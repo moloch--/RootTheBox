@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>auth.py</title>
+  <link rel="stylesheet" href="..\pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  
+  <div class='section'>
+    <div class='docs'><h1>auth.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>fills the database with some startup data.
+usage: python -c 'import setup.auth'</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">dbsession</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Permission</span><span class="p">,</span> <span class="n">User</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Groups and Permissions</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">g_admins</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span>
+    <span class="n">group_name</span> <span class="o">=</span> <span class="s">&#39;admins&#39;</span><span class="p">,</span>
+    <span class="n">display_name</span> <span class="o">=</span> <span class="s">&#39;the administrators of the application&#39;</span>
+<span class="p">)</span>
+<span class="n">dbsession</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">g_admins</span><span class="p">)</span>
+
+<span class="n">p_admin</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span>
+    <span class="n">permission_name</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span><span class="p">,</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s">&#39;an administrator permission, allows everything&#39;</span>
+<span class="p">)</span>
+<span class="n">p_admin</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g_admins</span><span class="p">)</span>
+<span class="n">dbsession</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p_admin</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Admin Account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">u_admin</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+    <span class="n">user_name</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span><span class="p">,</span>
+    <span class="n">display_name</span> <span class="o">=</span> <span class="s">&#39;the administrator&#39;</span><span class="p">,</span>
+    <span class="n">email_address</span> <span class="o">=</span> <span class="s">&#39;admin@admin.com&#39;</span><span class="p">,</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="s">&#39;admin&#39;</span>
+<span class="p">)</span>
+<span class="n">dbsession</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">u_admin</span><span class="p">)</span>
+<span class="n">g_admins</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_admin</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>User Account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">u_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+    <span class="n">user_name</span> <span class="o">=</span> <span class="s">&#39;user&#39;</span><span class="p">,</span>
+    <span class="n">display_name</span> <span class="o">=</span> <span class="s">&#39;a simple user&#39;</span><span class="p">,</span>
+    <span class="n">email_address</span> <span class="o">=</span> <span class="s">&#39;user@user.com&#39;</span><span class="p">,</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="s">&#39;user&#39;</span>
+<span class="p">)</span>
+<span class="n">dbsession</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">u_user</span><span class="p">)</span>
+
+<span class="n">dbsession</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

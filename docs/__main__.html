@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>__main__.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  
+  <div class='section'>
+    <div class='docs'><h1>__main__.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>this serves as a 'loader' for some commonly basic use function
+every womyn (or man) needs in the process of a web app development</p>
+<p>it's called <strong>__main__.py</strong> so u'll be able to type 'python . [command]'
+and it'll fulfill your wishes.</p>
+<p>feel free to change the filename if you wish.
+as I said before. nothing in this template is hardcoded</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">Popen</span>
+<span class="n">curr_time</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <h2>serves the application</h2>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">serve</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>usage: python . serve</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>spwans a process of this 'loader', which starts the applicaion by importing the __serve__ method.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;=&gt; </span><span class="si">%s</span><span class="s"> : serving the application.&#39;</span><span class="o">%</span><span class="n">curr_time</span><span class="p">())</span>
+        <span class="n">Popen</span><span class="p">([</span><span class="s">&#39;python&#39;</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="s">&#39;serve&#39;</span><span class="p">,</span> <span class="s">&#39;now&#39;</span><span class="p">])</span>
+        <span class="k">try</span><span class="p">:</span> <span class="n">sleep</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span> <span class="k">pass</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>checkout handlers/<strong>__init__.py</strong></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">handlers</span> <span class="kn">import</span> <span class="n">__serve__</span>
+        <span class="n">__serve__</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <h2>creates the database</h2>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">create</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>usage: python . create</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">print</span><span class="p">(</span><span class="s">&#39;=&gt; </span><span class="si">%s</span><span class="s"> : creating the database.&#39;</span><span class="o">%</span><span class="n">curr_time</span><span class="p">())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>checkout models/<strong>__init__.py</strong></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">__create__</span>
+    <span class="n">__create__</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <h2>tests the application</h2>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">test</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>usage: python . test</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">print</span><span class="p">(</span><span class="s">&#39;=&gt; </span><span class="si">%s</span><span class="s"> : testing the application.&#39;</span><span class="o">%</span><span class="n">curr_time</span><span class="p">())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>calling nose's nosetests to test the application using the 'tests' module</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">call</span><span class="p">([</span><span class="s">&#39;nosetests&#39;</span><span class="p">,</span> <span class="s">&#39;-v&#39;</span><span class="p">,</span> <span class="s">&#39;tests&#39;</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <h2>documents the project</h2>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">docs</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>usage: python . docs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">print</span><span class="p">(</span><span class="s">&#39;=&gt; </span><span class="si">%s</span><span class="s"> : documenting in process.&#39;</span><span class="o">%</span><span class="n">curr_time</span><span class="p">())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>calling pycco to document the this project</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">directories</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="s">&#39;handlers&#39;</span><span class="p">,</span> <span class="s">&#39;libs&#39;</span><span class="p">,</span> <span class="s">&#39;models&#39;</span><span class="p">,</span> <span class="s">&#39;setup&#39;</span><span class="p">,</span> <span class="s">&#39;tests&#39;</span><span class="p">]</span>
+    <span class="n">call</span><span class="p">([</span><span class="s">&#39;pycco&#39;</span><span class="p">,</span> <span class="s">&#39;-p&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">directory</span><span class="p">:</span> <span class="n">directory</span> <span class="o">+</span> <span class="s">&#39;/*.py&#39;</span><span class="p">,</span> <span class="n">directories</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <hr />
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p><em>the optional commands:</em></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;serve&#39;</span><span class="p">,</span> <span class="s">&#39;create&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;docs&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>evaling the command. if invalid command will print out a nicely formatted 'help' table</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="s">&#39;  -&gt;</span><span class="se">\t</span><span class="si">%s</span><span class="se">\t</span><span class="si">%s</span><span class="s">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="nb">eval</span><span class="p">(</span><span class="n">option</span><span class="p">)</span><span class="o">.</span><span class="n">__doc__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>        
+<span class="k">else</span><span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

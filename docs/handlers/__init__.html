@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>__init__.py</title>
+  <link rel="stylesheet" href="..\pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  
+  <div class='section'>
+    <div class='docs'><h1>__init__.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>this sets up the tornado application  and handlers.
+for more information about tornado check out <a href="http://www.tornadoweb.org">www.tornadoweb.org</a></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="kn">import</span> <span class="n">IOLoop</span>
+<span class="kn">from</span> <span class="nn">tornado.web</span> <span class="kn">import</span> <span class="n">Application</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>import your handlers and set the application routes and configuration</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">handlers.root</span> <span class="kn">import</span> <span class="n">RootController</span>
+      
+<span class="n">application</span> <span class="o">=</span> <span class="n">Application</span><span class="p">([</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>the RootController also serve as a StaticFileHandler. 'path' is mandatory, 'default_filename' is optional</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="p">(</span><span class="s">r&#39;/(.*)&#39;</span><span class="p">,</span> <span class="n">RootController</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;public&#39;</span><span class="p">,</span> <span class="s">&#39;default_filename&#39;</span><span class="p">:</span> <span class="s">&#39;index.html&#39;</span><span class="p">})</span>
+    <span class="p">],</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>just bullshit string that will be used as a ... cookie secert</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">cookie_secret</span><span class="o">=</span><span class="s">&#39;change_me_to_a_long_and_secrect_string_that_no_one_can_guess_asdlkasjdsakldjsalkdjsakldjskaldjlaskjdlkajdlkasjdklasjdopizxcmwerweiunh&#39;</span><span class="p">,</span>
+    <span class="n">template_path</span><span class="o">=</span><span class="s">&#39;templates&#39;</span><span class="p">,</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>request that does not pass @authorized will be redirected here</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">forbidden_url</span><span class="o">=</span><span class="s">&#39;/forbidden&#39;</span><span class="p">,</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>requests that does not pass @authenticated  will be redirected here</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login&#39;</span><span class="p">,</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>integer, in minutes, for how long until the session expires</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">session_expire</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>debug mode uses torando.autoreload module to reload the app on modules/templates
+change and print out errors as response. delete or set to False for production</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">debug</span><span class="o">=</span><span class="bp">True</span>
+<span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>the port. doh</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">application</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">8888</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>calling this will start the IOLoop. open your browser and enjoy.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">__serve__</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

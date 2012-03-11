@@ -1,0 +1,232 @@
+
+*
+{
+	margin: 0em;
+	padding: 0em;
+}
+
+span {
+	position:relative;
+	top:-100px;
+}
+
+form
+{
+	border: none;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+	color: #6a6a6a;
+}
+
+body
+{
+	font-family: "Trebuchet MS", sans-serif;
+	color: #000000;
+	font-size: 11pt;
+}
+
+#face
+{
+}
+
+a
+{
+	color: #080808 ;
+	text-decoration: underline;
+}
+
+a:hover
+{
+	text-decoration: none;
+}
+
+/* Outer */
+
+#outer
+{
+	/*margin: 2.5em 3.0em 1.5em 3.0em;*/
+	height:1080px;
+	background-image:url('/images/face.jpg');
+	background-repeat:no-repeat;
+}
+
+/* Header */
+
+#header
+{
+	padding: 0em 1.5em 0em 1.5em;
+	height: 8em;
+	width: 15em;
+	float: left;
+	position: relative;
+	background: #080808  ;
+}
+
+#header h1
+{
+	position: absolute;
+	bottom: 2.2em;
+	font-size: 1.5em;
+	letter-spacing: 0.1em;
+}
+
+#header h1 a
+{
+	color: #fff;
+	text-decoration: none;
+}
+
+#header h2
+{
+	position: absolute;
+	bottom: 2.7em;
+	color: #EFE0E0;
+	font-size: 0.8em;
+}
+
+#banner
+{
+	text-align: center;
+}
+
+/* Menu */
+#menuouter
+{
+	width: 100%;
+	text-align: center;
+}
+
+#menuinner
+{
+	display: inline-block;
+}
+
+/* Content */
+
+#content
+{
+	margin-top: 1px;
+	padding-top: 1.5em;
+}
+
+#content p
+{
+	margin-bottom: 1.5em;
+	line-height: 1.6em;
+}
+
+#content h2
+{
+	font-size: 1.5em;
+}
+
+#content h3
+{
+	font-size: 1.1em;
+}
+
+#content h2,h3,h4,h5,h6
+{
+	padding-bottom: 0.2em;
+	margin-bottom: 1.2em;
+}
+
+#content ul
+{
+	margin-bottom: 1.5em;
+	padding-left: 1em;
+	line-height: 1.6em;
+}
+
+#content blockquote
+{
+	border-left: solid 0.8em #cacaca;
+	padding: 0.5em 0em 0.5em 1.0em;
+	margin-bottom: 1.5em;
+	line-height: 1.6em;
+}
+
+#content blockquote p
+{
+	display: inline;
+}
+
+#content table
+{
+	border: dotted 1px #cacaca;
+	padding: 0.5em;
+	margin-bottom: 1.5em;
+}
+
+#content table th
+{
+	font-size:18;
+	text-align: left;
+	font-weight: bold;
+	padding: 0.5em;
+}
+
+#content table td
+{
+	font-size:12;
+	padding: 0.5em;
+}
+
+#content table tr.rowA
+{
+	background-color: #f5f5f5;
+	color: inherit;
+}
+
+#content table tr.rowB
+{
+	background-color: #fdfdfd;
+	color: inherit;
+}
+
+/* Primary Content */
+
+#primaryContentContainer
+{
+	margin:auto;
+	width:50%;
+}
+
+#primaryContent
+{
+	text-align:left;
+	margin: 0em 0em 0em 0em;
+	padding: 1.5em;
+}
+
+#primaryContent img
+{
+	max-width:200px;
+	max-height:auto;
+}
+
+/* Secondary Content */
+
+#secondaryContent
+{
+	float: left;
+	width: 15em;
+	padding: 1.5em;
+}
+
+/* Footer */
+
+#footer
+{
+	margin-top: 1.0em;
+	padding: 1.5em;
+	font-size: 0.9em;
+	text-align: center;
+}
+
+.clear
+{
+	clear: both;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Pragma" content="no-cache" />
+
+<head>
+	<title>Root the Box</title>
+	<link href="/css/main.css" rel="stylesheet" type="text/css" />
+	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
+	<link href="/css/animate.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+	<div id="banner">
+		<a href="/home">
+			<img src="/images/banner.jpg" width="1200" />
+		</a>
+	</div>
+	<div id="outer">
+		<div id="menuouter">
+			<div id="menuinner">
+					<!-- Insert Menu -->
+					{% module Template(menu) %}
+			</div>
+		</div>
+		<!-- Content -->
+		<div id="content" class="animated fadeIn">
+			<div id="primaryContentContainer">
+				<div id="primaryContent">
+					<!-- Insert Content -->
+					{% module Template(content) %}
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div id="footer">
+			Copyright &copy; 2012 'Root the Box' by [Buffer]Overflow
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>__init__.py</title>
+  <link rel="stylesheet" href="..\pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  
+  <div class='section'>
+    <div class='docs'><h1>__init__.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>defines a special ApplicationTest class.
+inheriate it inorder to write tests for the application</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">handlers</span> <span class="kn">import</span> <span class="n">application</span>
+<span class="kn">from</span> <span class="nn">libs.form_xcode</span> <span class="kn">import</span> <span class="n">form_encode</span>
+<span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="kn">import</span> <span class="n">HTTPRequest</span>
+<span class="kn">from</span> <span class="nn">tornado.testing</span> <span class="kn">import</span> <span class="n">AsyncHTTPTestCase</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <h2>ApplicationTest</h2>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ApplicationTest</span><span class="p">(</span><span class="n">AsyncHTTPTestCase</span><span class="p">):</span>
+    <span class="n">get_app</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="n">application</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>defines a self.get/post that will ease writing tests for the app.
+also, checkout the tests em'self in tests/root.py
+and tornado.testing to see how the heck async testing works.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="n">get</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fetch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fetch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;POST&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>setting body or query string</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">data</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">form_encode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="n">method</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s">&#39;method&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;GET&#39;</span><span class="p">:</span> <span class="n">path</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">?</span><span class="si">%s</span><span class="s">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span> <span class="n">kw</span><span class="p">[</span><span class="s">&#39;body&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>getting auth cookie and setting it for the request</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">auth</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;auth&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">auth</span><span class="p">:</span>
+            <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;auth&#39;</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>posting to /login in order to get the auth cookie. if login fails, treats as unauthed</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="bp">self</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/login&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;user_name&#39;</span><span class="p">:</span> <span class="n">auth</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;password&#39;</span><span class="p">:</span> <span class="n">auth</span><span class="p">[</span><span class="mi">1</span><span class="p">]},</span> <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">False</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span>
+                <span class="n">auth_cookie</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">;&#39;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;Set-Cookie&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="n">headers</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;headers&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="n">headers</span><span class="p">[</span><span class="s">&#39;Cookie&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_cookie</span> <span class="o">+</span> <span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Cookie&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">kw</span><span class="p">[</span><span class="s">&#39;headers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">headers</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+    
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">callback</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">HTTPRequest</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="o">**</span><span class="n">kw</span><span class="p">),</span> <span class="n">callback</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div><div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>import your tests here!</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">tests.root</span> <span class="kn">import</span> <span class="n">RootTest</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
