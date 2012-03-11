@@ -10,22 +10,16 @@ from sqlalchemy.orm import relationship, synonym
 from sqlalchemy.types import DateTime, Integer, Unicode
 from models import dbsession, DeclarativeBase, metadata
 
-#{ Association tables
-# This is the association table for the many-to-many relationship between groups and members.
-user_group_table = Table('user_group', metadata,
-    Column('user_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True),
-    Column('group_id', Integer, ForeignKey('groups.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
-)
-
 # This is the association table for the many-to-many relationship between groups and permissions.
 group_permission_table = Table('group_permission', metadata,
-    Column('group_id', Integer, ForeignKey('groups.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True),
+    Column('user_id', Integer, ForeignKey('user.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True),
     Column('permission_id', Integer, ForeignKey('permissions.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True)
 )
 
 # The authentication models
 class User(DeclarativeBase):
-    """User definition."""
+    """ User definition """
+    
     __tablename__ = 'users'
 
     # Columns
@@ -41,19 +35,17 @@ class User(DeclarativeBase):
         lambda self, password: setattr(self, '_password', self.__class__._hash_password(password))
     ))
     
-    # Special methods
     def __repr__(self):
-        return ('<User: %s, display=%s, email=%s>'%(self.user_name, self.display_name, self.email_address)).encode('utf-8')
+        return ('<User: %s, display=%s, email=%s>' % (self.user_name, self.display_name, self.email_address)).encode('utf-8')
 
     def __unicode__(self):
         return self.display_name or self.user_name
 
-    # Getters and setters
     @property
     def permissions(self):
         """Return a set with all permissions granted to the user."""
         permissions = set()
-        for g in self.groups: permissions = permissions | set(g.permissions)
+        for group in self.groups: permissions = permissions | set(group.permissions)
         return permissions
 
     @property
@@ -107,33 +99,36 @@ class User(DeclarativeBase):
         secure_hash.update(password + str(self.password[:64]))
         return self.password[64:] == secure_hash.hexdigest()
 
-class Group(DeclarativeBase):
-    """Group definition."""
-    __tablename__ = 'groups'
+class Team(DeclarativeBase):
+    """Team definition."""
+    
+    __tablename__ = 'teams'
 
     # Columns
     id = Column(Integer, primary_key=True) #@ReservedAssignment
-    group_name = Column(Unicode(64), unique=True, nullable=False)
-    display_name = Column(Unicode(255))
+    team_name = Column(Unicode(64), unique=True, nullable=False)
+    motto = Column(Unicode(255))
+    score = Column(Integer)
     created = Column(DateTime, default=datetime.now)
 
     # Relations
-    users = relationship('User', secondary=user_group_table, backref='groups')
+    #users = relationship('User', secondary=user_group_table, backref='teams')
 
     @classmethod
     def by_group_name(cls, group_name):
         """Return the user object whose group name is ``group_name``."""
-        return dbsession.query(cls).filter_by(group_name=group_name).first() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(group_name=team_name).first() #@UndefinedVariable
 
     # Special methods
     def __repr__(self):
-        return ('<Group: %s, display=%s>'%(self.group_name, self.display_name)).encode('utf-8')
+        return ('<Team: %s, score=%s>'%(self.team_name, self.score)).encode('utf-8')
 
     def __unicode__(self):
-        return self.display_name or self.group_name
+        return self.team_name
 
 class Permission(DeclarativeBase):
     """Permission definition."""
+    
     __tablename__ = 'permissions'
 
     # Columns

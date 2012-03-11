@@ -14,7 +14,7 @@ from os import system
 from sys import argv
 from time import sleep
 from datetime import datetime
-from subprocess import call, Popen
+from subprocess import call
 curr_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 def serve():

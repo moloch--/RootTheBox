@@ -4,6 +4,8 @@ this sets up the tornado application  and handlers.
 for more information about tornado check out <a href="http://www.tornadoweb.org">www.tornadoweb.org</a>
 """
 import logging
+from os import urandom
+from hashlib import sha512
 from tornado.ioloop import IOLoop #@UnresolvedImport
 from tornado.web import Application #@UnresolvedImport
 
@@ -11,6 +13,10 @@ from tornado.web import Application #@UnresolvedImport
 from handlers.root import RootController
 
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
+
+secretHash = sha512
+secretHash.update(urandom(512))
+secret = secretHash.hexdigest()
 
 application = Application([
         # the RootController also serve as a StaticFileHandler. 'path' is mandatory, 'default_filename' is optional
