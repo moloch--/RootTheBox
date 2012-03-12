@@ -14,7 +14,7 @@ class Box(BaseObject):
     
     box_name = Column(Unicode(64), unique=True, nullable=False)
     ip_address = Column(Unicode(16), unique=True, nullable=False)
-    description = Column(Unicode(255))
+    description = Column(Unicode(1024))
     root_key = Column(Unicode(255), unique=True, nullable=False)
     root_value = Column(Integer, nullable=False)
     user_key = Column(Unicode(255), unique=True, nullable=False)

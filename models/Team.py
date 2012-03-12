@@ -16,7 +16,7 @@ class Team(BaseObject):
     team_name = Column(Unicode(64), unique=True, nullable=False)
     motto = Column(Unicode(255))
     score = Column(Integer)
-    members = relationship("members")
+    members = relationship("User")
 
     # Relations
     #users = relationship('User', secondary=user_group_table, backref='teams')
