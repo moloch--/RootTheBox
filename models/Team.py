@@ -18,9 +18,6 @@ class Team(BaseObject):
     score = Column(Integer)
     members = relationship("User")
 
-    # Relations
-    #users = relationship('User', secondary=user_group_table, backref='teams')
-
     @classmethod
     def by_team_name(cls, team_name):
         """Return the user object whose group name is ``team_name``."""
