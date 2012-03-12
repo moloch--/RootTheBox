@@ -52,3 +52,4 @@ class ApplicationTest(AsyncHTTPTestCase):
 # import your tests here!
 #from tests.rootController import RootTest
 from tests.boxModel import *
+from tests.userModel import *

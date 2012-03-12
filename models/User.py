@@ -15,7 +15,7 @@ class User(BaseObject):
     """ User definition """
 
     user_name = Column(Unicode(64), unique=True, nullable=False)
-    display_name = Column(Unicode(255))
+    display_name = Column(Unicode(64))
     team_id = Column(Integer, ForeignKey('team.id'))
     
     _password = Column('password', Unicode(128))
@@ -68,9 +68,10 @@ class User(BaseObject):
     @classmethod
     def _hash_password(cls, password):
         # Make sure password is a str because we cannot hash unicode objects
-        if isinstance(password, unicode): password = password.encode('utf-8')
+        if isinstance(password, unicode): 
+            password = password.encode('utf-8')
         md5Hash = md5()
-        md5Hash.update()
+        md5Hash.update(password)
         password = md5Hash.hexdigest()
         # Make sure the hashed password is a unicode object at the end of the
         # process because SQLAlchemy _wants_ unicode objects for Unicode cols
