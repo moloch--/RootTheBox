@@ -16,7 +16,7 @@ class Team(BaseObject):
     team_name = Column(Unicode(64), unique=True, nullable=False)
     motto = Column(Unicode(255))
     score = Column(Integer)
-    members = relationship("User")
+    members = relationship("User", backref="Team")
 
     @classmethod
     def by_team_name(cls, team_name):
