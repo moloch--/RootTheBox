@@ -6,8 +6,8 @@ inheriate it inorder to write tests for the application
 
 from handlers import application
 from libs.form_xcode import form_encode
-from tornado.httpclient import HTTPRequest
-from tornado.testing import AsyncHTTPTestCase
+from tornado.httpclient import HTTPRequest #@UnresolvedImport
+from tornado.testing import AsyncHTTPTestCase #@UnresolvedImport
 
 # ApplicationTest
 # ---------------
@@ -50,4 +50,5 @@ class ApplicationTest(AsyncHTTPTestCase):
         return lambda callback: self.http_client.fetch(HTTPRequest(self.get_url(path), **kw), callback)
 
 # import your tests here!
-from tests.root import RootTest
+#from tests.rootController import RootTest
+from tests.boxModel import BoxTests

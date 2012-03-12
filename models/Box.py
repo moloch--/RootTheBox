@@ -4,36 +4,21 @@ Created on Mar 11, 2012
 @author: moloch
 '''
 
-from datetime import datetime
 from sqlalchemy import Column
-from sqlalchemy.types import DateTime, Integer, Unicode
-from models import dbsession, DeclarativeBase
+from sqlalchemy.types import Integer, Unicode
+from models import dbsession
+from models.BaseGameObject import BaseObject
 
-class Action(DeclarativeBase):
-    ''' Action definition '''
-    
-    __tablename__ = 'actions'
-    
-    id = Column(Integer, primary_key=True) #@ReservedAssignment
-    description = Column(Unicode(255))
-    classification = Column(Unicode(255))
-    created = Column(DateTime, default=datetime.now)
-
-class Box(DeclarativeBase):
+class Box(BaseObject):
     ''' Box definition '''
     
-    __tablename__ = 'boxes'
-    
-    # Columns
-    id = Column(Integer, primary_key=True) #@ReservedAssignment
     box_name = Column(Unicode(64), unique=True, nullable=False)
     ip_address = Column(Unicode(16), unique=True, nullable=False)
     description = Column(Unicode(255))
     root_key = Column(Unicode(255), unique=True, nullable=False)
-    root_value = Column(Integer)
+    root_value = Column(Integer, nullable=False)
     user_key = Column(Unicode(255), unique=True, nullable=False)
-    user_value = Column(Integer)
-    created = Column(DateTime, default=datetime.now)
+    user_value = Column(Integer, nullable=False)
     
     def __repr__(self):
         return ('<Box: name=%s, root_value=%d, user_value=%d>' % (self.box_name, self.root_value, self.user_value)).encode('utf-8')

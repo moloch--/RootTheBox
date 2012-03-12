@@ -6,7 +6,10 @@ tests the RootController
 from tests import ApplicationTest
 
 class RootTest(ApplicationTest):
-    def test(self): pass
+    ''' Application Tests '''
+    
+    def test(self): 
+        pass
     
     def test_index(self):
         # checks out the '/' path
