@@ -8,7 +8,7 @@ from hashlib import md5
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer
-from models import dbsession
+from models import dbsession, Team
 from models.BaseGameObject import BaseObject
 
 class User(BaseObject):
@@ -47,40 +47,33 @@ class User(BaseObject):
         return True if permission in self.permissions_names else False
 
     @property
-    def groups_names(self):
-        """Return a list with all groups names the user is a member of."""
-        return [g.group_name for g in self.groups]
-    
-    def in_group(self, group):
-        """Return True if ``group`` is in groups_names."""
-        return True if group in self.groups_names else False
-
-    @classmethod
-    def by_email_address(cls, email_address):
-        """Return the user object whose email address is ``email_address``."""
-        return dbsession.query(cls).filter_by(email_address=email_address).first() #@UndefinedVariable
+    def team_name(self):
+        """ Return a list with all groups names the user is a member of """
+        if self.team_id == None:
+            return None
+        else:
+            team = dbsession.query(Team).filter_by(id=self.team_id).first() #@UndefinedVariable
+            return team.team_name
 
     @classmethod
     def by_user_name(cls, user_name):
-        """Return the user object whose user name is ``user_name``."""
+        """ Return the user object whose user name is ``user_name`` """
         return dbsession.query(cls).filter_by(user_name=user_name).first() #@UndefinedVariable
 
     @classmethod
     def _hash_password(cls, password):
-        # Make sure password is a str because we cannot hash unicode objects
+        ''' Hashes the password using insecure Md5 :D '''
         if isinstance(password, unicode): 
             password = password.encode('utf-8')
         md5Hash = md5()
         md5Hash.update(password)
         password = md5Hash.hexdigest()
-        # Make sure the hashed password is a unicode object at the end of the
-        # process because SQLAlchemy _wants_ unicode objects for Unicode cols
         if not isinstance(password, unicode): 
             password = password.decode('utf-8')
         return password
 
     def validate_password(self, password):
-        """Check the password against existing credentials."""
+        """ Check the password against existing credentials """
         input_hash = md5()
         if isinstance(password, unicode): 
             password = password.encode('utf-8')

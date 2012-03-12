@@ -9,7 +9,7 @@ from models import dbsession, User, Team
 
 def test_create_user():
     user = User(
-        user_name = unicode('joe'),
+        user_name = unicode('tester'),
         display_name = unicode('moloch'),
         password = unicode('asdf'),
     )
@@ -17,7 +17,7 @@ def test_create_user():
     dbsession.flush() #@UndefinedVariable
     
 def test_by_user_name():
-    user = User.by_user_name(unicode('joe'))
+    user = User.by_user_name(unicode('tester'))
     assert not user == None
     hashTest = md5()
     hashTest.update(unicode('asdf'))
@@ -39,9 +39,14 @@ def test_by_team_name():
 def test_add_user_to_team():
     team = Team.by_team_name(unicode("The A Team"))
     assert not team == None
-    user = User.by_user_name(unicode("joe"))
+    user = User.by_user_name(unicode("tester"))
     assert not user == None
     user.team_id = team.id
     dbsession.add(user) #@UndefinedVariable
     dbsession.flush() #@UndefinedVariable
+    
+def test_user_team_name():
+    user = User.by_user_name(unicode("tester"))
+    assert user.team_name == unicode("The A Team")
+    
     
