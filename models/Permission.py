@@ -22,7 +22,7 @@ class Permission(BaseObject):
     description = Column(Unicode(255))
 
     # Relations
-    groups = relationship('Group', secondary=team_permission_table, backref='permissions')
+    groups = relationship('Team', secondary=team_permission_table, backref='permission')
 
     # Special methods
     def __repr__(self):
