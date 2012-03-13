@@ -57,7 +57,14 @@ class User(BaseObject):
         else:
             team = dbsession.query(Team).filter_by(id=self.team_id).first() #@UndefinedVariable
             return team.team_name
-
+    
+    @property
+    def score(self):
+        if self.dirty:
+            pass
+        else:
+            return self.score_cache
+    
     @classmethod
     def by_user_name(cls, user_name):
         """ Return the user object whose user name is ``user_name`` """

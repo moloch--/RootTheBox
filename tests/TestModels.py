@@ -7,6 +7,8 @@ Created on Mar 12, 2012
 from hashlib import md5
 from models import dbsession, User, Team, Box, Action
 
+DROP = False
+
 # Common functions user by all tests
 def createUser():
     user = User(
@@ -49,11 +51,12 @@ class TestUser():
             createTeam()
     
     def tearDown(self):
-        user = User.by_user_name(unicode('tester'))
-        team = Team.by_team_name(unicode('The A Team'))
-        dbsession.delete(user) #@UndefinedVariable
-        dbsession.delete(team) #@UndefinedVariable
-        dbsession.flush() #@UndefinedVariable
+        if DROP:
+            user = User.by_user_name(unicode('tester'))
+            team = Team.by_team_name(unicode('The A Team'))
+            dbsession.delete(user) #@UndefinedVariable
+            dbsession.delete(team) #@UndefinedVariable
+            dbsession.flush() #@UndefinedVariable
     
     def test_by_user_name(self):
         user = User.by_user_name(unicode('tester'))
@@ -88,9 +91,10 @@ class TestBox():
             createBox()
     
     def tearDown(self):
-        box = Box.by_box_name(unicode("The Gibson"))
-        dbsession.delete(box) #@UndefinedVariable
-        dbsession.flush() #@UndefinedVariable
+        if DROP:
+            box = Box.by_box_name(unicode("The Gibson"))
+            dbsession.delete(box) #@UndefinedVariable
+            dbsession.flush() #@UndefinedVariable
     
     def test_by_box_name(self):
         box = Box.by_box_name(unicode('The Gibson'))
@@ -118,9 +122,10 @@ class TestAction():
         dbsession.flush() #@UndefinedVariable
         
     def teadDown(self):
-        user = User.by_user_name(unicode('tester'))
-        dbsession.delete(user) #@UndefinedVariable
-        dbsession.flush() #@UndefinedVariable
+        if DROP:
+            user = User.by_user_name(unicode('tester'))
+            dbsession.delete(user) #@UndefinedVariable
+            dbsession.flush() #@UndefinedVariable
         
     def test_create_action(self):
         user = User.by_user_name(unicode('tester'))

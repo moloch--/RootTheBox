@@ -15,4 +15,3 @@ class Action(BaseObject):
     description = Column(Unicode(1024), nullable=False)
     value = Column(Integer, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    
