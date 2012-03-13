@@ -15,3 +15,6 @@ class Action(BaseObject):
     description = Column(Unicode(1024), nullable=False)
     value = Column(Integer, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    
+    def __repr__(self):
+        return ('<Action - class:%s, user_id:%d>' % (self.classification, self.user_id))

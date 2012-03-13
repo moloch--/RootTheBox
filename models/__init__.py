@@ -22,6 +22,7 @@ from models.Team import Team
 from models.User import User
 from models.Box import Box
 from models.Action import Action
+from models.CrackMe import CrackMe
 
 # calling this will create the tables at the database
 __create__ = lambda: (setattr(engine, 'echo', True), metadata.create_all(engine))

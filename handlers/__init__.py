@@ -18,7 +18,7 @@ application = Application([
         (r'/(.*)', RootController, {'path': 'public', 
                                     'default_filename': 'index.html'})
     ],
-    cookie_secret = urandom(64), #"Dkj50&Xl!QVKZ*!tu^pBk7f1AJ6zJ@#6Dkj50&Xl!QVKZ*!tu^pBk7f1AJ6zJ@#6",
+    cookie_secret = urandom(64),
     template_path ='templates',
     
     # request that does not pass @authorized will be redirected here

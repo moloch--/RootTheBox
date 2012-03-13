@@ -12,7 +12,7 @@ from random import random
 from functools import wraps
 from urllib import urlencode
 from urlparse import urlsplit
-from models import dbsession, User
+from models import dbsession
 from libs.form_xcode import form_decode
 from datetime import datetime, timedelta
 from tornado.web import HTTPError, RequestHandler, StaticFileHandler #@UnresolvedImport
@@ -32,8 +32,10 @@ def authorized(permission):
                     url = self.get_forbidden_url()
                     if '?' not in url:
                         # if forbidden url is absolute, make next absolute too
-                        if urlsplit(url).scheme: next_url = self.request.full_url()
-                        else: next_url = self.request.uri
+                        if urlsplit(url).scheme: 
+                            next_url = self.request.full_url()
+                        else: 
+                            next_url = self.request.uri
                         url += '?' + urlencode(dict(next=next_url))
                     self.redirect(url)
                     return
@@ -76,7 +78,8 @@ def get_current_user(self):
     auth = loads(self.get_secure_cookie('auth') or '""')
     if auth:
         user = dbsession.query(User).get(auth['id']) #@UndefinedVariable
-        if user and user.password[0:8] == auth['password']: return user
+        if user and user.password[0:8] == auth['password']: 
+            return user
 
 # BaseHandler
 # -----------
@@ -93,7 +96,8 @@ class BaseHandler(RequestHandler):
         
     @property
     def current_session(self):
-        if not hasattr(self, '_current_session'): self._current_session = self.get_current_session()
+        if not hasattr(self, '_current_session'): 
+            self._current_session = self.get_current_session()
         return self._current_session
     
     # patching the class.
