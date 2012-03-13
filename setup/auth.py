@@ -4,39 +4,41 @@ fills the database with some startup data.
 usage: python -c 'import setup.auth'
 """
 
-from models import dbsession, Team, Permission, User
+from models import dbsession, Team, User, Box
 
-# Groups and Permissions
-#g_team = team(
-#    team_name = 'admins',
-#    motto = 'the administrators of the application'
-#)
-#dbsession.add(g_admins) #@UndefinedVariable
-#
-#p_admin = Permission(
-#    permission_name = 'admin',
-#    description = 'an administrator permission, allows everything'
-#)
-#p_admin.groups.append(g_admins)
-#dbsession.add(p_admin) #@UndefinedVariable
+#Team
+team = Team(
+              team_name = 'Test Team',
+              motto = 'We rock!',
+              score = 10
+)
+dbsession.add(team) #@UndefinedVariable
 
-# Admin Account
-#u_admin = User(
-#    user_name = 'admin',
-#    display_name = 'the administrator',
-#    email_address = 'admin@admin.com',
-#    password = 'admin'
-#)
-#dbsession.add(u_admin) #@UndefinedVariable
-#g_admins.users.append(u_admin)
+#Box
+box = Box(
+            box_name = 'Test',
+            ip_address = '192.168.0.1',
+            description = 'This is a test box!',
+            root_key = "12345",
+            user_key = "54321",
+            root_value = 500,
+            user_value = 100
+)
+
+dbsession.add(box) #@UndefinedVariable
 
 # User Account
-u_user = User(
+user = User(
     user_name = 'user',
-    display_name = 'a simple user',
-    email_address = 'user@user.com',
+    display_name = 'cheater',
+    dirty = False,
     password = 'user'
 )
-dbsession.add(u_user) #@UndefinedVariable
+dbsession.add(user) #@UndefinedVariable
+dbsession.flush() #@UndefinedVariable
 
+#Link rows
+
+user.team_id = team.id
+dbsession.add(user) #@UndefinedVariable
 dbsession.flush() #@UndefinedVariable

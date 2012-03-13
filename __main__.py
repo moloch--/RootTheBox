@@ -42,11 +42,17 @@ def create():
     creates the database
     --------------------
     """
-    # usage: python . create
+    # Create the table schemas
+    # usage: python . create 
+    
+    #Bootstrap the database with some objects
+    #usage: python . create bs
     print('=> %s : creating the database.'%curr_time())
-    # checkout models/__\_\_init\_\_.py__
-    from models import __create__
+    from models import __create__, __boot_strap__
     __create__()
+    if(len(argv) == 3):
+        if(argv[2] == 'bs'):
+            __boot_strap__()
     
 def test():
     """
