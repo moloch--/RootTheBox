@@ -33,7 +33,7 @@ class User(BaseObject):
         return ('<User - name: %s, display: %s, team_id: %d>' % (self.user_name, self.display_name, self.team_id)).encode('utf-8')
 
     def __unicode__(self):
-        return self.display_name or self.user_name
+        return self.user_name
 
     @property
     def permissions(self):
@@ -69,6 +69,11 @@ class User(BaseObject):
     def by_user_name(cls, user_name):
         """ Return the user object whose user name is ``user_name`` """
         return dbsession.query(cls).filter_by(user_name=user_name).first() #@UndefinedVariable
+    
+    @classmethod
+    def by_display_name(cls, display_name):
+        """ Return the user object whose user name is ``display_name`` """
+        return dbsession.query(cls).filter_by(display_name=display_name).first() #@UndefinedVariable
     
     @classmethod
     def add_to_team(cls, team_name):

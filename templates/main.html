@@ -3,37 +3,38 @@
 <meta http-equiv="Pragma" content="no-cache" />
 
 <head>
-	<title>Root the Box</title>
-	<link href="/css/main.css" rel="stylesheet" type="text/css" />
-	<link href="/css/menu.css" rel="stylesheet" type="text/css" />
-	<link href="/css/animate.css" rel="stylesheet" type="text/css" />
+	<title>Root the Box: {% block title %} Template {% end %}</title>
+	<link href="/static/css/main.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/menu.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/animate.css" rel="stylesheet" type="text/css" />
 </head>
-
 <body>
 	<div id="banner">
-		<a href="/home">
-			<img src="/images/banner.jpg" width="1200" />
+		<a href="/">
+			<img src="/static/images/banner.jpg" width="1200" />
 		</a>
 	</div>
 	<div id="outer">
 		<div id="menuouter">
 			<div id="menuinner">
-					<!-- Insert Menu -->
-					{% module Template(menu) %}
+					{% block menu %}
+						{% include "menu_public.html" %}
+					{% end %}
 			</div>
 		</div>
 		<!-- Content -->
 		<div id="content" class="animated fadeIn">
 			<div id="primaryContentContainer">
 				<div id="primaryContent">
-					<!-- Insert Content -->
-					{% module Template(content) %}
+					{% block content %}
+						No Content
+					{% end %}
 				</div>
 			</div>
 		</div>
 		<div class="clear"></div>
 		<div id="footer">
-			Copyright &copy; 2012 'Root the Box' by [Buffer]Overflow
+			Created by Hathcox &amp; Moloch &copy; {{ datetime.date.today().year }} - Version {{ handler.application.settings['version'] }}
 		</div>
 	</div>
 </body>

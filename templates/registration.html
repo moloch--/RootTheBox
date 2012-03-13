@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+
+{% block title %}Registration{% end %}
+
+{% block content %}
+<h1>Register a New Account</h1>
+<h2>{{errors}}</h2>
+<br />
+<form action="/registration" method="post">
+	<p>
+		Account Name (first name): <input name="username" />
+	</p>
+	<p>
+		Handle (hacker name): <input name="handle" />
+	</p>
+	<p>
+		Password: <input name="pass1" type="password" />
+	</p>
+	<p>
+		Confirm Password: <input name="pass2" type="password" />
+	</p>
+	<input type="submit" value=" Register Account " />
+</form>
+{% end %}

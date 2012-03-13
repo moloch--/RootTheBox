@@ -7,16 +7,38 @@ import logging
 from os import urandom
 from tornado.ioloop import IOLoop #@UnresolvedImport
 from tornado.web import Application #@UnresolvedImport
+from tornado.web import StaticFileHandler #@UnresolvedImport
 
 # import your handlers and set the application routes and configuration
-from handlers.root import RootController
+from handlers.RootHandlers import *
+from handlers.UserHandlers import *
+from models import dbsession
 
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
 
 application = Application([
-        # the RootController also serve as a StaticFileHandler. 'path' is mandatory, 'default_filename' is optional
-        (r'/(.*)', RootController, {'path': 'public', 
-                                    'default_filename': 'index.html'})
+        # Static Handler - Serves static CSS, JavaScript and image files
+        (r'/static/(.*)', StaticFileHandler, {'path': 'static'}),
+        
+        # User Handlers - Serves user related pages
+        (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
+        (r'/user(.*)', HomeHandler, {'dbsession': dbsession}),
+        
+        # Box Handlers - Serves box related pages
+        #(r'/boxes(.*)')
+        
+        # Scoreboard Handlers - Severs scoreboard related pages
+        #(r'/scoreboard(.*)'
+        
+        # Admin Handlers - Administration pages
+        #r('/admin/teams(.*)
+        #r('/admin(.*)
+        
+        # Root handler - Servers all public pages
+        (r'/login(.*)', LoginHandler),
+        (r'/registration(.*)', UserRegistraionHandler, {'dbsession': dbsession}),
+        (r'/about(.*)', AboutHandler),
+        (r'/(.*)', WelcomeHandler)
     ],
     cookie_secret = urandom(64),
     template_path ='templates',
@@ -31,7 +53,8 @@ application = Application([
     session_expire = 20,
     # debug mode uses torando.autoreload module to reload the app on modules/templates
     # change and print out errors as response. delete or set to False for production
-    debug = True
+    debug = True,
+    version = '0.1'
 )
 # the port. doh
 application.listen(8888)

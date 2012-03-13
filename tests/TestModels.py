@@ -9,7 +9,7 @@ from models import dbsession, User, Team, Box, Action
 
 DROP = False
 
-# Common functions user by all tests
+# Common functions used by all tests
 def createUser(name = 'tester', handle='moloch', team=None):
     user = User(
         user_name = unicode(name),
@@ -161,6 +161,9 @@ class TestTeam():
             user = User.by_user_name(unicode('tester'))
             dbsession.delete(user) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
+            user = User.by_user_name(unicode('john'))
+            dbsession.delete(user) #@UndefinedVariable
+            dbsession.flush() #@UndefinedVariable
     
     def test_team_members(self):
         team = Team.by_team_name(unicode("The A Team"))
@@ -175,4 +178,13 @@ class TestCrackMe():
             createUser()
         if Team.by_team_name(unicode("The A Team")) == None:
             createTeam()
+    
+    def tearDown(self):
+        if DROP:
+            user = User.by_user_name(unicode('tester'))
+            dbsession.delete(user) #@UndefinedVariable
+            dbsession.flush() #@UndefinedVariable
+            team = Team.by_team_name(unicode("The A Team"))
+            dbsession.delete(team) #@UndefinedVariable
+            dbsession.flush() #@UndefinedVariable
 

@@ -1,5 +1,11 @@
-<form action="/login" method="post">
+{% extends "main.html" %}
 
+{% block title %}Login{% end %}
+
+{% block content %}
+<h1>Login</h1>
+<h2>{{header}}</h2>
+<form action="/login" method="post">
 	<table>
 		<tr>
 			<td>Username:</td>
@@ -21,3 +27,4 @@
 		</tr>
 	</table>
 </form>
+{% end %}

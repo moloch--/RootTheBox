@@ -1,3 +1,6 @@
+/* 
+Main CSS for Root the Box 
+*/
 
 *
 {
@@ -48,7 +51,7 @@ a:hover
 {
 	/*margin: 2.5em 3.0em 1.5em 3.0em;*/
 	height:1080px;
-	background-image:url('/images/face.jpg');
+	background-image:url('/static/images/face.jpg');
 	background-repeat:no-repeat;
 }
 
