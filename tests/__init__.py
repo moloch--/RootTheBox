@@ -28,8 +28,10 @@ class ApplicationTest(AsyncHTTPTestCase):
             data = form_encode(data)
 
         method = kw['method']
-        if method == 'GET': path = '%s?%s'%(path, data)
-        elif method == 'POST': kw['body'] = data
+        if method == 'GET': 
+            path = '%s?%s'%(path, data)
+        elif method == 'POST': 
+            kw['body'] = data
         
         # getting auth cookie and setting it for the request
         auth = kw.get('auth')
@@ -48,8 +50,7 @@ class ApplicationTest(AsyncHTTPTestCase):
                 pass
     
         return lambda callback: self.http_client.fetch(HTTPRequest(self.get_url(path), **kw), callback)
-
-# import your tests here!
+# -------------------------
+#  import your tests here!
+# -------------------------
 #from tests.rootController import RootTest
-from tests.boxModel import *
-from tests.userModel import *

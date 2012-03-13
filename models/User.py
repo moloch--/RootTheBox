@@ -6,8 +6,8 @@ Created on Mar 12, 2012
 
 from hashlib import md5
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym
-from sqlalchemy.types import Unicode, Integer
+from sqlalchemy.orm import synonym, relationship, backref
+from sqlalchemy.types import Unicode, Integer, Boolean
 from models import dbsession, Team
 from models.BaseGameObject import BaseObject
 
@@ -17,6 +17,9 @@ class User(BaseObject):
     user_name = Column(Unicode(64), unique=True, nullable=False)
     display_name = Column(Unicode(64))
     team_id = Column(Integer, ForeignKey('team.id'))
+    dirty = Column(Boolean)
+    score_cache = Column(Integer)
+    actions = relationship("Action", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
@@ -25,7 +28,7 @@ class User(BaseObject):
     ))
     
     def __repr__(self):
-        return ('<User: %s, display=%s, email=%s>' % (self.user_name, self.display_name, self.email_address)).encode('utf-8')
+        return ('<User: %s, display=%s, team_id=%d>' % (self.user_name, self.display_name, self.team_id)).encode('utf-8')
 
     def __unicode__(self):
         return self.display_name or self.user_name
