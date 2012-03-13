@@ -18,7 +18,7 @@ class Team(BaseObject):
     motto = Column(Unicode(255))
     score = Column(Integer)
     members = relationship("User", backref="Team")
-    crack_me_id = Column(Integer, ForeignKey("crack_me.id"), nullable=False)
+    crack_me_id = Column(Integer, ForeignKey("crack_me.id"))
     
     @classmethod
     def by_team_name(cls, team_name):
@@ -33,7 +33,7 @@ class Team(BaseObject):
             cls.crack_me_id = next_crack_me.id
         
     def __repr__(self):
-        return ('<Team - name: %s, score: %d>'%(self.team_name, self.score)).encode('utf-8')
+        return ('<Team - name: %s, score: %d>' % (self.team_name, self.score)).encode('utf-8')
 
     def __unicode__(self):
         return self.team_name
