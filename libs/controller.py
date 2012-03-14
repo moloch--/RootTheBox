@@ -50,6 +50,7 @@ def authorized(permission):
 sessions = {}
 
 def get_current_session(self):
+    print "INSIDE ~~~"
     """
     Return the request's session object.
     can be called using BaseHandler self.get_current_session() or

@@ -27,6 +27,10 @@ application = Application([
         
         # User Handlers - Serves user related pages
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
+        (r'/user/team(.*)', TeamHandler, {'dbsession': dbsession}),
+        (r'/user/boxes(.*)', BoxesHandler, {'dbsession': dbsession}),
+        (r'/user/scoreboard(.*)', ScoreBoardHandler, {'dbsession': dbsession}),
+
         (r'/user(.*)', HomeHandler, {'dbsession': dbsession}),
         
         # Box Handlers - Serves box related pages
@@ -65,7 +69,7 @@ application = Application([
     version = '0.1'
 )
 # the port. doh
-application.listen(8888)
+application.listen(23879)
 
 # calling this will start the IOLoop. open your browser and enjoy.
 __serve__ = lambda: IOLoop.instance().start()
