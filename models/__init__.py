@@ -17,17 +17,18 @@ Session = sessionmaker(bind=engine, autocommit=True)
 # import the dbsession instance to execute queries on your database
 dbsession = Session()
 
-# import your models.
+# import models.
+from models.Action import Action
+from models.Box import Box
+from models.CrackMe import CrackMe
+from models.Permission import Permission
 from models.Team import Team
 from models.User import User
-from models.Box import Box
-from models.Action import Action
-from models.CrackMe import CrackMe
 
 # calling this will create the tables at the database
 __create__ = lambda: (setattr(engine, 'echo', True), metadata.create_all(engine))
 
-#Bootstrap the database with some shit
+# Bootstrap the database with some shit
 def __boot_strap__() :
     import setup.auth
     
