@@ -24,6 +24,7 @@ class SettingsHandler(RequestHandler):
     def initialize(self, dbsession):
         self.dbsession = dbsession
     
+    @authenticated
     def get(self, *args, **kwargs):
         ''' Display the user settings '''
         logging.info("Render user page")
@@ -32,5 +33,6 @@ class SettingsHandler(RequestHandler):
 class LogoutHandler(RequestHandler):
     
     def get(self, *args, **kwargs):
+        logging.info("User logout")
         self.clear_all_cookies()
         self.redirect("/")

@@ -17,3 +17,9 @@ class UnauthorizedHandler(RequestHandler):
     def get(self, *args, **kwargs):
         ''' Renders the 403 page '''
         self.render("public/403.html")
+        
+class PhpHandler(RequestHandler):
+    
+    def get(self, *args, **kwargs):
+        ''' Renders the php page '''
+        self.render("public/php.html")

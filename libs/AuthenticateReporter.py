@@ -1,5 +1,5 @@
 '''
-Root the Box - Authentication Manager
+Root the Box - Authenticate Reporter
 Created on Feb 28, 2012
 
 @author: moloch
@@ -12,7 +12,6 @@ import logging
 from os import urandom
 from hashlib import sha256
 from base64 import b64encode
-from RtbConfig import * #@UnusedWildImport
 from tornado import iostream #@UnresolvedImport
 
 TIMEOUT = 1
@@ -28,8 +27,8 @@ class AuthenticateReporter():
         sock.settimeout(TIMEOUT)
         self.tcpStream = iostream.IOStream(sock, max_buffer_size=BUFFER_SIZE)
         self.tcpStream.set_close_callback(self.setDone)
-        logging.info("Checking for reporter at %s:%s" % (self.box.ipAddress, self.port))
-        self.tcpStream.connect((self.box.ipAddress, self.port))
+        logging.info("Checking for reporter at %s:%s" % (self.box.ip_address, self.port))
+        self.tcpStream.connect((self.box.ip_address, self.port))
         self.confirmedAccess = None
         self.pendingAccess = None
         self.done = False
@@ -44,10 +43,10 @@ class AuthenticateReporter():
             self.tcpStream.read_bytes(len('root'), self.checkAccessLevel)
             time.sleep(TIMEOUT)
             if not self.done:
-                logging.info("A reporter stopped responding on %s" % self.box.ipAddress)
+                logging.info("A reporter stopped responding on %s" % self.box.ip_address)
                 self.kill()
         except socket.error, error:
-            logging.info("Failed to connect to host %s: %s" % (self.box.ipAddress, error))
+            logging.info("Failed to connect to host %s: %s" % (self.box.ip_address, error))
             self.setDone()
 
     def checkAccessLevel(self, pendingAccess):

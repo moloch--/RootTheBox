@@ -14,6 +14,7 @@ from tornado.web import StaticFileHandler #@UnresolvedImport
 from handlers.BoxHandlers import *
 from handlers.RootHandlers import *
 from handlers.UserHandlers import *
+from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
 from handlers.ReporterHandlers import *
 from models import dbsession
@@ -36,10 +37,10 @@ application = Application([
         (r'/boxes(.*)', BoxesViewHandler, {'dbsession': dbsession}),
         
         # Scoreboard Handlers - Severs scoreboard related pages
-        #(r'/scoreboard(.*)'
+        #(r'/scoreboard(.*)', ScoreboardGraphHandler, {'dbsession': dbsession}),
         
         # Admin Handlers - Administration pages
-        #r('/admin/create_boxes(.*)
+        (r'/admin(.*)', AdminHomeHandler, {'dbsession':dbsession}),
         
         # Root handler - Serves all public pages
         (r'/login(.*)', LoginHandler),
@@ -49,9 +50,17 @@ application = Application([
         
         # Error handlers - Serves error pages
         (r'/403(.*)', UnauthorizedHandler),
+        (r'/(.*).php', PhpHandler),
         (r'/(.*)', NotFoundHandler)
     ],
+                          
+    # randomly generated secret key
     cookie_secret = b64encode(urandom(64)),
+    
+    # ip addresses that access the admin interface
+    admin_ips = ['127.0.0.1'],
+    
+    # template directory
     template_path ='templates',
     
     # request that does not pass @authorized will be redirected here
