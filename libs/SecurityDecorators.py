@@ -28,7 +28,7 @@ def authenticated(method):
 def authorized(permission):
     """ Checks user's permissions """
     
-    def check_auth(method):
+    def func(method):
         @functools.wraps(method)
         def wrapper(self, *args, **kwargs):
             sid = self.get_secure_cookie('auth')
@@ -39,3 +39,4 @@ def authorized(permission):
                     return method(*args, **kwargs)
             self.redirect(self.application.settings['forbidden_url'])
         return wrapper
+    return func
