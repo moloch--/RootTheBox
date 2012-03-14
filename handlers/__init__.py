@@ -29,14 +29,7 @@ application = Application([
         
         # User Handlers - Serves user related pages
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
-<<<<<<< Updated upstream
-        (r'/user/team(.*)', TeamHandler, {'dbsession': dbsession}),
-        (r'/user/boxes(.*)', BoxesHandler, {'dbsession': dbsession}),
-        (r'/user/scoreboard(.*)', ScoreBoardHandler, {'dbsession': dbsession}),
-
-=======
         (r'/user/logout(.*)', LogoutHandler),
->>>>>>> Stashed changes
         (r'/user(.*)', HomeHandler, {'dbsession': dbsession}),
         
         # Box Handlers - Serves box related pages
