@@ -14,7 +14,7 @@ def authenticated(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         auth = loads(self.get_secure_cookie('auth') or '""')
-        if User.by_user_name(auth['name']):
+        if User.by_user_name(auth['name']) != None:
             pass
         else:
             self.redirect(self.application.settings['login_url'])

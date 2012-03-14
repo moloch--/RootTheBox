@@ -40,15 +40,6 @@ application = Application([
         
         # Admin Handlers - Administration pages
         #r('/admin/create_boxes(.*)
-<<<<<<< Updated upstream
-        #r('/admin/users(.*)
-        #r('/admin/create_teams(.*)
-        #r('/admin(.*)', 
-=======
-        #r('/admin/create_users(.*)
-        #r('/admin/create_teams(.*)
-        #r('/admin(.*)
->>>>>>> Stashed changes
         
         # Root handler - Serves all public pages
         (r'/login(.*)', LoginHandler),

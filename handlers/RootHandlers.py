@@ -33,7 +33,7 @@ class LoginHandler(RequestHandler):
             logging.info("Successful login: %s" % user.user_name)
             self.set_secure_cookie('auth', dumps({
                     'id': user.id,
-                    'name': user.display_name,
+                    'name': user.user_name,
                 })
             )
             self.redirect('/user')
