@@ -29,9 +29,9 @@ class Box(BaseObject):
     @classmethod
     def by_box_name(cls, box_name):
         """Return the box object whose name is ``box_name``."""
-        return dbsession.query(cls).filter_by(box_name=box_name).first() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(box_name=unicode(box_name)).first() #@UndefinedVariable
     
     @classmethod
     def by_ip_address(cls, ip_address):
         """Return the box object whose name is ``box_name``."""
-        return dbsession.query(cls).filter_by(ip_address=ip_address).first() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(ip_address=unicode(ip_address)).first() #@UndefinedVariable

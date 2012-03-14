@@ -30,7 +30,7 @@ class Team(BaseObject):
     @classmethod
     def by_team_name(cls, team_name):
         """ Return the user object whose group name is ``team_name`` """
-        return dbsession.query(cls).filter_by(team_name=team_name).first() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(team_name=unicode(team_name)).first() #@UndefinedVariable
     
     @property
     def crack_me(self):
@@ -39,14 +39,15 @@ class Team(BaseObject):
     
     def give_control(self, box_name):
         box = Box.by_box_name(unicode(box_name))
-        if not self.is_controlling(box):
+        if not self.is_controlling(box.box_name):
             self.controlled_boxes.append(box)
     
     def lost_control(self, box_name):
-        self.controlled_boxes.remove(Box.by_box_name(unicode(box_name)))
+        if self.is_controlling(Box.by_box_name(box_name)):
+            self.controlled_boxes.remove(Box.by_box_name(box_name))
     
     def is_controlling(self, box_name):
-        return Box.by_box_name(unicode(box_name)) in self.controlled_boxes
+        return Box.by_box_name(box_name) in self.controlled_boxes
     
     def solved_crack_me(self):
         self.crack_me_id += 1

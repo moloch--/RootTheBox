@@ -156,15 +156,15 @@ class TestAction():
 class TestTeam():
     
     def setUp(self):
-        if User.by_user_name(unicode("tester")) == None:
+        if User.by_user_name("tester") == None:
             createUser()
-        if Team.by_team_name(unicode("The A Team")) == None:
+        if Team.by_team_name("The A Team") == None:
             createTeam()
-        team = Team.by_team_name(unicode("The A Team"))
-        if User.by_user_name(unicode('john')) == None:
-            createUser('john', 'johnyboy', team.id)
-        user = User.by_user_name(unicode('john'))
-        user.team_id = team.id
+        self.team = Team.by_team_name("The A Team")
+        if User.by_user_name('john') == None:
+            createUser('john', 'johnyboy', self.team.id)
+        user = User.by_user_name('john')
+        user.team_id = self.team.id
         dbsession.add(user) #@UndefinedVariable
         dbsession.flush() #@UndefinedVariable
         createAction()
@@ -180,8 +180,18 @@ class TestTeam():
             dbsession.flush() #@UndefinedVariable
     
     def test_team_members(self):
-        team = Team.by_team_name(unicode("The A Team"))
+        team = Team.by_team_name("The A Team")
         assert len(team.members) == 2
+        
+    def test_give_control(self):
+        self.team.give_control("The Gibson")
+        assert self.team.is_controlling("The Gibson")
+    
+    def test_lost_control(self):
+        self.team.give_control("The Gibson")
+        assert self.team.is_controlling("The Gibson")
+        self.team.lost_control("The Gibson")
+        assert not self.team.is_controlling("The Gibson")
 
 # ------[ Crack Me Test Class ] -------------------------------------
 class TestCrackMe():
@@ -217,16 +227,6 @@ class TestCrackMe():
         assert self.team.crack_me != None
         self.team.solved_crack_me()
         assert self.team.crack_me == None
-    
-    def test_give_control(self):
-        self.team.give_control(unicode("The Gibson"))
-        assert self.team.is_controlling(unicode("The Gibson"))
-    
-    def test_lost_control(self):
-        self.team.give_control("The Gibson")
-        assert self.team.is_controlling("The Gibson")
-        self.team.lost_control("The Gibson")
-        assert not self.team.is_controlling("The Gibson")
 
 # ------[ Permission Test Class ] -------------------------------------
 class TestPermission():
