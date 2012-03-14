@@ -55,12 +55,12 @@ def createAction():
 
 def createCrackMe(name = 'Enigma', fname = 'a.exe', fuuid = '1234', toke = 'asdf'):
     crack_me = CrackMe(
-        crackme_name = name,
-        description = 'German encryption machine',
+        crack_me_name = unicode(name),
+        description = unicode('German encryption machine'),
         value = 100,
-        file_name = fname,
-        file_uuid = fuuid,
-        token = toke
+        file_name = unicode(fname),
+        file_uuid = unicode(fuuid),
+        token = unicode(toke)
     )
     dbsession.add(crack_me)
     dbsession.flush()
@@ -161,9 +161,10 @@ class TestTeam():
         if Team.by_team_name(unicode("The A Team")) == None:
             createTeam()
         team = Team.by_team_name(unicode("The A Team"))
-        user = User.by_user_name(unicode("tester"))
         if User.by_user_name(unicode('john')) == None:
             createUser('john', 'johnyboy', team.id)
+        user = User.by_user_name(unicode('john'))
+        user.team_id = team.id
         dbsession.add(user) #@UndefinedVariable
         dbsession.flush() #@UndefinedVariable
         createAction()
@@ -194,6 +195,8 @@ class TestCrackMe():
             crack_me = createCrackMe()
         else:
             crack_me = CrackMe.by_id(1)
+        if CrackMe.by_id(2) == None:
+            crack_me = createCrackMe(name="Cipher", fname = 'b.exe', fuuid = '4321', toke = 'fdsa' )
         self.team = Team.by_team_name(unicode("The A Team"))
         self.team.crack_me_id = crack_me.id
     
@@ -210,7 +213,11 @@ class TestCrackMe():
         assert self.team.crack_me != None
     
     def test_next_crack_me(self):
-        pass
+        self.team.solved_crack_me()
+        assert self.team.crack_me != None
+        self.team.solved_crack_me()
+        assert self.team.crack_me == None
+        
     
 # ------[ Permission Test Class ] -------------------------------------
 class TestPermission():

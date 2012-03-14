@@ -36,7 +36,7 @@ class Team(BaseObject):
         ''' Returns the current crack me '''
         return dbsession.query(CrackMe).filter_by(id=self.crack_me_id).first() #@UndefinedVariable
     
-    def next_crack_me(self):
+    def solved_crack_me(self):
         self.crack_me_id += 1
         
     def __repr__(self):

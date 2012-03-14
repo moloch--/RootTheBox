@@ -13,7 +13,7 @@ from models.BaseGameObject import BaseObject
 
 class CrackMe(BaseObject):
     
-    crackme_name = Column(Unicode(64), unique=True, nullable=False)
+    crack_me_name = Column(Unicode(64), unique=True, nullable=False)
     description = Column(Unicode(1024))
     value = Column(Integer, nullable=False)
     file_name = Column(Unicode(64), unique=True, nullable=False)
