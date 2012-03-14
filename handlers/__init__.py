@@ -12,6 +12,7 @@ from tornado.web import StaticFileHandler #@UnresolvedImport
 # import your handlers and set the application routes and configuration
 from handlers.RootHandlers import *
 from handlers.UserHandlers import *
+from handlers.ReporterHandlers import *
 from models import dbsession
 
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
@@ -19,6 +20,10 @@ logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=lo
 application = Application([
         # Static Handler - Serves static CSS, JavaScript and image files
         (r'/static/(.*)', StaticFileHandler, {'path': 'static'}),
+        
+        # Reporter Handlers - Communication with reporters
+        (r'/reporter/register(.*)', ReporterRegistrationHandler, {}),
+        #(r'/reporter(.*)
         
         # User Handlers - Serves user related pages
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
@@ -38,7 +43,10 @@ application = Application([
         (r'/login(.*)', LoginHandler),
         (r'/registration(.*)', UserRegistraionHandler, {'dbsession': dbsession}),
         (r'/about(.*)', AboutHandler),
-        (r'/(.*)', WelcomeHandler)
+        (r'/', WelcomeHandler),
+        
+        # 404 - Catch all handler
+        (r'/(.*)', NotFoundHandler)
     ],
     cookie_secret = urandom(64),
     template_path ='templates',

@@ -4,11 +4,16 @@ Created on Mar 12, 2012
 @author: moloch
 '''
 
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
 from models.BaseGameObject import BaseObject
+
+association_table = Table('team_to_box', BaseObject.metadata,
+    Column('team_id', Integer, ForeignKey('team.id')),
+    Column('box_id', Integer, ForeignKey('box.id'))
+)
 
 class Team(BaseObject):
     """ Team definition """
@@ -18,6 +23,7 @@ class Team(BaseObject):
     score = Column(Integer, default=0)
     members = relationship("User", backref="Team")
     crack_me_id = Column(Integer, ForeignKey("crack_me.id"), default=1)
+    controlled_boxes = relationship("Box", secondary=association_table, backref="Team")
     
     @classmethod
     def by_team_name(cls, team_name):

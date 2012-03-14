@@ -5,26 +5,35 @@ Created on Mar 13, 2012
 '''
 import logging
 
+from json import dumps
 from hashlib import md5
 from models.User import User
 from tornado.web import RequestHandler #@UnresolvedImport
-from tornado.web import asynchronous #@UnresolvedImport
 
 class LoginHandler(RequestHandler):
 
-    @asynchronous
     def get(self, *args, **kwargs):
         ''' Display the login page '''
         self.render('login.html', header='User authentication required')
     
-    @asynchronous
     def post(self, *args, **kwargs):
         ''' Checks submitted user_name and password '''
-        user_name = self.get_argument('username')
-        user = User.by_user_name(user_name)
-        password = self.get_argument('password')
+        try:
+            user_name = self.get_argument('username')
+            user = User.by_user_name(user_name)
+        except:
+            self.render('login.html', header="Type in an account name")
+        try:
+            password = self.get_argument('password')
+        except:
+            self.render('login.html', header="Type in a password")
         if user != None and user.password == self.hashPassword(password):
             logging.info("Successful login: %s" % user.user_name)
+            self.set_secure_cookie('auth', dumps({
+                    'id': user.id,
+                    'name': user.display_name,
+                })
+            )
             self.redirect('/user')
         else:
             self.render('login.html', header="Failed login attempt, try again")
@@ -39,12 +48,10 @@ class UserRegistraionHandler(RequestHandler):
     def initialize(self, dbsession):
         self.dbsession = dbsession
     
-    @asynchronous
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''
         self.render("registration.html", errors='Please fill out the form below')
     
-    @asynchronous
     def post(self, *args, **kwargs):
         ''' Attempts to create an account '''
         # Check user_name parameter
@@ -85,19 +92,23 @@ class UserRegistraionHandler(RequestHandler):
             )
             self.dbsession.add(user)
             self.dbsession.flush()
-            self.redirect('/login')
+        self.redirect('/login')
     
 class AboutHandler(RequestHandler):
 
-    @asynchronous
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render('about.html')
         
-
 class WelcomeHandler(RequestHandler):
 
-    @asynchronous
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
-        self.render('welcome.html')
+        self.render("welcome.html")
+        
+class NotFoundHandler(RequestHandler):
+
+    def get(self, *args, **kwargs):
+        ''' Renders the 404 page '''
+        self.render("404.html")
+        
