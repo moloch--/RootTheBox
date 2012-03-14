@@ -15,11 +15,7 @@ class HomeHandler(RequestHandler):
     @authenticated
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
-<<<<<<< Updated upstream
         self.render('user/user.html', header='User Page')
-=======
-        self.render('user.html', header='User Page')
->>>>>>> Stashed changes
 
 class SettingsHandler(RequestHandler):
     
