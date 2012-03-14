@@ -5,8 +5,11 @@ Created on Mar 13, 2012
 '''
 import logging
 
-from json import dumps
+from os import urandom
+from base64 import b64encode
 from models.User import User
+from libs import sessions
+from libs.Session import Session
 from tornado.web import RequestHandler #@UnresolvedImport
 
 class LoginHandler(RequestHandler):
@@ -28,14 +31,12 @@ class LoginHandler(RequestHandler):
         except:
             self.render('public/login.html', header="Type in a password")
 
-
         if user != None and user.validate_password(password):
             logging.info("Successful login: %s" % user.user_name)
-            self.set_secure_cookie('auth', dumps({
-                    'id': user.id,
-                    'user_name': user.user_name,
-                })
-            )
+            sid = b64encode(urandom(24))
+            self.set_secure_cookie(name='auth', value=sid, expires_days=1)
+            sessions[sid] = Session()
+            sessions[sid].data['user_name'] = str(user.user_name)
             self.redirect('/user')
         else:
             self.render('public/login.html', header="Failed login attempt, try again")

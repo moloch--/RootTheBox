@@ -60,8 +60,6 @@ application = Application([
     # requests that does not pass @authenticated  will be redirected here
     login_url = '/login',
     
-    # integer, in minutes, for how long until the session expires
-    session_expire = 20,
     # debug mode uses torando.autoreload module to reload the app on modules/templates
     # change and print out errors as response. delete or set to False for production
     debug = True,

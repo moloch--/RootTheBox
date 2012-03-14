@@ -5,7 +5,8 @@ Created on Mar 13, 2012
 '''
 
 import functools
-from json import loads
+import datetime
+from libs import sessions
 from models.User import User
 
 def authenticated(method):
@@ -13,19 +14,28 @@ def authenticated(method):
     
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        auth = loads(self.get_secure_cookie('auth') or '""')
-        print 'Got:', auth
-        if User.by_user_name(auth['user_name']) != None:
-            return method(self, *args, **kwargs)
-        else:
-            self.redirect(self.application.settings['login_url'])
+        sid = self.get_secure_cookie('auth')
+        if sid != None:
+            session = sessions[sid]
+            if not datetime.timedelta(0) < (session.expiration - datetime.datetime.now()):
+                del self.application.sessions[sid]
+                self.redirect(self.application.settings['login_url'])
+            if User.by_user_name(session.data['user_name']) != None:
+                return method(self, *args, **kwargs)
+        self.redirect(self.application.settings['login_url'])
     return wrapper
 
-
-def authorized(method):
+def authorized(permission):
     """ Checks user's permissions """
     
-    @functools.wraps(method)
-    def wrapper(self, *args, **kwargs):
-        self.redirect(self.application.settings['forbidden_url'])
-    return wrapper
+    def check_auth(method):
+        @functools.wraps(method)
+        def wrapper(self, *args, **kwargs):
+            sid = self.get_secure_cookie('auth')
+            if sid != None:
+                session = sessions[sid]
+                user = User.by_user_name(session.data['user_name'])
+                if user != None and user.has_permission(permission):
+                    return method(*args, **kwargs)
+            self.redirect(self.application.settings['forbidden_url'])
+        return wrapper
