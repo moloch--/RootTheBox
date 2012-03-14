@@ -23,6 +23,7 @@ class LoginHandler(RequestHandler):
             user = User.by_user_name(user_name)
         except:
             self.render('login.html', header="Type in an account name")
+        
         try:
             password = self.get_argument('password')
         except:
@@ -105,10 +106,3 @@ class WelcomeHandler(RequestHandler):
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render("welcome.html")
-        
-class NotFoundHandler(RequestHandler):
-
-    def get(self, *args, **kwargs):
-        ''' Renders the 404 page '''
-        self.render("404.html")
-        

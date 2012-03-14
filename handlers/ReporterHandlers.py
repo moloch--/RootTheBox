@@ -12,10 +12,10 @@ class ReporterRegistrationHandler(RequestHandler):
     def initialize(self, dbsession):
         self.dbsession = dbsession
     
-    @asynchronous
     def get(self):
-        pass
+        self.render("404.html")
     
     @asynchronous
     def post(self):
-        pass
+        self.write("Hello World")
+        self.finish()

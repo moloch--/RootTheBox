@@ -70,63 +70,66 @@ def createCrackMe(name = 'Enigma', fname = 'a.exe', fuuid = '1234', toke = 'asdf
 class TestUser():
     
     def setUp(self):
-        if User.by_user_name(unicode("tester")) == None:
+        if User.by_user_name("tester") == None:
             createUser()
-        if Team.by_team_name(unicode("The A Team")) == None:
+        if Team.by_team_name("The A Team") == None:
             createTeam()
     
     def tearDown(self):
         if DROP:
-            user = User.by_user_name(unicode('tester'))
-            team = Team.by_team_name(unicode('The A Team'))
+            user = User.by_user_name('tester')
+            team = Team.by_team_name('The A Team')
             dbsession.delete(user) #@UndefinedVariable
             dbsession.delete(team) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
     
     def test_by_user_name(self):
-        user = User.by_user_name(unicode('tester'))
+        user = User.by_user_name('tester')
         assert not user == None
         hashTest = md5()
         hashTest.update(unicode('asdf'))
         assert user.password ==  hashTest.hexdigest()
         
     def test_by_team_name(self):
-        team = Team.by_team_name(unicode("The A Team"))
+        team = Team.by_team_name("The A Team")
         assert not team == None
 
     def test_add_user_to_team(self):
-        user = User.by_user_name(unicode("tester"))
+        user = User.by_user_name("tester")
         user.add_to_team("The A Team")
         
     def test_user_team_name(self):
-        user = User.by_user_name(unicode("tester"))
+        user = User.by_user_name("tester")
         assert user != None
         self.test_add_user_to_team()
         assert user.team_name == unicode("The A Team")
+    
+    def test_14(self):
+        assert True
          
 # ------[ Box Test Class ] -------------------------------------
 class TestBox():
     
     def setUp(self):
-        if Box.by_box_name(unicode("The Gibson")) == None:
+        if Box.by_box_name("The Gibson") == None:
             createBox()
     
     def tearDown(self):
         if DROP:
-            box = Box.by_box_name(unicode("The Gibson"))
+            box = Box.by_box_name("The Gibson")
             dbsession.delete(box) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
     
     def test_by_box_name(self):
-        box = Box.by_box_name(unicode('The Gibson'))
+        box = Box.by_box_name('The Gibson')
         assert box.ip_address == unicode('127.0.0.1')
-        box2 = Box.by_ip_address(unicode(''))
+        box2 = Box.by_ip_address('')
         assert box2 == None
     
     def test_by_ip_address(self):
-        box = Box.by_ip_address(unicode('127.0.0.1'))
+        box = Box.by_ip_address('127.0.0.1')
         assert box.box_name == unicode('The Gibson')
-        box2 = Box.by_ip_address(unicode(''))
+        box2 = Box.by_ip_address('')
         assert box2 == None
 
 # ------[ Action Test Class ] -------------------------------------
@@ -197,9 +200,9 @@ class TestTeam():
 class TestCrackMe():
     
     def setUp(self):
-        if User.by_user_name(unicode("tester")) == None:
+        if User.by_user_name("tester") == None:
             createUser()
-        if Team.by_team_name(unicode("The A Team")) == None:
+        if Team.by_team_name("The A Team") == None:
             createTeam()
         if CrackMe.by_id(1) == None:
             crack_me = createCrackMe()
@@ -207,15 +210,15 @@ class TestCrackMe():
             crack_me = CrackMe.by_id(1)
         if CrackMe.by_id(2) == None:
             crack_me = createCrackMe(name="Cipher", fname = 'b.exe', fuuid = '4321', toke = 'fdsa' )
-        self.team = Team.by_team_name(unicode("The A Team"))
+        self.team = Team.by_team_name("The A Team")
         self.team.crack_me_id = crack_me.id
     
     def tearDown(self):
         if DROP:
-            user = User.by_user_name(unicode('tester'))
+            user = User.by_user_name('tester')
             dbsession.delete(user) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
-            team = Team.by_team_name(unicode("The A Team"))
+            team = Team.by_team_name("The A Team")
             dbsession.delete(team) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
     
@@ -232,19 +235,19 @@ class TestCrackMe():
 class TestPermission():
     
     def setUp(self):
-        if User.by_user_name(unicode("tester")) == None:
+        if User.by_user_name("tester") == None:
             createUser()
-        if User.by_user_name(unicode('john')) == None:
+        if User.by_user_name('john') == None:
             createUser('john', 'johnyboy')
 
     def teadDown(self):
         if DROP:
-            user = User.by_user_name(unicode('tester'))
+            user = User.by_user_name('tester')
             dbsession.delete(user) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
 
     def test_has_permission(self):
-        user = User.by_user_name(unicode("tester"))
+        user = User.by_user_name("tester")
         permission = Permission(
             permission_name = unicode('admin'),
             user_id = user.id
@@ -252,5 +255,5 @@ class TestPermission():
         dbsession.add(permission) #@UndefinedVariable
         dbsession.flush() #@UndefinedVariable
         assert user.has_permission('admin')
-        user = User.by_user_name(unicode("john"))
+        user = User.by_user_name("john")
         assert not user.has_permission('admin')
