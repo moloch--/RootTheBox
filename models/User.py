@@ -10,6 +10,7 @@ from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, Boolean
 from models import dbsession
 from models.Team import Team
+from models.Permission import Permission
 from models.BaseGameObject import BaseObject
 
 class User(BaseObject):
@@ -86,22 +87,33 @@ class User(BaseObject):
         if isinstance(password, unicode): 
             password = password.encode('utf-8')
         if cls.user_name == 'admin':
-            shaHash = sha256()
-            shaHash.update(password)
-            shaHash.update(password + shaHash.hexdigest())
-            password = shaHash.hexdigest()
+            password = cls.adminHash(password)
         else:
-            md5Hash = md5()
-            md5Hash.update(password)
-            password = md5Hash.hexdigest()
-        if not isinstance(password, unicode): 
-            password = password.decode('utf-8')
+            password = cls.userHash(password)
         return password
 
+    @classmethod
+    def userHash(cls, preimage):
+        ''' Single round md5 '''
+        md5Hash = md5()
+        md5Hash.update(preimage)
+        return unicode(md5Hash.hexdigest())
+    
+    @classmethod
+    def adminHash(cls, preimage):
+        ''' Two rounds of sha256, no salt '''
+        shaHash = sha256()
+        shaHash.update(preimage)
+        shaHash.update(preimage + shaHash.hexdigest())
+        return unicode(shaHash.hexdigest())
+    
     def validate_password(self, password):
         """ Check the password against existing credentials """
-        input_hash = md5()
-        if isinstance(password, unicode): 
-            password = password.encode('utf-8')
-        input_hash.update(password)
-        return self.password == input_hash.hexdigest()
+        if self.user_name == 'admin':
+            pass
+        else:
+            input_hash = md5()
+            if isinstance(password, unicode): 
+                password = password.encode('utf-8')
+            input_hash.update(password)
+            return self.password == input_hash.hexdigest()

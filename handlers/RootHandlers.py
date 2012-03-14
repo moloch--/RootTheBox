@@ -27,7 +27,7 @@ class LoginHandler(RequestHandler):
             password = self.get_argument('password')
         except:
             self.render('login.html', header="Type in a password")
-        if user != None and user.password == self.hashPassword(password):
+        if user.validate_password(password):
             logging.info("Successful login: %s" % user.user_name)
             self.set_secure_cookie('auth', dumps({
                     'id': user.id,

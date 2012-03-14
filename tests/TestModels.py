@@ -5,7 +5,7 @@ Created on Mar 12, 2012
 '''
 
 from hashlib import md5
-from models import dbsession, User, Team, Box, Action
+from models import dbsession, User, Team, Box, Action, Permission
 
 DROP = False
 
@@ -188,3 +188,26 @@ class TestCrackMe():
             dbsession.delete(team) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
 
+# ------[ Permission Test Class ] -------------------------------------
+
+class TestPermission():
+    
+    def setUp(self):
+        if User.by_user_name(unicode("tester")) == None:
+            createUser()
+
+    def teadDown(self):
+        if DROP:
+            user = User.by_user_name(unicode('tester'))
+            dbsession.delete(user) #@UndefinedVariable
+            dbsession.flush() #@UndefinedVariable
+
+    def test_give_permission(self):
+        user = User.by_user_name(unicode("tester"))
+        permission = Permission(
+            permission_name = unicode('admin'),
+            user_id = user.id
+        )
+        dbsession.add(permission) #@UndefinedVariable
+        dbsession.flush() #@UndefinedVariable
+        assert user.has_permission('admin')
