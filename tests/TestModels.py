@@ -217,8 +217,17 @@ class TestCrackMe():
         assert self.team.crack_me != None
         self.team.solved_crack_me()
         assert self.team.crack_me == None
-        
     
+    def test_give_control(self):
+        self.team.give_control(unicode("The Gibson"))
+        assert self.team.is_controlling(unicode("The Gibson"))
+    
+    def test_lost_control(self):
+        self.team.give_control("The Gibson")
+        assert self.team.is_controlling("The Gibson")
+        self.team.lost_control("The Gibson")
+        assert not self.team.is_controlling("The Gibson")
+
 # ------[ Permission Test Class ] -------------------------------------
 class TestPermission():
     

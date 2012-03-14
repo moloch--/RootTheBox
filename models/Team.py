@@ -9,11 +9,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
 from models.CrackMe import CrackMe
+from models.Box import Box
 from models.BaseGameObject import BaseObject
 
-association_table = Table('team_to_box', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id')),
-    Column('box_id', Integer, ForeignKey('box.id'))
+association_table = Table('team_has_box', BaseObject.metadata,
+    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+    Column('box_id', Integer, ForeignKey('box.id'), nullable=False)
 )
 
 class Team(BaseObject):
@@ -35,6 +36,17 @@ class Team(BaseObject):
     def crack_me(self):
         ''' Returns the current crack me '''
         return dbsession.query(CrackMe).filter_by(id=self.crack_me_id).first() #@UndefinedVariable
+    
+    def give_control(self, box_name):
+        box = Box.by_box_name(unicode(box_name))
+        if not self.is_controlling(box):
+            self.controlled_boxes.append(box)
+    
+    def lost_control(self, box_name):
+        self.controlled_boxes.remove(Box.by_box_name(unicode(box_name)))
+    
+    def is_controlling(self, box_name):
+        return Box.by_box_name(unicode(box_name)) in self.controlled_boxes
     
     def solved_crack_me(self):
         self.crack_me_id += 1

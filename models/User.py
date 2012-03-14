@@ -69,12 +69,12 @@ class User(BaseObject):
     @classmethod
     def by_user_name(cls, user_name):
         """ Return the user object whose user name is ``user_name`` """
-        return dbsession.query(cls).filter_by(user_name=user_name).first() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(user_name=unicode(user_name)).first() #@UndefinedVariable
     
     @classmethod
     def by_display_name(cls, display_name):
         """ Return the user object whose user name is ``display_name`` """
-        return dbsession.query(cls).filter_by(display_name=display_name).first() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(display_name=unicode(display_name)).first() #@UndefinedVariable
     
     @classmethod
     def add_to_team(cls, team_name):
@@ -107,13 +107,9 @@ class User(BaseObject):
         shaHash.update(preimage + shaHash.hexdigest())
         return unicode(shaHash.hexdigest())
     
-    def validate_password(self, password):
+    def validate_password(self, attempt):
         """ Check the password against existing credentials """
-        if self.user_name == 'admin':
-            pass
+        if self.has_permission('admin'):
+            return self.password == self.adminHash(unicode(attempt))
         else:
-            input_hash = md5()
-            if isinstance(password, unicode): 
-                password = password.encode('utf-8')
-            input_hash.update(password)
-            return self.password == input_hash.hexdigest()
+            return self.password == self.userHash(unicode(attempt))
