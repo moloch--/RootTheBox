@@ -10,10 +10,10 @@ class NotFoundHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the 404 page '''
-        self.render("404.html")
+        self.render("public/404.html")
         
 class UnauthorizedHandler(RequestHandler):
     
     def get(self, *args, **kwargs):
         ''' Renders the 403 page '''
-        self.render("403.html")
+        self.render("public/403.html")

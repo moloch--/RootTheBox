@@ -13,7 +13,7 @@ class ReporterRegistrationHandler(RequestHandler):
         self.dbsession = dbsession
     
     def get(self):
-        self.render("404.html")
+        self.render("public/404.html")
     
     @asynchronous
     def post(self):

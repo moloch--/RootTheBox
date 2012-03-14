@@ -13,4 +13,4 @@ class BoxesViewHandler(RequestHandler):
         self.dbsession = dbsession
         
     def get(self, *args, **kwargs):
-        self.render("boxes_view.html", boxes = Box.get_all())
+        self.render("boxes/boxes_view.html", boxes = Box.get_all())

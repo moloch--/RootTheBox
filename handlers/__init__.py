@@ -39,10 +39,10 @@ application = Application([
         #(r'/scoreboard(.*)'
         
         # Admin Handlers - Administration pages
-        #r('/admin/boxes(.*)
+        #r('/admin/create_boxes(.*)
         #r('/admin/users(.*)
-        #r('/admin/teams(.*)
-        #r('/admin(.*)
+        #r('/admin/create_teams(.*)
+        #r('/admin(.*)', 
         
         # Root handler - Serves all public pages
         (r'/login(.*)', LoginHandler),
