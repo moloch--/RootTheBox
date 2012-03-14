@@ -5,15 +5,19 @@ Created on Mar 13, 2012
 '''
 
 import functools
+from json import loads
+from models.User import User
 
 def authenticated(method):
     ''' Checks to see if a user has authenticated '''
     
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        self.get_secure_cookie('auth')
-        
-        self.redirect(self.application.settings['login_url'])
+        auth = loads(self.get_secure_cookie('auth') or '""')
+        if User.by_user_name(auth['name']):
+            pass
+        else:
+            self.redirect(self.application.settings['login_url'])
     return wrapper
 
 

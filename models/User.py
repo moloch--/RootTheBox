@@ -109,7 +109,9 @@ class User(BaseObject):
     
     def validate_password(self, attempt):
         """ Check the password against existing credentials """
+        if isinstance(attempt, unicode):
+            attempt = attempt.encode('utf-8')
         if self.has_permission('admin'):
-            return self.password == self.adminHash(unicode(attempt))
+            return self.password == self.adminHash(attempt)
         else:
             return self.password == self.userHash(unicode(attempt))

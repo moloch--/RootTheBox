@@ -40,9 +40,15 @@ application = Application([
         
         # Admin Handlers - Administration pages
         #r('/admin/create_boxes(.*)
+<<<<<<< Updated upstream
         #r('/admin/users(.*)
         #r('/admin/create_teams(.*)
         #r('/admin(.*)', 
+=======
+        #r('/admin/create_users(.*)
+        #r('/admin/create_teams(.*)
+        #r('/admin(.*)
+>>>>>>> Stashed changes
         
         # Root handler - Serves all public pages
         (r'/login(.*)', LoginHandler),
@@ -71,7 +77,7 @@ application = Application([
     version = '0.1'
 )
 # the port. doh
-application.listen(23879)
+application.listen(8888)
 
 # calling this will start the IOLoop. open your browser and enjoy.
 __serve__ = lambda: IOLoop.instance().start()

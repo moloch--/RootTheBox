@@ -6,7 +6,6 @@ Created on Mar 13, 2012
 import logging
 
 from json import dumps
-from hashlib import md5
 from models.User import User
 from tornado.web import RequestHandler #@UnresolvedImport
 
@@ -27,8 +26,14 @@ class LoginHandler(RequestHandler):
         try:
             password = self.get_argument('password')
         except:
+<<<<<<< Updated upstream
             self.render('public/login.html', header="Type in a password")
         if user.validate_password(password):
+=======
+            self.render('login.html', header="Type in a password")
+
+        if user != None and user.validate_password(password):
+>>>>>>> Stashed changes
             logging.info("Successful login: %s" % user.user_name)
             self.set_secure_cookie('auth', dumps({
                     'id': user.id,
@@ -37,12 +42,17 @@ class LoginHandler(RequestHandler):
             )
             self.redirect('/user')
         else:
+<<<<<<< Updated upstream
             self.render('public/login.html', header="Failed login attempt, try again")
     
     def hashPassword(self, preimage):
         inputHash = md5()
         inputHash.update(preimage)
         return unicode(inputHash.hexdigest())
+=======
+            logging.info("failed login")
+            self.render('login.html', header="Failed login attempt, try again")
+>>>>>>> Stashed changes
 
 class UserRegistraionHandler(RequestHandler):
     
