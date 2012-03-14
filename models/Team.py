@@ -8,6 +8,7 @@ from sqlalchemy import Column, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
+from models.CrackMe import CrackMe
 from models.BaseGameObject import BaseObject
 
 association_table = Table('team_to_box', BaseObject.metadata,
@@ -29,7 +30,12 @@ class Team(BaseObject):
     def by_team_name(cls, team_name):
         """ Return the user object whose group name is ``team_name`` """
         return dbsession.query(cls).filter_by(team_name=team_name).first() #@UndefinedVariable
-
+    
+    @property
+    def crack_me(self):
+        ''' Returns the current crack me '''
+        return dbsession.query(CrackMe).filter_by(id=self.crack_me_id).first() #@UndefinedVariable
+    
     def next_crack_me(self):
         self.crack_me_id += 1
         

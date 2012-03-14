@@ -5,7 +5,7 @@ Created on Mar 12, 2012
 '''
 
 from hashlib import md5
-from models import dbsession, User, Team, Box, Action, Permission
+from models import * #@UnusedWildImport
 
 DROP = False
 
@@ -52,6 +52,19 @@ def createAction():
     )
     dbsession.add(action) #@UndefinedVariable
     dbsession.flush() #@UndefinedVariable   
+
+def createCrackMe(name = 'Enigma', fname = 'a.exe', fuuid = '1234', toke = 'asdf'):
+    crack_me = CrackMe(
+        crackme_name = name,
+        description = 'German encryption machine',
+        value = 100,
+        file_name = fname,
+        file_uuid = fuuid,
+        token = toke
+    )
+    dbsession.add(crack_me)
+    dbsession.flush()
+    return crack_me
 
 # ------[ User Test Class ] -------------------------------------
 class TestUser():
@@ -170,7 +183,6 @@ class TestTeam():
         assert len(team.members) == 2
 
 # ------[ Crack Me Test Class ] -------------------------------------
-
 class TestCrackMe():
     
     def setUp(self):
@@ -178,6 +190,12 @@ class TestCrackMe():
             createUser()
         if Team.by_team_name(unicode("The A Team")) == None:
             createTeam()
+        if CrackMe.by_id(1) == None:
+            crack_me = createCrackMe()
+        else:
+            crack_me = CrackMe.by_id(1)
+        self.team = Team.by_team_name(unicode("The A Team"))
+        self.team.crack_me_id = crack_me.id
     
     def tearDown(self):
         if DROP:
@@ -187,14 +205,21 @@ class TestCrackMe():
             team = Team.by_team_name(unicode("The A Team"))
             dbsession.delete(team) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
-
+    
+    def test_crack_me(self):
+        assert self.team.crack_me != None
+    
+    def test_next_crack_me(self):
+        pass
+    
 # ------[ Permission Test Class ] -------------------------------------
-
 class TestPermission():
     
     def setUp(self):
         if User.by_user_name(unicode("tester")) == None:
             createUser()
+        if User.by_user_name(unicode('john')) == None:
+            createUser('john', 'johnyboy')
 
     def teadDown(self):
         if DROP:
@@ -202,7 +227,7 @@ class TestPermission():
             dbsession.delete(user) #@UndefinedVariable
             dbsession.flush() #@UndefinedVariable
 
-    def test_give_permission(self):
+    def test_has_permission(self):
         user = User.by_user_name(unicode("tester"))
         permission = Permission(
             permission_name = unicode('admin'),
@@ -211,3 +236,5 @@ class TestPermission():
         dbsession.add(permission) #@UndefinedVariable
         dbsession.flush() #@UndefinedVariable
         assert user.has_permission('admin')
+        user = User.by_user_name(unicode("john"))
+        assert not user.has_permission('admin')
