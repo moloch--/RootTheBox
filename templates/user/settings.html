@@ -5,9 +5,10 @@
 {% block content %}
 <h1>Settings</h1>
 <br />
-<form action="/user/settings" method="post">
+<h2>Upload Avatar</h2>
+<form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
 {% raw xsrf_form_html() %}
-	
+	<label>Avatar File (.jpgs only):</label><input type="file" name="avatar" /> <br /> <br />
 	<input type="submit" value=" Save Changes" />
 </form>
 {% end %}

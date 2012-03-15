@@ -23,6 +23,7 @@ class User(BaseObject):
     score_cache = Column(Integer)
     actions = relationship("Action", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
+    avatar = Column(Unicode(64), default=unicode("default_avatar.gif"))
     
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(

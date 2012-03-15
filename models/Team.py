@@ -21,7 +21,7 @@ class Team(BaseObject):
     members = relationship("User", backref="Team")
     crack_me_id = Column(Integer, ForeignKey("crack_me.id"), default=1)
     controlled_boxes = relationship("Box", secondary=association_table, backref="Team")
-    files = relationship("File", backref=backref("Team", lazy="dynamic"))
+    files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
     
     @classmethod
     def by_team_name(cls, team_name):

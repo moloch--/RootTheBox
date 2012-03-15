@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from os import urandom
+from os import urandom, path
 from base64 import b64encode
 from tornado.ioloop import IOLoop #@UnresolvedImport
 from tornado.web import Application #@UnresolvedImport
@@ -23,6 +23,7 @@ logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=lo
 application = Application([
         # Static Handler - Serves static CSS, JavaScript and image files
         (r'/static/(.*)', StaticFileHandler, {'path': 'static'}),
+        (r'/avatars/(.*)', StaticFileHandler, {'path': 'files/avatars'}),
         
         # Reporter Handlers - Communication with reporters
         (r'/reporter/register', ReporterRegistrationHandler, {'dbsession': dbsession}),
@@ -80,6 +81,9 @@ application = Application([
     
     # Attack range for game
     attack_range = '',
+    
+    # Avatar directory
+    avatar_dir = path.abspath('files/avatars/'),
     
     # Debug mode
     debug = True,
