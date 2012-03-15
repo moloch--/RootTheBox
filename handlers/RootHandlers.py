@@ -37,6 +37,10 @@ class LoginHandler(RequestHandler):
             self.set_secure_cookie(name='auth', value=sid, expires_days=1)
             sessions[sid] = Session()
             sessions[sid].data['user_name'] = str(user.user_name)
+            if user.has_permission('admin'):
+                sessions[sid].data['menu'] = str('admin')
+            else:
+                sessions[sid].data['menu'] = str('user')
             self.redirect('/user')
         else:
             self.render('public/login.html', header="Failed login attempt, try again")

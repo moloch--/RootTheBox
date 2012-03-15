@@ -6,7 +6,9 @@ Created on Mar 13, 2012
 
 import logging
 
+from libs import sessions
 from libs.SecurityDecorators import authenticated
+from models import User
 from tornado.web import RequestHandler #@UnresolvedImport
 
 class HomeHandler(RequestHandler):
@@ -17,7 +19,9 @@ class HomeHandler(RequestHandler):
     @authenticated
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
-        self.render('user/user.html', header='User Page')
+        session = sessions[self.get_secure_cookie('auth')]
+        user = User.by_user_name(session.data['user_name'])
+        self.render('user/home.html', header='Welcome ' + user.user_name)
 
 class SettingsHandler(RequestHandler):
     
@@ -34,5 +38,10 @@ class LogoutHandler(RequestHandler):
     
     def get(self, *args, **kwargs):
         logging.info("User logout")
+        try:
+            sid = self.get_secure_cookie('auth')
+            del sessions[sid]
+        except:
+            pass
         self.clear_all_cookies()
         self.redirect("/")

@@ -7,7 +7,7 @@
 	<link href="/static/css/main.css" rel="stylesheet" type="text/css" />
 	<link href="/static/css/menu.css" rel="stylesheet" type="text/css" />
 	<link href="/static/css/animate.css" rel="stylesheet" type="text/css" />
-	<link  href="/static/favicon.ico" rel="shortcut icon" type="image/x-icon" /> 
+	<link  href="/static/favicon.ico'" rel="shortcut icon" type="image/x-icon" /> 
 </head>
 <body>
 	<div id="banner">
@@ -18,9 +18,7 @@
 	<div id="outer">
 		<div id="menuouter">
 			<div id="menuinner">
-					{% block menu %}
-						{% include "menu/menu_public.html" %}
-					{% end %}
+					{% module Menu() %}
 			</div>
 		</div>
 		<!-- Content -->

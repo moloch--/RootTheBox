@@ -5,21 +5,20 @@ Created on Mar 13, 2012
 '''
 
 import logging
-import datetime
 import functools
 from libs import sessions
 from models.User import User
 
 def authenticated(method):
-    ''' Checks to see if a user has authenticated '''
+    ''' Checks to see if a user has been authenticated '''
     
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         sid = self.get_secure_cookie('auth')
-        if sid != None:
+        if sid != None and sessions.has_key(sid):
             session = sessions[sid]
-            if not datetime.timedelta(0) < (session.expiration - datetime.datetime.now()):
-                del self.application.sessions[sid]
+            if session.is_expired():
+                del self.sessions[sid]
                 self.redirect(self.application.settings['login_url'])
             elif session != None:
                 return method(self, *args, **kwargs)

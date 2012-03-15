@@ -17,7 +17,9 @@ from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
 from handlers.ReporterHandlers import *
+
 from models import dbsession
+from modules.Menu import Menu
 
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
 
@@ -61,14 +63,16 @@ application = Application([
     admin_ips = ['127.0.0.1'],
     
     # template directory
-    template_path ='templates',
+    template_path = 'templates',
     
     # request that does not pass @authorized will be redirected here
-    forbidden_url ='/403',
+    forbidden_url = '/403',
     
     # requests that does not pass @authenticated  will be redirected here
     login_url = '/login',
     
+    # UI Modules
+    ui_modules = {"Menu": Menu},
     # debug mode uses torando.autoreload module to reload the app on modules/templates
     # change and print out errors as response. delete or set to False for production
     debug = True,
