@@ -21,7 +21,7 @@ class HomeHandler(RequestHandler):
         ''' Display the default user page '''
         session = sessions[self.get_secure_cookie('auth')]
         user = User.by_user_name(session.data['user_name'])
-        self.render('user/home.html', header='Welcome ' + user.user_name)
+        self.render('user/home.html', user_name = user.user_name)
 
 class SettingsHandler(RequestHandler):
     
@@ -31,8 +31,9 @@ class SettingsHandler(RequestHandler):
     @authenticated
     def get(self, *args, **kwargs):
         ''' Display the user settings '''
-        logging.info("Render user page")
-        self.render('user/user_settings.html', header='User Settings')
+        session = sessions[self.get_secure_cookie('auth')]
+        user = User.by_user_name(session.data['user_name'])
+        self.render('user/settings.html', user = user)
 
 class LogoutHandler(RequestHandler):
     
@@ -40,7 +41,8 @@ class LogoutHandler(RequestHandler):
         logging.info("User logout")
         try:
             sid = self.get_secure_cookie('auth')
-            del sessions[sid]
+            if sessions.has_key(sid):
+                del sessions[sid]
         except:
             pass
         self.clear_all_cookies()

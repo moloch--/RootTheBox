@@ -9,16 +9,16 @@
 <form action="/registration" method="post">
 {% raw xsrf_form_html() %}
 	<p>
-		Account Name (first name): <input name="username" />
+		Account Name (real name): <input name="username" />
 	</p>
 	<p>
 		Handle (hacker name): <input name="handle" />
 	</p>
 	<p>
-		Password: <input name="pass1" type="password" />
+		Password: <input name="pass1" type="password" autocomplete="off" />
 	</p>
 	<p>
-		Confirm Password: <input name="pass2" type="password" />
+		Confirm Password: <input name="pass2" type="password" autocomplete="off" />
 	</p>
 	<input type="submit" value=" Register Account " />
 </form>

@@ -1,15 +1,13 @@
-{% extends "main.html" %}
+{% extends "../main.html" %}
 
-{% block title %}User Index{% end %}
-
-{% block menu %} 
-	{% include "menu_user.html" %}
-{% end %}
-
-{% block bannerLink %}/user/{% end %}
+{% block title %}Settings{% end %}
 
 {% block content %}
-<h1>User Index</h1>
-<h2>{{header}}</h2>
-	<p>Welcome to the User Index Page!</p>
+<h1>Settings</h1>
+<br />
+<form action="/user/settings" method="post">
+{% raw xsrf_form_html() %}
+	
+	<input type="submit" value=" Save Changes" />
+</form>
 {% end %}

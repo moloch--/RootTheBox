@@ -1,0 +1,13 @@
+{% extends "../main.html" %}
+
+{% block title %}Boxes{% end %}
+
+{% block content %}
+	<h1>Boxes</h1>
+	<br />
+	{% for box in boxes %}
+	<ul>
+		<li>Name: {{ box.box_name }} Root Value: {{ box.root_value }} User Value: {{ box.user_value }}</li>
+	</ul>
+	{% end %}
+{% end %}
