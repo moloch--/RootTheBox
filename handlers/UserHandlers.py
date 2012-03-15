@@ -21,7 +21,7 @@ class HomeHandler(RequestHandler):
         ''' Display the default user page '''
         session = sessions[self.get_secure_cookie('auth')]
         user = User.by_user_name(session.data['user_name'])
-        self.render('user/home.html', user_name = user.user_name)
+        self.render('user/home.html', user = user)
 
 class SettingsHandler(RequestHandler):
     

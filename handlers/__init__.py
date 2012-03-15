@@ -12,6 +12,7 @@ from handlers.RootHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
+from handlers.CrackMeHandlers import *
 from handlers.ReporterHandlers import *
 
 from models import dbsession
@@ -33,6 +34,9 @@ application = Application([
         
         # Box Handlers - Serves box related pages
         (r'/boxes(.*)', BoxesViewHandler, {'dbsession': dbsession}),
+        
+        # Crack Me Handlers - Serves crack me related pages
+        (r'/crackme(.*)', CrackMeHandler, {'dbsession': dbsession}),
         
         # Scoreboard Handlers - Severs scoreboard related pages
         #(r'/scoreboard(.*)', ScoreboardGraphHandler, {'dbsession': dbsession}),

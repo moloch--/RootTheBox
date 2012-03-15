@@ -17,12 +17,14 @@ class AdminHandler(RequestHandler):
         self.dbsession = dbsession
         self.get_functions = {
             'team': self.get_team, 
+            'user': self.get_user,
             'box': self.get_box, 
             'crackme': self.get_crack_me, 
             'se': self.get_se
         }
         self.post_functions = {
-            'team': self.post_team, 
+            'team': self.post_team,
+            'user': self.post_user,
             'box': self.post_box, 
             'crackme': self.post_crack_me, 
             'se': self.post_se
@@ -62,7 +64,13 @@ class AdminCreateHandler(AdminHandler):
         self.dbsession.add(team)
         self.dbsession.flush()
         self.render("admin/created.html", game_object='team')
-
+    
+    def get_user(self, *args, **kwargs):
+        pass
+    
+    def post_user(self, *args, **kwargs):
+        pass
+    
     def get_box(self, *args, **kwargs):
         self.render("admin/create_box.html")
     
@@ -120,6 +128,8 @@ class AdminCreateHandler(AdminHandler):
         
     def post_se(self, *args, **kwargs):
         self.render("admin/create_se.html")
+        
+    
 
 class AdminEditHandler(AdminHandler):
     
@@ -128,7 +138,25 @@ class AdminEditHandler(AdminHandler):
         
     def post_team(self, *args, **kwargs):
         pass
-
+    
+    def get_user(self, *args, **kwargs):
+        self.render("admin/edit_user.html", teams = Team.get_all(), users = User.get_free_agents())
+    
+    def post_user(self, *args, **kwargs):
+        try:
+            team_name = self.get_argument('team_name')
+            user_name = self.get_argument('user_name')
+            team = Team.by_team_name(team_name)
+            user = User.by_user_name(user_name)
+            if team == None: raise TypeError
+            if user == None: raise TypeError
+        except:
+            self.render("admin/error.html", errors = "Failed to edit user")
+        user.team_id = team.id
+        self.dbsession.add(user)
+        self.dbsession.flush()
+        self.render("admin/created.html", game_object = "edit user team")
+        
     def get_box(self, *args, **kwargs):
         pass
         

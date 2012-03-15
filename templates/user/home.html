@@ -5,5 +5,6 @@
 {% block content %}
 <h1>Root the Box</h1>
 <h2>Game of Hackers</h2>
-	<p>Welcome to Root the Box {{ user_name }}</p>
+	<p>Welcome to Root the Box {{ user.user_name }}</p>
+	<p>You are on team {{ user.team.team_name }}</p>
 {% end %}

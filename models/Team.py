@@ -4,18 +4,13 @@ Created on Mar 12, 2012
 @author: moloch
 '''
 
-from sqlalchemy import Column, ForeignKey, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession
+from models import dbsession, association_table
 from models.CrackMe import CrackMe
 from models.Box import Box
 from models.BaseGameObject import BaseObject
-
-association_table = Table('team_has_box', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('box_id', Integer, ForeignKey('box.id'), nullable=False)
-)
 
 class Team(BaseObject):
     """ Team definition """
@@ -26,11 +21,16 @@ class Team(BaseObject):
     members = relationship("User", backref="Team")
     crack_me_id = Column(Integer, ForeignKey("crack_me.id"), default=1)
     controlled_boxes = relationship("Box", secondary=association_table, backref="Team")
+    files = relationship("File", backref=backref("Team", lazy="dynamic"))
     
     @classmethod
     def by_team_name(cls, team_name):
         """ Return the user object whose group name is ``team_name`` """
         return dbsession.query(cls).filter_by(team_name=unicode(team_name)).first() #@UndefinedVariable
+    
+    @classmethod
+    def get_all(cls):
+        return dbsession.query(cls).all() #@UndefinedVariable
     
     @property
     def crack_me(self):

@@ -5,9 +5,11 @@ Created on Mar 11, 2012
 '''
 
 from sqlalchemy import Column
+from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
 from models.BaseGameObject import BaseObject
+from models import association_table
 
 class Box(BaseObject):
     ''' Box definition '''
@@ -19,6 +21,7 @@ class Box(BaseObject):
     root_value = Column(Integer, nullable=False)
     user_key = Column(Unicode(255), unique=True, nullable=False)
     user_value = Column(Integer, nullable=False)
+    teams = relationship("Team", secondary=association_table, backref="Box")
     
     def __repr__(self):
         return ('<Box: name=%s, root_value=%d, user_value=%d>' % (self.box_name, self.root_value, self.user_value)).encode('utf-8')

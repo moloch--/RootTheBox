@@ -60,11 +60,29 @@ class User(BaseObject):
             return team.team_name
     
     @property
+    def team(self):
+        """ Return a list with all groups names the user is a member of """
+        if self.team_id == None:
+            return None
+        else:
+            return dbsession.query(Team).filter_by(id=self.team_id).first() #@UndefinedVariable
+    
+    @property
     def score(self):
         if self.dirty:
             pass
         else:
             return self.score_cache
+    
+    @classmethod
+    def get_all(cls):
+        """ Return all user objects """
+        return dbsession.query(cls).all() #@UndefinedVariable
+    
+    @classmethod
+    def get_free_agents(cls):
+        """ Return all user objects """
+        return dbsession.query(cls).filter_by(team_id=None).all() #@UndefinedVariable
     
     @classmethod
     def by_user_name(cls, user_name):
