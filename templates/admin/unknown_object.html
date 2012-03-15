@@ -1,0 +1,11 @@
+{% extends "../main.html" %}
+
+{% block title %}Error{% end %}
+
+{% block content %}
+<h1>Error</h1>
+<br />
+<p>
+Attempted to create unknown object: {{ unknown_object }}
+</p>
+{% end %}

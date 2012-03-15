@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-this sets up the tornado application  and handlers.
-for more information about tornado check out <a href="http://www.tornadoweb.org">www.tornadoweb.org</a>
-"""
+
 import logging
 from os import urandom
 from base64 import b64encode
@@ -10,7 +7,6 @@ from tornado.ioloop import IOLoop #@UnresolvedImport
 from tornado.web import Application #@UnresolvedImport
 from tornado.web import StaticFileHandler #@UnresolvedImport
 
-# import your handlers and set the application routes and configuration
 from handlers.BoxHandlers import *
 from handlers.RootHandlers import *
 from handlers.UserHandlers import *
@@ -57,19 +53,19 @@ application = Application([
         (r'/(.*)', NotFoundHandler)
     ],
                           
-    # randomly generated secret key
+    # Randomly generated secret key
     cookie_secret = b64encode(urandom(64)),
     
-    # ip addresses that access the admin interface
+    # Ip addresses that access the admin interface
     admin_ips = ['127.0.0.1'],
     
-    # template directory
+    # Template directory
     template_path = 'templates',
     
-    # request that does not pass @authorized will be redirected here
+    # Request that does not pass @authorized will be redirected here
     forbidden_url = '/403',
     
-    # requests that does not pass @authenticated  will be redirected here
+    # Requests that does not pass @authenticated  will be redirected here
     login_url = '/login',
     
     # UI Modules
@@ -78,9 +74,13 @@ application = Application([
     # Enable XSRF Forms
     xsrf_cookies = True,
     
-    # debug mode uses torando.autoreload module to reload the app on modules/templates
-    # change and print out errors as response. delete or set to False for production
+    # Attack range for game
+    attack_range = '',
+    
+    # Debug mode
     debug = True,
+    
+    # Application version
     version = '0.1'
 )
 # the port. doh

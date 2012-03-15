@@ -11,20 +11,20 @@ from tornado.web import RequestHandler #@UnresolvedImport
 from libs.SecurityDecorators import * #@UnusedWildImport
 from models import Team, Box, CrackMe
 
-class AdminCreateHandler(RequestHandler):
+class AdminHandler(RequestHandler):
     
     def initialize(self, dbsession):
         self.dbsession = dbsession
         self.get_functions = {
             'team': self.get_team, 
             'box': self.get_box, 
-            'crackme': self.get_crackme, 
+            'crackme': self.get_crack_me, 
             'se': self.get_se
         }
         self.post_functions = {
             'team': self.post_team, 
             'box': self.post_box, 
-            'crackme': self.post_crackme, 
+            'crackme': self.post_crack_me, 
             'se': self.post_se
         }
     
@@ -32,9 +32,9 @@ class AdminCreateHandler(RequestHandler):
     @restrict_ip_address
     def get(self, *args, **kwargs):
         if args[0] in self.get_functions.keys():
-            self.get_functions[args[0]]()
+            self.get_functions[args[0]](*args, **kwargs)
         else:
-            self.render("admin/unkown_object.html", error=args[0])
+            self.render("admin/unknown_object.html", unknown_object = args[0])
     
     @authorized('admin')
     @restrict_ip_address
@@ -42,9 +42,11 @@ class AdminCreateHandler(RequestHandler):
         if args[0] in self.post_functions.keys():
             self.post_functions[args[0]](*args, **kwargs)
         else:
-            self.render("admin/unkown_object.html", error=args[0])
+            self.render("admin/unknown_object.html", unknown_object = args[0])
 
-    def get_team(self):
+class AdminCreateHandler(AdminHandler):
+
+    def get_team(self, *args, **kwargs):
         self.render("admin/create_team.html")
         
     def post_team(self, *args, **kwargs):
@@ -52,7 +54,7 @@ class AdminCreateHandler(RequestHandler):
             team_name = self.get_argument('team_name')
             motto = self.get_argument('motto')
         except:
-            self.reander("admin/error.html", errors = "Failed to create team")
+            self.render("admin/error.html", errors = "Failed to create team")
         team = Team(
             team_name = unicode(team_name),
             motto = unicode(motto)
@@ -61,7 +63,7 @@ class AdminCreateHandler(RequestHandler):
         self.dbsession.flush()
         self.render("admin/created.html", game_object='team')
 
-    def get_box(self):
+    def get_box(self, *args, **kwargs):
         self.render("admin/create_box.html")
     
     def post_box(self, *args, **kwargs):
@@ -86,12 +88,12 @@ class AdminCreateHandler(RequestHandler):
         )
         self.dbsession.add(box)
         self.dbsession.flush()
-        self.render("created.html", game_object = "box")
+        self.render("admin/created.html", game_object = "box")
         
-    def get_crackme(self):
+    def get_crack_me(self, *args, **kwargs):
         self.render("admin/create_crackme.html")
     
-    def post_crackme(self, *args, **kwargs):
+    def post_crack_me(self, *args, **kwargs):
         try:
             crack_me_name = self.get_argument('crack_me_name')
             description = self.get_argument('description')
@@ -113,24 +115,34 @@ class AdminCreateHandler(RequestHandler):
         self.dbsession.flush()
         self.render('admin/created.html', game_object = "crack me")
     
-    def get_se(self):
+    def get_se(self, *args, **kwargs):
         pass
         
     def post_se(self, *args, **kwargs):
         self.render("admin/create_se.html")
 
-class AdminEditHandler(RequestHandler):
+class AdminEditHandler(AdminHandler):
     
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
+    def get_team(self, *args, **kwargs):
+        pass
+        
+    def post_team(self, *args, **kwargs):
+        pass
+
+    def get_box(self, *args, **kwargs):
+        pass
+        
+    def post_box(self, *args, **kwargs):
+        pass
     
-    @authorized('admin')
-    @restrict_ip_address
-    def get(self, *args, **kwargs):
-        print 'got', args
-        print 'kw got', kwargs
+    def get_crack_me(self, *args, **kwargs):
+        pass
+        
+    def post_crack_me(self, *args, **kwargs):
+        pass
     
-    @authorized('admin')
-    @restrict_ip_address
-    def post(self, *args, **kwargs):
+    def get_se(self, *args, **kwargs):
+        pass
+        
+    def post_se(self, *args, **kwargs):
         pass
