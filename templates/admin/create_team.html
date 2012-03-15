@@ -1,0 +1,14 @@
+{% extends "../main.html" %}
+
+{% block title %}Create Team{% end %}
+
+{% block content %}
+<h1>Create Team</h1>
+<br />
+	<form action="/admin/create/team" method="post">
+		{% raw xsrf_form_html() %}
+		<label>Team Name:</label> <input name="team_name" type="text" />
+		<label>Motto:</label> <input name="motto" type="text" />
+		<input type="submit" value=" Create Team " />
+	</form>
+{% end %}

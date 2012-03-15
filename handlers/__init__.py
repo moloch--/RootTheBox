@@ -42,7 +42,8 @@ application = Application([
         #(r'/scoreboard(.*)', ScoreboardGraphHandler, {'dbsession': dbsession}),
         
         # Admin Handlers - Administration pages
-        (r'/admin(.*)', AdminHomeHandler, {'dbsession':dbsession}),
+        (r'/admin/create/(.*)', AdminCreateHandler, {'dbsession':dbsession}),
+        (r'/admin/edit/(.*)', AdminEditHandler, {'dbsession':dbsession}),
         
         # Root handler - Serves all public pages
         (r'/login(.*)', LoginHandler),
@@ -73,6 +74,10 @@ application = Application([
     
     # UI Modules
     ui_modules = {"Menu": Menu},
+    
+    # Enable XSRF Forms
+    xsrf_cookies = True,
+    
     # debug mode uses torando.autoreload module to reload the app on modules/templates
     # change and print out errors as response. delete or set to False for production
     debug = True,

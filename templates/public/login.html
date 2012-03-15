@@ -6,6 +6,7 @@
 <h1>Login</h1>
 <h2>{{header}}</h2>
 <form action="/login" method="post">
+{% raw xsrf_form_html() %}
 	<table>
 		<tr>
 			<td>Username:</td>

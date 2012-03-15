@@ -4,41 +4,22 @@ fills the database with some startup data.
 usage: python -c 'import setup.auth'
 """
 
-from models import dbsession, Team, User, Box
-
-#Team
-team = Team(
-              team_name = 'Test Team',
-              motto = 'We rock!',
-              score = 10
-)
-dbsession.add(team) #@UndefinedVariable
-
-#Box
-box = Box(
-            box_name = 'Test',
-            ip_address = '192.168.0.1',
-            description = 'This is a test box!',
-            root_key = "12345",
-            user_key = "54321",
-            root_value = 500,
-            user_value = 100
-)
-
-dbsession.add(box) #@UndefinedVariable
+from models import dbsession, User, Permission
 
 # User Account
 user = User(
-    user_name = 'user',
-    display_name = 'cheater',
-    dirty = False,
-    password = 'user'
+    user_name = unicode('admin'),
+    display_name = unicode('God'),
+    password = unicode('nimda123')
 )
 dbsession.add(user) #@UndefinedVariable
 dbsession.flush() #@UndefinedVariable
 
-#Link rows
+permission = Permission(
+    permission_name = unicode('admin'),
+    user_id = user.id
+)
 
-user.team_id = team.id
-dbsession.add(user) #@UndefinedVariable
+dbsession.add(permission) #@UndefinedVariable
 dbsession.flush() #@UndefinedVariable
+print 'boot strap complete.'
