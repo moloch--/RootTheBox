@@ -14,6 +14,8 @@ from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
 from handlers.CrackMeHandlers import *
 from handlers.ReporterHandlers import *
+from handlers.WebsocketHandlers import *
+from handlers.ScoreBoardHandlers import *
 
 from models import dbsession
 from modules.Menu import Menu
@@ -42,11 +44,14 @@ application = Application([
         (r'/crackme(.*)', CrackMeHandler, {'dbsession': dbsession}),
         
         # Scoreboard Handlers - Severs scoreboard related pages
-        #(r'/scoreboard(.*)', ScoreboardGraphHandler, {'dbsession': dbsession}),
+        (r'/scoreboard(.*)', ScoreBoardHandler, {'dbsession': dbsession}),
         
         # Admin Handlers - Administration pages
         (r'/admin/create/(.*)', AdminCreateHandler, {'dbsession':dbsession}),
         (r'/admin/edit/(.*)', AdminEditHandler, {'dbsession':dbsession}),
+        
+        #Websocket Handlers - Websocket communication handlers
+        (r'/notification', NotificationHandler),
         
         # Root handler - Serves all public pages
         (r'/login(.*)', LoginHandler),
