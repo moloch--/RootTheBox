@@ -39,9 +39,9 @@ class HashesHandler(UserBaseHandler):
         
         if target == None or user == None or target.has_permission("admin"):
             self.render("hashes/error.html", operation = "hash cracking", errors = "That user does not exist")
-        if target in user.team.members:
+        elif target in user.team.members:
             self.render("hashes/error.html", operation = "hash cracking", errors = "You can't crack hashes from your own team")
-        if target.validate_password(preimage):
+        elif target.validate_password(preimage):
             self.steal_points(user, target)
             self.notify(user, target)
             self.render("hashes/success.html", user = user, target = target )
