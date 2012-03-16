@@ -12,6 +12,7 @@ from handlers.RootHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
+from handlers.HashesHandlers import *
 from handlers.CrackMeHandlers import *
 from handlers.ReporterHandlers import *
 
@@ -32,7 +33,7 @@ application = Application([
         (r'/user/shares(.*)', SharesHandler, {'dbsession': dbsession}),
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
         (r'/user/logout(.*)', LogoutHandler),
-        (r'/user(.*)', HomeHandler, {'dbsession': dbsession}),
+        (r'/user', HomeHandler, {'dbsession': dbsession}),
         
         # Box Handlers - Serves box related pages
         (r'/boxes(.*)', BoxesViewHandler, {'dbsession': dbsession}),
@@ -40,6 +41,9 @@ application = Application([
         # Crack Me Handlers - Serves crack me related pages
         (r'/crackme/download(.*)', CrackMeDownloadHandler, {'dbsession': dbsession}),
         (r'/crackme(.*)', CrackMeHandler, {'dbsession': dbsession}),
+        
+        # Hashes Handler - Serves hash related pages
+        (r'/hashes(.*)', HashesHandler, {'dbsession': dbsession}),
         
         # Scoreboard Handlers - Severs scoreboard related pages
         #(r'/scoreboard(.*)', ScoreboardGraphHandler, {'dbsession': dbsession}),

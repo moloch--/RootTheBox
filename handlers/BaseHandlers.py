@@ -4,23 +4,23 @@ Created on Mar 15, 2012
 @author: moloch
 '''
 
-from libs import sessions
+from libs import sessions #@UnusedImport
 from tornado.web import RequestHandler #@UnresolvedImport
 from libs.SecurityDecorators import * #@UnusedWildImport
 
 class UserBaseHandler(RequestHandler):
     
-    def initialize(self, dbsession):
+    def initialize(self, dbsession = None):
         self.dbsession = dbsession
     
     def get_current_user(self):
-        session = self.get_session()
-        if session != None:
-            return session.data['user_name']
+        if self.session != None:
+            return self.session.data['user_name']
         else:
             return None
  
-    def get_session(self):
+    @property
+    def session(self):
         session = sessions[self.get_secure_cookie('auth')]
         if session.is_expired():
             del sessions[self.get_secure_cookie('auth')]
