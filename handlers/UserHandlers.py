@@ -24,6 +24,17 @@ class HomeHandler(RequestHandler):
         user = User.by_user_name(session.data['user_name'])
         self.render('user/home.html', user = user)
 
+class SharesHandler(RequestHandler):
+    
+    def initialize(self, dbsession):
+        self.dbsession
+    
+    def get(self, *args, **kwargs):
+        pass
+    
+    def post(self, *args, **kwargs):
+        pass
+
 class SettingsHandler(RequestHandler):
     
     def initialize(self, dbsession):
@@ -47,14 +58,14 @@ class SettingsHandler(RequestHandler):
             self.render("user/error.html")
     
     def post_avatar(self, *args, **kwargs):
-        ''' Saves avatar '''
+        ''' Saves avatar - does NOT currently validate file type '''
         session = sessions[self.get_secure_cookie('auth')]
         user = User.by_user_name(session.data['user_name'])
         if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
             if len(self.request.files['avatar'][0]['body']) < (1024*1024):
                 if user.avatar == None:
-                    user.avatar = unicode(str(uuid1()))
-                filePath = self.application.settings['avatar_dir']+'/'+user.avatar+'.jpg'
+                    user.avatar = unicode(str(uuid1()) + '.jpg')
+                filePath = self.application.settings['avatar_dir']+'/'+user.avatar
                 logging.info("Saving avatar to: %s" % filePath)
                 avatar = open(filePath, 'wb')
                 avatar.write(self.request.files['avatar'][0]['body'])
@@ -68,7 +79,7 @@ class SettingsHandler(RequestHandler):
 class LogoutHandler(RequestHandler):
     
     def get(self, *args, **kwargs):
-        
+        ''' Clears cookies and session data '''
         try:
             sid = self.get_secure_cookie('auth')
             if sessions.has_key(sid):

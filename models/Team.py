@@ -17,7 +17,6 @@ class Team(BaseObject):
 
     team_name = Column(Unicode(64), unique=True, nullable=False)
     motto = Column(Unicode(255))
-    score = Column(Integer, default=0)
     members = relationship("User", backref="Team")
     crack_me_id = Column(Integer, ForeignKey("crack_me.id"), default=1)
     controlled_boxes = relationship("Box", secondary=association_table, backref="Team")
@@ -36,6 +35,10 @@ class Team(BaseObject):
     def crack_me(self):
         ''' Returns the current crack me '''
         return dbsession.query(CrackMe).filter_by(id=self.crack_me_id).first() #@UndefinedVariable
+    
+    @property
+    def score(self):
+        return sum(self.members)
     
     def give_control(self, box_name):
         box = Box.by_box_name(unicode(box_name))

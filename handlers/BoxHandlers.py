@@ -16,3 +16,5 @@ class BoxesViewHandler(RequestHandler):
     @authenticated
     def get(self, *args, **kwargs):
         self.render("boxes/view.html", boxes = Box.get_all())
+        
+        

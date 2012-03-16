@@ -10,6 +10,7 @@ from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, Boolean
 from models import dbsession
 from models.Team import Team
+from models.Action import Action
 from models.Permission import Permission
 from models.BaseGameObject import BaseObject
 
@@ -19,8 +20,8 @@ class User(BaseObject):
     user_name = Column(Unicode(64), unique=True, nullable=False)
     display_name = Column(Unicode(64), unique=True, nullable=False)
     team_id = Column(Integer, ForeignKey('team.id'))
-    dirty = Column(Boolean)
-    score_cache = Column(Integer)
+    dirty = Column(Boolean, default=True)
+    score_cache = Column(Integer, default=0)
     actions = relationship("Action", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.gif"))
@@ -34,8 +35,8 @@ class User(BaseObject):
     def __repr__(self):
         return ('<User - name: %s, display: %s, team_id: %d>' % (self.user_name, self.display_name, self.team_id)).encode('utf-8')
 
-    def __unicode__(self):
-        return self.user_name
+    def __radd__(self, other):
+        return self.score + other
 
     @property
     def permissions(self):
@@ -71,19 +72,22 @@ class User(BaseObject):
     @property
     def score(self):
         if self.dirty:
-            pass
-        else:
-            return self.score_cache
+            actions = dbsession.query(Action).filter_by(user_id=self.id).all() #@UndefinedVariable
+            self.score_cache = sum(actions)
+            self.dirty = False
+            dbsession.add(self) #@UndefinedVariable
+            dbsession.flush() #@UndefinedVariable
+        return self.score_cache
     
     @classmethod
     def get_all(cls):
         """ Return all user objects """
-        return dbsession.query(cls).all() #@UndefinedVariable
+        return dbsession.query(cls).filter(cls.user_name != 'admin').all() #@UndefinedVariable
     
     @classmethod
     def get_free_agents(cls):
         """ Return all user objects """
-        return dbsession.query(cls).filter_by(team_id=None).all() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_name != 'admin').all() #@UndefinedVariable
     
     @classmethod
     def by_user_name(cls, user_name):

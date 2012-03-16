@@ -21,7 +21,7 @@ from modules.Menu import Menu
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
 
 application = Application([
-        # Static Handler - Serves static CSS, JavaScript and image files
+        # Static Handlers - Serves static CSS, JavaScript and image files
         (r'/static/(.*)', StaticFileHandler, {'path': 'static'}),
         (r'/avatars/(.*)', StaticFileHandler, {'path': 'files/avatars'}),
         
@@ -29,6 +29,7 @@ application = Application([
         (r'/reporter/register', ReporterRegistrationHandler, {'dbsession': dbsession}),
         
         # User Handlers - Serves user related pages
+        (r'/user/shares(.*)', SharesHandler, {'dbsession': dbsession}),
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
         (r'/user/logout(.*)', LogoutHandler),
         (r'/user(.*)', HomeHandler, {'dbsession': dbsession}),
@@ -37,6 +38,7 @@ application = Application([
         (r'/boxes(.*)', BoxesViewHandler, {'dbsession': dbsession}),
         
         # Crack Me Handlers - Serves crack me related pages
+        (r'/crackme/download(.*)', CrackMeDownloadHandler, {'dbsession': dbsession}),
         (r'/crackme(.*)', CrackMeHandler, {'dbsession': dbsession}),
         
         # Scoreboard Handlers - Severs scoreboard related pages
@@ -79,11 +81,10 @@ application = Application([
     # Enable XSRF Forms
     xsrf_cookies = True,
     
-    # Attack range for game
-    attack_range = '',
-    
-    # Avatar directory
+    # File directories
     avatar_dir = path.abspath('files/avatars/'),
+    crack_me_dir = path.abspath('files/crack_mes/'),
+    se_dir = path.abspath('files/se/'),
     
     # Debug mode
     debug = True,

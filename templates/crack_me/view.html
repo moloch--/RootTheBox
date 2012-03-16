@@ -5,5 +5,13 @@
 {% block content %}
 <h1>Crack Me</h1>
 <br />
-{{ crack_me.crack_me_name }}
+{% if crack_me != None %}
+	{{ crack_me.crack_me_name }}
+	<a href="/crackme/download">Download</a>
+{% else %}
+	<p>
+	No Crack Me's remain.
+	</p>
+{% end %}
+<br />
 {% end %}

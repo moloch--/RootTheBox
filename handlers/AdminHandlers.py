@@ -9,13 +9,14 @@ Created on Mar 13, 2012
 from uuid import uuid1
 from tornado.web import RequestHandler #@UnresolvedImport
 from libs.SecurityDecorators import * #@UnusedWildImport
-from models import Team, Box, CrackMe
+from models import Team, Box, CrackMe, Action
 
 class AdminHandler(RequestHandler):
     
     def initialize(self, dbsession):
         self.dbsession = dbsession
         self.get_functions = {
+            'action': self.get_action, 
             'team': self.get_team, 
             'user': self.get_user,
             'box': self.get_box, 
@@ -23,6 +24,7 @@ class AdminHandler(RequestHandler):
             'se': self.get_se
         }
         self.post_functions = {
+            'action': self.post_action, 
             'team': self.post_team,
             'user': self.post_user,
             'box': self.post_box, 
@@ -47,7 +49,32 @@ class AdminHandler(RequestHandler):
             self.render("admin/unknown_object.html", unknown_object = args[0])
 
 class AdminCreateHandler(AdminHandler):
-
+    
+    def get_action(self, *args, **kwargs):
+        self.render("admin/create_action.html", users = User.get_all())
+        
+    def post_action(self, *args, **kwargs):
+        try:
+            classification = self.get_argument("classification")
+            description = self.get_argument("description")
+            value = int(self.get_argument("value"))
+            user_name = self.get_argument("user_name")
+        except:
+            self.render("admin/error.html", errors = "Failed to create action")
+        user = User.by_user_name(user_name)
+        action = Action(
+            classification = unicode(classification),
+            description = unicode(description),
+            value = value,
+            user_id = user.id
+        )
+        user.dirty = True
+        self.dbsession.add(action)
+        self.dbsession.add(user)
+        self.dbsession.flush()
+        self.render("admin/created.html", game_object = "action")
+        
+        
     def get_team(self, *args, **kwargs):
         self.render("admin/create_team.html")
         
@@ -63,7 +90,7 @@ class AdminCreateHandler(AdminHandler):
         )
         self.dbsession.add(team)
         self.dbsession.flush()
-        self.render("admin/created.html", game_object='team')
+        self.render("admin/created.html", game_object = 'team')
     
     def get_user(self, *args, **kwargs):
         pass
@@ -107,10 +134,15 @@ class AdminCreateHandler(AdminHandler):
             description = self.get_argument('description')
             value = int(self.get_argument('value'))
             file_name = self.get_argument('file_name')
-            file_uuid = uuid1()
+            file_uuid = str(uuid1())
             token = self.get_argument('token')
+            if len(self.request.files['crack_me']) != 1: raise TypeError
         except:
             self.render("admin/error.html", errors = "Failed to create crack me")
+        filePath = self.application.settings['crack_me_dir']+'/'+file_uuid
+        save = open(filePath, 'wb')
+        save.write(self.request.files['crack_me'][0]['body'])
+        save.close()
         crack_me = CrackMe(
             crack_me_name = unicode(crack_me_name),
             description = unicode(description),
@@ -128,10 +160,14 @@ class AdminCreateHandler(AdminHandler):
         
     def post_se(self, *args, **kwargs):
         self.render("admin/create_se.html")
-        
-    
 
 class AdminEditHandler(AdminHandler):
+    
+    def get_action(self, *args, **kwargs):
+        pass
+    
+    def post_action(self, *args, **kwargs):
+        pass
     
     def get_team(self, *args, **kwargs):
         pass
