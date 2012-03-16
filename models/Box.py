@@ -33,7 +33,7 @@ class Box(BaseObject):
     def get_all(cls):
         """ Returns a list of all boxes in the database """
         return dbsession.query(cls).all() #@UndefinedVariable
-    
+
     @classmethod
     def by_box_name(cls, box_name):
         """Return the box object whose name is ``box_name``."""

@@ -18,6 +18,7 @@ class Team(BaseObject):
     team_name = Column(Unicode(64), unique=True, nullable=False)
     motto = Column(Unicode(255))
     members = relationship("User", backref="Team")
+    listen_port = Column(Integer, unique=True, nullable=False)
     crack_me_id = Column(Integer, ForeignKey("crack_me.id"), default=1)
     controlled_boxes = relationship("Box", secondary=association_table, backref="Team")
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))

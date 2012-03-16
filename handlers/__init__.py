@@ -96,6 +96,9 @@ application = Application([
     crack_me_dir = path.abspath('files/crack_mes/'),
     se_dir = path.abspath('files/se/'),
 
+    # Seconds between scoring
+    ticks = 120,
+
     # Debug mode
     debug = True,
     
