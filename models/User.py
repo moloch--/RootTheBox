@@ -63,7 +63,7 @@ class User(BaseObject):
     
     @property
     def team(self):
-        """ Return a list with all groups names the user is a member of """
+        """ Return a the uesr's team object """
         if self.team_id == None:
             return None
         else:
@@ -71,6 +71,7 @@ class User(BaseObject):
     
     @property
     def score(self):
+        ''' Returns user's current score from cache, or re-calculates if expired '''
         if self.dirty:
             actions = dbsession.query(Action).filter_by(user_id=self.id).all() #@UndefinedVariable
             self.score_cache = sum(actions)
@@ -81,12 +82,12 @@ class User(BaseObject):
     
     @classmethod
     def get_all(cls):
-        """ Return all user objects """
+        """ Return all non-admin user objects """
         return dbsession.query(cls).filter(cls.user_name != 'admin').all() #@UndefinedVariable
     
     @classmethod
     def get_free_agents(cls):
-        """ Return all user objects """
+        """ Return all non-admin user objects without a team """
         return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_name != 'admin').all() #@UndefinedVariable
     
     @classmethod
@@ -101,6 +102,7 @@ class User(BaseObject):
     
     @classmethod
     def add_to_team(cls, team_name):
+        ''' Add user to team based on team name '''
         team = dbsession.query(Team).filter_by(team_name=unicode(team_name)).first() #@UndefinedVariable
         cls.team_id = team.id
     
@@ -124,7 +126,7 @@ class User(BaseObject):
     
     @classmethod
     def adminHash(cls, preimage):
-        ''' Two rounds of sha256, no salt '''
+        ''' Two rounds of sha256, no salt because I'm lazy '''
         shaHash = sha256()
         shaHash.update(preimage)
         shaHash.update(preimage + shaHash.hexdigest())

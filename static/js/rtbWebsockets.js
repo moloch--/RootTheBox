@@ -1,4 +1,4 @@
-var ws = new WebSocket("ws://172.16.1.12:8888/notification");
+var ws = new WebSocket("ws://192.168.1.4:8888/notification");
 if (typeof String.prototype.startsWith != 'function') {
 	  String.prototype.startsWith = function (str){
 	    return this.indexOf(str) == 0;

@@ -4,6 +4,7 @@ Created on Mar 13, 2012
 @author: moloch
 '''
 
+import imghdr
 import logging
 
 from uuid import uuid1
@@ -20,10 +21,7 @@ class HomeHandler(UserBaseHandler):
         self.render('user/home.html', user = user)
 
 class SharesHandler(UserBaseHandler):
-    
-    def initialize(self, dbsession):
-        self.dbsession
-    
+
     def get(self, *args, **kwargs):
         pass
     
@@ -33,6 +31,7 @@ class SharesHandler(UserBaseHandler):
 class SettingsHandler(UserBaseHandler):
     
     def initialize(self, dbsession):
+        ''' Database and URI setup '''
         self.dbsession = dbsession
         self.post_functions = {
             '/avatar': self.post_avatar
@@ -46,31 +45,38 @@ class SettingsHandler(UserBaseHandler):
     
     @authenticated
     def post(self, *args, **kwargs):
+        ''' Calls function based on parameter '''
         if args[0] in self.post_functions.keys():
             self.post_functions[args[0]](*args, **kwargs)
         else:
             self.render("user/error.html")
     
     def post_avatar(self, *args, **kwargs):
-        ''' Saves avatar - does NOT currently validate file type '''
+        ''' Saves avatar - Checks file header to test for non-image files '''
         user = User.by_user_name(self.session.data['user_name'])
         if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
             if len(self.request.files['avatar'][0]['body']) < (1024*1024):
-                if user.avatar == None:
-                    user.avatar = unicode(str(uuid1()) + '.jpg')
-                filePath = self.application.settings['avatar_dir']+'/'+user.avatar
-                logging.info("Saving avatar to: %s" % filePath)
-                avatar = open(filePath, 'wb')
-                avatar.write(self.request.files['avatar'][0]['body'])
-                avatar.close()
+                if user.avatar == "default_avatar.gif":
+                    user.avatar = unicode(str(uuid1()))
+                ext = imghdr.what("", h = self.request.files['avatar'][0]['body'])
+                if ext in ['png', 'jpeg', 'gif', 'bmp']:
+                    filePath = self.application.settings['avatar_dir']+'/'+user.avatar+"."+ext
+                    avatar = open(filePath, 'wb')
+                    avatar.write(self.request.files['avatar'][0]['body'])
+                    avatar.close()
+                    user.avatar += ("." + ext)
+                else:
+                    self.render("user/error.html", errors = "Invalid image format")
                 self.dbsession.add(user)
                 self.dbsession.flush()
                 self.redirect("/user")
+            else:
+                self.render("user/error.html", errors = "The image is too large")
         else:
-            self.render("user/error.html")
+            self.render("user/error.html", errors = "Please provide and image")
         
 class LogoutHandler(UserBaseHandler):
-    
+    ''' Clears cookies and sessions '''
     def get(self, *args, **kwargs):
         ''' Clears cookies and session data '''
         try:
@@ -79,6 +85,6 @@ class LogoutHandler(UserBaseHandler):
                 logging.info("User logout: %s" % self.sessions[sid].data['user_name'])
                 del self.sessions[sid]
         except:
-            pass
+            logging.info("Logout - No session")
         self.clear_all_cookies()
         self.redirect("/")

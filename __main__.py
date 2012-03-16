@@ -84,5 +84,7 @@ options = ['serve', 'create', 'test', 'docs']
 #if len(argv) == 1 or argv[1] not in options:
 #    print('')
 #    for option in options: print('  ->\t%s\t%s'%(option, eval(option).__doc__.split('\n')[1]))        
-
-eval(argv[1])()
+if argv[1] in options:
+    eval(argv[1])()
+else:
+    print 'PEBKAC'

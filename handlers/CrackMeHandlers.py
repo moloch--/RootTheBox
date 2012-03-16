@@ -27,13 +27,15 @@ class CrackMeDownloadHandler(RequestHandler):
     
     @authenticated
     def get(self, *args, **kwargs):
+        ''' Need to fix the Http header injection vuln '''
         session = sessions[self.get_secure_cookie('auth')]
         user = User.by_user_name(session.data['user_name'])
         if user.team.crack_me != None:
-            filePath = self.application.settings['crack_me_dir']+'/'+user.team.crack_me.file_uuid
+            filePath = self.application.settings['crack_me_dir']+'/'+user.team.crack_me.uuid
             current = open(filePath, 'rb')
             data = current.read()
             current.close()
+            self.set_header("Content-Type", crack_me.content)
             self.write(data)
             self.finish()
         else:

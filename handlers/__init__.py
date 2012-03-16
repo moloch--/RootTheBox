@@ -74,7 +74,7 @@ application = Application([
     cookie_secret = b64encode(urandom(64)),
     
     # Ip addresses that access the admin interface
-    admin_ips = ['127.0.0.1'],
+    admin_ips = ('127.0.0.1'),
     
     # Template directory
     template_path = 'templates',

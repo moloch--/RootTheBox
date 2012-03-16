@@ -17,7 +17,8 @@ class CrackMe(BaseObject):
     description = Column(Unicode(1024))
     value = Column(Integer, nullable=False)
     file_name = Column(Unicode(64), unique=True, nullable=False)
-    file_uuid = Column(Unicode(64), unique=True, nullable=False)
+    uuid = Column(Unicode(64), unique=True, nullable=False)
+    content = Column(Unicode(64), nullable=False)
     token = Column(Unicode(255), unique=True, nullable=False)
     
     teams = relationship("Team", backref="CrackMe")
