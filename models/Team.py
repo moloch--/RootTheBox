@@ -29,8 +29,9 @@ class Team(BaseObject):
     
     @classmethod
     def get_all(cls):
+        ''' Returns all team objects '''
         return dbsession.query(cls).all() #@UndefinedVariable
-    
+
     @property
     def crack_me(self):
         ''' Returns the current crack me '''
@@ -38,21 +39,34 @@ class Team(BaseObject):
     
     @property
     def score(self):
+        ''' Returns summation of all team members '''
         return sum(self.members)
-    
+
+    def file_by_file_name(self, file_name):
+        ''' Return file object based on file_name '''
+        return files.filter_by(file_name = file_name).first()
+
+    def file_by_uuid(self, uuid):
+        ''' Return file object based on uuid '''
+        return files.filter_by(uuid = uuid).first()
+
     def give_control(self, box_name):
+        ''' Give team control of a box object '''
         box = Box.by_box_name(unicode(box_name))
         if not self.is_controlling(box.box_name):
             self.controlled_boxes.append(box)
     
     def lost_control(self, box_name):
+        ''' Remove team's control over a box object '''
         if self.is_controlling(Box.by_box_name(box_name)):
             self.controlled_boxes.remove(Box.by_box_name(box_name))
     
     def is_controlling(self, box_name):
+        ''' Returns a boolean based on if the team has control of a box '''
         return Box.by_box_name(box_name) in self.controlled_boxes
     
     def solved_crack_me(self):
+        ''' Increments crack_me id '''
         self.crack_me_id += 1
         
     def __repr__(self):
@@ -63,3 +77,6 @@ class Team(BaseObject):
     
     def __str__(self):
         return unicode(self.team_name)
+
+    def __radd__(self, other):
+        return self.score + other

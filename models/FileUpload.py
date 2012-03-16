@@ -4,6 +4,7 @@ Created on Mar 15, 2012
 @author: moloch
 '''
 
+from models import dbsession
 from sqlalchemy.types import Unicode, Integer
 from sqlalchemy import Column, ForeignKey
 from models.BaseGameObject import BaseObject

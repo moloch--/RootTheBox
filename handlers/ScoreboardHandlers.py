@@ -13,4 +13,4 @@ class ScoreBoardHandler(RequestHandler):
         
     def get(self):
         ''' Display the scoreboard Page '''
-        self.render('public/scoreboard.html', header='Game Scoreboard')
+        self.render('scoreboard/view.html')

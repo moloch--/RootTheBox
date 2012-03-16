@@ -64,7 +64,7 @@ class SettingsHandler(UserBaseHandler):
                     avatar = open(filePath, 'wb')
                     avatar.write(self.request.files['avatar'][0]['body'])
                     avatar.close()
-                    user.avatar += ("." + ext)
+                    user.avatar = user.avatar[:user.avatar.rfind('.')]+"."+ext
                 else:
                     self.render("user/error.html", operation = "uploading avatar", errors = "Invalid image format")
                 self.dbsession.add(user)

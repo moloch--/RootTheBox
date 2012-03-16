@@ -4,16 +4,19 @@ Created on Mar 13, 2012
 @author: moloch
 '''
 
+import base64
 import logging #@UnusedImport
 
+from os import path
 from uuid import uuid1
+from tempfile import TemporaryFile
+from mimetypes import guess_type
 from libs.SecurityDecorators import * #@UnusedWildImport
 from libs.WebSocketManager import WebSocketManager
 from models import Team, Box, CrackMe, Action
 from handlers.BaseHandlers import AdminBaseHandler
 from tornado.web import RequestHandler #@UnresolvedImport
 from libs.Notification import Notification
-import base64
 
 class AdminCreateHandler(AdminBaseHandler):
     
@@ -96,12 +99,13 @@ class AdminCreateHandler(AdminBaseHandler):
         self.render("admin/create_crackme.html")
     
     def post_crack_me(self, *args, **kwargs):
+        ''' Saves crack me to file system '''
         try:
             crack_me_name = self.get_argument('crack_me_name')
             description = self.get_argument('description')
             value = int(self.get_argument('value'))
-            file_name = self.get_argument('file_name')
-            file_uuid = str(uuid1())
+            file_name = self.request.files['crack_me'][0]['filename']
+            uuid = str(uuid1())
             token = self.get_argument('token')
             if len(self.request.files['crack_me']) != 1: raise TypeError
         except:
@@ -110,23 +114,28 @@ class AdminCreateHandler(AdminBaseHandler):
         save = open(filePath, 'wb')
         save.write(self.request.files['crack_me'][0]['body'])
         save.close()
-        crack_me = CrackMe(
-            crack_me_name = unicode(crack_me_name),
-            description = unicode(description),
-            value = value,
-            file_name = unicode(file_name),
-            file_uuid = unicode(file_uuid),
-            token = unicode(token)
-        )
-        self.dbsession.add(crack_me)
-        self.dbsession.flush()
-        self.render('admin/created.html', game_object = "crack me")
+        content = guess_type(file_name)
+        if content[0] != None:
+            crack_me = CrackMe(
+                crack_me_name = unicode(crack_me_name),
+                description = unicode(description),
+                value = value,
+                file_name = unicode(path.basename(file_name)),
+                uuid = unicode(uuid),
+                content = unicode(str(content[0])),
+                token = unicode(token)
+            )
+            self.dbsession.add(crack_me)
+            self.dbsession.flush()
+            self.render('admin/created.html', game_object = "crack me")
+        else:
+            self.render('admin/error.html', errors = "Unknown file type, use a .zip")
     
     def get_se(self, *args, **kwargs):
-        pass
+        self.render("admin/create_se.html")
         
     def post_se(self, *args, **kwargs):
-        self.render("admin/create_se.html")
+        pass
 
 class AdminEditHandler(AdminBaseHandler):
     
@@ -208,6 +217,3 @@ class AdminNotifyHandler(RequestHandler):
         self.ws_manager.send_all(notification)
         logging.info("Admin sent a notification")
         self.redirect("/admin/notify")
-        
-            
-            

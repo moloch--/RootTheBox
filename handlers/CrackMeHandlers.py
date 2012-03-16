@@ -4,9 +4,9 @@ Created on Mar 13, 2012
 @author: moloch
 '''
 
+from models import User
 from libs import sessions
 from libs.SecurityDecorators import authenticated
-from models import User
 from tornado.web import RequestHandler #@UnresolvedImport
 
 class CrackMeHandler(RequestHandler):

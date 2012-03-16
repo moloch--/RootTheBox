@@ -8,7 +8,7 @@
 <form action="/admin/notify" method="post" enctype="multipart/form-data">
 	{% raw xsrf_form_html() %}
 	Title:<input name="title" type="text" /> <br />
-	Description:<input name="message" type="text" /> <br />
+	Message:<input name="message" type="text" /> <br />
 	File:<input name="image" type="file" /> <br />
 	Classification:
 	<select name="classification">
