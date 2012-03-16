@@ -1,0 +1,29 @@
+{% extends "../main.html" %}
+
+{% block title %}Hashes{% end %}
+
+{% block content %}
+	<h1>Password Hashes</h1>
+	<br />
+	{% for team in teams %}
+		{% if team.team_name != current.team_name %}
+			<h2>{{ team.team_name }}</h2>
+				<div>
+				{% for user in team.members %}
+					<div>{{ user.display_name }}</div>
+					<div>{{ user.password }}</div>
+				{% end %}
+				</div>
+				<form action="/hashes" method="post">
+					{% raw xsrf_form_html() %}
+					<select name="handle">
+						{% for user in team.members %}
+							<option value="{{ user.display_name }}">{{ user.display_name }}</option>
+						{% end %}
+					</select>
+					<input name="preimage" type="text" />
+					<input type="submit" value=" Cracked Hash " />
+				</form>
+			{% end %}
+		{% end %}
+{% end %}
