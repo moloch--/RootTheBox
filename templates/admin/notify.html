@@ -10,6 +10,14 @@
 	Title:<input name="title" type="text" /> <br />
 	Description:<input name="message" type="text" /> <br />
 	File:<input name="image" type="file" /> <br />
+	Classification:
+	<select name="classification">
+		{% for cls in classifications %}
+			<option value="{{ cls }}">{{ cls }}</option>
+		{% end %}
+		<option value="custom">custom</option>
+	</select>
+	<br />
 	<input type="submit" value=" Send Notification" />
 </form>
 {% end %}

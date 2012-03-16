@@ -182,12 +182,11 @@ class AdminNotifyHandler(RequestHandler):
     
     def initialize(self):
         self.ws_manager = WebSocketManager.Instance() #@UndefinedVariable
-        self.classifications = ['info', 'error', 'success']
     
     @authorized("admin")
     @restrict_ip_address
     def get(self, *args, **kwargs):
-        self.render("admin/notify.html", classifications = self.classifications)
+        self.render("admin/notify.html", classifications = Notification.get_classifications())
     
     @authorized("admin")
     @restrict_ip_address
@@ -195,6 +194,7 @@ class AdminNotifyHandler(RequestHandler):
         try:
             message = self.get_argument("message")
             title = self.get_argument("title") #@UnusedVariable
+            classification = self.get_argument("classification")
             try:
                 file_contents = base64.encodestring(self.request.files['image'][0]['body'])
             except:
@@ -202,7 +202,7 @@ class AdminNotifyHandler(RequestHandler):
         except:
             self.render("admin/error.html", errors = "Invalid Entry")
         if file_contents == None:
-            notification = Notification(title, message)
+            notification = Notification(title, message, classification)
         else:
             notification = Notification(title, message, file_contents = file_contents)
         self.ws_manager.send_all(notification)

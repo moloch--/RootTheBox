@@ -31,6 +31,10 @@ class Notification():
     def to_message(self):
         return "notification:title:"+self.title+"|message:"+self.message+"|icon:"+self.file_contents
 
+    @classmethod
+    def get_classifications(cls):
+        return ['info', 'success', 'error', 'warning']
+
     # Built-in images below - no interesting code
     def set_success(self):
         self.file_contents = "iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABGdBTUEAANkE3LLaAgAAIABJREFUeJztnXl"
