@@ -4,8 +4,10 @@ Created on Mar 15, 2012
 @author: moloch
 '''
 
-from libs.SecurityDecorators import authenticated
 from models import Team, User, Action
+from libs.SecurityDecorators import authenticated
+from libs.WebSocketManager import WebSocketManager
+from libs.Notification import Notification
 from handlers.BaseHandlers import UserBaseHandler
 
 class HashesHandler(UserBaseHandler):
@@ -32,15 +34,16 @@ class HashesHandler(UserBaseHandler):
         except:
             self.render("hashes/error.html", errors = "No password")
             
-        user = User.by_user_name(self.session['user_name'])
+        user = User.by_user_name(self.session.data['user_name'])
         target = User.by_display_name(display_name)
         
-        if target == None or target.has_permission("admin"):
+        if target == None or user == None or target.has_permission("admin"):
             self.render("hashes/error.html", operation = "hash cracking", errors = "That user does not exist")
-        if user in user.team.members:
+        if target in user.team.members:
             self.render("hashes/error.html", operation = "hash cracking", errors = "You can't crack hashes from your own team")
         if target.validate_password(preimage):
             self.steal_points(user, target)
+            self.notify(user, target)
             self.render("hashes/success.html", user = user, target = target )
         else:
             self.render("hashes/error.html", operation = "hash cracking", errors = "Wrong password")
@@ -59,6 +62,17 @@ class HashesHandler(UserBaseHandler):
             value = (target.score * -1),
             user_id = target.id
         )
+        target.dirty = True
+        user.dirty = True
         self.dbsession.add(target_action)
         self.dbsession.add(user_action)
         self.dbsession.flush()
+
+    def notify(self, user, target):
+        ''' Sends a password cracked message via web sockets '''
+        title = "Password Cracked!"
+        message = "%s's password was cracked by %s" % (target.display_name, user.display_name)
+        file_path = self.application.settings['avatar_dir']+'/'+user.avatar
+        ws_manager = WebSocketManager.Instance()
+        notify = Notification(title, message, file_location = file_path)
+        ws_manager.send_all(notify)

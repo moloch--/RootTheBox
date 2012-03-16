@@ -16,7 +16,7 @@
 				</div>
 				<form action="/hashes" method="post">
 					{% raw xsrf_form_html() %}
-					<select name="handle">
+					<select name="display_name">
 						{% for user in team.members %}
 							<option value="{{ user.display_name }}">{{ user.display_name }}</option>
 						{% end %}

@@ -34,7 +34,8 @@ class SettingsHandler(UserBaseHandler):
         ''' Database and URI setup '''
         self.dbsession = dbsession
         self.post_functions = {
-            '/avatar': self.post_avatar
+            '/avatar': self.post_avatar,
+            '/changepassword': self.post_password
         }
     
     @authenticated
@@ -65,15 +66,18 @@ class SettingsHandler(UserBaseHandler):
                     avatar = open(file_path, 'wb')
                     avatar.write(self.request.files['avatar'][0]['body'])
                     avatar.close()
+                    self.dbsession.add(user)
+                    self.dbsession.flush()
+                    self.redirect("/user")
                 else:
-                    self.render("user/error.html", operation = "uploading avatar", errors = "Invalid image format")
-                self.dbsession.add(user)
-                self.dbsession.flush()
-                self.redirect("/user")
+                    self.render("user/error.html", operation = "Uploading avatar", errors = "Invalid image format")
             else:
-                self.render("user/error.html", operation = "uploading avatar", errors = "The image is too large")
+                self.render("user/error.html", operation = "Uploading avatar", errors = "The image is too large")
         else:
-            self.render("user/error.html", operation = "uploading avatar", errors = "Please provide and image")
+            self.render("user/error.html", operation = "Uploading avatar", errors = "Please provide and image")
+
+    def post_password(self, *args, **kwargs):
+        pass
         
 class LogoutHandler(UserBaseHandler):
     ''' Clears cookies and sessions '''

@@ -129,7 +129,7 @@ class AdminCreateHandler(AdminBaseHandler):
             self.dbsession.flush()
             self.render('admin/created.html', game_object = "crack me")
         else:
-            self.render('admin/error.html', errors = "Unknown file type, use a .zip")
+            self.render('admin/error.html', errors = "Unknown file type, please zip and upload")
     
     def get_se(self, *args, **kwargs):
         self.render("admin/create_se.html")

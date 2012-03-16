@@ -7,7 +7,7 @@ import base64
 
 class Notification():
     
-    def __init__(self, title, message, classification = 'info', fileLocation = None, file_contents = None):
+    def __init__(self, title, message, classification = 'info', file_location = None, file_contents = None):
         ''' Must be passed named parameters '''
         self.title = title
         self.message = message
@@ -17,12 +17,12 @@ class Notification():
                 'warning': self.set_warning, 
                 'info': self.set_info
         }
-        if fileLocation == None and file_contents != None:
+        if file_location == None and file_contents != None:
             self.file_contents = file_contents
-        elif file_contents == None and fileLocation != None:
-            image_file = open(fileLocation, 'rb')
+        elif file_contents == None and file_location != None:
+            image_file = open(file_location, 'rb')
             self.file_contents = base64.encodestring(image_file.read())
-        elif file_contents == None and fileLocation == None:
+        elif file_contents == None and file_location == None:
             if classification in self.classifications.keys():
                 self.classifications[classification]()
             else:
