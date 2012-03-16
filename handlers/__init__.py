@@ -95,7 +95,7 @@ application = Application([
     avatar_dir = path.abspath('files/avatars/'),
     crack_me_dir = path.abspath('files/crack_mes/'),
     se_dir = path.abspath('files/se/'),
-    
+
     # Debug mode
     debug = True,
     

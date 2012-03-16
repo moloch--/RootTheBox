@@ -196,16 +196,17 @@ class AdminNotifyHandler(RequestHandler):
             message = self.get_argument("message")
             title = self.get_argument("title") #@UnusedVariable
             try:
-                fileContents = base64.encodestring(self.request.files['image'][0]['body'])
+                file_contents = base64.encodestring(self.request.files['image'][0]['body'])
             except:
-                fileContents = None
-        except Exception, fuckyoupython:
-            logging.error(fuckyoupython)
+                file_contents = None
+        except:
             self.render("admin/error.html", errors = "Invalid Entry")
-        
-        notification = Notification(title, message, None, fileContents)
+        if file_contents == None:
+            notification = Notification(title, message)
+        else:
+            notification = Notification(title, message, file_contents = file_contents)
         self.ws_manager.send_all(notification)
-        logging.info("SENT NOTIFY")
+        logging.info("Admin sent a notification")
         self.redirect("/admin/notify")
         
             
