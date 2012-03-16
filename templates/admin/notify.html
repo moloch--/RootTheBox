@@ -7,13 +7,16 @@
 <br />
 <form action="/admin/notify" method="post">
 	{% raw xsrf_form_html() %}
-	<input name="title" type="text" />
-	<input name="message" type="text" />
+	<label>Title: </label> <input name="title" type="text" /> 
+	<br /> <br />
+	<label>Message: </label> <input name="message" type="text" /> 
+	<br /> <br />
 	<select name="classification">
 		{% for cls in classifications %}
 			<option value="{{ cls }}">{{ cls }}</option>
 		{% end %}
-	</select>
-	<input type="submit" value=" Send Notification" />
+	</select> 
+	<br /> <br />
+	<input type="submit" value=" Send Notification " />
 </form>
 {% end %}

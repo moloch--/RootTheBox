@@ -197,8 +197,7 @@ class AdminNotifyHandler(RequestHandler):
         except:
             self.render("admin/error.html", errors = "can't send notify")
         self.ws_manager.send_all(classification, message)
-        logging.info("SENT NOTIFY")
-        self.redirect("/user")
+        self.redirect("/admin/notify")
         
             
             
