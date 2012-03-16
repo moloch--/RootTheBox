@@ -52,7 +52,7 @@ class SettingsHandler(UserBaseHandler):
             self.render("user/error.html")
     
     def post_avatar(self, *args, **kwargs):
-        ''' Saves avatar - Checks file header to test for non-image files '''
+        ''' Saves avatar - Reads file header an only allows approved formats '''
         user = User.by_user_name(self.session.data['user_name'])
         if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
             if len(self.request.files['avatar'][0]['body']) < (1024*1024):
@@ -66,14 +66,14 @@ class SettingsHandler(UserBaseHandler):
                     avatar.close()
                     user.avatar += ("." + ext)
                 else:
-                    self.render("user/error.html", errors = "Invalid image format")
+                    self.render("user/error.html", operation = "uploading avatar", errors = "Invalid image format")
                 self.dbsession.add(user)
                 self.dbsession.flush()
                 self.redirect("/user")
             else:
-                self.render("user/error.html", errors = "The image is too large")
+                self.render("user/error.html", operation = "uploading avatar", errors = "The image is too large")
         else:
-            self.render("user/error.html", errors = "Please provide and image")
+            self.render("user/error.html", operation = "uploading avatar", errors = "Please provide and image")
         
 class LogoutHandler(UserBaseHandler):
     ''' Clears cookies and sessions '''

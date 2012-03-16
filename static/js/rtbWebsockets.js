@@ -1,4 +1,4 @@
-var ws = new WebSocket("ws://192.168.1.4:8888/notification");
+var ws = new WebSocket("ws://localhost:8888/notification");
 if (typeof String.prototype.startsWith != 'function') {
 	  String.prototype.startsWith = function (str){
 	    return this.indexOf(str) == 0;
@@ -7,8 +7,8 @@ if (typeof String.prototype.startsWith != 'function') {
 
 ws.onopen = function() {
   //Wait for a notification
-
 };
+
 ws.onmessage = function (evt) {
 	if(evt.data.startsWith("notification:")) {
 		var title = evt.data.substring(evt.data.indexOf("title:")+"title:".length, evt.data.indexOf("|"));

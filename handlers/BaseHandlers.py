@@ -10,7 +10,7 @@ from libs.SecurityDecorators import * #@UnusedWildImport
 
 class UserBaseHandler(RequestHandler):
     
-    def initialize(self, dbsession = None):
+    def initialize(self, dbsession):
         self.dbsession = dbsession
     
     def get_current_user(self):
@@ -22,8 +22,8 @@ class UserBaseHandler(RequestHandler):
     @property
     def session(self):
         session = sessions[self.get_secure_cookie('auth')]
-        if session.is_expired():
-            del sessions[self.get_secure_cookie('auth')]
+        if session.is_expired() or session.data['ip_address'] != self.request.remote_ip:
+            del session
             return None
         else:
             return session

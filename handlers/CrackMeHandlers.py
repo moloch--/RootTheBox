@@ -18,7 +18,10 @@ class CrackMeHandler(RequestHandler):
     def get(self, *args, **kwargs):
         session = sessions[self.get_secure_cookie('auth')]
         user = User.by_user_name(session.data['user_name'])
-        self.render('crack_me/view.html', crack_me = user.team.crack_me)
+        if user.team != None:
+            self.render('crack_me/view.html', crack_me = user.team.crack_me)
+        else:
+            self.render('crack_me/view.html', crack_me = None)
     
 class CrackMeDownloadHandler(RequestHandler):
     

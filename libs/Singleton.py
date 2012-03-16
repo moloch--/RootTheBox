@@ -13,7 +13,6 @@ class Singleton:
 
     Limitations: The decorated class cannot be inherited from and the
     type of the singleton instance cannot be checked with `isinstance`. 
-
     """
 
     def __init__(self, decorated):
@@ -24,7 +23,6 @@ class Singleton:
         Returns the singleton instance. Upon its first call, it creates a
         new instance of the decorated class and calls its `__init__` method.
         On all subsequent calls, the already created instance is returned.
-
         """
         try:
             return self._instance
@@ -37,7 +35,7 @@ class Singleton:
         Call method that raises an exception in order to prevent creation
         of multiple instances of the singleton. The `Instance` method should
         be used instead.
-
         """
         raise TypeError(
-            'Singletons must be accessed through the `Instance` method.')
+                'Singletons must be accessed through the `Instance` method.'
+            )

@@ -34,7 +34,7 @@ application = Application([
         # User Handlers - Serves user related pages
         (r'/user/shares(.*)', SharesHandler, {'dbsession': dbsession}),
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
-        (r'/user/logout(.*)', LogoutHandler),
+        (r'/user/logout', LogoutHandler, {'dbsession': dbsession}),
         (r'/user', HomeHandler, {'dbsession': dbsession}),
         
         # Box Handlers - Serves box related pages
@@ -59,9 +59,9 @@ application = Application([
         (r'/notification', NotificationHandler),
         
         # Root handler - Serves all public pages
-        (r'/login(.*)', LoginHandler),
-        (r'/registration(.*)', UserRegistraionHandler, {'dbsession': dbsession}),
-        (r'/about(.*)', AboutHandler),
+        (r'/login', LoginHandler),
+        (r'/registration', UserRegistraionHandler, {'dbsession': dbsession}),
+        (r'/about', AboutHandler),
         (r'/', WelcomeHandler),
         
         # Error handlers - Serves error pages
@@ -88,7 +88,7 @@ application = Application([
     # UI Modules
     ui_modules = {"Menu": Menu},
     
-    # Enable XSRF Forms
+    # Enable XSRF forms
     xsrf_cookies = True,
     
     # File directories

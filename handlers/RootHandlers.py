@@ -37,6 +37,7 @@ class LoginHandler(RequestHandler):
             self.set_secure_cookie(name = 'auth', value = sid, expires_days = 1)
             sessions[sid] = Session()
             sessions[sid].data['user_name'] = str(user.user_name)
+            sessions[sid].data['ip_address'] = str(self.request.remote_ip)
             if user.has_permission('admin'):
                 sessions[sid].data['menu'] = str('admin')
             else:
@@ -56,7 +57,7 @@ class UserRegistraionHandler(RequestHandler):
         self.render("public/registration.html", errors = 'Please fill out the form below')
     
     def post(self, *args, **kwargs):
-        ''' Attempts to create an account '''
+        ''' Attempts to create an account, with shitty form validation '''
         # Check user_name parameter
         try:
             user_name = self.get_argument('username')
