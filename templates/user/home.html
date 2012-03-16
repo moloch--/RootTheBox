@@ -11,7 +11,9 @@
 	{% end %}
 	<p>
 	Your score is {{ user.score }} <br />
-	Your team's score is {{ user.team.score }} <br />
+	{% if user.team %}
+		Your team's score is {{ user.team.score }} <br />
+	{% end %}
 	</p>
 	{% if user.avatar %}
 		<img src="/avatars/{{ user.avatar }}" />
