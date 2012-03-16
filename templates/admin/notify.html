@@ -5,15 +5,11 @@
 {% block content %}
 <h1>Send Notification</h1>
 <br />
-<form action="/admin/notify" method="post">
+<form action="/admin/notify" method="post" enctype="multipart/form-data">
 	{% raw xsrf_form_html() %}
-	<input name="title" type="text" />
-	<input name="message" type="text" />
-	<select name="classification">
-		{% for cls in classifications %}
-			<option value="{{ cls }}">{{ cls }}</option>
-		{% end %}
-	</select>
+	Title:<input name="title" type="text" /> <br />
+	Description:<input name="message" type="text" /> <br />
+	File:<input name="image" type="file" /> <br />
 	<input type="submit" value=" Send Notification" />
 </form>
 {% end %}

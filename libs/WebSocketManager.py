@@ -11,9 +11,9 @@ class WebSocketManager():
     def __init__(self):
         self.connections = []
         
-    def send_all(self, notificationType, notificationMessage):
+    def send_all(self, notification):
         for connection in self.connections:
-            connection.write_message(notificationType+":"+notificationMessage)
+            connection.write_message(notification.to_message())
     
     def add_connection(self, connection): 
         self.connections.append(connection)

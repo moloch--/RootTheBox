@@ -12,6 +12,8 @@ from libs.WebSocketManager import WebSocketManager
 from models import Team, Box, CrackMe, Action
 from handlers.BaseHandlers import AdminBaseHandler
 from tornado.web import RequestHandler #@UnresolvedImport
+from libs.Notification import Notification
+import base64
 
 class AdminCreateHandler(AdminBaseHandler):
     
@@ -191,14 +193,20 @@ class AdminNotifyHandler(RequestHandler):
     @restrict_ip_address
     def post(self, *args, **kwargs):
         try:
-            classification = self.get_argument("classification")
             message = self.get_argument("message")
             title = self.get_argument("title") #@UnusedVariable
-        except:
-            self.render("admin/error.html", errors = "can't send notify")
-        self.ws_manager.send_all(classification, message)
+            try:
+                fileContents = base64.encodestring(self.request.files['image'][0]['body'])
+            except:
+                fileContents = None
+        except Exception, fuckyoupython:
+            logging.error(fuckyoupython)
+            self.render("admin/error.html", errors = "Invalid Entry")
+        
+        notification = Notification(title, message, None, fileContents)
+        self.ws_manager.send_all(notification)
         logging.info("SENT NOTIFY")
-        self.redirect("/user")
+        self.redirect("/admin/notify")
         
             
             
