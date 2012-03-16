@@ -11,12 +11,12 @@ class WebSocketManager():
     def __init__(self):
         self.connections = []
         
-    def sendClientsNotification(self, notificationMessage, notificationType):
+    def send_all(self, notificationType, notificationMessage):
         for connection in self.connections:
             connection.write_message(notificationType+":"+notificationMessage)
     
-    def addConnection(self, connection): 
+    def add_connection(self, connection): 
         self.connections.append(connection)
     
-    def removeConnection(self, connection):
+    def remove_connection(self, connection):
         self.connections.remove(connection)

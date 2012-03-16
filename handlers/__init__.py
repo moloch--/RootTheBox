@@ -53,6 +53,7 @@ application = Application([
         # Admin Handlers - Administration pages
         (r'/admin/create/(.*)', AdminCreateHandler, {'dbsession':dbsession}),
         (r'/admin/edit/(.*)', AdminEditHandler, {'dbsession':dbsession}),
+        (r'/admin/notify', AdminNotifyHandler),
         
         #Websocket Handlers - Websocket communication handlers
         (r'/notification', NotificationHandler),

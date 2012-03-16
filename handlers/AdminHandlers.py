@@ -4,12 +4,14 @@ Created on Mar 13, 2012
 @author: moloch
 '''
 
-#import logging
+import logging #@UnusedImport
 
 from uuid import uuid1
 from libs.SecurityDecorators import * #@UnusedWildImport
+from libs.WebSocketManager import WebSocketManager
 from models import Team, Box, CrackMe, Action
 from handlers.BaseHandlers import AdminBaseHandler
+from tornado.web import RequestHandler #@UnresolvedImport
 
 class AdminCreateHandler(AdminBaseHandler):
     
@@ -173,3 +175,30 @@ class AdminEditHandler(AdminBaseHandler):
         
     def post_se(self, *args, **kwargs):
         pass
+
+class AdminNotifyHandler(RequestHandler):
+    
+    def initialize(self):
+        self.ws_manager = WebSocketManager.Instance() #@UndefinedVariable
+        self.classifications = ['info', 'error', 'success']
+    
+    @authorized("admin")
+    @restrict_ip_address
+    def get(self, *args, **kwargs):
+        self.render("admin/notify.html", classifications = self.classifications)
+    
+    @authorized("admin")
+    @restrict_ip_address
+    def post(self, *args, **kwargs):
+        try:
+            classification = self.get_argument("classification")
+            message = self.get_argument("message")
+            title = self.get_argument("title") #@UnusedVariable
+        except:
+            self.render("admin/error.html", errors = "can't send notify")
+        self.ws_manager.send_all(classification, message)
+        logging.info("SENT NOTIFY")
+        self.redirect("/user")
+        
+            
+            
