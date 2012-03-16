@@ -60,11 +60,11 @@ class SettingsHandler(UserBaseHandler):
                     user.avatar = unicode(str(uuid1()))
                 ext = imghdr.what("", h = self.request.files['avatar'][0]['body'])
                 if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                    filePath = self.application.settings['avatar_dir']+'/'+user.avatar+"."+ext
-                    avatar = open(filePath, 'wb')
+                    user.avatar = user.avatar[:user.avatar.rfind('.')]+"."+ext
+                    file_path = self.application.settings['avatar_dir']+'/'+user.avatar
+                    avatar = open(file_path, 'wb')
                     avatar.write(self.request.files['avatar'][0]['body'])
                     avatar.close()
-                    user.avatar = user.avatar[:user.avatar.rfind('.')]+"."+ext
                 else:
                     self.render("user/error.html", operation = "uploading avatar", errors = "Invalid image format")
                 self.dbsession.add(user)
