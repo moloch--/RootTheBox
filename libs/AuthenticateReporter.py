@@ -21,11 +21,11 @@ BUFFER_SIZE = 1024
 
 def score_box(box):
     ''' Scores a single box '''
-    for team in box.teams:
-        auth = AuthenticateReporter(box, team)
+    for user in box.users:
+        auth = AuthenticateReporter(box, user)
         auth.check_validity()
         if auth.confirmed_access:
-            award_points(box, team, auth)
+            award_points(box, user, auth)
         else:
             team.lost_control(box.box_name)
 
@@ -55,11 +55,10 @@ def scoring_round():
 
 class AuthenticateReporter():
 
-    def __init__(self, box, team):
+    def __init__(self, box, user):
         self.sha = sha256()
         self.box = box
-        self.team = team
-        self.port = team.listen_port
+        self.port = user.team.listen_port
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(TIMEOUT)
         self.tcp_stream = iostream.IOStream(sock, max_buffer_size=BUFFER_SIZE)

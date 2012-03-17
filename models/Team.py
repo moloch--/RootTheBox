@@ -45,7 +45,10 @@ class Team(BaseObject):
     @property
     def boxes(self):
         ''' Returns a list of box object controlled by the team members '''
-        pass
+        boxes = []
+        for user in self.members:
+            boxes += user.controlled_boxes
+        return boxes
 
     def file_by_file_name(self, file_name):
         ''' Return file object based on file_name '''
@@ -54,25 +57,14 @@ class Team(BaseObject):
     def file_by_uuid(self, uuid):
         ''' Return file object based on uuid '''
         return files.filter_by(uuid = uuid).first()
-
-    def give_control(self, box_name):
-        ''' Give team control of a box object '''
-        box = Box.by_box_name(unicode(box_name))
-        if not self.is_controlling(box.box_name):
-            self.controlled_boxes.append(box)
-    
-    def lost_control(self, box_name):
-        ''' Remove team's control over a box object '''
-        if self.is_controlling(Box.by_box_name(box_name)):
-            self.controlled_boxes.remove(Box.by_box_name(box_name))
-    
-    def is_controlling(self, box_name):
-        ''' Returns a boolean based on if the team has control of a box '''
-        return Box.by_box_name(box_name) in self.controlled_boxes
     
     def solved_crack_me(self):
         ''' Increments crack_me id '''
         self.crack_me_id += 1
+
+    def is_controlling(self, box):
+        ''' Returns a boolean based on if the team has control of a box '''
+        return True if box in self.boxes else False
         
     def __repr__(self):
         return ('<Team - name: %s, score: %d>' % (self.team_name, self.score)).encode('utf-8')

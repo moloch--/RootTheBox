@@ -9,6 +9,7 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, Boolean
 from models import dbsession, association_table
+from models.Box import Box
 from models.Team import Team
 from models.Action import Action
 from models.Permission import Permission
@@ -50,10 +51,6 @@ class User(BaseObject):
         """Return a list with all permissions names granted to the user."""
         return [p.permission_name for p in self.permissions]
         
-    def has_permission(self, permission):
-        """Return True if ``permission`` is in permissions_names."""
-        return True if permission in self.permissions_names else False
-
     @property
     def team_name(self):
         """ Return a list with all groups names the user is a member of """
@@ -134,6 +131,10 @@ class User(BaseObject):
         shaHash.update(preimage + shaHash.hexdigest())
         return unicode(shaHash.hexdigest())
     
+    def has_permission(self, permission):
+        """ Return True if ``permission`` is in permissions_names """
+        return True if permission in self.permissions_names else False
+
     def validate_password(self, attempt):
         """ Check the password against existing credentials """
         if isinstance(attempt, unicode):
@@ -142,3 +143,14 @@ class User(BaseObject):
             return self.password == self.adminHash(attempt)
         else:
             return self.password == self.userHash(unicode(attempt))
+    
+    def give_control(self, box_name):
+        ''' Give team control of a box object '''
+        box = Box.by_box_name(unicode(box_name))
+        if not self.is_controlling(box.box_name):
+            self.controlled_boxes.append(box)
+    
+    def lost_control(self, box_name):
+        ''' Remove team's control over a box object '''
+        if self.is_controlling(Box.by_box_name(box_name)):
+            self.controlled_boxes.remove(Box.by_box_name(box_name))
