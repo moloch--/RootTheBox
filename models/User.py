@@ -8,11 +8,12 @@ from hashlib import md5, sha256
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, Boolean
-from models import dbsession
+from models import dbsession, association_table
 from models.Team import Team
 from models.Action import Action
 from models.Permission import Permission
 from models.BaseGameObject import BaseObject
+
 
 class User(BaseObject):
     """ User definition """
@@ -25,7 +26,8 @@ class User(BaseObject):
     actions = relationship("Action", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.gif"))
-    
+    controlled_boxes = relationship("Box", secondary=association_table, backref="User")
+
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
         lambda self: self._password,

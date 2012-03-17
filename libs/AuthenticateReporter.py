@@ -19,31 +19,39 @@ from models import Box
 TIMEOUT = 1
 BUFFER_SIZE = 1024
 
-def scoring():
-    results = {}
+def score_box(box):
+    ''' Scores a single box '''
+    for team in box.teams:
+        auth = AuthenticateReporter(box, team)
+        auth.check_validity()
+        if auth.confirmed_access:
+            award_points(box, team, auth)
+        else:
+            team.lost_control(box.box_name)
+
+def award_points(box, team, auth):
+    ''' Creates action based on pwnage '''
+    action = Action(
+        classification = unicode("Box Pwnage"),
+        description = unicode("%s pwned %s" % (team.team_name, box.box_name))
+        value = value,
+        user_id = ""
+    )
+    dbsession.add(action)
+    dbsession.flush()
+
+def scoring_round():
+    ''' Multi-threaded scoring '''
     boxes = list(Box.get_all())
+    threads = []
+    logging.info("Starting scoring round with %d boxes" % len(boxes))
     for box in boxes:
-        threads = []
-        for team in box.teams:
-            auth = AuthenticateReporter(box, team)
-            thread = threading.Thread(target = check_reporter, args = (box, team))
-            threads.append(thread)
-            thread.start()
-        # Wait for all threads to complete
-        for thread in threads:
-            thread.join()
-        # Remove failed connections
-
-
-def check_reporter(self, box, team):
-    ''' Authenticates remote service, returns True/False/None '''
-    auth_handler = AuthenticationHandler(box, team)
-    auth_handler.check_validity()
-    if auth_handler.confirmed_access == None:
-        return None
-    else:
-        return bool(auth_handler.confirmed_access)
-
+        thread = threading.Thread(target = score_box, args = (box,))
+        threads.append(thread)
+        thread.start()
+    for thread in threads:
+        thread.join()
+    logging.info("Scoring round completed")
 
 class AuthenticateReporter():
 
@@ -56,8 +64,8 @@ class AuthenticateReporter():
         sock.settimeout(TIMEOUT)
         self.tcp_stream = iostream.IOStream(sock, max_buffer_size=BUFFER_SIZE)
         self.tcp_stream.set_close_callback(self.setDone)
-        logging.info("Checking for reporter at %s:%s" % (self.box.ip_address, self.port))
         self.tcp_stream.connect((self.box.ip_address, self.port))
+        self.access_level = None
         self.confirmed_access = None
         self.pending_access = None
         self.done = False
@@ -68,6 +76,7 @@ class AuthenticateReporter():
     
     def check_validity(self):
         ''' Checks the validity of a reporter on a box '''
+        logging.info("Checking for reporter at %s:%s" % (self.box.ip_address, self.port))
         try:
             self.tcp_stream.read_bytes(len('root'), self.check_access_level)
             time.sleep(TIMEOUT)
@@ -82,9 +91,11 @@ class AuthenticateReporter():
         ''' Check if the reporter provided a valid access level '''
         self.pending_access = pending_access
         if self.pending_access == 'root':
+            self.access_level = 'root'
             self.sha.update(self.box.root_key)
             self.send_xid()
         elif self.pending_access == 'user':
+            self.access_level = 'user'
             self.sha.update(self.box.user_key)
             self.send_xid()
         else:
@@ -113,7 +124,7 @@ class AuthenticateReporter():
             self.tcp_stream.close()
 
     def get_xid(self):
-        ''' Returns a randomly generated transaction id of XID_SIZE '''
+        ''' Returns a randomly generated transaction id '''
         return b64encode(urandom(24))
 
     def kill(self):

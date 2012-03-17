@@ -21,7 +21,7 @@ class Box(BaseObject):
     root_value = Column(Integer, nullable=False)
     user_key = Column(Unicode(255), unique=True, nullable=False)
     user_value = Column(Integer, nullable=False)
-    teams = relationship("Team", secondary=association_table, backref="Box")
+    users = relationship("User", secondary=association_table, backref="Box")
     
     def __repr__(self):
         return ('<Box: name=%s, root_value=%d, user_value=%d>' % (self.box_name, self.root_value, self.user_value)).encode('utf-8')
@@ -29,6 +29,10 @@ class Box(BaseObject):
     def __unicode__(self):
         return self.box_name
     
+    @property
+    def teams(self):
+        pass
+
     @classmethod
     def get_all(cls):
         """ Returns a list of all boxes in the database """
@@ -36,10 +40,10 @@ class Box(BaseObject):
 
     @classmethod
     def by_box_name(cls, box_name):
-        """Return the box object whose name is ``box_name``."""
+        """ Return the box object whose name is ``box_name`` """
         return dbsession.query(cls).filter_by(box_name=unicode(box_name)).first() #@UndefinedVariable
     
     @classmethod
     def by_ip_address(cls, ip_address):
-        """Return the box object whose name is ``box_name``."""
+        """ Return the box object whose name is ``box_name`` """
         return dbsession.query(cls).filter_by(ip_address=unicode(ip_address)).first() #@UndefinedVariable

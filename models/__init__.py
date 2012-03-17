@@ -19,8 +19,8 @@ Session = sessionmaker(bind=engine, autocommit=True)
 # import the dbsession instance to execute queries on your database
 dbsession = Session()
 
-association_table = Table('team_to_box', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+association_table = Table('user_to_box', BaseObject.metadata,
+    Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
     Column('box_id', Integer, ForeignKey('box.id'), nullable=False)
 )
 

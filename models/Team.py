@@ -7,7 +7,7 @@ Created on Mar 12, 2012
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession, association_table
+from models import dbsession
 from models.CrackMe import CrackMe
 from models.Box import Box
 from models.BaseGameObject import BaseObject
@@ -20,7 +20,6 @@ class Team(BaseObject):
     members = relationship("User", backref="Team")
     listen_port = Column(Integer, unique=True, nullable=False)
     crack_me_id = Column(Integer, ForeignKey("crack_me.id"), default=1)
-    controlled_boxes = relationship("Box", secondary=association_table, backref="Team")
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
     
     @classmethod
@@ -42,6 +41,11 @@ class Team(BaseObject):
     def score(self):
         ''' Returns summation of all team members '''
         return sum(self.members)
+
+    @property
+    def boxes(self):
+        ''' Returns a list of box object controlled by the team members '''
+        pass
 
     def file_by_file_name(self, file_name):
         ''' Return file object based on file_name '''

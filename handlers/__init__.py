@@ -112,8 +112,10 @@ application.listen(8888)
 __serve__ = lambda: IOLoop.instance().start()
 
 
-#def start():
-#    sockets = tornado.netutil.bind_sockets(8888)
-#    tornado.process.fork_processes(-1)
-#    server = HTTPServer(application)
-#    server.add_sockets(sockets)
+def start():
+    scoring = ioloop.PeriodicCallback(self.scoring, self.ioLoop)
+
+    sockets = tornado.netutil.bind_sockets(8888)
+    tornado.process.fork_processes(-1)
+    server = HTTPServer(application)
+    server.add_sockets(sockets)
