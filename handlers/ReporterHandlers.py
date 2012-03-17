@@ -24,7 +24,7 @@ class ReporterRegistrationHandler(RequestHandler):
 			try:
 				user = User.by_display_name(self.get_argument("handle"))
 				if user != None and not user.team.is_controlling(box.box_name):
-					user.team.give_control(box.box_name)
+					user.give_control(box.box_name)
 					self.dbsession.add(user)
 					self.dbsession.flush()
 					self.notify(user, box)

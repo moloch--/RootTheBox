@@ -27,18 +27,34 @@ def score_box(box):
         if auth.confirmed_access:
             award_points(box, user, auth)
         else:
-            team.lost_control(box.box_name)
+            user.lost_control(box.box_name)
+            dbsession.add(user)
+            dbsession.flush()
 
-def award_points(box, team, auth):
+def award_points(box, user, auth):
     ''' Creates action based on pwnage '''
+    if auth.access_level == 'root':
+        value = box.root_value
+        description = "%s got root access on %s" % (user.display_name, box.box_name)
+    elif auth.access_level == 'user':
+        value = box.user_value
+        description = "%s got user level access on %s" % (user.display_name, box.box_name)
+    else:
+        raise TypeError
     action = Action(
         classification = unicode("Box Pwnage"),
-        description = unicode("%s pwned %s" % (team.team_name, box.box_name))
+        description = unicode(description),
         value = value,
-        user_id = ""
+        user_id = user.id
     )
+    user.dirty = True
     dbsession.add(action)
+    dbsession.add(user)
     dbsession.flush()
+    ws_manager = WebSocketManager.Instance()
+    path = self.application.settings['avatar_dir']+'/'+user.avatar
+    notify = Notification("Box Pwnage", description, file_location = path)
+    ws_manager.send_all(notify)
 
 def scoring_round():
     ''' Multi-threaded scoring '''
