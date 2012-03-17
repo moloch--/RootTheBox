@@ -8,7 +8,11 @@
 	<form action="/admin/create/team" method="post">
 		{% raw xsrf_form_html() %}
 		<label>Team Name:</label> <input name="team_name" type="text" />
+		<br /> <br />
 		<label>Motto:</label> <input name="motto" type="text" />
+		<br /> <br />
+		<label>Listen Port:</label> <input name="lport" type="text" />
+		<br />
 		<input type="submit" value=" Create Team " />
 	</form>
 {% end %}

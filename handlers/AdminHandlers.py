@@ -52,11 +52,13 @@ class AdminCreateHandler(AdminBaseHandler):
         try:
             team_name = self.get_argument('team_name')
             motto = self.get_argument('motto')
+            lport = int(self.get_argument('lport'))
         except:
             self.render("admin/error.html", errors = "Failed to create team")
         team = Team(
             team_name = unicode(team_name),
-            motto = unicode(motto)
+            motto = unicode(motto),
+            listen_port = lport
         )
         self.dbsession.add(team)
         self.dbsession.flush()
