@@ -7,6 +7,7 @@ Created on Mar 12, 2012
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer
 from models.BaseGameObject import BaseObject
+from models import dbsession, association_table
 
 class Action(BaseObject):
     ''' Action definition '''

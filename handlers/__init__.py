@@ -16,7 +16,7 @@ from handlers.HashesHandlers import *
 from handlers.CrackMeHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.WebsocketHandlers import *
-from handlers.ScoreBoardHandlers import *
+from handlers.ScoreboardHandlers import *
 
 from models import dbsession
 from modules.Menu import Menu
@@ -56,7 +56,7 @@ application = Application([
         (r'/admin/notify', AdminNotifyHandler),
         
         #Websocket Handlers - Websocket communication handlers
-        (r'/notification', NotificationHandler),
+        (r'/websocket', WebsocketHandler),
         
         # Root handler - Serves all public pages
         (r'/login', LoginHandler),

@@ -39,8 +39,9 @@ class AdminCreateHandler(AdminBaseHandler):
             user_id = user.id
         )
         user.dirty = True
-        self.dbsession.add(action)
+        user.actions.append(action)
         self.dbsession.add(user)
+        self.dbsession.add(action)       
         self.dbsession.flush()
         self.render("admin/created.html", game_object = "action")
         

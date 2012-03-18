@@ -11,6 +11,7 @@ from models import dbsession
 from models.CrackMe import CrackMe
 from models.Box import Box
 from models.BaseGameObject import BaseObject
+import logging
 
 class Team(BaseObject):
     """ Team definition """
@@ -41,7 +42,15 @@ class Team(BaseObject):
     def score(self):
         ''' Returns summation of all team members '''
         return sum(self.members)
-
+    
+    @property
+    def get_actions(self):
+        action_list = []
+        for user in self.members:
+            action_list += user.actions
+        action_list.sort(key=lambda action : action.created)
+        return action_list
+        
     @property
     def boxes(self):
         ''' Returns a list of box object controlled by the team members '''

@@ -8,7 +8,7 @@ import tornado.websocket #@UnresolvedImport
 from libs.SecurityDecorators import * #@UnusedWildImport
 from libs.WebSocketManager import WebSocketManager
 
-class NotificationHandler(tornado.websocket.WebSocketHandler):
+class WebsocketHandler(tornado.websocket.WebSocketHandler):
     
     def open(self): #@ReservedAssignment
         manager = WebSocketManager.Instance() #@UndefinedVariable
@@ -20,4 +20,3 @@ class NotificationHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         manager = WebSocketManager.Instance() #@UndefinedVariable
         manager.remove_connection(self)
-        

@@ -1,9 +1,67 @@
-{% extends "../main.html" %}
+{% extends "../main.html" %} {% block header %}
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
 
-{% block title %}Scoreboard{% end %}
+{% end %} {% block title %}Scoreboard{% end %} {% block content %}
+<h1>Scoreboard:</h1>
+<br>
 
-{% block contents %}
+<div id="scoreboard"
+	style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
-
+<script>
+var chart;
+$(document).ready(function() {
+	chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'scoreboard',
+			type: 'line'
+		},
+		title: {
+			text: 'Game Score'
+		},
+		subtitle: {
+			text: 'Smashing your Mom!'
+		},
+		xAxis: {
+			title: {
+				text: 'Time'
+			}
+		},
+		yAxis: {
+			title: {
+				text: 'Points'
+			}
+		},
+		tooltip: {
+			enabled: false,
+			formatter: function() {
+				return '<b>'+ this.series.name +'</b><br/>'+
+					this.x +': '+ this.y +'Â°C';
+			}
+		},
+		plotOptions: {
+			line: {
+				dataLabels: {
+					enabled: true
+				},
+				enableMouseTracking: true
+			}
+		},
+		series: [
+			{% for team in teams %}
+			{
+			name:"{{team.team_name}}",
+			{% set tempSum = 0 %}
+			data: [{% for action in team.get_actions %}
+				{% set tempSum += action.value %}
+					[{{action.created.strftime("%H%M%S")}}, {{tempSum}}], 
+				{% end %}],
+			},
+			{% end %}
+		]
+	});
+});
+</script>
 
 {% end %}

@@ -15,6 +15,10 @@ class WebSocketManager():
         for connection in self.connections:
             connection.write_message(notification.to_message())
     
+    def score_update(self, scoreUpdate):
+        for connection in self.connections:
+            connection.write_message(scoreUpdate.to_message())
+        
     def add_connection(self, connection): 
         self.connections.append(connection)
     
