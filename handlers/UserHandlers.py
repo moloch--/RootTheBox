@@ -15,6 +15,7 @@ from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
 from tornado.web import RequestHandler
 from BaseHandlers import UserBaseHandler
+from string import ascii_letters, digits
 
 class HomeHandler(UserBaseHandler):
     
@@ -52,11 +53,14 @@ class ShareUploadHandler(UserBaseHandler):
         save = open(filePath, 'wb')
         save.write(self.request.files['file_data'][0]['body'])
         save.close()
-        content = guess_type(self.request.files['file_data'][0]['filename'])
+        file_name = path.basename(self.request.files['file_data'][0]['filename'])
+        char_white_list = ascii_letters + digits + "-._"
+        file_name = filter(lambda char: char in char_white_list, file_name)
+        content = guess_type(file_name)
         if content[0] == None:
             self.render("user/error.html", operation = "File Upload", errors = "Unknown file content, please zip and upload")
         file_upload = FileUpload(
-            file_name = unicode(path.basename(self.request.files['file_data'][0]['filename'])),
+            file_name = unicode(file_name),
             content = unicode(str(content[0])),
             uuid = unicode(uuid),
             description = unicode(description),
@@ -71,11 +75,11 @@ class ShareDownloadHandler(UserBaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
         try:
-            file_name = self.get_argument('file')
+            uuid = self.get_argument('uuid')
         except:
             self.render("user/error.html", operation = "File Download", errors = "Missing parameter")
         user = self.get_current_user()
-        share = FileUpload.by_file_name(file_name)
+        share = FileUpload.by_uuid(uuid)
         if share == None or share.team_id != user.team_id:
             self.render("user/error.html", operation = "File Download", errors = "File does not exist")
         else:
@@ -83,6 +87,8 @@ class ShareDownloadHandler(UserBaseHandler):
             data = upload.read()
             upload.close()
             self.set_header('Content-Type', share.content)
+            self.set_header('Content-Length', share.byte_size)
+            self.set_header('Content-Disposition', 'attachment; filename=%s' % share.file_name)
             self.write(data)
             self.finish()
 

@@ -19,7 +19,7 @@
 	<p>
 		<ol>
 		{% for share in shares %}
-			<li>{{ share.file_name }}: {{ share.description }} - <a href="/user/shares/download?file={{ share.file_name }}">Download</a></li>
+			<li>{{ share.file_name }}: {{ share.description }} - <a href="/user/shares/download?uuid={{ share.uuid }}">Download</a></li>
 		{% end %}
 		</ol>
 	</p>

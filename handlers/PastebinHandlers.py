@@ -54,7 +54,7 @@ class DisplayPostHandler(RequestHandler):
         session = session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
         user = User.by_user_name(session.data['user_name'])
         try:
-            post_id = self.get_arguments("post_id")[0]
+            post_id = self.get_argument("post_id")
         except:
             self.render('pastebin/error.html', errors = "Invalid post id!")
             

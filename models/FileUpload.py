@@ -22,7 +22,7 @@ class FileUpload(BaseObject):
         return ('<File - name: %s, type: %s>' % (self.file_name, self.content))
 
     @classmethod
-    def by_user_name(cls, uuid):
+    def by_uuid(cls, uuid):
         """ Return the user object whose user name is ``uuid`` """
         return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first() #@UndefinedVariable
 
