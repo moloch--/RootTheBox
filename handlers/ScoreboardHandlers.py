@@ -3,7 +3,7 @@ Created on Mar 15, 2012
 
 @author: haddaway
 '''
-from libs.SecurityDecorators import authenticated
+
 from tornado.web import RequestHandler #@UnresolvedImport
 from models.Team import Team
 

@@ -5,8 +5,6 @@ Created on Mar 13, 2012
 '''
 import logging
 
-from os import urandom
-from base64 import b64encode
 from models.User import User
 from libs.Session import SessionManager
 from tornado.web import RequestHandler #@UnresolvedImport

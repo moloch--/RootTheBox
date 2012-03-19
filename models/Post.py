@@ -5,17 +5,8 @@ Created on Mar 12, 2012
 '''
 
 from sqlalchemy import Column, ForeignKey
-import sqlalchemy.orm as orm
 from sqlalchemy.types import Unicode, Integer
 from models.BaseGameObject import BaseObject
-from models import dbsession, association_table
-import models
-import logging
-from sqlalchemy.orm import mapper
-from sqlalchemy import event
-from libs.ScoreUpdate import ScoreUpdate
-from libs.WebSocketManager import WebSocketManager
-from sqlalchemy.orm import sessionmaker
 
 class Post(BaseObject):
     ''' Post definition '''
