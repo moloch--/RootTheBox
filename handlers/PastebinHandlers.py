@@ -4,7 +4,7 @@ Created on Mar 18, 2012
 @author: haddaway
 '''
 from models import User, Post
-from libs import sessions
+from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
 from tornado.web import RequestHandler #@UnresolvedImport
 import logging
@@ -16,7 +16,8 @@ class PastebinHandler(RequestHandler):
     
     @authenticated
     def get(self, *args, **kwargs):
-        session = sessions[self.get_secure_cookie('auth')]
+        session_manager = SessionManager.Instance()
+        session = session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
         user = User.by_user_name(session.data['user_name'])
         if user.team != None:
             self.render('pastebin/view.html', posts = user.team.get_posts)

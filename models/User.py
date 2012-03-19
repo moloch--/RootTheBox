@@ -77,9 +77,7 @@ class User(BaseObject):
             actions = dbsession.query(Action).filter_by(user_id=self.id).all() #@UndefinedVariable
             self.score_cache = sum(actions)
             self.dirty = False
-            dbsession.add(self) #@UndefinedVariable
-            #Auto flush enabled, this should be handled by the session
-            #dbsession.flush() #@UndefinedVariable
+            dbsession.add(self)
         return self.score_cache
     
     @classmethod
