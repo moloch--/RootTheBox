@@ -21,7 +21,17 @@ from handlers.PastebinHandlers import *
 
 from models import dbsession
 from modules.Menu import Menu
+import models
 
+def cache_actions():
+    ''' Loads all of the actions from the database into memory for the scoreboard pages'''
+    action_list = dbsession.query(models.Action).all()
+    ws_manager = WebSocketManager.Instance()
+    for action in action_list:
+        team = dbsession.query(models.User).filter_by(id=action.user_id).first()
+        score_update = ScoreUpdate(action.created.strftime("%d%H%M%S"), action.value, team.team_name, team.score)
+        ws_manager.currentUpdates.append(score_update)
+        
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
 
 application = Application([
@@ -110,17 +120,20 @@ application = Application([
     # Application version
     version = '0.1'
 )
+
 # the port. doh
 application.listen(8888)
 
 # calling this will start the IOLoop. open your browser and enjoy.
 __serve__ = lambda: IOLoop.instance().start()
 
+#cache the actions
+cache_actions()
 
 def start():
     scoring = ioloop.PeriodicCallback(self.scoring, self.ioLoop)
-
     sockets = tornado.netutil.bind_sockets(8888)
     tornado.process.fork_processes(-1)
     server = HTTPServer(application)
     server.add_sockets(sockets)
+    

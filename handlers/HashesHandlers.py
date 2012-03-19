@@ -78,5 +78,7 @@ class HashesHandler(UserBaseHandler):
         file_path = self.application.settings['avatar_dir']+'/'+user.avatar
         ws_manager = WebSocketManager.Instance()
         notify = Notification(title, message, file_location = file_path)
+        alt = Notification("123","456", file_location = file_path)
         ws_manager.send_all(notify)
+        ws_manager.send_team(user.team, alt)
         

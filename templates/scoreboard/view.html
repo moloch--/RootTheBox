@@ -60,11 +60,7 @@ $(document).ready(function() {
 			{% for team in teams %}
 			{
 			name:"{{team.team_name}}",
-			{% set tempSum = 0 %}
-			data: [{% for action in team.get_actions %}
-				{% set tempSum += action.value %}
-					[{{action.created.strftime("%d%H%M%S")}}, {{tempSum}}], 
-				{% end %}],
+			data: [],
 			},
 			{% end %}
 		]
