@@ -43,7 +43,8 @@ application = Application([
         (r'/reporter/register', ReporterRegistrationHandler, {'dbsession': dbsession}),
         
         # User Handlers - Serves user related pages
-        (r'/user/shares(.*)', SharesHandler, {'dbsession': dbsession}),
+        (r'/user/shares/download(.*)', ShareDownloadHandler, {'dbsession': dbsession}),
+        (r'/user/shares', ShareUploadHandler, {'dbsession': dbsession}),
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
         (r'/user/logout', LogoutHandler, {'dbsession': dbsession}),
         (r'/user', HomeHandler, {'dbsession': dbsession}),
@@ -106,9 +107,10 @@ application = Application([
     # Enable XSRF forms
     xsrf_cookies = True,
     
-    # File directories
+    # Special file directories
     avatar_dir = path.abspath('files/avatars/'),
     crack_me_dir = path.abspath('files/crack_mes/'),
+    shares_dir = path.abspath('files/shares'),
     se_dir = path.abspath('files/se/'),
 
     # Seconds between scoring

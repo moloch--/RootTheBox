@@ -23,18 +23,11 @@ class WebSocketManager():
         for connection in self.connections:
             connection.write_message(update.to_message())
     
-    def send_user(self, user, update):
-        ''' Sends a targeted user a specific message '''
-        self.session_manager = SessionManager.Instance()
-        for connection in self.connections:
-            try:
-                session = self.session_manager.get_session(self.connections[0].get_secure_cookie('auth'), self.connections[0].request.remote_ip)
-                current_user = models.User.by_user_name(session.data['user_name'])
-                if(user == current_user):
-                    connection.write_message(update.to_message())
-            except:
-                ''' These happen because a user can have a websocket connection and not be logged in'''
-                pass
+    def send_user(self):
+        pass
+
+    def send_team(self):
+        pass
 
     def send_team(self, team, update):
         ''' sends an entire team a specific message '''

@@ -1,0 +1,26 @@
+{% extends "../main.html" %}
+
+{% block title %}Shared Files{% end %}
+
+{% block content %}
+	<h1>File Sharing</h1>
+	<br />
+	<h2>Upload a File</h2>
+	<form action="/user/shares" method="post" enctype="multipart/form-data">
+		{% raw xsrf_form_html() %}
+		<label>File (max 50Mb):</label> <input name="file_data" type="file" />
+		<br /> <br />
+		<label>Description:</label> <input name="description" type="text" /> 
+		<br /> <br />
+		<input type="submit" value=" Upload File " />
+	</form>	
+	<br /> <br />
+	<h2>Download a File<h2>
+	<p>
+		<ol>
+		{% for share in shares %}
+			<li>{{ share.file_name }}: {{ share.description }} - <a href="/user/shares/download?file={{ share.file_name }}">Download</a></li>
+		{% end %}
+		</ol>
+	</p>
+{% end %}

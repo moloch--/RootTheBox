@@ -4,9 +4,10 @@ Created on Mar 15, 2012
 @author: moloch
 '''
 
+from models import User
+from libs.SecurityDecorators import *
 from libs.Session import SessionManager
 from tornado.web import RequestHandler #@UnresolvedImport
-from libs.SecurityDecorators import * #@UnusedWildImport
 
 class UserBaseHandler(RequestHandler):
     
@@ -17,7 +18,7 @@ class UserBaseHandler(RequestHandler):
     
     def get_current_user(self):
         if self.session != None:
-            return self.session.data['user_name']
+            return User.by_user_name(self.session.data['user_name'])
         return None
 
 
