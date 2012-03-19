@@ -31,7 +31,8 @@ class PastebinHandler(RequestHandler):
         except:
             self.render('pastebin/error.html', errors="Please Enter something!")
         
-        session = sessions[self.get_secure_cookie('auth')]
+        session_manager = SessionManager.Instance()
+        session = session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
         user = User.by_user_name(session.data['user_name'])
         post = Post(
             name = new_name,
@@ -49,7 +50,8 @@ class DisplayPostHandler(RequestHandler):
     
     @authenticated
     def get(self, *args, **kwargs):
-        session = sessions[self.get_secure_cookie('auth')]
+        session_manager = SessionManager.Instance()
+        session = session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
         user = User.by_user_name(session.data['user_name'])
         try:
             post_id = self.get_arguments("post_id")[0]
