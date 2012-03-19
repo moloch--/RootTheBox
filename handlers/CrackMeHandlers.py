@@ -4,13 +4,9 @@ Created on Mar 13, 2012
 @author: moloch
 '''
 
-<<<<<<< HEAD
 from models import User
-from libs.Session import SessionManager
-=======
 from models import User, Action
-from libs import sessions
->>>>>>> 9dfa76d75eef22d12d4206d5bf60cd9af731b701
+from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
 from tornado.web import RequestHandler #@UnresolvedImport
 from libs.WebSocketManager import WebSocketManager
