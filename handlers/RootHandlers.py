@@ -8,15 +8,14 @@ import logging
 from os import urandom
 from base64 import b64encode
 from models.User import User
-from libs import sessions
-from libs.Session import Session
+from libs.Session import SessionManager
 from tornado.web import RequestHandler #@UnresolvedImport
 
 class LoginHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         ''' Display the login page '''
-        self.render('public/login.html', header='User authentication required')
+        self.render('public/login.html', header = 'User authentication required')
     
     def post(self, *args, **kwargs):
         ''' Checks submitted user_name and password '''
@@ -24,24 +23,24 @@ class LoginHandler(RequestHandler):
             user_name = self.get_argument('username')
             user = User.by_user_name(user_name)
         except:
-            self.render('public/login.html', header="Type in an account name")
+            self.render('public/login.html', header = "Type in an account name")
         
         try:
             password = self.get_argument('password')
         except:
-            self.render('public/login.html', header="Type in a password")
+            self.render('public/login.html', header = "Type in a password")
 
         if user != None and user.validate_password(password):
             logging.info("Successful login: %s from %s" % (user.user_name, self.request.remote_ip))
-            sid = b64encode(urandom(24))
-            self.set_secure_cookie(name = 'auth', value = sid, expires_days = 1)
-            sessions[sid] = Session()
-            sessions[sid].data['user_name'] = str(user.user_name)
-            sessions[sid].data['ip_address'] = str(self.request.remote_ip)
+            session_manager = SessionManager.Instance()
+            sid, session = session_manager.start_session()
+            self.set_secure_cookie(name = 'auth', value = str(sid), expires_days = 1)
+            session.data['user_name'] = str(user.user_name)
+            session.data['ip'] = str(self.request.remote_ip)
             if user.has_permission('admin'):
-                sessions[sid].data['menu'] = str('admin')
+                session.data['menu'] = str('admin')
             else:
-                sessions[sid].data['menu'] = str('user')
+                session.data['menu'] = str('user')
             self.redirect('/user')
         else:
             logging.info("Failed login attempt from %s " % self.request.remote_ip)

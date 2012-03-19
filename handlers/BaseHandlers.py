@@ -4,7 +4,7 @@ Created on Mar 15, 2012
 @author: moloch
 '''
 
-from libs import sessions #@UnusedImport
+from libs.Session import SessionManager
 from tornado.web import RequestHandler #@UnresolvedImport
 from libs.SecurityDecorators import * #@UnusedWildImport
 
@@ -12,21 +12,14 @@ class UserBaseHandler(RequestHandler):
     
     def initialize(self, dbsession):
         self.dbsession = dbsession
+        self.session_manager = SessionManager.Instance()
+        self.session = self.session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
     
     def get_current_user(self):
         if self.session != None:
             return self.session.data['user_name']
-        else:
-            return None
- 
-    @property
-    def session(self):
-        session = sessions[self.get_secure_cookie('auth')]
-        if session.is_expired() or session.data['ip_address'] != self.request.remote_ip:
-            del session
-            return None
-        else:
-            return session
+        return None
+
 
 class AdminBaseHandler(RequestHandler):
     
