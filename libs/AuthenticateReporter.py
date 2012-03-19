@@ -14,6 +14,7 @@ from os import urandom
 from hashlib import sha256
 from base64 import b64encode
 from tornado import iostream #@UnresolvedImport
+from libs.WebSocketManager import WebSocketManager
 from models import Box
 
 TIMEOUT = 1
@@ -33,14 +34,12 @@ def score_box(box):
 
 def award_points(box, user, auth):
     ''' Creates action based on pwnage '''
-    if auth.access_level == 'root':
+    if auth.confirmed_access:
         value = box.root_value
         description = "%s got root access on %s" % (user.display_name, box.box_name)
-    elif auth.access_level == 'user':
+    else:
         value = box.user_value
         description = "%s got user level access on %s" % (user.display_name, box.box_name)
-    else:
-        raise TypeError
     action = Action(
         classification = unicode("Box Pwnage"),
         description = unicode(description),
@@ -52,8 +51,8 @@ def award_points(box, user, auth):
     dbsession.add(user)
     dbsession.flush()
     ws_manager = WebSocketManager.Instance()
-    path = self.application.settings['avatar_dir']+'/'+user.avatar
-    notify = Notification("Box Pwnage", description, file_location = path)
+    avatar_path = self.application.settings['avatar_dir']+'/'+user.avatar
+    notify = Notification("Box Pwnage", description, file_location = avatar_path)
     ws_manager.send_all(notify)
 
 def scoring_round():
@@ -77,10 +76,9 @@ class AuthenticateReporter():
         self.port = user.team.listen_port
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(TIMEOUT)
-        self.tcp_stream = iostream.IOStream(sock, max_buffer_size=BUFFER_SIZE)
+        self.tcp_stream = iostream.IOStream(sock, max_buffer_size = BUFFER_SIZE)
         self.tcp_stream.set_close_callback(self.setDone)
         self.tcp_stream.connect((self.box.ip_address, self.port))
-        self.access_level = None
         self.confirmed_access = None
         self.pending_access = None
         self.done = False
@@ -125,7 +123,7 @@ class AuthenticateReporter():
         self.sha.update(xid)
         while self.tcp_stream.writing():
             time.sleep(0.01)
-        self.tcp_stream.read_bytes(len(self.sha.hexdigest()), self.checkResponse)
+        self.tcp_stream.read_bytes(len(self.sha.hexdigest()), self.check_response)
             
     def check_response(self, response):
         ''' Checks if the reporter provided a valid response '''
