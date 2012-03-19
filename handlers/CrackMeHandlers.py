@@ -16,11 +16,12 @@ class CrackMeHandler(RequestHandler):
     
     def initialize(self, dbsession):
         self.dbsession = dbsession
+        self.session_manager = SessionManager.Instance()
+        self.session = self.session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
     
     @authenticated
     def get(self, *args, **kwargs):
-        session = sessions[self.get_secure_cookie('auth')]
-        user = User.by_user_name(session.data['user_name'])
+        user = User.by_user_name(self.session.data['user_name'])
         if user.team != None:
             self.render('crack_me/view.html', crack_me = user.team.crack_me)
         else:

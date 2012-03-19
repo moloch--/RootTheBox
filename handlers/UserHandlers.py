@@ -8,8 +8,10 @@ import imghdr
 import logging
 
 from uuid import uuid1
-from libs.SecurityDecorators import authenticated
 from models import User
+from libs.Session import SessionManager
+from libs.SecurityDecorators import authenticated
+from tornado.web import RequestHandler
 from BaseHandlers import UserBaseHandler
 
 class HomeHandler(UserBaseHandler):
@@ -28,11 +30,13 @@ class SharesHandler(UserBaseHandler):
     def post(self, *args, **kwargs):
         pass
 
-class SettingsHandler(UserBaseHandler):
+class SettingsHandler(RequestHandler):
     
     def initialize(self, dbsession):
         ''' Database and URI setup '''
         self.dbsession = dbsession
+        self.session_manager = SessionManager.Instance()
+        self.session = self.session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
         self.post_functions = {
             '/avatar': self.post_avatar,
             '/changepassword': self.post_password
@@ -80,15 +84,9 @@ class SettingsHandler(UserBaseHandler):
         pass
         
 class LogoutHandler(UserBaseHandler):
-    ''' Clears cookies and sessions '''
+
     def get(self, *args, **kwargs):
         ''' Clears cookies and session data '''
-        try:
-            sid = self.get_secure_cookie('auth')
-            if self.sessions.has_key(sid):
-                logging.info("User logout: %s" % self.sessions[sid].data['user_name'])
-                del self.sessions[sid]
-        except:
-            logging.info("Logout - No session")
+        self.session_manager.remove_session(self.get_secure_cookie('auth'))
         self.clear_all_cookies()
         self.redirect("/")
