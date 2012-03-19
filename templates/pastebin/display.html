@@ -1,7 +1,19 @@
 {% extends "../main.html" %}
 
+{% block header %}
+	<script type="text/javascript" src="/static/js/sh/shCore.js"></script>
+	<script type="text/javascript" src="/static/js/sh/shBrushJScript.js"></script>
+	<link type="text/css" rel="stylesheet" href="/static/css/sh/shCoreDefault.css"/>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+{% end %}
+
 {% block title %}Pastebin{% end %}
 
 {% block content %}
+<h2>{{name}}</h2>
+<pre class="brush: js;">
 	{{contents}}
+</pre>
+
+<a href="/pastebin">Back!</a>
 {% end %}

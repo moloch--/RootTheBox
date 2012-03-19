@@ -10,13 +10,16 @@ from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification
 from libs.ScoreUpdate import ScoreUpdate
 from handlers.BaseHandlers import UserBaseHandler
+from libs.Session import SessionManager
 
 class HashesHandler(UserBaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
         ''' Renders hashes page '''
-        user = User.by_user_name(self.get_current_user())
+        session_manager = SessionManager.Instance()
+        session = session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
+        user = User.by_user_name(session.data['user_name'])
         self.render("hashes/view.html", teams = Team.get_all(), current = user.team)
     
     @authenticated

@@ -59,11 +59,38 @@ class DisplayPostHandler(RequestHandler):
             self.render('pastebin/error.html', errors = "Invalid post id!")
             
         if user.team != None:
-            logging.info(post_id)
             posts = user.team.get_posts
             post = self.dbsession.query(Post).filter_by(id=post_id).first()
-            #if(post in posts):
-            self.render('pastebin/display.html', contents = post.contents)
+            if(post in posts):
+                self.render('pastebin/display.html', contents = post.contents, name=post.name)
+            else:
+                self.render('pastebin/error.html', errors = "Invalid Post Id!")
         else:
             self.render('pastebin/view.html', posts = [])
+            
+class DeletePostHandler(RequestHandler):
+    
+    def initialize(self, dbsession):
+        self.dbsession = dbsession
         
+    @authenticated
+    def get(self, *args, **kwargs):
+        session_manager = SessionManager.Instance()
+        session = session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
+        user = User.by_user_name(session.data['user_name'])
+        try:
+            post_id = self.get_argument("post_id")
+        except:
+            self.render('pastebin/error.html', errors = "Invalid post id!")
+            
+        if user.team != None:
+            posts = user.team.get_posts
+            post = self.dbsession.query(Post).filter_by(id=post_id).first()
+            if(post in posts):
+                self.dbsession.delete(post)
+                self.dbsession.flush()
+                posts = user.team.get_posts
+            
+            self.redirect('/pastebin')
+        else:
+            self.render('pastebin/view.html', posts = [])

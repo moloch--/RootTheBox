@@ -73,6 +73,7 @@ application = Application([
         #Pastebin Handlers
         (r'/pastebin', PastebinHandler, {'dbsession':dbsession}),
         (r'/pastebin/view(.*)', DisplayPostHandler, {'dbsession':dbsession}),
+        (r'/pastebin/delete(.*)', DeletePostHandler, {'dbsession':dbsession}),
         
         # Root handler - Serves all public pages
         (r'/login', LoginHandler),

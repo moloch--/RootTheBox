@@ -1,21 +1,47 @@
 {% extends "../main.html" %}
 
+{% block header %}
+	<script type="text/javascript" src="/static/js/sh/shCore.js"></script>
+	<script type="text/javascript" src="/static/js/sh/shBrushJScript.js"></script>
+	<link type="text/css" rel="stylesheet" href="/static/css/sh/shCoreDefault.css"/>
+	<script type="text/javascript">
+	SyntaxHighlighter.all();
+	</script>
+{% end %}
+
 {% block title %}Pastebin{% end %}
 
 {% block content %}
 	<div id="postList">
 		{% for post in posts %}
-			<div class="post"><a href="/pastebin/view?post_id={{post.id}}">{{post.name}}</a></div>
+			<div class="post"><a href="/pastebin/view?post_id={{post.id}}">{{post.name}}</a> : <a href="/pastebin/delete?post_id={{post.id}}">Delete!</a></div>
 		{% end %}
 	</div>
 
+	<h3>Preview:</h3>
+	<div id="preview_container">
+		<pre class="brush: js;" id="preview">
+		</pre>
+	</div>
+	
 	<div id="tinymce">
 	<form method="post" action="/pastebin">
 		{% raw xsrf_form_html() %}
 		Post Name:<input type="text" name="name"> <br>
-		<textarea name="content" style="width: 100%; height: 600px"></textarea>
+		<textarea id="post_content" name="content" style="width: 100%; height: 300px"></textarea>
 		<input type="submit" value="Submit Post!">
 	</form>
 	</div>
 	
+	<script>
+	$("#post_content").keyup(function(event) {
+		$('#preview_container').html("<pre class=\"brush: js;\" id=\"preview\"></pre>");
+		$('#preview').text($(this).val());
+		SyntaxHighlighter.highlight();
+	});
+	
+	function clean(text) {
+		
+	}
+	</script>
 {% end %}

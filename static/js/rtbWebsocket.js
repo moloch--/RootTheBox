@@ -8,7 +8,9 @@ $(document).ready(function() {
 	
 	ws.onopen = function() {
 		//Wait for a notification
-		ws.send("load plox");
+		if($('#scoreboard').length){
+			ws.send("load plox");
+		}
 	};
 	
 	ws.onmessage = function (evt) {
