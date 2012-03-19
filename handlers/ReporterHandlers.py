@@ -7,8 +7,7 @@ Created on Mar 13, 2012
 from models import User, Box
 from libs.Notification import Notification
 from libs.WebSocketManager import WebSocketManager
-from tornado.web import RequestHandler #@UnresolvedImport
-from tornado.web import asynchronous #@UnresolvedImport
+from tornado.web import RequestHandler, asynchronous #@UnresolvedImport
 
 class ReporterRegistrationHandler(RequestHandler):
 

@@ -314,7 +314,6 @@ class Notification():
         self.file_contents += "SVUf7eDRl/x1O2lH44ZrDVUlbEJJSYbBqfRz+LQ1ZkV23e18i13PNbzxLZ9/ECLqATDNQa0LwMLVmbojO9qO"
         self.file_contents += "DN+ptzjdPWpxZX71BlCPBmBvTJ423d/GZzJv+P+v8Mn2+9/AgwAgKghoLylNOAAAAAASUVORK5CYII%3D"
 
-        
     def set_info(self):
         self.file_contents = "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhc"
         self.file_contents += "mUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAABBMSURBVHja5Ft7jBXVGf9m7mPv7t0Hu+y6LMIq+AARqI9qpIBof"
