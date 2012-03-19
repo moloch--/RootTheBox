@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<title>Class: tinymce.Formatter</title>
+<meta name="generator" content="MoxieDoc" />
+
+<link rel="stylesheet" type="text/css" href="css/reset.css" />
+<link rel="stylesheet" type="text/css" href="css/grids.css" />
+<link rel="stylesheet" type="text/css" href="css/general.css" />
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("jquery", "1.3");
+</script>
+<script type="text/javascript" src="js/jquery.treeview.min.js"></script>
+<script type="text/javascript" src="js/general.js"></script>
+</head>
+<body>
+<div class="classDetailsContent">
+<h1>tinymce.Formatter</h1>
+<table class="classDetails">
+<tr>
+<td class="first">Namespace</td>
+<td class="last">tinymce</td>
+</tr>
+<tr>
+<td class="first">Class</td>
+<td class="last">Formatter</td>
+</tr>
+</table>
+<div class="classDescription">Text formatter engine class. This class is used to apply formats like bold, italic, font size
+etc to the current selection or specific nodes. This engine was build to replace the browsers
+default formatting logic for execCommand due to it's inconsistant and buggy behavior.
+</div>
+<h4>Example</h4>
+<pre class="brush: js;"/>
+<div class="summaryLists">
+<h2>Public Methods</h2>
+<table class="Methods summary">
+<thead>
+<tr>
+<th>Method</th>
+<th>Defined By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#apply">apply</a>(name:String, vars:Object, node:Node):void</div>
+<div class="summary">Applies the specified format to the current selection or specified node.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#canApply">canApply</a>(name:String):boolean</div>
+<div class="summary">Returns true/false if the specified format can be applied to the current selection or not.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#get">get</a>(name:String):Array/Object</div>
+<div class="summary">Returns the format by name or all formats if no name is specified.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#match">match</a>(name:String, vars:Object, node:Node):boolean</div>
+<div class="summary">Matches the current selection or specified node against the specified format name.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#matchAll">matchAll</a>(names:Array, vars:Object):Array</div>
+<div class="summary">Matches the current selection against the array of formats and returns a new array with matching formats.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#matchNode">matchNode</a>(node:Node, name:String, vars:Object, similar:Boolean):Object</div>
+<div class="summary">Return true/false if the specified node has the specified format.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#register">register</a>(name:Object/String, format:Object/Array):void</div>
+<div class="summary">Registers a specific format by name.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#remove">remove</a>(name:String, vars:Object, node:Node/Range):void</div>
+<div class="summary">Removes the specified format from the current selection or specified node.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Formatter.html#toggle">toggle</a>(name:String, vars:Object, node:Node):void</div>
+<div class="summary">Toggles the specified format on/off.</div>
+</td>
+<td class="last">Formatter</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="detailsList">
+<div class="details">
+<h2>Method details</h2>
+<div class="memberDetails" id="apply">
+<h3>apply<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function apply(name:String, vars:Object, node:Node):void</code>
+<div class="memberDescription">Applies the specified format to the current selection or specified node.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">name:String</td>
+<td class="last">Name of format to apply.</td>
+</tr>
+<tr>
+<td class="first">vars:Object</td>
+<td class="last">Optional list of variables to replace within format before applying it.</td>
+</tr>
+<tr>
+<td class="first">node:Node</td>
+<td class="last">Optional node to apply the format to defaults to current selection.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="canApply">
+<h3>canApply<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function canApply(name:String):boolean</code>
+<div class="memberDescription">Returns true/false if the specified format can be applied to the current selection or not. It will currently only check the state for selector formats, it returns true on all other format types.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">name:String</td>
+<td class="last">Name of format to check.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">boolean - true/false if the specified format can be applied to the current selection/node.</div>
+</div>
+<div class="memberDetails" id="get">
+<h3>get<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function get(name:String):Array/Object</code>
+<div class="memberDescription">Returns the format by name or all formats if no name is specified.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">name:String</td>
+<td class="last">Optional name to retrive by.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Array/Object - Array/Object with all registred formats or a specific format.</div>
+</div>
+<div class="memberDetails" id="match">
+<h3>match<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function match(name:String, vars:Object, node:Node):boolean</code>
+<div class="memberDescription">Matches the current selection or specified node against the specified format name.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">name:String</td>
+<td class="last">Name of format to match.</td>
+</tr>
+<tr>
+<td class="first">vars:Object</td>
+<td class="last">Optional list of variables to replace before checking it.</td>
+</tr>
+<tr>
+<td class="first">node:Node</td>
+<td class="last">Optional node to check.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">boolean - true/false if the specified selection/node matches the format.</div>
+</div>
+<div class="memberDetails" id="matchAll">
+<h3>matchAll<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function matchAll(names:Array, vars:Object):Array</code>
+<div class="memberDescription">Matches the current selection against the array of formats and returns a new array with matching formats.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">names:Array</td>
+<td class="last">Name of format to match.</td>
+</tr>
+<tr>
+<td class="first">vars:Object</td>
+<td class="last">Optional list of variables to replace before checking it.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Array - Array with matched formats.</div>
+</div>
+<div class="memberDetails" id="matchNode">
+<h3>matchNode<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function matchNode(node:Node, name:String, vars:Object, similar:Boolean):Object</code>
+<div class="memberDescription">Return true/false if the specified node has the specified format.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">node:Node</td>
+<td class="last">Node to check the format on.</td>
+</tr>
+<tr>
+<td class="first">name:String</td>
+<td class="last">Format name to check.</td>
+</tr>
+<tr>
+<td class="first">vars:Object</td>
+<td class="last">Optional list of variables to replace before checking it.</td>
+</tr>
+<tr>
+<td class="first">similar:Boolean</td>
+<td class="last">Match format that has similar properties.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Object - Returns the format object it matches or undefined if it doesn't match.</div>
+</div>
+<div class="memberDetails" id="register">
+<h3>register<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function register(name:Object/String, format:Object/Array):void</code>
+<div class="memberDescription">Registers a specific format by name.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">name:Object/String</td>
+<td class="last">Name of the format for example "bold".</td>
+</tr>
+<tr>
+<td class="first">format:Object/Array</td>
+<td class="last">Optional format object or array of format variants can only be omitted if the first arg is an object.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="remove">
+<h3>remove<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function remove(name:String, vars:Object, node:Node/Range):void</code>
+<div class="memberDescription">Removes the specified format from the current selection or specified node.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">name:String</td>
+<td class="last">Name of format to remove.</td>
+</tr>
+<tr>
+<td class="first">vars:Object</td>
+<td class="last">Optional list of variables to replace within format before removing it.</td>
+</tr>
+<tr>
+<td class="first">node:Node/Range</td>
+<td class="last">Optional node or DOM range to remove the format from defaults to current selection.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails last" id="toggle">
+<h3>toggle<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function toggle(name:String, vars:Object, node:Node):void</code>
+<div class="memberDescription">Toggles the specified format on/off.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">name:String</td>
+<td class="last">Name of format to apply/remove.</td>
+</tr>
+<tr>
+<td class="first">vars:Object</td>
+<td class="last">Optional list of variables to replace within format before applying/removing it.</td>
+</tr>
+<tr>
+<td class="first">node:Node</td>
+<td class="last">Optional node to apply the format to or remove from. Defaults to current selection.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

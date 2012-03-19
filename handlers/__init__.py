@@ -17,6 +17,7 @@ from handlers.CrackMeHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
+from handlers.PastebinHandlers import *
 
 from models import dbsession
 from modules.Menu import Menu
@@ -57,6 +58,10 @@ application = Application([
         
         #Websocket Handlers - Websocket communication handlers
         (r'/websocket', WebsocketHandler),
+        
+        #Pastebin Handlers
+        (r'/pastebin', PastebinHandler, {'dbsession':dbsession}),
+        (r'/pastebin/view(.*)', DisplayPostHandler, {'dbsession':dbsession}),
         
         # Root handler - Serves all public pages
         (r'/login', LoginHandler),

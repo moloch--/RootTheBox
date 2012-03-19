@@ -45,12 +45,22 @@ class Team(BaseObject):
     
     @property
     def get_actions(self):
+        ''' Returns all actions the team members have, sorted by date '''
         action_list = []
         for user in self.members:
             action_list += user.actions
         action_list.sort(key=lambda action : action.created)
         return action_list
         
+    @property
+    def get_posts(self):
+        ''' Returns all of the posts the team has '''
+        posts = []
+        for user in self.members:
+            posts += user.posts
+        posts.sort(key=lambda post : post.created)
+        return posts
+    
     @property
     def boxes(self):
         ''' Returns a list of box object controlled by the team members '''

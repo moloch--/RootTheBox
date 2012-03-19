@@ -70,7 +70,6 @@ class HashesHandler(UserBaseHandler):
         self.dbsession.add(target)
         self.dbsession.add(user)
         self.dbsession.flush()
-        self.updateScoreboard(user, user_action, target, target_action)
 
     def notify(self, user, target):
         ''' Sends a password cracked message via web sockets '''
@@ -81,7 +80,3 @@ class HashesHandler(UserBaseHandler):
         notify = Notification(title, message, file_location = file_path)
         ws_manager.send_all(notify)
         
-    def updateScoreboard(self, first_user, first_action, second_user, second_action):
-        ws_manager = WebSocketManager.Instance()
-        ws_manager.score_update(ScoreUpdate(first_action.created.strftime("%H%M%S"), first_action.value, first_user.team_name))
-        ws_manager.score_update(ScoreUpdate(second_action.created.strftime("%H%M%S"), second_action.value, second_user.team_name))

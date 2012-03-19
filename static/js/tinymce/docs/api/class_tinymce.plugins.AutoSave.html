@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<title>Class: tinymce.plugins.AutoSave</title>
+<meta name="generator" content="MoxieDoc" />
+
+<link rel="stylesheet" type="text/css" href="css/reset.css" />
+<link rel="stylesheet" type="text/css" href="css/grids.css" />
+<link rel="stylesheet" type="text/css" href="css/general.css" />
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("jquery", "1.3");
+</script>
+<script type="text/javascript" src="js/jquery.treeview.min.js"></script>
+<script type="text/javascript" src="js/general.js"></script>
+</head>
+<body>
+<div class="classDetailsContent">
+<h1>tinymce.plugins.AutoSave</h1>
+<table class="classDetails">
+<tr>
+<td class="first">Namespace</td>
+<td class="last">tinymce.plugins</td>
+</tr>
+<tr>
+<td class="first">Class</td>
+<td class="last">AutoSave</td>
+</tr>
+</table>
+<div class="classDescription">This plugin adds auto-save capability to the TinyMCE text editor to rescue content
+inadvertently lost. By using localStorage.
+</div>
+<div class="summaryLists">
+<h2>Public Methods</h2>
+<table class="Methods summary">
+<thead>
+<tr>
+<th>Method</th>
+<th>Defined By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#getExpDate">getExpDate</a>():String</div>
+<div class="summary">Returns an expiration date UTC string.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#getInfo">getInfo</a>():Object</div>
+<div class="summary">Returns information about the plugin as a name/value array.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#hasDraft">hasDraft</a>():boolean</div>
+<div class="summary">This method will return true/false if there is a local storage draft available.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#init">init</a>(ed:<a href="class_tinymce.Editor.html">Editor</a>, url:string):void</div>
+<div class="summary">Initializes the plugin, this will be executed after the plugin has been created.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#removeDraft">removeDraft</a>():void</div>
+<div class="summary">Removes the currently stored draft.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#restoreDraft">restoreDraft</a>():void</div>
+<div class="summary">This method will restore the contents from the storage engine back to the editor.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#setupStorage">setupStorage</a>():void</div>
+<div class="summary">This method will setup the storage engine.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#storeDraft">storeDraft</a>():void</div>
+<div class="summary">This method will store the current contents in the the storage engine.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+</tbody>
+</table>
+<h2>Public Events</h2>
+<table class="Events summary">
+<thead>
+<tr>
+<th>Event</th>
+<th>Defined By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#onRemoveDraft">onRemoveDraft</a>(sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>, draft:Object)</div>
+<div class="summary">This event gets fired when a draft removed/expired.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#onStoreDraft">onStoreDraft</a>(sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>, draft:Object)</div>
+<div class="summary">This event gets fired when a draft is stored to local storage.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.plugins.AutoSave.html#onStoreDraft">onStoreDraft</a>(sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>, draft:Object)</div>
+<div class="summary">This event gets fired when a draft is restored from local storage.</div>
+</td>
+<td class="last">AutoSave</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="detailsList">
+<div class="details">
+<h2>Method details</h2>
+<div class="memberDetails" id="getExpDate">
+<h3>getExpDate<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getExpDate():String</code>
+<div class="memberDescription">Returns an expiration date UTC string.
+</div>
+<h4>Returns</h4>
+<div class="returns">String - Expiration date UTC string.</div>
+</div>
+<div class="memberDetails" id="getInfo">
+<h3>getInfo<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getInfo():Object</code>
+<div class="memberDescription">Returns information about the plugin as a name/value array.
+The current keys are longname, author, authorurl, infourl and version.
+</div>
+<h4>Returns</h4>
+<div class="returns">Object - Name/value array containing information about the plugin.</div>
+</div>
+<div class="memberDetails" id="hasDraft">
+<h3>hasDraft<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function hasDraft():boolean</code>
+<div class="memberDescription">This method will return true/false if there is a local storage draft available.
+</div>
+<h4>Returns</h4>
+<div class="returns">boolean - true/false state if there is a local draft.</div>
+</div>
+<div class="memberDetails" id="init">
+<h3>init<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function init(ed:<a href="class_tinymce.Editor.html">Editor</a>, url:string):void</code>
+<div class="memberDescription">Initializes the plugin, this will be executed after the plugin has been created.
+This call is done before the editor instance has finished it's initialization so use the onInit event
+of the editor instance to intercept that event.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">ed:<a href="class_tinymce.Editor.html">Editor</a>
+</td>
+<td class="last">Editor instance that the plugin is initialized in.</td>
+</tr>
+<tr>
+<td class="first">url:string</td>
+<td class="last">Absolute URL to where the plugin is located.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="removeDraft">
+<h3>removeDraft<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function removeDraft():void</code>
+<div class="memberDescription">Removes the currently stored draft.
+</div>
+</div>
+<div class="memberDetails" id="restoreDraft">
+<h3>restoreDraft<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function restoreDraft():void</code>
+<div class="memberDescription">This method will restore the contents from the storage engine back to the editor.
+</div>
+</div>
+<div class="memberDetails" id="setupStorage">
+<h3>setupStorage<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function setupStorage():void</code>
+<div class="memberDescription">This method will setup the storage engine. If the browser has support for it.
+</div>
+</div>
+<div class="memberDetails last" id="storeDraft">
+<h3>storeDraft<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function storeDraft():void</code>
+<div class="memberDescription">This method will store the current contents in the the storage engine.
+</div>
+</div>
+</div>
+<div class="details">
+<h2>Event details</h2>
+<div class="memberDetails" id="onRemoveDraft">
+<h3>onRemoveDraft<span class="memberType">event</span>
+</h3>
+<code class="syntax">public 
+						event onRemoveDraft(sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>, draft:Object)</code>
+<div class="memberDescription">This event gets fired when a draft removed/expired.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>
+</td>
+<td class="last">Plugin instance sending the event.</td>
+</tr>
+<tr>
+<td class="first">draft:Object</td>
+<td class="last">Draft object containing the HTML contents of the editor.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="onStoreDraft">
+<h3>onStoreDraft<span class="memberType">event</span>
+</h3>
+<code class="syntax">public 
+						event onStoreDraft(sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>, draft:Object)</code>
+<div class="memberDescription">This event gets fired when a draft is stored to local storage.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>
+</td>
+<td class="last">Plugin instance sending the event.</td>
+</tr>
+<tr>
+<td class="first">draft:Object</td>
+<td class="last">Draft object containing the HTML contents of the editor.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails last" id="onStoreDraft">
+<h3>onStoreDraft<span class="memberType">event</span>
+</h3>
+<code class="syntax">public 
+						event onStoreDraft(sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>, draft:Object)</code>
+<div class="memberDescription">This event gets fired when a draft is restored from local storage.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">sender:<a href="class_tinymce.plugins.AutoSave.html">AutoSave</a>
+</td>
+<td class="last">Plugin instance sending the event.</td>
+</tr>
+<tr>
+<td class="first">draft:Object</td>
+<td class="last">Draft object containing the HTML contents of the editor.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

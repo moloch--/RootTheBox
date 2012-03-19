@@ -17,7 +17,7 @@ engine = create_engine('mysql://rtbUser:rtbUser@localhost/rtb')
 Session = sessionmaker(bind=engine, autocommit=True)
 
 # import the dbsession instance to execute queries on your database
-dbsession = Session()
+dbsession = Session(autoflush = True)
 
 association_table = Table('user_to_box', BaseObject.metadata,
     Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
@@ -27,6 +27,7 @@ association_table = Table('user_to_box', BaseObject.metadata,
 # import models.
 from models.Action import Action
 from models.Box import Box
+from models.Post import Post
 from models.CrackMe import CrackMe
 from models.Permission import Permission
 from models.Team import Team
