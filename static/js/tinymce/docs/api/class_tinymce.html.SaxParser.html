@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<title>Class: tinymce.html.SaxParser</title>
+<meta name="generator" content="MoxieDoc" />
+
+<link rel="stylesheet" type="text/css" href="css/reset.css" />
+<link rel="stylesheet" type="text/css" href="css/grids.css" />
+<link rel="stylesheet" type="text/css" href="css/general.css" />
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("jquery", "1.3");
+</script>
+<script type="text/javascript" src="js/jquery.treeview.min.js"></script>
+<script type="text/javascript" src="js/general.js"></script>
+</head>
+<body>
+<div class="classDetailsContent">
+<h1>tinymce.html.SaxParser</h1>
+<table class="classDetails">
+<tr>
+<td class="first">Namespace</td>
+<td class="last">tinymce.html</td>
+</tr>
+<tr>
+<td class="first">Class</td>
+<td class="last">SaxParser</td>
+</tr>
+<tr>
+<td class="first">Type</td>
+<td class="last">Singleton</td>
+</tr>
+</table>
+<div class="classDescription">Entity encoder class.
+</div>
+<div class="version">
+<span>Version:</span>3.4</div>
+<h4>Example</h4>
+<pre class="brush: js;"/>
+<div class="summaryLists">
+<h2>Public Methods</h2>
+<table class="Methods summary">
+<thead>
+<tr>
+<th>Method</th>
+<th>Defined By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.html.SaxParser.html#SaxParser">SaxParser</a>(settings:Object, schema:<a href="class_tinymce.html.Schema.html">Schema</a>)</div>
+<div class="summary">Constructs a new SaxParser instance.</div>
+</td>
+<td class="last">SaxParser</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.html.SaxParser.html#encodeAllRaw">encodeAllRaw</a>(text:String):String</div>
+<div class="summary">
+<span class="static">[static] </span>Encoded the specified text with both the attributes and text entities.</div>
+</td>
+<td class="last">SaxParser</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.html.SaxParser.html#encodeNamed">encodeNamed</a>(text:String, attr:Boolean, entities:Object):String</div>
+<div class="summary">
+<span class="static">[static] </span>Encodes the specified string using named entities.</div>
+</td>
+<td class="last">SaxParser</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.html.SaxParser.html#encodeNumeric">encodeNumeric</a>(text:String, attr:Boolean):String</div>
+<div class="summary">
+<span class="static">[static] </span>Encodes the specified string using numeric entities.</div>
+</td>
+<td class="last">SaxParser</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.html.SaxParser.html#encodeRaw">encodeRaw</a>(text:String, attr:Boolean):String</div>
+<div class="summary">
+<span class="static">[static] </span>Encodes the specified string using raw entities.</div>
+</td>
+<td class="last">SaxParser</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.html.SaxParser.html#getEncodeFunc">getEncodeFunc</a>(name:String, entities:String):function</div>
+<div class="summary">
+<span class="static">[static] </span>Returns an encode function based on the name(s) and it's optional entities.</div>
+</td>
+<td class="last">SaxParser</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.html.SaxParser.html#parse">parse</a>(html:String):void</div>
+<div class="summary">Parses the specified HTML string and executes the callbacks for each item it finds.</div>
+</td>
+<td class="last">SaxParser</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="detailsList">
+<div class="details">
+<h2>Method details</h2>
+<div class="memberDetails" id="SaxParser">
+<h3>SaxParser<span class="memberType">constructor</span>
+</h3>
+<code class="syntax">public 
+						function SaxParser(settings:Object, schema:<a href="class_tinymce.html.Schema.html">Schema</a>)</code>
+<div class="memberDescription">Constructs a new SaxParser instance.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">settings:Object</td>
+<td class="last">Name/value collection of settings. comment, cdata, text, start and end are callbacks.</td>
+</tr>
+<tr>
+<td class="first">schema:<a href="class_tinymce.html.Schema.html">Schema</a>
+</td>
+<td class="last">HTML Schema class to use when parsing.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="encodeAllRaw">
+<h3>encodeAllRaw<span class="memberType">method</span>
+</h3>
+<code class="syntax">public static 
+						function encodeAllRaw(text:String):String</code>
+<div class="memberDescription">Encoded the specified text with both the attributes and text entities. This function will produce larger text contents
+since it doesn't know if the context is within a attribute or text node. This was added for compatibility
+and is exposed as the DOMUtils.encode function.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">text:String</td>
+<td class="last">Text to encode.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Entity encoded text.</div>
+</div>
+<div class="memberDetails" id="encodeNamed">
+<h3>encodeNamed<span class="memberType">method</span>
+</h3>
+<code class="syntax">public static 
+						function encodeNamed(text:String, attr:Boolean, entities:Object):String</code>
+<div class="memberDescription">Encodes the specified string using named entities. The core entities will be encoded as named ones but all non lower ascii characters
+will be encoded into named entities.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">text:String</td>
+<td class="last">Text to encode.</td>
+</tr>
+<tr>
+<td class="first">attr:Boolean</td>
+<td class="last">Optional flag to specify if the text is attribute contents.</td>
+</tr>
+<tr>
+<td class="first">entities:Object</td>
+<td class="last">Optional parameter with entities to use.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Entity encoded text.</div>
+</div>
+<div class="memberDetails" id="encodeNumeric">
+<h3>encodeNumeric<span class="memberType">method</span>
+</h3>
+<code class="syntax">public static 
+						function encodeNumeric(text:String, attr:Boolean):String</code>
+<div class="memberDescription">Encodes the specified string using numeric entities. The core entities will be encoded as named ones but all non lower ascii characters
+will be encoded into numeric entities.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">text:String</td>
+<td class="last">Text to encode.</td>
+</tr>
+<tr>
+<td class="first">attr:Boolean</td>
+<td class="last">Optional flag to specify if the text is attribute contents.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Entity encoded text.</div>
+</div>
+<div class="memberDetails" id="encodeRaw">
+<h3>encodeRaw<span class="memberType">method</span>
+</h3>
+<code class="syntax">public static 
+						function encodeRaw(text:String, attr:Boolean):String</code>
+<div class="memberDescription">Encodes the specified string using raw entities. This means only the required XML base entities will be endoded.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">text:String</td>
+<td class="last">Text to encode.</td>
+</tr>
+<tr>
+<td class="first">attr:Boolean</td>
+<td class="last">Optional flag to specify if the text is attribute contents.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Entity encoded text.</div>
+</div>
+<div class="memberDetails" id="getEncodeFunc">
+<h3>getEncodeFunc<span class="memberType">method</span>
+</h3>
+<code class="syntax">public static 
+						function getEncodeFunc(name:String, entities:String):function</code>
+<div class="memberDescription">Returns an encode function based on the name(s) and it's optional entities.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">name:String</td>
+<td class="last">Comma separated list of encoders for example named,numeric.</td>
+</tr>
+<tr>
+<td class="first">entities:String</td>
+<td class="last">Optional parameter with entities to use instead of the built in set.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">function - Encode function to be used.</div>
+</div>
+<div class="memberDetails last" id="parse">
+<h3>parse<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function parse(html:String):void</code>
+<div class="memberDescription">Parses the specified HTML string and executes the callbacks for each item it finds.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">html:String</td>
+<td class="last">Html string to sax parse.</td>
+</tr>
+</table>
+<h4>Example</h4>
+<pre class="brush: js;"/>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

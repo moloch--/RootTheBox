@@ -11,6 +11,7 @@ from sqlalchemy.types import Unicode, Integer, Boolean
 from models import dbsession, association_table
 from models.Box import Box
 from models.Team import Team
+from models.Post import Post
 from models.Action import Action
 from models.Permission import Permission
 from models.BaseGameObject import BaseObject
@@ -25,6 +26,7 @@ class User(BaseObject):
     dirty = Column(Boolean, default=True)
     score_cache = Column(Integer, default=0)
     actions = relationship("Action", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
+    posts = relationship("Post", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.gif"))
     controlled_boxes = relationship("Box", secondary=association_table, backref="User")
@@ -76,7 +78,8 @@ class User(BaseObject):
             self.score_cache = sum(actions)
             self.dirty = False
             dbsession.add(self) #@UndefinedVariable
-            dbsession.flush() #@UndefinedVariable
+            #Auto flush enabled, this should be handled by the session
+            #dbsession.flush() #@UndefinedVariable
         return self.score_cache
     
     @classmethod

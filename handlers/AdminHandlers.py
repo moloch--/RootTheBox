@@ -113,7 +113,8 @@ class AdminCreateHandler(AdminBaseHandler):
             if len(self.request.files['crack_me']) != 1: raise TypeError
         except:
             self.render("admin/error.html", errors = "Failed to create crack me")
-        filePath = self.application.settings['crack_me_dir']+'/'+file_uuid
+            
+        filePath = self.application.settings['crack_me_dir']+'/'+uuid
         save = open(filePath, 'wb')
         save.write(self.request.files['crack_me'][0]['body'])
         save.close()

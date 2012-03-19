@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<!-- Content -->
-		<div id="content" class="animated fadeIn">
+		<div id="page_content" class="animated fadeIn">
 			<div id="primaryContentContainer">
 				<div id="primaryContent">
 					{% block content %}
@@ -41,5 +41,7 @@
 			Created by Hathcox &amp; Moloch &copy; {{ datetime.date.today().year }} - Version {{ handler.application.settings['version'] }}
 		</div>
 	</div>
+	{% block body %}
+	{% end %}
 </body>
 </html>

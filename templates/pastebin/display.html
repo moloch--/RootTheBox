@@ -1,0 +1,10 @@
+{% extends "../main.html" %}
+{% block header %}
+<script type="text/javascript" src="static/js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+{% end %} 
+
+{% block title %}Pastebin{% end %}
+
+{% block content %}
+	{% raw contents %}
+{% end %}

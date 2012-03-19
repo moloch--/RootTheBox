@@ -6,8 +6,19 @@
 <h1>Crack Me</h1>
 <br />
 {% if crack_me != None %}
-	{{ crack_me.crack_me_name }}
-	<a href="/crackme/download">Download</a>
+	<div id="crack_me">
+		{{ crack_me.crack_me_name }}
+		<a href="/crackme/download">Download</a>
+	</div>
+	
+	<div class="form">
+	<form action="/crackme" method="post" >
+		{% raw xsrf_form_html() %}
+		<input type="hidden" name="crack_me" value="{{crack_me.id}}">
+		Token: <input type="text" name="token"> <br>
+		<input type="submit" value="Submit Crackme!">
+	</form>
+	</div>
 {% else %}
 	<p>
 	No Crack Me's remain.

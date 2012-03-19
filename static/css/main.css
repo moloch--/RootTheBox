@@ -10,7 +10,7 @@ Main CSS for Root the Box
 
 span {
 	position:relative;
-	top:-100px;
+	/*top:-100px;*/
 }
 
 form
@@ -108,42 +108,42 @@ a:hover
 
 /* Content */
 
-#content
+#page_content
 {
 	margin-top: 1px;
 	padding-top: 1.5em;
 }
 
-#content p
+#page_content p
 {
 	margin-bottom: 1.5em;
 	line-height: 1.6em;
 }
 
-#content h2
+#page_content h2
 {
 	font-size: 1.5em;
 }
 
-#content h3
+#page_content h3
 {
 	font-size: 1.1em;
 }
 
-#content h2,h3,h4,h5,h6
+#page_content h2,h3,h4,h5,h6
 {
 	padding-bottom: 0.2em;
 	margin-bottom: 1.2em;
 }
 
-#content ul
+#page_content ul
 {
 	margin-bottom: 1.5em;
 	padding-left: 1em;
 	line-height: 1.6em;
 }
 
-#content blockquote
+#page_content blockquote
 {
 	border-left: solid 0.8em #cacaca;
 	padding: 0.5em 0em 0.5em 1.0em;
@@ -151,19 +151,19 @@ a:hover
 	line-height: 1.6em;
 }
 
-#content blockquote p
+#page_content blockquote p
 {
 	display: inline;
 }
-
-#content table
+/*  This was messing with the tables everywhere, make seperate divs for the tables you want to organize or a table class to apply these too
+#page_content table
 {
 	border: dotted 1px #cacaca;
 	padding: 0.5em;
 	margin-bottom: 1.5em;
 }
 
-#content table th
+#page_content table th
 {
 	font-size:18;
 	text-align: left;
@@ -171,23 +171,24 @@ a:hover
 	padding: 0.5em;
 }
 
-#content table td
+#page_content table td
 {
 	font-size:12;
 	padding: 0.5em;
 }
 
-#content table tr.rowA
+#page_content table tr.rowA
 {
 	background-color: #f5f5f5;
 	color: inherit;
 }
 
-#content table tr.rowB
+#page_content table tr.rowB
 {
 	background-color: #fdfdfd;
 	color: inherit;
 }
+*/
 
 /* Primary Content */
 
@@ -208,6 +209,11 @@ a:hover
 {
 	max-width:200px;
 	max-height:auto;
+}
+
+#primaryContent #scoreboard
+{
+
 }
 
 /* Secondary Content */
@@ -232,4 +238,9 @@ a:hover
 .clear
 {
 	clear: both;
+}
+/* tiny mce */
+
+#tinymce {
+	
 }

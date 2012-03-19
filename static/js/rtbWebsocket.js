@@ -10,36 +10,41 @@ ws.onopen = function() {
 };
 
 ws.onmessage = function (evt) {
-	if(evt.data.startsWith("notification:")) {
-		var title = evt.data.substring(evt.data.indexOf("title:")+"title:".length, evt.data.indexOf("|"));
-		var message = evt.data.substring(evt.data.indexOf("message:")+"message:".length, evt.data.indexOf("|", evt.data.indexOf("message:")));
-		var icon = evt.data.substring(evt.data.indexOf("icon:")+"icon:".length);
-		Notifier.notify(message, title, "data:image/png;base64,"+icon);
-	} else if(evt.data.startsWith("update:")) {
-		if($('#scoreboard').length) {
-			var teamName = trim(evt.data.substring(evt.data.indexOf("teamName:")+"teamName:".length));
-			var series = getSeries(teamName);
-			var timestamp = trim(evt.data.substring(evt.data.indexOf("timestamp:")+"timestamp:".length, evt.data.indexOf("|", evt.data.indexOf("timestamp:"))));
-			//Find the correct sieries with the updates team name
-			//Find the timestamp of the update
-			//Find the value of the update
-			//push that point
-			//chart.series[0].addPoint( [200, 31]);
-			console.log(timestamp);
+	var message = JSON.parse(evt.data);
+	
+	if(message['py/object'] == 'libs.Notification.Notification') {
+		//Send a Notification
+		Notifier.notify(message['message'], message['title'], "data:image/png;base64,"+message['file_contents']);
+	} else if(message['py/object'] == 'libs.ScoreUpdate.ScoreUpdate') {
+		if($('#scoreboard').length){
+			//Update the line chart
+			chart.series[getSeriesByName(message['team_name'])].addPoint([parseInt(message['time_stamp']), parseInt(message['team_score'])]);
+			//Update the bar chart
+			correctData(getSeriesByName(message['team_name']), parseInt(message['team_score']));
+			bar_chart.redraw();
 		}
 	}
 	
 };
 
-function getSeries(teamName) {
+function getSeriesByName(teamName) {
 	for(var index = 0; index < chart.series.length; index++) {
-		console.log(chart.series[index].name);
 		if(chart.series[index].name == teamName) {
 			return index;
 		}
 	}
 	return -1;
 }
+function correctData(teamIndex, newScore) {
+	var new_data = [];
+	//Copy all of the team scores that are currently being displayed
+	for(var index = 0; index < bar_chart.series[0].data.length; index++) {
+		 new_data[index] = bar_chart.series[0].data[index].config;
+	}
+	new_data[teamIndex] = newScore;
+	bar_chart.series[0].setData(new_data, false);
+}
+
 function trim(stringToTrim) {
 	return stringToTrim.replace(/^\s+|\s+$/g,"");
 }

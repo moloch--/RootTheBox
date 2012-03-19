@@ -4,6 +4,7 @@ Created on Mar 16, 2012
 @author: haddaway
 '''
 import base64
+from jsonpickle.pickler import Pickler
 
 class Notification():
     
@@ -29,7 +30,8 @@ class Notification():
                 self.reander("admin/error.html", errors = "Notification class does not exist")
 
     def to_message(self):
-        return "notification:title:"+self.title+"|message:"+self.message+"|icon:"+self.file_contents
+        return Pickler().flatten(self)
+        #return "notification:title:"+self.title+"|message:"+self.message+"|icon:"+self.file_contents
 
     @classmethod
     def get_classifications(cls):
