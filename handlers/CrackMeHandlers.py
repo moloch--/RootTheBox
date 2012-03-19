@@ -46,7 +46,8 @@ class CrackMeHandler(RequestHandler):
                     classification = unicode("CrackMe Beaten"),
                     description = unicode("%s successfully cracked the level %s CrackMe" % (user.display_name, user.team.crack_me.id)),
                     value = user.team.crack_me.value,
-                    user_id = user.id)
+                    user_id = user.id
+                )
                 user.dirty = True
                 self.notify(user, user.team.crack_me)
                 user.team.solved_crack_me()

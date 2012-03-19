@@ -104,11 +104,9 @@ class AuthenticateReporter():
         ''' Check if the reporter provided a valid access level '''
         self.pending_access = pending_access
         if self.pending_access == 'root':
-            self.access_level = 'root'
             self.sha.update(self.box.root_key)
             self.send_xid()
         elif self.pending_access == 'user':
-            self.access_level = 'user'
             self.sha.update(self.box.user_key)
             self.send_xid()
         else:

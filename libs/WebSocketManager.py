@@ -15,6 +15,12 @@ class WebSocketManager():
         for connection in self.connections:
             connection.write_message(notification.to_message())
     
+    def send_user(self):
+        pass
+
+    def send_team(self):
+        pass
+
     def score_update(self, scoreUpdate):
         for connection in self.connections:
             connection.write_message(scoreUpdate.to_message())
