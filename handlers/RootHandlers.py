@@ -13,7 +13,6 @@ class LoginHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         ''' Display the login page '''
-        self.clear_all_cookies()
         self.render('public/login.html', header = 'User authentication required')
     
     def post(self, *args, **kwargs):

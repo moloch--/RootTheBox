@@ -10,10 +10,11 @@
 {% block title %}Pastebin{% end %}
 
 {% block content %}
-<h2>{{name}}</h2>
+<h1>{{name}}</h1>
+<a href="/pastebin">&lt;&lt; Back</a>
 <pre class="brush: js;">
 	{{contents}}
 </pre>
 
-<a href="/pastebin">Back!</a>
+<a href="/pastebin">&lt;&lt; Back</a>
 {% end %}
