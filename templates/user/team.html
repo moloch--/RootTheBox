@@ -1,0 +1,14 @@
+{% extends "../main.html" %}
+
+{% block title %}Team{% end %}
+
+{% block content %}
+<h1>Team Members</h1>
+<p>
+	{% for member in team.members %}
+		
+			{% memeber.user_name %}
+
+	{% end %}
+</p>
+{% end %}

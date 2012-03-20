@@ -145,7 +145,13 @@ class SettingsHandler(RequestHandler):
 
     def post_password(self, *args, **kwargs):
         pass
-        
+
+class TeamViewHandler(UserBaseHandler):
+
+    def get(self, *args, **kwargs):
+        user = self.get_current_user()
+        self.render("user/team.html", user = user, team = user.team)        
+
 class LogoutHandler(UserBaseHandler):
 
     def get(self, *args, **kwargs):
