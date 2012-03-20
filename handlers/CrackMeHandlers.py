@@ -35,17 +35,16 @@ class CrackMeHandler(RequestHandler):
             crack_me = int(crack_me)
             token = self.get_argument("token")
         except:
-            self.render('crack_me/error.html', errors="Enter a Token!")
-        
-        session = sessions[self.get_secure_cookie('auth')]
-        user = User.by_user_name(session.data['user_name'])
+            self.render('crack_me/error.html', errors = "Enter a Token!")
+
+        user = User.by_user_name(self.session.data['user_name'])
         #If they are entering towards the correct crackme
         if(user.team.crack_me.id == crack_me):
             #If they entered the token correctly
             if(user.team.crack_me.token == token):
                 user_action = Action(
-                    classification = unicode("CrackMe Beaten"),
-                    description = unicode("%s successfully cracked the level %s CrackMe" % (user.display_name, user.team.crack_me.id)),
+                    classification = unicode("Cracked a Crack Me"),
+                    description = unicode("%s successfully cracked the level %s Crack Me" % (user.display_name, user.team.crack_me.id)),
                     value = user.team.crack_me.value,
                     user_id = user.id
                 )
@@ -58,14 +57,14 @@ class CrackMeHandler(RequestHandler):
                 self.dbsession.flush()
                 self.redirect("/crackmes")
             else:
-                self.render('crack_me/error.html', errors="Invalid Token!")
+                self.render('crack_me/error.html', errors = "Invalid Token!")
         else:
-            self.render('crack_me/error.html', errors="You're not on that CrackMe yet!")
+            self.render('crack_me/error.html', errors = "You're not on that Crack Me yet!")
 
     def notify(self, user, crack_me):
-        ''' Send a notification to everyone that someone cracked a CrackMe '''
-        title = "CrackMe Broken!"
-        message = unicode("%s successfully cracked the level %s CrackMe" % (user.display_name, crack_me.id))
+        ''' Send a notification to everyone that someone cracked a Crack Me '''
+        title = "Crack Me Cracked!"
+        message = unicode("%s successfully cracked the level %s Crack Me" % (user.display_name, crack_me.id))
         file_path = self.application.settings['avatar_dir']+'/'+user.avatar
         ws_manager = WebSocketManager.Instance()
         notify = Notification(title, message, file_location = file_path)
