@@ -90,7 +90,6 @@ class DeletePostHandler(RequestHandler):
                 self.dbsession.delete(post)
                 self.dbsession.flush()
                 posts = user.team.get_posts
-            
             self.redirect('/pastebin')
         else:
             self.render('pastebin/view.html', posts = [])
