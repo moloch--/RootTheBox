@@ -9,6 +9,7 @@ import logging
 
 from os import path
 from uuid import uuid1
+from base64 import b64encode, b64decode
 from models import User, FileUpload
 from mimetypes import guess_type
 from libs.Session import SessionManager
@@ -32,7 +33,7 @@ class ShareUploadHandler(UserBaseHandler):
         ''' Renders upload file page '''
         user = self.get_current_user()
         self.render("user/share_view.html", shares = user.team.files)
-    
+
     @authenticated
     def post(self, *args, **kwargs):
         ''' Shit form validation '''
@@ -50,8 +51,9 @@ class ShareUploadHandler(UserBaseHandler):
 
         uuid = str(uuid1())
         filePath = self.application.settings['shares_dir']+'/'+uuid
-        save = open(filePath, 'wb')
-        save.write(self.request.files['file_data'][0]['body'])
+        save = open(filePath, 'w')
+        data = b64encode(self.request.files['file_data'][0]['body'])
+        save.write(data)
         save.close()
         file_name = path.basename(self.request.files['file_data'][0]['filename'])
         char_white_list = ascii_letters + digits + "-._"
@@ -83,13 +85,13 @@ class ShareDownloadHandler(UserBaseHandler):
         if share == None or share.team_id != user.team_id:
             self.render("user/error.html", operation = "File Download", errors = "File does not exist")
         else:
-            upload = open(self.application.settings['shares_dir']+'/'+share.uuid, 'rb')
+            upload = open(self.application.settings['shares_dir']+'/'+share.uuid, 'r')
             data = upload.read()
             upload.close()
             self.set_header('Content-Type', share.content)
             self.set_header('Content-Length', share.byte_size)
             self.set_header('Content-Disposition', 'attachment; filename=%s' % share.file_name)
-            self.write(data)
+            self.write(b64decode(data))
             self.finish()
 
 class SettingsHandler(RequestHandler):
@@ -105,6 +107,11 @@ class SettingsHandler(RequestHandler):
             '/changepassword': self.post_password
         }
     
+    def get_current_user(self):
+        if self.session != None:
+            return User.by_user_name(self.session.data['user_name'])
+        return None
+    
     @authenticated
     def get(self, *args, **kwargs):
         ''' Display the user settings '''
@@ -118,7 +125,7 @@ class SettingsHandler(RequestHandler):
             self.post_functions[args[0]](*args, **kwargs)
         else:
             self.render("user/error.html")
-    
+
     def post_avatar(self, *args, **kwargs):
         ''' Saves avatar - Reads file header an only allows approved formats '''
         user = self.get_current_user()

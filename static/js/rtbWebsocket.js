@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var ws = new WebSocket("ws://localhost:8888/websocket");
+	var ws = new WebSocket("ws://192.168.2.47:8888/websocket");
 	if (typeof String.prototype.startsWith != 'function') {
 		  String.prototype.startsWith = function (str){
 		    return this.indexOf(str) == 0;
