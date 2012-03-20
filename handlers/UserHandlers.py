@@ -16,6 +16,8 @@ from libs.SecurityDecorators import authenticated
 from tornado.web import RequestHandler
 from BaseHandlers import UserBaseHandler
 from string import ascii_letters, digits
+from recaptcha.client import captcha
+from libs import Config
 
 class HomeHandler(UserBaseHandler):
     
@@ -97,6 +99,7 @@ class SettingsHandler(RequestHandler):
     
     def initialize(self, dbsession):
         ''' Database and URI setup '''
+        self.config = Config.Config()
         self.dbsession = dbsession
         self.session_manager = SessionManager.Instance()
         self.session = self.session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
@@ -109,7 +112,7 @@ class SettingsHandler(RequestHandler):
     def get(self, *args, **kwargs):
         ''' Display the user settings '''
         user = User.by_user_name(self.session.data['user_name'])
-        self.render('user/settings.html', user = user)
+        self.render('user/settings.html', user = user, message = None)
     
     @authenticated
     def post(self, *args, **kwargs):
@@ -121,7 +124,7 @@ class SettingsHandler(RequestHandler):
     
     def post_avatar(self, *args, **kwargs):
         ''' Saves avatar - Reads file header an only allows approved formats '''
-        user = self.get_current_user()
+        user = User.by_user_name(self.session.data['user_name'])
         if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
             if len(self.request.files['avatar'][0]['body']) < (1024*1024):
                 if user.avatar == "default_avatar.gif":
@@ -144,7 +147,37 @@ class SettingsHandler(RequestHandler):
             self.render("user/error.html", operation = "Uploading avatar", errors = "Please provide and image")
 
     def post_password(self, *args, **kwargs):
-        pass
+        user = User.by_user_name(self.session.data['user_name'])
+        try:
+            old_password = self.get_argument("old_password")
+            new_password = self.get_argument("new_password")
+            new_password_two = self.get_argument("new_password2")
+        except:
+            self.render("user/error.html", operation="Changing Password", errors = "Please fill out all forms!")
+
+        try:
+            response = captcha.submit(
+                self.get_argument('recaptcha_challenge_field'),
+                self.get_argument('recaptcha_response_field'),
+                self.config.recaptcha_private_key,
+                self.request.remote_ip,)
+        except:
+            self.render("user/error.html", operation="Changing Password", errors = "Please fill out recaptcha!")
+   
+
+        if(user.validate_password(old_password)):
+            if(new_password == new_password_two):
+                if response.is_valid:
+                    user.password = new_password
+                    self.dbsession.add(user)
+                    self.dbsession.flush()
+                    self.render("user/settings.html", message="Succesfully Changed Password!")
+                else:
+                    self.render("user/error.html", operation="Changing Password", errors = "Invalid Recaptcha!")
+            else:
+                self.render("user/error.html", operation="Changing Password", errors = "New password's didn't match!")
+        else:
+            self.render("user/error.html", operation="Changing Password", errors = "Invalid old password!")
 
 class TeamViewHandler(UserBaseHandler):
 

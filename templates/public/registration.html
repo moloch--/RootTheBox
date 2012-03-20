@@ -3,6 +3,20 @@
 {% block title %}Registration{% end %}
 
 {% block content %}
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+
+<!-- Wrapping the Recaptcha create method in a javascript function -->
+<script type="text/javascript">
+   function showRecaptcha(element) {
+     Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
+       theme: "clean",
+       callback: Recaptcha.focus_response_field});
+   }
+   $(document).ready(function() {
+	  showRecaptcha('recaptcha_div'); 
+   });
+</script>
+
 <h1>Register a New Account</h1>
 <h2>{{errors}}</h2>
 <br />
@@ -19,6 +33,9 @@
 	</p>
 	<p>
 		Confirm Password: <input name="pass2" type="password" autocomplete="off" />
+	</p>
+	<p>
+		<div id="recaptcha_div"></div>
 	</p>
 	<input type="submit" value=" Register Account " />
 </form>

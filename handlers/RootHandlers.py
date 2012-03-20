@@ -8,8 +8,13 @@ import logging
 from models.User import User
 from libs.Session import SessionManager
 from tornado.web import RequestHandler #@UnresolvedImport
+from recaptcha.client import captcha
+from libs import Config
 
 class LoginHandler(RequestHandler):
+
+    def initialize(self):
+        self.config = Config.Config()
 
     def get(self, *args, **kwargs):
         ''' Display the login page '''
@@ -17,6 +22,7 @@ class LoginHandler(RequestHandler):
     
     def post(self, *args, **kwargs):
         ''' Checks submitted user_name and password '''
+        logging.info(self.request.arguments)
         try:
             user_name = self.get_argument('username')
             user = User.by_user_name(user_name)
@@ -28,7 +34,16 @@ class LoginHandler(RequestHandler):
         except:
             self.render('public/login.html', header = "Type in a password")
 
-        if user != None and user.validate_password(password):
+        try:
+            response = captcha.submit(
+                self.get_argument('recaptcha_challenge_field'),
+                self.get_argument('recaptcha_response_field'),
+                self.config.recaptcha_private_key,
+                self.request.remote_ip,)
+        except:
+            self.render('public/login.html', header = "Please fill out recaptcha!")
+
+        if user != None and user.validate_password(password) and response.is_valid:
             logging.info("Successful login: %s from %s" % (user.user_name, self.request.remote_ip))
             session_manager = SessionManager.Instance()
             sid, session = session_manager.start_session()
@@ -48,6 +63,7 @@ class UserRegistraionHandler(RequestHandler):
     
     def initialize(self, dbsession):
         self.dbsession = dbsession
+        self.config = Config.Config()
     
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''
@@ -78,6 +94,17 @@ class UserRegistraionHandler(RequestHandler):
         except:
             self.render('registration.html', errors = 'Please enter a password')
         
+        #Check recaptcha
+        try:
+            response = captcha.submit(
+                self.get_argument('recaptcha_challenge_field'),
+                self.get_argument('recaptcha_response_field'),
+                self.config.recaptcha_private_key,
+                self.request.remote_ip,)
+        except:
+            self.render('public/registration.html', errors = "Please fill out recaptcha!")
+
+        
         # Create account
         if User.by_user_name(user_name) != None:
             self.render('public/registration.html', errors = 'Account name already taken')
@@ -85,6 +112,8 @@ class UserRegistraionHandler(RequestHandler):
             self.render('public/registration.html', errors = 'Handle already taken')
         elif not 0 < len(password) <= 7:
             self.render('public/registration.html', errors = 'Password must be 1-7 characters')
+        elif not response.is_valid:
+            self.render('public/registration.html', errors = 'Invalid Recaptcha!')
         else:
             user = User(
                 user_name = user_name,

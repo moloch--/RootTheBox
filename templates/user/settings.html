@@ -3,6 +3,20 @@
 {% block title %}Settings{% end %}
 
 {% block content %}
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+
+<!-- Wrapping the Recaptcha create method in a javascript function -->
+<script type="text/javascript">
+   function showRecaptcha(element) {
+     Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
+       theme: "clean",
+       callback: Recaptcha.focus_response_field});
+   }
+   $(document).ready(function() {
+	  showRecaptcha('recaptcha_div'); 
+   });
+</script>
+
 <h1>Settings</h1>
 <br />
 <h2>Upload Avatar</h2>
@@ -10,5 +24,21 @@
 {% raw xsrf_form_html() %}
 	<label>Avatar File (Max 1Mb): </label> <input type="file" name="avatar" /> <br /> <br />
 	<input type="submit" value=" Save Changes" />
+</form>
+<br /> <br />
+
+<h2>Change Password</h2>
+
+{% if message != None %}
+	<h3>{{message}}</h3>
+{% end %}
+
+<form action="/user/settings/changepassword" method="post">
+	{% raw xsrf_form_html() %}
+	<label>Old Password:</label><input type="password" name="old_password"/> <br />
+	<label>New Password:</label><input type="password" name="new_password"/> <br />
+	<label>New Password Agian:</label><input type="password" name="new_password2"/> <br />
+	<div id="recaptcha_div"></div>
+	<input type="submit" value="Change Password!">
 </form>
 {% end %}
