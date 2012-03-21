@@ -10,7 +10,7 @@ import logging
 from os import path
 from uuid import uuid1
 from base64 import b64encode, b64decode
-from models import User, FileUpload
+from models import User, FileUpload, Challenge, Action
 from mimetypes import guess_type
 from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
@@ -189,8 +189,13 @@ class SettingsHandler(RequestHandler):
 class TeamViewHandler(UserBaseHandler):
 
     def get(self, *args, **kwargs):
-        user = self.get_current_user()
+        user = User.by_user_name(self.session.data['user_name'])
         self.render("user/team.html", user = user, team = user.team)        
+
+class ReporterHandler(UserBaseHandler):
+
+    def get(self, *args, **kwargs):
+        self.render("user/reporter.html")        
 
 class LogoutHandler(UserBaseHandler):
 
@@ -199,3 +204,47 @@ class LogoutHandler(UserBaseHandler):
         self.session_manager.remove_session(self.get_secure_cookie('auth'))
         self.clear_all_cookies()
         self.redirect("/")
+        
+class ChallengeHandler(UserBaseHandler):
+    
+    def get(self, *args, **kwargs):
+        user = User.by_user_name(self.session.data['user_name'])
+        all_challenges = Challenge.get_all()
+        correct_challenges = []
+        for challenge in all_challenges:
+            if user.team != None:
+                if not challenge in user.team.challenges:
+                    correct_challenges.append(challenge)
+                
+        self.render("user/challenge.html", challenges = correct_challenges)
+        
+    def post(self, *args, **kwargs):
+        user = User.by_user_name(self.session.data['user_name'])
+        try:
+            token = self.get_argument("token")
+            challenge = Challenge.get_by_id(self.get_argument("challenge"))
+        except:
+            self.render("user/error.html", operation="Submit Challenge", errors = "Please enter a Token!")
+            
+        if user.team != None:
+            if not challenge in user.team.challenges:
+                if token == challenge.token:
+                    action = Action(
+                        classification = unicode("Challenge Completed"),
+                        description = unicode(user.user_name+" has succesfully completed "+challenge.name+" !"),
+                        value = challenge.value,
+                        user_id = user.id)
+                    challenge.teams.append(user.team)
+                    self.dbsession.add(challenge)
+                    self.dbsession.add(action)
+                    self.dbsession.flush()
+                    self.redirect('/challenge')
+                else:
+                    self.render("user/error.html", operation="Submit Challenge", errors = "Invalid Token!")
+            else:
+                self.render("user/error.html", operation="Submit Challenge", errors = "You've already beaten this challenge!")
+        else:
+            self.render("user/error.html", operation="Submit Challenge", errors = "You're not on a team!")
+
+
+    

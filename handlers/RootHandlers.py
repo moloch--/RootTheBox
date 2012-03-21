@@ -92,7 +92,7 @@ class UserRegistraionHandler(RequestHandler):
             else:
                 password = password1
         except:
-            self.render('registration.html', errors = 'Please enter a password')
+            self.render('public/registration.html', errors = 'Please enter a password')
         
         #Check recaptcha
         try:

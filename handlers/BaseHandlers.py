@@ -27,6 +27,7 @@ class AdminBaseHandler(RequestHandler):
     def initialize(self, dbsession):
         self.dbsession = dbsession
         self.get_functions = {
+            'challenge':self.get_challenge,
             'action': self.get_action, 
             'team': self.get_team, 
             'user': self.get_user,
@@ -35,6 +36,7 @@ class AdminBaseHandler(RequestHandler):
             'se': self.get_se
         }
         self.post_functions = {
+            'challenge':self.post_challenge,
             'action': self.post_action, 
             'team': self.post_team,
             'user': self.post_user,

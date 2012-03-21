@@ -48,6 +48,7 @@ application = Application([
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
         (r'/user/team', TeamViewHandler, {'dbsession': dbsession}),
         (r'/user/logout', LogoutHandler, {'dbsession': dbsession}),
+        (r'/user/reporter', ReporterHandler, {'dbsession': dbsession}),
         (r'/user', HomeHandler, {'dbsession': dbsession}),
         
         # Box Handlers - Serves box related pages
@@ -62,6 +63,9 @@ application = Application([
         
         # Scoreboard Handlers - Severs scoreboard related pages
         (r'/scoreboard(.*)', ScoreBoardHandler, {'dbsession': dbsession}),
+        
+        # Challenges Handlers
+        (r'/challenge(.*)', ChallengeHandler, {'dbsession' : dbsession}),
         
         # Admin Handlers - Administration pages
         (r'/admin/create/(.*)', AdminCreateHandler, {'dbsession':dbsession}),

@@ -13,13 +13,33 @@ from tempfile import TemporaryFile
 from mimetypes import guess_type
 from libs.SecurityDecorators import * #@UnusedWildImport
 from libs.WebSocketManager import WebSocketManager
-from models import Team, Box, CrackMe, Action
+from models import Team, Box, CrackMe, Action, Challenge
 from handlers.BaseHandlers import AdminBaseHandler
 from tornado.web import RequestHandler #@UnresolvedImport
 from libs.Notification import Notification
 
 class AdminCreateHandler(AdminBaseHandler):
     
+    def get_challenge(self, *args, **kwargs):
+        self.render("admin/create_challenge.html")
+
+    def post_challenge(self, *args, **kwargs):
+        try:
+            name = self.get_argument('name')
+            description = self.get_argument('description')
+            value = int(self.get_argument('value'))
+            token = self.get_argument('token')
+        except:
+            self.render("admin/error.html", errors = "Failed to create challenge")
+        challenge = Challenge(
+                        name = unicode(name),
+                        description = unicode(description),
+                        value = value,
+                        token = unicode(token))
+        self.dbsession.add(challenge)
+        self.dbsession.flush()
+        self.render("admin/created.html", game_object = "challenge")
+        
     def get_action(self, *args, **kwargs):
         self.render("admin/create_action.html", users = User.get_all())
         
@@ -142,6 +162,12 @@ class AdminCreateHandler(AdminBaseHandler):
         pass
 
 class AdminEditHandler(AdminBaseHandler):
+    
+    def get_challenge(self, *args, **kwargs):
+        pass 
+    
+    def post_challenge(self, *args, **kwargs):
+        pass
     
     def get_action(self, *args, **kwargs):
         pass

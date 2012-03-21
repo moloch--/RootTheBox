@@ -7,7 +7,7 @@ Created on Mar 12, 2012
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession
+from models import dbsession, team_challenges
 from models.CrackMe import CrackMe
 from models.Box import Box
 from models.BaseGameObject import BaseObject
@@ -22,6 +22,7 @@ class Team(BaseObject):
     listen_port = Column(Integer, unique=True, nullable=False)
     crack_me_id = Column(Integer, ForeignKey("crack_me.id"), default=1)
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
+    challenges = relationship("Challenge", secondary=team_challenges, backref="Team")
     
     @classmethod
     def by_team_name(cls, team_name):

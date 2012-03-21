@@ -24,6 +24,11 @@ association_table = Table('user_to_box', BaseObject.metadata,
     Column('box_id', Integer, ForeignKey('box.id'), nullable=False)
 )
 
+team_challenges = Table('team_to_challenge', BaseObject.metadata,
+    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+    Column('challenge_id', Integer, ForeignKey('challenge.id'), nullable=False)
+)
+
 # import models.
 from models.Action import Action
 from models.Box import Box
@@ -33,6 +38,7 @@ from models.Permission import Permission
 from models.Team import Team
 from models.User import User
 from models.FileUpload import FileUpload
+from models.Challenge import Challenge
 
 # calling this will create the tables at the database
 __create__ = lambda: (setattr(engine, 'echo', True), metadata.create_all(engine))

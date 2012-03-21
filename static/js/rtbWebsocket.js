@@ -1,3 +1,4 @@
+<!--THIS IS OLD AND NOT SUPPORTED -->
 $(document).ready(function() {
 	var ws = new WebSocket("ws://192.168.2.47:8888/websocket");
 	if (typeof String.prototype.startsWith != 'function') {

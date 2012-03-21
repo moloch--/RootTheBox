@@ -1,0 +1,24 @@
+{% extends "../main.html" %}
+
+{% block title %}Team{% end %}
+
+{% block content %}
+<h1>Challenges</h1>
+<p>
+	{% for challenge in challenges %}
+	<div id="challenges">
+			<div id="challenge">
+				{{challenge}}
+			</div>
+		<div id="challenge_form">
+			<form action="/challenge" method="post">
+				{% raw xsrf_form_html() %}
+				<label>Token:</label><input type="text" name="token">
+				<input type="hidden" name="challenge" value="{{challenge.id}}">
+				<input type="submit" value="Submit Challenge!">
+			</form>
+		</div>
+	</div>
+	{% end %}
+</p>
+{% end %}
