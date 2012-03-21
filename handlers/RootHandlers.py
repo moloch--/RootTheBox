@@ -12,9 +12,6 @@ from recaptcha.client import captcha
 
 class LoginHandler(RequestHandler):
 
-    def initialize(self):
-        self.config = Config.Config()
-
     def get(self, *args, **kwargs):
         ''' Display the login page '''
         self.render('public/login.html', header = 'User authentication required')
@@ -65,7 +62,6 @@ class UserRegistraionHandler(RequestHandler):
     
     def initialize(self, dbsession):
         self.dbsession = dbsession
-        self.config = Config.Config()
     
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''

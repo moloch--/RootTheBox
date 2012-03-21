@@ -99,7 +99,6 @@ class SettingsHandler(RequestHandler):
     
     def initialize(self, dbsession):
         ''' Database and URI setup '''
-        self.config = Config.Config()
         self.dbsession = dbsession
         self.session_manager = SessionManager.Instance()
         self.session = self.session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
