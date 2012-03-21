@@ -9,7 +9,7 @@
 	{% else %}
 		{% for sheep in wall %}
 		<div>
-			{{ sheep.cracker }} broke {{ sheep.user }}'s password "{{ sheep.preimage }}"
+			{{ sheep.cracker }} broke {{ sheep.user }}'s password "{{ sheep.preimage }}" for {{ sheep.point_value }} points
 		</div>
 		{% end %}
 	{% end %}
