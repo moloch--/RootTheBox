@@ -7,12 +7,13 @@
 <p>
 	{% for team in teams %}
 		<h2>{{ team.team_name }}</h2>
+		<h3>"{{ team.motto }}"</h3>
 		{% for member in team.members %}
 		<div id="team_member">
 				<div id="member_name">{{ member.display_name }}</div>
 				{% if member.avatar %}
 				<div id="member_avatar">
-					<img src="/avatars/{{member.avatar}}" />
+					<img src="/avatars/{{ member.avatar }}" />
 				</div>
 				{% end %}
 				<div id="member_score">

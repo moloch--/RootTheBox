@@ -21,6 +21,7 @@ class CrackMeHandler(RequestHandler):
     
     @authenticated
     def get(self, *args, **kwargs):
+        ''' '''
         user = User.by_user_name(self.session.data['user_name'])
         if user.team != None:
             self.render('crack_me/view.html', crack_me = user.team.crack_me)

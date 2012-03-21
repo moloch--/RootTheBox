@@ -45,6 +45,8 @@ class HashesHandler(UserBaseHandler):
             self.render("hashes/error.html", operation = "hash cracking", errors = "That user does not exist")
         elif target in user.team.members:
             self.render("hashes/error.html", operation = "hash cracking", errors = "You can't crack hashes from your own team")
+        elif target.score <= 0:
+            self.render("hashes/error.html", operation = "hash cracking", errors = "Target user must have a score greater than zero")
         elif target.validate_password(preimage):
             self.steal_points(user, target)
             self.notify(user, target)
