@@ -18,7 +18,6 @@ from tornado.web import RequestHandler
 from BaseHandlers import UserBaseHandler
 from string import ascii_letters, digits
 from recaptcha.client import captcha
-from libs import Config
 
 class HomeHandler(UserBaseHandler):
     

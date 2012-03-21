@@ -9,7 +9,6 @@ from models.User import User
 from libs.Session import SessionManager
 from tornado.web import RequestHandler #@UnresolvedImport
 from recaptcha.client import captcha
-from libs import Config
 
 class LoginHandler(RequestHandler):
 
