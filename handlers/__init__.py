@@ -58,8 +58,9 @@ application = Application([
         (r'/crackme/download(.*)', CrackMeDownloadHandler, {'dbsession': dbsession}),
         (r'/crackme(.*)', CrackMeHandler, {'dbsession': dbsession}),
         
-        # Hashes Handler - Serves hash related pages
+        # Hashes Handlers - Serves hash related pages
         (r'/hashes(.*)', HashesHandler, {'dbsession': dbsession}),
+        (r'/wallofsheep', WallOfSheepHandler, {'dbsession': dbsession}),
         
         # Scoreboard Handlers - Severs scoreboard related pages
         (r'/scoreboard(.*)', ScoreBoardHandler, {'dbsession': dbsession}),
@@ -80,7 +81,7 @@ application = Application([
         (r'/pastebin/view(.*)', DisplayPostHandler, {'dbsession':dbsession}),
         (r'/pastebin/delete(.*)', DeletePostHandler, {'dbsession':dbsession}),
         
-        # Root handler - Serves all public pages
+        # Root handlers - Serves all public pages
         (r'/login', LoginHandler),
         (r'/registration', UserRegistraionHandler, {'dbsession': dbsession}),
         (r'/about', AboutHandler),

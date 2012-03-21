@@ -1,0 +1,16 @@
+{% extends "../main.html" %}
+
+{% block title %}Wall of Sheep{% end %}
+
+{% block content %}
+	<h1>Wall of Sheep</h1>
+	{% if len(wall) == 0 %}
+		<h2>No Sheep Yet</h2>
+	{% else %}
+		{% for sheep in wall %}
+		<div>
+			{{ sheep.cracker }} broke {{ sheep.user }}'s password "{{ sheep.preimage }}"
+		</div>
+		{% end %}
+	{% end %}
+{% end %}

@@ -4,13 +4,13 @@ Created on Mar 15, 2012
 @author: moloch
 '''
 
-from models import Team, User, Action
+from models import Team, User, Action, WallOfSheep
 from libs.SecurityDecorators import authenticated
 from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification
 from libs.ScoreUpdate import ScoreUpdate
-from handlers.BaseHandlers import UserBaseHandler
 from libs.Session import SessionManager
+from handlers.BaseHandlers import UserBaseHandler
 
 class HashesHandler(UserBaseHandler):
 
@@ -42,30 +42,32 @@ class HashesHandler(UserBaseHandler):
         target = User.by_display_name(display_name)
         
         if target == None or user == None or target.has_permission("admin"):
-            self.render("hashes/error.html", operation = "hash cracking", errors = "That user does not exist")
+            self.render("hashes/error.html", operation = "Hash cracking", errors = "That user does not exist")
         elif target in user.team.members:
-            self.render("hashes/error.html", operation = "hash cracking", errors = "You can't crack hashes from your own team")
+            self.render("hashes/error.html", operation = "Hash cracking", errors = "You can't crack hashes from your own team")
         elif target.score <= 0:
-            self.render("hashes/error.html", operation = "hash cracking", errors = "Target user must have a score greater than zero")
+            self.render("hashes/error.html", operation = "Hash cracking", errors = "Target user must have a score greater than zero")
         elif target.validate_password(preimage):
-            self.steal_points(user, target)
             self.notify(user, target)
+            value = self.steal_points(user, target)
+            self.add_to_wall(user, target, preimage, value)
             self.render("hashes/success.html", user = user, target = target )
         else:
-            self.render("hashes/error.html", operation = "hash cracking", errors = "Wrong password")
+            self.render("hashes/error.html", operation = "Hash cracking", errors = "Wrong password, try again")
             
     def steal_points(self, user, target):
         ''' Creates actions if password cracking was successful '''
+        value = target.score
         user_action = Action (
             classification = unicode("Hash Cracking"),
             description = unicode("%s cracked %s's password" % (user.display_name, target.display_name)),
-            value = target.score,
+            value = value,
             user_id = user.id
         )
         target_action = Action (
             classification = unicode("Hash Cracking"),
             description = unicode("%s's password was cracked by %s" % (target.display_name, user.display_name)),
-            value = (target.score * -1),
+            value = (value * -1),
             user_id = target.id
         )
         target.dirty = True
@@ -75,15 +77,34 @@ class HashesHandler(UserBaseHandler):
         self.dbsession.add(target)
         self.dbsession.add(user)
         self.dbsession.flush()
+        return value
+
+    def add_to_wall(self, user, target, preimage, value):
+        ''' Creates an entry in the wall of sheep '''
+        sheep = WallOfSheep(
+            preimage = unicode(preimage),
+            point_value = value,
+            user_id = target.id,
+            cracker_id = user.id
+        )
+        self.dbsession.add(sheep)
+        self.dbsession.flush()
 
     def notify(self, user, target):
         ''' Sends a password cracked message via web sockets '''
-        title = "Password Cracked!"
-        message = "%s's password was cracked by %s" % (target.display_name, user.display_name)
         file_path = self.application.settings['avatar_dir']+'/'+user.avatar
         ws_manager = WebSocketManager.Instance()
-        notify = Notification(title, message, file_location = file_path)
-        alt = Notification("123","456", file_location = file_path)
+        message = "%s's password was cracked by %s" % (target.display_name, user.display_name)
+        notify = Notification("Password Cracked", message, file_location = file_path)
+        team_message = "Your team has lost points due to %s's weak password" % target.display_name
+        alt = Notification("%d Points Stolen" % target.score, team_message, classification = "warning")
         ws_manager.send_all(notify)
         ws_manager.send_team(user.team, alt)
-        
+
+
+class WallOfSheepHandler(UserBaseHandler):
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        wall_of_sheep = WallOfSheep.get_all()
+        self.render("wall_of_sheep/view.html", wall = wall_of_sheep)

@@ -30,11 +30,12 @@ class Notification():
                 self.reander("admin/error.html", errors = "Notification class does not exist")
 
     def to_message(self):
+        ''' Creates JSON object '''
         return Pickler().flatten(self)
-        #return "notification:title:"+self.title+"|message:"+self.message+"|icon:"+self.file_contents
 
     @classmethod
     def get_classifications(cls):
+        ''' Returns a list of built-in images '''
         return ['info', 'success', 'error', 'warning']
 
     # Built-in images below - no interesting code
