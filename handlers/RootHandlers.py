@@ -42,12 +42,15 @@ class LoginHandler(RequestHandler):
                 self.request.remote_ip,)
         except:
             self.render('public/login.html', header = "Please fill out recaptcha!")
+        
+        if user.team == None and not user.has_permission('admin'):
+            self.render("public/login.html", header = "You must be assigned to a team before you can login")
 
         if user != None and user.validate_password(password) and response.is_valid:
             logging.info("Successful login: %s from %s" % (user.user_name, self.request.remote_ip))
             session_manager = SessionManager.Instance()
             sid, session = session_manager.start_session()
-            self.set_secure_cookie(name = 'auth', value = str(sid), expires_days = 1, HttpOnly=True)
+            self.set_secure_cookie(name = 'auth', value = str(sid), expires_days = 1, HttpOnly = True)
             session.data['user_name'] = str(user.user_name)
             session.data['ip'] = str(self.request.remote_ip)
             if user.has_permission('admin'):

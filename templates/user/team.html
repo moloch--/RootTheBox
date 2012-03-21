@@ -5,22 +5,25 @@
 {% block content %}
 <h1>Team Members</h1>
 <p>
-	{% for member in team.members %}
-	<div id="team_member">
-			<div id="member_name">{{member.user_name}}</div>
-			{% if member.avatar %}
-			<div id="member_avatar">
-				<img src="/avatars/{{member.avatar}}" />
-			</div>
-			{% end %}
-			<div id="member_score">
-			{% if member.score %}
-				{{member.score}}
-			{% else %}
-				0
-			{% end %}
-			</div>
-	</div>
+	{% for team in teams %}
+		<h2>{{ team.team_name }}</h2>
+		{% for member in team.members %}
+		<div id="team_member">
+				<div id="member_name">{{ member.display_name }}</div>
+				{% if member.avatar %}
+				<div id="member_avatar">
+					<img src="/avatars/{{member.avatar}}" />
+				</div>
+				{% end %}
+				<div id="member_score">
+				{% if member.score %}
+					{{ member.score }}
+				{% else %}
+					0
+				{% end %}
+				</div>
+		</div>
+		{% end %}
 	{% end %}
 </p>
 {% end %}

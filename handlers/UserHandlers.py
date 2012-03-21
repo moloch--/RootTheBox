@@ -10,7 +10,7 @@ import logging
 from os import path
 from uuid import uuid1
 from base64 import b64encode, b64decode
-from models import User, FileUpload, Challenge, Action
+from models import User, Team, FileUpload, Challenge, Action
 from mimetypes import guess_type
 from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
@@ -50,7 +50,6 @@ class ShareUploadHandler(UserBaseHandler):
 
         if 50 * (1024*1024) < len(self.request.files['file_data'][0]['body']):
             self.render("user/error.html", operation = "File Upload", errors = "File too large")
-
         uuid = str(uuid1())
         filePath = self.application.settings['shares_dir']+'/'+uuid
         save = open(filePath, 'w')
@@ -160,8 +159,7 @@ class SettingsHandler(RequestHandler):
             new_password = self.get_argument("new_password")
             new_password_two = self.get_argument("new_password2")
         except:
-            self.render("user/error.html", operation="Changing Password", errors = "Please fill out all forms!")
-
+            self.render("user/error.html", operation="Changing Password", errors = "Please fill out all forms")
         try:
             response = captcha.submit(
                 self.get_argument('recaptcha_challenge_field'),
@@ -169,33 +167,76 @@ class SettingsHandler(RequestHandler):
                 self.config.recaptcha_private_key,
                 self.request.remote_ip,)
         except:
-            self.render("user/error.html", operation="Changing Password", errors = "Please fill out recaptcha!")
-   
-
-        if(user.validate_password(old_password)):
-            if(new_password == new_password_two):
+            self.render("user/error.html", operation="Changing Password", errors = "Please fill out recaptcha")
+        if user.validate_password(old_password):
+            if new_password == new_password_two:
                 if response.is_valid:
                     user.password = new_password
                     self.dbsession.add(user)
                     self.dbsession.flush()
                     self.render("user/settings.html", message="Succesfully Changed Password!")
                 else:
-                    self.render("user/error.html", operation="Changing Password", errors = "Invalid Recaptcha!")
+                    self.render("user/error.html", operation="Changing Password", errors = "Invalid recaptcha")
             else:
-                self.render("user/error.html", operation="Changing Password", errors = "New password's didn't match!")
+                self.render("user/error.html", operation="Changing Password", errors = "New password's didn't match")
         else:
-            self.render("user/error.html", operation="Changing Password", errors = "Invalid old password!")
+            self.render("user/error.html", operation="Changing Password", errors = "Invalid old password")
 
 class TeamViewHandler(UserBaseHandler):
 
+    @authenticated
     def get(self, *args, **kwargs):
-        user = User.by_user_name(self.session.data['user_name'])
-        self.render("user/team.html", user = user, team = user.team)        
+        teams = Team.get_all()
+        self.render("user/team.html", teams = teams)        
+
 
 class ReporterHandler(UserBaseHandler):
 
+    @authenticated
     def get(self, *args, **kwargs):
-        self.render("user/reporter.html")        
+        self.render("user/reporter.html")
+        
+class ChallengeHandler(UserBaseHandler):
+    
+    @authenticated
+    def get(self, *args, **kwargs):
+        user = User.by_user_name(self.session.data['user_name'])
+        all_challenges = Challenge.get_all()
+        correct_challenges = []
+        for challenge in all_challenges:
+            if user.team != None:
+                if not challenge in user.team.challenges:
+                    correct_challenges.append(challenge)          
+        self.render("user/challenge.html", challenges = correct_challenges)
+    
+    @authenticated
+    def post(self, *args, **kwargs):
+        user = User.by_user_name(self.session.data['user_name'])
+        try:
+            token = self.get_argument("token")
+            challenge = Challenge.get_by_id(self.get_argument("challenge"))
+        except:
+            self.render("user/error.html", operation="Submit Challenge", errors = "Please enter a token")    
+        if user.team != None:
+            if not challenge in user.team.challenges:
+                if token == challenge.token:
+                    action = Action(
+                        classification = unicode("Challenge Completed"),
+                        description = unicode(user.user_name+" has succesfully completed "+challenge.name+" !"),
+                        value = challenge.value,
+                        user_id = user.id
+                    )
+                    challenge.teams.append(user.team)
+                    self.dbsession.add(challenge)
+                    self.dbsession.add(action)
+                    self.dbsession.flush()
+                    self.redirect('/challenge')
+                else:
+                    self.render("user/error.html", operation="Submit Challenge", errors = "Invalid Token")
+            else:
+                self.render("user/error.html", operation="Submit Challenge", errors = "This challenge was already completed")
+        else:
+            self.render("user/error.html", operation="Submit Challenge", errors = "You're not on a team")
 
 class LogoutHandler(UserBaseHandler):
 
@@ -204,47 +245,4 @@ class LogoutHandler(UserBaseHandler):
         self.session_manager.remove_session(self.get_secure_cookie('auth'))
         self.clear_all_cookies()
         self.redirect("/")
-        
-class ChallengeHandler(UserBaseHandler):
-    
-    def get(self, *args, **kwargs):
-        user = User.by_user_name(self.session.data['user_name'])
-        all_challenges = Challenge.get_all()
-        correct_challenges = []
-        for challenge in all_challenges:
-            if user.team != None:
-                if not challenge in user.team.challenges:
-                    correct_challenges.append(challenge)
-                
-        self.render("user/challenge.html", challenges = correct_challenges)
-        
-    def post(self, *args, **kwargs):
-        user = User.by_user_name(self.session.data['user_name'])
-        try:
-            token = self.get_argument("token")
-            challenge = Challenge.get_by_id(self.get_argument("challenge"))
-        except:
-            self.render("user/error.html", operation="Submit Challenge", errors = "Please enter a Token!")
-            
-        if user.team != None:
-            if not challenge in user.team.challenges:
-                if token == challenge.token:
-                    action = Action(
-                        classification = unicode("Challenge Completed"),
-                        description = unicode(user.user_name+" has succesfully completed "+challenge.name+" !"),
-                        value = challenge.value,
-                        user_id = user.id)
-                    challenge.teams.append(user.team)
-                    self.dbsession.add(challenge)
-                    self.dbsession.add(action)
-                    self.dbsession.flush()
-                    self.redirect('/challenge')
-                else:
-                    self.render("user/error.html", operation="Submit Challenge", errors = "Invalid Token!")
-            else:
-                self.render("user/error.html", operation="Submit Challenge", errors = "You've already beaten this challenge!")
-        else:
-            self.render("user/error.html", operation="Submit Challenge", errors = "You're not on a team!")
-
-
     
