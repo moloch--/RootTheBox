@@ -164,7 +164,7 @@ class SettingsHandler(RequestHandler):
             response = captcha.submit(
                 self.get_argument('recaptcha_challenge_field'),
                 self.get_argument('recaptcha_response_field'),
-                self.config.recaptcha_private_key,
+                self.application.settings['recaptcha_private_key'],
                 self.request.remote_ip,)
         except:
             self.render("user/error.html", operation="Changing Password", errors = "Please fill out recaptcha")

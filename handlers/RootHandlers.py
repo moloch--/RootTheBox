@@ -38,7 +38,7 @@ class LoginHandler(RequestHandler):
             response = captcha.submit(
                 self.get_argument('recaptcha_challenge_field'),
                 self.get_argument('recaptcha_response_field'),
-                self.config.recaptcha_private_key,
+                self.application.settings['recaptcha_private_key'],
                 self.request.remote_ip,)
         except:
             self.render('public/login.html', header = "Please fill out recaptcha!")
@@ -102,7 +102,7 @@ class UserRegistraionHandler(RequestHandler):
             response = captcha.submit(
                 self.get_argument('recaptcha_challenge_field'),
                 self.get_argument('recaptcha_response_field'),
-                self.config.recaptcha_private_key,
+                self.application.settings['recaptcha_private_key'],
                 self.request.remote_ip,)
         except:
             self.render('public/registration.html', errors = "Please fill out recaptcha!")

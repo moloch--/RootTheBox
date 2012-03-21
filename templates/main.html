@@ -41,13 +41,9 @@
 		</div>
 	</div>
 	<script>
-	{% import socket%}
-	{% set s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) %}
-	{% set another = s.connect(("gmail.com",80)) %}
-	{% set ip = s.getsockname()[0] %}
-	{% set last = s.close()%}
+
 	$(document).ready(function() {
-		var ws = new WebSocket("ws://{{ip}}:8888/websocket");
+		var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:8888/websocket");
 		if (typeof String.prototype.startsWith != 'function') {
 			  String.prototype.startsWith = function (str){
 			    return this.indexOf(str) == 0;

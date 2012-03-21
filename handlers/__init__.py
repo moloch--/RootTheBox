@@ -3,6 +3,7 @@
 import logging
 from os import urandom, path
 from base64 import b64encode
+from libs.HostIpAddress import HostIpAddress
 from tornado.ioloop import IOLoop #@UnresolvedImport
 from tornado.web import Application #@UnresolvedImport
 from tornado.web import StaticFileHandler #@UnresolvedImport
@@ -114,6 +115,12 @@ application = Application([
     # Enable XSRF forms
     xsrf_cookies = True,
     
+    # Recaptcha Key
+    recaptcha_private_key = "6LcJJ88SAAAAAPPAN72hppldxema3LI7fkw0jaIa",
+
+    # WebSocket Host IP Address
+    ws_ip_address = HostIpAddress().get_ip_address(),
+
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),
     crack_me_dir = path.abspath('files/crack_mes/'),
