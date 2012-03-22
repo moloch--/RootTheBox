@@ -5,6 +5,15 @@
 * http://rootthebox.com/
 * GPL v3
 
+Features
+-------------------
+* Real-time scoring graphs using web sockets
+* Real-time status updates using web sockets
+* Team based file/text sharing
+* HTML5/CSS3 stuff
+* A wall of sheep displaying cracked passwords
+* Other cool stuff
+
  Setup
 -------------------
 * install these packages: tornado (2.2), sqlalchemy (0.7.5), nose (1.0.0), python-recaptcha, python-jsonpickle, pycco and virtualenv is recommended
