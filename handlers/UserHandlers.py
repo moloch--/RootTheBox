@@ -163,7 +163,8 @@ class SettingsHandler(RequestHandler):
                 self.get_argument('recaptcha_challenge_field'),
                 self.get_argument('recaptcha_response_field'),
                 self.application.settings['recaptcha_private_key'],
-                self.request.remote_ip,)
+                self.request.remote_ip
+            )
         except:
             self.render("user/error.html", operation="Changing Password", errors = "Please fill out recaptcha")
         if user.validate_password(old_password):
