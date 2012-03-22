@@ -1,6 +1,7 @@
  Root the Box
 -------------------
-* Based on teaspoon
+* A real-time scoring engine for hacker CTF games
+* Based on tornado/teaspoon
 * http://rootthebox.com/
 * GPL v3
 
