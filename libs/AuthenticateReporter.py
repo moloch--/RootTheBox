@@ -84,22 +84,22 @@ class AuthenticateReporter():
     def check_validity(self):
         ''' Checks the validity of a reporter on a box '''
         logging.info("Checking for reporter at %s:%s" % (self.box.ip_address, self.port))
-        #try:
-        self.sock.connect((self.box.ip_address, self.port))
-        self.pending_access = self.sock.recv(BUFFER_SIZE)
-        if self.pending_access == 'root':
-                self.sha.update(self.box.root_key)
-                self.verify_response()
-        elif self.pending_access == 'user':
-                self.sha.update(self.box.user_key)
-                self.verify_response()
-        else:
-                logging.info("Reporter provided an invalid access level")
-        #except:
-            #logging.info("Failed to connect to reporter")
+        try:
+            self.sock.connect((self.box.ip_address, self.port))
+            self.pending_access = self.sock.recv(BUFFER_SIZE)
+            if self.pending_access == 'root':
+                    self.sha.update(self.box.root_key)
+                    self.verify_response()
+            elif self.pending_access == 'user':
+                    self.sha.update(self.box.user_key)
+                    self.verify_response()
+            else:
+                    logging.info("Reporter provided an invalid access level")
+        except:
+            logging.info("Failed to connect to reporter")
 
     def verify_response(self):
-        ''' Verifies the response from the reporter is valid '''
+        ''' Verifies zero-knowledge proof '''
         self.send_xid()
         response = self.sock.recv(BUFFER_SIZE)
         if response == self.sha.hexdigest():
