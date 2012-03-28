@@ -80,6 +80,7 @@ class User(BaseObject):
             self.score_cache = sum(actions)
             self.dirty = False
             dbsession.add(self)
+            dbsession.flush()
         return self.score_cache
     
     @classmethod

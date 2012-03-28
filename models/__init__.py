@@ -40,6 +40,7 @@ from models.User import User
 from models.FileUpload import FileUpload
 from models.Challenge import Challenge
 from models.WallOfSheep import WallOfSheep
+from models.SEChallenge import SEChallenge
 
 # calling this will create the tables at the database
 __create__ = lambda: (setattr(engine, 'echo', True), metadata.create_all(engine))

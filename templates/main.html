@@ -68,7 +68,7 @@
 					//Update the line chart
 					chart.series[getSeriesByName(message['team_name'])].addPoint([parseInt(message['time_stamp']), getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))]);
 					//Update the bar chart
-					correctData(getSeriesByName(message['team_name']), parseInt(message['team_score']));
+					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
 					bar_chart.redraw();
 				}
 			}
@@ -98,7 +98,7 @@
 			for(var index = 0; index < bar_chart.series[0].data.length; index++) {
 				 new_data[index] = bar_chart.series[0].data[index].config;
 			}
-			new_data[teamIndex] = newScore;
+			new_data[teamIndex] += newScore;
 			bar_chart.series[0].setData(new_data, false);
 		}
 		

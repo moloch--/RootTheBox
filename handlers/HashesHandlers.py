@@ -30,13 +30,13 @@ class HashesHandler(UserBaseHandler):
         try:
             display_name = self.get_argument("display_name")
         except:
-            self.render("hashes/error.html", errors = "No user name")
+            self.render("hashes/error.html", operation = "Hash cracking", errors = "No user name")
         
         # Get preimage
         try:
             preimage = self.get_argument("preimage")
         except:
-            self.render("hashes/error.html", errors = "No password")
+            self.render("hashes/error.html", errors = "No password", operation = "Hash cracking")
             
         user = User.by_user_name(self.session.data['user_name'])
         target = User.by_display_name(display_name)

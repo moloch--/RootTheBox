@@ -25,11 +25,13 @@ from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
+from handlers.PastebinHandlers import *
+from handlers.SocialHandlers import *
 
 import models
 from models import dbsession
 from modules.Menu import Menu
-      
+       
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
 
 application = Application([
@@ -65,6 +67,9 @@ application = Application([
         
         # Challenges Handlers
         (r'/challenge(.*)', ChallengeHandler, {'dbsession' : dbsession}),
+        
+        # Social Challenges Handlers
+        (r'/se(.*)', SocialHomeHandler, {'dbsession':dbsession}),
         
         # Admin Handlers - Administration pages
         (r'/admin/create/(.*)', AdminCreateHandler, {'dbsession':dbsession}),
@@ -136,16 +141,15 @@ application = Application([
     # Application version
     version = '0.1'
 )
-
 def cache_actions():
     ''' Loads all of the actions from the database into memory for the scoreboard pages'''
     action_list = dbsession.query(models.Action).all()
     ws_manager = WebSocketManager.Instance()
     for action in action_list:
         team = dbsession.query(models.User).filter_by(id=action.user_id).first()
-        score_update = ScoreUpdate(action.created.strftime("%d%H%M%S"), action.value, team.team_name, team.score)
+        score_update = ScoreUpdate(action.created.strftime("%d%H%M%S"), action.value, team.team_name)
         ws_manager.currentUpdates.append(score_update)
-
+ 
 # Start the server
 def start_game():
     ''' Main entry point for the application '''

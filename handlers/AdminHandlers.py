@@ -13,7 +13,7 @@ from tempfile import TemporaryFile
 from mimetypes import guess_type
 from libs.SecurityDecorators import * #@UnusedWildImport
 from libs.WebSocketManager import WebSocketManager
-from models import Team, Box, CrackMe, Action, Challenge
+from models import Team, Box, CrackMe, Action, Challenge, SEChallenge
 from handlers.BaseHandlers import AdminBaseHandler
 from tornado.web import RequestHandler #@UnresolvedImport
 from libs.Notification import Notification
@@ -159,7 +159,24 @@ class AdminCreateHandler(AdminBaseHandler):
         self.render("admin/create_se.html")
         
     def post_se(self, *args, **kwargs):
-        pass
+        try:
+            name = self.get_argument('name')
+            description = self.get_argument('description')
+            value = int(self.get_argument('value'))
+            token = self.get_argument('token')
+            level = int(self.get_argument('level'))
+        except:
+            self.render("admin/error.html", errors = "Failed to create challenge")
+        challenge = SEChallenge(
+                        name = unicode(name),
+                        description = unicode(description),
+                        value = value,
+                        token = unicode(token),
+                        level = level)
+        self.dbsession.add(challenge)
+        self.dbsession.flush()
+        self.render("admin/created.html", game_object = "challenge")
+   
 
 class AdminEditHandler(AdminBaseHandler):
     
