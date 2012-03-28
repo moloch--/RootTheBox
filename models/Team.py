@@ -4,6 +4,8 @@ Created on Mar 12, 2012
 @author: moloch
 '''
 
+import logging
+
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode
@@ -11,7 +13,6 @@ from models import dbsession, team_challenges
 from models.CrackMe import CrackMe
 from models.Box import Box
 from models.BaseGameObject import BaseObject
-import logging
 
 class Team(BaseObject):
     """ Team definition """

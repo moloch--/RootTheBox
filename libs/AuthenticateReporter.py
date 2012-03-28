@@ -15,6 +15,7 @@ from models import Box
 from hashlib import sha256
 from base64 import b64encode
 from tornado import iostream
+from models import dbsession
 from libs.WebSocketManager import WebSocketManager
 
 TIMEOUT = 1
@@ -78,7 +79,7 @@ class AuthenticateReporter():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(TIMEOUT)
         self.tcp_stream = iostream.IOStream(sock, max_buffer_size = BUFFER_SIZE)
-        self.tcp_stream.set_close_callback(self.setDone)
+        self.tcp_stream.set_close_callback(self.set_done)
         self.tcp_stream.connect((self.box.ip_address, self.port))
         self.confirmed_access = None
         self.pending_access = None
