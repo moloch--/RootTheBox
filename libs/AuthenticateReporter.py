@@ -30,7 +30,7 @@ def score_box(box):
         if auth.confirmed_access != None:
             award_points(box, user, auth)
         else:
-            user.lost_control(box.box_name)
+            user.lost_control(box)
             dbsession.add(user)
             dbsession.flush()
 
