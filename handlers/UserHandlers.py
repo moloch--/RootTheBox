@@ -121,7 +121,7 @@ class SettingsHandler(RequestHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
-        if args[0] in self.post_functions.keys():
+        if len(args) == 1 and args[0] in self.post_functions.keys():
             self.post_functions[args[0]](*args, **kwargs)
         else:
             self.render("user/error.html")
@@ -133,6 +133,9 @@ class SettingsHandler(RequestHandler):
             if len(self.request.files['avatar'][0]['body']) < (1024*1024):
                 if user.avatar == "default_avatar.gif":
                     user.avatar = unicode(str(uuid1()))
+                elif os.path.exists(self.application.settings['avatar_dir']+'/'+user.avatar):
+                    os.unlink(self.application.settings['avatar_dir']+'/'+user.avatar)
+                # Check image header, reject any unapproved formats
                 ext = imghdr.what("", h = self.request.files['avatar'][0]['body'])
                 if ext in ['png', 'jpeg', 'gif', 'bmp']:
                     user.avatar = user.avatar[:user.avatar.rfind('.')]+"."+ext
@@ -157,7 +160,7 @@ class SettingsHandler(RequestHandler):
             new_password = self.get_argument("new_password")
             new_password_two = self.get_argument("new_password2")
         except:
-            self.render("user/error.html", operation="Changing Password", errors = "Please fill out all forms")
+            self.render("user/error.html", operation = "Changing Password", errors = "Please fill out all forms")
         try:
             response = captcha.submit(
                 self.get_argument('recaptcha_challenge_field'),
@@ -166,20 +169,20 @@ class SettingsHandler(RequestHandler):
                 self.request.remote_ip
             )
         except:
-            self.render("user/error.html", operation="Changing Password", errors = "Please fill out recaptcha")
+            self.render("user/error.html", operation = "Changing Password", errors = "Please fill out recaptcha")
         if user.validate_password(old_password):
             if new_password == new_password_two:
                 if response.is_valid:
                     user.password = new_password
                     self.dbsession.add(user)
                     self.dbsession.flush()
-                    self.render("user/settings.html", message="Succesfully Changed Password!")
+                    self.render("user/settings.html", message = "Succesfully Changed Password!")
                 else:
-                    self.render("user/error.html", operation="Changing Password", errors = "Invalid recaptcha")
+                    self.render("user/error.html", operation = "Changing Password", errors = "Invalid recaptcha")
             else:
-                self.render("user/error.html", operation="Changing Password", errors = "New password's didn't match")
+                self.render("user/error.html", operation = "Changing Password", errors = "New password's didn't match")
         else:
-            self.render("user/error.html", operation="Changing Password", errors = "Invalid old password")
+            self.render("user/error.html", operation = "Changing Password", errors = "Invalid old password")
 
 class TeamViewHandler(UserBaseHandler):
 
@@ -215,7 +218,7 @@ class ChallengeHandler(UserBaseHandler):
             token = self.get_argument("token")
             challenge = Challenge.get_by_id(self.get_argument("challenge"))
         except:
-            self.render("user/error.html", operation="Submit Challenge", errors = "Please enter a token")    
+            self.render("user/error.html", operation = "Submit Challenge", errors = "Please enter a token")    
         if user.team != None:
             if not challenge in user.team.challenges:
                 if token == challenge.token:
@@ -231,11 +234,11 @@ class ChallengeHandler(UserBaseHandler):
                     self.dbsession.flush()
                     self.redirect('/challenge')
                 else:
-                    self.render("user/error.html", operation="Submit Challenge", errors = "Invalid Token")
+                    self.render("user/error.html", operation = "Submit Challenge", errors = "Invalid Token")
             else:
-                self.render("user/error.html", operation="Submit Challenge", errors = "This challenge was already completed")
+                self.render("user/error.html", operation = "Submit Challenge", errors = "This challenge was already completed")
         else:
-            self.render("user/error.html", operation="Submit Challenge", errors = "You're not on a team")
+            self.render("user/error.html", operation = "Submit Challenge", errors = "You're not on a team")
 
 class LogoutHandler(UserBaseHandler):
 

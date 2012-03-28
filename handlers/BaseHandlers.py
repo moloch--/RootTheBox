@@ -10,6 +10,7 @@ from libs.Session import SessionManager
 from tornado.web import RequestHandler #@UnresolvedImport
 
 class UserBaseHandler(RequestHandler):
+    ''' User handlers extend this class '''
     
     def initialize(self, dbsession):
         self.dbsession = dbsession
@@ -21,8 +22,8 @@ class UserBaseHandler(RequestHandler):
             return User.by_user_name(self.session.data['user_name'])
         return None
 
-
 class AdminBaseHandler(RequestHandler):
+    ''' Admin handlers extend this class '''
     
     def initialize(self, dbsession):
         self.dbsession = dbsession
@@ -48,15 +49,19 @@ class AdminBaseHandler(RequestHandler):
     @authorized('admin')
     @restrict_ip_address
     def get(self, *args, **kwargs):
-        if args[0] in self.get_functions.keys():
+        if len(args) == 1 and args[0] in self.get_functions.keys():
             self.get_functions[args[0]](*args, **kwargs)
-        else:
+        elif 1 <= len(args):
             self.render("admin/unknown_object.html", unknown_object = args[0])
+        else:
+            self.render("admin/errror.html", errors = "Missing parameters")
     
     @authorized('admin')
     @restrict_ip_address
     def post(self, *args, **kwargs):
-        if args[0] in self.post_functions.keys():
+        if len(args) == 1 and args[0] in self.post_functions.keys():
             self.post_functions[args[0]](*args, **kwargs)
-        else:
+        elif 1 <= len(args):
             self.render("admin/unknown_object.html", unknown_object = args[0])
+        else:
+            self.render("admin/error.html", errors = "Missing parameters")
