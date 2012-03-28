@@ -4,6 +4,8 @@ Created on Mar 15, 2012
 @author: moloch
 '''
 
+import logging
+
 from models import User
 from libs.SecurityDecorators import *
 from libs.Session import SessionManager
@@ -21,6 +23,14 @@ class UserBaseHandler(RequestHandler):
         if self.session != None:
             return User.by_user_name(self.session.data['user_name'])
         return None
+
+    def write_error(code, **kwargs):
+        logging.info("HTTP Error "+str(code)+": Client at %s" % self.request.remote_ip)
+        if code == 404 or code == 500:
+            self.redirect("/404")
+        else:
+            self.write("wat")
+            self.finish()
 
 class AdminBaseHandler(RequestHandler):
     ''' Admin handlers extend this class '''
