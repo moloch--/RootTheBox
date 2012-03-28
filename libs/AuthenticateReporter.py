@@ -15,23 +15,41 @@ from models import Box
 from hashlib import sha256
 from base64 import b64encode
 from tornado import iostream
-from models import dbsession
+from models import dbsession, Action
 from libs.WebSocketManager import WebSocketManager
 
 TIMEOUT = 1
+XID_SIZE = 24
 BUFFER_SIZE = 1024
+
+def scoring_round():
+    ''' Multi-threaded scoring '''
+    boxes = list(Box.get_all())
+    logging.info("Starting scoring round with %d boxes" % len(boxes))
+    for box in boxes:
+        score_box(box)
+    logging.info("Scoring round completed")
 
 def score_box(box):
     ''' Scores a single box '''
+    threads = []
     for user in box.users:
-        auth = AuthenticateReporter(box, user)
-        auth.check_validity()
-        if auth.confirmed_access != None:
-            award_points(box, user, auth)
-        else:
-            user.lost_control(box)
-            dbsession.add(user)
-            dbsession.flush()
+        thread = threading.Thread(target = score_user, args = (box, user))
+        threads.append(thread)
+        thread.start()
+        for thread in threads:
+            thread.join(timeout = TIMEOUT)
+
+def score_user(box, user):
+    ''' Scores a single user/team '''
+    auth = AuthenticateReporter(box, user)
+    auth.check_validity()
+    if auth.confirmed_access != None:
+        award_points(box, user, auth)
+    else:
+        user.lost_control(box)
+        dbsession.add(user)
+        dbsession.flush()
 
 def award_points(box, user, auth):
     ''' Creates action based on pwnage '''
@@ -51,23 +69,6 @@ def award_points(box, user, auth):
     dbsession.add(action)
     dbsession.add(user)
     dbsession.flush()
-    ws_manager = WebSocketManager.Instance()
-    avatar_path = self.application.settings['avatar_dir']+'/'+user.avatar
-    notify = Notification("Box Pwnage", description, file_location = avatar_path)
-    ws_manager.send_all(notify)
-
-def scoring_round():
-    ''' Multi-threaded scoring '''
-    boxes = list(Box.get_all())
-    threads = []
-    logging.info("Starting scoring round with %d boxes" % len(boxes))
-    for box in boxes:
-        thread = threading.Thread(target = score_box, args = (box,))
-        threads.append(thread)
-        thread.start()
-    for thread in threads:
-        thread.join()
-    logging.info("Scoring round completed")
 
 class AuthenticateReporter():
 
@@ -75,67 +76,39 @@ class AuthenticateReporter():
         self.sha = sha256()
         self.box = box
         self.port = user.team.listen_port
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(TIMEOUT)
-        self.tcp_stream = iostream.IOStream(sock, max_buffer_size = BUFFER_SIZE)
-        self.tcp_stream.set_close_callback(self.set_done)
-        self.tcp_stream.connect((self.box.ip_address, self.port))
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.settimeout(TIMEOUT)
         self.confirmed_access = None
         self.pending_access = None
-        self.done = False
-    
-    def set_done(self):
-        ''' Set flag when authentication protocol has completed '''
-        self.done = True
     
     def check_validity(self):
         ''' Checks the validity of a reporter on a box '''
         logging.info("Checking for reporter at %s:%s" % (self.box.ip_address, self.port))
-        try:
-            self.tcp_stream.read_bytes(len('root'), self.check_access_level)
-        except socket.error, error:
-            logging.info("Failed to connect to host %s: %s" % (self.box.ip_address, error))
-            self.set_done()
-
-    def check_access_level(self, pending_access):
-        ''' Check if the reporter provided a valid access level '''
-        self.pending_access = pending_access
+        #try:
+        self.sock.connect((self.box.ip_address, self.port))
+        self.pending_access = self.sock.recv(BUFFER_SIZE)
         if self.pending_access == 'root':
-            self.sha.update(self.box.root_key)
-            self.send_xid()
+                self.sha.update(self.box.root_key)
+                self.verify_response()
         elif self.pending_access == 'user':
-            self.sha.update(self.box.user_key)
-            self.send_xid()
+                self.sha.update(self.box.user_key)
+                self.verify_response()
         else:
-            logging.info("A reporter submitted an invalid access level")
-            self.tcp_stream.write("Error - Invalid access level %s" % self.pending_access)
-            self.tcp_stream.close()
+                logging.info("Reporter provided an invalid access level")
+        #except:
+            #logging.info("Failed to connect to reporter")
+
+    def verify_response(self):
+        ''' Verifies the response from the reporter is valid '''
+        self.send_xid()
+        response = self.sock.recv(BUFFER_SIZE)
+        if response == self.sha.hexdigest():
+            self.confirmed_access = bool(self.pending_access == 'root')
+        else:
+            logging.info("Reporter's response was invalid")
 
     def send_xid(self):
-        ''' Send the reporter the transaction id '''
-        xid = self.get_xid()
-        self.tcp_stream.write(xid)
+        ''' Sends transaction id to client '''
+        xid = b64encode(urandom(XID_SIZE))
+        self.sock.sendall(xid)
         self.sha.update(xid)
-        while self.tcp_stream.writing():
-            time.sleep(0.01)
-        self.tcp_stream.read_bytes(len(self.sha.hexdigest()), self.check_response)
-            
-    def check_response(self, response):
-        ''' Checks if the reporter provided a valid response '''
-        logging.debug("Server: %s Reporter: %s" % (self.sha.hexdigest(), response))
-        if self.sha.hexdigest() == response:
-            self.tcp_stream.write("Success")
-            self.confirmed_access = bool(self.pending_access == 'root')
-            self.tcp_stream.close()
-        else:
-            logging.info("A reporter submitted an invalid sha value")
-            self.tcp_stream.write("Error - Checksum mismatch")
-            self.tcp_stream.close()
-
-    def get_xid(self):
-        ''' Returns a randomly generated transaction id '''
-        return b64encode(urandom(24))
-
-    def kill(self):
-        ''' Kills the connection to the reporter regardless of state '''
-        self.tcp_stream.close()
