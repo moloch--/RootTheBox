@@ -1,36 +1,40 @@
 # -*- coding: utf-8 -*-
+'''
+Created on Mar 13, 2012
 
+@author: moloch
+'''
+
+import models
 import logging
+
 from time import sleep
 from os import urandom, path
 from base64 import b64encode
+from models import dbsession
+from modules.Menu import Menu
+from libs.Session import SessionManager
 from libs.HostIpAddress import HostIpAddress
 from libs.AuthenticateReporter import scoring_round
-from libs.Session import SessionManager
 from tornado import netutil
 from tornado import process
 from tornado.web import Application
 from tornado.web import StaticFileHandler 
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
-
 from handlers.BoxHandlers import *
 from handlers.RootHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
 from handlers.HashesHandlers import *
+from handlers.SocialHandlers import *
 from handlers.CrackMeHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
+from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
-from handlers.PastebinHandlers import *
-from handlers.SocialHandlers import *
-
-import models
-from models import dbsession
-from modules.Menu import Menu
        
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
 
