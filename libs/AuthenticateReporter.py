@@ -23,7 +23,6 @@ BUFFER_SIZE = 1024
 
 def score_box(box):
     ''' Scores a single box '''
-    logging.info("Starting a scoring round, good hunting!")
     for user in box.users:
         auth = AuthenticateReporter(box, user)
         auth.check_validity()

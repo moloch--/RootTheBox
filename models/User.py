@@ -4,6 +4,8 @@ Created on Mar 12, 2012
 @author: moloch
 '''
 
+import logging
+
 from hashlib import md5, sha256
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
@@ -158,4 +160,5 @@ class User(BaseObject):
     def lost_control(self, box):
         ''' Remove team's control over a box object '''
         if box in self.controlled_boxes:
+            logging.info("Removed control of %s from %s" % (box.box_name, self.display_name))
             self.controlled_boxes.remove(box)

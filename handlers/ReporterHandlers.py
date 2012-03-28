@@ -3,6 +3,7 @@ Created on Mar 13, 2012
 
 @author: moloch
 '''
+import logging
 
 from models import User, Box
 from libs.Notification import Notification
@@ -21,7 +22,8 @@ class ReporterRegistrationHandler(RequestHandler):
 		box = Box.by_ip_address(self.request.remote_ip)
 		if box != None:
 			try:
-				user = User.by_display_name(self.get_argument("handle"))
+				display_name = self.get_argument("handle")
+				user = User.by_display_name(display_name)
 				if user != None and not user.team.is_controlling(box):
 					user.give_control(box)
 					self.dbsession.add(user)

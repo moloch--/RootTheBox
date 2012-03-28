@@ -18,14 +18,6 @@ class SessionManager():
 		self.sessions = {}
 		self.sessions_lock = Lock()
 
-	def clean_up():
-		''' Removes all expired sessions '''
-		for sid in self.sessions.keys():
-			if self.sessions[sid].is_expired():
-				self.sessions_lock.acquire()
-				del self.sessions[sid]
-				self.sessions_lock.release()
-
 	def start_session(self):
 		''' Creates a new session and returns the session id and the new session object '''
 		sid = b64encode(urandom(24))
@@ -49,6 +41,14 @@ class SessionManager():
 			elif self.sessions[sid].data['ip'] == ip_address:
 				return self.sessions[sid]
 		return None
+
+	def clean_up(self):
+		''' Removes all expired sessions '''
+		for sid in self.sessions.keys():
+			if self.sessions[sid].is_expired():
+				self.sessions_lock.acquire()
+				del self.sessions[sid]
+				self.sessions_lock.release()
 
 class Session():
     
