@@ -6,6 +6,7 @@ from os import urandom, path
 from base64 import b64encode
 from libs.HostIpAddress import HostIpAddress
 from libs.AuthenticateReporter import scoring_round
+from libs.Session import SessionManager
 from tornado import netutil
 from tornado import process
 from tornado.web import Application
@@ -126,6 +127,9 @@ application = Application([
     # Milli-Seconds between scoring
     ticks = int(30 * 1000),
 
+    # Milli-Seconds between session clean up
+    clean_up_timeout = int(120 * 1000),
+
     # Debug mode
     debug = False,
     
@@ -152,7 +156,10 @@ def start_game():
     server = HTTPServer(application)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
+    session_manager = SessionManager.Instance()
     if process.task_id() == 0:
         scoring = PeriodicCallback(scoring_round, application.settings['ticks'], io_loop = io_loop)
         scoring.start()
+        session_clean_up = PeriodicCallback(session_manager.clean_up, application.settings['clean_up_timeout'], io_loop = io_loop)
+        session_clean_up.start()
     io_loop.start()

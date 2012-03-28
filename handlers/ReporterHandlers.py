@@ -20,18 +20,18 @@ class ReporterRegistrationHandler(RequestHandler):
 		''' Registers a reporting service on a remote box '''
 		box = Box.by_ip_address(self.request.remote_ip)
 		if box != None:
-			#try:
-			user = User.by_display_name(self.get_argument("handle"))
-			if user != None and not user.team.is_controlling(box):
-				user.give_control(box)
-				self.dbsession.add(user)
-				self.dbsession.flush()
-				self.notify(user, box)
-				self.write(unicode(user.team.listen_port))
-			else:
-				self.write("Invalid handle")
-			#except:
-			#	self.write("Missing parameter")
+			try:
+				user = User.by_display_name(self.get_argument("handle"))
+				if user != None and not user.team.is_controlling(box):
+					user.give_control(box)
+					self.dbsession.add(user)
+					self.dbsession.flush()
+					self.notify(user, box)
+					self.write(unicode(user.team.listen_port))
+				else:
+					self.write("Invalid handle")
+			except:
+				self.write("Missing parameter")
 		else:
 			self.write("Invalid ip address")
 		self.finish()
