@@ -37,13 +37,19 @@ class SEChallenge(BaseObject):
 
     @classmethod
     def get_lowest(cls):
-        ''' Get the lowest level challenge from the db'''
-        return dbsession.query(cls).order_by(cls.level).first() #@UndefinedVariable
+        ''' Get the lowest level challenge from the db without a team id set'''
+        for se in dbsession.query(cls).order_by(cls.level).all():
+            if se.team_id == None:
+                return se
+        return None
     
     @classmethod
     def get_highest(cls):
-        ''' Gets the highest level se challenge '''
-        return dbsession.query(cls).order_by(cls.level.desc()).first()
+        ''' Gets the highest level se challenge without a team id set'''
+        for se in dbsession.query(cls).order_by(cls.level).all():
+            if se.team_id == None:
+                return se
+        return None
 
     def __repr__(self):
         return ('<SEChallenge - name:%s, value:%d>' % (self.name, self.value))
