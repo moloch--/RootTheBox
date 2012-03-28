@@ -10,14 +10,15 @@ from libs.WebSocketManager import WebSocketManager
 
 class WebsocketHandler(tornado.websocket.WebSocketHandler):
     
-    def open(self): #@ReservedAssignment
-        self.manager = WebSocketManager.Instance() #@UndefinedVariable
+    def open(self):
+        self.manager = WebSocketManager.Instance() 
         self.manager.add_connection(self)
         
     def on_message(self, message):
-        logging.warn("%s tried to send us [%s]!" % (self.request.remote_ip, message))
         if message == "load plox":
             self.manager.get_updates(self)
+        else:
+            logging.warn("%s tried to send us '%s'" % (self.request.remote_ip, message))
         
             
     def on_close(self):

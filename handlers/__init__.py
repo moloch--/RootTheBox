@@ -161,9 +161,15 @@ def start_game():
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
     session_manager = SessionManager.Instance()
-    if process.task_id() == 0:
+    if process.task_id() == 1:
         scoring = PeriodicCallback(scoring_round, application.settings['ticks'], io_loop = io_loop)
-        scoring.start()
         session_clean_up = PeriodicCallback(session_manager.clean_up, application.settings['clean_up_timeout'], io_loop = io_loop)
+        scoring.start()
         session_clean_up.start()
-    io_loop.start()
+    try:
+        io_loop.start()
+    except KeyboardInterrupt:
+        if process.task_id() == 1:
+            print '\r[!] Shutdown Everything!'
+            session_clean_up.stop()
+            io_loop.stop()

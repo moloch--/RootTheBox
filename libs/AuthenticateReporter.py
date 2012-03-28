@@ -93,10 +93,6 @@ class AuthenticateReporter():
         logging.info("Checking for reporter at %s:%s" % (self.box.ip_address, self.port))
         try:
             self.tcp_stream.read_bytes(len('root'), self.check_access_level)
-            time.sleep(TIMEOUT)
-            if not self.done:
-                logging.info("A reporter stopped responding on %s" % self.box.ip_address)
-                self.kill()
         except socket.error, error:
             logging.info("Failed to connect to host %s: %s" % (self.box.ip_address, error))
             self.set_done()
@@ -126,9 +122,10 @@ class AuthenticateReporter():
             
     def check_response(self, response):
         ''' Checks if the reporter provided a valid response '''
+        logging.debug("Server: %s Reporter: %s" % (self.sha.hexdigest(), response))
         if self.sha.hexdigest() == response:
             self.tcp_stream.write("Success")
-            self.confirmed_access = (self.pending_access == 'root')
+            self.confirmed_access = bool(self.pending_access == 'root')
             self.tcp_stream.close()
         else:
             logging.info("A reporter submitted an invalid sha value")

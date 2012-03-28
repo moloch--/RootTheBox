@@ -18,7 +18,6 @@ class LoginHandler(RequestHandler):
     
     def post(self, *args, **kwargs):
         ''' Checks submitted user_name and password '''
-        logging.info(self.request.arguments)
         try:
             user_name = self.get_argument('username')
             user = User.by_user_name(user_name)
@@ -93,7 +92,7 @@ class UserRegistraionHandler(RequestHandler):
         except:
             self.render('public/registration.html', errors = 'Please enter a password')
         
-        #Check recaptcha
+        # Check recaptcha
         try:
             response = captcha.submit(
                 self.get_argument('recaptcha_challenge_field'),
