@@ -1,6 +1,6 @@
  Root the Box
 -------------------
-* A real-time/asynchronous scoring engine for hacker CTF games
+* A multi-threaded real-time/asynchronous scoring engine for hacker CTF games
 * Based on tornado/teaspoon
 * http://rootthebox.com/
 * GPL v3

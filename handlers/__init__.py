@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from time import sleep
 from os import urandom, path
 from base64 import b64encode
 from libs.HostIpAddress import HostIpAddress
-from tornado.ioloop import IOLoop #@UnresolvedImport
-from tornado.web import Application #@UnresolvedImport
-from tornado.web import StaticFileHandler #@UnresolvedImport
+from libs.AuthenticateReporter import scoring_round
+from tornado import netutil
+from tornado import process
+from tornado.web import Application
+from tornado.web import StaticFileHandler 
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop, PeriodicCallback
 
 from handlers.BoxHandlers import *
 from handlers.RootHandlers import *
@@ -16,23 +21,14 @@ from handlers.ErrorHandlers import *
 from handlers.HashesHandlers import *
 from handlers.CrackMeHandlers import *
 from handlers.ReporterHandlers import *
+from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
-from handlers.PastebinHandlers import *
 
+import models
 from models import dbsession
 from modules.Menu import Menu
-import models
-
-def cache_actions():
-    ''' Loads all of the actions from the database into memory for the scoreboard pages'''
-    action_list = dbsession.query(models.Action).all()
-    ws_manager = WebSocketManager.Instance()
-    for action in action_list:
-        team = dbsession.query(models.User).filter_by(id=action.user_id).first()
-        score_update = ScoreUpdate(action.created.strftime("%d%H%M%S"), action.value, team.team_name, team.score)
-        ws_manager.currentUpdates.append(score_update)
-        
+      
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
 
 application = Application([
@@ -124,32 +120,39 @@ application = Application([
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),
     crack_me_dir = path.abspath('files/crack_mes/'),
-    shares_dir = path.abspath('files/shares'),
+    shares_dir = path.abspath('files/shares/'),
     se_dir = path.abspath('files/se/'),
 
-    # Seconds between scoring
-    ticks = 120,
+    # Milli-Seconds between scoring
+    ticks = int(30 * 1000),
 
     # Debug mode
-    debug = True,
+    debug = False,
     
     # Application version
     version = '0.1'
 )
 
-# the port. doh
-application.listen(8888)
+def cache_actions():
+    ''' Loads all of the actions from the database into memory for the scoreboard pages'''
+    action_list = dbsession.query(models.Action).all()
+    ws_manager = WebSocketManager.Instance()
+    for action in action_list:
+        team = dbsession.query(models.User).filter_by(id=action.user_id).first()
+        score_update = ScoreUpdate(action.created.strftime("%d%H%M%S"), action.value, team.team_name, team.score)
+        ws_manager.currentUpdates.append(score_update)
 
-# calling this will start the IOLoop. open your browser and enjoy.
-__serve__ = lambda: IOLoop.instance().start()
-
-#cache the actions
-cache_actions()
-
-def start():
-    scoring = ioloop.PeriodicCallback(self.scoring, self.ioLoop)
-    sockets = tornado.netutil.bind_sockets(8888)
-    tornado.process.fork_processes(-1)
+# Start the server
+def start_game():
+    ''' Main entry point for the application '''
+    cache_actions()
+    sockets = netutil.bind_sockets(8888)
+    if process.task_id() == None:
+        tornado.process.fork_processes(-1, max_restarts = 10)
     server = HTTPServer(application)
     server.add_sockets(sockets)
-    
+    io_loop = IOLoop.instance()
+    if process.task_id() == 0:
+        scoring = PeriodicCallback(scoring_round, application.settings['ticks'], io_loop = io_loop)
+        scoring.start()
+    io_loop.start()

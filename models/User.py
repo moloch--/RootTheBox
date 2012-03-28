@@ -117,25 +117,25 @@ class User(BaseObject):
         if isinstance(password, unicode): 
             password = password.encode('utf-8')
         if 8 <= len(password):
-            password = cls.adminHash(password)
+            password = cls.admin_hash(password)
         else:
-            password = cls.userHash(password)
+            password = cls.user_hash(password)
         return password
 
     @classmethod
-    def userHash(cls, preimage):
+    def user_hash(cls, preimage):
         ''' Single round md5 '''
-        md5Hash = md5()
-        md5Hash.update(preimage)
-        return unicode(md5Hash.hexdigest())
+        md5_hash = md5()
+        md5_hash.update(preimage)
+        return unicode(md5_hash.hexdigest())
     
     @classmethod
-    def adminHash(cls, preimage):
+    def admin_hash(cls, preimage):
         ''' Two rounds of sha256, with a static non-ascii salt because I'm lazy '''
-        shaHash = sha256()
-        shaHash.update(preimage)
-        shaHash.update(preimage + shaHash.hexdigest() + "\x90\x90\x90")
-        return unicode(shaHash.hexdigest())
+        sha_hash = sha256()
+        sha_hash.update(preimage)
+        sha_hash.update(preimage + sha_hash.hexdigest() + "\x90\x90\x90")
+        return unicode(sha_hash.hexdigest())
     
     def has_permission(self, permission):
         """ Return True if ``permission`` is in permissions_names """
@@ -146,17 +146,16 @@ class User(BaseObject):
         if isinstance(attempt, unicode):
             attempt = attempt.encode('utf-8')
         if self.has_permission('admin'):
-            return self.password == self.adminHash(attempt)
+            return self.password == self.admin_hash(attempt)
         else:
-            return self.password == self.userHash(unicode(attempt))
+            return self.password == self.user_hash(unicode(attempt))
     
-    def give_control(self, box_name):
+    def give_control(self, box):
         ''' Give team control of a box object '''
-        box = Box.by_box_name(unicode(box_name))
-        if not self.is_controlling(box.box_name):
+        if not self.team.is_controlling(box):
             self.controlled_boxes.append(box)
     
-    def lost_control(self, box_name):
+    def lost_control(self, box):
         ''' Remove team's control over a box object '''
-        if self.is_controlling(Box.by_box_name(box_name)):
-            self.controlled_boxes.remove(Box.by_box_name(box_name))
+        if box in self.controlled_boxes:
+            self.controlled_boxes.remove(box)

@@ -15,6 +15,9 @@ from sys import argv
 from time import sleep
 from datetime import datetime
 from subprocess import call
+from handlers import start_game
+from models import __create__, __boot_strap__
+
 curr_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 def serve():
@@ -22,20 +25,9 @@ def serve():
     serves the application
     ----------------------
     """
-    # usage: python . serve
-    
-    # spwans a process of this 'loader', which starts the applicaion by importing the \_\_serve\_\_ method.
     if len(argv) == 2:
         print('=> %s : serving the application.' % curr_time())
-        system('python . serve now')
-        try: 
-            sleep(-1)
-        except: 
-            pass
-    # checkout handlers/__\_\_init\_\_.py__
-    else:
-        from handlers import __serve__
-        __serve__()
+        start_game()
 
 def create():
     """
@@ -48,11 +40,9 @@ def create():
     #Bootstrap the database with some objects
     #usage: python . create bs
     print('=> %s : creating the database.'%curr_time())
-    from models import __create__, __boot_strap__
     __create__()
-    if(len(argv) == 3):
-        if(argv[2] == 'bs'):
-            __boot_strap__()
+    if len(argv) == 3 and argv[2] == 'bs':
+        __boot_strap__()
     
 def test():
     """
@@ -60,7 +50,7 @@ def test():
     ---------------------
     """
     # usage: python . test
-    print('=> %s : testing the application.' % curr_time())
+    print '=> %s : testing the application.' % curr_time()
     # calling nose's nosetests to test the application using the 'tests' module
     call(['nosetests', '-v', 'tests'])
 
@@ -70,7 +60,7 @@ def docs():
     ---------------------
     """
     # usage: python . docs
-    print('=> %s : documenting in process.' % curr_time())
+    print '=> %s : documenting in process.' % curr_time()
     # calling pycco to document the this project
     directories = ['.', 'handlers', 'libs', 'models', 'setup', 'tests']
     call(['pycco', '-p'] + map(lambda directory: directory + '/*.py', directories))

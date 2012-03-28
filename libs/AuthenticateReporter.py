@@ -11,21 +11,22 @@ import logging
 import threading
 
 from os import urandom
+from models import Box
 from hashlib import sha256
 from base64 import b64encode
-from tornado import iostream #@UnresolvedImport
+from tornado import iostream
 from libs.WebSocketManager import WebSocketManager
-from models import Box
 
 TIMEOUT = 1
 BUFFER_SIZE = 1024
 
 def score_box(box):
     ''' Scores a single box '''
+    logging.info("Starting a scoring round, good hunting!")
     for user in box.users:
         auth = AuthenticateReporter(box, user)
         auth.check_validity()
-        if auth.confirmed_access:
+        if auth.confirmed_access != None:
             award_points(box, user, auth)
         else:
             user.lost_control(box.box_name)
@@ -130,7 +131,7 @@ class AuthenticateReporter():
             self.confirmed_access = (self.pending_access == 'root')
             self.tcp_stream.close()
         else:
-            logging.info("A reporter submitted an invalid sha")
+            logging.info("A reporter submitted an invalid sha value")
             self.tcp_stream.write("Error - Checksum mismatch")
             self.tcp_stream.close()
 

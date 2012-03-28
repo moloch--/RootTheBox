@@ -31,7 +31,6 @@ class Action(BaseObject):
     def __radd__(self, other):
         return self.value + other
     
-    
 def insert_listener(mapper, connection, target):    
     logging.info("Called!")    
     team = dbsession.query(models.User).filter_by(id=target.user_id).first()

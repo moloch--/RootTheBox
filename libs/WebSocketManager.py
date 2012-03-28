@@ -3,10 +3,10 @@ Created on Mar 15, 2012
 
 @author: haddaway
 '''
-from libs.Singleton import *
-import logging
-from libs.Session import SessionManager
 import models
+import logging
+from libs.Singleton import *
+from libs.Session import SessionManager
 
 @Singleton
 class WebSocketManager():
