@@ -108,11 +108,12 @@ a:hover
 
 /* Content */
 #content_left_side {
-	float:left 
+	float: left;
+	position: absolute;
 } 
 
 #content_right_side { 
-	float:right
+	float: right;
 }
 
 #page_content
@@ -240,6 +241,8 @@ a:hover
 	padding: 1.5em;
 	font-size: 0.9em;
 	text-align: center;
+	position: absolute;
+    bottom: 0px;
 }
 
 .clear
@@ -251,3 +254,10 @@ a:hover
 #tinymce {
 	
 }
+
+/* Hashes Page */
+#feedback { font-size: 1.2em; }
+#selectable .ui-selecting { background: #0186ba; }
+#selectable .ui-selected { background: #0186ba; color: white; }
+#selectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#selectable li { margin: 3px; padding: 0.4em; font-size: 1.2em; height: 16px; }

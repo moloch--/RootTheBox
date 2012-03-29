@@ -13,13 +13,6 @@
 
 		<div id="content_right_side">
 		<!-- Start Select -->
-				<style>
-					#feedback { font-size: 1.2em; }
-					#selectable .ui-selecting { background: #0186ba; }
-					#selectable .ui-selected { background: #0186ba; color: white; }
-					#selectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-					#selectable li { margin: 3px; padding: 0.4em; font-size: 1.2em; height: 16px; }
-				</style>
 				<script>
 					function load_user_details(user_name) {
 						$.get('/hashes/ajax?user_details=' + user_name, function(data) {
@@ -72,5 +65,4 @@
 			</form>
 		</div>
 		<!-- End Selected User -->
-
 {% end %}

@@ -9,7 +9,7 @@ import logging
 from models import User
 from libs.SecurityDecorators import *
 from libs.Session import SessionManager
-from tornado.web import RequestHandler #@UnresolvedImport
+from tornado.web import RequestHandler
 
 class UserBaseHandler(RequestHandler):
     ''' User handlers extend this class '''

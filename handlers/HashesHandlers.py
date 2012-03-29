@@ -107,6 +107,7 @@ class HashesAjaxHandler(RequestHandler):
     def initialize(self, dbsession):
         self.dbsession = dbsession
 
+    @authenticated
     def get(self, *args, **kwargs):
         ''' Renders a user details div, requested via AJAX '''
         try:

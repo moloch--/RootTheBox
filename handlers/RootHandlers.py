@@ -7,8 +7,9 @@ import logging
 
 from models.User import User
 from libs.Session import SessionManager
-from tornado.web import RequestHandler #@UnresolvedImport
+from tornado.web import RequestHandler
 from recaptcha.client import captcha
+from string import ascii_letters, digits
 
 class LoginHandler(RequestHandler):
 
@@ -34,7 +35,8 @@ class LoginHandler(RequestHandler):
                 self.get_argument('recaptcha_challenge_field'),
                 self.get_argument('recaptcha_response_field'),
                 self.application.settings['recaptcha_private_key'],
-                self.request.remote_ip,)
+                self.request.remote_ip
+            )
         except:
             self.render('public/login.html', header = "Please fill out recaptcha!")
        
