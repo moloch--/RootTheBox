@@ -141,7 +141,7 @@ application = Application([
     clean_up_timeout = int(120 * 1000),
 
     # Debug mode
-    debug = False,
+    debug = True,
     
     # Application version
     version = '0.1'
@@ -161,7 +161,7 @@ def start_game():
     cache_actions()
     sockets = netutil.bind_sockets(8888)
     #if process.task_id() == None:
-    #    tornado.process.fork_processes(1, max_restarts = 10)
+    #    tornado.process.fork_processes(-1, max_restarts = 10)
     server = HTTPServer(application)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()

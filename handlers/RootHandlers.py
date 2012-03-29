@@ -107,7 +107,7 @@ class UserRegistraionHandler(RequestHandler):
         # Create account
         if User.by_user_name(user_name) != None:
             self.render('public/registration.html', errors = 'Account name already taken')
-        elif user_name != handle:
+        elif user_name == handle:
             self.render('public/registration.html', errors = 'Account name and hacker name must differ')
         elif User.by_display_name(handle) != None:
             self.render('public/registration.html', errors = 'Handle already taken')
