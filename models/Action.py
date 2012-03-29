@@ -31,14 +31,13 @@ class Action(BaseObject):
     def __radd__(self, other):
         return self.value + other
     
-def insert_listener(mapper, connection, target):    
-    logging.info("Called!")    
+def insert_listener(mapper, connection, target):       
     team = dbsession.query(models.User).filter_by(id=target.user_id).first()
     ws_manager = WebSocketManager.Instance()
     score_update = ScoreUpdate(target.created.strftime("%d%H%M%S"), target.value, team.team_name)
     ws_manager.currentUpdates.append(score_update)
-    logging.info("Added action!")
     ws_manager.send_all(score_update)
+
 # attach to all mappers
 event.listen(Action, 'after_insert', insert_listener)
 

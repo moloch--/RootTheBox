@@ -80,7 +80,8 @@ class CrackMeDownloadHandler(RequestHandler):
     @authenticated
     def get(self, *args, **kwargs):
         ''' Need to fix the Http header injection vuln '''
-        session = self.session_manager.get_session([self.get_secure_cookie('auth'), self.request.remote_ip])
+        session_manager = SessionManager.Instance()
+        session = session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
         if session != None:
             user = User.by_user_name(session.data['user_name'])
             if user.team.crack_me != None:
@@ -88,7 +89,7 @@ class CrackMeDownloadHandler(RequestHandler):
                 current = open(filePath, 'rb')
                 data = current.read()
                 current.close()
-                self.set_header("Content-Type", crack_me.content)
+                self.set_header("Content-Type", user.team.crack_me.content)
                 self.write(data)
                 self.finish()
             else:

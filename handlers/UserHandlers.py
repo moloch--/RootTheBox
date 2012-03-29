@@ -18,6 +18,7 @@ from tornado.web import RequestHandler
 from BaseHandlers import UserBaseHandler
 from string import ascii_letters, digits
 from recaptcha.client import captcha
+from tornado import process
 
 class HomeHandler(UserBaseHandler):
     
@@ -25,6 +26,7 @@ class HomeHandler(UserBaseHandler):
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
         user = User.by_user_name(self.session.data['user_name'])
+        logging.info("Home of %s, task id is %s" % (user.user_name, str(process.task_id())))
         self.render('user/home.html', user = user)
 
 class ShareUploadHandler(UserBaseHandler):
@@ -44,11 +46,13 @@ class ShareUploadHandler(UserBaseHandler):
         except:
             self.render("user/error.html", operation = "File Upload", errors = "Missing description")
 
-        if not self.request.files.has_key('file_data'):
+        if 0 == len(self.request.files.keys()):
             self.render("user/error.html", operation = "File Upload", errors = "No file data")
+            return
 
         if 50 * (1024*1024) < len(self.request.files['file_data'][0]['body']):
             self.render("user/error.html", operation = "File Upload", errors = "File too large")
+
         uuid = str(uuid1())
         filePath = self.application.settings['shares_dir']+'/'+uuid
         save = open(filePath, 'w')

@@ -160,13 +160,14 @@ def start_game():
     ''' Main entry point for the application '''
     cache_actions()
     sockets = netutil.bind_sockets(8888)
-    if process.task_id() == None:
-        tornado.process.fork_processes(-1, max_restarts = 10)
+    #if process.task_id() == None:
+    #    tornado.process.fork_processes(1, max_restarts = 10)
     server = HTTPServer(application)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
     session_manager = SessionManager.Instance()
-    if process.task_id() == 1:
+    if process.task_id() == None:
+        logging.info("Registering scoring and session callbacks")
         scoring = PeriodicCallback(scoring_round, application.settings['ticks'], io_loop = io_loop)
         session_clean_up = PeriodicCallback(session_manager.clean_up, application.settings['clean_up_timeout'], io_loop = io_loop)
         scoring.start()
@@ -174,7 +175,7 @@ def start_game():
     try:
         io_loop.start()
     except KeyboardInterrupt:
-        if process.task_id() == 1:
+        if process.task_id() == 0:
             print '\r[!] Shutdown Everything!'
             session_clean_up.stop()
             io_loop.stop()
