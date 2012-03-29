@@ -1,5 +1,10 @@
 {% extends "../main.html" %}
 
+{% block header %}
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link href="/static/css/vader/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+{% end %}
+
 {% block title %}Hashes{% end %}
 
 {% block content %}
@@ -7,23 +12,47 @@
 	<br />
 	{% for team in teams %}
 		{% if team.team_name != current.team_name %}
+			<style>
+				#feedback { font-size: 1.4em; }
+				#selectable_{{ team.id }} .ui-selecting { background: #0186ba; }
+				#selectable_{{ team.id }} .ui-selected { background: #0186ba; color: white; }
+				#selectable_{{ team.id }} { list-style-type: none; margin: 0; padding: 0; width: 80%; }
+				#selectable_{{ team.id }} li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+			</style>
+			<script>
+				$(function() {
+					$("#selectable_{{ team.id }}").selectable({
+						stop: function() {
+							var result = $("#select_result_{{ team.id }}").empty();
+							$(".ui-selected", this).each( function() {
+								var index = $("#selectable_{{ team.id }} li").index(this);
+								result.append($("#selectable_{{ team.id }} li")[index].id + "&nbsp;");
+								document.getElementById('selected_{{ team.id }}').value = $("#selectable_{{ team.id }} li")[index].id;
+							});
+						}
+					});
+				});
+			</script>
 			<h2>{{ team.team_name }}</h2>
-				<div>
-				{% for user in team.members %}
-					<div>{{ user.display_name }}</div>
-					<div>{{ user.password }}</div>
-				{% end %}
-				</div>
-				<form action="/hashes" method="post">
-					{% raw xsrf_form_html() %}
-					<select name="display_name">
-						{% for user in team.members %}
-							<option value="{{ user.display_name }}">{{ user.display_name }}</option>
-						{% end %}
-					</select>
-					<input name="preimage" type="text" />
-					<input type="submit" value=" Cracked Hash " />
-				</form>
-			{% end %}
+			<div class="hashes">
+				<ol id="selectable_{{ team.id }}">
+					{% for user in team.members %}
+						<li id="{{ user.display_name }}" class="ui-widget-content">
+							&nbsp;{{ user.display_name }}&nbsp;:&nbsp;{{ user.password }}&nbsp;
+						</li>
+					{% end %}
+				</ol>
+			</div>
+			<br />
+			<form action="/hashes" method="post">
+				{% raw xsrf_form_html() %}
+				<span>Selected hash:&nbsp;</span>
+				<span id="select_result_{{ team.id }}">none</span>
+				<input id="selected_{{ team.id }}" name="display_name" type="hidden" value="" />
+				<input name="preimage" type="text" />
+				<input type="submit" value=" Cracked Hash " />
+			</form>
+			<br /><br />
 		{% end %}
+	{% end %}
 {% end %}

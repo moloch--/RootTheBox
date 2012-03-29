@@ -36,7 +36,7 @@ from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
        
-logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(format = '[%(levelname)s] %(asctime)s - %(message)s', level = logging.DEBUG)
 
 application = Application([
         # Static Handlers - Serves static CSS, JavaScript and image files
