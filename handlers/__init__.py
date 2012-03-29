@@ -167,12 +167,15 @@ def start_game():
     io_loop = IOLoop.instance()
     session_manager = SessionManager.Instance()
     if process.task_id() == None:
-        logging.info("Registering scoring and session callbacks")
         scoring = PeriodicCallback(scoring_round, application.settings['ticks'], io_loop = io_loop)
         session_clean_up = PeriodicCallback(session_manager.clean_up, application.settings['clean_up_timeout'], io_loop = io_loop)
         scoring.start()
         session_clean_up.start()
     try:
+        for count in range(3, 0, -1):
+            logging.info("The game will begin in ... %d" % (count,))
+            sleep(1)
+        logging.info("Good hunting!")
         io_loop.start()
     except KeyboardInterrupt:
         if process.task_id() == 0:
