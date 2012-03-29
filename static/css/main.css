@@ -107,6 +107,13 @@ a:hover
 }
 
 /* Content */
+#content_left_side {
+	float:left 
+} 
+
+#content_right_side { 
+	float:right
+}
 
 #page_content
 {

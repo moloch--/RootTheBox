@@ -23,10 +23,10 @@
 <form action="/registration" method="post">
 {% raw xsrf_form_html() %}
 	<p>
-		Account Name (real name): <input name="username" />
+		Account Name (alpha-numeric only): <input name="username" />
 	</p>
 	<p>
-		Handle (hacker name): <input name="handle" />
+		Hacker Name (alpha-numeric only): <input name="handle" />
 	</p>
 	<p>
 		Password: <input name="pass1" type="password" autocomplete="off" />

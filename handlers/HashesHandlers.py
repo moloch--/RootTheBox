@@ -4,6 +4,7 @@ Created on Mar 15, 2012
 @author: moloch
 '''
 
+from tornado.web import RequestHandler
 from models import Team, User, Action, WallOfSheep
 from libs.SecurityDecorators import authenticated
 from libs.WebSocketManager import WebSocketManager
@@ -101,6 +102,22 @@ class HashesHandler(UserBaseHandler):
         ws_manager.send_all(notify)
         ws_manager.send_team(user.team, alt)
 
+class HashesAjaxHandler(RequestHandler):
+
+    def initialize(self, dbsession):
+        self.dbsession = dbsession
+
+    def get(self, *args, **kwargs):
+        ''' Renders a user details div, requested via AJAX '''
+        try:
+            display_name = self.get_argument("user_details")
+        except:
+            self.write("No Data")
+        user = User.by_display_name(display_name)
+        if user == None: 
+            self.write("No Data")
+        else:
+            self.render("hashes/user_details.html", user = user)
 
 class WallOfSheepHandler(UserBaseHandler):
 

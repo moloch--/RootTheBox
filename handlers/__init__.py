@@ -63,7 +63,8 @@ application = Application([
         (r'/crackme(.*)', CrackMeHandler, {'dbsession': dbsession}),
         
         # Hashes Handlers - Serves hash related pages
-        (r'/hashes(.*)', HashesHandler, {'dbsession': dbsession}),
+        (r'/hashes', HashesHandler, {'dbsession': dbsession}),
+        (r'/hashes/ajax(.*)', HashesAjaxHandler, {'dbsession': dbsession}),
         (r'/wallofsheep', WallOfSheepHandler, {'dbsession': dbsession}),
         
         # Scoreboard Handlers - Severs scoreboard related pages

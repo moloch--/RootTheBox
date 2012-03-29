@@ -101,8 +101,7 @@ class UserRegistraionHandler(RequestHandler):
                 self.request.remote_ip,)
         except:
             self.render('public/registration.html', errors = "Please fill out recaptcha!")
-
-        
+    
         # Create account
         if User.by_user_name(user_name) != None:
             self.render('public/registration.html', errors = 'Account name already taken')
@@ -113,9 +112,12 @@ class UserRegistraionHandler(RequestHandler):
         elif not response.is_valid:
             self.render('public/registration.html', errors = 'Invalid Recaptcha!')
         else:
+            char_white_list = ascii_letters + digits
+            user_name = filter(lambda char: char in char_white_list, user_name)
+            display_name = filter(lambda char: char in char_white_list, handle)
             user = User(
-                user_name = user_name,
-                display_name = handle,
+                user_name = unicode(user_name),
+                display_name = unicode(display_name),
                 password = password
             )
             self.dbsession.add(user)
