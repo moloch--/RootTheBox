@@ -1,0 +1,83 @@
+/***************************************************
+think simple by marija zaric and distributed by http://freehtml5templates.com
+***************************************************
+
+/***************************************************
+			        GALLERY
+***************************************************/	 
+	 a.photo_hover3{
+	position:relative;
+	float: right;
+	margin:5px 13px 8px 0;
+	padding: 8px;
+
+	}
+	a.photo_hover3{ background-color:white;
+	border: 1px solid #E1E1E1;
+
+}
+	a.photo_hover3:hover {
+	border: 1px dotted #66CCFF;
+	background-color:#C7EDFF;
+	opacity:0.9;
+	z-index:1000;
+}
+	 a.photo_hover2{
+	position:relative;
+	float: left;
+	margin:5px 13px 8px 0;
+	padding: 8px;
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	}
+	a.photo_hover2{ background-color:white;
+	border: 1px solid #E1E1E1;
+
+}
+	a.photo_hover2:hover {
+	border: 1px solid #E1E1E1;
+}
+
+/***************************************************
+				   GALLERY
+***************************************************/	
+
+.holder_gallery {
+	width:610px;
+	float:left;
+	margin-right:10px;
+	padding:0;
+	}		
+	.holder_gallery a.photo_hover {left:42px}
+	.holder_gallery h3 { clear:left}
+	
+.holder_gallery a.name{
+	font-size:12px;
+	text-align:left;
+	position:relative;
+	margin-top:15px;
+	display:block;
+	clear:left;
+	line-height:15px;
+}
+
+.holder_gallery a.name1{
+	font-size:12px;
+	position:relative;
+	display:inline;
+    text-align:left;
+	top:20px;
+    left:0;
+}
+
+.holder_gallery a.description{
+	font-size:12px;
+	float:left;
+	position:relative;
+	margin-right:5px;
+	padding-top:7px;
+	color:gray;
+	width:300px;
+	display:inline;
+}

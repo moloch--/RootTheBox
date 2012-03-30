@@ -16,11 +16,17 @@
 	<h1>Pastebin</h1>
 	<h2>Existing Posts</h2>
 	<div id="postList">
-		{% for post in posts %}
-			<div class="post">
-				<a href="/pastebin/view?post_id={{post.id}}">{{post.name}}</a> : 
-				<a href="/pastebin/delete?post_id={{post.id}}">Delete</a>
-			</div>
+		{% if len(posts) == 0 %}
+			No Existing Posts
+		{% else %}
+			<ol>
+			{% for post in posts %}
+				<li>
+					<a href="/pastebin/view?post_id={{post.id}}">{{post.name}}</a> : 
+					<a href="/pastebin/delete?post_id={{post.id}}">Delete</a>
+				</li>
+			{% end %}
+			<ol>
 		{% end %}
 	</div>
 	<br />

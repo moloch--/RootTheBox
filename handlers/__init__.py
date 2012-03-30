@@ -50,6 +50,7 @@ application = Application([
         (r'/user/shares/download(.*)', ShareDownloadHandler, {'dbsession': dbsession}),
         (r'/user/shares', ShareUploadHandler, {'dbsession': dbsession}),
         (r'/user/settings(.*)', SettingsHandler, {'dbsession': dbsession}),
+        (r'/user/team/ajax(.*)', TeamAjaxHandler, {'dbsession': dbsession}),
         (r'/user/team', TeamViewHandler, {'dbsession': dbsession}),
         (r'/user/logout', LogoutHandler, {'dbsession': dbsession}),
         (r'/user/reporter', ReporterHandler, {'dbsession': dbsession}),

@@ -27,9 +27,14 @@ class Team(BaseObject):
     
     @classmethod
     def by_team_name(cls, team_name):
-        """ Return the user object whose group name is ``team_name`` """
+        """ Return the team object based on ``team_name`` """
         return dbsession.query(cls).filter_by(team_name=unicode(team_name)).first() #@UndefinedVariable
     
+    @classmethod
+    def by_team_id(cls, team_id):
+        """ Return the team object based one id """
+        return dbsession.query(cls).filter_by(id=team_id).first() #@UndefinedVariable
+
     @classmethod
     def get_all(cls):
         ''' Returns all team objects '''
@@ -46,7 +51,7 @@ class Team(BaseObject):
         return sum(self.members)
     
     @property
-    def get_actions(self):
+    def actions(self):
         ''' Returns all actions the team members have, sorted by date '''
         action_list = []
         for user in self.members:
@@ -55,7 +60,7 @@ class Team(BaseObject):
         return action_list
         
     @property
-    def get_posts(self):
+    def posts(self):
         ''' Returns all of the posts the team has '''
         posts = []
         for user in self.members:

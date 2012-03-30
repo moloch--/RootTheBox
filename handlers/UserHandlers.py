@@ -195,7 +195,20 @@ class TeamViewHandler(UserBaseHandler):
         teams = Team.get_all()
         self.render("user/team.html", teams = teams)        
 
+class TeamAjaxHandler(UserBaseHandler):
 
+    @authenticated
+    def get(self, *args, **kwargs):
+        try:
+            team_id = self.get_argument("team_id")
+        except:
+            self.render("blank.html")
+        team = Team.by_team_id(team_id)
+        if team != None:
+            self.render("user/team_ajax.html", team = team)
+        else:
+            self.render("blank.html")
+         
 class ReporterHandler(UserBaseHandler):
 
     @authenticated

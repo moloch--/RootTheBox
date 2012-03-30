@@ -1,30 +1,47 @@
 {% extends "../main.html" %}
 
+{% block header %}
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.pikachoose.js"></script>
+<link href="/static/css/vader/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+<link type="text/css" href="/static/css/team_styles.css" rel="stylesheet" />
+<link type="text/css" href="/static/css/team_css3.css" rel="stylesheet" />
+{% end %}
+
 {% block title %}Team{% end %}
 
 {% block content %}
-<h1>Team Members</h1>
-<p>
-	{% for team in teams %}
-		<h2>{{ team.team_name }}</h2>
-		<h3>"{{ team.motto }}"</h3>
-		{% for member in team.members %}
-		<div id="team_member">
-				<div id="member_name">{{ member.display_name }}</div>
-				{% if member.avatar %}
-				<div id="member_avatar">
-					<img src="/avatars/{{ member.avatar }}" />
-				</div>
-				{% end %}
-				<div id="member_score">
-				{% if member.score %}
-					{{ member.score }}
-				{% else %}
-					0
-				{% end %}
-				</div>
+	<h1>Team Members</h1>
+	<br />
+	<script>		
+		
+		$(function() {
+			$( "#radio" ).buttonset();
+		});
+		
+		function load_team(team_id) {
+			$.get('/user/team/ajax?team_id=' + team_id, function(data) {
+			  document.getElementById('display_team').innerHTML = data;
+			  start_slide_show();
+			});
+		}
+
+		function start_slide_show() {
+			$(document).ready(function() {
+				$("#pikame").PikaChoose();
+			});
+		}
+	</script>
+	<form>
+		<div id="radio">
+			{% for team in teams %}
+				<input type="radio" id="{{ team.id }}" name="radio" onclick="load_team({{ team.id }})" />
+				<label for="{{ team.id }}">{{ team.team_name }}</label>
+			{% end %}
 		</div>
-		{% end %}
-	{% end %}
-</p>
+	</form>
+	<br />
+	<div id="display_team">
+	</div>
+
 {% end %}

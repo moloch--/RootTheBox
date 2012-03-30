@@ -20,7 +20,7 @@ class PastebinHandler(RequestHandler):
         session = session_manager.get_session(self.get_secure_cookie('auth'), self.request.remote_ip)
         user = User.by_user_name(session.data['user_name'])
         if user.team != None:
-            self.render('pastebin/view.html', posts = user.team.get_posts)
+            self.render('pastebin/view.html', posts = user.team.posts)
         else:
             self.render('pastebin/view.html', posts = [])
     @authenticated
@@ -59,7 +59,7 @@ class DisplayPostHandler(RequestHandler):
             self.render('pastebin/error.html', errors = "Invalid post id!")
             
         if user.team != None:
-            posts = user.team.get_posts
+            posts = user.team.posts
             post = self.dbsession.query(Post).filter_by(id=post_id).first()
             if(post in posts):
                 self.render('pastebin/display.html', contents = post.contents, name=post.name)
@@ -84,12 +84,12 @@ class DeletePostHandler(RequestHandler):
             self.render('pastebin/error.html', errors = "Invalid post id!")
             
         if user.team != None:
-            posts = user.team.get_posts
+            posts = user.team.posts
             post = self.dbsession.query(Post).filter_by(id=post_id).first()
             if(post in posts):
                 self.dbsession.delete(post)
                 self.dbsession.flush()
-                posts = user.team.get_posts
+                posts = user.team.posts
             self.redirect('/pastebin')
         else:
             self.render('pastebin/view.html', posts = [])
