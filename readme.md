@@ -1,9 +1,9 @@
  Root the Box
 -------------------
-* A multi-threaded real-time/asynchronous scoring engine for hacker CTF games
+* A multi-threaded real-time scoring engine for hacker CTF games
 * Based on tornado/teaspoon
 * http://rootthebox.com/
-* GPL v3
+* Licensed under the Apache License, Version 2.0
 
 Features
 -------------------
@@ -22,6 +22,7 @@ Features
 * 'python . create' to ONLY create the tables 
 * 'python -c "import setup.auth" to create the admin account
 * 'python . test' - will test the application.
-* 'python . serve' - will serve the application. open your browser at http://localhost:8888, for more configuration checkout __handlers/\_\_init\_\_.py__
+* 'python . serve' - will serve the application
+*  For more configuration checkout __handlers/\_\_init\_\_.py__
 
 

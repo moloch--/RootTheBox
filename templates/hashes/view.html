@@ -11,58 +11,58 @@
 	<h1>Password Hashes</h1>
 	<br />
 
-		<div id="content_right_side">
-		<!-- Start Select -->
-			<script>
-				function load_user_details(user_name) {
-					$.get('/hashes/ajax?user_details=' + user_name, function(data) {
-					  document.getElementById('user_details').innerHTML = data;
+	<div id="content_right_side">
+	<!-- Start Select -->
+		<script>
+		function load_user_details(user_name) {
+			$.get('/hashes/ajax?user_details=' + user_name, function(data) {
+			  document.getElementById('user_details').innerHTML = data;
+			});
+		}
+		$(function() {
+			$("#selectable").selectable({
+				stop: function() {
+				var result = $("#select_result").empty();
+				$(".ui-selected", this).each( function() {
+					var index = $("#selectable li").index(this);
+					result.append($("#selectable li")[index].id + "&nbsp;");
+					document.getElementById('selected').value = $("#selectable li")[index].id;
+					load_user_details($("#selectable li")[index].id);
 					});
 				}
-				$(function() {
-					$("#selectable").selectable({
-						stop: function() {
-						var result = $("#select_result").empty();
-						$(".ui-selected", this).each( function() {
-							var index = $("#selectable li").index(this);
-							result.append($("#selectable li")[index].id + "&nbsp;");
-							document.getElementById('selected').value = $("#selectable li")[index].id;
-							load_user_details($("#selectable li")[index].id);
-							});
-						}
-					});
-				});
-			</script>
-			<div class="hashes">
-				<ol id="selectable">
-					{% for team in teams %}
-						{% if team.team_name != current.team_name %}
-							{% for user in team.members %}
-								<li id="{{ user.display_name }}" class="ui-widget-content">
-								<img src="/avatars/{{ user.avatar }}" height=20 width=20 />
-								{{ team.team_name}}&nbsp;:&nbsp;{{ user.display_name }}&nbsp;
-								</li>
-							{% end %}
+			});
+		});
+		</script>
+		<div class="hashes">
+			<ol id="selectable">
+				{% for team in teams %}
+					{% if team.team_name != current.team_name %}
+						{% for user in team.members %}
+							<li id="{{ user.display_name }}" class="ui-widget-content">
+							<img src="/avatars/{{ user.avatar }}" height=20 width=20 />
+							{{ team.team_name}}&nbsp;:&nbsp;{{ user.display_name }}&nbsp;
+							</li>
 						{% end %}
 					{% end %}
-				</ol>
-			</div>
+				{% end %}
+			</ol>
 		</div>
-		<!-- End Select -->
-		<!-- Start Selected User -->
-		<div id="content_left_side">
-			<h2>Selected User Details</h2>
-			<div id="user_details">
-				<h2>No User Selected</h2>
-			</div>
-			<form action="/hashes" method="post">
-				{% raw xsrf_form_html() %}
-				<span><strong>Selected hash:</strong>&nbsp;</span>
-				<span id="select_result">none</span>
-				<input id="selected" name="display_name" type="hidden" value="" />
-				<input name="preimage" type="text" />
-				<input type="submit" value=" Steal Points " />
-			</form>
+	</div>
+	<!-- End Select -->
+	<!-- Start Selected User -->
+	<div id="content_left_side">
+		<h2>Selected User Details</h2>
+		<div id="user_details">
+			<h2>No User Selected</h2>
 		</div>
-		<!-- End Selected User -->
+		<form action="/hashes" method="post">
+			{% raw xsrf_form_html() %}
+			<span><strong>Selected hash:</strong>&nbsp;</span>
+			<span id="select_result">none</span>
+			<input id="selected" name="display_name" type="hidden" value="" />
+			<input name="preimage" type="text" />
+			<input type="submit" value=" Steal Points " />
+		</form>
+	</div>
+	<!-- End Selected User -->
 {% end %}

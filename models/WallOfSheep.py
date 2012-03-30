@@ -4,7 +4,7 @@ Created on Mar 21, 2012
 @author: moloch
 '''
 
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession, User
 from models.BaseGameObject import BaseObject
@@ -19,19 +19,17 @@ class WallOfSheep(BaseObject):
     @property
     def user(self):
         ''' Returns display name of user'''
-        user = User.by_user_id(self.user_id)
-        return user.display_name
-    
+        return User.by_user_id(self.user_id)
+   
     @property
     def cracker(self):
         ''' Returns display name of cracker '''
-        user = User.by_user_id(self.cracker_id)
-        return user.display_name
+        return User.by_user_id(self.cracker_id)
 
     @classmethod
     def get_all(cls):
         ''' Returns all team objects '''
-        return dbsession.query(cls).all()
+        return dbsession.query(cls).order_by(desc(cls.created)).all()
 
     @classmethod
     def by_user_id(cls, user_id):

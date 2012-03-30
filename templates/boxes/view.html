@@ -1,13 +1,66 @@
 {% extends "../main.html" %}
 
+{% block header %}
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link href="/static/css/vader/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+{% end %}
+
 {% block title %}Boxes{% end %}
 
 {% block content %}
-	<h1>Boxes</h1>
+	<h1>The Boxes</h1>
 	<br />
-	{% for box in boxes %}
-	<ul>
-		<li>Name: {{ box.box_name }} Root Value: {{ box.root_value }} User Value: {{ box.user_value }}</li>
-	</ul>
-	{% end %}
+	<style>
+		#demo-frame > div.demo { padding: 10px !important; }
+	</style>
+	<script>
+	$(function() {
+		$( "#tabs" ).tabs({
+			select: function( event, ui ) {
+				$( "#slider" ).slider( "value", ui.index );
+			}
+		});
+		$( "#slider" ).slider({
+			min: 0,
+			max: $( "#tabs" ).tabs( "length" ) - 1,
+			slide: function( event, ui ) {
+				$( "#tabs" ).tabs( "select", ui.value );
+			}
+		});
+	});
+	</script>
+
+	<div id="slider" style="width:100px"></div>
+
+	<div id="tabs">
+		<ul>
+			{% for box in boxes %}
+				<li><a href="#{{ box.box_name }}">{{ box.box_name }}</a></li>
+			{% end %}
+		</ul>
+		{% for box in boxes %}
+			<div id="{{ box.box_name }}">
+				<p>
+					<strong>Box Name: </strong> {{ box.box_name }}
+				</p>
+				<p>
+					<strong>IP Address: </strong> {{ box.ip_address }}
+				</p>
+				<p>
+					<strong>Description: </strong> {{ box.description }}
+				</p>
+				<p>
+					<strong>Controlling Team(s): </strong>
+					{% if len(box.users) == 0 %}
+						None
+					{% else %}
+						{% for user in box.users %}
+							{{ user.team.team_name }}
+						{% end %}
+					{% end %}
+				</p>
+			</div>
+		{% end %}
+	</div>
+
 {% end %}

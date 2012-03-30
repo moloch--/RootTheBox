@@ -1,16 +1,45 @@
 {% extends "../main.html" %}
 
+{% block header %}
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link href="/static/css/vader/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+{% end %}
+
 {% block title %}Wall of Sheep{% end %}
 
 {% block content %}
 	<h1>Wall of Sheep</h1>
-	{% if len(wall) == 0 %}
-		<h2>No Sheep Yet</h2>
-	{% else %}
-		{% for sheep in wall %}
-		<div>
-			{{ sheep.cracker }} broke {{ sheep.user }}'s password "{{ sheep.preimage }}" for {{ sheep.point_value }} points
-		</div>
+	<br />
+	<!-- Start Wall -->
+	<script>
+		$(function() {
+			$( "#accordion" ).accordion({
+				event: "mouseover"
+			});
+		});
+	</script>
+
+	<div class="wall_of_sheep">
+		{% if len(wall) == 0 %}
+			<h2>No Sheep Yet</h2>
+		{% else %}
+			<div id="accordion">
+			{% for sheep in wall %}
+				<h3><a href="#">{{ sheep.user.display_name }} - ({{ sheep.point_value }})</a></h3>
+				<div>
+					<div id="sheep_avatar">
+						<img src="/avatars/{{ sheep.user.avatar }}" height=50 width=50 />
+					</div>
+					<div id="sheep_text">
+						<p>
+						{{ sheep.user.display_name }}'s password "{{ sheep.preimage }}" was broken by
+						{{ sheep.cracker.display_name }} for {{ sheep.point_value }} points.
+						</p>
+					</div>
+				</div>
+			{% end %}
+			</div>
 		{% end %}
-	{% end %}
+	</div>
+	<!-- End Wall -->
 {% end %}

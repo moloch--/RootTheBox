@@ -281,3 +281,14 @@ a:hover
 	font-size: 1.2em; 
 	height: 16px; 
 }
+
+/* Wall of Sheep */
+#sheep_avatar {
+	float: left;
+	text-align: right;
+} 
+
+#sheep_text { 
+	float: right;
+	text-align: left;
+}
