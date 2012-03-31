@@ -107,15 +107,6 @@ a:hover
 }
 
 /* Content */
-#content_left_side {
-	float: left;
-	position: absolute;
-} 
-
-#content_right_side { 
-	float: right;
-}
-
 #page_content
 {
 	margin-top: 1px;
@@ -163,40 +154,6 @@ a:hover
 {
 	display: inline;
 }
-/*  This was messing with the tables everywhere, make seperate divs for the tables you want to organize or a table class to apply these too
-#page_content table
-{
-	border: dotted 1px #cacaca;
-	padding: 0.5em;
-	margin-bottom: 1.5em;
-}
-
-#page_content table th
-{
-	font-size:18;
-	text-align: left;
-	font-weight: bold;
-	padding: 0.5em;
-}
-
-#page_content table td
-{
-	font-size:12;
-	padding: 0.5em;
-}
-
-#page_content table tr.rowA
-{
-	background-color: #f5f5f5;
-	color: inherit;
-}
-
-#page_content table tr.rowB
-{
-	background-color: #fdfdfd;
-	color: inherit;
-}
-*/
 
 /* Primary Content */
 
@@ -256,6 +213,24 @@ a:hover
 }
 
 /* Hashes Page */
+#hashes_container {
+	margin:auto;
+}
+
+#content_left_side {
+	float: left;
+	margin-right: 1%;
+} 
+
+#content_right_side { 
+	float: right;
+	margin-left: 1%;
+}
+
+#content_submit {
+	position: relative;
+}
+
 #feedback { 
 	font-size: 1.2em; 
 }
@@ -305,3 +280,4 @@ a:hover
 	float: right;
 	text-align: left;
 }
+

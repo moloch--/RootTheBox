@@ -2,28 +2,48 @@
 
 {% block title %}Login{% end %}
 
-{% block content %}
+{% block header %}
 <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+<link rel="stylesheet" href="/static/css/screen.css" media="screen" />
+{% end %}
 
-<!-- Wrapping the Recaptcha create method in a javascript function -->
-<script type="text/javascript">
-   function showRecaptcha(element) {
-     Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
-       theme: "clean",
-       callback: Recaptcha.focus_response_field});
-   }
-   $(document).ready(function() {
-	  showRecaptcha('recaptcha_div'); 
-   });
-</script>
+{% block content %}
+    <!-- Wrapping the Recaptcha create method in a javascript function -->
+    <script type="text/javascript">
+    function showRecaptcha(element) {
+       Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
+         theme: "clean",
+         callback: Recaptcha.focus_response_field});
+     }
+    $(document).ready(function() {
+  	  showRecaptcha('recaptcha_div'); 
+     });
 
-<h1>Login</h1>
-<h2>{{header}}</h2>
-<form action="/login" method="post" autocomplete="off">
-{% raw xsrf_form_html() %}
-			<label>Username:</label><input name="username" /> <br />
-			<label>Password:</label><input name="password" type="password" /> <br />
-			<div id="recaptcha_div"></div>
-			<input type="submit" value=" Authenticate " /> <br />
-</form>
+    $(function(){ $("login_form").uniform(); });
+  </script>
+
+  <h1>Login</h1>
+  <h2>{{ message }}</h2>
+    <form id="form1" action="/login" method="post" autocomplete="off">  
+      {% raw xsrf_form_html() %}
+      <fieldset><legend>Login</legend>
+        <p class="first">
+          <label for="username">Account Name</label>
+          <input type="text" name="username" id="username" size="30" />
+        </p>
+        <p>
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" size="30" />
+        </p>
+        <p>
+          <label for="recaptch_div">Are you a Cylon?</label>
+          <div id="recaptcha_div"></div>
+        </p>      
+      </fieldset>
+      <p class="submit">
+        <button type="submit"> Authenticate </button>
+      </p>   
+        
+    </form>
+
 {% end %}

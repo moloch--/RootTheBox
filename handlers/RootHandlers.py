@@ -15,7 +15,7 @@ class LoginHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         ''' Display the login page '''
-        self.render('public/login.html', header = 'User authentication required')
+        self.render('public/login.html', message = 'User authentication required')
     
     def post(self, *args, **kwargs):
         ''' Checks submitted user_name and password '''
@@ -23,12 +23,12 @@ class LoginHandler(RequestHandler):
             user_name = self.get_argument('username')
             user = User.by_user_name(user_name)
         except:
-            self.render('public/login.html', header = "Type in an account name")
+            self.render('public/login.html', message = "Type in an account name")
         
         try:
             password = self.get_argument('password')
         except:
-            self.render('public/login.html', header = "Type in a password")
+            self.render('public/login.html', message = "Type in a password")
 
         try:
             response = captcha.submit(
@@ -38,11 +38,11 @@ class LoginHandler(RequestHandler):
                 self.request.remote_ip
             )
         except:
-            self.render('public/login.html', header = "Please fill out recaptcha!")
+            self.render('public/login.html', message = "Please fill out recaptcha!")
        
         if user != None:
             if user.team == None and not user.has_permission('admin'):
-                self.render("public/login.html", header = "You must be assigned to a team before you can login")
+                self.render("public/login.html", message = "You must be assigned to a team before you can login")
 
         if user != None and user.validate_password(password) and response.is_valid:
             logging.info("Successful login: %s from %s" % (user.user_name, self.request.remote_ip))
@@ -58,7 +58,7 @@ class LoginHandler(RequestHandler):
             self.redirect('/user')
         else:
             logging.info("Failed login attempt from %s " % self.request.remote_ip)
-            self.render('public/login.html', header = "Failed login attempt, try again")
+            self.render('public/login.html', message = "Failed login attempt, try again")
 
 class UserRegistraionHandler(RequestHandler):
     

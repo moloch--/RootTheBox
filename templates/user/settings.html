@@ -2,6 +2,7 @@
 
 {% block header %}
 <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+<link rel="stylesheet" href="/static/css/screen.css" media="screen" />
 {% end %}
 
 {% block title %}Settings{% end %}
@@ -9,37 +10,65 @@
 {% block content %}
 	<!-- Wrapping the Recaptcha create method in a javascript function -->
 	<script type="text/javascript">
-	   function showRecaptcha(element) {
-	     Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
-	       theme: "clean",
-	       callback: Recaptcha.focus_response_field});
-	   }
-	   $(document).ready(function() {
-		  showRecaptcha('recaptcha_div'); 
-	   });
+		function showRecaptcha(element) {
+	    	Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
+	    	theme: "clean",
+	    	callback: Recaptcha.focus_response_field
+	   		});
+		}
+		$(document).ready(function() {
+			showRecaptcha('recaptcha_div'); 
+		});
 	</script>
 
 	<h1>Settings</h1>
 	<br />
 	<h2>Upload Avatar</h2>
-	<form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
-	{% raw xsrf_form_html() %}
-		<label>Avatar File h250 x w500 (Max 1Mb): </label> <input type="file" name="avatar" /> <br /> <br />
-		<input type="submit" value=" Save Changes" />
-	</form>
-	<br /> <br />
+    <form id="form1" action="/user/settings/avatar" method="post" enctype="multipart/form-data">  
+      {% raw xsrf_form_html() %}
+      <fieldset>
+      	<legend>Change Avatar</legend>
+        <p class="first">
+          <label for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
+          <input type="file" name="avatar" id="avatar" />
+        </p>  
+      </fieldset>
+      <p class="submit">
+        <button type="submit"> Change Avatar </button>
+      </p>   
+    </form>
 
+    <br />
 	<h2>Change Password</h2>
 	{% if message != None %}
 		<h3>{{ message }}</h3>
 	{% end %}
 
-	<form action="/user/settings/changepassword" method="post" autocomplete="off">
-		{% raw xsrf_form_html() %}
-		<label>Old Password:</label><input type="password" name="old_password"/> <br />
-		<label>New Password:</label><input type="password" name="new_password"/> <br />
-		<label>Confirm Password:</label><input type="password" name="new_password2"/> <br />
-		<div id="recaptcha_div"></div>
-		<input type="submit" value=" Change Password ">
-	</form>
+    <form id="form1" action="/user/settings/changepassword" method="post" autocomplete="off">  
+      {% raw xsrf_form_html() %}
+      <fieldset>
+      	<legend>Change Password</legend>
+        <p class="first">
+          <label for="old_password">Old Password</label>
+          <input type="password" name="old_password" id="old_password" />
+        </p>  
+        <p>
+          <label for="new_password">New Password</label>
+          <input type="password" name="new_password" id="new_password" size="7" />
+        </p>
+        <p>
+          <label for="new_password2">Confirm New Password</label>
+          <input type="password" name="new_password2" id="new_password2" size="7" />
+        </p>
+        <br />
+        <p>
+          <label for="recaptch_div">A robot may not injure a human being or, through inaction, 
+          	allow a human being to come to harm&nbsp;&nbsp;&nbsp;- Asimov</label>
+          <div id="recaptcha_div"></div>
+        </p>      
+      </fieldset>
+      <p class="submit">
+        <button type="submit"> Change Password </button>
+      </p>   
+    </form>
 {% end %}

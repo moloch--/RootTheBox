@@ -3,67 +3,76 @@
 {% block header %}
 <script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
 <link href="/static/css/vader/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/static/css/screen.css" media="screen" />
 {% end %}
 
 {% block title %}Hashes{% end %}
 
 {% block content %}
-	<h1>Password Hashes</h1>
-	<br />
+	<div id="hashes_container">
+		<h1>Password Hashes</h1>
+		<br />
 
-	<div id="content_right_side">
-	<!-- Start Select -->
-		<script>
-		function load_user_details(user_name) {
-			$.get('/hashes/ajax?user_details=' + user_name, function(data) {
-			  document.getElementById('user_details').innerHTML = data;
+		<div id="content_right_side">
+		<!-- Start Select -->
+			<script>
+			function load_user_details(user_name) {
+				$.get('/hashes/ajax?user_details=' + user_name, function(data) {
+				  document.getElementById('user_details').innerHTML = data;
+				});
+			}
+			$(function() {
+				$("#selectable").selectable({
+					stop: function() {
+					var result = $("#select_result").empty();
+					$(".ui-selected", this).each( function() {
+						var index = $("#selectable li").index(this);
+						result.append($("#selectable li")[index].id + "&nbsp;");
+						document.getElementById('selected').value = $("#selectable li")[index].id;
+						load_user_details($("#selectable li")[index].id);
+						});
+					}
+				});
 			});
-		}
-		$(function() {
-			$("#selectable").selectable({
-				stop: function() {
-				var result = $("#select_result").empty();
-				$(".ui-selected", this).each( function() {
-					var index = $("#selectable li").index(this);
-					result.append($("#selectable li")[index].id + "&nbsp;");
-					document.getElementById('selected').value = $("#selectable li")[index].id;
-					load_user_details($("#selectable li")[index].id);
-					});
-				}
-			});
-		});
-		</script>
-		<div class="hashes">
-			<ol id="selectable">
-				{% for team in teams %}
-					{% if team.team_name != current.team_name %}
-						{% for user in team.members %}
-							<li id="{{ user.display_name }}" class="ui-widget-content">
-							<img src="/avatars/{{ user.avatar }}" height=20 width=40 />
-							{{ team.team_name}}&nbsp;:&nbsp;{{ user.display_name }}&nbsp;
-							</li>
+			</script>
+			<div class="hash_selection">
+				<h2>Target Selection</h2>
+				<ol id="selectable">
+					{% for team in teams %}
+						{% if team.team_name != current.team_name %}
+							{% for user in team.members %}
+								<li id="{{ user.display_name }}" class="ui-widget-content">
+								<img src="/avatars/{{ user.avatar }}" height=20 width=40 />
+								{{ team.team_name}}&nbsp;:&nbsp;{{ user.display_name }}&nbsp;
+								</li>
+							{% end %}
 						{% end %}
 					{% end %}
-				{% end %}
-			</ol>
+				</ol>
+				<br />
+			</div>
 		</div>
-	</div>
-	<!-- End Select -->
-	<!-- Start Selected User -->
-	<div id="content_left_side">
-		<h2>Selected User Details</h2>
-		<div id="user_details">
-			<h2>No User Selected</h2>
+		<!-- End Select -->
+		<!-- Start Selected User -->
+		<div id="content_left_side">
+			<div id="user_details">
+				<h2>No User Selected</h2>
+			</div>
+			<div id="content_submit">
+				<form id="form2" action="/hashes" method="post" autocomplete="off">	
+					{% raw xsrf_form_html() %}
+				    <input id="selected" name="display_name" type="hidden" value="" />
+					<h3><span>Steal Points</span></h3>
+					<fieldset><legend>Steal Points</legend>
+						<p class="first">
+							<label for="preimage">Password</label>
+							<input type="text" name="preimage" id="preimage" size="7" />
+						</p>
+						<p class="submit"><button type="submit">Add to Wall of Sheep</button></p>				
+					</fieldset>						
+				</form>	
+			</div>
 		</div>
-		<form action="/hashes" method="post">
-			{% raw xsrf_form_html() %}
-			<span><strong>Selected hash:</strong>&nbsp;</span>
-			<span id="select_result">none</span>
-			<br />
-			<input id="selected" name="display_name" type="hidden" value="" />
-			<input name="preimage" type="text" />
-			<input type="submit" value=" Steal Points " />
-		</form>
 	</div>
 	<!-- End Selected User -->
 {% end %}
