@@ -1,19 +1,32 @@
 {% extends "../main.html" %}
 
+{% block header %}
+<link rel="stylesheet" href="/static/css/screen.css" media="screen" />
+{% end %}
+
 {% block title %}Shared Files{% end %}
 
 {% block content %}
 	<h1>File Sharing</h1>
 	<br />
 	<h2>Upload a File</h2>
-	<form action="/user/shares" method="post" enctype="multipart/form-data">
-		{% raw xsrf_form_html() %}
-		<label>File (max 50Mb):</label> <input name="file_data" type="file" />
-		<br /> <br />
-		<label>Description:</label> <input name="description" type="text" /> 
-		<br /> <br />
-		<input type="submit" value=" Upload File " />
-	</form>	
+	<form id="form1" action="/user/shares" method="post" enctype="multipart/form-data">  
+      {% raw xsrf_form_html() %}
+      <fieldset><legend>File Upload</legend>
+        <p class="first">
+          <label for="file_data">File (Max 50Mb)</label>
+          <input type="file" name="file_data" id="file_data" />
+        </p>
+        <p>
+          <label for="description">Description</label>
+          <input type="text" name="description" id="description" />
+        </p> 
+      </fieldset>
+      <p class="submit">
+        <button type="submit"> Upload File </button>
+      </p>
+    </form>
+
 	<br /> <br />
 	<h2>Download a File<h2>
 	<p>

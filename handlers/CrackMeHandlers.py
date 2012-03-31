@@ -6,9 +6,10 @@ Created on Mar 13, 2012
 
 from models import User
 from models import User, Action
+from base64 import b64decode
 from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
-from tornado.web import RequestHandler #@UnresolvedImport
+from tornado.web import RequestHandler
 from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification
 
@@ -39,9 +40,9 @@ class CrackMeHandler(RequestHandler):
             self.render('crack_me/error.html', errors = "Enter a Token!")
 
         user = User.by_user_name(self.session.data['user_name'])
-        #If they are entering towards the correct crackme
+        # If they are entering towards the correct crackme
         if(user.team.crack_me.id == crack_me):
-            #If they entered the token correctly
+            # If they entered the token correctly
             if(user.team.crack_me.token == token):
                 user_action = Action(
                     classification = unicode("Cracked a Crack Me"),
@@ -89,7 +90,10 @@ class CrackMeDownloadHandler(RequestHandler):
                 current = open(filePath, 'rb')
                 data = current.read()
                 current.close()
-                self.set_header("Content-Type", user.team.crack_me.content)
+                self.set_header('Content-Type', user.team.crack_me.content)
+                self.set_header('Content-Length', user.team.cracke_me.byte_size)
+                self.set_header('Content-Disposition', 'attachment; filename=%s' % user.team.crack_me.file_name)
+                self.write(b64decode(data))
                 self.write(data)
                 self.finish()
             else:

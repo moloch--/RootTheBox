@@ -10,14 +10,16 @@ import logging
 
 from os import path
 from uuid import uuid1
+from base64 import b64encode
 from tempfile import TemporaryFile
 from mimetypes import guess_type
-from libs.SecurityDecorators import * #@UnusedWildImport
+from libs.SecurityDecorators import *
 from libs.WebSocketManager import WebSocketManager
+from libs.Notification import Notification
 from models import Team, Box, CrackMe, Action, Challenge, SEChallenge
 from handlers.BaseHandlers import AdminBaseHandler
-from tornado.web import RequestHandler #@UnresolvedImport
-from libs.Notification import Notification
+from tornado.web import RequestHandler
+from string import ascii_letters, digits
 
 class AdminCreateHandler(AdminBaseHandler):
     
@@ -33,10 +35,11 @@ class AdminCreateHandler(AdminBaseHandler):
         except:
             self.render("admin/error.html", errors = "Failed to create challenge")
         challenge = Challenge(
-                        name = unicode(name),
-                        description = unicode(description),
-                        value = value,
-                        token = unicode(token))
+            name = unicode(name),
+            description = unicode(description),
+            value = value,
+            token = unicode(token)
+        )
         self.dbsession.add(challenge)
         self.dbsession.flush()
         self.render("admin/created.html", game_object = "challenge")
@@ -134,9 +137,9 @@ class AdminCreateHandler(AdminBaseHandler):
             difficulty = unicode(difficulty),
             avatar = unicode(avatar),
             root_key = unicode(root_key),
-            root_value = unicode(str(root_value)),
+            root_value = int(root_value),
             user_key = unicode(user_key),
-            user_value = unicode(str(user_value))
+            user_value = int(user_value)
         )
         self.dbsession.add(box)
         self.dbsession.flush()
@@ -160,9 +163,10 @@ class AdminCreateHandler(AdminBaseHandler):
             
         filePath = self.application.settings['crack_me_dir']+'/'+uuid
         save = open(filePath, 'wb')
-        save.write(self.request.files['crack_me'][0]['body'])
+        save.write(b64encode(self.request.files['crack_me'][0]['body']))
         save.close()
         content = guess_type(file_name)
+
         if content[0] != None:
             crack_me = CrackMe(
                 crack_me_name = unicode(crack_me_name),
@@ -192,11 +196,12 @@ class AdminCreateHandler(AdminBaseHandler):
         except:
             self.render("admin/error.html", errors = "Failed to create challenge")
         challenge = SEChallenge(
-                        name = unicode(name),
-                        description = unicode(description),
-                        value = value,
-                        token = unicode(token),
-                        level = level)
+            name = unicode(name),
+            description = unicode(description),
+            value = value,
+            token = unicode(token),
+            level = level
+        )
         self.dbsession.add(challenge)
         self.dbsession.flush()
         self.render("admin/created.html", game_object = "challenge")
