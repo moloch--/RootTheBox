@@ -12,13 +12,15 @@ think simple by marija zaric and distributed by http://freehtml5templates.com
 	padding: 8px;
 
 	}
-	a.photo_hover3{ background-color:white;
+	a.photo_hover3{ 
+	background-color:white;
 	border: 1px solid #E1E1E1;
 
 }
 	a.photo_hover3:hover {
 	border: 1px dotted #66CCFF;
-	background-color:#C7EDFF;
+	/* background-color:#C7EDFF; */
+	background-color: #0186ba;
 	opacity:0.9;
 	z-index:1000;
 }
@@ -31,7 +33,8 @@ think simple by marija zaric and distributed by http://freehtml5templates.com
 	-moz-border-radius: .5em;
 	border-radius: .5em;
 	}
-	a.photo_hover2{ background-color:white;
+	a.photo_hover2{ 
+	background-color:white;
 	border: 1px solid #E1E1E1;
 
 }

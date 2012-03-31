@@ -31,34 +31,39 @@
 	</script>
 
 	<div id="slider" style="width:100px"></div>
-
 	<div id="tabs">
 		<ul>
 			{% for box in boxes %}
-				<li><a href="#{{ box.box_name }}">{{ box.box_name }}</a></li>
+				<li><a href="#{{ box.id }}">{{ box.box_name }}</a></li>
 			{% end %}
 		</ul>
 		{% for box in boxes %}
-			<div id="{{ box.box_name }}">
-				<p>
-					<strong>Box Name: </strong> {{ box.box_name }}
-				</p>
-				<p>
-					<strong>IP Address: </strong> {{ box.ip_address }}
-				</p>
-				<p>
-					<strong>Description: </strong> {{ box.description }}
-				</p>
-				<p>
-					<strong>Controlling Team(s): </strong>
-					{% if len(box.users) == 0 %}
-						None
-					{% else %}
-						{% for user in box.users %}
-							{{ user.team.team_name }}
+			<div id="{{ box.id }}">
+				<div>
+					<img src="/avatars/{{ box.avatar }}" />
+					<p>
+						<strong>Box Name: </strong> {{ box.box_name }}
+					</p>
+					<p>
+						<strong>IP Address: </strong> {{ box.ip_address }}
+					</p>
+					<p>
+						<strong>Difficulty: </strong> {{ box.difficulty }}
+					</p>
+					<p>
+						<strong>Description: </strong> {{ box.description }}
+					</p>
+					<p>
+						<strong>Controlling Team(s): </strong>
+						{% if len(box.users) == 0 %}
+							None
+						{% else %}
+							{% for user in box.users %}
+								{{ user.team.team_name }}
+							{% end %}
 						{% end %}
-					{% end %}
-				</p>
+					</p>
+				</div>
 			</div>
 		{% end %}
 	</div>

@@ -17,8 +17,8 @@ a{color:white;}
 	.pika-stage .pika-aniwrap{position: absolute; top: 0px; left: 0px;}
 	.pika-stage .pika-ani {position:relative;display: none;z-index:2;margin:0 auto;}
 	.pika-stage img {border:0;height:100%;}
-
-.pika-stage .caption {position: absolute; background: url(75-black.png); font-size: 14px; background-color:#2BA9D1; padding: 10px; text-align: right; bottom: 10px; right: 10px;color:white;}
+/* background-color:#2BA9D1 */
+.pika-stage .caption {position: absolute; background: url(75-black.png); font-size: 14px; background-color:#0186ba; padding: 10px; text-align: right; bottom: 10px; right: 10px;color:white;}
 	.pika-stage .caption p {padding: 0; margin: 0; line-height: 14px;}
 
 .pika-imgnav a {position: absolute; text-indent: -5000px; display: block;z-index:3;cursor:pointer;}

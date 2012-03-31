@@ -39,12 +39,6 @@ class User(BaseObject):
         lambda self, password: setattr(self, '_password', self.__class__._hash_password(password))
     ))
     
-    def __repr__(self):
-        return ('<User - name: %s, display: %s, team_id: %d>' % (self.user_name, self.display_name, self.team_id)).encode('utf-8')
-
-    def __radd__(self, other):
-        return self.score + other
-
     @property
     def permissions(self):
         """Return a set with all permissions granted to the user."""
@@ -163,3 +157,9 @@ class User(BaseObject):
         if box in self.controlled_boxes:
             logging.info("Removed control of %s from %s" % (box.box_name, self.display_name))
             self.controlled_boxes.remove(box)
+    
+    def __repr__(self):
+        return ('<User - name: %s, display: %s, team_id: %d>' % (self.user_name, self.display_name, self.team_id)).encode('utf-8')
+
+    def __radd__(self, other):
+        return self.score + other

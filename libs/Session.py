@@ -10,6 +10,9 @@ from threading import Lock
 from libs.Singleton import *
 from datetime import datetime, timedelta
 
+SID_SIZE = 24
+SESSION_TIME = 60
+
 @Singleton
 class SessionManager():
 	''' Mostly thread safe session manager '''
@@ -20,7 +23,7 @@ class SessionManager():
 
 	def start_session(self):
 		''' Creates a new session and returns the session id and the new session object '''
-		sid = b64encode(urandom(24))
+		sid = b64encode(urandom(SID_SIZE))
 		self.sessions_lock.acquire()
 		self.sessions[sid] = Session(sid)
 		self.sessions_lock.release()
@@ -51,11 +54,12 @@ class SessionManager():
 				self.sessions_lock.release()
 
 class Session():
+    ''' Session object stores data, time, id '''
     
     def __init__(self, sid):
         self.id = sid
         self.data = {}
-        self.expiration = datetime.now() + timedelta(minutes = 20)
+        self.expiration = datetime.now() + timedelta(minutes = SESSION_TIME)
     
     def is_expired(self):
     	''' Returns boolean based on if session has expired '''

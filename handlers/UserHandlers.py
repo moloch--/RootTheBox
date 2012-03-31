@@ -176,13 +176,16 @@ class SettingsHandler(RequestHandler):
             self.render("user/error.html", operation = "Changing Password", errors = "Please fill out recaptcha")
         if user.validate_password(old_password):
             if new_password == new_password_two:
-                if response.is_valid:
-                    user.password = new_password
-                    self.dbsession.add(user)
-                    self.dbsession.flush()
-                    self.render("user/settings.html", message = "Succesfully Changed Password!")
+                if len(new_password) <= 7:
+                    if response.is_valid:
+                        user.password = new_password
+                        self.dbsession.add(user)
+                        self.dbsession.flush()
+                        self.render("user/settings.html", message = "Succesfully Changed Password!")
+                    else:
+                        self.render("user/error.html", operation = "Changing Password", errors = "Invalid recaptcha")
                 else:
-                    self.render("user/error.html", operation = "Changing Password", errors = "Invalid recaptcha")
+                    self.render("user/error.html", operation = "Change Password", errors = "Password must be less than 7 chars")
             else:
                 self.render("user/error.html", operation = "Changing Password", errors = "New password's didn't match")
         else:
@@ -199,6 +202,7 @@ class TeamAjaxHandler(UserBaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
+        ''' PUBLIC method for serving team information '''
         try:
             team_id = self.get_argument("team_id")
         except:

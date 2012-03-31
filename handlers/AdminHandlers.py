@@ -4,8 +4,9 @@ Created on Mar 13, 2012
 @author: moloch
 '''
 
+import imghdr
 import base64
-import logging #@UnusedImport
+import logging
 
 from os import path
 from uuid import uuid1
@@ -95,6 +96,7 @@ class AdminCreateHandler(AdminBaseHandler):
         self.render("admin/create_box.html")
     
     def post_box(self, *args, **kwargs):
+        ''' Creates a box in the database '''
         try:
             box_name = self.get_argument("box_name")
             ip_address = self.get_argument("ip_address")
@@ -103,16 +105,38 @@ class AdminCreateHandler(AdminBaseHandler):
             root_value = int(self.get_argument("root_value"))
             user_key = self.get_argument("user_key")
             user_value = int(self.get_argument("user_value"))
+            difficulty = self.get_argument("difficulty")
+            if not difficulty in ['Easy', 'Medium', 'Hard']:
+                raise TypeError
+            avatar = "default_avatar.gif"
         except:
             self.render("admin/error.html", errors = "Failed to create box")
+        if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
+            if len(self.request.files['avatar'][0]['body']) < (1024*1024):
+                avatar = unicode(str(uuid1()))
+                ext = imghdr.what("", h = self.request.files['avatar'][0]['body'])
+                if ext in ['png', 'jpeg', 'gif', 'bmp']:
+                    avatar = avatar+'.'+ext
+                    file_path = self.application.settings['avatar_dir']+'/'+avatar
+                    avatar_file = open(file_path, 'wb')
+                    avatar_file.write(self.request.files['avatar'][0]['body'])
+                    avatar_file.close()
+                else:
+                    self.render("admin/error.html", errors = "Invalid image format")
+            else:
+                self.render("admin/error.html", errors = "The image is too large")
+        else:
+            self.render("admin/error.html", errors = "No image")
         box = Box(
             box_name = unicode(box_name),
             ip_address = unicode(ip_address),
             description = unicode(description),
+            difficulty = unicode(difficulty),
+            avatar = unicode(avatar),
             root_key = unicode(root_key),
-            root_value = root_value,
+            root_value = unicode(str(root_value)),
             user_key = unicode(user_key),
-            user_value = user_value
+            user_value = unicode(str(user_value))
         )
         self.dbsession.add(box)
         self.dbsession.flush()

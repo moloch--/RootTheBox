@@ -9,7 +9,7 @@ class HostIpAddress():
 
 	def __init__(self):
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		sock.connect(("gmail.com", 80))
+		sock.connect(("google.com", 80))
 		self.ip_address = sock.getsockname()[0]
 		sock.close()
 

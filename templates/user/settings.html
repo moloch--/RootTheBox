@@ -1,43 +1,45 @@
 {% extends "../main.html" %}
 
+{% block header %}
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+{% end %}
+
 {% block title %}Settings{% end %}
 
 {% block content %}
-<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+	<!-- Wrapping the Recaptcha create method in a javascript function -->
+	<script type="text/javascript">
+	   function showRecaptcha(element) {
+	     Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
+	       theme: "clean",
+	       callback: Recaptcha.focus_response_field});
+	   }
+	   $(document).ready(function() {
+		  showRecaptcha('recaptcha_div'); 
+	   });
+	</script>
 
-<!-- Wrapping the Recaptcha create method in a javascript function -->
-<script type="text/javascript">
-   function showRecaptcha(element) {
-     Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
-       theme: "clean",
-       callback: Recaptcha.focus_response_field});
-   }
-   $(document).ready(function() {
-	  showRecaptcha('recaptcha_div'); 
-   });
-</script>
-
-<h1>Settings</h1>
-<br />
-<h2>Upload Avatar</h2>
-<form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
-{% raw xsrf_form_html() %}
-	<label>Avatar File 500x250 (Max 1Mb): </label> <input type="file" name="avatar" /> <br /> <br />
-	<input type="submit" value=" Save Changes" />
-</form>
-<br /> <br />
-
-<h2>Change Password</h2>
-{% if message != None %}
-	<h3>{{ message }}</h3>
-{% end %}
-
-<form action="/user/settings/changepassword" method="post" autocomplete="off">
+	<h1>Settings</h1>
+	<br />
+	<h2>Upload Avatar</h2>
+	<form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
 	{% raw xsrf_form_html() %}
-	<label>Old Password:</label><input type="password" name="old_password"/> <br />
-	<label>New Password:</label><input type="password" name="new_password"/> <br />
-	<label>Confirm Password:</label><input type="password" name="new_password2"/> <br />
-	<div id="recaptcha_div"></div>
-	<input type="submit" value=" Change Password ">
-</form>
+		<label>Avatar File 250x500 (Max 1Mb): </label> <input type="file" name="avatar" /> <br /> <br />
+		<input type="submit" value=" Save Changes" />
+	</form>
+	<br /> <br />
+
+	<h2>Change Password</h2>
+	{% if message != None %}
+		<h3>{{ message }}</h3>
+	{% end %}
+
+	<form action="/user/settings/changepassword" method="post" autocomplete="off">
+		{% raw xsrf_form_html() %}
+		<label>Old Password:</label><input type="password" name="old_password"/> <br />
+		<label>New Password:</label><input type="password" name="new_password"/> <br />
+		<label>Confirm Password:</label><input type="password" name="new_password2"/> <br />
+		<div id="recaptcha_div"></div>
+		<input type="submit" value=" Change Password ">
+	</form>
 {% end %}

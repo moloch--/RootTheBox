@@ -286,9 +286,22 @@ a:hover
 #sheep_avatar {
 	float: left;
 	text-align: right;
+	overflow:hidden;
 } 
 
 #sheep_text { 
+	float: right;
+	text-align: left;
+	overflow:hidden;
+}
+
+/* Wall of Sheep */
+#left {
+	float: left;
+	text-align: right;
+} 
+
+#right { 
 	float: right;
 	text-align: left;
 }
