@@ -24,7 +24,7 @@
 	<h2>Upload Avatar</h2>
 	<form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
 	{% raw xsrf_form_html() %}
-		<label>Avatar File 250x500 (Max 1Mb): </label> <input type="file" name="avatar" /> <br /> <br />
+		<label>Avatar File h250 x w500 (Max 1Mb): </label> <input type="file" name="avatar" /> <br /> <br />
 		<input type="submit" value=" Save Changes" />
 	</form>
 	<br /> <br />

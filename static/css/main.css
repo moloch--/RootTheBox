@@ -215,8 +215,8 @@ a:hover
 
 #primaryContent img
 {
-	max-width:200px;
-	max-height:auto;
+	max-width:500px;
+	max-height:250px;
 }
 
 #primaryContent #scoreboard

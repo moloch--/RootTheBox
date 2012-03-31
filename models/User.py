@@ -30,7 +30,7 @@ class User(BaseObject):
     actions = relationship("Action", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     posts = relationship("Post", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
-    avatar = Column(Unicode(64), default=unicode("default_avatar.gif"))
+    avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
     controlled_boxes = relationship("Box", secondary=association_table, backref="User")
 
     _password = Column('password', Unicode(128))

@@ -30,7 +30,7 @@
 	});
 	</script>
 
-	<div id="slider" style="width:100px"></div>
+	<div id="slider" style="width:200px"></div>
 	<div id="tabs">
 		<ul>
 			{% for box in boxes %}
@@ -40,7 +40,7 @@
 		{% for box in boxes %}
 			<div id="{{ box.id }}">
 				<div>
-					<img src="/avatars/{{ box.avatar }}" />
+					<img src="/avatars/{{ box.avatar }}" height=125 width=250 />
 					<p>
 						<strong>Box Name: </strong> {{ box.box_name }}
 					</p>
@@ -51,17 +51,17 @@
 						<strong>Difficulty: </strong> {{ box.difficulty }}
 					</p>
 					<p>
-						<strong>Description: </strong> {{ box.description }}
-					</p>
-					<p>
 						<strong>Controlling Team(s): </strong>
-						{% if len(box.users) == 0 %}
+						{% if len(box.teams) == 0 %}
 							None
 						{% else %}
-							{% for user in box.users %}
-								{{ user.team.team_name }}
+							{% for team in box.teams %}
+								{{ team.team_name }}
 							{% end %}
 						{% end %}
+					</p>
+					<p>
+						<strong>Description: </strong> {{ box.description }}
 					</p>
 				</div>
 			</div>

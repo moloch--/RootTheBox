@@ -3,7 +3,7 @@
 	<div class="pikachoose">
 		<ul id="pikame">
 			{% for user in team.members %}
-				<li><a href="#"><img src="/avatars/{{ user.avatar }}" width="500" height="250" alt="picture" /></a>
+				<li><a href="#"><img src="/avatars/{{ user.avatar }}" alt="picture" /></a>
 				<span>{{ user.display_name }}</span></li>	
 			{% end %}
 		</ul>
