@@ -15,7 +15,7 @@
    function showRecaptcha(element) {
      Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
        theme: "clean",
-       callback: Recaptcha.focus_response_field});
+       callback: null});
    }
    $(document).ready(function() {
 	  showRecaptcha('recaptcha_div'); 
@@ -33,7 +33,7 @@
         </p>
         <p class="first">
           <label for="username">Hacker Name </label>
-          <input type="text" name="username" id="username" size="30" />
+          <input type="text" name="handle" id="handle" size="30" />
         </p>
         <p>
           <label for="pass1">Password</label>
