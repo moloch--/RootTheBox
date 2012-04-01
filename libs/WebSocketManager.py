@@ -7,6 +7,7 @@ import models
 import logging
 from libs.Singleton import *
 from libs.Session import SessionManager
+import tornado
 
 @Singleton
 class WebSocketManager():
@@ -16,9 +17,11 @@ class WebSocketManager():
         self.currentUpdates = []
         
     def get_updates(self, connection):
+        totalMessage = ''
         for update in self.currentUpdates:
-            connection.write_message(update.to_message())
-        
+            totalMessage += tornado.escape.json_encode(update.to_message()) + '\n'
+        connection.write_message(totalMessage)
+            
     def send_all(self, update):
         for connection in self.connections:
             connection.write_message(update.to_message())

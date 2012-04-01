@@ -71,34 +71,40 @@
 		};
 		
 		ws.onmessage = function (evt) {
-			var message = JSON.parse(evt.data);
-			console.log(message);
-			if(message['py/object'] == 'libs.Notification.Notification') {
-				//Send a Notification
-				Notifier.notify(message['message'], message['title'], "data:image/png;base64,"+message['file_contents']);
-			} else if(message['py/object'] == 'libs.ScoreUpdate.ScoreUpdate') {
-				if($('#scoreboard').length && redraw){
-					//Update the line chart
-					chart.series[getSeriesByName(message['team_name'])].addPoint([parseInt(message['time_stamp']), getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))]);
-					//Update the bar chart
-					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
-					bar_chart.redraw();
-				//If we are getting the initial data points
-				} else {
-					//Put the datapoint into an array and wait for redraw
-					initialData.push([message['team_name'], parseInt(message['time_stamp']), parseInt(message['value'])]);
-					//Update the bar chart
-					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
-					bar_chart.redraw();
+			console.log(evt.data);
+			var messages = checkForMultiple(evt.data);
+			console.log(messages);
+			for(message in messages) {
+				console.log(typeof messages[message]);
+				console.log(messages[message]);
+				message = jQuery.parseJSON(messages[message]);
+				console.log(message);
+				if(message['py/object'] == 'libs.Notification.Notification') {
+					//Send a Notification
+					Notifier.notify(message['message'], message['title'], "data:image/png;base64,"+message['file_contents']);
+				} else if(message['py/object'] == 'libs.ScoreUpdate.ScoreUpdate') {
+					if($('#scoreboard').length && redraw){
+						//Update the line chart
+						chart.series[getSeriesByName(message['team_name'])].addPoint([parseInt(message['time_stamp']), getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))]);
+						//Update the bar chart
+						correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
+						bar_chart.redraw();
+					//If we are getting the initial data points
+					} else {
+						//Put the datapoint into an array and wait for redraw
+						initialData.push([message['team_name'], parseInt(message['time_stamp']), parseInt(message['value'])]);
+						//Update the bar chart
+						correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
+						bar_chart.redraw();
+					}
+				} else if (message['redraw'] == 'true') {
+					redraw = true;
+					console.log(initialData);
+					//Load all of the initial data into the main chart
+					loadInitialData();
+					chart.redraw();
 				}
-			} else if (message['redraw'] == 'true') {
-				redraw = true;
-				console.log(initialData);
-				//Load all of the initial data into the main chart
-				loadInitialData();
-				chart.redraw();
 			}
-			
 		};
 		
 		function getCorrectValue(newestValue, seriesId) {
@@ -106,6 +112,25 @@
 				return chart.series[seriesId].data[chart.series[seriesId].data.length-1].config[1] + newestValue;
 			} else {
 				return newestValue;
+			}
+		}
+		
+		function checkForMultiple(totalString) {
+			//Try to get a single message
+			try {
+				var message = JSON.parse(evt.data);
+				return message;
+			} catch (err) {
+				//Try for multiple
+				var messages = totalString.split("\n");
+				var returnMessages = []
+				for(var msgIndex = 0; msgIndex < messages.length; msgIndex++) {
+					var message = messages[msgIndex];
+					if(message != "") {
+						returnMessages.push(message);
+					}
+				}
+				return returnMessages;
 			}
 		}
 		
