@@ -2,6 +2,8 @@
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/screen.css" media="screen" />
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link href="/static/css/vader/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
 {% end %}
 
 {% block title %}Shared Files{% end %}
@@ -26,16 +28,26 @@
         <button type="submit"> Upload File </button>
       </p>
     </form>
-
 	<br /> <br />
-	<h2>Download a File<h2>
-	<p>
-		<ol>
+	<h2>Download a File</h2>
+	<script>
+		$(function() {
+			$( "#accordion" ).accordion();
+		});
+	</script>
+
+	<div id="accordion">
 		{% for share in shares %}
-			<li>{{ share.file_name }}: {{ share.description }} - <a href="/user/shares/download?uuid={{ share.uuid }}">Download</a> 
-				{{ share.byte_size }} byte(s)
-			</li>
+			<h3><a href="#">{{ share.file_name }} - {{ share.content }} </a></h3>
+			<div>
+				<p>
+					<strong>Name: </strong> {{ share.file_name }} <br />
+					<strong>Content: </strong> {{ share.content }} <br />
+					<strong>Size: </strong> {{ share.byte_size }} byte(s) <br />
+					<a href="/user/shares/download?uuid={{ share.uuid }}">Download</a>
+				</p>
+			</div>
 		{% end %}
-		</ol>
-	</p>
+	</div>
+
 {% end %}

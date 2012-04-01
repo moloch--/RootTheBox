@@ -136,7 +136,7 @@ application = Application([
     se_dir = path.abspath('files/se/'),
 
     # Milli-Seconds between scoring
-    ticks = int(120 * 1000),
+    ticks = int(30 * 1000),
 
     # Milli-Seconds between session clean up
     clean_up_timeout = int(60 * 1000),
