@@ -111,21 +111,7 @@
 		
 		function checkForMultiple(totalString) {
 			//Try to get a single message
-			try {
-				var message = JSON.parse(evt.data);
-				return message;
-			} catch (err) {
-				//Try for multiple
-				var messages = totalString.split("\n");
-				var returnMessages = []
-				for(var msgIndex = 0; msgIndex < messages.length; msgIndex++) {
-					var message = messages[msgIndex];
-					if(message != "") {
-						returnMessages.push(message);
-					}
-				}
-				return returnMessages;
-			}
+			return totalString.split("\n");;
 		}
 		
 		function getSeriesByName(teamName) {
