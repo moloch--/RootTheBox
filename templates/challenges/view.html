@@ -1,21 +1,33 @@
 {% extends "../main.html" %}
 
+{% block header %}
+<link rel="stylesheet" href="/static/css/screen.css" media="screen" />
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+{% end %}
+
 {% block title %}Team{% end %}
 
 {% block content %}
 <h1>Challenges</h1>
 	<script>
-		function load_details(challenge_id) {
-			$.get('/challenges/ajax?id=' + challenge_id, function(data) {
-				document.getElementById('challenges').innerHTML = data;
+		function load_right(challenge_id) {
+			$("#ajax_challenge").click(function () {
+			    $(this).hide("slide", { direction: "left" }, 1000);
+			    $.get('/challenges/ajax?id=' + challenge_id, function(data) {
+					document.getElementById('challenges').innerHTML = data;
+				});
 			});
 		}
 	</script>
 	<div id="challenges">
-		<ol>
-		{% for challenge in challenges %}
-			<li><a id="{{ challenge.id }}" onclick="load_details({{ challenge.id }})">{{ challenge.name }}</a></li>
-		{% end %}
-		</ol>
+		<div id="ajax_challenge">
+			<ol>
+			{% for challenge in challenges %}
+				<li><a id="{{ challenge.id }}" onclick="load_right({{ challenge.id }})">{{ challenge.name }}</a></li>
+			{% end %}
+			</ol>
+		</div>
 	</div>
 {% end %}
