@@ -34,6 +34,7 @@ from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
+from handlers.ChallengeHandlers import *
 from handlers.ScoreboardHandlers import *
        
 logging.basicConfig(format = '[%(levelname)s] %(asctime)s - %(message)s', level = logging.DEBUG)
@@ -72,7 +73,8 @@ application = Application([
         (r'/scoreboard(.*)', ScoreBoardHandler, {'dbsession': dbsession}),
         
         # Challenges Handlers
-        (r'/challenge(.*)', ChallengeHandler, {'dbsession' : dbsession}),
+        (r'/challenges/ajax(.*)', ChallengesAjaxHandler, {'dbsession' : dbsession}),
+        (r'/challenges', ChallengesHandler, {'dbsession' : dbsession}),
         
         # Social Challenges Handlers
         (r'/se(.*)', SocialHomeHandler, {'dbsession':dbsession}),

@@ -18,7 +18,6 @@ from tornado.web import RequestHandler
 from BaseHandlers import UserBaseHandler
 from string import ascii_letters, digits
 from recaptcha.client import captcha
-from tornado import process
 
 class HomeHandler(UserBaseHandler):
     
@@ -26,7 +25,6 @@ class HomeHandler(UserBaseHandler):
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
         user = User.by_user_name(self.session.data['user_name'])
-        logging.info("Home of %s, task id is %s" % (user.user_name, str(process.task_id())))
         self.render('user/home.html', user = user)
 
 class ShareUploadHandler(UserBaseHandler):
@@ -139,7 +137,6 @@ class SettingsHandler(RequestHandler):
                     user.avatar = unicode(str(uuid1()))
                 elif os.path.exists(self.application.settings['avatar_dir']+'/'+user.avatar):
                     os.unlink(self.application.settings['avatar_dir']+'/'+user.avatar)
-                # Check image header, reject any unapproved formats
                 ext = imghdr.what("", h = self.request.files['avatar'][0]['body'])
                 if ext in ['png', 'jpeg', 'gif', 'bmp']:
                     user.avatar = user.avatar[:user.avatar.rfind('.')]+"."+ext
@@ -218,48 +215,6 @@ class ReporterHandler(UserBaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
         self.render("user/reporter.html")
-        
-class ChallengeHandler(UserBaseHandler):
-    
-    @authenticated
-    def get(self, *args, **kwargs):
-        user = User.by_user_name(self.session.data['user_name'])
-        all_challenges = Challenge.get_all()
-        correct_challenges = []
-        for challenge in all_challenges:
-            if user.team != None:
-                if not challenge in user.team.challenges:
-                    correct_challenges.append(challenge)          
-        self.render("user/challenge.html", challenges = correct_challenges)
-    
-    @authenticated
-    def post(self, *args, **kwargs):
-        user = User.by_user_name(self.session.data['user_name'])
-        try:
-            token = self.get_argument("token")
-            challenge = Challenge.get_by_id(self.get_argument("challenge"))
-        except:
-            self.render("user/error.html", operation = "Submit Challenge", errors = "Please enter a token")    
-        if user.team != None:
-            if not challenge in user.team.challenges:
-                if token == challenge.token:
-                    action = Action(
-                        classification = unicode("Challenge Completed"),
-                        description = unicode(user.user_name+" has succesfully completed "+challenge.name+" !"),
-                        value = challenge.value,
-                        user_id = user.id
-                    )
-                    challenge.teams.append(user.team)
-                    self.dbsession.add(challenge)
-                    self.dbsession.add(action)
-                    self.dbsession.flush()
-                    self.redirect('/challenge')
-                else:
-                    self.render("user/error.html", operation = "Submit Challenge", errors = "Invalid Token")
-            else:
-                self.render("user/error.html", operation = "Submit Challenge", errors = "This challenge was already completed")
-        else:
-            self.render("user/error.html", operation = "Submit Challenge", errors = "You're not on a team")
 
 class LogoutHandler(UserBaseHandler):
 

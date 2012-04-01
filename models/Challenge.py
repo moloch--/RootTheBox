@@ -22,12 +22,12 @@ class Challenge(BaseObject):
     @classmethod
     def get_all(cls):
         ''' Returns all challenge objects '''
-        return dbsession.query(cls).all() #@UndefinedVariable
+        return dbsession.query(cls).all() 
  
     @classmethod
-    def get_by_id(cls, challenge_id):
+    def by_id(cls, challenge_id):
         ''' Returns all challenge objects '''
-        return dbsession.query(cls).filter_by(id=challenge_id).first() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(id=challenge_id).first()
 
     def __repr__(self):
         return ('<Challenge - name:%s, value:%d>' % (self.name, self.value))

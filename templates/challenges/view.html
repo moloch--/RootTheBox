@@ -1,0 +1,21 @@
+{% extends "../main.html" %}
+
+{% block title %}Team{% end %}
+
+{% block content %}
+<h1>Challenges</h1>
+	<script>
+		function load_details(challenge_id) {
+			$.get('/challenges/ajax?id=' + challenge_id, function(data) {
+				document.getElementById('challenges').innerHTML = data;
+			});
+		}
+	</script>
+	<div id="challenges">
+		<ol>
+		{% for challenge in challenges %}
+			<li><a id="{{ challenge.id }}" onclick="load_details({{ challenge.id }})">{{ challenge.name }}</a></li>
+		{% end %}
+		</ol>
+	</div>
+{% end %}

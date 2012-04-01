@@ -37,7 +37,7 @@ class AdminCreateHandler(AdminBaseHandler):
         challenge = Challenge(
             name = unicode(name),
             description = unicode(description),
-            value = value,
+            value = int(value),
             token = unicode(token)
         )
         self.dbsession.add(challenge)
@@ -59,7 +59,7 @@ class AdminCreateHandler(AdminBaseHandler):
         action = Action(
             classification = unicode(classification),
             description = unicode(description),
-            value = value,
+            value = int(value),
             user_id = user.id
         )
         user.dirty = True
@@ -83,7 +83,7 @@ class AdminCreateHandler(AdminBaseHandler):
         team = Team(
             team_name = unicode(team_name),
             motto = unicode(motto),
-            listen_port = lport
+            listen_port = int(lport)
         )
         self.dbsession.add(team)
         self.dbsession.flush()
@@ -166,13 +166,15 @@ class AdminCreateHandler(AdminBaseHandler):
         save.write(b64encode(self.request.files['crack_me'][0]['body']))
         save.close()
         content = guess_type(file_name)
-
+        char_white_list = ascii_letters + digits + "-._"
+        file_name = path.basename(file_name)
+        file_name = filter(lambda char: char in char_white_list, file_name)
         if content[0] != None:
             crack_me = CrackMe(
                 crack_me_name = unicode(crack_me_name),
                 description = unicode(description),
-                value = value,
-                file_name = unicode(path.basename(file_name)),
+                value = int(value),
+                file_name = unicode(file_name),
                 uuid = unicode(uuid),
                 content = unicode(str(content[0])),
                 token = unicode(token)
@@ -266,8 +268,8 @@ class AdminEditHandler(AdminBaseHandler):
 class AdminNotifyHandler(RequestHandler):
     
     def initialize(self):
-        self.ws_manager = WebSocketManager.Instance() #@UndefinedVariable
-    
+        self.ws_manager = WebSocketManager.Instance()
+        
     @authorized("admin")
     @restrict_ip_address
     def get(self, *args, **kwargs):
@@ -278,7 +280,7 @@ class AdminNotifyHandler(RequestHandler):
     def post(self, *args, **kwargs):
         try:
             message = self.get_argument("message")
-            title = self.get_argument("title") #@UnusedVariable
+            title = self.get_argument("title")
             classification = self.get_argument("classification")
             try:
                 file_contents = base64.encodestring(self.request.files['image'][0]['body'])

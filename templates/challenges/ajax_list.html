@@ -1,0 +1,9 @@
+<div class="animated bounceInLeft">
+	<ol>
+	{% for challenge in challenges %}
+		<li>
+			<a id="{{ challenge.id }}" onclick="load_details({{ challenge.id }})">{{ challenge.name }}</a>
+		</li>
+	{% end %}
+	</ol>
+</div>

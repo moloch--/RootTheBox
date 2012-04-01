@@ -43,7 +43,7 @@ class CrackMeHandler(RequestHandler):
                 level = user.team.crack_me.id
                 user_action = Action(
                     classification = unicode("Cracked a Crack Me"),
-                    description = unicode("%s successfully cracked the level %s Crack Me" % (user.display_name, user.team.crack_me.id)),
+                    description = unicode("%s successfully cracked the level %s" % (user.display_name, level)),
                     value = user.team.crack_me.value,
                     user_id = user.id
                 )
@@ -94,3 +94,5 @@ class CrackMeDownloadHandler(RequestHandler):
                 self.finish()
             else:
                 self.render('crack_me/complete.html')
+        else:
+            self.redirect("/login")
