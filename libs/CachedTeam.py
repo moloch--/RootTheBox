@@ -7,5 +7,5 @@ class CachedTeam():
         self.scores = []
         
     def add_score(self, score_update):
-        self.current_score += int(score_update.value)
         self.scores.append([int(score_update.time_stamp), self.current_score])
+        self.current_score += int(score_update.value)
