@@ -20,7 +20,7 @@ class RtbClient():
     def __init__(self, display_name):
         self.listenPort = None
         self.user = urllib.urlencode({'handle': display_name})
-        self.rHost = '127.0.0.1'
+        self.rHost = '192.168.1.4'
         self.loadKeyFile()
     
     def start(self):
@@ -30,7 +30,7 @@ class RtbClient():
             print 'failure'
     
     def loadKeyFile(self):
-        self.keyValue = '1234'
+        self.keyValue = 'asdf'
     
     def reporter(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -61,7 +61,7 @@ class RtbClient():
                 os._exit(1)
     
     def register(self):
-        connection = httplib.HTTPConnection("127.0.0.1:8888")
+        connection = httplib.HTTPConnection("192.168.1.4:8888")
         connection.request("GET", "/reporter/register?%s" % self.user)
         response = connection.getresponse()
         if response.status == 200:

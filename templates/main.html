@@ -3,53 +3,65 @@
 <meta http-equiv="Pragma" content="no-cache" />
 
 <head>
-	<title>Root the Box: {% block title %} Template {% end %}</title>
-	<link href="/static/css/main.css" rel="stylesheet" type="text/css" />
-	<link href="/static/css/menu.css" rel="stylesheet" type="text/css" />
-	<link href="/static/css/animate.css" rel="stylesheet" type="text/css" />
-	<link href="/static/css/notifier.css" rel="stylesheet" type="text/css" />
-	<link href="/static/images/favicon.ico" rel="shortcut icon" type="image/x-icon" /> 
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script type="text/javascript" src="/static/js/notifier.js"></script>
-	{% block header %}{% end %}
+<title>Root the Box: {% block title %} Template {% end %}</title>
+<link href="/static/css/main.css" rel="stylesheet" type="text/css" />
+<link href="/static/css/menu.css" rel="stylesheet" type="text/css" />
+<link href="/static/css/animate.css" rel="stylesheet" type="text/css" />
+<link href="/static/css/notifier.css" rel="stylesheet" type="text/css" />
+<link href="/static/images/favicon.ico" rel="shortcut icon"
+	type="image/x-icon" />
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/notifier.js"></script>
+{% block header %}{% end %}
 </head>
 <body>
 	<div id="banner">
-		<a href="{% block bannerLink %}/{% end %}">
-			<img src="/static/images/banner.jpg" width="1200" />
-		</a>
+		<a href="{% block bannerLink %}/{% end %}"> <img
+			src="/static/images/banner.jpg" width="1200" /> </a>
 	</div>
 	<div id="outer">
 		<div id="menuouter">
-			<div id="menuinner">
-					{% module Menu() %}
-			</div>
+			<div id="menuinner">{% module Menu() %}</div>
 		</div>
 		<!-- Content -->
 		<div id="page_content" class="animated fadeIn">
 			<div id="primaryContentContainer">
-				<div id="primaryContent">
-					{% block content %}
-						No Content
-					{% end %}
-				</div>
+				<div id="primaryContent">{% block content %} No Content {% end
+					%}</div>
 			</div>
 		</div>
 		<div class="clear"></div>
-		<div id="footer">
-			Created by Hathcox &amp; Moloch &copy; {{ datetime.date.today().year }} - Version {{ handler.application.settings['version'] }}
-		</div>
+		<div id="footer">Created by Hathcox &amp; Moloch &copy; {{
+			datetime.date.today().year }} - Version {{
+			handler.application.settings['version'] }}</div>
 	</div>
 	<script>
 
 	$(document).ready(function() {
 		var redraw = false;
+		var initialData = [];
 		var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:8888/websocket");
 		if (typeof String.prototype.startsWith != 'function') {
 			  String.prototype.startsWith = function (str){
 			    return this.indexOf(str) == 0;
 			  };
 		}
+		
+		if (!Array.prototype.indexOf) {
+			  Array.prototype.indexOf = function (obj, fromIndex) {
+			    if (fromIndex == null) {
+			        fromIndex = 0;
+			    } else if (fromIndex < 0) {
+			        fromIndex = Math.max(0, this.length + fromIndex);
+			    }
+			    for (var i = fromIndex, j = this.length; i < j; i++) {
+			        if (this[i] === obj)
+			            return i;
+			    }
+			    return -1;
+			  };
+			}
 		
 		ws.onopen = function() {
 			//Wait for a notification
@@ -59,22 +71,31 @@
 		};
 		
 		ws.onmessage = function (evt) {
-			console.log(evt.data);
 			var message = JSON.parse(evt.data);
 			console.log(message);
 			if(message['py/object'] == 'libs.Notification.Notification') {
 				//Send a Notification
 				Notifier.notify(message['message'], message['title'], "data:image/png;base64,"+message['file_contents']);
 			} else if(message['py/object'] == 'libs.ScoreUpdate.ScoreUpdate') {
-				if($('#scoreboard').length){
+				if($('#scoreboard').length && redraw){
 					//Update the line chart
-					chart.series[getSeriesByName(message['team_name'])].addPoint([parseInt(message['time_stamp']), getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))], redraw);
+					chart.series[getSeriesByName(message['team_name'])].addPoint([parseInt(message['time_stamp']), getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))]);
+					//Update the bar chart
+					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
+					bar_chart.redraw();
+				//If we are getting the initial data points
+				} else {
+					//Put the datapoint into an array and wait for redraw
+					initialData.push([message['team_name'], parseInt(message['time_stamp']), parseInt(message['value'])]);
 					//Update the bar chart
 					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
 					bar_chart.redraw();
 				}
 			} else if (message['redraw'] == 'true') {
 				redraw = true;
+				console.log(initialData);
+				//Load all of the initial data into the main chart
+				loadInitialData();
 				chart.redraw();
 			}
 			
@@ -97,6 +118,47 @@
 			return -1;
 		}
 		
+		function loadInitialData() {
+			var teams = findTeamsFromInitial();
+			console.log(teams);
+			//For each team
+			for(var teamIndex = 0; teamIndex < teams.length; teamIndex++) {
+				//Find all entries for the team
+				var teamEntries = findEntriesByName(teams[teamIndex]);
+				//Set the current value to 0
+				var currentValue = 0;
+				//For each entry
+				for(var entryIndex = 0; entryIndex < teamEntries.length; entryIndex++) {
+					// current value += this entry
+					currentValue += teamEntries[entryIndex][2];
+					//Plot the point without redraw
+					chart.series[getSeriesByName(teamEntries[entryIndex][0])].addPoint([teamEntries[entryIndex][1] , currentValue], false);
+				}
+					
+			}
+		}
+		
+		function findEntriesByName(teamName) {
+			var entries = [];
+			for(var i = 0; i < initialData.length; i++) {
+				if(initialData[i][0] == teamName) {
+					entries.push(initialData[i]);
+				}
+			}
+			return entries;
+		}
+		
+		function findTeamsFromInitial() {
+			var teams = []
+			for(var index = 0; index < initialData.length; index++) {
+				//If the team isn't in teams yet
+				if(teams.indexOf(initialData[index][0]) < 0) {
+					teams.push(initialData[index][0]);
+				}
+			}
+			return teams;
+		}
+		
 		function correctData(teamIndex, newScore) {
 			var new_data = [];
 			//Copy all of the team scores that are currently being displayed
@@ -110,9 +172,9 @@
 		function trim(stringToTrim) {
 			return stringToTrim.replace(/^\s+|\s+$/g,"");
 		}
+		
 	});
 	</script>
-	{% block body %}
-	{% end %}
+	{% block body %} {% end %}
 </body>
 </html>
