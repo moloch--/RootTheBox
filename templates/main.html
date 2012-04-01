@@ -43,6 +43,7 @@
 	<script>
 
 	$(document).ready(function() {
+		var redraw = false;
 		var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:8888/websocket");
 		if (typeof String.prototype.startsWith != 'function') {
 			  String.prototype.startsWith = function (str){
@@ -58,6 +59,7 @@
 		};
 		
 		ws.onmessage = function (evt) {
+			console.log(evt.data);
 			var message = JSON.parse(evt.data);
 			console.log(message);
 			if(message['py/object'] == 'libs.Notification.Notification') {
@@ -66,11 +68,14 @@
 			} else if(message['py/object'] == 'libs.ScoreUpdate.ScoreUpdate') {
 				if($('#scoreboard').length){
 					//Update the line chart
-					chart.series[getSeriesByName(message['team_name'])].addPoint([parseInt(message['time_stamp']), getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))]);
+					chart.series[getSeriesByName(message['team_name'])].addPoint([parseInt(message['time_stamp']), getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))], redraw);
 					//Update the bar chart
 					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
 					bar_chart.redraw();
 				}
+			} else if (message['redraw'] == 'true') {
+				redraw = true;
+				chart.redraw();
 			}
 			
 		};

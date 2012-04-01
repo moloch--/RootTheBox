@@ -17,6 +17,7 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         if message == "load plox":
             self.manager.get_updates(self)
+            self.write_message("{\"redraw\":\"true\"}")
         else:
             logging.warn("%s tried to send us '%s'" % (self.request.remote_ip, message))
         
