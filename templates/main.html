@@ -71,14 +71,9 @@
 		};
 		
 		ws.onmessage = function (evt) {
-			console.log(evt.data);
 			var messages = checkForMultiple(evt.data);
-			console.log(messages);
 			for(message in messages) {
-				console.log(typeof messages[message]);
-				console.log(messages[message]);
 				message = jQuery.parseJSON(messages[message]);
-				console.log(message);
 				if(message['py/object'] == 'libs.Notification.Notification') {
 					//Send a Notification
 					Notifier.notify(message['message'], message['title'], "data:image/png;base64,"+message['file_contents']);
@@ -99,7 +94,6 @@
 					}
 				} else if (message['redraw'] == 'true') {
 					redraw = true;
-					console.log(initialData);
 					//Load all of the initial data into the main chart
 					loadInitialData();
 					chart.redraw();
@@ -145,7 +139,6 @@
 		
 		function loadInitialData() {
 			var teams = findTeamsFromInitial();
-			console.log(teams);
 			//For each team
 			for(var teamIndex = 0; teamIndex < teams.length; teamIndex++) {
 				//Find all entries for the team
