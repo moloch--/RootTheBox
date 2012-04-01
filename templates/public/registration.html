@@ -8,50 +8,49 @@
 {% block title %}Registration{% end %}
 
 {% block content %}
-<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+  <script type="text/javascript">
+     function showRecaptcha(element) {
+       Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
+         theme: "clean",
+         callback: null});
+     }
+     $(document).ready(function() {
+  	  showRecaptcha('recaptcha_div'); 
+     });
+  </script>
 
-<!-- Wrapping the Recaptcha create method in a javascript function -->
-<script type="text/javascript">
-   function showRecaptcha(element) {
-     Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
-       theme: "clean",
-       callback: null});
-   }
-   $(document).ready(function() {
-	  showRecaptcha('recaptcha_div'); 
-   });
-</script>
-
-<h1>Register a New Account</h1>
-<h2>{{ errors }}</h2>
-    <form id="form1" action="/registration" method="post">  
-      {% raw xsrf_form_html() %}
-      <fieldset><legend>Contact form</legend>
-        <p class="first">
-          <label for="username">Account Name </label>
-          <input type="text" name="username" id="username" size="30" />
-        </p>
-        <p class="first">
-          <label for="username">Hacker Name </label>
-          <input type="text" name="handle" id="handle" size="30" />
-        </p>
-        <p>
-          <label for="pass1">Password</label>
-          <input type="password" name="pass1" id="pass1" size="7" autocomplete="off" />
-        </p>
-        <p>
-          <label for="pass2">Confirm Password</label>
-          <input type="password" name="pass2" id="pass2" size="7" autocomplete="off" />
-        </p>
-        <p>
-          <label for="recaptch_div">Are you human?</label>
-          <div id="recaptcha_div"></div>
-        </p>      
-      </fieldset>
-      <p class="submit">
-        <button type="submit">&nbsp;Register Account&nbsp;</button>
-      </p>   
-        
-    </form>
-
+  <h1>Register a New Account</h1>
+  <h2>{{ errors }}</h2>
+      <form id="form1" action="/registration" method="post">  
+        {% raw xsrf_form_html() %}
+        <fieldset><legend>Contact form</legend>
+          <p class="first">
+            <label for="username">Account Name </label>
+            <input type="text" name="username" id="username" size="30" />
+          </p>
+          <p class="first">
+            <label for="username">Hacker Name </label>
+            <input type="text" name="handle" id="handle" size="30" />
+          </p>
+          <p>
+            <label for="pass1">Password</label>
+            <input type="password" name="pass1" id="pass1" size="7" autocomplete="off" />
+          </p>
+          <p>
+            <label for="pass2">Confirm Password</label>
+            <input type="password" name="pass2" id="pass2" size="7" autocomplete="off" />
+          </p>
+          <p>
+            <label for="recaptch_div">Are you human?</label>
+            <div id="recaptcha_div"></div>
+          </p>      
+        </fieldset>
+        <p class="submit">
+          <button type="submit">&nbsp;Register Account&nbsp;</button>
+        </p>   
+          
+      </form>
+      <script>
+        document.getElementById('username').focus();
+      </script>
 {% end %}

@@ -42,7 +42,6 @@
 						{% if team.team_name != current.team_name %}
 							{% for user in team.members %}
 								<li id="{{ user.display_name }}" class="ui-widget-content">
-								<img src="/avatars/{{ user.avatar }}" height=20 width=40 />
 								{{ team.team_name}}&nbsp;:&nbsp;{{ user.display_name }}&nbsp;
 								</li>
 							{% end %}

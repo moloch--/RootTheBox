@@ -32,6 +32,7 @@ def scoring_round():
 
 def score_box(box):
     ''' Scores a single box '''
+    logging.info("Scoring reporters on %s" % (box.box_name,))
     threads = []
     for user in box.users:
         thread = threading.Thread(target = score_user, args = (box, user))

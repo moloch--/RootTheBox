@@ -281,3 +281,12 @@ a:hover
 	text-align: left;
 }
 
+/* File Sharing */
+.share_description {
+	width: 95%;
+	background-color: transparent;
+	border: none;
+	font-family: "Trebuchet MS", sans-serif;
+	color: #FFFFFF;
+	font-size: 11pt;
+}

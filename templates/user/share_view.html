@@ -34,17 +34,26 @@
 		$(function() {
 			$( "#accordion" ).accordion();
 		});
+		$(function() {
+			$( ".dl_crack_me button" ).button()  
+		});
 	</script>
 
 	<div id="accordion">
 		{% for share in shares %}
-			<h3><a href="#">{{ share.file_name }} - {{ share.content }} </a></h3>
+			<h3><a href="#"><strong>{{ share.file_name }}</strong>&nbsp;&nbsp;&nbsp;{{ share.content }} </a></h3>
 			<div>
 				<p>
-					<strong>Name: </strong> {{ share.file_name }} <br />
-					<strong>Content: </strong> {{ share.content }} <br />
-					<strong>Size: </strong> {{ share.byte_size }} byte(s) <br />
-					<a href="/user/shares/download?uuid={{ share.uuid }}">Download</a>
+					<strong>File Size: </strong> {{ share.byte_size }} byte(s) <br />
+					<strong>Description:</strong> <br />
+					<textarea class="share_description">
+						{{ share.description }}
+					</textarea>
+					<div class="dl_crack_me">
+						<button onclick="window.open('/user/shares/download?uuid={{ share.uuid }}', '_newtab');" >
+							Download {{ share.file_name }}
+						</button>
+					</div>
 				</p>
 			</div>
 		{% end %}

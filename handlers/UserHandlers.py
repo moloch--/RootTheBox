@@ -4,10 +4,10 @@ Created on Mar 13, 2012
 @author: moloch
 '''
 
+import os
 import imghdr
 import logging
 
-from os import path
 from uuid import uuid1
 from base64 import b64encode, b64decode
 from models import User, Team, FileUpload, Challenge, Action
@@ -59,7 +59,7 @@ class ShareUploadHandler(UserBaseHandler):
         data = b64encode(self.request.files['file_data'][0]['body'])
         save.write(data)
         save.close()
-        file_name = path.basename(self.request.files['file_data'][0]['filename'])
+        file_name = os.path.basename(self.request.files['file_data'][0]['filename'])
         char_white_list = ascii_letters + digits + "-._"
         file_name = filter(lambda char: char in char_white_list, file_name)
         content = guess_type(file_name)
@@ -135,7 +135,7 @@ class SettingsHandler(RequestHandler):
         user = User.by_user_name(self.session.data['user_name'])
         if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
             if len(self.request.files['avatar'][0]['body']) < (1024*1024):
-                if user.avatar == "default_avatar.gif":
+                if user.avatar == "default_avatar.jpeg":
                     user.avatar = unicode(str(uuid1()))
                 elif os.path.exists(self.application.settings['avatar_dir']+'/'+user.avatar):
                     os.unlink(self.application.settings['avatar_dir']+'/'+user.avatar)
