@@ -35,7 +35,8 @@ def insert_listener(mapper, connection, target):
     team = dbsession.query(models.User).filter_by(id=target.user_id).first()
     ws_manager = WebSocketManager.Instance()
     score_update = ScoreUpdate(target.created.strftime("%d%H%M%S"), target.value, team.team_name)
-    ws_manager.currentUpdates.append(score_update)
+    #ws_manager.currentUpdates.append(score_update)
+    ws_manager.cachedScores.add_score(score_update)
     ws_manager.send_all(score_update)
 
 # attach to all mappers

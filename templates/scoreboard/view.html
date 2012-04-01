@@ -60,7 +60,8 @@ $(document).ready(function() {
 			{% for team in teams %}
 			{
 			name:"{{team.team_name}}",
-			data: [],
+			data: 
+			       {{cached_scores.find_scores_by_team(team.team_name)}},
 			},
 			{% end %}
 		]
