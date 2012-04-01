@@ -33,17 +33,14 @@ class CrackMeHandler(RequestHandler):
     def post(self, *args, **kwargs):
         ''' Check to see if the user correctly entered the crackme's token '''
         try:
-            crack_me = self.get_argument("crack_me")
-            crack_me = int(crack_me)
             token = self.get_argument("token")
         except:
-            self.render('crack_me/error.html', errors = "Enter a Token!")
+            self.render('crack_me/error.html', errors = "No token input")
 
         user = User.by_user_name(self.session.data['user_name'])
-        # If they are entering towards the correct crackme
-        if(user.team.crack_me.id == crack_me):
-            # If they entered the token correctly
+        if user != None:
             if(user.team.crack_me.token == token):
+                level = user.team.crack_me.id
                 user_action = Action(
                     classification = unicode("Cracked a Crack Me"),
                     description = unicode("%s successfully cracked the level %s Crack Me" % (user.display_name, user.team.crack_me.id)),
@@ -57,11 +54,11 @@ class CrackMeHandler(RequestHandler):
                 self.dbsession.add(user)
                 self.dbsession.add(user.team)
                 self.dbsession.flush()
-                self.redirect("/crackmes")
+                self.render('crack_me/success.html', level = level)
             else:
-                self.render('crack_me/error.html', errors = "Invalid Token!")
+                self.render('crack_me/error.html', errors = "Invalid Token")
         else:
-            self.render('crack_me/error.html', errors = "You're not on that Crack Me yet!")
+            self.redirect("/login")
 
     def notify(self, user, crack_me):
         ''' Send a notification to everyone that someone cracked a Crack Me '''
@@ -91,7 +88,6 @@ class CrackMeDownloadHandler(RequestHandler):
                 data = current.read()
                 current.close()
                 self.set_header('Content-Type', user.team.crack_me.content)
-                self.set_header('Content-Length', user.team.cracke_me.byte_size)
                 self.set_header('Content-Disposition', 'attachment; filename=%s' % user.team.crack_me.file_name)
                 self.write(b64decode(data))
                 self.write(data)
