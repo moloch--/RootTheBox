@@ -155,7 +155,7 @@ def cache_actions():
     ws_manager = WebSocketManager.Instance()
     for action in action_list:
         team = dbsession.query(models.User).filter_by(id=action.user_id).first()
-        score_update = ScoreUpdate(action.created.strftime("%d%H%M%S"), action.value, team.team_name)
+        score_update = ScoreUpdate(action.created.strftime("%m%d%H%M%S"), action.value, team.team_name)
         #ws_manager.currentUpdates.append(score_update)
         ws_manager.cachedScores.add_score(score_update)
  

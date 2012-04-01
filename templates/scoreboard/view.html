@@ -118,7 +118,7 @@ $(document).ready(function() {
 			
 			data: [
 				{% for team in teams %}
-					0,
+					{{cached_scores.find_current_score_by_team(team.team_name)}},
 				{% end %}       
 			       ],
 			dataLabels: {
