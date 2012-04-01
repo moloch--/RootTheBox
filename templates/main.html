@@ -55,6 +55,7 @@
 		ws.onmessage = function (evt) {
 			message = jQuery.parseJSON(evt.data);
 			console.log(message);
+			console.log(message['time_stamp']);
 			if(message['py/object'] == 'libs.Notification.Notification') {
 				//Send a Notification
 				Notifier.notify(message['message'], message['title'], "data:image/png;base64,"+message['file_contents']);
@@ -62,13 +63,12 @@
 				if($('#scoreboard').length){
 					//Update the line chart
 					chart.series[getSeriesByName(message['team_name'])].addPoint(
-							[parseInt(message['time_stamp']),
+							[parseInt(message['time_stamp'], 10),
 							 getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))]
 							);
 					//Update the bar chart
 					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
 					bar_chart.redraw();
-					chart.redraw();
 				} 
 			}
 		};
