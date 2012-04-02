@@ -10,8 +10,10 @@ apt-get install python-pip python-dev build-essential &&
 pip install --upgrade pip &&
 pip install --upgrade virtualenv
 
+echo "Installing packages ..."
 apt-get install python-dev build-essential python-mysqldb python-mysqldb-dbg python-recaptcha python-jsonpickle
 
-pip install tornado
-pip install sqlalchemy
+echo "Installing tornado/sqlalchemy ..."
+/usr/local/bin/pip install tornado
+/usr/local/bin/pip install sqlalchemy
 
