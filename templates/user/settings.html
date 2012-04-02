@@ -24,7 +24,7 @@
 	<h1>Settings</h1>
 	<br />
 	<h2>Upload Avatar</h2>
-    <form id="form1" action="/user/settings/avatar" method="post" enctype="multipart/form-data">  
+    <form style="height:105px" id="form1" action="/user/settings/avatar" method="post" enctype="multipart/form-data">  
       {% raw xsrf_form_html() %}
       <fieldset>
       	<legend>Change Avatar</legend>
@@ -44,7 +44,7 @@
 		<h3>{{ message }}</h3>
 	{% end %}
 
-    <form id="form1" action="/user/settings/changepassword" method="post" autocomplete="off">  
+    <form style="height:420px" id="form1" action="/user/settings/changepassword" method="post" autocomplete="off">  
       {% raw xsrf_form_html() %}
       <fieldset>
       	<legend>Change Password</legend>
