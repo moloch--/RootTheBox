@@ -9,7 +9,9 @@
 /* Sexy buttons */
 
 .sexy-button {
-	margin: 3px;
+	margin-left: 228px;
+	margin-top:4px;
+	margin-bottom:4px;
 	width:150px;
 	height:37px;
 	line-height:37px;		
@@ -19,6 +21,11 @@
 	cursor:pointer;
 	text-align:center;
 }
+
+.sexy-button:hover {
+	background:url(/static/images/form1/form_button_hover.gif) no-repeat 0 0;
+}
+
 
 /* form 1 */
 

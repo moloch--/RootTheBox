@@ -1,0 +1,62 @@
+
+
+{% extends "../main.html" %} 
+
+{% block header %}
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link href="/static/css/custom-theme/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+{% end %} 
+
+{% block title %}Scoreboard{% end %} {% block content %}
+<br>
+		<div id="pie" style="margin-left:-85px; min-width: 500px; width:800px; height: 400px;"></div>
+<script>
+var pc;
+$(document).ready(function() {
+	pc = new Highcharts.Chart({
+		chart: {
+			renderTo: 'pie',
+			plotBackgroundColor: null,
+			plotBorderWidth: null,
+			plotShadow: false,
+			backgroundColor:'transparent'
+		},
+		title: {
+			text: 'Point Distribution'
+		},
+		tooltip: {
+			formatter: function() {
+				return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+			}
+		},
+		plotOptions: {
+			pie: {
+				allowPointSelect: true,
+				showInLegend: true,
+				cursor: 'pointer',
+				dataLabels: {
+					enabled: true,
+					color: '#000000',
+					connectorColor: '#000000',
+					formatter: function() {
+						return '<b>'+ this.point.name +'</b>';
+					}
+				}
+			}
+		},
+		series: [{
+			type: 'pie',
+			name: 'Browser share',
+			data: [
+				{% for team in teams %}
+					['{{team.team_name}}' , {{cached_scores.find_current_score_by_team(team.team_name)}}],
+				{% end %}
+			]
+		}]
+	});
+});
+</script>
+
+{% end %}

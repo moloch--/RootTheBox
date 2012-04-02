@@ -71,6 +71,10 @@ application = Application([
         
         # Scoreboard Handlers - Severs scoreboard related pages
         (r'/scoreboard(.*)', ScoreBoardHandler, {'dbsession': dbsession}),
+        (r'/all_time(.*)', AllTimeHandler, {'dbsession': dbsession}),
+        (r'/pie_chart(.*)', PieChartHandler, {'dbsession': dbsession}),
+        (r'/bar_chart(.*)', BarChartHandler, {'dbsession': dbsession}),
+
         
         # Challenges Handlers
         (r'/challenges/ajax(.*)', ChallengesAjaxHandler, {'dbsession' : dbsession}),

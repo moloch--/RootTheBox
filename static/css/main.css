@@ -294,3 +294,8 @@ a:hover
 	color: #FFFFFF;
 	font-size: 11pt;
 }
+
+/* Sexy Links*/
+.sexy li {
+	list-style-type: none;
+}
