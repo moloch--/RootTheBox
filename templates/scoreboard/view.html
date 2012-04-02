@@ -12,14 +12,10 @@
 <br>
 <div id="scoreboard-tabs">
 	<ul>
-		<li><a href="#scoreboard-tabs-1">Real Time Graph</a></li>
-		<li><a href="##scoreboard-tabs-2">All Time Graph</a></li>
+		<li><a href="#scoreboard-tabs-2">All Time Graph</a></li>
 		<li><a href="#scoreboard-tabs-3">Bar Chart</a></li>
 		<li><a href="#scoreboard-tabs-4">Pie Chart</a></li>
 	</ul>
-	<div id="scoreboard-tabs-1">
-		TODO
-	</div>
 	<div id="scoreboard-tabs-2">
 		<div id="scoreboard" style="min-width: 500px; width:579px; height: 400px; margin: 0 auto"></div>
 	</div>
@@ -127,7 +123,7 @@ $(document).ready(function() {
 			}
 		},
 		legend: {
-			enabled: false
+			enabled: true
 		},
 		tooltip: {
 			formatter: function() {
@@ -179,6 +175,7 @@ $(document).ready(function() {
 		plotOptions: {
 			pie: {
 				allowPointSelect: true,
+				showInLegend: true,
 				cursor: 'pointer',
 				dataLabels: {
 					enabled: true,
@@ -200,6 +197,7 @@ $(document).ready(function() {
 			]
 		}]
 	});
+	
 });
 <!-- -->
 </script>
