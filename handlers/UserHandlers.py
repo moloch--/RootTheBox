@@ -50,19 +50,20 @@ class ShareUploadHandler(UserBaseHandler):
 
         if 50 * (1024*1024) < len(self.request.files['file_data'][0]['body']):
             self.render("user/error.html", operation = "File Upload", errors = "File too large")
+            return
 
-        uuid = str(uuid1())
-        filePath = self.application.settings['shares_dir']+'/'+uuid
-        save = open(filePath, 'w')
-        data = b64encode(self.request.files['file_data'][0]['body'])
-        save.write(data)
-        save.close()
         file_name = os.path.basename(self.request.files['file_data'][0]['filename'])
         char_white_list = ascii_letters + digits + "-._"
         file_name = filter(lambda char: char in char_white_list, file_name)
         content = guess_type(file_name)
         if content[0] == None:
             self.render("user/error.html", operation = "File Upload", errors = "Unknown file content, please zip and upload")
+        uuid = str(uuid1())
+        filePath = self.application.settings['shares_dir']+'/'+uuid
+        save = open(filePath, 'w')
+        data = b64encode(self.request.files['file_data'][0]['body'])
+        save.write(data)
+        save.close()
         file_upload = FileUpload(
             file_name = unicode(file_name),
             content = unicode(str(content[0])),
