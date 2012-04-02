@@ -17,8 +17,9 @@ Features
 
  Setup
 -------------------
-* install these packages: tornado (2.2), sqlalchemy (0.7.5), nose (1.0.0), python-recaptcha, python-jsonpickle, pycco and virtualenv is recommended
-* set up the db connection string at __models/\_\_init\_\_.py__
+* Supported platforms: Ubuntu 11.04
+* Install these packages: tornado (2.2), sqlalchemy (0.7.5), python-recaptcha, python-jsonpickle, or run the __depends.sh__ script in /setup
+* Set up the db connection string at __models/\_\_init\_\_.py__
 * 'python . create' to ONLY create the tables 
 * 'python -c "import setup.auth" to create the admin account
 * 'python . test' - will test the application.
