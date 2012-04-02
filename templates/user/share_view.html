@@ -12,7 +12,7 @@
 	<h1>File Sharing</h1>
 	<br />
 	<h2>Upload a File</h2>
-	<form id="form1" action="/user/shares" method="post" enctype="multipart/form-data">  
+	<form style="height:159px" id="form1" action="/user/shares" method="post" enctype="multipart/form-data">  
       {% raw xsrf_form_html() %}
       <fieldset><legend>File Upload</legend>
         <p class="first">
@@ -46,9 +46,9 @@
 				<p>
 					<strong>File Size: </strong> {{ share.byte_size }} byte(s) <br />
 					<strong>Description:</strong> <br />
-					<textarea class="share_description">
+					<p class="share_description">
 						{{ share.description }}
-					</textarea>
+					</p>
 					<div class="dl_crack_me">
 						<button onclick="window.open('/user/shares/download?uuid={{ share.uuid }}', '_newtab');" >
 							Download {{ share.file_name }}

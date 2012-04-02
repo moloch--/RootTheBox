@@ -5,7 +5,7 @@
 	<strong>Name: </strong>{{ challenge.name }} <br />
 	<strong>Description</strong> {{ challenge.description }} <br />
 
-	<form id="form1" action="/login" method="post" autocomplete="off">  
+	<form style="height:100px" id="form1" action="/challenge?challenge={{challenge.id}}" method="post" autocomplete="off">  
       {% raw xsrf_form_html() %}
       <fieldset><legend>Login</legend>
         <p class="first">

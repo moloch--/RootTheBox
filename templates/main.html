@@ -69,6 +69,9 @@
 					//Update the bar chart
 					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
 					bar_chart.redraw();
+					//Update pie chart
+					correctPieData(message['team_name'], getSeriesByName(message['team_name']), parseInt(message['value']));
+					pc.redraw();
 				} 
 			}
 		};
@@ -100,8 +103,14 @@
 			bar_chart.series[0].setData(new_data, false);
 		}
 		
-		function trim(stringToTrim) {
-			return stringToTrim.replace(/^\s+|\s+$/g,"");
+		function correctPieData(teamName, teamIndex, newScore) {
+			var new_data = [];
+			//Copy all of the team scores that are currently being displayed
+			for(var index = 0; index < pc.series[0].data.length; index++) {
+				 new_data[index] = pc.series[0].data[index].config;
+			}
+			new_data[teamIndex][1] += newScore;
+			pc.series[0].setData(new_data, false);
 		}
 		
 	});

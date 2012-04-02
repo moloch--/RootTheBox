@@ -3,21 +3,42 @@
 {% block header %}
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link href="/static/css/custom-theme/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
 {% end %} 
 
 {% block title %}Scoreboard{% end %} {% block content %}
 <h1>Scoreboard</h1>
 <br>
-
-<div id="scoreboard"
-	style="min-width: 800px; height: 400px; margin: 0 auto"></div>
-<div id="real_time_bar" style="min-width: 800px; height: 400px; margin: 0 auto">
+<div id="scoreboard-tabs">
+	<ul>
+		<li><a href="#scoreboard-tabs-1">Real Time Graph</a></li>
+		<li><a href="##scoreboard-tabs-2">All Time Graph</a></li>
+		<li><a href="#scoreboard-tabs-3">Bar Chart</a></li>
+		<li><a href="#scoreboard-tabs-4">Pie Chart</a></li>
+	</ul>
+	<div id="scoreboard-tabs-1">
+		TODO
+	</div>
+	<div id="scoreboard-tabs-2">
+		<div id="scoreboard" style="min-width: 500px; width:579px; height: 400px; margin: 0 auto"></div>
+	</div>
+	<div id="scoreboard-tabs-3">
+		<div id="real_time_bar" style="min-width: 500px; width:579px; height: 400px; margin: 0 auto"></div>
+	</div>
+	<div id="scoreboard-tabs-4">
+		<div id="pie" style="min-width: 500px; width:579px; height: 400px; margin: 0 auto"></div>
+	</div>
 </div>
-
 <script>
 <!-- Real Time Line Graph -->
 var chart;
 $(document).ready(function() {
+	$(function() {
+		$( "#scoreboard-tabs" ).tabs();
+	});
+
+	
 	chart = new Highcharts.Chart({
 		chart: {
 			renderTo: 'scoreboard',
@@ -70,6 +91,7 @@ $(document).ready(function() {
 
 <!-- Real Time Bar Graph-->
 var bar_chart;
+var pc;
 $(document).ready(function() {
 	bar_chart = new Highcharts.Chart({
 		chart: {
@@ -137,8 +159,49 @@ $(document).ready(function() {
 			}
 		}]
 	});
+	
+	pc = new Highcharts.Chart({
+		chart: {
+			renderTo: 'pie',
+			plotBackgroundColor: null,
+			plotBorderWidth: null,
+			plotShadow: false,
+			backgroundColor:'transparent'
+		},
+		title: {
+			text: 'Point Distribution'
+		},
+		tooltip: {
+			formatter: function() {
+				return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+			}
+		},
+		plotOptions: {
+			pie: {
+				allowPointSelect: true,
+				cursor: 'pointer',
+				dataLabels: {
+					enabled: true,
+					color: '#000000',
+					connectorColor: '#000000',
+					formatter: function() {
+						return '<b>'+ this.point.name +'</b>';
+					}
+				}
+			}
+		},
+		series: [{
+			type: 'pie',
+			name: 'Browser share',
+			data: [
+				{% for team in teams %}
+					['{{team.team_name}}' , {{cached_scores.find_current_score_by_team(team.team_name)}}],
+				{% end %}
+			]
+		}]
+	});
 });
-
+<!-- -->
 </script>
 
 {% end %}
