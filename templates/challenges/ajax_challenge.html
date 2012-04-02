@@ -1,7 +1,20 @@
-<div class="animated bounceInRight">
-	<a onclick="load_details('back')">&lt;&lt; Back</a>
+<div id="ajax_challenge" class="animated bounceInRight">
+	<a onclick="load_right('back')">&lt;&lt; Back</a>
 	<br />
+	
 	<strong>Name: </strong>{{ challenge.name }} <br />
-	<strong>Description</strong> {{ challenge.description }}
+	<strong>Description</strong> {{ challenge.description }} <br />
 
+	<form id="form1" action="/login" method="post" autocomplete="off">  
+      {% raw xsrf_form_html() %}
+      <fieldset><legend>Login</legend>
+        <p class="first">
+          <label for="token">Token</label>
+          <input type="text" name="token" id="token" />
+        </p> 
+      </fieldset>
+      <p class="submit">
+        <button type="submit"> Submit Token </button>
+      </p>   
+    </form>
 </div>
