@@ -6,6 +6,20 @@
 *
 */
 
+/* Sexy buttons */
+
+.sexy-button {
+	margin: 3px;
+	width:150px;
+	height:37px;
+	line-height:37px;		
+	border:none;
+	background:url(/static/images/form1/form_button.gif) no-repeat 0 0;
+	color:#fff;
+	cursor:pointer;
+	text-align:center;
+}
+
 /* form 1 */
 
 	#form1{

@@ -7,7 +7,7 @@
 
 	<form style="height:100px" id="form1" action="/challenge?challenge={{challenge.id}}" method="post" autocomplete="off">  
       {% raw xsrf_form_html() %}
-      <fieldset><legend>Login</legend>
+      <fieldset>
         <p class="first">
           <label for="token">Token</label>
           <input type="text" name="token" id="token" />

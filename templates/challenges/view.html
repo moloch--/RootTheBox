@@ -25,7 +25,7 @@
 		<div id="ajax_challenge">
 			<ol>
 			{% for challenge in challenges %}
-				<li><a id="{{ challenge.id }}" onclick="load_right({{ challenge.id }})">{{ challenge.name }}</a></li>
+				<li><button class="sexy-button" id="{{ challenge.id }}" onclick="load_right({{ challenge.id }})">{{ challenge.name }}</button></li>
 			{% end %}
 			</ol>
 		</div>

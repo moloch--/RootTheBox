@@ -2,25 +2,44 @@
 
 {% block title %}Social Enginering{% end %}
 
+{% block header %}
+<link rel="stylesheet" href="/static/css/screen.css" media="screen" />
+{% end %}
+
 {% block content %}
 	<h1>Social Engineering Challenge</h1>
 	
-	<div id="social_challenge">
 	{% if current_se != None %}
-		<div id="name">{{current_se.name}}</div>
-		<div id="description">{{current_se.description}}</div>
-		<div id="value">{{current_se.value}}</div>
-		<div id="level">Level:{{current_se.level}}</div>
-		<div id="se_form">
-			<form action="/se" method="post" >
-				{% raw xsrf_form_html() %}
-				<label>Token:</label><input type="text" name="token" />
-				<input type="submit" name="Submit Token!">
-			</form>
-		</div>
+	 <form style="height:373px" id="form1" action="/se" method="post" autocomplete="off">  
+      {% raw xsrf_form_html() %}
+      <fieldset>
+      	<legend>Social Engineering!</legend>
+        <p class="first">
+          <b><label for="name">Name:</label></b>
+          {{current_se.name}}
+        </p>  
+        <p style="height:100px;">
+          <b><label for="description">Description:</label></b>
+          {{current_se.description}}
+        </p>
+        <p>
+          <b><label for="value">Value:</label></b>
+          {{current_se.value}}
+        </p>
+        <p>
+          <b><label for="level">Level:</label></b>
+          {{current_se.level}}
+        </p>
+        <p>
+          <b><label for="token">Token:</label></b>
+          <input type="text" name="token" />
+        </p>
+      </fieldset>
+      <p class="submit">
+        <button type="submit"> Change Password </button>
+      </p>   
+    </form>
 	{% else %}
 		<div>That's all of the Social Engineering Challenges!</div>
 	{% end %}
-	</div>
-		
 {% end %}

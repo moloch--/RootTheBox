@@ -22,7 +22,7 @@ class SEManager():
         
     def get_current(self):
         correct = SEChallenge.get_highest()
-        if self.active_challenge == None and correct != None:
+        if self.active_challenge == None and correct != None and self.last_challenge != None:
             if self.last_challenge.level < correct.level:
                 self.active_challenge = correct
         return self.active_challenge
