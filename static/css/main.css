@@ -198,7 +198,7 @@ a:hover
 	padding: 1.5em;
 	font-size: 0.9em;
 	text-align: center;
-	position: absolute;
+	position: fixed;
     bottom: 0px;
 }
 
