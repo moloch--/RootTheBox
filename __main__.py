@@ -26,7 +26,7 @@ def serve():
     ----------------------
     """
     if len(argv) == 2:
-        print('=> %s : serving the application.' % curr_time())
+        print('=> %s : Starting up the application, please wait ...' % curr_time())
         start_game()
 
 def create():

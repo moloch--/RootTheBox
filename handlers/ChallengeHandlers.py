@@ -4,6 +4,8 @@ Created on April 1, 2012
 @author: moloch
 '''
 
+import logging
+
 from tornado.web import RequestHandler
 from models import User, Action, Challenge
 from libs.SecurityDecorators import authenticated
@@ -43,13 +45,22 @@ class ChallengesHandler(UserBaseHandler):
     
     @authenticated
     def post(self, *args, **kwargs):
-        user = User.by_user_name(self.session.data['user_name'])
+        ''' Compares submitted token to stored token '''
         try:
             token = self.get_argument("token")
-            challenge = Challenge.get_by_id(self.get_argument("challenge"))
         except:
-            self.render("user/error.html", operation = "Submit Challenge", errors = "Please enter a token")    
-        if user.team != None:
+            self.render("user/error.html", operation = "Submit Challenge", errors = "Please enter a token") 
+        
+        try:
+            challenge_id = self.get_argument("challenge_id")
+            logging.info("Got: " + str(challenge_id))
+            challenge = Challenge.by_id(self.get_argument("challenge_id"))
+            if challenge == None: raise TypeError
+        except:
+            self.render("user/error.html", operation = "Submit Challenge", errors = "Invalid challenge")
+        user = User.by_user_name(self.session.data['user_name'])
+        if user != None and user.team != None:
+            logging.info("%s submitted a token for challenge '%s'" % (user.user_name, challenge.name))
             if not challenge in user.team.challenges:
                 if token == challenge.token:
                     action = Action(
@@ -62,10 +73,10 @@ class ChallengesHandler(UserBaseHandler):
                     self.dbsession.add(challenge)
                     self.dbsession.add(action)
                     self.dbsession.flush()
-                    self.redirect('/challenge')
+                    self.render("challenges/success.html")
                 else:
                     self.render("user/error.html", operation = "Submit Challenge", errors = "Invalid Token")
             else:
                 self.render("user/error.html", operation = "Submit Challenge", errors = "This challenge was already completed")
         else:
-            self.render("user/error.html", operation = "Submit Challenge", errors = "You're not on a team")
+            self.redirect("/login")

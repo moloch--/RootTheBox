@@ -142,7 +142,7 @@ application = Application([
     se_dir = path.abspath('files/se/'),
 
     # Milli-Seconds between scoring
-    ticks = int(30 * 1000),
+    ticks = int(60 * 1000),
 
     # Milli-Seconds between session clean up
     clean_up_timeout = int(60 * 1000),
@@ -153,6 +153,8 @@ application = Application([
     # Application version
     version = '0.1'
 )
+
+# Main Functions
 def cache_actions():
     ''' Loads all of the actions from the database into memory for the scoreboard pages'''
     action_list = dbsession.query(models.Action).all()
@@ -163,7 +165,7 @@ def cache_actions():
         #ws_manager.currentUpdates.append(score_update)
         ws_manager.cachedScores.add_score(score_update)
  
-# Start the server
+# Main entry point
 def start_game():
     ''' Main entry point for the application '''
     cache_actions()

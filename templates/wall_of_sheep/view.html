@@ -25,7 +25,7 @@
 		{% else %}
 			<div id="accordion">
 				{% for sheep in wall %}
-					<h3><a href="#">{{ sheep.user.display_name }} - ({{ sheep.point_value }})</a></h3>
+					<h3><a href="#"><strong>{{ sheep.user.display_name }}</strong> - ({{ sheep.point_value }})</a></h3>
 					<div>
 						<div id="sheep_avatar">
 							<img src="/avatars/{{ sheep.user.avatar }}" height=50 width=100 />

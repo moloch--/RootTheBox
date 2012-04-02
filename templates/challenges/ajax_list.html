@@ -1,10 +1,7 @@
 <div id="ajax_challenge" class="animated bounceInLeft">
-	<ol>
+	<br />
 	{% for challenge in challenges %}
-		<li>
-			<button class="sexy-button" id="{{ challenge.id }}" onclick="load_right({{ challenge.id }})">{{ challenge.name }}</button>
-		</li>
+		<button class="sexy-button" id="{{ challenge.id }}" onclick="load_right({{ challenge.id }})">{{ challenge.name }}</button>
+		<br />
 	{% end %}
-	
-	</ol>
 </div>

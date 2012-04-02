@@ -47,7 +47,7 @@ class User(BaseObject):
     @property
     def permissions_names(self):
         """Return a list with all permissions names granted to the user."""
-        return [p.permission_name for p in self.permissions]
+        return [permission.permission_name for permission in self.permissions]
         
     @property
     def team_name(self):
