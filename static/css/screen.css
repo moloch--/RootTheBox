@@ -42,6 +42,7 @@
 		padding:0 25px 20px 25px;
 		margin:0;
 		text-align:left;
+		margin-left:-1px;
 		}	
 	#form1 button{
 		width:150px;
@@ -142,10 +143,10 @@
 		overflow:auto;
 		}					
 	#form3 p.submit{
+		margin-left: -1px;
 		clear:both;
 		background:url(/static/images/form1/form_bottom.gif) no-repeat 0 100%;
 		padding:0 25px 20px 25px;
-		margin:0;
 		text-align:left;
 		}	
 	#form3 button{
