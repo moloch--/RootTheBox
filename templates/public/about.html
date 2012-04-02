@@ -6,10 +6,29 @@ About
 {% end %}
 
 {% block content %}
-<p>
-Created by Hathcox &amp; Moloch
-</p>
-<p>
-Version {{ handler.application.settings['version'] }}
-</p>
+	<h1>About v{{ handler.application.settings['version'] }}</h1>
+	<div id="about">
+		<p>
+			<h2>Programming</h2>
+			<h3>Hathcox</h3>
+			<h3>Moloch</h3>
+		</p>
+		<p>
+			<h2></h2>
+			<h3>Hathcox</h3>
+			<h3>Moloch</h3>
+		</p>
+		<p>
+			<h2>Art Assets</h2>
+			<h3>Hathcox</h3>
+		</p>
+		<p>
+			<h2>Special Thanks</h2>
+			<h3>Dogshep</h3>
+			<h3>F13</h3>
+			<h3>Pickles</h3>
+			<h3>Redshift</h3>
+			<h3>Stormcrow</h3>
+		</p>
+	</div>
 {% end %}

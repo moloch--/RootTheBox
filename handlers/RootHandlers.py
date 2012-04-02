@@ -116,7 +116,7 @@ class UserRegistraionHandler(RequestHandler):
         elif not response.is_valid:
             self.render('public/registration.html', errors = 'Invalid Recaptcha!')
         else:
-            char_white_list = ascii_letters + digits
+            char_white_list = ascii_letters + digits + "_-()"
             user_name = filter(lambda char: char in char_white_list, user_name)
             display_name = filter(lambda char: char in char_white_list, handle)
             user = User(

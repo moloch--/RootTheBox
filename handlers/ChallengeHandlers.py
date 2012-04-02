@@ -38,7 +38,7 @@ class ChallengesHandler(UserBaseHandler):
         correct_challenges = []
         for challenge in all_challenges:
             if user.team != None and not challenge in user.team.challenges:
-                correct_challenges.append(challenge)          
+                correct_challenges.append(challenge)
         self.render("challenges/view.html", challenges = correct_challenges)
     
     @authenticated
