@@ -281,6 +281,10 @@ a:hover
 	text-align: left;
 }
 
+#about {
+	text-align:center
+}
+
 /* File Sharing */
 .share_description {
 	width: 95%;
