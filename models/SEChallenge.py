@@ -17,7 +17,7 @@ class SEChallenge(BaseObject):
     description = Column(Unicode(1024), nullable=False)
     token = Column(Unicode(255), nullable=False)
     value = Column(Integer, nullable=False)
-    level = Column(Integer, nullable=False)
+    level = Column(Integer, nullable=False, unique=True)
     team_id = Column(Integer, ForeignKey('team.id'), nullable=True)
    
     @classmethod
