@@ -22,7 +22,7 @@ class Challenge(BaseObject):
     @classmethod
     def get_all(cls):
         ''' Returns all challenge objects '''
-        return dbsession.query(cls).all() 
+        return dbsession.query(cls).all()
  
     @classmethod
     def by_id(cls, challenge_id):
