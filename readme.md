@@ -19,11 +19,11 @@ Features
 -------------------
 * Supported platforms: Ubuntu 11.04, but should work on any linux system.  Windows and OSX have not been tested.
 * Install these packages: tornado (2.2), sqlalchemy (0.7.5), python-recaptcha, python-jsonpickle
+* Detailed instructions are in the Github wiki, here is the tl;dr
 * Run the __depends.sh__ script in /setup to automatically install required packages
 * Set up the db connection string at __models/\_\_init\_\_.py__
 * 'python . create' to ONLY create the tables 
 * 'python -c "import setup.auth" to create the admin account
-* 'python . test' - will test the application.
 * 'python . serve' - will serve the application
 *  For more configuration checkout __handlers/\_\_init\_\_.py__
 
