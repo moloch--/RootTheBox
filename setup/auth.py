@@ -22,7 +22,7 @@ else:
 	if password1 == password2 and 8 < len(password1):
 		password = password1
 	else:
-		print '[!] Error: Passwords did not match'
+		print '[!] Error: Passwords did not match, or were too short'
 		os._exit(1)
 
 # User Account
