@@ -2,7 +2,6 @@
 -------------------
 * A multi-threaded real-time scoring engine for hacker CTF games
 * Based on tornado/teaspoon
-* http://rootthebox.com/
 * Licensed under the Apache License, Version 2.0
 
 Features
@@ -17,7 +16,7 @@ Features
 
  Setup
 -------------------
-* Supported platforms: Ubuntu 11.04, but should work on any linux system.  Windows and OSX have not been tested.
+* Supported platforms: Ubuntu 11.10, but should work on any linux system.  Windows and OSX have not been tested.
 * Install these packages: tornado (2.2), sqlalchemy (0.7.5), python-recaptcha, python-jsonpickle
 * Detailed instructions are in the Github wiki, here is the tl;dr
 * Run the __depends.sh__ script in /setup to automatically install required packages
