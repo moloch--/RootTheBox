@@ -133,7 +133,7 @@ application = Application([
     recaptcha_private_key = "6LcJJ88SAAAAAPPAN72hppldxema3LI7fkw0jaIa",
 
     # WebSocket Host IP Address
-    ws_ip_address = HostIpAddress().get_ip_address(),
+    ws_ip_address = "127.0.0.1",
 
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),

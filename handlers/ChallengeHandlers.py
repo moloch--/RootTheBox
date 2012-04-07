@@ -58,6 +58,7 @@ class ChallengesHandler(UserBaseHandler):
             if challenge == None: raise TypeError
         except:
             self.render("user/error.html", operation = "Submit Challenge", errors = "Invalid challenge")
+        
         user = User.by_user_name(self.session.data['user_name'])
         if user != None and user.team != None:
             logging.info("%s submitted a token for challenge '%s'" % (user.user_name, challenge.name))
