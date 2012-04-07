@@ -18,6 +18,7 @@ import platform
 from hashlib import sha256
 
 BUFFER_SIZE = 1024
+LINE_LENGTH = 65
 
 class RtbClient():
     ''' Root the Box Reporter '''
@@ -46,16 +47,22 @@ class RtbClient():
             sys.stdout.write('[*] Detected Linux operating system (%s) \n' % (platform.release(),))
             sys.stdout.write('[*] Attempting to load root key from %s ... ' % (self.linux_root_path,))
             sys.stdout.flush()
-            level = 'root'
-            key_value = self.__load__(self.linux_root_path)
-            if key_value == None:
+            self.level = 'root'
+            self.key_value = self.__load__(self.linux_root_path)
+            if self.key_value == None:
                 sys.stdout.write("failure\n[*] Attempting to read user key from %s ... " % (self.linux_user_path,))
                 sys.stdout.flush()
-                level = 'user'
-                key_value = self.__load__(self.linux_user_path)
-                if key_value == None:
+                self.level = 'user'
+                self.key_value = self.__load__(self.linux_user_path)
+                if self.key_value == None:
                     sys.stdout.write("failure\n[!] Error: Unable to read key file(s)\n")
                     os._exit(1)
+                else:
+                    sys.stdout.write("success\n")
+                    sys.stdout.flush()
+            else:
+                sys.stdout.write("success\n")
+                sys.stdout.flush()
         elif platform.system().lower() == "windows":
             sys.stdout.write("[*] Detected Windows %s operating system\n" % (platform.release(),))
             sys.stdout.write("[*] Attempting to load root key from %s ... " % (self.windows_root_path,))
@@ -70,7 +77,7 @@ class RtbClient():
             key_file = open(path, 'r')
             key_data = key_file.read()
             key_file.close
-            return key_data
+            return key_data.strip()
         else:
             return None
 
@@ -86,12 +93,12 @@ class RtbClient():
         ''' Listens for the scoring engine '''
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sys.stdout.write('[*] Binding to port %d \n' % self.listenPort)
+        sys.stdout.write('[*] Binding to port %d \n' % self.listen_port)
         sock.bind(("", self.listen_port))
         sock.listen(1)
         while True:
             try:
-                sys.stdout.write('\r[*] Reporter listening ...\t\t\t\t\t\r ')
+                sys.stdout.write('\r[*] Reporter listening ...'+str(LINE_LENGTH * ' ')+'\r')
                 sys.stdout.flush()
                 connection, address = sock.accept()
                 sys.stdout.write('\r[*] Connection from %s' % address[0])
@@ -113,7 +120,7 @@ class RtbClient():
                     connection.sendall(result)
                     sys.stdout.write('\r[*] Sent checksum: %s' % result)
                     sys.stdout.flush()
-                    time.sleep(0.5)
+                    time.sleep(1.5)
             except socket.error, err:
                 sys.stdout.write('\n[!] Unable to configure socket (%s)\n' % err)
                 sys.stdout.flush()
@@ -121,7 +128,7 @@ class RtbClient():
     
     def register(self):
         ''' Retrieves configuration information from the scoring engine '''
-        connection = httplib.HTTPConnection(self.remote_host)
+        connection = httplib.HTTPConnection(self.remote_host+":8888")
         connection.request("GET", "/reporter/register?%s" % self.user)
         response = connection.getresponse()
         if response.status == 200:
@@ -130,8 +137,9 @@ class RtbClient():
                 self.listen_port = int(data)
                 return True
             except:
-                sys.stdout.write('[!] Error: %s' % data)
+                sys.stdout.write('\n[!] Error: %s\n' % data)
                 sys.stdout.flush()
+                os._exit(1)
         return False
 
 def help():
@@ -144,13 +152,17 @@ def help():
   
 if __name__ == '__main__':
     ''' float main() '''
-    if "--help" in sys.argv or "-h" in sys.argv or "/?" in sys.argv:
-        help()
-    elif 2 <= len(sys.argv):
-        sys.stdout.write("[*] Root the Box VII - Good Hunting!\n")
-        client = RtbClient(sys.argv[1])
-        client.start()
-    else:
-        sys.stdout.write("[!] PEBKAC: Too few or too many arguments, see --help\n")
+    try:
+        if "--help" in sys.argv or "-h" in sys.argv or "/?" in sys.argv:
+            help()
+        elif 2 <= len(sys.argv):
+            sys.stdout.write("[*] Root the Box VII - Good Hunting!\n")
+            client = RtbClient(sys.argv[1])
+            client.start()
+        else:
+            sys.stdout.write("[!] PEBKAC: Too few or too many arguments, see --help\n")
+            sys.stdout.flush()
+    except:
+        sys.stdout.write("\r[!] User exit "+str(LINE_LENGTH * ' ')+'\n')
         sys.stdout.flush()
     os._exit(0)
