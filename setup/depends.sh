@@ -5,15 +5,16 @@ if [ "$(id -u)" != "0" ]; then
 	exit 1
 fi
 
-echo "Installing pip ..."
+echo "[*] Installing pip ..."
 apt-get install python-pip python-dev build-essential && 
 pip install --upgrade pip &&
 pip install --upgrade virtualenv
 
-echo "Installing packages ..."
+echo "[*] Installing packages ..."
 apt-get install mysql-server python-mysqldb python-mysqldb-dbg python-recaptcha python-jsonpickle
 
-echo "Installing tornado/sqlalchemy ..."
+echo "[*] Installing tornado/sqlalchemy ..."
 /usr/local/bin/pip install tornado
 /usr/local/bin/pip install sqlalchemy
 
+echo "[*] Setup Completed."
