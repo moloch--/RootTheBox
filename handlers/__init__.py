@@ -42,7 +42,7 @@ logging.basicConfig(format = '[%(levelname)s] %(asctime)s - %(message)s', level 
 
 consoleLogger = logging.StreamHandler()
 consoleLogger.setLevel(logging.DEBUG)
-fileLogger = logging.FileHandler(filename='rtb.log')
+fileLogger = logging.FileHandler(filename = 'rtb.log')
 fileLogger.setLevel(logging.DEBUG)
 logging.getLogger('').addHandler(consoleLogger)
 logging.getLogger('').addHandler(fileLogger)
@@ -78,7 +78,7 @@ application = Application([
         (r'/wallofsheep', WallOfSheepHandler, {'dbsession': dbsession}),
         
         # Scoreboard Handlers - Severs scoreboard related pages
-        (r'/scoreboard(.*)', ScoreBoardHandler, {'dbsession': dbsession}),
+        (r'/scoreboard', ScoreBoardHandler, {'dbsession': dbsession}),
         (r'/all_time(.*)', AllTimeHandler, {'dbsession': dbsession}),
         (r'/pie_chart(.*)', PieChartHandler, {'dbsession': dbsession}),
         (r'/bar_chart(.*)', BarChartHandler, {'dbsession': dbsession}),
