@@ -46,7 +46,7 @@ $(document).ready(function() {
 		tooltip: {
 			enabled: false,
 			formatter: function() {
-				return '<b>'+ this.series.name +'</b><br/>'+
+				return '<strong>'+ this.series.name +'</strong><br />'+
 					this.x +': '+ this.y +'Â°C';
 			}
 		},
@@ -61,9 +61,9 @@ $(document).ready(function() {
 		series: [
 			{% for team in teams %}
 			{
-			name:"{{team.team_name}}",
+			name:"{{ team.team_name }}",
 			data: 
-			       {{cached_scores.find_scores_by_team(team.team_name)}},
+			       {{ cached_scores.find_scores_by_team(team.team_name) }},
 			},
 			{% end %}
 		]

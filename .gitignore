@@ -1,3 +1,4 @@
 #Class files
 
 *.pyc
+*.log

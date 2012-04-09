@@ -5,6 +5,7 @@ Created on Mar 13, 2012
 @author: moloch
 '''
 
+import sys
 import models
 import logging
 
@@ -36,8 +37,18 @@ from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ChallengeHandlers import *
 from handlers.ScoreboardHandlers import *
-       
+
 logging.basicConfig(format = '[%(levelname)s] %(asctime)s - %(message)s', level = logging.DEBUG)
+
+format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
+consoleLogger = logging.StreamHandler()
+consoleLogger.setLevel(logging.DEBUG)
+consoleLogger.setFormatter(format)
+logging.getLogger('').addHandler(consoleLogger)
+fileLogger = logging.FileHandler(filename='rtb.log')
+fileLogger.setLevel(logging.DEBUG)
+fileLogger.setFormatter(format)
+logging.getLogger('').addHandler(fileLogger)
 
 application = Application([
         # Static Handlers - Serves static CSS, JavaScript and image files
@@ -133,7 +144,7 @@ application = Application([
     recaptcha_private_key = "6LcJJ88SAAAAAPPAN72hppldxema3LI7fkw0jaIa",
 
     # WebSocket Host IP Address
-    ws_ip_address = "127.0.0.1",
+    ws_ip_address = HostIpAddress().get_ip_address(),
 
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),
@@ -162,7 +173,6 @@ def cache_actions():
     for action in action_list:
         team = dbsession.query(models.User).filter_by(id=action.user_id).first()
         score_update = ScoreUpdate(action.created.strftime("%d%H%M%S"), action.value, team.team_name)
-        #ws_manager.currentUpdates.append(score_update)
         ws_manager.cachedScores.add_score(score_update)
  
 # Main entry point
@@ -170,8 +180,6 @@ def start_game():
     ''' Main entry point for the application '''
     cache_actions()
     sockets = netutil.bind_sockets(8888)
-    #if process.task_id() == None:
-    #    tornado.process.fork_processes(-1, max_restarts = 10)
     server = HTTPServer(application)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
@@ -183,9 +191,9 @@ def start_game():
         session_clean_up.start()
     try:
         for count in range(3, 0, -1):
-            logging.info("The game will begin in ... %d" % (count,))
+            sys.stdout.write("The game will begin in ... %d\n" % (count,))
             sleep(1)
-        logging.info("Good hunting!")
+        sys.stdout.write("The game has begun, good hunting!")
         io_loop.start()
     except KeyboardInterrupt:
         if process.task_id() == 0:
