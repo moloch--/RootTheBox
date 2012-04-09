@@ -40,14 +40,11 @@ from handlers.ScoreboardHandlers import *
 
 logging.basicConfig(format = '[%(levelname)s] %(asctime)s - %(message)s', level = logging.DEBUG)
 
-format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
 consoleLogger = logging.StreamHandler()
 consoleLogger.setLevel(logging.DEBUG)
-consoleLogger.setFormatter(format)
-logging.getLogger('').addHandler(consoleLogger)
 fileLogger = logging.FileHandler(filename='rtb.log')
 fileLogger.setLevel(logging.DEBUG)
-fileLogger.setFormatter(format)
+logging.getLogger('').addHandler(consoleLogger)
 logging.getLogger('').addHandler(fileLogger)
 
 application = Application([
@@ -192,8 +189,10 @@ def start_game():
     try:
         for count in range(3, 0, -1):
             sys.stdout.write("The game will begin in ... %d\n" % (count,))
+            sys.stdout.flush()
             sleep(1)
-        sys.stdout.write("The game has begun, good hunting!")
+        sys.stdout.write("The game has begun, good hunting!\n")
+        sys.stdout.flush()
         io_loop.start()
     except KeyboardInterrupt:
         if process.task_id() == 0:
