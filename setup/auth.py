@@ -3,6 +3,7 @@
 fills the database with some startup data.
 usage: python -c 'import setup.auth'
 """
+import os
 import sys
 import getpass
 
