@@ -46,35 +46,19 @@ def create():
     
 def test():
     """
-    tests the application
+    run unit tests
     ---------------------
     """
     # usage: python . test
     print '=> %s : testing the application.' % curr_time()
     # calling nose's nosetests to test the application using the 'tests' module
     call(['nosetests', '-v', 'tests'])
-
-def docs():
-    """
-    documents the project
-    ---------------------
-    """
-    # usage: python . docs
-    print '=> %s : documenting in process.' % curr_time()
-    # calling pycco to document the this project
-    directories = ['.', 'handlers', 'libs', 'models', 'setup', 'tests']
-    call(['pycco', '-p'] + map(lambda directory: directory + '/*.py', directories))
     
 # -----
 if len(argv) == 1:
     argv.append("serve")
-# _the optional commands:_
-options = ['serve', 'create', 'test', 'docs']
-# evaling the command. if invalid command will print out a nicely formatted 'help' table
-#if len(argv) == 1 or argv[1] not in options:
-#    print('')
-#    for option in options: print('  ->\t%s\t%s'%(option, eval(option).__doc__.split('\n')[1]))        
+options = ['serve', 'create', 'test']
 if argv[1] in options:
     eval(argv[1])()
 else:
-    print 'PEBKAC'
+    print '[!] Error: PEBKAC'
