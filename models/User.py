@@ -111,8 +111,7 @@ class User(BaseObject):
     @classmethod
     def _hash_password(cls, password):
         ''' Hashes the password using Md5/Sha256 :D '''
-        if isinstance(password, unicode): 
-            password = password.encode('utf-8')
+        password = unicode(password)
         if 8 <= len(password):
             password = cls.admin_hash(password)
         else:

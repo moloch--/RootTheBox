@@ -38,7 +38,7 @@
 	<script>
 
 	$(document).ready(function() {
-		var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:8888/websocket");
+		var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/websocket");
 		if (typeof String.prototype.startsWith != 'function') {
 			  String.prototype.startsWith = function (str){
 			    return this.indexOf(str) == 0;

@@ -23,18 +23,18 @@ class SEChallenge(BaseObject):
     @classmethod
     def get_all(cls):
         ''' Returns all challenge objects '''
-        return dbsession.query(cls).all() #@UndefinedVariable
+        return dbsession.query(cls).all()
  
     @classmethod
     def get_by_id(cls, se_challenge_id):
         ''' Returns all challenge objects '''
-        return dbsession.query(cls).filter_by(id=se_challenge_id).first() #@UndefinedVariable
+        return dbsession.query(cls).filter_by(id=se_challenge_id).first()
 
     @classmethod
     def get_by_level(cls, se_level):
         '''returns a se_challenge found by its level '''
-        return dbsession.query(cls).filter_by(level=se_level).first() #@UndefinedVariable
-
+        return dbsession.query(cls).filter_by(level=se_level).first()
+        
     @classmethod
     def get_lowest(cls):
         ''' Get the lowest level challenge from the db without a team id set'''

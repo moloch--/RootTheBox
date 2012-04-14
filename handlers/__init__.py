@@ -142,6 +142,7 @@ application = Application([
 
     # WebSocket Host IP Address
     ws_ip_address = HostIpAddress().get_ip_address(),
+    ws_port = "8888",
 
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),
