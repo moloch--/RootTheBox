@@ -35,28 +35,9 @@ python:        3028 (99.54%)
 
 sh:              14 (0.46%)
 
-
 Total Physical Source Lines of Code (SLOC)                = 3,042
 
-Development Effort Estimate, Person-Years (Person-Months) = 0.64 (7.72)
+Total Estimated Cost to Develop                           = $ 86,888 (average salary = $56,286/year, overhead = 2.40).
 
-Schedule Estimate, Years (Months)                         = 0.45 (5.44)
-
-Estimated Average Number of Developers (Effort/Schedule)  = 1.42
-
-Total Estimated Cost to Develop                           = $ 86,888
-
- (average salary = $56,286/year, overhead = 2.40).
-
-SLOCCount, Copyright (C) 2001-2004 David A. Wheeler
-
-SLOCCount is Open Source Software/Free Software, licensed under the GNU GPL.
-
-SLOCCount comes with ABSOLUTELY NO WARRANTY, and you are welcome to
-
-redistribute it under certain conditions as specified by the GNU GPL license;
-
-see the documentation for details.
-
-Please credit this data as "generated using David A. Wheeler's 'SLOCCount'."
+Generated using David A. Wheeler's 'SLOCCount'
 
