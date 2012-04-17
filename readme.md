@@ -16,9 +16,12 @@ Features
 
  Setup
 -------------------
+* Detailed setup instructions https://github.com/moloch--/RootTheBox/wiki/Installation
+
+Setup TL;DR
+-------------------
 * Supported platforms: Ubuntu 11.10, but should work on any linux system.  Windows and OSX have not been tested.
 * Install these packages: tornado (2.2), sqlalchemy (0.7.5), python-recaptcha, python-jsonpickle
-* Detailed setup instructions are in the Github wiki, here is the tl;dr
 * Run the __depends.sh__ script in /setup to automatically install required packages
 * Set up the db connection string at __models/\_\_init\_\_.py__
 * 'python . create' to ONLY create the tables 
