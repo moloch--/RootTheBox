@@ -162,3 +162,12 @@ class User(BaseObject):
 
     def __radd__(self, other):
         return self.score + other
+
+    def __rsub__(self, other):
+        return self.score - other
+
+    def __add__(self, other):
+        return self.score + other
+
+    def __sub__(self, other):
+        return self.score - other

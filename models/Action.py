@@ -27,10 +27,19 @@ class Action(BaseObject):
     
     def __repr__(self):
         return ('<Action - class:%s, user_id:%d>' % (self.classification, self.user_id))
-    
+
     def __radd__(self, other):
         return self.value + other
-    
+
+    def __rsub__(self, other):
+        return self.value - other
+
+    def __add__(self, other):
+        return self.value + other
+
+    def __sub__(self, other):
+        return self.value - other
+
 def insert_listener(mapper, connection, target):       
     team = dbsession.query(models.User).filter_by(id=target.user_id).first()
     ws_manager = WebSocketManager.Instance()
