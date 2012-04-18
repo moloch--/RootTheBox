@@ -35,9 +35,9 @@ SLOC Information
 
 Totals grouped by language (dominant language first):
 
-python:        3028 (99.54%)
+python:        3421 (99.59%)
 
-sh:              14 (0.46%)
+sh:              14 (0.41%)
 
 Total Physical Source Lines of Code (SLOC)                = 3,042
 
