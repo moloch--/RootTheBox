@@ -20,6 +20,7 @@ Detailed setup instructions https://github.com/moloch--/RootTheBox/wiki/Installa
 
 Setup TL;DR
 -------------------
+* Python 2.5.x - 2.7.x
 * Supported platforms: Ubuntu 11.10, but should work on any linux system.  Windows and OSX have not been tested.
 * Install these packages: tornado (2.2), sqlalchemy (0.7.5), python-recaptcha, python-jsonpickle
 * Run the __depends.sh__ script in /setup to automatically install required packages
