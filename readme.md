@@ -8,7 +8,7 @@ A Game of Hackers
 -------------------
 Root the Box is a scoring engine for a computer wargame where hackers can practice and learn. 
 The application can be easily modified for any hacker CTF game.  The out of the box configuration
-is decribed on our main site http://rootthebox.com
+is described on our main site http://rootthebox.com
 
 Features
 -------------------
