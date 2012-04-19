@@ -174,7 +174,7 @@ application = Application([
     debug = True,
     
     # Application version
-    version = '0.1'
+    version = '0.2'
 )
 
 # Main Functions
