@@ -17,10 +17,10 @@ Created on Mar 21, 2012
    See the License for the specific language governing permissions and
    limitations under the License.
 '''
-from libs.Singleton import *
+
 import logging
+from libs.Singleton import *
 from libs.Session import SessionManager
-import models
 from models.SEChallenge import SEChallenge
 
 @Singleton

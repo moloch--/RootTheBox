@@ -8,10 +8,8 @@
 <link href="/static/css/menu.css" rel="stylesheet" type="text/css" />
 <link href="/static/css/animate.css" rel="stylesheet" type="text/css" />
 <link href="/static/css/notifier.css" rel="stylesheet" type="text/css" />
-<link href="/static/images/favicon.ico" rel="shortcut icon"
-	type="image/x-icon" />
-<script type="text/javascript"
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<link href="/static/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="/static/js/notifier.js"></script>
 {% block header %}{% end %}
 </head>
@@ -46,9 +44,9 @@
 		}
 		
 		ws.onopen = function() {
-			//Wait for a notification
+			// Wait for a notification
 			if($('#scoreboard').length){
-				//ws.send("load plox");
+				// ws.send("load plox");
 			}
 		};
 		
@@ -57,19 +55,19 @@
 			console.log(message);
 			console.log(message['time_stamp']);
 			if(message['py/object'] == 'libs.Notification.Notification') {
-				//Send a Notification
+				// Send a Notification
 				Notifier.notify(message['message'], message['title'], "data:image/png;base64,"+message['file_contents']);
 			} else if(message['py/object'] == 'libs.ScoreUpdate.ScoreUpdate') {
 				if($('#scoreboard').length){
-					//Update the line chart
+					// Update the line chart
 					chart.series[getSeriesByName(message['team_name'])].addPoint(
 							[parseInt(message['time_stamp'], 10),
 							 getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))]
 							);
-					//Update the bar chart
+					// Update the bar chart
 					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
 					bar_chart.redraw();
-					//Update pie chart
+					// Update pie chart
 					correctPieData(message['team_name'], getSeriesByName(message['team_name']), parseInt(message['value']));
 					pc.redraw();
 				} 
@@ -95,7 +93,7 @@
 		
 		function correctData(teamIndex, newScore) {
 			var new_data = [];
-			//Copy all of the team scores that are currently being displayed
+			// Copy all of the team scores that are currently being displayed
 			for(var index = 0; index < bar_chart.series[0].data.length; index++) {
 				 new_data[index] = bar_chart.series[0].data[index].config;
 			}
@@ -105,7 +103,7 @@
 		
 		function correctPieData(teamName, teamIndex, newScore) {
 			var new_data = [];
-			//Copy all of the team scores that are currently being displayed
+			// Copy all of the team scores that are currently being displayed
 			for(var index = 0; index < pc.series[0].data.length; index++) {
 				 new_data[index] = pc.series[0].data[index].config;
 			}
