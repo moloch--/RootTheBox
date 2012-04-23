@@ -34,6 +34,7 @@ from datetime import datetime
 from subprocess import call
 from handlers import start_game
 from models import __create__, __boot_strap__
+from libs import ConsoleColors
 
 curr_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
@@ -43,7 +44,7 @@ def serve():
     ----------------------
     """
     if len(argv) == 2:
-        print('=> %s : Starting up the application, please wait ...' % curr_time())
+        print(ConsoleColors.INFO+'%s : Starting up the application, please wait ...' % curr_time())
         start_game()
 
 def create():
@@ -56,7 +57,7 @@ def create():
     
     #Bootstrap the database with some objects
     #usage: python . create bs
-    print('=> %s : creating the database.'%curr_time())
+    print(ConsoleColors.INFO+'%s : creating the database.'%curr_time())
     __create__()
     if len(argv) == 3 and argv[2] == 'bs':
         __boot_strap__()
@@ -67,7 +68,7 @@ def test():
     ---------------------
     """
     # usage: python . test
-    print '=> %s : testing the application.' % curr_time()
+    print '[*] %s : testing the application.' % curr_time()
     # calling nose's nosetests to test the application using the 'tests' module
     call(['nosetests', '-v', 'tests'])
     
@@ -78,4 +79,4 @@ options = ['serve', 'create', 'test']
 if argv[1] in options:
     eval(argv[1])()
 else:
-    print '[!] Error: PEBKAC'
+    print(ConsoleColors.WARN+'Error: PEBKAC')

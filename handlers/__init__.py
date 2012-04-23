@@ -28,6 +28,7 @@ from os import urandom, path
 from base64 import b64encode
 from models import dbsession
 from modules.Menu import Menu
+from libs.ConsoleColors import *
 from libs.Session import SessionManager
 from libs.HostIpAddress import HostIpAddress
 from libs.AuthenticateReporter import scoring_round
@@ -204,14 +205,14 @@ def start_game():
         session_clean_up.start()
     try:
         for count in range(3, 0, -1):
-            sys.stdout.write("The game will begin in ... %d\n" % (count,))
+            sys.stdout.write("\r"+INFO+"The game will begin in ... %d" % (count,))
             sys.stdout.flush()
             sleep(1)
-        sys.stdout.write("The game has begun, good hunting!\n")
+        sys.stdout.write("\r"+INFO+"The game has begun, good hunting!\n")
         sys.stdout.flush()
         io_loop.start()
     except KeyboardInterrupt:
         if process.task_id() == None:
-            print '\r[!] Shutdown Everything!'
+            print('\r'+WARN+'Shutdown Everything!')
             session_clean_up.stop()
             io_loop.stop()
