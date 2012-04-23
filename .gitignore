@@ -1,5 +1,6 @@
-#Class files
-
+# Class files
 *.pyc
+
+# Misc files
 *.log
 *.prefs

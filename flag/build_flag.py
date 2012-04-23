@@ -19,8 +19,8 @@ Created on Feb 24, 2012
 
 -----
 
-Build Script by Moloch
-Requires Py2Exe for Python 2.7
+Requires Py2Exe, builds a .exe file for easy of use on windows
+Current configuration requires administrator access if UAC is enabled
 
 """
 from distutils.core import setup
