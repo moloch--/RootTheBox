@@ -1,4 +1,4 @@
-#>> Root the Box
+#> Root the Box
 
 A Game of Hackers
 -------------------
@@ -35,16 +35,25 @@ Setup TL;DR
 
 SLOC Information
 ---------------------
+SLOC	Directory	SLOC-by-Language (Sorted)
+1480    handlers        python=1480
+869     libs            python=869
+656     models          python=656
+267     tests           python=267
+188     flag            python=188
+47      setup           python=33,sh=14
+28      top_dir         python=28
+26      modules         python=26
 
 Totals grouped by language (dominant language first):
 
-python:        3421 (99.59%)
+python:        3547 (99.61%)
 
-sh:              14 (0.41%)
+sh:              14 (0.39%)
 
-Total Physical Source Lines of Code (SLOC)                = 3,435
+Total Physical Source Lines of Code (SLOC)                = 3,561
 
-Total Estimated Cost to Develop                           = $ 86,888 (average salary = $56,286/year, overhead = 2.40).
+Total Estimated Cost to Develop                           = $ 102,516
 
 Generated using David A. Wheeler's 'SLOCCount'
 
