@@ -7,7 +7,7 @@
 <br />
 <form action="/admin/create/challenge" method="post" >
 	{% raw xsrf_form_html() %}
-	<label>Name:</label><input name="name" type="text" />
+	<label>Challege Name:</label><input name="name" type="text" />
 	<br /> <br />
 	<label>Description:</label> <input name="description" type="text" />
 	<br /> <br />
@@ -15,6 +15,6 @@
 	<br /> <br />
 	<label>Token</label> <input name="token" type="text" />
 	<br /> <br />
-	<input type="submit" value=" Create Action " />
+	<input type="submit" value=" Create Challenge " />
 </form>
 {% end %}

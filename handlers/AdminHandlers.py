@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on Mar 13, 2012
 
@@ -25,7 +26,6 @@ import logging
 from os import path
 from uuid import uuid1
 from base64 import b64encode
-from tempfile import TemporaryFile
 from mimetypes import guess_type
 from libs.SecurityDecorators import *
 from libs.WebSocketManager import WebSocketManager
@@ -62,6 +62,7 @@ class AdminCreateHandler(AdminBaseHandler):
         self.render("admin/create_action.html", users = User.get_all())
         
     def post_action(self, *args, **kwargs):
+        ''' Create arbitrary action '''
         try:
             classification = self.get_argument("classification")
             description = self.get_argument("description")
@@ -88,6 +89,7 @@ class AdminCreateHandler(AdminBaseHandler):
         self.render("admin/create_team.html")
         
     def post_team(self, *args, **kwargs):
+        ''' Create a team '''
         try:
             team_name = self.get_argument('team_name')
             motto = self.get_argument('motto')
@@ -203,6 +205,7 @@ class AdminCreateHandler(AdminBaseHandler):
         self.render("admin/create_se.html")
         
     def post_se(self, *args, **kwargs):
+        ''' Create social engineering challenge '''
         try:
             name = self.get_argument('name')
             description = self.get_argument('description')
@@ -224,6 +227,7 @@ class AdminCreateHandler(AdminBaseHandler):
    
 
 class AdminEditHandler(AdminBaseHandler):
+    ''' Edit game objects '''
     
     def get_challenge(self, *args, **kwargs):
         pass 
@@ -247,6 +251,7 @@ class AdminEditHandler(AdminBaseHandler):
         self.render("admin/edit_user.html", teams = Team.get_all(), users = User.get_free_agents())
     
     def post_user(self, *args, **kwargs):
+        ''' Assign a user to a team '''
         try:
             team_name = self.get_argument('team_name')
             user_name = self.get_argument('user_name')
@@ -259,7 +264,7 @@ class AdminEditHandler(AdminBaseHandler):
         user.team_id = team.id
         self.dbsession.add(user)
         self.dbsession.flush()
-        self.render("admin/created.html", game_object = "edit user team")
+        self.render("admin/created.html", game_object = "Edit user team")
         
     def get_box(self, *args, **kwargs):
         pass
@@ -280,6 +285,7 @@ class AdminEditHandler(AdminBaseHandler):
         pass
 
 class AdminNotifyHandler(RequestHandler):
+    ''' Sends requests to the AdminAjaxNotifyHandler '''
     
     def initialize(self):
         self.ws_manager = WebSocketManager.Instance()
@@ -288,10 +294,15 @@ class AdminNotifyHandler(RequestHandler):
     @restrict_ip_address
     def get(self, *args, **kwargs):
         self.render("admin/notify.html", classifications = Notification.get_classifications())
-    
+
+class AdminAjaxNotifyHandler(RequestHandler):
+    ''' Sends notifications to all web sockets '''
+
     @authorized("admin")
     @restrict_ip_address
-    def post(self, *args, **kwargs):
+    def get(self, *args, **kwargs):
+        print kwargs
+        '''
         try:
             message = self.get_argument("message")
             title = self.get_argument("title")
@@ -308,4 +319,39 @@ class AdminNotifyHandler(RequestHandler):
             notification = Notification(title, message, file_contents = file_contents)
         self.ws_manager.send_all(notification)
         logging.info("Admin sent a notification")
-        self.redirect("/admin/notify")
+        self.write("success")
+        '''
+
+class AdminAwardChallengeHandler(RequestHandler):
+    ''' Awards challenges to a user '''
+
+    def initialize(self, dbsession):
+        self.dbsession = dbsession
+
+    @authorized("admin")
+    @restrict_ip_address
+    def get(self):
+        self.render("admin/award_challenge.html", challenges = Challenge.get_all(), users = User.get_all())
+
+    @authorized("admin")
+    @restrict_ip_address
+    def post(self):
+        try:
+            user_id = self.get_argument("user")
+            user = User.by_id(user_id)
+            challenge_id = self.get_argument("challenge")
+            challenge = Challenge.by_id(challenge_id)
+            if user == None: raise TypeError
+            if challenge == None: raise TypeError
+        except:
+            self.render("admin/error.html", errors = "Missing parameter")     
+        action = Action(
+            classification = unicode("Challenge Completed"),
+            description = unicode(user.user_name+" has succesfully completed "+challenge.name),
+            value = challenge.value,
+            user_id = user.id
+        )
+        challenge.teams.append(user.team)
+        self.dbsession.add(challenge)
+        self.dbsession.add(action)
+        self.dbsession.flush()

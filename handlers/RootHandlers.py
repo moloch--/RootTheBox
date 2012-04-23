@@ -17,6 +17,7 @@ Created on Mar 13, 2012
    See the License for the specific language governing permissions and
    limitations under the License.
 '''
+
 import logging
 
 from models.User import User
@@ -116,7 +117,7 @@ class UserRegistraionHandler(RequestHandler):
                 self.application.settings['recaptcha_private_key'],
                 self.request.remote_ip,)
         except:
-            self.render('public/registration.html', errors = "Please fill out recaptcha!")
+            self.render('public/registration.html', errors = "Please fill out recaptcha")
     
         # Create account
         if User.by_user_name(user_name) != None:
@@ -130,7 +131,7 @@ class UserRegistraionHandler(RequestHandler):
         elif not response.is_valid:
             self.render('public/registration.html', errors = 'Invalid Recaptcha!')
         else:
-            char_white_list = ascii_letters + digits + "_-()"
+            char_white_list = ascii_letters + digits + " _-()"
             user_name = filter(lambda char: char in char_white_list, user_name)
             display_name = filter(lambda char: char in char_white_list, handle)
             user = User(

@@ -33,6 +33,8 @@ from hashlib import sha256
 
 BUFFER_SIZE = 1024
 LINE_LENGTH = 65
+SERVER = 'game.rootthebox.com'
+SERVER_PORT = 8888
 
 class RtbClient():
     ''' Root the Box Reporter '''
@@ -42,7 +44,7 @@ class RtbClient():
         self.user = urllib.urlencode({'handle': display_name})
         self.remote_host = self.__rhost__()
         self.linux_root_path = "/root/garbage"
-        self.linux_user_path = "/var/garbage"
+        self.linux_user_path = "/home/garbage"
         self.windows_root_path = "C:\\root_garbage.txt"
         self.windows_user_path = "C:\\user_garbage.txt"
         self.level = None
@@ -81,6 +83,22 @@ class RtbClient():
             sys.stdout.write("[*] Detected Windows %s operating system\n" % (platform.release(),))
             sys.stdout.write("[*] Attempting to load root key from %s ... " % (self.windows_root_path,))
             sys.stdout.flush()
+            self.level = 'root'
+            self.key_value = self.__load__(self.windows_root_path)
+            if self.key_value == None:
+                sys.stdout.write("failure\n[*] Attempting to read user key from %s ... " % (self.linux_user_path,))
+                sys.stdout.flush()
+                self.level = 'user'
+                self.key_value = self.__load__(self.windows_user_path)
+                if self.key_value == None:
+                    sys.stdout.write("failure\n[!] Error: Unable to read key file(s)\n")
+                    os._exit(1)
+                else:
+                    sys.stdout.write("success\n")
+                    sys.stdout.flush()
+            else:
+                sys.stdout.write("success\n")
+                sys.stdout.flush()
         else:
             sys.stdout.write("[!] Error: Platform not supported (%s)\n" % (platform.release(),))
             sys.stdout.flush()
@@ -99,7 +117,7 @@ class RtbClient():
         ''' Finds the ip address of the scoring engine '''
         sys.stdout.write("[*] Finding scoring engine address, please wait ...")
         sys.stdout.flush()
-        ip = socket.gethostbyname('game.rootthebox.com')
+        ip = socket.gethostbyname(SERVER)
         sys.stdout.write("\r[*] Found scoring engine at %s             \n" % ip)
         return ip
 
@@ -142,7 +160,7 @@ class RtbClient():
     
     def register(self):
         ''' Retrieves configuration information from the scoring engine '''
-        connection = httplib.HTTPConnection(self.remote_host+":8888")
+        connection = httplib.HTTPConnection(self.remote_host+":"+str(SERVER_PORT))
         connection.request("GET", "/reporter/register?%s" % self.user)
         response = connection.getresponse()
         if response.status == 200:

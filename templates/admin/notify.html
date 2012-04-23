@@ -3,21 +3,21 @@
 {% block title %}Notification{% end %}
 
 {% block content %}
-<h1>Send Notification</h1>
-<br />
-<form action="/admin/notify" method="post" enctype="multipart/form-data">
-	{% raw xsrf_form_html() %}
-	Title:<input name="title" type="text" /> <br />
-	Message:<input name="message" type="text" /> <br />
-	File:<input name="image" type="file" /> <br />
-	Classification:
-	<select name="classification">
-		{% for cls in classifications %}
-			<option value="{{ cls }}">{{ cls }}</option>
-		{% end %}
-		<option value="custom">custom</option>
-	</select>
+	<h1>Send Notification</h1>
 	<br />
-	<input type="submit" value=" Send Notification" />
-</form>
+	<form action="/admin/notify" method="post" enctype="multipart/form-data">
+		{% raw xsrf_form_html() %}
+		Title:<input name="title" type="text" /> <br />
+		Message:<input name="message" type="text" /> <br />
+		File:<input name="image" type="file" /> <br />
+		Classification:
+		<select name="classification">
+			{% for cls in classifications %}
+				<option value="{{ cls }}">{{ cls }}</option>
+			{% end %}
+			<option value="custom">custom</option>
+		</select>
+		<br />
+		<input type="submit" value=" Send Notification" />
+	</form>
 {% end %}

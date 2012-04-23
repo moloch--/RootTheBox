@@ -112,7 +112,7 @@ class User(BaseObject):
         return dbsession.query(cls).filter_by(display_name=unicode(display_name)).first() #@UndefinedVariable
     
     @classmethod
-    def by_user_id(cls, user_id):
+    def by_id(cls, user_id):
         """ Return the user object whose user id is ``user_id`` """
         return dbsession.query(cls).filter_by(id=user_id).first() #@UndefinedVariable
 
@@ -141,10 +141,10 @@ class User(BaseObject):
     
     @classmethod
     def admin_hash(cls, preimage):
-        ''' Two rounds of sha256, with a static non-ascii salt because I'm lazy '''
+        ''' Two rounds of sha256, no salt '''
         sha_hash = sha256()
         sha_hash.update(preimage)
-        sha_hash.update(preimage + sha_hash.hexdigest() + "\x90\x90\x90")
+        sha_hash.update(preimage + sha_hash.hexdigest())
         return unicode(sha_hash.hexdigest())
     
     def has_permission(self, permission):

@@ -109,11 +109,12 @@ application = Application([
         (r'/admin/create/(.*)', AdminCreateHandler, {'dbsession':dbsession}),
         (r'/admin/edit/(.*)', AdminEditHandler, {'dbsession':dbsession}),
         (r'/admin/notify', AdminNotifyHandler),
+        (r'/admin/notify/ajax(.*)', AdminAjaxNotifyHandler, {'dbsession', dbsession}),
         
-        #Websocket Handlers - Websocket communication handlers
+        # WebSocket Handlers - Websocket communication handlers
         (r'/websocket', WebsocketHandler),
         
-        #Pastebin Handlers
+        # Pastebin Handlers
         (r'/pastebin', PastebinHandler, {'dbsession':dbsession}),
         (r'/pastebin/view(.*)', DisplayPostHandler, {'dbsession':dbsession}),
         (r'/pastebin/delete(.*)', DeletePostHandler, {'dbsession':dbsession}),
@@ -125,7 +126,7 @@ application = Application([
         (r'/', WelcomeHandler),
         
         # Error handlers - Serves error pages
-        (r'/403(.*)', UnauthorizedHandler),
+        (r'/403', UnauthorizedHandler),
         (r'/(.*).php', PhpHandler),
         (r'/(.*)', NotFoundHandler)
     ],
@@ -210,7 +211,7 @@ def start_game():
         sys.stdout.flush()
         io_loop.start()
     except KeyboardInterrupt:
-        if process.task_id() == 0:
+        if process.task_id() == None:
             print '\r[!] Shutdown Everything!'
             session_clean_up.stop()
             io_loop.stop()

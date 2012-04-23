@@ -26,7 +26,7 @@ import getpass
 
 from models import dbsession, User, Permission
 
-DEV_ENVIRON = False
+DEV_ENVIRON = True
 
 if DEV_ENVIRON:
 	password = 'nimda123'
@@ -37,7 +37,7 @@ else:
 	sys.stdout.write("[?] Confirm New Admin ")
 	sys.stdout.flush()
 	password2 = getpass.getpass()
-	if password1 == password2 and 8 < len(password1):
+	if password1 == password2 and 8 <= len(password1):
 		password = password1
 	else:
 		print '[!] Error: Passwords did not match, or were too short'

@@ -32,9 +32,19 @@ from tornado import iostream
 from models import dbsession, Action
 from libs.WebSocketManager import WebSocketManager
 
+# Scoring configuration
 TIMEOUT = 1
 XID_SIZE = 24
 BUFFER_SIZE = 1024
+
+logging.basicConfig(format = '[%(levelname)s] %(asctime)s - %(message)s', level = logging.DEBUG)
+
+consoleLogger = logging.StreamHandler()
+consoleLogger.setLevel(logging.DEBUG)
+fileLogger = logging.FileHandler(filename = 'rtb_score.log')
+fileLogger.setLevel(logging.DEBUG)
+logging.getLogger('').addHandler(consoleLogger)
+logging.getLogger('').addHandler(fileLogger)
 
 def scoring_round():
     ''' Multi-threaded scoring '''

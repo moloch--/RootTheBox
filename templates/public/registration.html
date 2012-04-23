@@ -25,20 +25,20 @@
         {% raw xsrf_form_html() %}
         <fieldset><legend>Contact form</legend>
           <p class="first">
-            <label for="username">Account Name </label>
-            <input type="text" name="username" id="username" size="30" />
+            <label for="username">Account Name (Alphanumeric Only)</label>
+            <input type="text" name="username" id="username" />
           </p>
           <p class="first">
-            <label for="username">Hacker Name </label>
-            <input type="text" name="handle" id="handle" size="30" />
+            <label for="username">Hacker Name (Alphanumeric Only)</label>
+            <input type="text" name="handle" id="handle" />
           </p>
           <p>
-            <label for="pass1">Password</label>
-            <input type="password" name="pass1" id="pass1" size="7" autocomplete="off" />
+            <label for="pass1">Password (Ascii Only)</label>
+            <input type="password" name="pass1" id="pass1" autocomplete="off" />
           </p>
           <p>
             <label for="pass2">Confirm Password</label>
-            <input type="password" name="pass2" id="pass2" size="7" autocomplete="off" />
+            <input type="password" name="pass2" id="pass2" autocomplete="off" />
           </p>
           <p>
             <label for="recaptch_div">Are you human?</label>
