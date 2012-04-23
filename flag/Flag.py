@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 '''
 Created on Feb 24, 2012
 
@@ -37,7 +36,7 @@ SERVER = 'game.rootthebox.com'
 SERVER_PORT = 8888
 PING = "ping"
 
-class RtbClient():
+class RtbClient(object):
     ''' Root the Box Reporter '''
 
     def __init__(self, display_name):
@@ -62,14 +61,14 @@ class RtbClient():
     def load_key_file(self):
         ''' Loads the key file '''
         if platform.system().lower() == "linux":
-            self.__linux_key_file__()
+            self.__linux__()
         elif platform.system().lower() == "windows":
-            self.__windows_key_file__()
+            self.__windows__()
         else:
             sys.stdout.write("[!] Error: Platform not supported (%s)\n" % (platform.release(),))
             sys.stdout.flush()
 
-    def __windows_key_file__(self):
+    def __windows__(self):
         ''' Load a windows key file '''
         sys.stdout.write("[*] Detected Windows %s operating system\n" % (platform.release(),))
         sys.stdout.write("[*] Attempting to load root key from %s ... " % (self.windows_root_path,))
@@ -91,7 +90,7 @@ class RtbClient():
             sys.stdout.write("success\n")
             sys.stdout.flush()
 
-    def __linux_key_file__(self):
+    def __linux__(self):
         ''' Load a linux key file '''
         sys.stdout.write('[*] Detected Linux operating system (%s) \n' % (platform.release(),))
         sys.stdout.write('[*] Attempting to load root key from %s ... ' % (self.linux_root_path,))
