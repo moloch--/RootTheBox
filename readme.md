@@ -36,13 +36,21 @@ Setup TL;DR
 SLOC Information
 ---------------------
 SLOC	Directory	SLOC-by-Language (Sorted)
+
 1480    handlers        python=1480
+
 869     libs            python=869
+
 656     models          python=656
+
 267     tests           python=267
+
 188     flag            python=188
+
 47      setup           python=33,sh=14
+
 28      top_dir         python=28
+
 26      modules         python=26
 
 Totals grouped by language (dominant language first):
