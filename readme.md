@@ -1,17 +1,14 @@
- Root the Box
--------------------
-* A multi-threaded real-time scoring engine for hacker CTF games
-* Based on tornado/teaspoon
-* Distributed under the Apache License, Version 2.0
+#Root the Box
 
 A Game of Hackers
 -------------------
-Root the Box is a scoring engine for a computer wargame where hackers can practice and learn. 
-The application can be easily modified for any hacker CTF game.  The out of the box configuration
-is described on our main site http://rootthebox.com
+Root the Box is a multi-threaded real-time scoring engine for a computer wargame where hackers can practice and learn. 
+The application can be easily modified for any hacker CTF game.
 
 Features
 -------------------
+* Based on Tornado
+* Distributed under the Apache License, Version 2.0
 * Real-time scoreboard graphs using web sockets
 * Real-time status updates using web sockets
 * Team based file/text sharing
@@ -20,7 +17,7 @@ Features
 * Saxroll 403 page
 * Other cool stuff
 
- Setup
+Setup
 -------------------
 Detailed setup instructions https://github.com/moloch--/RootTheBox/wiki/Installation
 
@@ -45,7 +42,7 @@ python:        3421 (99.59%)
 
 sh:              14 (0.41%)
 
-Total Physical Source Lines of Code (SLOC)                = 3,042
+Total Physical Source Lines of Code (SLOC)                = 3,435
 
 Total Estimated Cost to Develop                           = $ 86,888 (average salary = $56,286/year, overhead = 2.40).
 
