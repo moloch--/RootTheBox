@@ -52,9 +52,9 @@ class Box(object):
         self.was_captured = False
 
 ###################
-# > Flag Manager
+# > Flag Monitor
 ###################
-class FlagManager(object):
+class FlagMonitor(object):
     ''' Manages all flags and state changes '''
 
     def __init__(self):
@@ -62,6 +62,7 @@ class FlagManager(object):
         self.display_name = None
         self.load_file = None
         self.load_url = None
+        self.beep = False
 
     def start(self):
         self.screen = curses.initscr()
@@ -76,7 +77,7 @@ class FlagManager(object):
         self.__load__()
 
     def __title__(self):
-        title = "[ Root the Box - Flag Manager ]"
+        title = "[ Root the Box - Flag Monitor ]"
         version = "[ v0.1 ]"
         agent = "[ "+self.display_name+" ]"
         self.screen.addstr(0, ((self.max[1] - len(title)) / 2), title)
@@ -186,9 +187,10 @@ def help():
     sys.stdout.write("\t-f, --file <path>...........................Load boxes from file\n")
     sys.stdout.write("\t-a, --agent <name>..........................Define agent name\n")
     sys.stdout.write("\t-u, --url <url>.............................Scoring engine URL\n")
+    sys.stdout.write("\t-b, --beep..................................Beep upon event\n")
     sys.stdout.flush()
 
-def parse_argv(flag_manager):
+def parse_argv(flag_monitor):
     ''' Parses command line arguments '''
     for arg in sys.argv:
         if arg == "-f" or arg == "--file":
@@ -197,6 +199,8 @@ def parse_argv(flag_manager):
             flag_manager.display_name = get_value(arg)
         elif arg == "-u" or arg == "--url":
             flag_manager.load_url = get_value(arg)
+        elif  arg == "-b" or arg == "--beep":
+            flag_manager.beep = True
 
 def get_value(token):
     ''' Gets a value based on a command line parameter '''
@@ -215,7 +219,7 @@ if __name__ == "__main__":
     if "-h" in sys.argv or "--help" in sys.argv:
         help()
     else:
-        flag_manager = FlagManager()
+        flag_monitor = FlagMonitor()
         if 1 < len(sys.argv):
-            parse_argv(flag_manager)
+            parse_argv(flag_monitor)
         flag_manager.start()
