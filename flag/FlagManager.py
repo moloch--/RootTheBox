@@ -84,7 +84,7 @@ class FlagManager(object):
         self.screen.addstr(self.max[0] - 1, 3, agent)
 
     def __load__(self):
-        self.load_message = "Loading, please wait ..."
+        self.load_message = " Loading, please wait ... "
         self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max[0] / 2) - 1, ((self.max[1] - len(self.load_message)) / 2))
         self.loading_bar.border(0)
         self.loading_bar.addstr(1, 1, self.load_message)
@@ -97,25 +97,28 @@ class FlagManager(object):
     def __interface__(self):
         ''' Main interface loop '''
         self.loading_bar.clear()
-        self.__title__()
-        self.screen.refresh()
-        self.x_position = 5
-        self.y_position = 3
-        for box in self.boxes:
-            self.draw_box(box)
-            self.y_position += 1
-        select = self.screen.getch()
-        if select == ord("q"):
-            self.stop()
-        else:
-        	self.__interface__()
+        self.screen.nodelay(1)
+        while True:
+            self.__title__()
+            self.x_position = 5
+            self.y_position = 3
+            for box in self.boxes:
+                self.draw_box(box)
+                self.y_position += 1
+            self.screen.refresh()
+            select = self.screen.getch()
+            if select == ord("q"):
+                break
+            else:
+                time.sleep(0.1)
+        self.stop()
 
     def draw_box(self, box):
         ''' Draws a box on the screen '''
-        display_box = str(self.boxes.index(box))+". "+box.name+" ("+box.ip_address+")"
+        display_box = str(self.boxes.index(box) + 1)+". "+box.name+" ("+box.ip_address+")"
         self.screen.addstr(self.y_position, self.x_position, display_box)
 
-    def load_file(self, path):
+    def load_from_file(self, path):
         ''' Reads a file at path returns the file contents or None '''
         path = os.path.abspath(path)
         if os.path.exists(path) and os.path.isfile(path):
@@ -126,13 +129,13 @@ class FlagManager(object):
                 plain_text = line.strip()
                 name, ip_address, port = line.split(";")
                 self.boxes.append(Box(name, ip_address, port))
-            box_file.close
+            box_file.close()
         else:
             sys.stdout.write("[!] Error: File does not exist (%s)\n" % (os.path.abspath(path),))
             sys.stdout.flush()
             os._exit(1)
 
-    def load_url(self):
+    def load_from_url(self):
         ''' Load boxes from scoring engine '''
         pass
 
@@ -144,19 +147,19 @@ class FlagManager(object):
             self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max[0] / 2) - 1, ((self.max[1] - len(self.load_message)) / 2))
             self.loading_bar.border(0)
             self.loading_bar.addstr(1, 1, prompt)
-            curses.curs_set(2)
+            curses.curs_set(1)
             curses.echo()
             self.loading_bar.refresh()
-            self.display_name = self.loading_bar.getstr()
+            self.display_name = self.loading_bar.getstr(1, len(prompt) + 1, len(self.load_message) - len(prompt) - 1)
         curses.curs_set(0)
         curses.noecho()
 
     def __boxes__(self):
         ''' Load boxes from url and/or file '''
         if self.load_file != None:
-            self.load_file(self.load_file)
+            self.load_from_file(self.load_file)
         if self.load_url != None:
-            self.load_url(self.load_url)
+            self.load_from_url(self.load_url)
 
     def __redraw__(self):
         ''' Redraw the entire window '''
