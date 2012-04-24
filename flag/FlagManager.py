@@ -77,8 +77,10 @@ class FlagManager(object):
     def __title__(self):
         title = "[ Root the Box - Flag Manager ]"
         version = "[ v0.1 ]"
+        agent = "[ "+self.display_name+" ]"
         self.screen.addstr(0, ((self.max[1] - len(title)) / 2), title)
         self.screen.addstr(self.max[0] - 1, (self.max[1] - len(version)) - 3, version)
+        self.screen.addstr(self.max[0] - 1, 3, agent)
 
     def __load__(self):
         self.load_message = "Loading, please wait ..."
@@ -176,7 +178,7 @@ def help():
     sys.stdout.write("\tFileManager.py <options>\n")
     sys.stdout.write("Options:\n")
     sys.stdout.write("\t-f, --file <path>...........................Load boxes from file\n")
-    sys.stdout.write("\t-a, --agent <name>.......................Define hacker name\n")
+    sys.stdout.write("\t-a, --agent <name>..........................Define agent name\n")
     sys.stdout.write("\t-u, --url <url>.............................Scoring engine URL\n")
     sys.stdout.flush()
 
