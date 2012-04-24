@@ -68,32 +68,33 @@ class FlagMonitor(object):
         self.screen = curses.initscr()
         curses.start_color()
         curses.use_default_colors()
+        self.__colors__()
         curses.noecho()
         curses.cbreak()
         curses.curs_set(0)
         self.screen.clear()
         self.screen.border(0)
-        self.max = self.screen.getmaxyx()
+        self.max_y, self.max_x = self.screen.getmaxyx()
         self.__load__()
+        self.__interface__()
 
     def __title__(self):
         title = "[ Root the Box - Flag Monitor ]"
         version = "[ v0.1 ]"
         agent = "[ "+self.display_name+" ]"
-        self.screen.addstr(0, ((self.max[1] - len(title)) / 2), title)
-        self.screen.addstr(self.max[0] - 1, (self.max[1] - len(version)) - 3, version)
-        self.screen.addstr(self.max[0] - 1, 3, agent)
+        self.screen.addstr(0, ((self.max_x - len(title)) / 2), title, curses.color_pair(self.TITLE) | curses.A_BOLD)
+        self.screen.addstr(self.max_y - 1, (self.max_x - len(version)) - 3, version)
+        self.screen.addstr(self.max_y - 1, 3, agent)
 
     def __load__(self):
         self.load_message = " Loading, please wait ... "
-        self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max[0] / 2) - 1, ((self.max[1] - len(self.load_message)) / 2))
+        self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
         self.loading_bar.border(0)
-        self.loading_bar.addstr(1, 1, self.load_message)
+        self.loading_bar.addstr(1, 1, self.load_message, curses.A_BOLD)
         self.loading_bar.refresh()
         time.sleep(0.5)
         self.__boxes__()
         self.__agent__()
-        self.__interface__()
 
     def __interface__(self):
         ''' Main interface loop '''
@@ -116,7 +117,7 @@ class FlagMonitor(object):
 
     def draw_box(self, box):
         ''' Draws a box on the screen '''
-        display_box = str(self.boxes.index(box) + 1)+". "+box.name+" ("+box.ip_address+")"
+        display_box = str(self.boxes.index(box) + 1)+str(". %s (%s)" % (box.name, box.ip_address))
         self.screen.addstr(self.y_position, self.x_position, display_box)
 
     def load_from_file(self, path):
@@ -145,9 +146,9 @@ class FlagMonitor(object):
         if self.display_name == None:
             self.loading_bar.clear()
             prompt = "Agent: "
-            self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max[0] / 2) - 1, ((self.max[1] - len(self.load_message)) / 2))
+            self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
             self.loading_bar.border(0)
-            self.loading_bar.addstr(1, 1, prompt)
+            self.loading_bar.addstr(1, 1, prompt, curses.A_BOLD)
             curses.curs_set(1)
             curses.echo()
             self.loading_bar.refresh()
@@ -161,6 +162,11 @@ class FlagMonitor(object):
             self.load_from_file(self.load_file)
         if self.load_url != None:
             self.load_from_url(self.load_url)
+
+    def __colors__(self):
+        ''' Setup all color pairs '''
+        self.TITLE = 1
+        curses.init_pair(self.TITLE, curses.COLOR_CYAN, -1)
 
     def __redraw__(self):
         ''' Redraw the entire window '''
@@ -194,13 +200,13 @@ def parse_argv(flag_monitor):
     ''' Parses command line arguments '''
     for arg in sys.argv:
         if arg == "-f" or arg == "--file":
-            flag_manager.load_file = get_value(arg)
+            flag_monitor.load_file = get_value(arg)
         elif arg == "-a" or arg == "--agent":
-            flag_manager.display_name = get_value(arg)
+            flag_monitor.display_name = get_value(arg)
         elif arg == "-u" or arg == "--url":
-            flag_manager.load_url = get_value(arg)
+            flag_monitor.load_url = get_value(arg)
         elif  arg == "-b" or arg == "--beep":
-            flag_manager.beep = True
+            flag_monitor.beep = True
 
 def get_value(token):
     ''' Gets a value based on a command line parameter '''
@@ -222,4 +228,4 @@ if __name__ == "__main__":
         flag_monitor = FlagMonitor()
         if 1 < len(sys.argv):
             parse_argv(flag_monitor)
-        flag_manager.start()
+        flag_monitor.start()
