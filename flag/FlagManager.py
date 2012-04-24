@@ -49,6 +49,7 @@ class Box(object):
         self.ip_address = ip_address
         self.port = port
         self.is_captured = False
+        self.was_captured = False
 
 ###################
 # > Flag Manager
@@ -106,6 +107,8 @@ class FlagManager(object):
         select = self.screen.getch()
         if select == ord("q"):
             self.stop()
+        else:
+        	self.__interface__()
 
     def draw_box(self, box):
         ''' Draws a box on the screen '''
