@@ -32,9 +32,12 @@ import os
 import sys
 import time
 import socket
+import random
+import threading
 
 try:
     import curses
+    import curses.panel
 except ImportError:
     print("Error: Failed to import curses, platform not supported")
     os._exit(2)
@@ -82,10 +85,10 @@ class FlagMonitor(object):
         curses.noecho()
         curses.cbreak()
         curses.curs_set(0)
+        self.max_y, self.max_x = self.screen.getmaxyx()
         self.screen.clear()
         self.screen.border(0)
         self.screen.refresh()
-        self.max_y, self.max_x = self.screen.getmaxyx()
         self.__load__()
         self.__interface__()
 
@@ -103,6 +106,7 @@ class FlagMonitor(object):
 
     def __interface__(self):
         ''' Main interface loop '''
+        self.__redraw__()
         while True:
             self.screen.nodelay(1)
             self.__title__()
@@ -214,29 +218,22 @@ class FlagMonitor(object):
     def load_from_url(self):
         ''' Load boxes from scoring engine '''
         pass
-    
-    def trim_string(self, string, length):
-        ''' Ensures a string is always a given length '''
-        if len(string) < length:
-            while len(string) < length:
-                string += " "
-        if len(string) > length:
-            string = string[:length]
-        return string
 
     def __agent__(self):
         ''' Get display name from user '''
         if self.display_name == None:
+            self.stop_thread = False
+            thread = threading.Thread(target=self.__matrix__)
             self.loading_bar.clear()
             prompt = "Agent: "
-            self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
-            self.loading_bar.border(0)
-            self.loading_bar.addstr(1, 1, prompt, curses.A_BOLD)
-            curses.curs_set(1)
+            self.agent_prompt = curses.newwin(3, len(self.load_message) + 2, (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
+            self.agent_prompt.border(0)
+            self.agent_prompt.addstr(1, 1, prompt, curses.A_BOLD)
             curses.echo()
-            self.loading_bar.refresh()
-            self.display_name = self.loading_bar.getstr(1, len(prompt) + 1, len(self.load_message) - len(prompt) - 1)
-        curses.curs_set(0)
+            thread.start()
+            self.display_name = self.agent_prompt.getstr(1, len(prompt) + 1, len(self.load_message) - len(prompt) - 1)
+            self.stop_thread = True
+            thread.join()
         curses.noecho()
 
     def __boxes__(self):
@@ -261,7 +258,8 @@ class FlagMonitor(object):
 
     def __redraw__(self):
         ''' Redraw the entire window '''
-        self.screen.redrawwin()
+        self.screen.clear()
+        self.screen.border(0)
         self.screen.refresh()
 
     def __clear__(self):
@@ -272,6 +270,48 @@ class FlagMonitor(object):
         ''' Gracefully exits the program '''
         curses.endwin()
         os._exit(0)
+
+    def __matrix__(self):
+        ''' Displays really cool, pointless matrix like animation in the background '''
+        # (2) Sat com animation
+        sat_com = " > Initializing sat com unit, please wait ... "
+        progress = ["|", "/","-", "\\"]
+        for index in range(0, random.randint(0, 100)):
+            self.screen.addstr(2, 2, sat_com + progress[index % 4])
+            self.screen.refresh()
+            time.sleep(0.1)
+            if self.stop_thread:
+                return
+        self.screen.addstr(2, 2, sat_com + "success")
+        self.screen.refresh()
+        # (3) Uplink animation
+        download = " > Establishing satalite uplink: "
+        for index in range(0, 100, 10):
+            self.screen.addstr(3, 2, download+str(index)+"%")
+            self.screen.refresh()
+            time.sleep(0.2)
+            if self.stop_thread:
+                return
+        self.screen.addstr(3, 2, download + "complete")
+        self.screen.refresh()
+        # (4) Downloading animation
+        download = " > Downloading noki telcodes: "
+        for index in range(0, 100):
+            self.screen.addstr(4, 2, download+str(index)+"%")
+            self.screen.refresh()
+            time.sleep(0.1)
+            if self.stop_thread:
+                return
+        self.screen.addstr(4, 2, download + "complete")
+        self.screen.refresh()
+        # (5) Matrix animation
+        matrix = " > The matrix has you ... follow the white rabbit "
+        for index in range(0, len(matrix)):
+            time.sleep(0.2)
+            self.screen.addstr(5, 2, matrix[:index])
+            self.screen.refresh()
+            if self.stop_thread:
+                return
 
 ###################
 # > Main Entry
