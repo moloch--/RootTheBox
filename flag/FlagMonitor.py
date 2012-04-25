@@ -39,6 +39,11 @@ except ImportError:
     os._exit(2)
 
 ###################
+# > Constants
+###################
+BUFFER_SIZE = 128
+
+###################
 # > Simple Box
 ###################
 class Box(object):
@@ -48,8 +53,7 @@ class Box(object):
         self.name = name
         self.ip_address = ip_address
         self.port = port
-        self.is_captured = False
-        self.was_captured = False
+        self.state = None
 
 ###################
 # > Flag Monitor
@@ -82,7 +86,7 @@ class FlagMonitor(object):
         title = "[ Root the Box - Flag Monitor ]"
         version = "[ v0.1 ]"
         agent = "[ "+self.display_name+" ]"
-        self.screen.addstr(0, ((self.max_x - len(title)) / 2), title, curses.color_pair(self.TITLE) | curses.A_BOLD)
+        self.screen.addstr(0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD)
         self.screen.addstr(self.max_y - 1, (self.max_x - len(version)) - 3, version)
         self.screen.addstr(self.max_y - 1, 3, agent)
 
@@ -95,30 +99,63 @@ class FlagMonitor(object):
         time.sleep(0.5)
         self.__boxes__()
         self.__agent__()
+        self.loading_bar.clear()
 
     def __interface__(self):
         ''' Main interface loop '''
-        self.loading_bar.clear()
-        self.screen.nodelay(1)
         while True:
+            self.screen.nodelay(1)
             self.__title__()
             self.x_position = 5
             self.y_position = 3
+            self.screen.vline(1, 10, "|", self.max_y - 2)
             for box in self.boxes:
-                self.draw_box(box)
+                self.check_box(box)
                 self.y_position += 1
             self.screen.refresh()
             select = self.screen.getch()
             if select == ord("q"):
                 break
+            elif select == ord("m"):
+                self.__menu__()
             else:
-                time.sleep(0.1)
+                time.sleep(0.01)
         self.stop()
+    
+    def __menu__(self):
+        ''' Draws the main menu '''
+        menu_title = " *** Main Menu *** "
+        menu_entries = { "Exit": self.stop }
+        self.main_menu = curses.newwin(len(menu_entries) + 3, len(menu_title) + 2, (self.max_y / 2) - 1, ((self.max_x - len(menu_title)) / 2))
+        self.main_menu.border(0)
+        self.main_menu.addstr(1, 1, menu_title, curses.A_BOLD)
+        pos_x = 2
+        pos_y = 2
+        for entry in menu_entries:
+            display_entry = str(menu_entries.index(entry) + 1)+str(". %s" % (entry,))
+            self.main_menu.addstr(pos_y, pos_x, display_entry)
+            pos_y += 1
+        self.main_menu.refresh()
+        self.main_menu.nodelay(0)
+        select = self.main_menu.getch()
+        self.main_menu.clear()
 
-    def draw_box(self, box):
+    def check_box(self, box):
         ''' Draws a box on the screen '''
         display_box = str(self.boxes.index(box) + 1)+str(". %s (%s)" % (box.name, box.ip_address))
         self.screen.addstr(self.y_position, self.x_position, display_box)
+    
+    def ping_box(self, ip_address, port):
+        ''' Pings a box (not ICMP) '''
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((ip_address, port))
+            sock.sendall('ping')
+            pong = sock.recv(BUFFER_SIZE)
+            sock.close()
+            return pong
+        except:
+            return None
 
     def load_from_file(self, path):
         ''' Reads a file at path returns the file contents or None '''
@@ -140,6 +177,15 @@ class FlagMonitor(object):
     def load_from_url(self):
         ''' Load boxes from scoring engine '''
         pass
+    
+    def trim_string(self, string, length):
+        ''' Ensures a string is always a given length '''
+        if len(string) < length:
+            while len(string) <= length:
+                string += " "
+        if len(string) > length:
+            string = string[:length]
+        return string
 
     def __agent__(self):
         ''' Get display name from user '''
@@ -165,8 +211,14 @@ class FlagMonitor(object):
 
     def __colors__(self):
         ''' Setup all color pairs '''
-        self.TITLE = 1
-        curses.init_pair(self.TITLE, curses.COLOR_CYAN, -1)
+        self.PING = 1
+        curses.init_pair(self.PING, curses.COLOR_WHITE, curses.COLOR_RED)
+        self.IS_CAPTURED = 2
+        curses.init_pair(self.IS_CAPTURED, curses.COLOR_GREEN, -1)
+        self.TEAM_CAPTURED = 3
+        curses.init_pair(self.TEAM_CAPTURED, curses.COLOR_CYAN, -1) 
+        self.WAS_CAPTURED = 4
+        curses.init_pair(self.WAS_CAPTURED, curses.COLOR_WHITE, curses.COLOR_RED)
 
     def __redraw__(self):
         ''' Redraw the entire window '''
@@ -180,6 +232,7 @@ class FlagMonitor(object):
     def stop(self):
         ''' Gracefully exits the program '''
         curses.endwin()
+        os._exit(0)
 
 ###################
 # > Main Entry
