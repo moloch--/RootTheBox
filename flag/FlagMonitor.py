@@ -19,6 +19,7 @@ Created on Apr 23, 2012
    limitations under the License.
 ---------
 
+Linux only (well anything with curses really)
 Small program used by teams to monitor their flags
 For the sake of portability everything is in one file
 
@@ -41,7 +42,9 @@ except ImportError:
 ###################
 # > Constants
 ###################
-BUFFER_SIZE = 128
+BUFFER_SIZE = 64
+MIN_Y = 24
+MIN_X = 80
 
 ###################
 # > Simple Box
@@ -54,6 +57,7 @@ class Box(object):
         self.ip_address = ip_address
         self.port = port
         self.state = None
+        self.capture_time = None
 
 ###################
 # > Flag Monitor
@@ -64,11 +68,13 @@ class FlagMonitor(object):
     def __init__(self):
         self.boxes = []
         self.display_name = None
+        self.team_members = []
         self.load_file = None
         self.load_url = None
         self.beep = False
 
     def start(self):
+        ''' Initializes the screen '''
         self.screen = curses.initscr()
         curses.start_color()
         curses.use_default_colors()
@@ -78,19 +84,13 @@ class FlagMonitor(object):
         curses.curs_set(0)
         self.screen.clear()
         self.screen.border(0)
+        self.screen.refresh()
         self.max_y, self.max_x = self.screen.getmaxyx()
         self.__load__()
         self.__interface__()
 
-    def __title__(self):
-        title = "[ Root the Box - Flag Monitor ]"
-        version = "[ v0.1 ]"
-        agent = "[ "+self.display_name+" ]"
-        self.screen.addstr(0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD)
-        self.screen.addstr(self.max_y - 1, (self.max_x - len(version)) - 3, version)
-        self.screen.addstr(self.max_y - 1, 3, agent)
-
     def __load__(self):
+        ''' Loads all required data '''
         self.load_message = " Loading, please wait ... "
         self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
         self.loading_bar.border(0)
@@ -106,13 +106,11 @@ class FlagMonitor(object):
         while True:
             self.screen.nodelay(1)
             self.__title__()
-            self.x_position = 5
-            self.y_position = 3
-            self.screen.vline(1, 10, "|", self.max_y - 2)
-            for box in self.boxes:
-                self.check_box(box)
-                self.y_position += 1
+            self.__grid__()
             self.screen.refresh()
+            for box in self.boxes:
+                self.__box__(box, self.boxes.index(box))
+                self.screen.refresh()
             select = self.screen.getch()
             if select == ord("q"):
                 break
@@ -122,6 +120,42 @@ class FlagMonitor(object):
                 time.sleep(0.01)
         self.stop()
     
+    def __title__(self):
+        ''' Create title and footer '''
+        title = " Root the Box - Flag Monitor "
+        version = "[ v0.1 ]"
+        agent = "[ "+self.display_name+" ]"
+        self.screen.addstr(0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD)
+        self.screen.addstr(self.max_y - 1, (self.max_x - len(version)) - 3, version)
+        self.screen.addstr(self.max_y - 1, 3, agent)
+
+    def __grid__(self):
+        ''' Draws the grid layout '''
+        pos_x = 3
+        self.screen.hline(3, 1, curses.ACS_HLINE, self.max_x - 2)
+        self.ip_title = "   IP  Address   "
+        self.screen.vline(2, pos_x + len(self.ip_title), curses.ACS_VLINE, self.max_y - 3)
+        self.screen.addstr(2, 2, self.ip_title)
+        pos_x += len(self.ip_title)
+        self.name_title = "       Box  Name       "
+        self.screen.vline(2,  pos_x + len(self.name_title) + 1, curses.ACS_VLINE, self.max_y - 3)
+        self.screen.addstr(2, pos_x + 1, self.name_title)
+        pos_x += len(self.name_title)
+        self.flag_title = "   Flag Status   "
+        self.screen.vline(2,  pos_x + len(self.flag_title) + 2, curses.ACS_VLINE, self.max_y - 3)
+        self.screen.addstr(2, pos_x + 2, self.flag_title)
+        pos_x += len(self.flag_title)
+        self.ping_title = "  Ping  "
+        self.screen.addstr(2, pos_x + 3, self.ping_title)
+        self.__positions__()
+
+    def __positions__(self):
+        ''' Sets default x position for each col '''
+        self.start_ip_pos = 2
+        self.start_name_pos = self.start_ip_pos + len(self.ip_title) + 3
+        self.start_flag_pos = self.start_name_pos + len(self.name_title) + 2
+        self.start_ping_pos = self.start_flag_pos + len(self.flag_title) + 1
+
     def __menu__(self):
         ''' Draws the main menu '''
         menu_title = " *** Main Menu *** "
@@ -140,10 +174,13 @@ class FlagMonitor(object):
         select = self.main_menu.getch()
         self.main_menu.clear()
 
-    def check_box(self, box):
+    def __box__(self, box, index):
         ''' Draws a box on the screen '''
-        display_box = str(self.boxes.index(box) + 1)+str(". %s (%s)" % (box.name, box.ip_address))
-        self.screen.addstr(self.y_position, self.x_position, display_box)
+        pos_y = 4 + index
+        self.screen.addstr(pos_y, self.start_ip_pos, box.ip_address)
+        self.screen.addstr(pos_y, self.start_name_pos, box.name[:len(self.name_title)])
+        if box.state == None:
+            self.screen.addstr(pos_y, self.start_flag_pos, "Not Captured")
     
     def ping_box(self, ip_address, port):
         ''' Pings a box (not ICMP) '''
@@ -181,7 +218,7 @@ class FlagMonitor(object):
     def trim_string(self, string, length):
         ''' Ensures a string is always a given length '''
         if len(string) < length:
-            while len(string) <= length:
+            while len(string) < length:
                 string += " "
         if len(string) > length:
             string = string[:length]
@@ -212,13 +249,15 @@ class FlagMonitor(object):
     def __colors__(self):
         ''' Setup all color pairs '''
         self.PING = 1
-        curses.init_pair(self.PING, curses.COLOR_WHITE, curses.COLOR_RED)
+        curses.init_pair(self.PING, curses.COLOR_WHITE, curses.COLOR_BLUE)
         self.IS_CAPTURED = 2
-        curses.init_pair(self.IS_CAPTURED, curses.COLOR_GREEN, -1)
+        curses.init_pair(self.IS_CAPTURED, -1, curses.COLOR_GREEN)
         self.TEAM_CAPTURED = 3
-        curses.init_pair(self.TEAM_CAPTURED, curses.COLOR_CYAN, -1) 
+        curses.init_pair(self.TEAM_CAPTURED, -1, curses.COLOR_CYAN) 
         self.WAS_CAPTURED = 4
         curses.init_pair(self.WAS_CAPTURED, curses.COLOR_WHITE, curses.COLOR_RED)
+        self.NEVER_CAPTURED = 5
+        curses.init_pair(self.WAS_CAPTURED, -1, -1)
 
     def __redraw__(self):
         ''' Redraw the entire window '''

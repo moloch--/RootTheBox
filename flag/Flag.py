@@ -215,7 +215,7 @@ if __name__ == '__main__':
         else:
             sys.stdout.write("[!] PEBKAC: Too few or too many arguments, see --help\n")
             sys.stdout.flush()
-    except:
+    except KeyboardInterrupt:
         sys.stdout.write("\r[!] User exit "+str(LINE_LENGTH * ' ')+'\n')
         sys.stdout.flush()
     os._exit(0)
