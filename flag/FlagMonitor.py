@@ -71,6 +71,7 @@ class FlagMonitor(object):
     def __init__(self):
         self.boxes = []
         self.display_name = None
+        self.team_port = None
         self.team_members = []
         self.load_file = None
         self.load_url = None
@@ -86,7 +87,6 @@ class FlagMonitor(object):
         curses.cbreak()
         curses.curs_set(0)
         self.max_y, self.max_x = self.screen.getmaxyx()
-        self.screen.clear()
         self.screen.border(0)
         self.screen.refresh()
         self.__load__()
@@ -102,6 +102,7 @@ class FlagMonitor(object):
         time.sleep(0.5)
         self.__boxes__()
         self.__agent__()
+        self.__team__()
         self.loading_bar.clear()
 
     def __interface__(self):
@@ -118,8 +119,6 @@ class FlagMonitor(object):
             select = self.screen.getch()
             if select == ord("q"):
                 break
-            elif select == ord("m"):
-                self.__menu__()
             else:
                 time.sleep(0.01)
         self.stop()
@@ -160,24 +159,6 @@ class FlagMonitor(object):
         self.start_flag_pos = self.start_name_pos + len(self.name_title) + 2
         self.start_ping_pos = self.start_flag_pos + len(self.flag_title) + 1
 
-    def __menu__(self):
-        ''' Draws the main menu '''
-        menu_title = " *** Main Menu *** "
-        menu_entries = { "Exit": self.stop }
-        self.main_menu = curses.newwin(len(menu_entries) + 3, len(menu_title) + 2, (self.max_y / 2) - 1, ((self.max_x - len(menu_title)) / 2))
-        self.main_menu.border(0)
-        self.main_menu.addstr(1, 1, menu_title, curses.A_BOLD)
-        pos_x = 2
-        pos_y = 2
-        for entry in menu_entries:
-            display_entry = str(menu_entries.index(entry) + 1)+str(". %s" % (entry,))
-            self.main_menu.addstr(pos_y, pos_x, display_entry)
-            pos_y += 1
-        self.main_menu.refresh()
-        self.main_menu.nodelay(0)
-        select = self.main_menu.getch()
-        self.main_menu.clear()
-
     def __box__(self, box, index):
         ''' Draws a box on the screen '''
         pos_y = 4 + index
@@ -185,7 +166,17 @@ class FlagMonitor(object):
         self.screen.addstr(pos_y, self.start_name_pos, box.name[:len(self.name_title)])
         if box.state == None:
             self.screen.addstr(pos_y, self.start_flag_pos, "Not Captured")
+        elif box.state == self.IS_CAPTURED:
+            self.screen.addstr(pos_y, self.start_flag_pos, " CAPTURED ", curses.color_pair(self.IS_CAPTURED))
+        elif box.state == self.TEAM_CAPTURED:
+            self.screen.addstr(pos_y, self.start_flag_pos, "TEAM CAPTURED", curses.color_pair(self.TEAM_CAPTURED))
+        else:
+            pass
     
+    def update_box_status(self, box):
+        ''' Pings box and updates its status '''
+        self.ping_box(box.ip_address, self.team_port)
+
     def ping_box(self, ip_address, port):
         ''' Pings a box (not ICMP) '''
         try:
@@ -207,7 +198,7 @@ class FlagMonitor(object):
                 if len(line) == 0 or line[0] == "#":
                     continue
                 plain_text = line.strip()
-                name, ip_address, port = line.split(";")
+                name, ip_address = line.split(";")
                 self.boxes.append(Box(name, ip_address, port))
             box_file.close()
         else:
@@ -235,6 +226,10 @@ class FlagMonitor(object):
             self.stop_thread = True
             thread.join()
         curses.noecho()
+    
+    def __team__(self):
+        ''' Download team configuration '''
+        pass
 
     def __boxes__(self):
         ''' Load boxes from url and/or file '''
@@ -254,7 +249,7 @@ class FlagMonitor(object):
         self.WAS_CAPTURED = 4
         curses.init_pair(self.WAS_CAPTURED, curses.COLOR_WHITE, curses.COLOR_RED)
         self.NEVER_CAPTURED = 5
-        curses.init_pair(self.WAS_CAPTURED, -1, -1)
+        curses.init_pair(self.NEVER_CAPTURED, -1, -1)
 
     def __redraw__(self):
         ''' Redraw the entire window '''
@@ -275,8 +270,8 @@ class FlagMonitor(object):
         ''' Displays really cool, pointless matrix like animation in the background '''
         # (2) Sat com animation
         sat_com = " > Initializing sat com unit, please wait ... "
-        progress = ["|", "/","-", "\\"]
-        for index in range(0, random.randint(0, 100)):
+        progress = ["|", "/", "-", "\\"]
+        for index in range(0, random.randint(50, 150)):
             self.screen.addstr(2, 2, sat_com + progress[index % 4])
             self.screen.refresh()
             time.sleep(0.1)
@@ -286,13 +281,14 @@ class FlagMonitor(object):
         self.screen.refresh()
         # (3) Uplink animation
         download = " > Establishing satalite uplink: "
-        for index in range(0, 100, 10):
-            self.screen.addstr(3, 2, download+str(index)+"%")
+        for index in range(5, 25):
+            signal = random.randint(0, 30)
+            self.screen.addstr(3, 2, download+str(signal)+" dBi    ")
             self.screen.refresh()
             time.sleep(0.2)
             if self.stop_thread:
                 return
-        self.screen.addstr(3, 2, download + "complete")
+        self.screen.addstr(3, 2, download + "locked on")
         self.screen.refresh()
         # (4) Downloading animation
         download = " > Downloading noki telcodes: "
@@ -304,11 +300,20 @@ class FlagMonitor(object):
                 return
         self.screen.addstr(4, 2, download + "complete")
         self.screen.refresh()
-        # (5) Matrix animation
+        # (5) Initializing memory address
+        memory = " > Initializing memory: "
+        for index in range(0, 2**32, 2**12):
+            self.screen.addstr(5, 2, memory + str("0x%08X" % index))
+            self.screen.refresh()
+            if self.stop_thread:
+                return
+        self.screen.addstr(5, 2, memory + str("0x%08X -> 0xFFFFFFFF" % (0,)))
+        self.screen.refresh()
+        # (6) Matrix animation
         matrix = " > The matrix has you ... follow the white rabbit "
         for index in range(0, len(matrix)):
             time.sleep(0.2)
-            self.screen.addstr(5, 2, matrix[:index])
+            self.screen.addstr(6, 2, matrix[:index])
             self.screen.refresh()
             if self.stop_thread:
                 return

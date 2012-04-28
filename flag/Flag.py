@@ -17,6 +17,14 @@ Created on Feb 24, 2012
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+---------
+
+Flag program, teams need to execute this on boxes
+in order to gain points.  This code supports both
+Windows and Linux.  A .exe can be generated for 
+ease of use on Winodws boxes using py2exe and the
+build_flag.py script.
+
 '''
 
 import os
