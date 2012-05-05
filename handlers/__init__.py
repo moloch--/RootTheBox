@@ -99,7 +99,6 @@ application = Application([
         (r'/pie_chart(.*)', PieChartHandler, {'dbsession': dbsession}),
         (r'/bar_chart(.*)', BarChartHandler, {'dbsession': dbsession}),
 
-        
         # Challenges Handlers
         (r'/challenges/ajax(.*)', ChallengesAjaxHandler, {'dbsession' : dbsession}),
         (r'/challenges', ChallengesHandler, {'dbsession' : dbsession}),

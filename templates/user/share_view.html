@@ -40,22 +40,26 @@
 	</script>
 
 	<div id="accordion">
-		{% for share in shares %}
-			<h3><a href="#"><strong>{{ share.file_name }}</strong>&nbsp;&nbsp;&nbsp;{{ share.content }} </a></h3>
-			<div>
-				<p>
-					<strong>File Size: </strong> {{ share.byte_size }} byte(s) <br />
-					<strong>Description:</strong> <br />
-					<p class="share_description">
-						{{ share.description }}
+		{% if len(shares) == 0 %}
+			There are currently no shared files.
+		{% else %}
+			{% for share in shares %}
+				<h3><a href="#"><strong>{{ share.file_name }}</strong>&nbsp;&nbsp;&nbsp;{{ share.content }} </a></h3>
+				<div>
+					<p>
+						<strong>File Size: </strong> {{ share.byte_size }} byte(s) <br />
+						<strong>Description:</strong> <br />
+						<p class="share_description">
+							{{ share.description }}
+						</p>
+						<div class="dl_crack_me">
+							<button onclick="window.open('/user/shares/download?uuid={{ share.uuid }}', '_newtab');" >
+								Download {{ share.file_name }}
+							</button>
+						</div>
 					</p>
-					<div class="dl_crack_me">
-						<button onclick="window.open('/user/shares/download?uuid={{ share.uuid }}', '_newtab');" >
-							Download {{ share.file_name }}
-						</button>
-					</div>
-				</p>
-			</div>
+				</div>
+			{% end %}
 		{% end %}
 	</div>
 

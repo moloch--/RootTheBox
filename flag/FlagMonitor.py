@@ -140,7 +140,7 @@ class FlagMonitor(object):
         self.screen.vline(2, pos_x + len(self.ip_title), curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, 2, self.ip_title)
         pos_x += len(self.ip_title)
-        self.name_title = "       Box  Name       "
+        self.name_title = "         Box  Name         "
         self.screen.vline(2,  pos_x + len(self.name_title) + 1, curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, pos_x + 1, self.name_title)
         pos_x += len(self.name_title)
@@ -165,22 +165,30 @@ class FlagMonitor(object):
         self.screen.addstr(pos_y, self.start_ip_pos, box.ip_address)
         self.screen.addstr(pos_y, self.start_name_pos, box.name[:len(self.name_title)])
         if box.state == None:
-            self.screen.addstr(pos_y, self.start_flag_pos, "Not Captured")
+            self.screen.addstr(pos_y, self.start_flag_pos, " NOT  CAPTURED ")
         elif box.state == self.IS_CAPTURED:
-            self.screen.addstr(pos_y, self.start_flag_pos, " CAPTURED ", curses.color_pair(self.IS_CAPTURED))
+            self.screen.addstr(pos_y, self.start_flag_pos, " FLAG  PLANTED ", curses.color_pair(self.IS_CAPTURED))
         elif box.state == self.TEAM_CAPTURED:
-            self.screen.addstr(pos_y, self.start_flag_pos, "TEAM CAPTURED", curses.color_pair(self.TEAM_CAPTURED))
+            self.screen.addstr(pos_y, self.start_flag_pos, " TEAM CAPTURED ", curses.color_pair(self.TEAM_CAPTURED))
         else:
             pass
     
     def update_box_status(self, box):
         ''' Pings box and updates its status '''
-        self.ping_box(box.ip_address, self.team_port)
+        response = self.ping_box(box.ip_address, self.team_port)
+        if response != None:
+            if response == self.display_name:
+                box.state = self.IS_CAPTURED
+            elif response in self.team_members:
+                box.state = self.TEAM_CAPTURED
+        elif box.state != None:
+            box.state = self.WAS_CAPTURED
 
     def ping_box(self, ip_address, port):
         ''' Pings a box (not ICMP) '''
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(1)
             sock.connect((ip_address, port))
             sock.sendall('ping')
             pong = sock.recv(BUFFER_SIZE)

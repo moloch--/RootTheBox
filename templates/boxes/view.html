@@ -15,22 +15,20 @@
 	</style>
 	<script>
 	$(function() {
-		$( "#tabs" ).tabs({
-			select: function( event, ui ) {
-				$( "#slider" ).slider( "value", ui.index );
+		$("#tabs").tabs({
+			select: function(event, ui) {
+				$("#slider").slider("value", ui.index);
 			}
 		});
 		$( "#slider" ).slider({
 			min: 0,
-			max: $( "#tabs" ).tabs( "length" ) - 1,
+			max: $("#tabs").tabs("length") - 1,
 			slide: function( event, ui ) {
-				$( "#tabs" ).tabs( "select", ui.value );
+				$("#tabs").tabs( "select", ui.value );
 			}
 		});
 	});
 	</script>
-
-	<!-- <div id="slider" style="width:200px"></div> -->
 
 	<div id="tabs">
 		<ul>
@@ -50,6 +48,11 @@
 					</p>
 					<p>
 						<strong>Difficulty: </strong> {{ box.difficulty }}
+					</p>
+					<p>
+						<strong>Point Values: </strong> <br />
+						&nbsp;&nbsp;&nbsp;User Access {{ box.user_value }}/ppm<br />
+						&nbsp;&nbsp;&nbsp;Root Access {{ box.root_value }}/ppm
 					</p>
 					<p>
 						<strong>Controlling Team(s): </strong>
