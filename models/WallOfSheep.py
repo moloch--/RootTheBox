@@ -33,12 +33,12 @@ class WallOfSheep(BaseObject):
     @property
     def user(self):
         ''' Returns display name of user'''
-        return User.by_user_id(self.user_id)
+        return User.by_id(self.user_id)
    
     @property
     def cracker(self):
         ''' Returns display name of cracker '''
-        return User.by_user_id(self.cracker_id)
+        return User.by_id(self.cracker_id)
 
     @classmethod
     def get_all(cls):

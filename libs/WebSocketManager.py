@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on Mar 15, 2012
 
@@ -64,6 +65,6 @@ class WebSocketManager():
         
     def add_connection(self, connection): 
         self.connections.append(connection)
-    
+
     def remove_connection(self, connection):
         self.connections.remove(connection)

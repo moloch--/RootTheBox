@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Root the Box - Authenticate Reporter
 Created on Feb 28, 2012

@@ -175,8 +175,7 @@ class AdminCreateHandler(AdminBaseHandler):
             token = self.get_argument('token')
             if len(self.request.files['crack_me']) != 1: raise TypeError
         except:
-            self.render("admin/error.html", errors = "Failed to create crack me")
-            
+            self.render("admin/error.html", errors = "Failed to create crack me")    
         filePath = self.application.settings['crack_me_dir']+'/'+uuid
         save = open(filePath, 'wb')
         save.write(b64encode(self.request.files['crack_me'][0]['body']))
@@ -301,8 +300,6 @@ class AdminAjaxNotifyHandler(RequestHandler):
     @authorized("admin")
     @restrict_ip_address
     def get(self, *args, **kwargs):
-        print kwargs
-        '''
         try:
             message = self.get_argument("message")
             title = self.get_argument("title")
@@ -320,7 +317,6 @@ class AdminAjaxNotifyHandler(RequestHandler):
         self.ws_manager.send_all(notification)
         logging.info("Admin sent a notification")
         self.write("success")
-        '''
 
 class AdminAwardChallengeHandler(RequestHandler):
     ''' Awards challenges to a user '''
