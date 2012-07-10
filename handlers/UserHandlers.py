@@ -42,6 +42,7 @@ class HomeHandler(UserBaseHandler):
         self.render('user/home.html', user = user)
 
 class ShareUploadHandler(UserBaseHandler):
+    ''' Handles file shares for teams '''
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -65,7 +66,7 @@ class ShareUploadHandler(UserBaseHandler):
         if 50 * (1024*1024) < len(self.request.files['file_data'][0]['body']):
             self.render("user/error.html", operation = "File Upload", errors = "File too large")
             return
-
+        # Disreguard all user controlled variables
         file_name = os.path.basename(self.request.files['file_data'][0]['filename'])
         char_white_list = ascii_letters + digits + "-._"
         file_name = filter(lambda char: char in char_white_list, file_name)

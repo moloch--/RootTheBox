@@ -34,7 +34,6 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
             self.write_message("{\"redraw\":\"true\"}")
         else:
             logging.warn("%s tried to send us '%s'" % (self.request.remote_ip, message))
-        
-            
+
     def on_close(self):
         self.manager.remove_connection(self)
