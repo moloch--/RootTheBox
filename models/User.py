@@ -18,6 +18,8 @@ Created on Mar 12, 2012
    limitations under the License.
 '''
 
+
+import string
 import logging
 
 from hashlib import md5, sha256
@@ -34,23 +36,18 @@ from models.BaseGameObject import BaseObject
 
 
 class User(BaseObject):
-    """ User definition """
+    ''' User definition '''
 
     user_name = Column(Unicode(64), unique=True, nullable=False)
     display_name = Column(Unicode(64), unique=True, nullable=False)
     team_id = Column(Integer, ForeignKey('team.id'))
     dirty = Column(Boolean, default=True)
     score_cache = Column(Integer, default=0)
-    actions = relationship("Action", backref=backref("User",
-                                                     lazy="joined"), cascade="all, delete-orphan")
-    posts = relationship("Post", backref=backref("User",
-                                                 lazy="joined"), cascade="all, delete-orphan")
-    permissions = relationship("Permission", backref=backref("User",
-                                                             lazy="joined"), cascade="all, delete-orphan")
+    actions = relationship("Action", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
+    posts = relationship("Post", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
+    permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
-    controlled_boxes = relationship(
-        "Box", secondary=association_table, backref="User")
-
+    controlled_boxes = relationship("Box", secondary=association_table, backref="User")
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
         lambda self: self._password,
@@ -60,38 +57,38 @@ class User(BaseObject):
 
     @property
     def permissions(self):
-        """Return a set with all permissions granted to the user."""
-        return dbsession.query(Permission).filter_by(user_id=self.id)  # @UndefinedVariable
+        '''Return a set with all permissions granted to the user.'''
+        return dbsession.query(Permission).filter_by(user_id=self.id)
 
     @property
     def permissions_names(self):
-        """Return a list with all permissions names granted to the user."""
+        '''Return a list with all permissions names granted to the user.'''
         return [permission.permission_name for permission in self.permissions]
 
     @property
     def team_name(self):
-        """ Return a list with all groups names the user is a member of """
+        ''' Return a list with all groups names the user is a member of '''
         if self.team_id == None:
             return None
         else:
             team = dbsession.query(
-                Team).filter_by(id=self.team_id).first()  # @UndefinedVariable
+                Team).filter_by(id=self.team_id).first()
             return team.team_name
 
     @property
     def team(self):
-        """ Return a the uesr's team object """
+        ''' Return a the uesr's team object '''
         if self.team_id == None:
             return None
         else:
-            return dbsession.query(Team).filter_by(id=self.team_id).first()  # @UndefinedVariable
+            return dbsession.query(Team).filter_by(id=self.team_id).first()
 
     @property
     def score(self):
         ''' Returns user's current score from cache, or re-calculates if expired '''
         if self.dirty:
             actions = dbsession.query(
-                Action).filter_by(user_id=self.id).all()  # @UndefinedVariable
+                Action).filter_by(user_id=self.id).all()
             self.score_cache = sum(actions)
             self.dirty = False
             dbsession.add(self)
@@ -100,40 +97,40 @@ class User(BaseObject):
 
     @classmethod
     def get_all(cls):
-        """ Return all non-admin user objects """
-        return dbsession.query(cls).filter(cls.user_name != 'admin').all()  # @UndefinedVariable
+        ''' Return all non-admin user objects '''
+        return dbsession.query(cls).filter(cls.user_name != 'admin').all()  
 
     @classmethod
     def get_free_agents(cls):
-        """ Return all non-admin user objects without a team """
-        return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_name != 'admin').all()  # @UndefinedVariable
+        ''' Return all non-admin user objects without a team '''
+        return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_name != 'admin').all()  
 
     @classmethod
     def by_user_name(cls, user_name):
-        """ Return the user object whose user name is ``user_name`` """
-        return dbsession.query(cls).filter_by(user_name=unicode(user_name)).first()  # @UndefinedVariable
+        ''' Return the user object whose user name is 'user_name' '''
+        return dbsession.query(cls).filter_by(user_name=unicode(user_name)).first()  
 
     @classmethod
     def by_display_name(cls, display_name):
-        """ Return the user object whose user name is ``display_name`` """
-        return dbsession.query(cls).filter_by(display_name=unicode(display_name)).first()  # @UndefinedVariable
+        ''' Return the user object whose user name is 'display_name' '''
+        return dbsession.query(cls).filter_by(display_name=unicode(display_name)).first()  
 
     @classmethod
     def by_id(cls, user_id):
-        """ Return the user object whose user id is ``user_id`` """
-        return dbsession.query(cls).filter_by(id=user_id).first()  # @UndefinedVariable
+        ''' Return the user object whose user id is 'user_id' '''
+        return dbsession.query(cls).filter_by(id=user_id).first()  
 
     @classmethod
     def add_to_team(cls, team_name):
         ''' Add user to team based on team name '''
         team = dbsession.query(Team).filter_by(
-            team_name=unicode(team_name)).first()  # @UndefinedVariable
+            team_name=unicode(team_name)).first()  
         cls.team_id = team.id
 
     @classmethod
     def _hash_password(cls, password):
         ''' Hashes the password using Md5/Sha256 :D '''
-        password = unicode(password)
+        password = filter(lambda char: char in string.printable[:-5], password)
         if 8 <= len(password):
             password = cls.admin_hash(password)
         else:
@@ -149,18 +146,20 @@ class User(BaseObject):
 
     @classmethod
     def admin_hash(cls, preimage):
-        ''' Two rounds of sha256, no salt '''
+        ''' 25,000 rounds of sha256 '''
         sha_hash = sha256()
         sha_hash.update(preimage)
-        sha_hash.update(preimage + sha_hash.hexdigest())
+        for count in range(1, 25000):
+            sha_hash.update(preimage + sha_hash.hexdigest() + str(count))
         return unicode(sha_hash.hexdigest())
 
     def has_permission(self, permission):
-        """ Return True if ``permission`` is in permissions_names """
+        ''' Return True if 'permission' is in permissions_names '''
         return True if permission in self.permissions_names else False
 
     def validate_password(self, attempt):
-        """ Check the password against existing credentials """
+        ''' Check the password against existing credentials '''
+        attempt = filter(lambda char: char in string.printable[:-5], attempt)
         if isinstance(attempt, unicode):
             attempt = attempt.encode('utf-8')
         if self.has_permission('admin'):
