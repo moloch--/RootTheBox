@@ -23,17 +23,19 @@ from libs.Singleton import *
 from libs.Session import SessionManager
 from models.SEChallenge import SEChallenge
 
+
 @Singleton
 class SEManager():
-    
+
     def __init__(self):
         self.last_challenge = None
         self.active_challenge = SEChallenge.get_lowest()
-    
+
     def update_challenge(self):
         self.last_challenge = self.active_challenge
-        self.active_challenge = SEChallenge.get_by_level(self.active_challenge.level+1)
-        
+        self.active_challenge = SEChallenge.get_by_level(
+            self.active_challenge.level + 1)
+
     def get_current(self):
         correct = SEChallenge.get_highest()
         if self.active_challenge == None and correct != None and self.last_challenge != None:

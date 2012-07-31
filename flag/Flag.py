@@ -21,11 +21,12 @@ Created on Feb 24, 2012
 
 Flag program, teams need to execute this on boxes
 in order to gain points.  This code supports both
-Windows and Linux.  A .exe can be generated for 
+Windows and Linux.  A .exe can be generated for
 ease of use on Winodws boxes using py2exe and the
 build_flag.py script.
 
 '''
+
 
 import os
 import sys
@@ -38,11 +39,13 @@ import platform
 
 from hashlib import sha256
 
+
 BUFFER_SIZE = 1024
 LINE_LENGTH = 65
 SERVER = 'game.rootthebox.com'
 SERVER_PORT = 8888
 PING = "ping"
+
 
 class RtbClient(object):
     ''' Root the Box Reporter '''
@@ -57,15 +60,16 @@ class RtbClient(object):
         self.windows_root_path = "C:\\root_garbage.txt"
         self.windows_user_path = "C:\\user_garbage.txt"
         self.level = None
-    
+
     def start(self):
         ''' Main entry point '''
         self.load_key_file()
         if self.__register__():
             self.__reporter__()
         else:
-            sys.stdout.write('[!] Error: Failed to acquire configuration infomation\n')
-    
+            sys.stdout.write(
+                '[!] Error: Failed to acquire configuration infomation\n')
+
     def load_key_file(self):
         ''' Loads the key file '''
         if platform.system().lower() == "linux":
@@ -73,23 +77,28 @@ class RtbClient(object):
         elif platform.system().lower() == "windows":
             self.__windows__()
         else:
-            sys.stdout.write("[!] Error: Platform not supported (%s)\n" % (platform.release(),))
+            sys.stdout.write("[!] Error: Platform not supported (%s)\n" %
+                             (platform.release(),))
             sys.stdout.flush()
 
     def __windows__(self):
         ''' Load a windows key file '''
-        sys.stdout.write("[*] Detected Windows %s operating system\n" % (platform.release(),))
-        sys.stdout.write("[*] Attempting to load root key from %s ... " % (self.windows_root_path,))
+        sys.stdout.write("[*] Detected Windows %s operating system\n" %
+                         (platform.release(),))
+        sys.stdout.write("[*] Attempting to load root key from %s ... " %
+                         (self.windows_root_path,))
         sys.stdout.flush()
         self.level = 'root'
         self.key_value = self.__load__(self.windows_root_path)
         if self.key_value == None:
-            sys.stdout.write("failure\n[*] Attempting to read user key from %s ... " % (self.linux_user_path,))
+            sys.stdout.write("failure\n[*] Attempting to read user key from %s ... " %
+                             (self.linux_user_path,))
             sys.stdout.flush()
             self.level = 'user'
             self.key_value = self.__load__(self.windows_user_path)
             if self.key_value == None:
-                sys.stdout.write("failure\n[!] Error: Unable to read key file(s)\n")
+                sys.stdout.write(
+                    "failure\n[!] Error: Unable to read key file(s)\n")
                 os._exit(1)
             else:
                 sys.stdout.write("success\n")
@@ -100,18 +109,22 @@ class RtbClient(object):
 
     def __linux__(self):
         ''' Load a linux key file '''
-        sys.stdout.write('[*] Detected Linux operating system (%s) \n' % (platform.release(),))
-        sys.stdout.write('[*] Attempting to load root key from %s ... ' % (self.linux_root_path,))
+        sys.stdout.write('[*] Detected Linux operating system (%s) \n' %
+                         (platform.release(),))
+        sys.stdout.write('[*] Attempting to load root key from %s ... ' %
+                         (self.linux_root_path,))
         sys.stdout.flush()
         self.level = 'root'
         self.key_value = self.__load__(self.linux_root_path)
         if self.key_value == None:
-            sys.stdout.write("failure\n[*] Attempting to read user key from %s ... " % (self.linux_user_path,))
+            sys.stdout.write("failure\n[*] Attempting to read user key from %s ... " %
+                             (self.linux_user_path,))
             sys.stdout.flush()
             self.level = 'user'
             self.key_value = self.__load__(self.linux_user_path)
             if self.key_value == None:
-                sys.stdout.write("failure\n[!] Error: Unable to read key file(s)\n")
+                sys.stdout.write(
+                    "failure\n[!] Error: Unable to read key file(s)\n")
                 os._exit(1)
             else:
                 sys.stdout.write("success\n")
@@ -135,7 +148,8 @@ class RtbClient(object):
         sys.stdout.write("[*] Finding scoring engine address, please wait ...")
         sys.stdout.flush()
         ip = socket.gethostbyname(SERVER)
-        sys.stdout.write("\r[*] Found scoring engine at %s             \n" % ip)
+        sys.stdout.write(
+            "\r[*] Found scoring engine at %s             \n" % ip)
         return ip
 
     def __reporter__(self):
@@ -147,7 +161,8 @@ class RtbClient(object):
         sock.listen(1)
         while True:
             try:
-                sys.stdout.write('\r[*] Reporter listening ...'+str(LINE_LENGTH * ' ')+'\r')
+                sys.stdout.write('\r[*] Reporter listening ...' +
+                                 str(LINE_LENGTH * ' ') + '\r')
                 sys.stdout.flush()
                 connection, address = sock.accept()
                 sys.stdout.write('\r[*] Connection from %s' % address[0])
@@ -157,14 +172,16 @@ class RtbClient(object):
                     if data[:len(PING)] == PING:
                         self.__pong__(connection)
                     else:
-                        sys.stdout.write('\n[!] Warning: Bad connection attempt (%s)\n' % address[0])
+                        sys.stdout.write('\n[!] Warning: Bad connection attempt (%s)\n' %
+                                         address[0])
                         sys.stdout.flush()
                         connection.sendall(" >:( Go away!\r\n")
                         connection.close()
                 else:
                     self.__verify__(connection)
             except socket.error, err:
-                sys.stdout.write('\n[!] Unable to configure socket (%s)\n' % err)
+                sys.stdout.write(
+                    '\n[!] Unable to configure socket (%s)\n' % err)
                 sys.stdout.flush()
                 os._exit(1)
 
@@ -186,10 +203,11 @@ class RtbClient(object):
     def __pong__(self, connection):
         ''' Responds to pings (not ICMP) '''
         connection.sendall(str(self.display_name))
-    
+
     def __register__(self):
         ''' Retrieves configuration information from the scoring engine '''
-        connection = httplib.HTTPConnection(self.remote_host+":"+str(SERVER_PORT))
+        connection = httplib.HTTPConnection(
+            self.remote_host + ":" + str(SERVER_PORT))
         connection.request("GET", "/reporter/register?%s" % self.user)
         response = connection.getresponse()
         if response.status == 200:
@@ -203,14 +221,15 @@ class RtbClient(object):
                 os._exit(1)
         return False
 
+
 def help():
     ''' Displays a helpful message '''
-    sys.stdout.write("Root the Box VII - Reporter - v0.1 \n")
-    sys.stdout.write("Usage:\n\treporter.py <hacker name>\n")
+    sys.stdout.write("Root the Box - Flag - v0.1 \n")
+    sys.stdout.write("Usage:\n\tflag.py <hacker name>\n")
     sys.stdout.write("Options:\n")
     sys.stdout.write("\t--help...............................Display this helpful message\n")
     sys.stdout.flush()
-  
+
 if __name__ == '__main__':
     ''' float main() '''
     try:
@@ -221,9 +240,10 @@ if __name__ == '__main__':
             client = RtbClient(sys.argv[1])
             client.start()
         else:
-            sys.stdout.write("[!] PEBKAC: Too few or too many arguments, see --help\n")
+            sys.stdout.write(
+                "[!] PEBKAC: Too few or too many arguments, see --help\n")
             sys.stdout.flush()
     except KeyboardInterrupt:
-        sys.stdout.write("\r[!] User exit "+str(LINE_LENGTH * ' ')+'\n')
+        sys.stdout.write("\r[!] User exit " + str(LINE_LENGTH * ' ') + '\n')
         sys.stdout.flush()
     os._exit(0)

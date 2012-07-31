@@ -52,6 +52,8 @@ MIN_X = 80
 ###################
 # > Simple Box
 ###################
+
+
 class Box(object):
     ''' Simple box object for storing info '''
 
@@ -65,6 +67,8 @@ class Box(object):
 ###################
 # > Flag Monitor
 ###################
+
+
 class FlagMonitor(object):
     ''' Manages all flags and state changes '''
 
@@ -95,7 +99,8 @@ class FlagMonitor(object):
     def __load__(self):
         ''' Loads all required data '''
         self.load_message = " Loading, please wait ... "
-        self.loading_bar = curses.newwin(3, len(self.load_message) + 2, (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
+        self.loading_bar = curses.newwin(3, len(self.load_message) + 2,
+                                         (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
         self.loading_bar.border(0)
         self.loading_bar.addstr(1, 1, self.load_message, curses.A_BOLD)
         self.loading_bar.refresh()
@@ -122,14 +127,16 @@ class FlagMonitor(object):
             else:
                 time.sleep(0.01)
         self.stop()
-    
+
     def __title__(self):
         ''' Create title and footer '''
         title = " Root the Box - Flag Monitor "
         version = "[ v0.1 ]"
-        agent = "[ "+self.display_name+" ]"
-        self.screen.addstr(0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD)
-        self.screen.addstr(self.max_y - 1, (self.max_x - len(version)) - 3, version)
+        agent = "[ " + self.display_name + " ]"
+        self.screen.addstr(
+            0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD)
+        self.screen.addstr(
+            self.max_y - 1, (self.max_x - len(version)) - 3, version)
         self.screen.addstr(self.max_y - 1, 3, agent)
 
     def __grid__(self):
@@ -137,15 +144,18 @@ class FlagMonitor(object):
         pos_x = 3
         self.screen.hline(3, 1, curses.ACS_HLINE, self.max_x - 2)
         self.ip_title = "   IP  Address   "
-        self.screen.vline(2, pos_x + len(self.ip_title), curses.ACS_VLINE, self.max_y - 3)
+        self.screen.vline(
+            2, pos_x + len(self.ip_title), curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, 2, self.ip_title)
         pos_x += len(self.ip_title)
         self.name_title = "         Box  Name         "
-        self.screen.vline(2,  pos_x + len(self.name_title) + 1, curses.ACS_VLINE, self.max_y - 3)
+        self.screen.vline(2, pos_x + len(self.name_title) + 1,
+                          curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, pos_x + 1, self.name_title)
         pos_x += len(self.name_title)
         self.flag_title = "   Flag Status   "
-        self.screen.vline(2,  pos_x + len(self.flag_title) + 2, curses.ACS_VLINE, self.max_y - 3)
+        self.screen.vline(2, pos_x + len(self.flag_title) + 2,
+                          curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, pos_x + 2, self.flag_title)
         pos_x += len(self.flag_title)
         self.ping_title = "  Ping  "
@@ -163,16 +173,19 @@ class FlagMonitor(object):
         ''' Draws a box on the screen '''
         pos_y = 4 + index
         self.screen.addstr(pos_y, self.start_ip_pos, box.ip_address)
-        self.screen.addstr(pos_y, self.start_name_pos, box.name[:len(self.name_title)])
+        self.screen.addstr(
+            pos_y, self.start_name_pos, box.name[:len(self.name_title)])
         if box.state == None:
             self.screen.addstr(pos_y, self.start_flag_pos, " NOT  CAPTURED ")
         elif box.state == self.IS_CAPTURED:
-            self.screen.addstr(pos_y, self.start_flag_pos, " FLAG  PLANTED ", curses.color_pair(self.IS_CAPTURED))
+            self.screen.addstr(pos_y, self.start_flag_pos,
+                               " FLAG  PLANTED ", curses.color_pair(self.IS_CAPTURED))
         elif box.state == self.TEAM_CAPTURED:
-            self.screen.addstr(pos_y, self.start_flag_pos, " TEAM CAPTURED ", curses.color_pair(self.TEAM_CAPTURED))
+            self.screen.addstr(pos_y, self.start_flag_pos,
+                               " TEAM CAPTURED ", curses.color_pair(self.TEAM_CAPTURED))
         else:
             pass
-    
+
     def update_box_status(self, box):
         ''' Pings box and updates its status '''
         response = self.ping_box(box.ip_address, self.team_port)
@@ -210,7 +223,8 @@ class FlagMonitor(object):
                 self.boxes.append(Box(name, ip_address, port))
             box_file.close()
         else:
-            sys.stdout.write("[!] Error: File does not exist (%s)\n" % (os.path.abspath(path),))
+            sys.stdout.write("[!] Error: File does not exist (%s)\n" %
+                             (os.path.abspath(path),))
             sys.stdout.flush()
             os._exit(1)
 
@@ -225,16 +239,18 @@ class FlagMonitor(object):
             thread = threading.Thread(target=self.__matrix__)
             self.loading_bar.clear()
             prompt = "Agent: "
-            self.agent_prompt = curses.newwin(3, len(self.load_message) + 2, (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
+            self.agent_prompt = curses.newwin(3, len(self.load_message) + 2, (self.
+                                                                              max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
             self.agent_prompt.border(0)
             self.agent_prompt.addstr(1, 1, prompt, curses.A_BOLD)
             curses.echo()
             thread.start()
-            self.display_name = self.agent_prompt.getstr(1, len(prompt) + 1, len(self.load_message) - len(prompt) - 1)
+            self.display_name = self.agent_prompt.getstr(
+                1, len(prompt) + 1, len(self.load_message) - len(prompt) - 1)
             self.stop_thread = True
             thread.join()
         curses.noecho()
-    
+
     def __team__(self):
         ''' Download team configuration '''
         pass
@@ -253,9 +269,10 @@ class FlagMonitor(object):
         self.IS_CAPTURED = 2
         curses.init_pair(self.IS_CAPTURED, -1, curses.COLOR_GREEN)
         self.TEAM_CAPTURED = 3
-        curses.init_pair(self.TEAM_CAPTURED, -1, curses.COLOR_CYAN) 
+        curses.init_pair(self.TEAM_CAPTURED, -1, curses.COLOR_CYAN)
         self.WAS_CAPTURED = 4
-        curses.init_pair(self.WAS_CAPTURED, curses.COLOR_WHITE, curses.COLOR_RED)
+        curses.init_pair(
+            self.WAS_CAPTURED, curses.COLOR_WHITE, curses.COLOR_RED)
         self.NEVER_CAPTURED = 5
         curses.init_pair(self.NEVER_CAPTURED, -1, -1)
 
@@ -291,7 +308,7 @@ class FlagMonitor(object):
         download = " > Establishing satalite uplink: "
         for index in range(5, 25):
             signal = random.randint(0, 30)
-            self.screen.addstr(3, 2, download+str(signal)+" dBi    ")
+            self.screen.addstr(3, 2, download + str(signal) + " dBi    ")
             self.screen.refresh()
             time.sleep(0.2)
             if self.stop_thread:
@@ -301,7 +318,7 @@ class FlagMonitor(object):
         # (4) Downloading animation
         download = " > Downloading noki telcodes: "
         for index in range(0, 100):
-            self.screen.addstr(4, 2, download+str(index)+"%")
+            self.screen.addstr(4, 2, download + str(index) + "%")
             self.screen.refresh()
             time.sleep(0.1)
             if self.stop_thread:
@@ -310,7 +327,7 @@ class FlagMonitor(object):
         self.screen.refresh()
         # (5) Initializing memory address
         memory = " > Initializing memory: "
-        for index in range(0, 2**32, 2**12):
+        for index in range(0, 2 ** 32, 2 ** 12):
             self.screen.addstr(5, 2, memory + str("0x%08X" % index))
             self.screen.refresh()
             if self.stop_thread:
@@ -329,6 +346,8 @@ class FlagMonitor(object):
 ###################
 # > Main Entry
 ###################
+
+
 def help():
     ''' Displays a helpful message '''
     sys.stdout.write("Root the Box - Flag Manager\n")
@@ -336,10 +355,14 @@ def help():
     sys.stdout.write("\tFileManager.py <options>\n")
     sys.stdout.write("Options:\n")
     sys.stdout.write("\t-f, --file <path>...........................Load boxes from file\n")
-    sys.stdout.write("\t-a, --agent <name>..........................Define agent name\n")
-    sys.stdout.write("\t-u, --url <url>.............................Scoring engine URL\n")
-    sys.stdout.write("\t-b, --beep..................................Beep upon event\n")
+    sys.stdout.write(
+        "\t-a, --agent <name>..........................Define agent name\n")
+    sys.stdout.write(
+        "\t-u, --url <url>.............................Scoring engine URL\n")
+    sys.stdout.write(
+        "\t-b, --beep..................................Beep upon event\n")
     sys.stdout.flush()
+
 
 def parse_argv(flag_monitor):
     ''' Parses command line arguments '''
@@ -352,6 +375,7 @@ def parse_argv(flag_monitor):
             flag_monitor.load_url = get_value(arg)
         elif  arg == "-b" or arg == "--beep":
             flag_monitor.beep = True
+
 
 def get_value(token):
     ''' Gets a value based on a command line parameter '''

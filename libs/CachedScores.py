@@ -13,19 +13,20 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 '''
 
 from libs.CachedTeam import CachedTeam
 
+
 class CachedScores():
-    
+
     def __init__(self):
         self.memory = {}
-        
+
     def add_score(self, score_update):
         ''' This should change reclaculate the memory to add the update'''
-        if not self.memory.has_key(score_update.team_name):
+        if not score_update.team_name in self.memory:
             self.memory[score_update.team_name] = CachedTeam(score_update)
         self.memory.get(score_update.team_name).add_score(score_update)
 
@@ -35,7 +36,7 @@ class CachedScores():
         except:
             scores = "[]"
         return scores
-    
+
     def find_current_score_by_team(self, team_name):
         try:
             score = self.memory[team_name].current_score

@@ -20,13 +20,14 @@ Created on Mar 21, 2012
 import socket
 import logging
 
+
 class HostIpAddress():
 
-	def __init__(self):
-		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		sock.connect(("google.com", 80))
-		self.ip_address = sock.getsockname()[0]
-		sock.close()
+    def __init__(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.connect(("google.com", 80))
+        self.ip_address = sock.getsockname()[0]
+        sock.close()
 
-	def get_ip_address(self):
-		return self.ip_address
+    def get_ip_address(self):
+        return self.ip_address

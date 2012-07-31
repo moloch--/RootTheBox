@@ -12,7 +12,7 @@ class Singleton:
     to use `__call__` will result in a `TypeError` being raised.
 
     Limitations: The decorated class cannot be inherited from and the
-    type of the singleton instance cannot be checked with `isinstance`. 
+    type of the singleton instance cannot be checked with `isinstance`.
     """
 
     def __init__(self, decorated):
@@ -36,4 +36,5 @@ class Singleton:
         of multiple instances of the singleton. The `Instance` method should
         be used instead.
         """
-        raise TypeError('Singletons must be accessed through the `Instance` method.')
+        raise TypeError(
+            'Singletons must be accessed through the `Instance` method.')

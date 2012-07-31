@@ -22,6 +22,7 @@ from sqlalchemy.types import Unicode, Integer
 from sqlalchemy import Column, ForeignKey
 from models.BaseGameObject import BaseObject
 
+
 class Permission(BaseObject):
     """ Permission definition """
 

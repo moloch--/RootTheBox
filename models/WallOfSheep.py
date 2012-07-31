@@ -23,6 +23,7 @@ from sqlalchemy.types import Integer, Unicode
 from models import dbsession, User
 from models.BaseGameObject import BaseObject
 
+
 class WallOfSheep(BaseObject):
 
     preimage = Column(Unicode(64), nullable=False)
@@ -34,7 +35,7 @@ class WallOfSheep(BaseObject):
     def user(self):
         ''' Returns display name of user'''
         return User.by_id(self.user_id)
-   
+
     @property
     def cracker(self):
         ''' Returns display name of cracker '''

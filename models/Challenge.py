@@ -24,20 +24,22 @@ from sqlalchemy.types import Unicode, Integer
 from models.BaseGameObject import BaseObject
 from models import team_challenges, dbsession
 
+
 class Challenge(BaseObject):
     ''' Challenge definition '''
-    
+
     name = Column(Unicode(255), nullable=False)
     description = Column(Unicode(1024), nullable=False)
     token = Column(Unicode(255), nullable=False)
     value = Column(Integer, nullable=False)
-    teams = relationship("Team", secondary=team_challenges, backref="Challenge")
-   
+    teams = relationship(
+        "Team", secondary=team_challenges, backref="Challenge")
+
     @classmethod
     def get_all(cls):
         ''' Returns all challenge objects '''
         return dbsession.query(cls).all()
- 
+
     @classmethod
     def by_id(cls, challenge_id):
         ''' Returns all challenge objects '''
@@ -45,8 +47,6 @@ class Challenge(BaseObject):
 
     def __repr__(self):
         return ('<Challenge - name:%s, value:%d>' % (self.name, self.value))
-    
+
     def __radd__(self, other):
         return self.value + other
-
-

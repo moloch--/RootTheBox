@@ -26,7 +26,7 @@ from models.BaseGameObject import BaseObject
 
 
 class CrackMe(BaseObject):
-    
+
     crack_me_name = Column(Unicode(64), unique=True, nullable=False)
     description = Column(Unicode(1024))
     value = Column(Integer, nullable=False)
@@ -34,14 +34,14 @@ class CrackMe(BaseObject):
     uuid = Column(Unicode(64), unique=True, nullable=False)
     content = Column(Unicode(64), nullable=False)
     token = Column(Unicode(255), unique=True, nullable=False)
-    
+
     teams = relationship("Team", backref="CrackMe")
- 
+
     @classmethod
     def by_crackme_name(cls, name):
         """ Return the user object whose user name is ``crackme_name`` """
         return dbsession.query(cls).filter_by(crackme_name=unicode(name)).first()
-    
+
     @classmethod
     def by_id(cls, crackme_id):
         """ Return the user object whose user name is ``id`` """
@@ -49,6 +49,3 @@ class CrackMe(BaseObject):
 
     def __repr__(self):
         return ('<CrackMe - name: %s, value: %d>' % (self.crackme_name, self.value))
-   
-    
-    

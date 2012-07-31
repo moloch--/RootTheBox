@@ -38,14 +38,17 @@ from libs import ConsoleColors
 
 curr_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
+
 def serve():
     """
     serves the application
     ----------------------
     """
     if len(argv) == 2:
-        print(ConsoleColors.INFO+'%s : Starting up the application, please wait ...' % curr_time())
+        print(ConsoleColors.INFO +
+              '%s : Starting up the application, please wait ...' % curr_time())
         start_game()
+
 
 def create():
     """
@@ -53,15 +56,16 @@ def create():
     --------------------
     """
     # Create the table schemas
-    # usage: python . create 
-    
+    # usage: python . create
+
     #Bootstrap the database with some objects
     #usage: python . create bs
-    print(ConsoleColors.INFO+'%s : creating the database.'%curr_time())
+    print(ConsoleColors.INFO + '%s : creating the database.' % curr_time())
     __create__()
     if len(argv) == 3 and argv[2] == 'bs':
         __boot_strap__()
-    
+
+
 def test():
     """
     run unit tests
@@ -71,7 +75,7 @@ def test():
     print '[*] %s : testing the application.' % curr_time()
     # calling nose's nosetests to test the application using the 'tests' module
     call(['nosetests', '-v', 'tests'])
-    
+
 # -----
 if len(argv) == 1:
     argv.append("serve")
@@ -79,4 +83,4 @@ options = ['serve', 'create', 'test']
 if argv[1] in options:
     eval(argv[1])()
 else:
-    print(ConsoleColors.WARN+'Error: PEBKAC')
+    print(ConsoleColors.WARN + 'Error: PEBKAC')

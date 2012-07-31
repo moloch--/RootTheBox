@@ -38,14 +38,16 @@ TIMEOUT = 1
 XID_SIZE = 24
 BUFFER_SIZE = 1024
 
-logging.basicConfig(format = '[%(levelname)s] %(asctime)s - %(message)s', level = logging.DEBUG)
+logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s',
+                    level=logging.DEBUG)
 
 consoleLogger = logging.StreamHandler()
 consoleLogger.setLevel(logging.DEBUG)
-fileLogger = logging.FileHandler(filename = 'rtb_score.log')
+fileLogger = logging.FileHandler(filename='rtb_score.log')
 fileLogger.setLevel(logging.DEBUG)
 logging.getLogger('').addHandler(consoleLogger)
 logging.getLogger('').addHandler(fileLogger)
+
 
 def scoring_round():
     ''' Multi-threaded scoring '''
@@ -55,16 +57,18 @@ def scoring_round():
         score_box(box)
     logging.info("Scoring round completed")
 
+
 def score_box(box):
     ''' Scores a single box '''
     logging.info("Scoring reporters on %s" % (box.box_name,))
     threads = []
     for user in box.users:
-        thread = threading.Thread(target = score_user, args = (box, user))
+        thread = threading.Thread(target=score_user, args=(box, user))
         threads.append(thread)
         thread.start()
         for thread in threads:
-            thread.join(timeout = TIMEOUT)
+            thread.join(timeout=TIMEOUT)
+
 
 def score_user(box, user):
     ''' Scores a single user/team '''
@@ -77,24 +81,28 @@ def score_user(box, user):
         dbsession.add(user)
         dbsession.flush()
 
+
 def award_points(box, user, auth):
     ''' Creates action based on pwnage '''
     if auth.confirmed_access:
         value = box.root_value
-        description = "%s got root access on %s" % (user.display_name, box.box_name)
+        description = "%s got root access on %s" % (
+            user.display_name, box.box_name)
     else:
         value = box.user_value
-        description = "%s got user level access on %s" % (user.display_name, box.box_name)
+        description = "%s got user level access on %s" % (
+            user.display_name, box.box_name)
     action = Action(
-        classification = unicode("Box Pwnage"),
-        description = unicode(description),
-        value = value,
-        user_id = user.id
+        classification=unicode("Box Pwnage"),
+        description=unicode(description),
+        value=value,
+        user_id=user.id
     )
     user.dirty = True
     dbsession.add(action)
     dbsession.add(user)
     dbsession.flush()
+
 
 class AuthenticateReporter():
 
@@ -106,10 +114,11 @@ class AuthenticateReporter():
         self.sock.settimeout(TIMEOUT)
         self.confirmed_access = None
         self.pending_access = None
-    
+
     def check_validity(self):
         ''' Checks the validity of a reporter on a box '''
-        logging.info("Checking for reporter at %s:%s" % (self.box.ip_address, self.port))
+        logging.info("Checking for reporter at %s:%s" % (self.box.
+                                                         ip_address, self.port))
         try:
             self.sock.connect((self.box.ip_address, self.port))
             self.pending_access = self.sock.recv(BUFFER_SIZE)

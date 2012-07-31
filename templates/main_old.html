@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Pragma" content="no-cache" />
+
+<head>
+<title>Root the Box: {% block title %} Template {% end %}</title>
+<link href="/static/css/main.css" rel="stylesheet" type="text/css" />
+<link href="/static/css/menu.css" rel="stylesheet" type="text/css" />
+<link href="/static/css/animate.css" rel="stylesheet" type="text/css" />
+<link href="/static/css/notifier.css" rel="stylesheet" type="text/css" />
+<link href="/static/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/notifier.js"></script>
+{% block header %}{% end %}
+</head>
+<body>
+	<div id="banner">
+		<a href="{% block bannerLink %}/{% end %}"> <img
+			src="/static/images/banner.jpg" width="1200" /> </a>
+	</div>
+	<div id="outer">
+		<div id="menuouter">
+			<div id="menuinner">{% module Menu() %}</div>
+		</div>
+		<!-- Content -->
+		<div id="page_content" class="animated fadeIn">
+			<div id="primaryContentContainer">
+				<div id="primaryContent">{% block content %} No Content {% end %}</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div id="footer"><a href="http://redactedlabs.com" target="_blank">Redacted Labs</a> &copy; {{
+			datetime.date.today().year }} - Version {{
+			handler.application.settings['version'] }}</div>
+	</div>
+	<script>
+
+	$(document).ready(function() {
+		var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/websocket");
+		if (typeof String.prototype.startsWith != 'function') {
+			  String.prototype.startsWith = function (str){
+			    return this.indexOf(str) == 0;
+			  };
+		}
+		
+		ws.onopen = function() {
+			// Wait for a notification
+			if($('#scoreboard').length){
+				// ws.send("load plox");
+			}
+		};
+		
+		ws.onmessage = function (evt) {
+			message = jQuery.parseJSON(evt.data);
+			console.log(message);
+			console.log(message['time_stamp']);
+			if(message['py/object'] == 'libs.Notification.Notification') {
+				// Send a Notification
+				Notifier.notify(message['message'], message['title'], "data:image/png;base64,"+message['file_contents']);
+			} else if(message['py/object'] == 'libs.ScoreUpdate.ScoreUpdate') {
+				if($('#scoreboard').length){
+					// Update the line chart
+					chart.series[getSeriesByName(message['team_name'])].addPoint(
+							[parseInt(message['time_stamp'], 10),
+							 getCorrectValue(parseInt(message['value']), getSeriesByName(message['team_name']))]
+							);
+					// Update the bar chart
+					correctData(getSeriesByName(message['team_name']), parseInt(message['value']));
+					bar_chart.redraw();
+					// Update pie chart
+					correctPieData(message['team_name'], getSeriesByName(message['team_name']), parseInt(message['value']));
+					pc.redraw();
+				} 
+			}
+		};
+		
+		function getCorrectValue(newestValue, seriesId) {
+			if(chart.series[seriesId].data.length > 0) {
+				return chart.series[seriesId].data[chart.series[seriesId].data.length-1].config[1] + newestValue;
+			} else {
+				return newestValue;
+			}
+		}
+		
+		function getSeriesByName(teamName) {
+			for(var index = 0; index < chart.series.length; index++) {
+				if(chart.series[index].name == teamName) {
+					return index;
+				}
+			}
+			return -1;
+		}
+		
+		function correctData(teamIndex, newScore) {
+			var new_data = [];
+			// Copy all of the team scores that are currently being displayed
+			for(var index = 0; index < bar_chart.series[0].data.length; index++) {
+				 new_data[index] = bar_chart.series[0].data[index].config;
+			}
+			new_data[teamIndex] += newScore;
+			bar_chart.series[0].setData(new_data, false);
+		}
+		
+		function correctPieData(teamName, teamIndex, newScore) {
+			var new_data = [];
+			// Copy all of the team scores that are currently being displayed
+			for(var index = 0; index < pc.series[0].data.length; index++) {
+				 new_data[index] = pc.series[0].data[index].config;
+			}
+			new_data[teamIndex][1] += newScore;
+			pc.series[0].setData(new_data, false);
+		}
+		
+	});
+	</script>
+	{% block body %} {% end %}
+</body>
+</html>

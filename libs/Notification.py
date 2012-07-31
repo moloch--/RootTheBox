@@ -20,17 +20,18 @@ Created on Mar 16, 2012
 import base64
 from jsonpickle.pickler import Pickler
 
+
 class Notification():
-    
-    def __init__(self, title, message, classification = 'info', file_location = None, file_contents = None):
+
+    def __init__(self, title, message, classification='info', file_location=None, file_contents=None):
         ''' Must be passed named parameters '''
         self.title = title
         self.message = message
         self.classifications = {
-                'success': self.set_success, 
-                'error': self.set_error, 
-                'warning': self.set_warning, 
-                'info': self.set_info
+            'success': self.set_success,
+            'error': self.set_error,
+            'warning': self.set_warning,
+            'info': self.set_info
         }
         if file_location == None and file_contents != None:
             self.file_contents = file_contents
@@ -41,7 +42,8 @@ class Notification():
             if classification in self.classifications.keys():
                 self.classifications[classification]()
             else:
-                self.reander("admin/error.html", errors = "Notification class does not exist")
+                self.reander("admin/error.html",
+                             errors="Notification class does not exist")
 
     def to_message(self):
         ''' Creates JSON object '''
@@ -194,7 +196,7 @@ class Notification():
         self.file_contents += "5PHmdqX1WImeuaQKxs+nYpD/LhrOPVmcMgMQGk9rojjOPm7yR1UFFzUYypXIz6c88icKcSq/vPkBNgd9rGy"
         self.file_contents += "M2N+YDXZvxrltLVP+OYl6Ni9TMB75k3TkUtzmkT9xTHpHkBUZnat9gg29KVY6vdv6OlW3RXPb7zgeyUbggR"
         self.file_contents += "c/7rXxPXjw4MGDBw8ePHjw4MGDBw8ePHjw4MGDBw8ePHjw4MGDBw8eTPx/Q67oIKrFqoEAAAAASUVORK5CYII%3D"
-        
+
     def set_error(self):
         self.file_contents = "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhc"
         self.file_contents += "mUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAABFCSURBVHjavFsJjBVVFr311+6mu2kQbFYVUVEURVREbSSgLbigI"
@@ -267,8 +269,8 @@ class Notification():
         self.file_contents += "xrmZ2yP1DvQf4Is7702kTfninzImNg7Xx7LsIAZuVlvRGFKqN4k1sMs5uPni4w4WeT0/UVOrBY5Bg8nSxRqV"
         self.file_contents += "4vIN7+JrHgfgv2PyM9qIkirSSCtzvW1VGCicBaX+L+U5QhAA48aFDP63QQQuB6dLDL8YJGhg0WGgctI1L/Hs"
         self.file_contents += "n0Q7laRX1C+bEIo32QAygTABgWQyTfzliKEsmLAjFwLMIFrwBWFBGD0mvRYYR+hCgmgQ2ndNq5n9DiLJfuFv"
-        self.file_contents += "3djgJKobWihkLDiSghhWwjCJoSwOkhfSy/2Afd6+78AAwAu4RZEgEv6AAAAAABJRU5ErkJggg%3D%3D"  
-    
+        self.file_contents += "3djgJKobWihkLDiSghhWwjCJoSwOkhfSy/2Afd6+78AAwAu4RZEgEv6AAAAAABJRU5ErkJggg%3D%3D"
+
     def set_warning(self):
         self.file_contents = "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhc"
         self.file_contents += "mUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAA5SSURBVHja5FsJkBXFGf57jvf2vV12F1ZYWHaXGxWzKB4oCipE5"
@@ -400,4 +402,3 @@ class Notification():
         self.file_contents += "04WZXMizgQEQ5n4hQTAlgDY5QDQWgzjhZp169bdiKH0XHSU85EdDciITi044DiVdaOWx1Dgw93d3cc3bty4Z"
         self.file_contents += "2hoKB8QsBwAjgYAu2AARLCABE3IVgJAyDmmgaj2XJhO6whBdQDygc/OZLUfuT1e6ZCdqE7DAEpKzZKgNdpei"
         self.file_contents += "h3YRqRGce2EVgnvVdxp11n1HfZdgPN4XJBfj+Mg84ENl4v2+J8AAwBFomhAziE49wAAAABJRU5ErkJggg%3D%3D"
-    

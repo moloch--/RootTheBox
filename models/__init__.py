@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 
 this sets up sqlalchemy.
 for more information about sqlalchemy check out <a href="http://www.sqlalchemy.org/">www.sqlalchemy.org</a>
@@ -33,17 +33,21 @@ engine = create_engine('mysql://rtbUser:rtbUser@localhost/rtb')
 Session = sessionmaker(bind=engine, autocommit=True)
 
 # import the dbsession instance to execute queries on your database
-dbsession = Session(autoflush = True)
+dbsession = Session(autoflush=True)
 
 association_table = Table('user_to_box', BaseObject.metadata,
-    Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
-    Column('box_id', Integer, ForeignKey('box.id'), nullable=False)
-)
+                          Column('user_id',
+                                 Integer, ForeignKey('user.id'), nullable=False),
+                          Column('box_id',
+                                 Integer, ForeignKey('box.id'), nullable=False)
+                          )
 
 team_challenges = Table('team_to_challenge', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('challenge_id', Integer, ForeignKey('challenge.id'), nullable=False)
-)
+                        Column('team_id', Integer,
+                               ForeignKey('team.id'), nullable=False),
+                        Column('challenge_id', Integer,
+                               ForeignKey('challenge.id'), nullable=False)
+                        )
 
 # import models.
 from models.Action import Action
@@ -59,12 +63,11 @@ from models.WallOfSheep import WallOfSheep
 from models.SEChallenge import SEChallenge
 
 # calling this will create the tables at the database
-__create__ = lambda: (setattr(engine, 'echo', True), metadata.create_all(engine))
+__create__ = lambda: (
+    setattr(engine, 'echo', True), metadata.create_all(engine))
 
 # Bootstrap the database with some shit
-def __boot_strap__() :
+
+
+def __boot_strap__():
     import setup.auth
-    
-    
-    
-    

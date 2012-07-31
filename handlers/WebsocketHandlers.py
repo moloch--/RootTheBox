@@ -22,18 +22,20 @@ import tornado.websocket
 from libs.SecurityDecorators import *
 from libs.WebSocketManager import WebSocketManager
 
+
 class WebsocketHandler(tornado.websocket.WebSocketHandler):
-    
+
     def open(self):
-        self.manager = WebSocketManager.Instance() 
+        self.manager = WebSocketManager.Instance()
         self.manager.add_connection(self)
-        
+
     def on_message(self, message):
         if message == "load plox":
             self.manager.get_updates(self)
             self.write_message("{\"redraw\":\"true\"}")
         else:
-            logging.warn("%s tried to send us '%s'" % (self.request.remote_ip, message))
+            logging.warn("%s tried to send us '%s'" % (self.
+                                                       request.remote_ip, message))
 
     def on_close(self):
         self.manager.remove_connection(self)
