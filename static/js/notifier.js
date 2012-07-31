@@ -1,10 +1,10 @@
 $(document).ready(function(){
 
   var config = window.NotifierjsConfig = {
-    defaultTimeOut: 5000,
+    defaultTimeOut: 12500,
     position: ["top", "right"],
     notificationStyles: {
-      padding: "12px 18px",
+      padding: "16px 24px",
       margin: "0 0 6px 0",
       backgroundColor: "#000",
       opacity: 0.8,
@@ -12,7 +12,7 @@ $(document).ready(function(){
       font: "normal 13px 'Droid Sans', sans-serif",
       borderRadius: "3px",
       boxShadow: "#999 0 0 12px",
-      width: "300px"
+      width: "350px"
     },
     notificationStylesHover: {
       opacity: 1,

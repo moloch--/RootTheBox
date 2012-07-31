@@ -19,9 +19,11 @@ Created on Mar 13, 2012
     limitations under the License.
 '''
 
+
 import sys
 import models
 import logging
+
 
 from time import sleep
 from os import urandom, path
@@ -54,8 +56,8 @@ from handlers.WebsocketHandlers import *
 from handlers.ChallengeHandlers import *
 from handlers.ScoreboardHandlers import *
 
-config = ConfigManager.Instance()
 
+config = ConfigManager.Instance()
 app = Application([
                   # Static Handlers - Serves static CSS, JavaScript and
                   # image files

@@ -49,11 +49,10 @@ BUFFER_SIZE = 64
 MIN_Y = 24
 MIN_X = 80
 
+
 ###################
 # > Simple Box
 ###################
-
-
 class Box(object):
     ''' Simple box object for storing info '''
 
@@ -64,11 +63,10 @@ class Box(object):
         self.state = None
         self.capture_time = None
 
+
 ###################
 # > Flag Monitor
 ###################
-
-
 class FlagMonitor(object):
     ''' Manages all flags and state changes '''
 
@@ -343,11 +341,10 @@ class FlagMonitor(object):
             if self.stop_thread:
                 return
 
+
 ###################
 # > Main Entry
 ###################
-
-
 def help():
     ''' Displays a helpful message '''
     sys.stdout.write("Root the Box - Flag Manager\n")

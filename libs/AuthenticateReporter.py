@@ -5,25 +5,27 @@ Created on Feb 28, 2012
 
 @author: moloch
 
- Copyright [2012] [Redacted Labs]
+    Copyright [2012] [Redacted Labs]
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 '''
+
 
 import time
 import socket
 import logging
 import threading
+
 
 from os import urandom
 from models import Box
@@ -33,20 +35,11 @@ from tornado import iostream
 from models import dbsession, Action
 from libs.WebSocketManager import WebSocketManager
 
+
 # Scoring configuration
 TIMEOUT = 1
 XID_SIZE = 24
 BUFFER_SIZE = 1024
-
-logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s',
-                    level=logging.DEBUG)
-
-consoleLogger = logging.StreamHandler()
-consoleLogger.setLevel(logging.DEBUG)
-fileLogger = logging.FileHandler(filename='rtb_score.log')
-fileLogger.setLevel(logging.DEBUG)
-logging.getLogger('').addHandler(consoleLogger)
-logging.getLogger('').addHandler(fileLogger)
 
 
 def scoring_round():
