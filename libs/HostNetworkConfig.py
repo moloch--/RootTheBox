@@ -1,7 +1,7 @@
 '''
-Created on Mar 17, 2012
+Created on Mar 21, 2012
 
-@author: haddaway
+@author: moloch
 
     Copyright [2012] [Redacted Labs]
 
@@ -19,15 +19,16 @@ Created on Mar 17, 2012
 '''
 
 
-from jsonpickle.pickler import Pickler
+import socket
+import logging
 
 
-class ScoreUpdate():
+class HostNetworkConfig():
 
-    def __init__(self, time_stamp, value, team_name):
-        self.time_stamp = str(time_stamp)
-        self.value = str(value)
-        self.team_name = str(team_name)
-
-    def to_message(self):
-        return Pickler().flatten(self)
+    @classmethod
+    def get_ip_address(self, uri="rootthebox.com", port=80):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.connect((uri, port))
+        ip_address = sock.getsockname()[0]
+        sock.close()
+        return ip_address

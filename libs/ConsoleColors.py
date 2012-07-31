@@ -51,34 +51,35 @@ if platform.system() == 'Linux':
     # === Macros ===
     INFO = bold + C + "[*] " + W
     WARN = bold + R + "[!] " + W
+    PROMPT = bold + P + "[?] " + W
 
 else:
 
     ''' Sets all colors to blank strings '''
     # === Text Colors ===
-    W = ""  # @UnusedVariable
-    BLA = ""  # @UnusedVariable
-    R = ""  # @UnusedVariable
-    G = ""  # @UnusedVariable
-    O = ""  # @UnusedVariable
-    BLU = ""  # @UnusedVariable
-    P = ""  # @UnusedVariable
-    C = ""  # @UnusedVariable
-    GR = ""  # @UnusedVariable
+    W = ""
+    BLA = ""
+    R = ""
+    G = ""
+    O = ""
+    BLU = ""
+    P = ""
+    C = ""
+    GR = ""
 
     # === Styles ===
-    bold = ""  # @UnusedVariable
-    underline = ""  # @UnusedVariable
-    blink = ""  # @UnusedVariable
-    reverse = ""  # @UnusedVariable
-    concealed = ""  # @UnusedVariable
+    bold = ""
+    underline = ""
+    blink = ""
+    reverse = ""
+    concealed = ""
 
     # === Background Colors ===
-    bkgd_black = ""  # @UnusedVariable
-    bkgd_red = ""  # @UnusedVariable
-    bkgd_green = ""  # @UnusedVariable
-    bkgd_yellow = ""  # @UnusedVariable
-    bkgd_blue = ""  # @UnusedVariable
-    bkgd_magenta = ""  # @UnusedVariable
-    bkgd_cyan = ""  # @UnusedVariable
-    bkgd_white = ""  # @UnusedVariable
+    bkgd_black = ""
+    bkgd_red = ""
+    bkgd_green = ""
+    bkgd_yellow = ""
+    bkgd_blue = ""
+    bkgd_magenta = ""
+    bkgd_cyan = ""
+    bkgd_white = ""

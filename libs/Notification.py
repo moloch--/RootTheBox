@@ -17,6 +17,8 @@ Created on Mar 16, 2012
    See the License for the specific language governing permissions and
    limitations under the License.
 '''
+
+
 import base64
 from jsonpickle.pickler import Pickler
 
@@ -54,8 +56,8 @@ class Notification():
         ''' Returns a list of built-in images '''
         return ['info', 'success', 'error', 'warning']
 
-    # Built-in images below - no interesting code
     def set_success(self):
+        ''' base64 of the image file '''
         self.file_contents = "iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABGdBTUEAANkE3LLaAgAAIABJREFUeJztnXl"
         self.file_contents += "8HOWZ579v9aluqdU6LR/C95kAsk0SEjDYAYwJ7MQckyUbZpBnNnyYkAkhF+QgQCCb3dn9LCGbz4ZPNsEik"
         self.file_contents += "NkJCdjeXJMQYiAHOAFsLl9gW7ZlW7JlqdU6+q53/3iruquqq3XYsjFQP1NUvfVWt6rq9zy/53mPqgYPHjx"

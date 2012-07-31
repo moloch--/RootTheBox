@@ -1,8 +1,6 @@
 /*
  Highcharts JS v2.2.1 (2012-03-15)
-
  (c) 2009-2011 Torstein H?nsi
-
  License: www.highcharts.com/license
 */
 (function(){function L(a,b){var c;a||(a={});for(c in b)a[c]=b[c];return a}function za(){for(var a=0,b=arguments,c=b.length,d={};a<c;a++)d[b[a++]]=b[a];return d}function S(a,b){return parseInt(a,b||10)}function Ab(a){return typeof a==="string"}function mb(a){return typeof a==="object"}function Fb(a){return Object.prototype.toString.call(a)==="[object Array]"}function Bb(a){return typeof a==="number"}function nb(a){return oa.log(a)/oa.LN10}function cb(a){return oa.pow(10,a)}function Gb(a,b){for(var c=

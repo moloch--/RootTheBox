@@ -4,7 +4,7 @@ Created on June 30, 2012
 
 @author: moloch
 
-  Copyright [2012] [Redacted Labs]
+    Copyright [2012] [Redacted Labs]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ logging.basicConfig(format='\r[%(levelname)s] %(asctime)s - %(message)s',
 class ConfigManager(object):
     '''  Central class which handles any user-controlled settings '''
 
-    def __init__(self):
-        self.cfg_path = os.path.abspath("PlanetaryAssaultSystem.cfg")
+    def __init__(self, cfg_file='rootthebox.cfg'):
+        self.cfg_path = os.path.abspath(cfg_file)
         if not (os.path.exists(self.cfg_path) and os.path.isfile(self.cfg_path)):
             logging.critical("No configuration file found at %s, cannot continue." %
                              cfg_path)
@@ -49,33 +49,9 @@ class ConfigManager(object):
         logging.info('Loading config from %s' % self.cfg_path)
         self.config = ConfigParser.SafeConfigParser()
         self.config.readfp(open(self.cfg_path, 'r'))
-        self.__tables__()
-        self.__system__()
         self.__network__()
         self.__security__()
         self.__database__()
-
-    def __tables__(self):
-        ''' Load rainbow table configurations '''
-        self.rainbow_tables = {}
-        self.rainbow_tables['LM'] = self.config.get("RainbowTables", 'lm')
-        if not os.path.exists(self.rainbow_tables['LM']):
-            logging.warn("LM rainbow table directory not found (%s)" %
-                         self.rainbow_tables['LM'])
-        self.rainbow_tables['NTLM'] = self.config.get("RainbowTables", 'ntlm')
-        if not os.path.exists(self.rainbow_tables['NTLM']):
-            logging.warn("NTLM rainbow table directory not found (%s)" %
-                         self.rainbow_tables['NTLM'])
-        self.rainbow_tables['MD5'] = self.config.get("RainbowTables", 'md5')
-        if not os.path.exists(self.rainbow_tables['MD5']):
-            logging.warn("MD5 rainbow table directory not found (%s)" %
-                         self.rainbow_tables['MD5'])
-
-    def __system__(self):
-        ''' Load system configurations '''
-        threads = self.config.getint("System", 'threads')
-        self.max_threads = 1 if threads <= 0 else threads
-        self.debug = self.config.getboolean("System", 'debug')
 
     def __network__(self):
         ''' Load network configurations '''

@@ -43,11 +43,15 @@ class User(BaseObject):
     team_id = Column(Integer, ForeignKey('team.id'))
     dirty = Column(Boolean, default=True)
     score_cache = Column(Integer, default=0)
-    actions = relationship("Action", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
-    posts = relationship("Post", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
-    permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
+    actions = relationship("Action", backref=backref("User",
+                                                     lazy="joined"), cascade="all, delete-orphan")
+    posts = relationship("Post", backref=backref("User",
+                                                 lazy="joined"), cascade="all, delete-orphan")
+    permissions = relationship("Permission", backref=backref("User",
+                                                             lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
-    controlled_boxes = relationship("Box", secondary=association_table, backref="User")
+    controlled_boxes = relationship(
+        "Box", secondary=association_table, backref="User")
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
         lambda self: self._password,
@@ -98,33 +102,33 @@ class User(BaseObject):
     @classmethod
     def get_all(cls):
         ''' Return all non-admin user objects '''
-        return dbsession.query(cls).filter(cls.user_name != 'admin').all()  
+        return dbsession.query(cls).filter(cls.user_name != 'admin').all()
 
     @classmethod
     def get_free_agents(cls):
         ''' Return all non-admin user objects without a team '''
-        return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_name != 'admin').all()  
+        return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_name != 'admin').all()
 
     @classmethod
     def by_user_name(cls, user_name):
         ''' Return the user object whose user name is 'user_name' '''
-        return dbsession.query(cls).filter_by(user_name=unicode(user_name)).first()  
+        return dbsession.query(cls).filter_by(user_name=unicode(user_name)).first()
 
     @classmethod
     def by_display_name(cls, display_name):
         ''' Return the user object whose user name is 'display_name' '''
-        return dbsession.query(cls).filter_by(display_name=unicode(display_name)).first()  
+        return dbsession.query(cls).filter_by(display_name=unicode(display_name)).first()
 
     @classmethod
     def by_id(cls, user_id):
         ''' Return the user object whose user id is 'user_id' '''
-        return dbsession.query(cls).filter_by(id=user_id).first()  
+        return dbsession.query(cls).filter_by(id=user_id).first()
 
     @classmethod
     def add_to_team(cls, team_name):
         ''' Add user to team based on team name '''
         team = dbsession.query(Team).filter_by(
-            team_name=unicode(team_name)).first()  
+            team_name=unicode(team_name)).first()
         cls.team_id = team.id
 
     @classmethod

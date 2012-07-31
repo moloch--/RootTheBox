@@ -39,12 +39,12 @@ class CrackMe(BaseObject):
 
     @classmethod
     def by_crackme_name(cls, name):
-        """ Return the user object whose user name is ``crackme_name`` """
+        ''' Return the user object whose user name is "crackme_name" '''
         return dbsession.query(cls).filter_by(crackme_name=unicode(name)).first()
 
     @classmethod
     def by_id(cls, crackme_id):
-        """ Return the user object whose user name is ``id`` """
+        ''' Return the user object whose user name is "id" '''
         return dbsession.query(cls).filter_by(id=unicode(crackme_id)).first()
 
     def __repr__(self):

@@ -18,6 +18,7 @@ Created on Mar 13, 2012
    limitations under the License.
 '''
 
+
 import logging
 import functools
 from models.User import User
@@ -39,7 +40,7 @@ def authenticated(method):
 
 
 def restrict_ip_address(method):
-    """ Only allows access to ip addresses in a provided list """
+    ''' Only allows access to ip addresses in a provided list '''
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -53,7 +54,7 @@ def restrict_ip_address(method):
 
 
 def authorized(permission):
-    """ Checks user's permissions """
+    ''' Checks user's permissions '''
 
     def func(method):
         @functools.wraps(method)

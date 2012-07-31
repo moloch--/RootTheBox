@@ -28,11 +28,11 @@ from models.BaseGameObject import BaseObject
 
 metadata = BaseObject.metadata
 
-# set the connection string here
-engine = create_engine('mysql://rtbUser:rtbUser@localhost/rtb')
-Session = sessionmaker(bind=engine, autocommit=True)
+config = ConfigManager.Instance()
+db_connection = 'mysql://%s:%s@%s/%s' % (
+    config.db_user, config.db_password, config.db_server, config.db_name)
 
-# import the dbsession instance to execute queries on your database
+Session = sessionmaker(bind=engine, autocommit=True)
 dbsession = Session(autoflush=True)
 
 association_table = Table('user_to_box', BaseObject.metadata,
@@ -49,7 +49,7 @@ team_challenges = Table('team_to_challenge', BaseObject.metadata,
                                ForeignKey('challenge.id'), nullable=False)
                         )
 
-# import models.
+# import models
 from models.Action import Action
 from models.Box import Box
 from models.Post import Post
@@ -67,7 +67,5 @@ __create__ = lambda: (
     setattr(engine, 'echo', True), metadata.create_all(engine))
 
 # Bootstrap the database with some shit
-
-
 def __boot_strap__():
-    import setup.auth
+    import setup.bootstrap

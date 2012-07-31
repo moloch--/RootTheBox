@@ -54,132 +54,125 @@ from handlers.WebsocketHandlers import *
 from handlers.ChallengeHandlers import *
 from handlers.ScoreboardHandlers import *
 
-logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s',
-                    level=logging.DEBUG)
+config = ConfigManager.Instance()
 
-consoleLogger = logging.StreamHandler()
-consoleLogger.setLevel(logging.DEBUG)
-fileLogger = logging.FileHandler(filename='rtb.log')
-fileLogger.setLevel(logging.DEBUG)
-logging.getLogger('').addHandler(consoleLogger)
-logging.getLogger('').addHandler(fileLogger)
+app = Application([
+                  # Static Handlers - Serves static CSS, JavaScript and
+                  # image files
+                  (r'/static/(.*)',
+                   StaticFileHandler, {'path': 'static'}),
+                  (r'/avatars/(.*)',
+                   StaticFileHandler, {'path': 'files/avatars'}),
 
-application = Application([
-                          # Static Handlers - Serves static CSS, JavaScript and
-                          # image files
-                          (r'/static/(.*)',
-                              StaticFileHandler, {'path': 'static'}),
-                          (r'/avatars/(.*)',
-                              StaticFileHandler, {'path': 'files/avatars'}),
+                  # Reporter Handlers - Communication with reporters
+                  (r'/reporter/register', ReporterRegistrationHandler, {
+                   'dbsession': dbsession}),
 
-                          # Reporter Handlers - Communication with reporters
-                          (r'/reporter/register', ReporterRegistrationHandler, {
-                           'dbsession': dbsession}),
+                  # User Handlers - Serves user related pages
+                  (r'/user/shares/download(.*)', ShareDownloadHandler, {
+                   'dbsession': dbsession}),
+                  (r'/user/shares',
+                   ShareUploadHandler, {'dbsession': dbsession}),
+                  (r'/user/settings(.*)',
+                   SettingsHandler, {'dbsession': dbsession}),
+                  (r'/user/team/ajax(.*)',
+                   TeamAjaxHandler, {'dbsession': dbsession}),
+                  (r'/user/team',
+                   TeamViewHandler, {'dbsession': dbsession}),
+                  (r'/user/logout',
+                   LogoutHandler, {'dbsession': dbsession}),
+                  (r'/user/reporter',
+                   ReporterHandler, {'dbsession': dbsession}),
+                  (r'/user', HomeHandler, {'dbsession': dbsession}),
 
-                          # User Handlers - Serves user related pages
-                          (r'/user/shares/download(.*)', ShareDownloadHandler, {
-                           'dbsession': dbsession}),
-                          (r'/user/shares',
-                              ShareUploadHandler, {'dbsession': dbsession}),
-                          (r'/user/settings(.*)',
-                              SettingsHandler, {'dbsession': dbsession}),
-                          (r'/user/team/ajax(.*)',
-                              TeamAjaxHandler, {'dbsession': dbsession}),
-                          (r'/user/team',
-                              TeamViewHandler, {'dbsession': dbsession}),
-                          (r'/user/logout',
-                              LogoutHandler, {'dbsession': dbsession}),
-                          (r'/user/reporter',
-                              ReporterHandler, {'dbsession': dbsession}),
-                          (r'/user', HomeHandler, {'dbsession': dbsession}),
+                  # Box Handlers - Serves box related pages
+                  (r'/boxes(.*)',
+                   BoxesViewHandler, {'dbsession': dbsession}),
 
-                          # Box Handlers - Serves box related pages
-                          (r'/boxes(.*)',
-                              BoxesViewHandler, {'dbsession': dbsession}),
+                  # Crack Me Handlers - Serves crack me related pages
+                  (r'/crackme/download(.*)', CrackMeDownloadHandler, {
+                   'dbsession': dbsession}),
+                  (r'/crackme(.*)',
+                   CrackMeHandler, {'dbsession': dbsession}),
 
-                          # Crack Me Handlers - Serves crack me related pages
-                          (r'/crackme/download(.*)', CrackMeDownloadHandler, {
-                           'dbsession': dbsession}),
-                          (r'/crackme(.*)',
-                              CrackMeHandler, {'dbsession': dbsession}),
+                  # Hashes Handlers - Serves hash related pages
+                  (r'/hashes',
+                   HashesHandler, {'dbsession': dbsession}),
+                  (r'/hashes/ajax(.*)',
+                   HashesAjaxHandler, {'dbsession': dbsession}),
+                  (r'/wallofsheep',
+                   WallOfSheepHandler, {'dbsession': dbsession}),
 
-                          # Hashes Handlers - Serves hash related pages
-                          (r'/hashes',
-                              HashesHandler, {'dbsession': dbsession}),
-                          (r'/hashes/ajax(.*)',
-                              HashesAjaxHandler, {'dbsession': dbsession}),
-                          (r'/wallofsheep',
-                              WallOfSheepHandler, {'dbsession': dbsession}),
+                  # Scoreboard Handlers - Severs scoreboard related
+                  # pages
+                  (r'/scoreboard',
+                   ScoreBoardHandler, {'dbsession': dbsession}),
+                  (r'/all_time(.*)',
+                   AllTimeHandler, {'dbsession': dbsession}),
+                  (r'/pie_chart(.*)',
+                   PieChartHandler, {'dbsession': dbsession}),
+                  (r'/bar_chart(.*)',
+                   BarChartHandler, {'dbsession': dbsession}),
 
-                          # Scoreboard Handlers - Severs scoreboard related
-                          # pages
-                          (r'/scoreboard',
-                              ScoreBoardHandler, {'dbsession': dbsession}),
-                          (r'/all_time(.*)',
-                              AllTimeHandler, {'dbsession': dbsession}),
-                          (r'/pie_chart(.*)',
-                              PieChartHandler, {'dbsession': dbsession}),
-                          (r'/bar_chart(.*)',
-                              BarChartHandler, {'dbsession': dbsession}),
+                  # Challenges Handlers
+                  (r'/challenges/ajax(.*)', ChallengesAjaxHandler, {
+                   'dbsession': dbsession}),
+                  (r'/challenges',
+                   ChallengesHandler, {'dbsession': dbsession}),
 
-                          # Challenges Handlers
-                          (r'/challenges/ajax(.*)', ChallengesAjaxHandler, {
-                           'dbsession': dbsession}),
-                          (r'/challenges',
-                              ChallengesHandler, {'dbsession': dbsession}),
+                  # Social Challenges Handlers
+                  (r'/se(.*)',
+                   SocialHomeHandler, {'dbsession':dbsession}),
 
-                          # Social Challenges Handlers
-                          (r'/se(.*)',
-                              SocialHomeHandler, {'dbsession':dbsession}),
+                  # Admin Handlers - Administration pages
+                  (r'/admin/create/(.*)',
+                   AdminCreateHandler, {'dbsession':dbsession}),
+                  (r'/admin/edit/(.*)',
+                   AdminEditHandler, {'dbsession':dbsession}),
+                  (r'/admin/notify', AdminNotifyHandler),
+                  (r'/admin/notify/ajax(.*)', AdminAjaxNotifyHandler, {
+                   'dbsession', dbsession}),
 
-                          # Admin Handlers - Administration pages
-                          (r'/admin/create/(.*)',
-                              AdminCreateHandler, {'dbsession':dbsession}),
-                          (r'/admin/edit/(.*)',
-                              AdminEditHandler, {'dbsession':dbsession}),
-                          (r'/admin/notify', AdminNotifyHandler),
-                          (r'/admin/notify/ajax(.*)', AdminAjaxNotifyHandler, {
-                           'dbsession', dbsession}),
+                  # WebSocket Handlers - Websocket communication
+                  # handlers
+                  (r'/websocket', WebsocketHandler),
 
-                          # WebSocket Handlers - Websocket communication
-                          # handlers
-                          (r'/websocket', WebsocketHandler),
+                  # Pastebin Handlers
+                  (r'/pastebin',
+                   PastebinHandler, {'dbsession':dbsession}),
+                  (r'/pastebin/view(.*)',
+                   DisplayPostHandler, {'dbsession':dbsession}),
+                  (r'/pastebin/delete(.*)',
+                   DeletePostHandler, {'dbsession':dbsession}),
 
-                          # Pastebin Handlers
-                          (r'/pastebin',
-                              PastebinHandler, {'dbsession':dbsession}),
-                          (r'/pastebin/view(.*)',
-                              DisplayPostHandler, {'dbsession':dbsession}),
-                          (r'/pastebin/delete(.*)',
-                              DeletePostHandler, {'dbsession':dbsession}),
+                  # Root handlers - Serves all public pages
+                  (r'/login', LoginHandler),
+                  (r'/registration', UserRegistraionHandler,
+                   {'dbsession': dbsession}),
+                  (r'/about', AboutHandler),
+                  (r'/', WelcomeHandler),
 
-                          # Root handlers - Serves all public pages
-                          (r'/login', LoginHandler),
-                          (r'/registration', UserRegistraionHandler,
-                              {'dbsession': dbsession}),
-                          (r'/about', AboutHandler),
-                          (r'/', WelcomeHandler),
+                  # Error handlers - Serves error pages
+                  (r'/403', UnauthorizedHandler),
+                  (r'/(.*).php', PhpHandler),
+                  (r'/(.*)', NotFoundHandler)
+                  ],
 
-                          # Error handlers - Serves error pages
-                          (r'/403', UnauthorizedHandler),
-                          (r'/(.*).php', PhpHandler),
-                          (r'/(.*)', NotFoundHandler)
-                          ],
+    # Randomly generated secret key
+    cookie_secret=b64encode(urandom(64)),
 
-                          # Randomly generated secret key
-                          cookie_secret=b64encode(urandom(64)),
+    # Ip addresses that access the admin interface
+    admin_ips=config.admin_ips,
 
-                          # Ip addresses that access the admin interface
-                          admin_ips=('127.0.0.1'),
+    # Template directory
+    template_path = 'templates',
 
-                          # Template directory
-                          template_path = 'templates',
-
-                          # Request that does not pass @authorized will be
-                          # redirected here
+    # Request that does not pass @authorized will be
+    # redirected here
     forbidden_url = '/403',
 
-    # Requests that does not pass @authenticated  will be redirected here
+    # Requests that does not pass @authenticated  will be
+    # redirected here
     login_url = '/login',
 
     # UI Modules
@@ -189,11 +182,11 @@ application = Application([
     xsrf_cookies = True,
 
     # Recaptcha Key
-    recaptcha_private_key = "6LcJJ88SAAAAAPPAN72hppldxema3LI7fkw0jaIa",
+    recaptcha_private_key = config.recaptcha_private_key, #"6LcJJ88SAAAAAPPAN72hppldxema3LI7fkw0jaIa",
 
     # WebSocket Host IP Address
-    ws_ip_address = HostIpAddress().get_ip_address(),
-    ws_port = "8888",
+    ws_ip_address = config.ws_ip_address,
+    ws_port = config.ws_port,
 
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),
@@ -208,15 +201,13 @@ application = Application([
     clean_up_timeout = int(60 * 1000),
 
     # Debug mode
-    debug = True,
+    debug = config.debug,
 
     # Application version
     version = '0.2'
 )
 
 # Main Functions
-
-
 def cache_actions():
     ''' Loads all of the actions from the database into memory for the scoreboard pages'''
     action_list = dbsession.query(models.Action).all()
@@ -229,21 +220,19 @@ def cache_actions():
         ws_manager.cachedScores.add_score(score_update)
 
 # Main entry point
-
-
 def start_game():
     ''' Main entry point for the application '''
     cache_actions()
-    sockets = netutil.bind_sockets(8888)
-    server = HTTPServer(application)
+    sockets = netutil.bind_sockets(config.listen_port)
+    server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
     session_manager = SessionManager.Instance()
     if process.task_id() == None:
         scoring = PeriodicCallback(
-            scoring_round, application.settings['ticks'], io_loop=io_loop)
+            scoring_round, app.settings['ticks'], io_loop=io_loop)
         session_clean_up = PeriodicCallback(session_manager.clean_up,
-            application.settings['clean_up_timeout'], io_loop=io_loop)
+            app.settings['clean_up_timeout'], io_loop=io_loop)
         scoring.start()
         session_clean_up.start()
     try:

@@ -1,6 +1,24 @@
-# Class files
-*.pyc
+*.py[co]
 
-# Misc files
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
+# Log files
 *.log
-*.prefs
+
+# Installer logs
+pip-log.txt
+
+# Eclipse
+.project
+.pydevproject
