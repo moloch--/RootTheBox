@@ -24,7 +24,6 @@ import sys
 import models
 import logging
 
-
 from time import sleep
 from os import urandom, path
 from base64 import b64encode
@@ -42,10 +41,10 @@ from tornado.web import StaticFileHandler
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
 from handlers.BoxHandlers import *
-from handlers.RootHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
+from handlers.PublicHandlers import *
 from handlers.HashesHandlers import *
 from handlers.SocialHandlers import *
 from handlers.CrackMeHandlers import *
@@ -152,7 +151,7 @@ app = Application([
                   (r'/registration', UserRegistraionHandler,
                    {'dbsession': dbsession}),
                   (r'/about', AboutHandler),
-                  (r'/', WelcomeHandler),
+                  (r'/', HomePageHandler),
 
                   # Error handlers - Serves error pages
                   (r'/403', UnauthorizedHandler),
@@ -183,12 +182,13 @@ app = Application([
     # Enable XSRF forms
     xsrf_cookies = True,
 
-    # Recaptcha Key
-    recaptcha_private_key = config.recaptcha_private_key, #"6LcJJ88SAAAAAPPAN72hppldxema3LI7fkw0jaIa",
+    # Recaptcha Settings
+    recaptcha_enable = config.recaptcha_enable,
+    recaptcha_private_key = config.recaptcha_private_key,
 
     # WebSocket Host IP Address
     ws_ip_address = config.ws_ip_address,
-    ws_port = config.ws_port,
+    ws_port = config.listen_port,
 
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),

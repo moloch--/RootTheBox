@@ -28,6 +28,13 @@ from recaptcha.client import captcha
 from string import ascii_letters, digits
 
 
+class HomePageHandler(RequestHandler):
+
+    def get(self, *args, **kwargs):
+        ''' Renders the about page '''
+        self.render("public/home.html")
+
+
 class LoginHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
@@ -170,10 +177,3 @@ class AboutHandler(RequestHandler):
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render('public/about.html')
-
-
-class WelcomeHandler(RequestHandler):
-
-    def get(self, *args, **kwargs):
-        ''' Renders the about page '''
-        self.render("public/welcome.html")

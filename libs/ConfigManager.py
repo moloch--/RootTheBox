@@ -28,6 +28,7 @@ import ConfigParser
 
 from libs import ConsoleColors
 from libs.Singleton import Singleton
+from libs.HostNetworkConfig import HostNetworkConfig
 
 
 # .basicConfig must be called prior to ANY call to logging.XXXX so make sure
@@ -49,30 +50,41 @@ class ConfigManager(object):
         logging.info('Loading config from %s' % self.cfg_path)
         self.config = ConfigParser.SafeConfigParser()
         self.config.readfp(open(self.cfg_path, 'r'))
-        self.__network__()
+        self.__server__()
         self.__security__()
         self.__database__()
 
-    def __network__(self):
+    def __server__(self):
         ''' Load network configurations '''
-        self.listen_port = self.config.getint("Network", 'port')
+        self.listen_port = self.config.getint("Server", 'port', 8888)
+        self.debug = self.config.getboolean("Server", 'debug', False)
+        host = self.config.get("Server", 'websocket_host', "AUTO")
+        if host == "AUTO":
+            self.websocket_host = HostNetworkConfig.get_ip_address()
+        else:
+            self.websocket_host = host
 
     def __security__(self):
         ''' Load security configurations '''
-        ips = self.config.get("Security", 'admin_ips').split(',')
+        ips = self.config.get("Security", 'admin_ips', "127.0.0.1").split(',')
         if not '127.0.0.1' in ips:
             ips.append('127.0.0.1')
         self.admin_ips = tuple(ips)
 
+    def __recaptcha__(self):
+        ''' Loads recaptcha settings '''
+        self.recaptcha_enable = self.config.getboolean("Recaptcha", 'enable', True)
+        self.recaptcha_private_key = self.config.get("Recaptcha", 'private_key', "NULL")
+
     def __database__(self):
         ''' Loads database connection information '''
-        self.db_server = self.config.get("Database", 'server')
-        self.db_name = self.config.get("Database", 'name')
-        user = self.config.get("Database", 'user')
+        self.db_server = self.config.get("Database", 'server', "localhost")
+        self.db_name = self.config.get("Database", 'name', "rootthebox")
+        user = self.config.get("Database", 'user', "RUNTIME")
         if user == 'RUNTIME':
             user = raw_input(ConsoleColors.PROMPT + "Database User: ")
         self.db_user = user
-        password = self.config.get("Database", 'password')
+        password = self.config.get("Database", 'password', "RUNTIME")
         if password == 'RUNTIME':
             sys.stdout.write(ConsoleColors.PROMPT + "Database ")
             sys.stdout.flush()
