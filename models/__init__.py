@@ -49,6 +49,11 @@ from models.Team import Team
 from models.User import User
 from models.FileUpload import FileUpload
 from models.WallOfSheep import WallOfSheep
+#from models.Flag import Flag
+#from models.Notification import Notification
+from models.Corporation import Corporation
+from models.GameLevel import GameLevel
+#from models.Item import Item
 
 # calling this will create the tables at the database
 __create__ = lambda: (

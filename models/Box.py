@@ -27,7 +27,6 @@ from models import dbsession
 from models.BaseGameObject import BaseObject
 from models import association_table
 
-
 class Box(BaseObject):
     ''' Box definition '''
 

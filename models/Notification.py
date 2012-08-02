@@ -24,7 +24,7 @@ from sqlalchemy.types import Unicode, Integer
 from models.BaseGameObject import BaseObject
 
 
-class PastBin(BaseObject):
+class Notification(BaseObject):
     ''' PasteBin definition '''
 
     pass
