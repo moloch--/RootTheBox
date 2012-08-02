@@ -53,12 +53,13 @@ class ConfigManager(object):
         self.__server__()
         self.__security__()
         self.__database__()
+        self.__recaptcha__()
 
     def __server__(self):
         ''' Load network configurations '''
-        self.listen_port = self.config.getint("Server", 'port', 8888)
-        self.debug = self.config.getboolean("Server", 'debug', False)
-        host = self.config.get("Server", 'websocket_host', "AUTO")
+        self.listen_port = self.config.getint("Server", 'port')
+        self.debug = self.config.getboolean("Server", 'debug')
+        host = self.config.get("Server", 'websocket_host')
         if host == "AUTO":
             self.websocket_host = HostNetworkConfig.get_ip_address()
         else:
@@ -73,8 +74,8 @@ class ConfigManager(object):
 
     def __recaptcha__(self):
         ''' Loads recaptcha settings '''
-        self.recaptcha_enable = self.config.getboolean("Recaptcha", 'enable', True)
-        self.recaptcha_private_key = self.config.get("Recaptcha", 'private_key', "NULL")
+        self.recaptcha_enable = self.config.getboolean("Recaptcha", 'enable')
+        self.recaptcha_private_key = self.config.get("Recaptcha", 'private_key')
 
     def __database__(self):
         ''' Loads database connection information '''

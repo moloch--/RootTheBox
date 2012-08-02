@@ -32,7 +32,7 @@ from models import Box
 from hashlib import sha256
 from base64 import b64encode
 from tornado import iostream
-from models import dbsession, Action
+from models import dbsession
 from libs.WebSocketManager import WebSocketManager
 
 

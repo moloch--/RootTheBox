@@ -20,12 +20,16 @@ from sqlalchemy import Column, ForeignKey, Table
 from sqlalchemy.types import Integer
 from sqlalchemy.orm import sessionmaker
 from models.BaseGameObject import BaseObject
+from libs.ConfigManager import ConfigManager
 
 metadata = BaseObject.metadata
 
 config = ConfigManager.Instance()
 db_connection = 'mysql://%s:%s@%s/%s' % (
     config.db_user, config.db_password, config.db_server, config.db_name)
+
+# set the connection string here
+engine = create_engine(db_connection)
 
 Session = sessionmaker(bind=engine, autocommit=True)
 dbsession = Session(autoflush=True)
@@ -37,25 +41,14 @@ association_table = Table('user_to_box', BaseObject.metadata,
                                  Integer, ForeignKey('box.id'), nullable=False)
                           )
 
-team_challenges = Table('team_to_challenge', BaseObject.metadata,
-                        Column('team_id', Integer,
-                               ForeignKey('team.id'), nullable=False),
-                        Column('challenge_id', Integer,
-                               ForeignKey('challenge.id'), nullable=False)
-                        )
-
 # import models
-from models.Action import Action
 from models.Box import Box
-from models.Post import Post
-from models.CrackMe import CrackMe
+from models.PasteBin import PasteBin
 from models.Permission import Permission
 from models.Team import Team
 from models.User import User
 from models.FileUpload import FileUpload
-from models.Challenge import Challenge
 from models.WallOfSheep import WallOfSheep
-from models.SEChallenge import SEChallenge
 
 # calling this will create the tables at the database
 __create__ = lambda: (

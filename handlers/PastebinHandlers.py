@@ -18,7 +18,7 @@ Created on Mar 18, 2012
    See the License for the specific language governing permissions and
    limitations under the License.
 '''
-from models import User, Post
+from models import User, PasteBin
 from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
 from tornado.web import RequestHandler  # @UnresolvedImport

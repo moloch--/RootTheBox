@@ -61,8 +61,8 @@ if len(argv) == 1:
     argv.append("serve")
 options = {
     'serve': serve, 
-    'create' create, 
-    'test' test,
+    'create': create, 
+    'test': test,
 }
 if argv[1] in options.keys():
     options[argv[1]]()

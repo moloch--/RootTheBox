@@ -30,8 +30,6 @@ from sqlalchemy.types import Unicode, Integer, Boolean
 from models import dbsession, association_table
 from models.Box import Box
 from models.Team import Team
-from models.Post import Post
-from models.Action import Action
 from models.Permission import Permission
 from models.BaseGameObject import BaseObject
 

@@ -30,7 +30,7 @@ from mimetypes import guess_type
 from libs.SecurityDecorators import *
 from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification
-from models import Team, Box, CrackMe, Action, Challenge, SEChallenge
+from models import Team, Box
 from handlers.BaseHandlers import AdminBaseHandler
 from tornado.web import RequestHandler
 from string import ascii_letters, digits

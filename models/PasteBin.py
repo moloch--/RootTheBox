@@ -24,7 +24,7 @@ from sqlalchemy.types import Unicode, Integer
 from models.BaseGameObject import BaseObject
 
 
-class PastBin(BaseObject):
+class PasteBin(BaseObject):
     ''' PasteBin definition '''
 
     name = Column(Unicode(255), nullable=False)

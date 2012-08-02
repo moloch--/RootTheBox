@@ -21,7 +21,7 @@ Created on Mar 15, 2012
 
 
 from tornado.web import RequestHandler
-from models import Team, User, Action, WallOfSheep
+from models import Team, User, WallOfSheep
 from libs.SecurityDecorators import authenticated
 from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification

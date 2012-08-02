@@ -25,7 +25,7 @@ import logging
 
 from uuid import uuid1
 from base64 import b64encode, b64decode
-from models import User, Team, FileUpload, Challenge, Action
+from models import User, Team, FileUpload
 from mimetypes import guess_type
 from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated

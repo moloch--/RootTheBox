@@ -21,7 +21,7 @@ Created on Mar 11, 2012
 
 from sets import Set
 from sqlalchemy import Column
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
 from models.BaseGameObject import BaseObject

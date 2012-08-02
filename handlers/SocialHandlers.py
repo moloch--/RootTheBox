@@ -20,10 +20,8 @@ Created on Mar 13, 2012
 '''
 
 from models.User import User
-from models.Action import Action
 from libs.SecurityDecorators import authenticated
 from tornado.web import RequestHandler  # @UnresolvedImport
-from libs.SEManager import SEManager
 from libs.Session import SessionManager
 from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification

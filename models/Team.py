@@ -24,8 +24,7 @@ import logging
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession, team_challenges
-from models.CrackMe import CrackMe
+from models import dbsession
 from models.Box import Box
 from models.BaseGameObject import BaseObject
 
@@ -38,7 +37,7 @@ class Team(BaseObject):
     members = relationship("User", backref="Team")
     listen_port = Column(Integer, unique=True, nullable=False)
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
-    money = Column(Integer, default=0 nullable=False)
+    money = Column(Integer, default=0, nullable=False)
 
     @classmethod
     def by_team_name(cls, team_name):

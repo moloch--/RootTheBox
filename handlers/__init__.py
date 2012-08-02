@@ -31,8 +31,9 @@ from models import dbsession
 from modules.Menu import Menu
 from libs.ConsoleColors import *
 from libs.Session import SessionManager
-from libs.HostIpAddress import HostIpAddress
+from libs.HostNetworkConfig import HostNetworkConfig
 from libs.AuthenticateReporter import scoring_round
+from libs.ConfigManager import ConfigManager
 from tornado import netutil
 from tornado import process
 from tornado import options
@@ -46,13 +47,9 @@ from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
 from handlers.PublicHandlers import *
 from handlers.HashesHandlers import *
-from handlers.SocialHandlers import *
-from handlers.CrackMeHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
-from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
-from handlers.ChallengeHandlers import *
 from handlers.ScoreboardHandlers import *
 
 
@@ -90,12 +87,6 @@ app = Application([
                   (r'/boxes(.*)',
                    BoxesViewHandler, {'dbsession': dbsession}),
 
-                  # Crack Me Handlers - Serves crack me related pages
-                  (r'/crackme/download(.*)', CrackMeDownloadHandler, {
-                   'dbsession': dbsession}),
-                  (r'/crackme(.*)',
-                   CrackMeHandler, {'dbsession': dbsession}),
-
                   # Hashes Handlers - Serves hash related pages
                   (r'/hashes',
                    HashesHandler, {'dbsession': dbsession}),
@@ -114,16 +105,6 @@ app = Application([
                    PieChartHandler, {'dbsession': dbsession}),
                   (r'/bar_chart(.*)',
                    BarChartHandler, {'dbsession': dbsession}),
-
-                  # Challenges Handlers
-                  (r'/challenges/ajax(.*)', ChallengesAjaxHandler, {
-                   'dbsession': dbsession}),
-                  (r'/challenges',
-                   ChallengesHandler, {'dbsession': dbsession}),
-
-                  # Social Challenges Handlers
-                  (r'/se(.*)',
-                   SocialHomeHandler, {'dbsession':dbsession}),
 
                   # Admin Handlers - Administration pages
                   (r'/admin/create/(.*)',
@@ -187,7 +168,7 @@ app = Application([
     recaptcha_private_key = config.recaptcha_private_key,
 
     # WebSocket Host IP Address
-    ws_ip_address = config.ws_ip_address,
+    ws_ip_address = config.websocket_host,
     ws_port = config.listen_port,
 
     # Special file directories
@@ -224,7 +205,7 @@ def cache_actions():
 # Main entry point
 def start_game():
     ''' Main entry point for the application '''
-    cache_actions()
+    #cache_actions()
     sockets = netutil.bind_sockets(config.listen_port)
     server = HTTPServer(app)
     server.add_sockets(sockets)
