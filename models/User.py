@@ -39,20 +39,14 @@ from models.BaseGameObject import BaseObject
 class User(BaseObject):
     ''' User definition '''
 
-    user_name = Column(Unicode(64), unique=True, nullable=False)
+    name = Column(Unicode(64), unique=True, nullable=False)
     display_name = Column(Unicode(64), unique=True, nullable=False)
     team_id = Column(Integer, ForeignKey('team.id'))
-    dirty = Column(Boolean, default=True)
-    score_cache = Column(Integer, default=0)
-    actions = relationship("Action", backref=backref("User",
-                                                     lazy="joined"), cascade="all, delete-orphan")
-    posts = relationship("Post", backref=backref("User",
+    pastes = relationship("PasteBin", backref=backref("User",
                                                  lazy="joined"), cascade="all, delete-orphan")
     permissions = relationship("Permission", backref=backref("User",
                                                              lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
-    controlled_boxes = relationship(
-        "Box", secondary=association_table, backref="User")
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
         lambda self: self._password,
@@ -68,7 +62,7 @@ class User(BaseObject):
     @property
     def permissions_names(self):
         '''Return a list with all permissions names granted to the user.'''
-        return [permission.permission_name for permission in self.permissions]
+        return [permission.name for permission in self.permissions]
 
     @property
     def team_name(self):
@@ -78,7 +72,7 @@ class User(BaseObject):
         else:
             team = dbsession.query(
                 Team).filter_by(id=self.team_id).first()
-            return team.team_name
+            return team.name
 
     @property
     def team(self):
@@ -87,18 +81,6 @@ class User(BaseObject):
             return None
         else:
             return dbsession.query(Team).filter_by(id=self.team_id).first()
-
-    @property
-    def score(self):
-        ''' Returns user's current score from cache, or re-calculates if expired '''
-        if self.dirty:
-            actions = dbsession.query(
-                Action).filter_by(user_id=self.id).all()
-            self.score_cache = sum(actions)
-            self.dirty = False
-            dbsession.add(self)
-            dbsession.flush()
-        return self.score_cache
 
     @classmethod
     def get_all(cls):
@@ -112,24 +94,23 @@ class User(BaseObject):
 
     @classmethod
     def by_user_name(cls, user_name):
-        ''' Return the user object whose user name is 'user_name' '''
-        return dbsession.query(cls).filter_by(user_name=unicode(user_name)).first()
+        ''' Return the user object whose user name is "user_name" '''
+        return dbsession.query(cls).filter_by(name=unicode(user_name)).first()
 
     @classmethod
     def by_display_name(cls, display_name):
-        ''' Return the user object whose user name is 'display_name' '''
+        ''' Return the user object whose user name is "display_name" '''
         return dbsession.query(cls).filter_by(display_name=unicode(display_name)).first()
 
     @classmethod
     def by_id(cls, user_id):
-        ''' Return the user object whose user id is 'user_id' '''
+        ''' Return the user object whose user id is "user_id" '''
         return dbsession.query(cls).filter_by(id=user_id).first()
 
     @classmethod
     def add_to_team(cls, team_name):
         ''' Add user to team based on team name '''
-        team = dbsession.query(Team).filter_by(
-            team_name=unicode(team_name)).first()
+        team = dbsession.query(Team).filter_by(name=unicode(team_name)).first()
         cls.team_id = team.id
 
     @classmethod

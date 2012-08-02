@@ -224,8 +224,8 @@ class RtbClient(object):
 
 def help():
     ''' Displays a helpful message '''
-    sys.stdout.write("Root the Box - Flag - v0.1 \n")
-    sys.stdout.write("Usage:\n\tflag.py <hacker name>\n")
+    sys.stdout.write("Root the Box - Bot - v0.1 \n")
+    sys.stdout.write("Usage:\n\tflag.py <team name>\n")
     sys.stdout.write("Options:\n")
     sys.stdout.write("\t--help...............................Display this helpful message\n")
     sys.stdout.flush()

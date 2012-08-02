@@ -33,57 +33,41 @@ from models.BaseGameObject import BaseObject
 class Team(BaseObject):
     """ Team definition """
 
-    team_name = Column(Unicode(64), unique=True, nullable=False)
+    name = Column(Unicode(64), unique=True, nullable=False)
     motto = Column(Unicode(255))
     members = relationship("User", backref="Team")
     listen_port = Column(Integer, unique=True, nullable=False)
-    crack_me_id = Column(Integer, ForeignKey("crack_me.id"), default=1)
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
-    challenges = relationship(
-        "Challenge", secondary=team_challenges, backref="Team")
+    money = Column(Integer, default=0 nullable=False)
 
     @classmethod
     def by_team_name(cls, team_name):
         """ Return the team object based on ``team_name`` """
-        return dbsession.query(cls).filter_by(team_name=unicode(team_name)).first()  # @UndefinedVariable
+        return dbsession.query(cls).filter_by(team_name=unicode(team_name)).first()  
 
     @classmethod
     def by_team_id(cls, team_id):
         """ Return the team object based one id """
-        return dbsession.query(cls).filter_by(id=team_id).first()  # @UndefinedVariable
+        return dbsession.query(cls).filter_by(id=team_id).first()  
 
     @classmethod
     def get_all(cls):
         ''' Returns all team objects '''
-        return dbsession.query(cls).all()  # @UndefinedVariable
+        return dbsession.query(cls).all()  
 
     @property
     def crack_me(self):
         ''' Returns the current crack me '''
-        return dbsession.query(CrackMe).filter_by(id=self.crack_me_id).first()  # @UndefinedVariable
+        return dbsession.query(CrackMe).filter_by(id=self.crack_me_id).first()  
 
     @property
-    def score(self):
-        ''' Returns summation of all team members '''
-        return sum(self.members)
-
-    @property
-    def actions(self):
-        ''' Returns all actions the team members have, sorted by date '''
-        action_list = []
+    def pastes(self):
+        ''' Returns all of the pastes the team has '''
+        pastes = []
         for user in self.members:
-            action_list += user.actions
-        action_list.sort(key=lambda action: action.created)
-        return action_list
-
-    @property
-    def posts(self):
-        ''' Returns all of the posts the team has '''
-        posts = []
-        for user in self.members:
-            posts += user.posts
-        posts.sort(key=lambda post: post.created)
-        return posts
+            pastes += user.pastes
+        pastes.sort(key=lambda paste: paste.created)
+        return pastes
 
     @property
     def boxes(self):
@@ -113,10 +97,10 @@ class Team(BaseObject):
         return ('<Team - name: %s, score: %d>' % (self.team_name, self.score)).encode('utf-8')
 
     def __unicode__(self):
-        return self.team_name
+        return self.name
 
     def __str__(self):
-        return unicode(self.team_name)
+        return unicode(self.name)
 
     def __radd__(self, other):
         return self.score + other
