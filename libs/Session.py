@@ -26,7 +26,7 @@ from libs.Singleton import *
 from datetime import datetime, timedelta
 
 SID_SIZE = 24
-SESSION_TIME = 60
+SESSION_TIME = 120
 
 
 @Singleton

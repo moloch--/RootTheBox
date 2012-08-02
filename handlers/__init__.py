@@ -187,20 +187,8 @@ app = Application([
     debug = config.debug,
 
     # Application version
-    version = '0.2'
+    version = '0.3'
 )
-
-# Main Functions
-def cache_actions():
-    ''' Loads all of the actions from the database into memory for the scoreboard pages'''
-    action_list = dbsession.query(models.Action).all()
-    ws_manager = WebSocketManager.Instance()
-    for action in action_list:
-        team = dbsession.query(
-            models.User).filter_by(id=action.user_id).first()
-        score_update = ScoreUpdate(
-            action.created.strftime("%d%H%M%S"), action.value, team.team_name)
-        ws_manager.cachedScores.add_score(score_update)
 
 # Main entry point
 def start_game():
