@@ -28,20 +28,20 @@ from models.BaseGameObject import BaseObject
 class FileUpload(BaseObject):
 
     file_name = Column(Unicode(255), nullable=False)
-    content = Column(Unicode(255))
+    content = Column(Unicode(255), nullable=False)
     uuid = Column(Unicode(64), unique=True, nullable=False)
-    description = Column(Unicode(1024))
-    byte_size = Column(Integer)
+    description = Column(Unicode(1024), nullable=False)
+    byte_size = Column(Integer, nullable=False)
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
 
     @classmethod
     def by_uuid(cls, uuid):
-        """ Return the user object whose uuid is ``uuid`` """
+        ''' Return the user object whose uuid is "uuid" '''
         return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_file_name(cls, file_name):
-        """ Return the user object whose file name is ``file_name`` """
+        ''' Return the user object whose file name is "file_name" '''
         return dbsession.query(cls).filter_by(file_name=unicode(file_name)).first()
 
     def __repr__(self):

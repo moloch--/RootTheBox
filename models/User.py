@@ -37,13 +37,21 @@ from models.BaseGameObject import BaseObject
 class User(BaseObject):
     ''' User definition '''
 
-    name = Column(Unicode(64), unique=True, nullable=False)
-    display_name = Column(Unicode(64), unique=True, nullable=False)
+    _name = Column(Unicode(64), unique=True, nullable=False)
+    name = synonym('_name', descriptor=property(
+        lambda self: self._name,
+        lambda self, name: setattr(
+            self, '_name', self.__class__.filter_string(name, " _-"))
+    ))
+    _display_name = Column(Unicode(64), unique=True, nullable=False)
+    display_name = synonym('_display_name', descriptor=property(
+        lambda self: self._display_name,
+        lambda self, name: setattr(
+            self, '_display_name', self.__class__.filter_string(display_name, " _-"))
+    ))
     team_id = Column(Integer, ForeignKey('team.id'))
-    pastes = relationship("PasteBin", backref=backref("User",
-                                                 lazy="joined"), cascade="all, delete-orphan")
-    permissions = relationship("Permission", backref=backref("User",
-                                                             lazy="joined"), cascade="all, delete-orphan")
+    pastes = relationship("PasteBin", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
+    permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
@@ -115,11 +123,16 @@ class User(BaseObject):
     def _hash_password(cls, password):
         ''' Hashes the password using Md5/Sha256 :D '''
         password = filter(lambda char: char in string.printable[:-5], password)
-        if 8 <= len(password):
+        if config.max_password_length <= len(password):
             password = cls.admin_hash(password)
         else:
             password = cls.user_hash(password)
         return password
+
+    @classmethod
+    def filter_string(cls, string, extra_chars=''):
+        char_white_list = ascii_letters + digits + extra_chars
+        return filter(lambda char: char in char_white_list, string)
 
     @classmethod
     def user_hash(cls, preimage):

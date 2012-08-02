@@ -2,49 +2,27 @@
 
 {% block title %}Login{% end %}
 
-{% block header %}
-<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
-<link rel="stylesheet" href="/static/css/screen.css" media="screen" />
-{% end %}
-
 {% block content %}
-    <!-- Wrapping the Recaptcha create method in a javascript function -->
-    <script type="text/javascript">
-    function showRecaptcha(element) {
-       Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
-         theme: "clean",
-         callback: null});
-     }
-    $(document).ready(function() {
-  	  showRecaptcha('recaptcha_div'); 
-     });
-  </script>
-
   <h1>Login</h1>
   <h2>{{ message }}</h2>
-    <form id="form1" action="/login" method="post" autocomplete="off">  
+    <form action="/login" method="post" autocomplete="off">  
       {% raw xsrf_form_html() %}
-      <fieldset><legend>Login</legend>
-        <p class="first">
+      <fieldset>
+        <legend>Login</legend>
+        <p>
           <label for="username">Account Name</label>
-          <input type="text" name="username" id="username" size="30" />
+          <input type="text" name="username" />
         </p>
         <p>
           <label for="password">Password</label>
-          <input type="password" name="password" id="password" size="30" />
-        </p>
-        <p>
-          <label for="recaptch_div">Are you a Cylon?</label>
-          <div id="recaptcha_div"></div>
-        </p>      
+          <input type="password" name="password" />
+        </p>     
       </fieldset>
       <p class="submit">
         <button type="submit"> Authenticate </button>
-      </p>   
-        
+      </p>
     </form>
     <script>
-    document.getElementById('username').focus();
+      document.getElementById('username').focus();
     </script>
-
 {% end %}
