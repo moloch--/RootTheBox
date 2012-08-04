@@ -19,12 +19,17 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
+
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer
 from models.BaseGameObject import BaseObject
 
 
 class Flag(BaseObject):
-    ''' PasteBin definition '''
+    ''' Flag definition '''
 
-    pass
+    game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
+    name = Column(Unicode(255), nullable=False)
+    token = Column(Unicode(255), nullable=False)
+    description = Column(Unicode(255), nullable=False)
+    money = Column(Integer, nullable=False)

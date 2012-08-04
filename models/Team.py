@@ -30,7 +30,7 @@ from models.BaseGameObject import BaseObject
 
 
 class Team(BaseObject):
-    """ Team definition """
+    ''' Team definition '''
 
     name = Column(Unicode(64), unique=True, nullable=False)
     motto = Column(Unicode(255))
@@ -41,12 +41,12 @@ class Team(BaseObject):
 
     @classmethod
     def by_team_name(cls, team_name):
-        """ Return the team object based on ``team_name`` """
+        ''' Return the team object based on "team_name" '''
         return dbsession.query(cls).filter_by(team_name=unicode(team_name)).first()  
 
     @classmethod
     def by_team_id(cls, team_id):
-        """ Return the team object based one id """
+        ''' Return the team object based one id '''
         return dbsession.query(cls).filter_by(id=team_id).first()  
 
     @classmethod
@@ -95,11 +95,8 @@ class Team(BaseObject):
     def __repr__(self):
         return ('<Team - name: %s, score: %d>' % (self.team_name, self.score)).encode('utf-8')
 
-    def __unicode__(self):
-        return self.name
-
     def __str__(self):
         return unicode(self.name)
 
     def __radd__(self, other):
-        return self.score + other
+        return self.money + other

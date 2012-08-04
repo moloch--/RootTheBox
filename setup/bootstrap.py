@@ -26,6 +26,8 @@ import os
 import sys
 import getpass
 
+from libs.ConsoleColors import *
+from libs.ConfigManager import ConfigManager
 from models import dbsession, User, Permission
 
 # Fills the database with some startup data.
@@ -49,7 +51,7 @@ else:
 
 # User Account
 user = User(
-    user_name=unicode('admin'),
+    name=unicode('admin'),
     display_name=unicode('God'),
     password=unicode(password)
 )
@@ -57,7 +59,7 @@ dbsession.add(user)
 dbsession.flush()
 
 permission = Permission(
-    permission_name=unicode('admin'),
+    name=unicode('admin'),
     user_id=user.id
 )
 dbsession.add(permission)

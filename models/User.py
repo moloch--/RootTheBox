@@ -20,17 +20,19 @@ Created on Mar 12, 2012
 '''
 
 
-import string
 import logging
 
+from string import ascii_letters, digits, printable
 from hashlib import md5, sha256
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, Boolean
+from libs.ConfigManager import ConfigManager
 from models import dbsession, association_table
 from models.Box import Box
 from models.Team import Team
 from models.Permission import Permission
+from models.Notification import Notification
 from models.BaseGameObject import BaseObject
 
 
@@ -46,12 +48,13 @@ class User(BaseObject):
     _display_name = Column(Unicode(64), unique=True, nullable=False)
     display_name = synonym('_display_name', descriptor=property(
         lambda self: self._display_name,
-        lambda self, name: setattr(
+        lambda self, display_name: setattr(
             self, '_display_name', self.__class__.filter_string(display_name, " _-"))
     ))
     team_id = Column(Integer, ForeignKey('team.id'))
     pastes = relationship("PasteBin", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
+    notifications = relationship("Notification", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
@@ -122,7 +125,8 @@ class User(BaseObject):
     @classmethod
     def _hash_password(cls, password):
         ''' Hashes the password using Md5/Sha256 :D '''
-        password = filter(lambda char: char in string.printable[:-5], password)
+        config = ConfigManager.Instance()
+        password = filter(lambda char: char in printable[:-5], password)
         if config.max_password_length <= len(password):
             password = cls.admin_hash(password)
         else:
@@ -164,29 +168,13 @@ class User(BaseObject):
         else:
             return self.password == self.user_hash(unicode(attempt))
 
-    def give_control(self, box):
-        ''' Give team control of a box object '''
-        if not self.team.is_controlling(box):
-            self.controlled_boxes.append(box)
+    def get_new_notifications(self):
+        ''' Returns any unread messages '''
+        return filter(lambda notification: notification.viewed == False, self.notifications)
 
-    def lost_control(self, box):
-        ''' Remove team's control over a box object '''
-        if box in self.controlled_boxes:
-            logging.info("Removed control of %s from %s" % (
-                box.box_name, self.display_name))
-            self.controlled_boxes.remove(box)
+    def get_notifications(self, limit=10):
+        ''' Return most recent notifications '''
+        return sorted(self.notifications[:limit])
 
     def __repr__(self):
         return ('<User - name: %s, display: %s, team_id: %d>' % (self.user_name, self.display_name, self.team_id)).encode('utf-8')
-
-    def __radd__(self, other):
-        return self.score + other
-
-    def __rsub__(self, other):
-        return self.score - other
-
-    def __add__(self, other):
-        return self.score + other
-
-    def __sub__(self, other):
-        return self.score - other

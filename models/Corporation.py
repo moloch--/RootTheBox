@@ -19,7 +19,8 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
-from sqlalchemy import Column, ForeignKey
+
+from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Integer
 from sqlalchemy.orm import relationship, backref
 from models.BaseGameObject import BaseObject
@@ -29,5 +30,5 @@ class Corporation(BaseObject):
     ''' Corporation definition '''
 
     name = Column(Unicode(64), unique=True, nullable=False)
-    description = Column(Unicode(1024))
-    boxes = relationship("Box", backref=backref("Corporation", lazy="dynamic"))
+    description = Column(Unicode(1024), nullable=False)
+    boxes = relationship("Box", backref=backref("Corporation", lazy="joined"), cascade="all, delete-orphan")

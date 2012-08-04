@@ -19,6 +19,7 @@ Created on Mar 13, 2012
    limitations under the License.
 '''
 
+
 import imghdr
 import base64
 import logging

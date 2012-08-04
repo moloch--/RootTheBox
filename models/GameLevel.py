@@ -19,17 +19,20 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
+
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer
 from sqlalchemy.orm import relationship, backref
+from models.Flag import Flag
 from models.BaseGameObject import BaseObject
 
 
 class GameLevel(BaseObject):
-    ''' PasteBin definition '''
+    ''' Game Level definition '''
 
     name = Column(Unicode(255), nullable=False)
     number = Column(Integer, nullable=False)
     buyout = Column(Integer, nullable=False)
     banner_uri = Column(Unicode(255), nullable=False)
-    flags = relationship("Flag", backref=backref("GameLevel", lazy="dynamic"))
+    flags = relationship("Flag", backref=backref("GameLevel", lazy="joined"), cascade="all, delete-orphan")
+    
