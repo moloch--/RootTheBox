@@ -34,9 +34,7 @@ from libs.Session import SessionManager
 from libs.HostNetworkConfig import HostNetworkConfig
 from libs.AuthenticateReporter import scoring_round
 from libs.ConfigManager import ConfigManager
-from tornado import netutil
-from tornado import process
-from tornado import options
+from tornado import netutil, process, options
 from tornado.web import Application
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
@@ -168,9 +166,7 @@ app = Application([
 
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),
-    crack_me_dir = path.abspath('files/crack_mes/'),
     shares_dir = path.abspath('files/shares/'),
-    se_dir = path.abspath('files/se/'),
 
     # Milli-Seconds between scoring
     ticks = int(60 * 1000),

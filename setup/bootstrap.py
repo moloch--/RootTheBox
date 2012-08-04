@@ -45,8 +45,7 @@ else:
     if password1 == password2 and 12 <= len(password1):
         password = password1
     else:
-        print WARN + \
-            'Error: Passwords did not match, or were less than 12 chars'
+        print WARN + 'Error: Passwords did not match, or were less than 12 chars'
         os._exit(1)
 
 # User Account
@@ -71,4 +70,4 @@ if config.debug:
 else:
     environ = bold + "Production boot strap" + W
     details = '.'
-print INFO + '%s complete successfully%s' % (environ, details)
+print INFO + '%s completed successfully%s' % (environ, details)

@@ -42,7 +42,7 @@ class Team(BaseObject):
     @classmethod
     def by_team_name(cls, team_name):
         ''' Return the team object based on "team_name" '''
-        return dbsession.query(cls).filter_by(team_name=unicode(team_name)).first()  
+        return dbsession.query(cls).filter_by(name=unicode(team_name)).first()  
 
     @classmethod
     def by_team_id(cls, team_id):
