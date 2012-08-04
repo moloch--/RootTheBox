@@ -20,7 +20,7 @@ Created on Mar 11, 2012
 '''
 
 from sets import Set
-from sqlalchemy import Column
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
@@ -30,12 +30,12 @@ from models import association_table
 class Box(BaseObject):
     ''' Box definition '''
 
+    corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     box_name = Column(Unicode(64), unique=True, nullable=False)
     ip_address = Column(Unicode(16), unique=True, nullable=False)
     description = Column(Unicode(2048))
     difficulty = Column(Unicode(255), nullable=False)
     avatar = Column(Unicode(64), default=unicode("default_avatar.gif"))
-    flags = relationship("Flag", backref=backref("Box", lazy="dynamic"))
 
     @classmethod
     def get_all(cls):

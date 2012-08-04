@@ -34,14 +34,10 @@ from libs.Session import SessionManager
 from libs.HostNetworkConfig import HostNetworkConfig
 from libs.AuthenticateReporter import scoring_round
 from libs.ConfigManager import ConfigManager
-from tornado import netutil
-from tornado import process
-from tornado import options
+from tornado import netutil, process, options
 from tornado.web import Application
-from tornado.web import StaticFileHandler
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
-from handlers.BoxHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
@@ -51,7 +47,7 @@ from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
-from handlers.TestHandlers import *
+from handlers.StaticFileHandler import StaticFileHandler
 
 
 config = ConfigManager.Instance()
@@ -83,10 +79,6 @@ app = Application([
                   (r'/user/reporter',
                    ReporterHandler, {'dbsession': dbsession}),
                   (r'/user', HomeHandler, {'dbsession': dbsession}),
-
-                  # Box Handlers - Serves box related pages
-                  (r'/boxes(.*)',
-                   BoxesViewHandler, {'dbsession': dbsession}),
 
                   # Hashes Handlers - Serves hash related pages
                   (r'/hashes',
@@ -127,9 +119,6 @@ app = Application([
                    DisplayPostHandler, {'dbsession':dbsession}),
                   (r'/pastebin/delete(.*)',
                    DeletePostHandler, {'dbsession':dbsession}),
-
-                  #Test Form Validation Handler
-                  (r'/test', TestFormHandler),
 
                   # Root handlers - Serves all public pages
                   (r'/login', LoginHandler),
@@ -177,9 +166,7 @@ app = Application([
 
     # Special file directories
     avatar_dir = path.abspath('files/avatars/'),
-    crack_me_dir = path.abspath('files/crack_mes/'),
     shares_dir = path.abspath('files/shares/'),
-    se_dir = path.abspath('files/se/'),
 
     # Milli-Seconds between scoring
     ticks = int(60 * 1000),

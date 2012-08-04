@@ -26,6 +26,8 @@ import os
 import sys
 import getpass
 
+from libs.ConsoleColors import *
+from libs.ConfigManager import ConfigManager
 from models import dbsession, User, Permission
 
 # Fills the database with some startup data.
@@ -43,13 +45,12 @@ else:
     if password1 == password2 and 12 <= len(password1):
         password = password1
     else:
-        print WARN + \
-            'Error: Passwords did not match, or were less than 12 chars'
+        print WARN + 'Error: Passwords did not match, or were less than 12 chars'
         os._exit(1)
 
 # User Account
 user = User(
-    user_name=unicode('admin'),
+    name=unicode('admin'),
     display_name=unicode('God'),
     password=unicode(password)
 )
@@ -57,7 +58,7 @@ dbsession.add(user)
 dbsession.flush()
 
 permission = Permission(
-    permission_name=unicode('admin'),
+    name=unicode('admin'),
     user_id=user.id
 )
 dbsession.add(permission)
@@ -69,4 +70,4 @@ if config.debug:
 else:
     environ = bold + "Production boot strap" + W
     details = '.'
-print INFO + '%s complete successfully%s' % (environ, details)
+print INFO + '%s completed successfully%s' % (environ, details)

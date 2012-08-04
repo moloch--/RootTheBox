@@ -25,7 +25,7 @@ from models.BaseGameObject import BaseObject
 
 
 class Permission(BaseObject):
-    """ Permission definition """
+    ''' Permission definition '''
 
     name = Column(Unicode(64), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
