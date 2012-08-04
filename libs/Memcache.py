@@ -43,9 +43,7 @@ class FileCache(object):
             data = f.read()
             f.close()
             if len(data) < cls.MAX_FILE_SIZE:
-                md5 = hashlib.md5()
-                md5.update(data)
-                if mem.set(md5.hexdigest(), data):
+                if mem.set(b64encode(file_path), data):
                     logging.info("Cached %s in memory." % file_path)
                 else:
                     logging.error("Failed to properly cache image file.")
@@ -53,7 +51,7 @@ class FileCache(object):
 
     @classmethod
     def delete(cls, file_path):
-        ''' Remove file from memcache '''
+        ''' Remove file from memory cache '''
         mem = memcache.Client(['127.0.0.1:11211'], debug=False)
         mem.delete(b64encode(file_path))
 

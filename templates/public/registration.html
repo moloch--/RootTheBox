@@ -1,41 +1,43 @@
-{% extends "../main.html" %}
+{% extends "../main_public.html" %}
 
 {% block title %}Registration{% end %}
 
 {% block content %}
   <h1>Register a New Account</h1>
-  <h2>{{ errors }}</h2>
+  <br />
+    <div class="well">
       <form action="/registration" method="post">  
         {% raw xsrf_form_html() %}
-        <fieldset><legend>Contact form</legend>
+        <fieldset><legend>Welcome to the Underground</legend>
           <p>
-            <label for="username">Account Name (Alphanumeric Only)</label>
-            <input type="text" name="username" />
+            <label for="account">Account Name (Alphanumeric Only)</label>
+            <input name="account" placeholder="Account Name" type="text" />
           </p>
           <p>
             <label for="handle">Hacker Name (Alphanumeric Only)</label>
-            <input type="text" name="handle" />
+            <input name="handle" placeholder="Hacker Name" type="text" />
           </p>
           <p>
             <label for="pass1">Password (Ascii Only)</label>
-            <input type="password" name="pass1" autocomplete="off" />
+            <input name="pass1" placeholder="Password" type="password" autocomplete="off" />
           </p>
           <p>
             <label for="pass2">Confirm Password</label>
-            <input type="password" name="pass2" autocomplete="off" />
+            <input name="pass2" placeholder="Confirm Password" type="password"  autocomplete="off" />
           </p>
           <p>
             <label for="token">Registration Token</label>
-            <input type="text" name="token" autocomplete="off" />
+            <input name="token" placeholder="Token" type="text"  autocomplete="off" />
           </p>     
         </fieldset>
         <p class="submit">
-          <button type="submit">&nbsp;Register Account&nbsp;</button>
+          <button class="btn btn-primary btn-large" type="submit">&nbsp;Register Account&nbsp;</button>
         </p>
       </form>
-      <script>
+    </div>
+    <script>
         $(document).ready(function() {
           document.getElementById('username').focus();
         }
-      </script>
+    </script>
 {% end %}

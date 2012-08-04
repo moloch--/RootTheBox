@@ -1,28 +1,32 @@
-{% extends "../main.html" %}
+{% extends "../main_public.html" %}
 
 {% block title %}Login{% end %}
 
 {% block content %}
-  <h1>Login</h1>
-  <h2>{{ message }}</h2>
+  <h1>Agent Authentication</h1>
+  <br />
+  <div class="well">
     <form action="/login" method="post" autocomplete="off">  
       {% raw xsrf_form_html() %}
       <fieldset>
         <legend>Login</legend>
         <p>
-          <label for="username">Account Name</label>
-          <input type="text" name="username" />
+          <label for="account">Account Name</label>
+          <input name="account" placeholder="Account Name" type="text" />
         </p>
         <p>
           <label for="password">Password</label>
-          <input type="password" name="password" />
+          <input name="password" placeholder="Password" type="password" />
         </p>     
       </fieldset>
       <p class="submit">
-        <button type="submit"> Authenticate </button>
-      </p>
+        <button class="btn btn-primary btn-large" type="submit"> Authenticate </button>
+      </p>   
     </form>
-    <script>
-      document.getElementById('username').focus();
-    </script>
+  </div>
+  <script>
+    $(document).ready(function() {
+      document.getElementById('account').focus();
+    }
+  </script>
 {% end %}

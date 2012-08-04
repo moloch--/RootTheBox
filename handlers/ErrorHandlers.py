@@ -64,4 +64,4 @@ class PhpHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the php page '''
-        self.render("public/php.html")
+        self.render("public/noob.html")

@@ -1,31 +1,44 @@
-{% extends "../main.html" %}
+{% extends "../main_public.html" %}
 
 {% block title %} About {% end %}
 
+{% block head %}
+<script src="/static/js/gistfile1.js" type="text/javascript"></script>
+{% end %}
+
 {% block content %}
 	<h1>About v{{ handler.application.settings['version'] }}</h1>
-	<div>
-		<p>
-			<h2>Programming</h2>
-			<h3>Hathcox</h3>
-			<h3>Moloch</h3>
-		</p>
-		<p>
-			<h2>Design Work</h2>
-			<h3>Hathcox</h3>
-			<h3>Moloch</h3>
-		</p>
-		<p>
-			<h2>Art Assets</h2>
-			<h3>Hathcox</h3>
-		</p>
-		<p>
-			<h2>Special Thanks</h2>
-			<h3>Dogshep</h3>
-			<h3>F13</h3>
-			<h3>Pickles</h3>
-			<h3>Redshift</h3>
-			<h3>Stormcrow</h3>
-		</p>
+	<br />
+	<div class="well">
+		<center>
+			<marquee behavior="scroll" direction="down" scrollamount="2">
+				<p>
+					<h2>Special Thanks</h2>
+					<h3>Stach &amp; Liu</h3>
+					<h3>Cummings Engineering Inc.</h3>
+				</p>
+				<p>
+					<h2>Social Engineering</h2>
+					<h3>Redshift</h3>
+				</p>
+				<p>
+					<h2>Networking</h2>
+					<h3>Dogshep</h3>
+					<h3>Pickles</h3>
+				</p>
+				<p>
+					<h2>Design Work</h2>
+					<h3>Hathcox</h3>
+					<h3>Moloch</h3>
+					<h3>Pickles</h3>
+				</p>
+				<p>
+					<h2>Programming</h2>
+					<h3>Hathcox</h3>
+					<h3>Moloch</h3>
+					<h3>Stormcrow</h3>
+				</p>
+			</marquee>
+		</center>
 	</div>
 {% end %}

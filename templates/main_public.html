@@ -28,13 +28,13 @@
     <script src="/static/js/bootstrap.js" type="text/javascript"></script>
     <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/static/js/libs/bootstrap.min.js" type="text/javascript"></script>
+    {% block head %}{% end %}
   </head>
   <body>
     {% module Menu() %}
-    <div class="container-fluid">
-      <div class="row-fluid">
-        {% module Sidebar() %}
-        <div class="span9">
+    <div class="container">
+      <div class="animated fadeIn">
+        <div>
           {% block content %} Content Missing {% end %}
         </div><!--/span-->
       </div><!--/row-->
