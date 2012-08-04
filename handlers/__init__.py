@@ -36,7 +36,7 @@ from libs.HostNetworkConfig import HostNetworkConfig
 from libs.AuthenticateReporter import scoring_round
 from libs.ConfigManager import ConfigManager
 from tornado import netutil, options
-from tornado.web import Application, StaticFileHandler
+from tornado.web import Application
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
 from handlers.UserHandlers import *
@@ -46,6 +46,7 @@ from handlers.PublicHandlers import *
 from handlers.HashesHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
+from handlers.StaticFileHandler import StaticFileHandler
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
 
@@ -191,7 +192,8 @@ def start_game():
     io_loop = IOLoop.instance()
     session_manager = SessionManager.Instance()
     scoring = PeriodicCallback(scoring_round, app.settings['ticks'], io_loop=io_loop)
-    session_clean_up = PeriodicCallback(session_manager.clean_up, app.settings['clean_up_timeout'], io_loop=io_loop)
+    session_clean_up = PeriodicCallback(session_manager.clean_up, 
+                                        app.settings['clean_up_timeout'], io_loop=io_loop)
     scoring.start()
     session_clean_up.start()
     try:

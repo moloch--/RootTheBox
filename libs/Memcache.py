@@ -20,6 +20,7 @@ Created on Mar 12, 2012
 '''
 
 
+import hashlib
 import logging
 import memcache
 
@@ -29,23 +30,22 @@ from base64 import b64encode
 class FileCache(object):
     ''' Simple wrapper for memcached '''
 
-    MAX_FILE_SIZE = 1024 * 1024 # 1Mb
+    MAX_FILE_SIZE = 1024 * 1024 * 10 # 10 Mb
 
     @classmethod
     def get(cls, file_path):
         ''' Loads file from disk or memory cache '''
-        print 'get file:', file_path
         mem = memcache.Client(['127.0.0.1:11211'], debug=False)
         key = b64encode(file_path)
         data = mem.get(key)
         if data == None:
-            print 'first read'
             f = open(file_path, 'r')
             data = f.read()
             f.close()
             if len(data) < cls.MAX_FILE_SIZE:
-                if mem.set(key, data):
-                    print 'cached in mem'
+                md5 = hashlib.md5()
+                md5.update(data)
+                if mem.set(md5.hexdigest(), data):
                     logging.info("Cached %s in memory." % file_path)
                 else:
                     logging.error("Failed to properly cache image file.")
