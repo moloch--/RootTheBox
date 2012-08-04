@@ -30,12 +30,13 @@ from base64 import b64encode
 from models import dbsession
 from modules.Menu import Menu
 from libs.ConsoleColors import *
+from libs.Memcache import FileCache
 from libs.Session import SessionManager
 from libs.HostNetworkConfig import HostNetworkConfig
 from libs.AuthenticateReporter import scoring_round
 from libs.ConfigManager import ConfigManager
-from tornado import netutil, process, options
-from tornado.web import Application
+from tornado import netutil, options
+from tornado.web import Application, StaticFileHandler
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
 from handlers.UserHandlers import *
@@ -47,7 +48,6 @@ from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
-from handlers.StaticFileHandler import StaticFileHandler
 
 
 config = ConfigManager.Instance()
@@ -190,13 +190,10 @@ def start_game():
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
     session_manager = SessionManager.Instance()
-    if process.task_id() == None:
-        scoring = PeriodicCallback(
-            scoring_round, app.settings['ticks'], io_loop=io_loop)
-        session_clean_up = PeriodicCallback(session_manager.clean_up,
-            app.settings['clean_up_timeout'], io_loop=io_loop)
-        scoring.start()
-        session_clean_up.start()
+    scoring = PeriodicCallback(scoring_round, app.settings['ticks'], io_loop=io_loop)
+    session_clean_up = PeriodicCallback(session_manager.clean_up, app.settings['clean_up_timeout'], io_loop=io_loop)
+    scoring.start()
+    session_clean_up.start()
     try:
         for count in range(3, 0, -1):
             sys.stdout.write(
@@ -207,7 +204,7 @@ def start_game():
         sys.stdout.flush()
         io_loop.start()
     except KeyboardInterrupt:
-        if process.task_id() == None:
-            print('\r' + WARN + 'Shutdown Everything!')
-            session_clean_up.stop()
-            io_loop.stop()
+        print('\r' + WARN + 'Shutdown Everything!')
+        FileCache.flush()
+        session_clean_up.stop()
+        io_loop.stop()

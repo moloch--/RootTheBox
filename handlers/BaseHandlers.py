@@ -41,6 +41,7 @@ class FormHandler(RequestHandler):
         results = self.form.validate(arguments)
         return results
 
+
 class UserBaseHandler(FormHandler):
     ''' User handlers extend this class '''
 
@@ -55,46 +56,63 @@ class UserBaseHandler(FormHandler):
             return User.by_user_name(self.session.data['user_name'])
         return None
 
+    @authenticated
+    def put(self, *args, **kwargs):
+        ''' Log odd behavior, this should never get legitimately called '''
+        logging.warn("%s attempted to use PUT method" % self.request.remote_ip)
+        self.render("public/404.html")
+
+    @authenticated
+    def delete(self, *args, **kwargs):
+        ''' Log odd behavior, this should never get legitimately called '''
+        logging.warn(
+            "%s attempted to use DELETE method" % self.request.remote_ip)
+        self.render("public/404.html")
+
+    @authenticated
+    def head(self, *args, **kwargs):
+        ''' Log odd behavior, this should never get legitimately called '''
+        logging.warn(
+            "%s attempted to use HEAD method" % self.request.remote_ip)
+        self.render("public/404.html")
+
+    @authenticated
+    def options(self, *args, **kwargs):
+        ''' Log odd behavior, this should never get legitimately called '''
+        logging.warn(
+            "%s attempted to use OPTIONS method" % self.request.remote_ip)
+        self.render("public/404.html")
+
+
 class AdminBaseHandler(FormHandler):
     ''' Admin handlers extend this class '''
 
     def initialize(self, dbsession):
         self.dbsession = dbsession
-        self.get_functions = {
-            'challenge': self.get_challenge,
-            'action': self.get_action,
-            'team': self.get_team,
-            'user': self.get_user,
-            'box': self.get_box,
-            'crackme': self.get_crack_me,
-            'se': self.get_se
-        }
-        self.post_functions = {
-            'challenge': self.post_challenge,
-            'action': self.post_action,
-            'team': self.post_team,
-            'user': self.post_user,
-            'box': self.post_box,
-            'crackme': self.post_crack_me,
-            'se': self.post_se
-        }
 
-    @authorized('admin')
-    @restrict_ip_address
-    def get(self, *args, **kwargs):
-        if len(args) == 1 and args[0] in self.get_functions.keys():
-            self.get_functions[args[0]](*args, **kwargs)
-        elif 1 <= len(args):
-            self.render("admin/unknown_object.html", unknown_object=args[0])
-        else:
-            self.render("admin/errror.html", errors="Missing parameters")
+    @authenticated
+    def put(self, *args, **kwargs):
+        ''' Log odd behavior, this should never get legitimately called '''
+        logging.warn("%s attempted to use PUT method" % self.request.remote_ip)
+        self.render("public/404.html")
 
-    @authorized('admin')
-    @restrict_ip_address
-    def post(self, *args, **kwargs):
-        if len(args) == 1 and args[0] in self.post_functions.keys():
-            self.post_functions[args[0]](*args, **kwargs)
-        elif 1 <= len(args):
-            self.render("admin/unknown_object.html", unknown_object=args[0])
-        else:
-            self.render("admin/error.html", errors="Missing parameters")
+    @authenticated
+    def delete(self, *args, **kwargs):
+        ''' Log odd behavior, this should never get legitimately called '''
+        logging.warn(
+            "%s attempted to use DELETE method" % self.request.remote_ip)
+        self.render("public/404.html")
+
+    @authenticated
+    def head(self, *args, **kwargs):
+        ''' Log odd behavior, this should never get legitimately called '''
+        logging.warn(
+            "%s attempted to use HEAD method" % self.request.remote_ip)
+        self.render("public/404.html")
+
+    @authenticated
+    def options(self, *args, **kwargs):
+        ''' Log odd behavior, this should never get legitimately called '''
+        logging.warn(
+            "%s attempted to use OPTIONS method" % self.request.remote_ip)
+        self.render("public/404.html")

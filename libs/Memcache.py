@@ -34,15 +34,20 @@ class FileCache(object):
     @classmethod
     def get(cls, file_path):
         ''' Loads file from disk or memory cache '''
+        print 'get file:', file_path
         mem = memcache.Client(['127.0.0.1:11211'], debug=False)
         key = b64encode(file_path)
         data = mem.get(key)
         if data == None:
+            print 'first read'
             f = open(file_path, 'r')
             data = f.read()
             f.close()
-            if len(data) < MAX_FILE_SIZE:
-                if not mem.put(key, data):
+            if len(data) < cls.MAX_FILE_SIZE:
+                if mem.set(key, data):
+                    print 'cached in mem'
+                    logging.info("Cached %s in memory." % file_path)
+                else:
                     logging.error("Failed to properly cache image file.")
         return data
 
@@ -51,4 +56,11 @@ class FileCache(object):
         ''' Remove file from memcache '''
         mem = memcache.Client(['127.0.0.1:11211'], debug=False)
         mem.delete(b64encode(file_path))
+
+    @classmethod
+    def flush(cls):
+        ''' Flush memory cache '''
+        mem = memcache.Client(['127.0.0.1:11211'], debug=False)
+        mem.flush_all()
+
 
