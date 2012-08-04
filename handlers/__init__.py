@@ -51,6 +51,7 @@ from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
+from handlers.TestHandlers import *
 
 
 config = ConfigManager.Instance()
@@ -126,6 +127,9 @@ app = Application([
                    DisplayPostHandler, {'dbsession':dbsession}),
                   (r'/pastebin/delete(.*)',
                    DeletePostHandler, {'dbsession':dbsession}),
+
+                  #Test Form Validation Handler
+                  (r'/test', TestFormHandler),
 
                   # Root handlers - Serves all public pages
                   (r'/login', LoginHandler),

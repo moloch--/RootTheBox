@@ -28,7 +28,20 @@ from libs.Session import SessionManager
 from tornado.web import RequestHandler
 
 
-class UserBaseHandler(RequestHandler):
+class FormHandler(RequestHandler):
+    ''' This deals with forms, and form validation'''
+
+    def initialize(self):
+        #The form object that will be validated agianst
+        self.form = None
+
+    def validate_form(self):
+        ''' When called, this will check agianst self.form and arguments passed '''
+        arguments = self.request.arguments
+        results = self.form.validate(arguments)
+        return results
+
+class UserBaseHandler(FormHandler):
     ''' User handlers extend this class '''
 
     def initialize(self, dbsession):
@@ -42,8 +55,7 @@ class UserBaseHandler(RequestHandler):
             return User.by_user_name(self.session.data['user_name'])
         return None
 
-
-class AdminBaseHandler(RequestHandler):
+class AdminBaseHandler(FormHandler):
     ''' Admin handlers extend this class '''
 
     def initialize(self, dbsession):
