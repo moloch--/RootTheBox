@@ -66,20 +66,21 @@ class Form(object):
 
     def __get_error_messages__(self, arguments, required_pieces):
         ''' Returns a list of all applicable error messages '''
-        errors = []
+        self.errors = []
         print required_pieces
         for piece in required_pieces:
             # If the peice isn't in our argument list
             if piece.name not in arguments.keys():
-                errors.append(piece.error_message)
-        return errors
+                self.errors.append(piece.error_message)
 
     def validate(self, arguments):
         ''' This method is used to validate that a form's arguments are actually existant '''
         errors = []
         required_piece_names = self.__get_piece_names__()
-        errors = self.__get_error_messages__(arguments, self.form_pieces)
-        return errors
+        self.__get_error_messages__(arguments, self.form_pieces)
+        if len(self.errors) == 0:
+            return True
+        return False
 
 
 class FormPiece():
