@@ -39,17 +39,17 @@ from models.BaseGameObject import BaseObject
 class User(BaseObject):
     ''' User definition '''
 
-    _name = Column(Unicode(64), unique=True, nullable=False)
-    name = synonym('_name', descriptor=property(
-        lambda self: self._name,
-        lambda self, name: setattr(
-            self, '_name', self.__class__.filter_string(name, " _-"))
+    _account = Column(Unicode(64), unique=True, nullable=False)
+    account = synonym('_account', descriptor=property(
+        lambda self: self._account,
+        lambda self, account: setattr(
+            self, '_account', self.__class__.filter_string(account, " _-"))
     ))
-    _display_name = Column(Unicode(64), unique=True, nullable=False)
-    display_name = synonym('_display_name', descriptor=property(
-        lambda self: self._display_name,
-        lambda self, display_name: setattr(
-            self, '_display_name', self.__class__.filter_string(display_name, " _-"))
+    _handle = Column(Unicode(64), unique=True, nullable=False)
+    handle = synonym('_handle', descriptor=property(
+        lambda self: self._handle,
+        lambda self, handle: setattr(
+            self, '_handle', self.__class__.filter_string(handle, " _-"))
     ))
     team_id = Column(Integer, ForeignKey('team.id'))
     pastes = relationship("PasteBin", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
@@ -69,19 +69,19 @@ class User(BaseObject):
         return dbsession.query(Permission).filter_by(user_id=self.id)
 
     @property
-    def permissions_names(self):
-        '''Return a list with all permissions names granted to the user.'''
-        return [permission.name for permission in self.permissions]
+    def permissions_accounts(self):
+        '''Return a list with all permissions accounts granted to the user.'''
+        return [permission.account for permission in self.permissions]
 
     @property
     def team_name(self):
-        ''' Return a list with all groups names the user is a member of '''
+        ''' Return a list with all groups accounts the user is a member of '''
         if self.team_id == None:
             return None
         else:
             team = dbsession.query(
                 Team).filter_by(id=self.team_id).first()
-            return team.name
+            return team.account
 
     @property
     def team(self):
@@ -94,22 +94,22 @@ class User(BaseObject):
     @classmethod
     def get_all(cls):
         ''' Return all non-admin user objects '''
-        return dbsession.query(cls).filter(cls.user_name != 'admin').all()
+        return dbsession.query(cls).filter(cls.user_account != 'admin').all()
 
     @classmethod
     def get_free_agents(cls):
         ''' Return all non-admin user objects without a team '''
-        return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_name != 'admin').all()
+        return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_account != 'admin').all()
 
     @classmethod
-    def by_user_name(cls, user_name):
-        ''' Return the user object whose user name is "user_name" '''
-        return dbsession.query(cls).filter_by(name=unicode(user_name)).first()
+    def by_account(cls, account):
+        ''' Return the user object whose user account is "account" '''
+        return dbsession.query(cls).filter_by(account=unicode(account)).first()
 
     @classmethod
-    def by_display_name(cls, display_name):
-        ''' Return the user object whose user name is "display_name" '''
-        return dbsession.query(cls).filter_by(display_name=unicode(display_name)).first()
+    def by_handle(cls, handle):
+        ''' Return the user object whose user account is "handle" '''
+        return dbsession.query(cls).filter_by(handle=unicode(handle)).first()
 
     @classmethod
     def by_id(cls, user_id):
@@ -117,9 +117,9 @@ class User(BaseObject):
         return dbsession.query(cls).filter_by(id=user_id).first()
 
     @classmethod
-    def add_to_team(cls, team_name):
-        ''' Add user to team based on team name '''
-        team = dbsession.query(Team).filter_by(name=unicode(team_name)).first()
+    def add_to_team(cls, team_account):
+        ''' Add user to team based on team account '''
+        team = dbsession.query(Team).filter_by(account=unicode(team_account)).first()
         cls.team_id = team.id
 
     @classmethod
@@ -155,8 +155,8 @@ class User(BaseObject):
         return unicode(sha_hash.hexdigest())
 
     def has_permission(self, permission):
-        ''' Return True if 'permission' is in permissions_names '''
-        return True if permission in self.permissions_names else False
+        ''' Return True if 'permission' is in permissions_accounts '''
+        return True if permission in self.permissions_accounts else False
 
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
@@ -177,4 +177,4 @@ class User(BaseObject):
         return sorted(self.notifications[:limit])
 
     def __repr__(self):
-        return ('<User - name: %s, display: %s, team_id: %d>' % (self.user_name, self.display_name, self.team_id)).encode('utf-8')
+        return ('<User - account: %s, display: %s, team_id: %d>' % (self.user_account, self.handle, self.team_id)).encode('utf-8')

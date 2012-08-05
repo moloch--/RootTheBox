@@ -1,68 +1,31 @@
-<ul id="menu">
-	<li>
-		<a href="/user">Home</a>
-	</li>
-	<li>
-		<a href="/boxes" >Play Game</a>
-		<ul>
-			<li>
-				<a href="/boxes">Boxes</a>
-			</li>
-			<li>
-				<a href="/challenges">Programming</a>
-			</li>
-			<li>
-				<a href="/hashes">Password Hashes</a>
-			</li>
-			<li>
-				<a href="/crackmes">Reverse Engineering</a>
-			</li>
-			<li>
-				<a href="/se">Social Engineering</a>
-			</li>
-		</ul>
-	</li>
-	<li>
-		<a href="/user/team">Team</a>
-		<ul>
-			<li>
-				<a href="/user/team">All Teams</a>
-			</li>
-			<li>
-				<a href="/user/reporter">Flag Downloads</a>
-			</li>
-			<li>
-				<a href="/user/shares">File Sharing</a>
-			</li>
-			<li>
-				<a href="/pastebin">Paste Bin</a>
-			</li>
-		</ul>
-	</li>
-	<li>
-		<a href="/scoreboard">Scoreboard</a>
-		<ul>
-			<li>
-				<a href="/all_time">Game History</a>
-			</li>
-			<li>
-				<a href="/bar_chart">Real-time Bar Chart</a>
-			</li>
-			<li>
-				<a href="/pie_chart">Real-time Pie Chart</a>
-			</li>
-			<li>
-				<a href="/pie_chart">Game Log</a>
-			</li>
-		</ul>
-	</li>
-	<li>
-		<a href="/wallofsheep">Wall of Sheep</a>
-	</li>
-	<li>
-		<a href="/user/settings">Settings</a>
-	</li>
-	<li>
-		<a href="/user/logout">Logout</a>
-	</li>
-</ul>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Root the Box</a>
+          <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i> 
+              {{ handle }}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/settings">Settings</a></li>
+              <li class="divider"></li>
+              <li><a href="/logout">Sign Out</a></li>
+            </ul>
+          </div>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li><a href="/login">Login</a></li>
+              <li><a href="/registration">Registration</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>

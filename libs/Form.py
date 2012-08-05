@@ -73,13 +73,13 @@ class Form(object):
             if piece.name not in arguments.keys():
                 self.errors.append(piece.error_message)
 
-    def validate(self, arguments):
+    def validate(self, arguments=None):
         ''' This method is used to validate that a form's arguments are actually existant '''
-        errors = []
-        required_piece_names = self.__get_piece_names__()
-        self.__get_error_messages__(arguments, self.form_pieces)
-        if len(self.errors) == 0:
-            return True
+        if arguments != None:
+            errors = []
+            required_piece_names = self.__get_piece_names__()
+            self.__get_error_messages__(arguments, self.form_pieces)
+            return len(self.errors) == 0
         return False
 
 

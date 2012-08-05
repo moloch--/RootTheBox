@@ -5,6 +5,15 @@
 {% block content %}
   <h1>Agent Authentication</h1>
   <br />
+  {% if errors != None and len(errors) != 0 %}
+    {% for error in errors %}
+      <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">ERROR</h4>
+        {{ error }}
+      </div>
+    {% end %}
+  {% end %}
   <div class="well">
     <form action="/login" method="post" autocomplete="off">  
       {% raw xsrf_form_html() %}
@@ -20,7 +29,7 @@
         </p>     
       </fieldset>
       <p class="submit">
-        <button class="btn btn-primary btn-large" type="submit"> Authenticate </button>
+        <button class="btn btn-primary btn-large" type="submit">Authenticate</button>
       </p>   
     </form>
   </div>

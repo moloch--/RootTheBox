@@ -185,7 +185,6 @@ app = Application([
 # Main entry point
 def start_game():
     ''' Main entry point for the application '''
-    #cache_actions()
     sockets = netutil.bind_sockets(config.listen_port)
     server = HTTPServer(app)
     server.add_sockets(sockets)

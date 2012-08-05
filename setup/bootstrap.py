@@ -50,8 +50,8 @@ else:
 
 # User Account
 user = User(
-    name=unicode('admin'),
-    display_name=unicode('God'),
+    account=unicode('admin'),
+    handle=unicode('God'),
     password=unicode(password)
 )
 dbsession.add(user)

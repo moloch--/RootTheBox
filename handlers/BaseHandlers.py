@@ -31,18 +31,14 @@ from tornado.web import RequestHandler
 class FormHandler(RequestHandler):
     ''' This deals with forms, and form validation'''
 
-    def initialize(self):
-        #The form object that will be validated agianst
-        self.form = None
-
     def validate_form(self):
         ''' When called, this will check agianst self.form and arguments passed '''
         arguments = self.request.arguments
-        results = self.form.validate(arguments)
+        results = self.form.__validate__(arguments)
         return results
 
 
-class UserBaseHandler(FormHandler):
+class UserBaseHandler(RequestHandler):
     ''' User handlers extend this class '''
 
     def initialize(self, dbsession):
@@ -84,11 +80,12 @@ class UserBaseHandler(FormHandler):
         self.render("public/404.html")
 
 
-class AdminBaseHandler(FormHandler):
+class AdminBaseHandler(RequestHandler):
     ''' Admin handlers extend this class '''
 
     def initialize(self, dbsession):
         self.dbsession = dbsession
+        self.form = None
 
     @authenticated
     def put(self, *args, **kwargs):

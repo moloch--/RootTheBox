@@ -3,18 +3,27 @@
 {% block title %}Registration{% end %}
 
 {% block content %}
-  <h1>Register a New Account</h1>
+  <h1>Registration</h1>
   <br />
+  {% if errors != None and len(errors) != 0 %}
+    {% for error in errors %}
+      <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">ERROR</h4>
+        {{ error }}
+      </div>
+    {% end %}
+  {% end %}
     <div class="well">
       <form action="/registration" method="post">  
         {% raw xsrf_form_html() %}
-        <fieldset><legend>Welcome to the Underground</legend>
+        <fieldset><legend>Agent Enrollment</legend>
           <p>
-            <label for="account">Account Name (Alphanumeric Only)</label>
+            <label for="account">Account Name (Alpha-numeric Only)</label>
             <input name="account" placeholder="Account Name" type="text" />
           </p>
           <p>
-            <label for="handle">Hacker Name (Alphanumeric Only)</label>
+            <label for="handle">Hacker Name (Alpha-numeric Only)</label>
             <input name="handle" placeholder="Hacker Name" type="text" />
           </p>
           <p>
@@ -23,11 +32,11 @@
           </p>
           <p>
             <label for="pass2">Confirm Password</label>
-            <input name="pass2" placeholder="Confirm Password" type="password"  autocomplete="off" />
+            <input name="pass2" placeholder="Confirm Password" type="password" autocomplete="off" />
           </p>
           <p>
             <label for="token">Registration Token</label>
-            <input name="token" placeholder="Token" type="text"  autocomplete="off" />
+            <input name="token" placeholder="Token" type="text" autocomplete="off" />
           </p>     
         </fieldset>
         <p class="submit">

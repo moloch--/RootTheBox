@@ -18,6 +18,7 @@ Created on Mar 14, 2012
     limitations under the License.
 '''
 
+
 from libs.Session import SessionManager
 from tornado.web import UIModule
 
@@ -25,12 +26,13 @@ from tornado.web import UIModule
 class Menu(UIModule):
 
     def render(self, *args, **kwargs):
+        ''' Renders the top menu '''
         session_manager = SessionManager.Instance()
         session = session_manager.get_session(
             self.handler.get_secure_cookie('auth'), self.request.remote_ip)
         if session != None:
             if session.data['menu'] == 'user':
-                return self.render_string('menu/user.html')
+                return self.render_string('menu/user.html', handle = session.data['handle'])
             elif session.data['menu'] == 'admin':
                 return self.render_string('menu/admin.html')
         return self.render_string('menu/public.html')
