@@ -60,8 +60,8 @@ class UnauthorizedHandler(RequestHandler):
         self.render("public/403.html")
 
 
-class PhpHandler(RequestHandler):
+class NoobHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
-        ''' Renders the php page '''
+        ''' Renders the noob page '''
         self.render("public/noob.html")

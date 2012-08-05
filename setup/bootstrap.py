@@ -52,7 +52,7 @@ else:
 user = User(
     account=unicode('admin'),
     handle=unicode('God'),
-    password=unicode(password)
+    password=password
 )
 dbsession.add(user)
 dbsession.flush()

@@ -21,7 +21,7 @@
         <legend>Login</legend>
         <p>
           <label for="account">Account Name</label>
-          <input name="account" placeholder="Account Name" type="text" />
+          <input name="account" id="account" placeholder="Account Name" type="text" />
         </p>
         <p>
           <label for="password">Password</label>
@@ -34,8 +34,6 @@
     </form>
   </div>
   <script>
-    $(document).ready(function() {
       document.getElementById('account').focus();
-    }
   </script>
 {% end %}

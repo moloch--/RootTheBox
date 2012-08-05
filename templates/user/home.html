@@ -5,15 +5,16 @@
 {% block content %}
 <h1>Root the Box</h1>
 <h2>Game of Hackers</h2>
-	<p>Welcome to Root the Box {{ user.display_name }}</p>
+	<p>
+		Welcome to Root the Box {{ user.handle }}
+	</p>
 	{% if user.team %}
 		<p>You are on team {{ user.team.team_name }}</p>
 	{% end %}
 	<p>
-	Your score is {{ user.score }} <br />
-	{% if user.team %}
-		Your team's score is {{ user.team.score }} <br />
-	{% end %}
+		{% if user.team %}
+			Your bank account balance ${{ user.team.money }} <br />
+		{% end %}
 	</p>
 	{% if user.avatar %}
 		<img src="/avatars/{{ user.avatar }}" />

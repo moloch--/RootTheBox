@@ -29,6 +29,7 @@ from os import urandom, path
 from base64 import b64encode
 from models import dbsession
 from modules.Menu import Menu
+from modules.Sidebar import Sidebar
 from libs.ConsoleColors import *
 from libs.Memcache import FileCache
 from libs.Session import SessionManager
@@ -75,8 +76,6 @@ app = Application([
                    TeamAjaxHandler, {'dbsession': dbsession}),
                   (r'/user/team',
                    TeamViewHandler, {'dbsession': dbsession}),
-                  (r'/user/logout',
-                   LogoutHandler, {'dbsession': dbsession}),
                   (r'/user/reporter',
                    ReporterHandler, {'dbsession': dbsession}),
                   (r'/user', HomeHandler, {'dbsession': dbsession}),
@@ -103,12 +102,9 @@ app = Application([
                   # Admin Handlers - Administration pages
                   (r'/admin/create/(.*)',
                    AdminCreateHandler, {'dbsession':dbsession}),
-                  (r'/admin/edit/(.*)',
-                   AdminEditHandler, {'dbsession':dbsession}),
-                  (r'/admin/notify', AdminNotifyHandler),
-                  (r'/admin/notify/ajax(.*)', AdminAjaxNotifyHandler, {
-                   'dbsession', dbsession}),
-
+                  (r'/admin/view/(.*)',
+                   AdminViewHandler, {'dbsession':dbsession}),
+                  
                   # WebSocket Handlers - Websocket communication
                   # handlers
                   (r'/websocket', WebsocketHandler),
@@ -121,16 +117,20 @@ app = Application([
                   (r'/pastebin/delete(.*)',
                    DeletePostHandler, {'dbsession':dbsession}),
 
-                  # Root handlers - Serves all public pages
+                  # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),
                   (r'/registration', UserRegistraionHandler,
                    {'dbsession': dbsession}),
                   (r'/about', AboutHandler),
+                  (r'/logout', LogoutHandler,
+                   {'dbsession': dbsession}),
                   (r'/', HomePageHandler),
 
                   # Error handlers - Serves error pages
                   (r'/403', UnauthorizedHandler),
-                  (r'/(.*).php', PhpHandler),
+                  (r'/(.*).php(.*)', NoobHandler),
+                  (r'/admin', NoobHandler),
+                  (r'/administrator', NoobHandler),
                   (r'/(.*)', NotFoundHandler)
                   ],
 
@@ -152,7 +152,7 @@ app = Application([
     login_url = '/login',
 
     # UI Modules
-    ui_modules = {"Menu": Menu},
+    ui_modules = {"Menu": Menu, "Sidebar": Sidebar},
 
     # Enable XSRF forms
     xsrf_cookies = True,

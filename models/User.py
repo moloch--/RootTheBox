@@ -71,7 +71,7 @@ class User(BaseObject):
     @property
     def permissions_accounts(self):
         '''Return a list with all permissions accounts granted to the user.'''
-        return [permission.account for permission in self.permissions]
+        return [permission.name for permission in self.permissions]
 
     @property
     def team_name(self):
@@ -94,12 +94,12 @@ class User(BaseObject):
     @classmethod
     def get_all(cls):
         ''' Return all non-admin user objects '''
-        return dbsession.query(cls).filter(cls.user_account != 'admin').all()
+        return dbsession.query(cls).filter(cls.account != 'admin').all()
 
     @classmethod
     def get_free_agents(cls):
         ''' Return all non-admin user objects without a team '''
-        return dbsession.query(cls).filter_by(team_id=None).filter(cls.user_account != 'admin').all()
+        return dbsession.query(cls).filter_by(team_id=None).filter(cls.account != 'admin').all()
 
     @classmethod
     def by_account(cls, account):
@@ -108,7 +108,7 @@ class User(BaseObject):
 
     @classmethod
     def by_handle(cls, handle):
-        ''' Return the user object whose user account is "handle" '''
+        ''' Return the user object whose user is "handle" '''
         return dbsession.query(cls).filter_by(handle=unicode(handle)).first()
 
     @classmethod
@@ -160,8 +160,8 @@ class User(BaseObject):
 
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
-        attempt = filter(lambda char: char in string.printable[:-5], attempt)
-        if isinstance(attempt, unicode):
+        attempt = filter(lambda char: char in printable[:-5], attempt)
+        if not isinstance(attempt, unicode):
             attempt = attempt.encode('utf-8')
         if self.has_permission('admin'):
             return self.password == self.admin_hash(attempt)
@@ -174,7 +174,7 @@ class User(BaseObject):
 
     def get_notifications(self, limit=10):
         ''' Return most recent notifications '''
-        return sorted(self.notifications[:limit])
+        return self.notifications.sort(key=lambda notify: notify.created)[:limit]
 
     def __repr__(self):
         return ('<User - account: %s, display: %s, team_id: %d>' % (self.user_account, self.handle, self.team_id)).encode('utf-8')

@@ -1,68 +1,55 @@
-<ul id="menu">
-	<li>
-		<a href="/admin/notify">Game Control</a>
-	</li>
-	<li>
-		<a href="/admin/create">Create Objects</a>
-		<ul>
-			<li>
-				<a href="/admin/create/challenge">Create an Challenge</a>
-			</li>
-			<li>
-				<a href="/admin/create/action">Create an Action</a>
-			</li>
-			<li>
-				<a href="/admin/create/team">Create a Team</a>
-			</li>
-			<li>
-				<a href="/admin/create/box">Create a Box</a>
-			</li>
-			<li>
-				<a href="/admin/create/crackme">Create a Crack Me</a>
-			</li>
-			<li>
-				<a href="/admin/create/se">Create an SE Challenge</a>
-			</li>
-		</ul>
-	</li>
-	<li>
-		<a href="/admin/edit">Edit Objects</a>
-		<ul>
-			<li>
-				<a href="/admin/edit/user">Edit User</a>
-			</li>
-			<li>
-				<a href="/admin/edit/teams">Edit Teams</a>
-			</li>
-			<li>
-				<a href="/admin/edit/boxes">Edit Boxes</a>
-			</li>
-			<li>
-				<a href="/admin/edit/crackmes">Edit Crack Me's</a>
-			</li>
-			<li>
-				<a href="/admin/edit/se">Edit SE Challenges</a>
-			</li>
-		</ul>
-	</li>
-	<li>
-		<a href="/admin/view" >View Objects</a>
-		<ul>
-			<li>
-				<a href="/admin/view/teams">View Teams</a>
-			</li>
-			<li>
-				<a href="/admin/view/teams">View Boxes</a>
-			</li>
-			<li>
-				<a href="/admin/view/teams">View Crack Me's</a>
-			</li>
-			<li>
-				<a href="/admin/view/se">View SE Challenges</a>
-			</li>
-		</ul>
-	</li>
-	<li>
-		<a href="/user/logout">Logout</a>
-	</li>
-</ul>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Root the Box</a>
+          <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i> 
+              {{ handle }}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/settings">Settings</a></li>
+              <li class="divider"></li>
+              <li><a href="/logout">Logout</a></li>
+            </ul>
+          </div>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  Create Game Objects
+                <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/admin/create/team">Create Team</a></li>
+                  <li><a href="/admin/create/corporation">Create Corporation</a></li>
+                  <li><a href="/admin/create/box">Create Box</a></li>
+                  <li><a href="/admin/create/flag">Create Flag</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  View Game Objects
+                <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/admin/view/team">View Team</a></li>
+                  <li><a href="/admin/view/corporation">View Corporation</a></li>
+                  <li><a href="/admin/view/box">View Box</a></li>
+                  <li><a href="/admin/view/flag">View Flag</a></li>
+                </ul>
+              </li>
+              <!-- Other -->
+              <li><a href="/admin/notifications">Notifications</a></li>
+              <li><a href="/admin/regtokens">Reg Tokens</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>

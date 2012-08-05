@@ -21,7 +21,7 @@ Created on Mar 12, 2012
 
 
 class Form(object):
-    ''' Held by FormHandler's to deal with easy validation'''
+    ''' Held by FormHandler's to deal with easy validation '''
 
     def __init__(self, *args, **kwargs):
         self.form_pieces = []
@@ -43,7 +43,7 @@ class Form(object):
         return required_pieces
 
     def __contains_list__(self, small, big):
-        ''' checks to make sure that all of the smaller list in inside of the bigger list'''
+        ''' checks to make sure that all of the smaller list in inside of the bigger list '''
         all_exist = True
         for item in small:
             if item not in big:
@@ -67,7 +67,6 @@ class Form(object):
     def __get_error_messages__(self, arguments, required_pieces):
         ''' Returns a list of all applicable error messages '''
         self.errors = []
-        print required_pieces
         for piece in required_pieces:
             # If the peice isn't in our argument list
             if piece.name not in arguments.keys():

@@ -14,17 +14,33 @@
       </div>
     {% end %}
   {% end %}
+    <style> 
+    .black-option
+    { 
+     color: black; 
+     font-size: 2em; 
+    } 
+   </style> 
     <div class="well">
       <form action="/registration" method="post">  
         {% raw xsrf_form_html() %}
         <fieldset><legend>Agent Enrollment</legend>
           <p>
             <label for="account">Account Name (Alpha-numeric Only)</label>
-            <input name="account" placeholder="Account Name" type="text" />
+            <input name="account" id="account" placeholder="Account Name" type="text" />
           </p>
           <p>
             <label for="handle">Hacker Name (Alpha-numeric Only)</label>
             <input name="handle" placeholder="Hacker Name" type="text" />
+          </p>
+          <p>
+            <label for="team">Join Team</label>
+            <select>
+              <option value=""></option>
+              {% for team in teams %}
+                <option class="black-option" value="{{ team.name }}">{{ team.name }}</option>
+              {% end %}
+            </select>
           </p>
           <p>
             <label for="pass1">Password (Ascii Only)</label>
@@ -45,8 +61,6 @@
       </form>
     </div>
     <script>
-        $(document).ready(function() {
-          document.getElementById('username').focus();
-        }
+        document.getElementById('account').focus();
     </script>
 {% end %}

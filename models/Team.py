@@ -4,36 +4,42 @@ Created on Mar 12, 2012
 
 @author: moloch
 
- Copyright [2012] [Redacted Labs]
+    Copyright [2012] [Redacted Labs]
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 '''
 
 
 import logging
 
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
 from models.Box import Box
 from models.BaseGameObject import BaseObject
+from string import ascii_letters, digits
 
 
 class Team(BaseObject):
     ''' Team definition '''
 
-    name = Column(Unicode(64), unique=True, nullable=False)
+    _name = Column(Unicode(64), unique=True, nullable=False)
+    name = synonym('_name', descriptor=property(
+        lambda self: self._name,
+        lambda self, name: setattr(
+            self, '_name', self.__class__.filter_string(name, " -_"))
+    ))
     motto = Column(Unicode(255))
     members = relationship("User", backref="Team")
     listen_port = Column(Integer, unique=True, nullable=False)
@@ -41,7 +47,7 @@ class Team(BaseObject):
     money = Column(Integer, default=0, nullable=False)
 
     @classmethod
-    def by_team_name(cls, team_name):
+    def by_name(cls, team_name):
         ''' Return the team object based on "team_name" '''
         return dbsession.query(cls).filter_by(name=unicode(team_name)).first()  
 
@@ -53,12 +59,12 @@ class Team(BaseObject):
     @classmethod
     def get_all(cls):
         ''' Returns all team objects '''
-        return dbsession.query(cls).all()  
+        return dbsession.query(cls).all()
 
-    @property
-    def crack_me(self):
-        ''' Returns the current crack me '''
-        return dbsession.query(CrackMe).filter_by(id=self.crack_me_id).first()  
+    @classmethod
+    def filter_string(cls, string, extra_chars=''):
+        char_white_list = ascii_letters + digits + extra_chars
+        return filter(lambda char: char in char_white_list, string)
 
     @property
     def pastes(self):
@@ -85,19 +91,8 @@ class Team(BaseObject):
         ''' Return file object based on uuid '''
         return files.filter_by(uuid=uuid).first()
 
-    def solved_crack_me(self):
-        ''' Increments crack_me id '''
-        self.crack_me_id += 1
-
-    def is_controlling(self, box):
-        ''' Returns a boolean based on if the team has control of a box '''
-        return True if box in self.boxes else False
-
     def __repr__(self):
         return ('<Team - name: %s, score: %d>' % (self.team_name, self.score)).encode('utf-8')
 
     def __str__(self):
         return unicode(self.name)
-
-    def __radd__(self, other):
-        return self.money + other

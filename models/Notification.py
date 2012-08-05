@@ -64,12 +64,3 @@ class Notification(BaseObject):
             icon: self.icon
         }
         return json.dumps(notification)
-
-    def __cmp__(self, other):
-        ''' Compares data/time the notification was created '''
-        if self.created < other:
-            return -1
-        elif self.created == other:
-            return 0
-        else:
-            return 1

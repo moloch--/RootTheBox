@@ -71,7 +71,7 @@ class ConfigManager(object):
         if not '127.0.0.1' in ips:
             ips.append('127.0.0.1')
         self.admin_ips = tuple(ips)
-        self.max_password_length = self.config.get("Security", 'max_password_length')
+        self.max_password_length = int(self.config.get("Security", 'max_password_length'))
 
     def __recaptcha__(self):
         ''' Loads recaptcha settings '''

@@ -34,5 +34,5 @@ class Menu(UIModule):
             if session.data['menu'] == 'user':
                 return self.render_string('menu/user.html', handle = session.data['handle'])
             elif session.data['menu'] == 'admin':
-                return self.render_string('menu/admin.html')
+                return self.render_string('menu/admin.html', handle = "Admin")
         return self.render_string('menu/public.html')

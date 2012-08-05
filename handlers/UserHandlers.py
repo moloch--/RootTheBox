@@ -40,7 +40,7 @@ class HomeHandler(UserBaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
-        user = User.by_user_name(self.session.data['user_name'])
+        user = self.get_current_user()
         self.render('user/home.html', user=user)
 
 
@@ -264,11 +264,3 @@ class ReporterHandler(UserBaseHandler):
     def get(self, *args, **kwargs):
         self.render("user/reporter.html")
 
-
-class LogoutHandler(UserBaseHandler):
-
-    def get(self, *args, **kwargs):
-        ''' Clears cookies and session data '''
-        self.session_manager.remove_session(self.get_secure_cookie('auth'))
-        self.clear_all_cookies()
-        self.redirect("/")

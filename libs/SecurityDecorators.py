@@ -63,7 +63,7 @@ def authorized(permission):
             session = session_manager.get_session(
                 self.get_secure_cookie('auth'), self.request.remote_ip)
             if session != None:
-                user = User.by_user_name(session.data['user_name'])
+                user = User.by_handle(session.data['handle'])
                 if user != None and user.has_permission(permission):
                     return method(self, *args, **kwargs)
             logging.warn("Attempted unauthorized access from %s to %s" %

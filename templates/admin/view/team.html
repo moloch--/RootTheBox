@@ -1,0 +1,53 @@
+{% extends "../../main.html" %}
+
+{% block title %}View Teams{% end %}
+
+{% block content %}
+    <!-- Hidden Edit Form -->
+    <div id="editTeamModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Edit Team</h3>
+        </div>
+        <div class="modal-body">
+        <form id="edit-team" method="post" action="/admin/edit/team">
+            <input type="hidden" id="sms-contact" name="sms-contact" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button type="button" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+    <!-- Start Visable -->
+    <h1>Teams</h1>
+    <br />
+    <div class="well">
+      <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Motto</th>
+              <th>Listen Port</th>
+              <th>Bank Account</th>
+              <th><!-- Edit Button --></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for team in teams %}
+                <tr>
+                  <td>{{ team.name }}</td>
+                  <td>{{ team.motto }}</td>
+                  <td>{{ team.listen_port }}</td>
+                  <td>${{ team.money }}</td>
+                  <td>
+                    <a class="btn btn-primary" data-toggle="modal" href="#editTeamModal">
+                      Edit
+                    </a>
+                  </td>
+                </tr>
+          {% end %}
+          </tbody>
+      </table>
+    </div>
+{% end %}

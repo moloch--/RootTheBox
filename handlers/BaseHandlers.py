@@ -49,7 +49,7 @@ class UserBaseHandler(RequestHandler):
 
     def get_current_user(self):
         if self.session != None:
-            return User.by_user_name(self.session.data['user_name'])
+            return User.by_handle(self.session.data['handle'])
         return None
 
     @authenticated
@@ -85,7 +85,6 @@ class AdminBaseHandler(RequestHandler):
 
     def initialize(self, dbsession):
         self.dbsession = dbsession
-        self.form = None
 
     @authenticated
     def put(self, *args, **kwargs):

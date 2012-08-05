@@ -23,8 +23,11 @@ Created on Mar 13, 2012
 import logging
 
 from models.User import User
+from models.Team import Team
 from libs.Form import Form
+from libs.ConfigManager import ConfigManager
 from libs.Session import SessionManager
+from handlers.BaseHandlers import UserBaseHandler
 from tornado.web import RequestHandler
 from recaptcha.client import captcha
 from string import ascii_letters, digits
@@ -53,20 +56,20 @@ class LoginHandler(RequestHandler):
     def post(self, *args, **kwargs):
         ''' Checks submitted username and password '''
         if self.form.validate(self.request.arguments):
-            user = User.by_account(self.request.arguments['account'])
-            if user != None and user.validate_password(password):
+            user = User.by_account(self.request.arguments['account'][0])
+            if user != None and user.validate_password(self.request.arguments['password'][0]):
                 if user.team == None and not user.has_permission('admin'):
                     # Successful login, but not assigned to a team yet
                     self.render("public/login.html", errors=["You must be assigned to a team before you can login"])
                 else:
-                    self.successful_login()
+                    self.successful_login(user)
                     self.redirect('/user')
             else:
                 self.failed_login()
         else:
             self.render('public/login.html', errors=self.form.errors)
 
-    def successful_login(self):
+    def successful_login(self, user):
         ''' Called when a user successfully logs in '''
         logging.info("Successful login: %s/%s from %s" % (user.account, user.handle, self.request.remote_ip))
         session_manager = SessionManager.Instance()
@@ -86,6 +89,7 @@ class LoginHandler(RequestHandler):
 
 
 class UserRegistraionHandler(RequestHandler):
+    ''' Registration Code '''
 
     def initialize(self, dbsession):
         self.dbsession = dbsession
@@ -99,40 +103,41 @@ class UserRegistraionHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''
-        self.render("public/registration.html", errors=None)
+        self.render("public/registration.html", errors=None, teams=Team.get_all())
 
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
         # Check user_name parameter
         if self.form.validate(self.request.arguments):
+            config = ConfigManager.Instance()
             if User.by_account(self.request.arguments['account']) != None:
                 self.render('public/registration.html',
-                            errors=['Account name already taken'])
+                            errors=['Account name already taken'], teams=Team.get_all())
             elif self.request.arguments['account'] == self.request.arguments['handle']:
                 self.render('public/registration.html',
                             errors=['Account name and hacker name must differ'])
             elif User.by_handle(self.request.arguments['handle']) != None:
                 self.render(
-                    'public/registration.html', errors=['Handle already taken'])
+                    'public/registration.html', errors=['Handle already taken'], teams=Team.get_all())
             elif not self.request.arguments['pass1'] == self.request.arguments['pass2']:
                 self.render(
-                    'public/registration.html', errors=['Passwords do not match'])
+                    'public/registration.html', errors=['Passwords do not match'], teams=Team.get_all())
             elif not 0 < len(self.request.arguments['pass1']) <= config.max_password_length:
                 self.render('public/registration.html',
-                            errors=['Password must be 1-%d characters' % config.max_password_length])
+                            errors=['Password must be 1-%d characters' % config.max_password_length], teams=Team.get_all())
             else:
                 user = User(
-                    account=unicode(account),
-                    handle=unicode(handle),
-                    password=password
+                    account=unicode(self.request.arguments['account']),
+                    handle=unicode(self.request.arguments['handle']),
+                    password=str(self.request.arguments['pass1'][0]),
                 )
                 self.dbsession.add(user)
                 self.dbsession.flush()
             self.redirect('/login')
         elif 0 < len(self.form.errors):
-            self.render('public/registration.html', errors=self.form.errors)
+            self.render('public/registration.html', errors=self.form.errors, teams=Team.get_all())
         else:
-            self.render('public/registration.html', errors=['Unknown error'])
+            self.render('public/registration.html', errors=['Unknown error'], teams=Team.get_all())
 
 
 class AboutHandler(RequestHandler):
@@ -140,3 +145,12 @@ class AboutHandler(RequestHandler):
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render('public/about.html')
+
+
+class LogoutHandler(UserBaseHandler):
+
+    def get(self, *args, **kwargs):
+        ''' Clears cookies and session data '''
+        self.session_manager.remove_session(self.get_secure_cookie('auth'))
+        self.clear_all_cookies()
+        self.redirect("/")
