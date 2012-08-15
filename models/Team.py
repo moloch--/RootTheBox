@@ -27,7 +27,7 @@ from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
 from models.Box import Box
-from models.BaseGameObject import BaseObject
+from models.BaseGameObject import BaseObject, get_uuid
 from string import ascii_letters, digits
 
 
@@ -45,6 +45,7 @@ class Team(BaseObject):
     listen_port = Column(Integer, unique=True, nullable=False)
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
     money = Column(Integer, default=0, nullable=False)
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=get_uuid)
 
     @classmethod
     def by_name(cls, team_name):
@@ -60,6 +61,11 @@ class Team(BaseObject):
     def get_all(cls):
         ''' Returns all team objects '''
         return dbsession.query(cls).all()
+
+    @classmethod
+    def by_uuid(cls, team_uuid):
+        ''' Return the job object whose user uuid is "team_uuid" '''
+        return dbsession.query(cls).filter_by(uuid=unicode(team_uuid)).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):

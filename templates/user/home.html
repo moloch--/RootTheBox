@@ -6,15 +6,13 @@
 <h1>Root the Box</h1>
 <h2>Game of Hackers</h2>
 	<p>
-		Welcome to Root the Box {{ user.handle }}
+		Welcome to Root the Box {{ user.handle }} <br />
 	</p>
-	{% if user.team %}
-		<p>You are on team {{ user.team.team_name }}</p>
-	{% end %}
 	<p>
-		{% if user.team %}
-			Your bank account balance ${{ user.team.money }} <br />
-		{% end %}
+		You are on team {{ user.team.name }} <br />
+	</p>
+	<p>
+		Your bank account balance ${{ user.team.money }} <br />
 	</p>
 	{% if user.avatar %}
 		<img src="/avatars/{{ user.avatar }}" />

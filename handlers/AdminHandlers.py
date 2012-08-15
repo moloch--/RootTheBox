@@ -4,19 +4,19 @@ Created on Mar 13, 2012
 
 @author: moloch
 
- Copyright [2012] [Redacted Labs]
+    Copyright [2012] [Redacted Labs]
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 '''
 
 
@@ -72,10 +72,29 @@ class AdminCreateHandler(AdminBaseHandler):
             self.render("public/404.html")
 
     def create_corporation(self):
-        pass
+        form = Form(name="Enter a name")
 
     def create_box(self):
-        pass
+        form = Form(
+            name="Enter a box name",
+            ip_address="Enter an IP address",
+            description="Enter a description",
+            difficulty="Select a difficulty",
+            avatar="Please upload an avatar",
+        )
+        if form.validate(self.request.arguments):
+            box = Box(
+                name=unicode(name),
+                ip_address=unicode(ip_address),
+                description=unicode(description),
+                difficulty=unicode(difficulty),
+                avatar=unicode(avatar_uuid),
+            )
+            dbsession.add(box)
+            dbsession.flush()
+            self.render("admin/view/box.html", boxes=Box.get_all())
+        else:
+            self.render("admin/create/box.html", errors=form.errors)
 
     def create_flag(self):
         pass
@@ -91,7 +110,7 @@ class AdminCreateHandler(AdminBaseHandler):
             )
             self.dbsession.add(team)
             self.dbsession.flush()
-            self.render("admin/view/team.html", teams=Team.get_all())
+            self.render("admin/view/team.html", errors=None, teams=Team.get_all())
         else:
             self.render("admin/create/team.html", errors=form.errors)
 
@@ -115,19 +134,19 @@ class AdminViewHandler(AdminBaseHandler):
             self.render("public/404.html")
 
     def view_corporations(self):
-        self.render("admin/view/corporation.html", corporations=Corporation.get_all())
+        self.render("admin/view/corporation.html", errors=None, corporations=Corporation.get_all())
 
     def view_boxes(self):
-        self.render("admin/view/box.html", boxes=Box.get_all())
+        self.render("admin/view/box.html", errors=None, boxes=Box.get_all())
 
     def view_flags(self):
-        self.render("admin/view/flag.html", flags=Flag.get_all())
+        self.render("admin/view/flag.html", errors=None, flags=Flag.get_all())
 
     def view_teams(self):
-        self.render("admin/view/team.html", teams=Team.get_all())
+        self.render("admin/view/team.html", errors=None, teams=Team.get_all())
 
     def view_users(self):
-        self.render("admin/view/user.html", users=User.get_all())
+        self.render("admin/view/user.html", errors=None, users=User.get_all())
 
 
 class AdminEditHandler(AdminBaseHandler):
@@ -135,10 +154,30 @@ class AdminEditHandler(AdminBaseHandler):
 
     @authorized('admin')
     @restrict_ip_address
-    def get(self, *args, **kwargs):
+    def post(self, *args, **kwargs):
+        self.game_objects = {
+            'corporation': self.edit_corporations,
+            'box': self.edit_boxes,
+            'flag': self.edit_flags,
+            'team': self.edit_teams,
+            'user': self.edit_users,
+        }
+        if len(args) == 1 and args[0] in self.game_objects.keys():
+            self.game_objects[args[0]]()
+        else:
+            self.render("public/404.html")
+
+    def edit_corporations(self):
         pass
 
-    @authorized('admin')
-    @restrict_ip_address
-    def post(self, *args, **kwargs):
+    def edit_boxes(self):
+        pass
+
+    def edit_flags(self):
+        pass
+
+    def edit_teams(self):
+        pass
+
+    def edit_users(self):
         pass

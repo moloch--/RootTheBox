@@ -23,6 +23,24 @@
 
 	<h1>Settings</h1>
 	<br />
+  {% if errors != None and len(errors) != 0 %}
+    {% for error in errors %}
+      <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">ERROR</h4>
+        {{ error }}
+      </div>
+    {% end %}
+  {% end %}
+  {% if success != None and len(success) != 0 %}
+    {% for message in success %}
+      <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">SUCCESS</h4>
+        {{ message }}
+      </div>
+    {% end %}
+  {% end %}
 	<h2>Upload Avatar</h2>
     <form style="height:105px" id="form1" action="/user/settings/avatar" method="post" enctype="multipart/form-data">  
       {% raw xsrf_form_html() %}

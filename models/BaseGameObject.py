@@ -21,11 +21,17 @@ Created on Mar 12, 2012
 
 import re
 
+from uuid import uuid4
 from datetime import datetime
 from sqlalchemy import Column
 from sqlalchemy.types import DateTime, Integer
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.ext.declarative import declarative_base
+
+
+def get_uuid():
+    ''' Generates a random unicode uuid '''
+    return unicode(uuid4())
 
 
 class BaseGameObject(object):

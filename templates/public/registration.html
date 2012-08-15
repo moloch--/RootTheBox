@@ -35,10 +35,10 @@
           </p>
           <p>
             <label for="team">Join Team</label>
-            <select>
+            <select name="team">
               <option value=""></option>
               {% for team in teams %}
-                <option class="black-option" value="{{ team.name }}">{{ team.name }}</option>
+                <option class="black-option" value="{{ team.uuid }}">{{ team.name }}</option>
               {% end %}
             </select>
           </p>

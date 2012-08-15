@@ -20,18 +20,21 @@ Created on Mar 11, 2012
 '''
 
 from sets import Set
+from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
-from models.BaseGameObject import BaseObject
+from models.BaseGameObject import BaseObject, get_uuid
 from models import association_table
+
 
 class Box(BaseObject):
     ''' Box definition '''
 
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=get_uuid)
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
-    box_name = Column(Unicode(64), unique=True, nullable=False)
+    name = Column(Unicode(64), unique=True, nullable=False)
     ip_address = Column(Unicode(16), unique=True, nullable=False)
     description = Column(Unicode(2048))
     difficulty = Column(Unicode(255), nullable=False)
@@ -43,9 +46,9 @@ class Box(BaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
-    def by_box_name(cls, box_name):
-        ''' Return the box object whose name is "box_name" '''
-        return dbsession.query(cls).filter_by(box_name=unicode(box_name)).first()
+    def by_name(cls, name):
+        ''' Return the box object whose name is "name" '''
+        return dbsession.query(cls).filter_by(name=unicode(name)).first()
 
     @classmethod
     def by_ip_address(cls, ip_address):

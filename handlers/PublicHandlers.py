@@ -58,12 +58,8 @@ class LoginHandler(RequestHandler):
         if self.form.validate(self.request.arguments):
             user = User.by_account(self.request.arguments['account'][0])
             if user != None and user.validate_password(self.request.arguments['password'][0]):
-                if user.team == None and not user.has_permission('admin'):
-                    # Successful login, but not assigned to a team yet
-                    self.render("public/login.html", errors=["You must be assigned to a team before you can login"])
-                else:
-                    self.successful_login(user)
-                    self.redirect('/user')
+                self.successful_login(user)
+                self.redirect('/user')
             else:
                 self.failed_login()
         else:
@@ -96,6 +92,7 @@ class UserRegistraionHandler(RequestHandler):
         self.form = Form(
             account="Please enter an account name",
             handle="Please enter a handle",
+            team="Please select a team to join",
             pass1="Please enter a password",
             pass2="Please confirm your password",
             token="Please enter a registration token"
@@ -125,10 +122,14 @@ class UserRegistraionHandler(RequestHandler):
             elif not 0 < len(self.request.arguments['pass1']) <= config.max_password_length:
                 self.render('public/registration.html',
                             errors=['Password must be 1-%d characters' % config.max_password_length], teams=Team.get_all())
+            elif len(self.request.arguments['team'][0]) == 0 or Team.by_uuid(self.request.arguments['team'][0]) == None:
+                self.render('public/registration.html', errors=["Please select a team to join"], teams=Team.get_all())
             else:
+                team = Team.by_uuid(self.request.arguments['team'][0])
                 user = User(
                     account=unicode(self.request.arguments['account']),
                     handle=unicode(self.request.arguments['handle']),
+                    team_id=team.id,
                     password=str(self.request.arguments['pass1'][0]),
                 )
                 self.dbsession.add(user)

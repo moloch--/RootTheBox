@@ -43,7 +43,7 @@ class FileCache(object):
             data = f.read()
             f.close()
             if len(data) < cls.MAX_FILE_SIZE:
-                if mem.set(b64encode(file_path), data):
+                if mem.set(key, data):
                     logging.info("Cached %s in memory." % file_path)
                 else:
                     logging.error("Failed to properly cache image file.")

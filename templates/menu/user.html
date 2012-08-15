@@ -6,7 +6,24 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="/">Root the Box</a>
+          <a class="brand" href="/">Root the Box - {{ team_name }}</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li><a href="/user">Home</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  Team
+                <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/user/share/files">File Sharing</a></li>
+                  <li><a href="/user/share/text">Text Sharing</a></li>
+                </ul>
+              </li>
+              <li><a href="/scoreboard">Scoreboards</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
           <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
               <i class="icon-user"></i> 
@@ -14,18 +31,11 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="/settings">Settings</a></li>
+              <li><a href="/user/settings">Settings</a></li>
               <li class="divider"></li>
               <li><a href="/logout">Logout</a></li>
             </ul>
           </div>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li><a href="/login">Login</a></li>
-              <li><a href="/registration">Registration</a></li>
-              <li><a href="/about">About</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>

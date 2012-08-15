@@ -21,6 +21,7 @@ Created on Mar 14, 2012
 
 from libs.Session import SessionManager
 from tornado.web import UIModule
+from models import User
 
 
 class Menu(UIModule):
@@ -32,7 +33,8 @@ class Menu(UIModule):
             self.handler.get_secure_cookie('auth'), self.request.remote_ip)
         if session != None:
             if session.data['menu'] == 'user':
-                return self.render_string('menu/user.html', handle = session.data['handle'])
+                user = User.by_handle(session.data['handle'])
+                return self.render_string('menu/user.html', handle=user.handle, team_name=user.team.name)
             elif session.data['menu'] == 'admin':
-                return self.render_string('menu/admin.html', handle = "Admin")
+                return self.render_string('menu/admin.html', handle="Admin")
         return self.render_string('menu/public.html')

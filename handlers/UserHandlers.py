@@ -4,20 +4,21 @@ Created on Mar 13, 2012
 
 @author: moloch
 
- Copyright [2012] [Redacted Labs]
+    Copyright [2012] [Redacted Labs]
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 '''
+
 
 import os
 import imghdr
@@ -137,31 +138,30 @@ class SettingsHandler(RequestHandler):
             self.get_secure_cookie('auth'), self.request.remote_ip)
         self.post_functions = {
             '/avatar': self.post_avatar,
-            '/changepassword': self.post_password
+            '/password': self.post_password
         }
 
     def get_current_user(self):
         if self.session != None:
-            return User.by_user_name(self.session.data['user_name'])
+            return User.by_name(self.session.data['name'])
         return None
 
     @authenticated
     def get(self, *args, **kwargs):
         ''' Display the user settings '''
-        user = User.by_user_name(self.session.data['user_name'])
-        self.render('user/settings.html', user=user, message=None)
+        self.render('user/settings.html', success=None, errors=None)
 
     @authenticated
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
         if len(args) == 1 and args[0] in self.post_functions.keys():
-            self.post_functions[args[0]](*args, **kwargs)
+            self.post_functions[args[0]]()
         else:
-            self.render("user/error.html")
+            self.render("user/settings.html", success=None, errors=None)
 
     def post_avatar(self, *args, **kwargs):
         ''' Saves avatar - Reads file header an only allows approved formats '''
-        user = User.by_user_name(self.session.data['user_name'])
+        user = User.by_name(self.session.data['name'])
         if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
             if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
                 if user.avatar == "default_avatar.jpeg":
@@ -181,26 +181,24 @@ class SettingsHandler(RequestHandler):
                     avatar.close()
                     self.dbsession.add(user)
                     self.dbsession.flush()
-                    self.redirect("/user")
+                    self.render("user/settings.html", success="Successfully changed avatar", errors=None)
                 else:
-                    self.render("user/error.html", operation="Uploading avatar",
-                                errors="Invalid image format")
+                    self.render("user/settings.html", success=None,
+                                errors=["Invalid image format"])
             else:
-                self.render("user/error.html", operation="Uploading avatar",
-                            errors="The image is too large")
+                self.render("user/settings.html", success=None,
+                            errors=["The image is too large"])
         else:
-            self.render("user/error.html", operation="Uploading avatar",
-                        errors="Please provide and image")
+            self.render("user/settings.html", success=None,
+                        errors=["Please provide and image"])
 
     def post_password(self, *args, **kwargs):
-        user = User.by_user_name(self.session.data['user_name'])
-        try:
-            old_password = self.get_argument("old_password")
-            new_password = self.get_argument("new_password")
-            new_password_two = self.get_argument("new_password2")
-        except:
-            self.render("user/error.html", operation="Changing Password",
-                        errors="Please fill out all forms")
+        user = User.by_name(self.session.data['name'])
+        form = Form(
+            old_password="Please enter your old password",
+            new_password="Please enter a new password",
+            new_password_two="Please confirm your new password",
+        )
         try:
             response = captcha.submit(
                 self.get_argument('recaptcha_challenge_field'),
@@ -209,49 +207,52 @@ class SettingsHandler(RequestHandler):
                 self.request.remote_ip
             )
         except:
-            self.render("user/error.html", operation="Changing Password",
-                        errors="Please fill out recaptcha")
+            self.render("user/settings.html",
+                        errors=["Please fill out recaptcha"])
+            return
+        if self.response.is_valid():
+            self.set_password(user, self.get_argument('old_password'),  
+                self.get_argument('new_password'),  
+                self.get_argument('new_password_two'))
+        else:
+            self.render("user/settings.html", success=None, errors=["Invalid recaptcha"])
+
+    def set_password(self, user, old_password, new_password, new_password_two):
+        ''' Sets a users password '''
+        config = ConfigManager.Instance()
         if user.validate_password(old_password):
             if new_password == new_password_two:
-                if len(new_password) <= 7:
-                    if response.is_valid:
-                        user.password = new_password
-                        self.dbsession.add(user)
-                        self.dbsession.flush()
-                        self.render("user/settings.html",
-                                    message="Succesfully Changed Password!")
-                    else:
-                        self.render("user/error.html", operation="Changing Password",
-                                    errors="Invalid recaptcha")
+                if len(new_password) <= config.max_password_length:
+                    user.password = new_password
+                    self.dbsession.add(user)
+                    self.dbsession.flush()
+                    self.redirect("/user/settings.html", success="Successfully updated password", errors=None)
                 else:
-                    self.render("user/error.html", operation="Change Password",
-                                errors="Password must be less than 7 chars")
+                    message = "Password must be less than %d chars" % config.max_password_length
+                    self.render("user/settings.html", success=None, errors=[message])
             else:
-                self.render("user/error.html", operation="Changing Password",
-                            errors="New password's didn't match")
+                self.render("user/settings.html", success=None, errors=["New password's didn't match"])
         else:
-            self.render("user/error.html", operation="Changing Password",
-                        errors="Invalid old password")
+            self.render("user/settings.html", success=None, errors=["Invalid old password"])
 
 
 class TeamViewHandler(UserBaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        teams = Team.get_all()
-        self.render("user/team.html", teams=teams)
+        self.render("user/team.html", teams=Team.get_all())
 
 
 class TeamAjaxHandler(UserBaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        ''' PUBLIC method for serving team information '''
+        ''' Serves team information '''
         try:
             team_id = self.get_argument("team_id")
         except:
             self.render("blank.html")
-        team = Team.by_team_id(team_id)
+        team = Team.by_id(team_id)
         if team != None:
             self.render("user/team_ajax.html", team=team)
         else:

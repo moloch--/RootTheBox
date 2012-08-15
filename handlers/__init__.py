@@ -66,10 +66,19 @@ app = Application([
                    'dbsession': dbsession}),
 
                   # User Handlers - Serves user related pages
+                  # File share Handlers
                   (r'/user/shares/download(.*)', ShareDownloadHandler, {
                    'dbsession': dbsession}),
-                  (r'/user/shares',
+                  (r'/user/share/files',
                    ShareUploadHandler, {'dbsession': dbsession}),
+                  # Text share Handlers
+                  (r'/user/share/text',
+                   PastebinHandler, {'dbsession':dbsession}),
+                  (r'/pastebin/view(.*)',
+                   DisplayPostHandler, {'dbsession':dbsession}),
+                  (r'/pastebin/delete(.*)',
+                   DeletePostHandler, {'dbsession':dbsession}),
+                  # User handlers
                   (r'/user/settings(.*)',
                    SettingsHandler, {'dbsession': dbsession}),
                   (r'/user/team/ajax(.*)',
@@ -108,14 +117,6 @@ app = Application([
                   # WebSocket Handlers - Websocket communication
                   # handlers
                   (r'/websocket', WebsocketHandler),
-
-                  # Pastebin Handlers
-                  (r'/pastebin',
-                   PastebinHandler, {'dbsession':dbsession}),
-                  (r'/pastebin/view(.*)',
-                   DisplayPostHandler, {'dbsession':dbsession}),
-                  (r'/pastebin/delete(.*)',
-                   DeletePostHandler, {'dbsession':dbsession}),
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),
