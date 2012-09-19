@@ -8,12 +8,18 @@
 	<p>
 		Welcome to Root the Box {{ user.handle }} <br />
 	</p>
-	<p>
-		You are on team {{ user.team.name }} <br />
-	</p>
-	<p>
+	{% if user.team != None %}
+		<p>
+			You are on team {{ user.team.name }} <br />
+		</p>
+		<p>
 		Your bank account balance ${{ user.team.money }} <br />
-	</p>
+		</p>
+	{% else %}
+		<p>
+			You are not on a team.
+		</p>
+	{% end %}
 	{% if user.avatar %}
 		<img src="/avatars/{{ user.avatar }}" />
 	{% end %}

@@ -20,10 +20,10 @@ Created on Mar 13, 2012
 '''
 
 
-from tornado.web import RequestHandler
+from handlers.BaseHandlers import BaseHandler
 
 
-class NotFoundHandler(RequestHandler):
+class NotFoundHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the 404 page '''
@@ -53,14 +53,14 @@ class NotFoundHandler(RequestHandler):
         self.render("public/404.html")
 
 
-class UnauthorizedHandler(RequestHandler):
+class UnauthorizedHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the 403 page '''
         self.render("public/403.html")
 
 
-class NoobHandler(RequestHandler):
+class NoobHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the noob page '''

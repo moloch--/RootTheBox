@@ -41,7 +41,7 @@ class BaseHandler(RequestHandler):
             self.conn = pylibmc.Client(
                 [self.config.memcached_server], binary=True)
             self.conn.behaviors['no_block'] = 1  # async I/O
-            self.session = self.create_session(session_id)
+            self.session = self._create_session(session_id)
             self.session.refresh()  # advance expiry time and save session
             self.set_secure_cookie(
                 'session_id',
@@ -58,7 +58,22 @@ class BaseHandler(RequestHandler):
             return User.by_handle(self.session['handle'])
         return None
 
-    def create_session(self, session_id=None):
+    def start_session(self):
+        ''' Starts a new session '''
+        self.conn = pylibmc.Client(
+                [self.config.memcached_server], binary=True)
+        self.conn.behaviors['no_block'] = 1  # async I/O
+        self.session = self._create_session()
+        self.set_secure_cookie(
+            'session_id',
+            self.session.session_id,
+            expires_days=1,
+            expires=self.session.expires,
+            path='/',
+            HttpOnly=True,
+        )
+
+    def _create_session(self, session_id=None):
         ''' Creates a new session '''
         kw = {
             'duration': self.config.session_age,

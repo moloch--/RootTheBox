@@ -65,7 +65,7 @@ class User(BaseObject):
         lambda self, password: setattr(
             self, '_password', self.__class__._hash_password(password))
     ))
-    theme_id = Column(Integer, ForeignKey('theme.id'), default=1, nullable=False)
+    theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
 
     @property
     def permissions(self):

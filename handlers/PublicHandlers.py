@@ -40,14 +40,8 @@ class HomePageHandler(BaseHandler):
         self.render("public/home.html")
 
 
-class LoginHandler(RequestHandler):
+class LoginHandler(BaseHandler):
     ''' Takes care of the login process '''
-
-    def initialize(self):
-        self.form = Form(
-            account="Enter an account name",
-            password="A password is required to login",
-        )
 
     def get(self, *args, **kwargs):
         ''' Display the login page '''
@@ -55,7 +49,11 @@ class LoginHandler(RequestHandler):
 
     def post(self, *args, **kwargs):
         ''' Checks submitted username and password '''
-        if self.form.validate(self.request.arguments):
+        form = Form(
+            account="Enter an account name",
+            password="A password is required to login",
+        )
+        if form.validate(self.request.arguments):
             user = User.by_account(self.request.arguments['account'][0])
             if user != None and user.validate_password(self.request.arguments['password'][0]):
                 self.successful_login(user)
@@ -69,16 +67,14 @@ class LoginHandler(RequestHandler):
         ''' Called when a user successfully logs in '''
         logging.info("Successful login: %s/%s from %s" % (user.
                                                           account, user.handle, self.request.remote_ip))
-        session_manager = SessionManager.Instance()
-        sid, session = session_manager.start_session()
-        self.set_secure_cookie(
-            name='auth', value=str(sid), expires_days=1, HttpOnly=True)
-        session.data['handle'] = str(user.handle)
-        session.data['ip'] = str(self.request.remote_ip)
+        self.start_session()
+        self.session['handle'] = ''.join(user.handle) # Don't leave a ref to user object
+        self.session['theme_id'] = user.theme_id
         if user.has_permission('admin'):
-            session.data['menu'] = 'admin'
+            self.session['menu'] = 'admin'
         else:
-            session.data['menu'] = 'user'
+            self.session['menu'] = 'user'
+        self.session.save()
 
     def failed_login(self):
         ''' Called if username or password is invalid '''
@@ -87,12 +83,17 @@ class LoginHandler(RequestHandler):
             "Bad username and/or password, try again"])
 
 
-class UserRegistraionHandler(RequestHandler):
+class UserRegistraionHandler(BaseHandler):
     ''' Registration Code '''
 
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
-        self.form = Form(
+    def get(self, *args, **kwargs):
+        ''' Renders the registration page '''
+        self.render(
+            "public/registration.html", errors=None)
+
+    def post(self, *args, **kwargs):
+        ''' Attempts to create an account, with shitty form validation '''
+        form = Form(
             account="Please enter an account name",
             handle="Please enter a handle",
             team="Please select a team to join",
@@ -100,32 +101,23 @@ class UserRegistraionHandler(RequestHandler):
             pass2="Please confirm your password",
             token="Please enter a registration token"
         )
-
-    def get(self, *args, **kwargs):
-        ''' Renders the registration page '''
-        self.render(
-            "public/registration.html", errors=None, teams=Team.get_all())
-
-    def post(self, *args, **kwargs):
-        ''' Attempts to create an account, with shitty form validation '''
-        # Check user_name parameter
-        if self.form.validate(self.request.arguments):
+        if form.validate(self.request.arguments):
             config = ConfigManager.Instance()
             if User.by_account(self.request.arguments['account']) != None:
                 self.render('public/registration.html',
-                            errors=['Account name already taken'], teams=Team.get_all())
+                            errors=['Account name already taken'])
             elif self.request.arguments['account'] == self.request.arguments['handle']:
                 self.render('public/registration.html',
                             errors=['Account name and hacker name must differ'])
             elif User.by_handle(self.request.arguments['handle']) != None:
                 self.render(
-                    'public/registration.html', errors=['Handle already taken'], teams=Team.get_all())
+                    'public/registration.html', errors=['Handle already taken'])
             elif not self.request.arguments['pass1'] == self.request.arguments['pass2']:
                 self.render(
-                    'public/registration.html', errors=['Passwords do not match'], teams=Team.get_all())
+                    'public/registration.html', errors=['Passwords do not match'])
             elif not 0 < len(self.request.arguments['pass1']) <= config.max_password_length:
                 self.render('public/registration.html',
-                            errors=['Password must be 1-%d characters' % config.max_password_length], teams=Team.get_all())
+                            errors=['Password must be 1-%d characters' % config.max_password_length])
             elif len(self.request.arguments['team'][0]) == 0 or Team.by_uuid(self.request.arguments['team'][0]) == None:
                 self.render('public/registration.html', errors=[
                     "Please select a team to join"], teams=Team.get_all())
@@ -142,13 +134,13 @@ class UserRegistraionHandler(RequestHandler):
             self.redirect('/login')
         elif 0 < len(self.form.errors):
             self.render('public/registration.html',
-                        errors=self.form.errors, teams=Team.get_all())
+                        errors=self.form.errors)
         else:
             self.render('public/registration.html', errors=[
-                'Unknown error'], teams=Team.get_all())
+                'Unknown error'])
 
 
-class AboutHandler(RequestHandler):
+class AboutHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
@@ -159,6 +151,7 @@ class LogoutHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Clears cookies and session data '''
-        self.session.delete()
+        if self.session != None:
+            self.session.delete()
         self.clear_all_cookies()
         self.redirect("/")

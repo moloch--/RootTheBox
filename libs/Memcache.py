@@ -29,7 +29,7 @@ from base64 import b64encode
 class FileCache(object):
     ''' Simple wrapper for memcached '''
 
-    MAX_FILE_SIZE = 1024 * 1024 * 10  # 10 Mb
+    MAX_FILE_SIZE = 1024 # 1 Mb
 
     @classmethod
     def get(cls, file_path):
@@ -51,11 +51,11 @@ class FileCache(object):
     @classmethod
     def delete(cls, file_path):
         ''' Remove file from memory cache '''
-        mem = memcache.Client(['127.0.0.1:11211'], debug=False)
+        mem = pylibmc.Client(['127.0.0.1:11211'], binary=True)
         mem.delete(b64encode(file_path))
 
     @classmethod
     def flush(cls):
         ''' Flush memory cache '''
-        mem = memcache.Client(['127.0.0.1:11211'], debug=False)
+        mem = pylibmc.Client(['127.0.0.1:11211'], binary=True)
         mem.flush_all()

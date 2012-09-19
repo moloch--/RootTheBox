@@ -174,13 +174,9 @@ def start_game():
     server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
-    session_manager = SessionManager.Instance()
-    scoring = PeriodicCallback(
-        scoring_round, app.settings['ticks'], io_loop=io_loop)
-    session_clean_up = PeriodicCallback(session_manager.clean_up,
-                                        app.settings['clean_up_timeout'], io_loop=io_loop)
-    scoring.start()
-    session_clean_up.start()
+    #scoring = PeriodicCallback(
+    #    scoring_round, app.settings['ticks'], io_loop=io_loop)
+    #scoring.start()
     try:
         for count in range(3, 0, -1):
             sys.stdout.write(

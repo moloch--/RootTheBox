@@ -100,7 +100,7 @@ class BaseSession(collections.MutableMapping):
     of the already available classes and documentation to aformentioned functions.
     """
     def __init__(self, session_id=None, data=None, security_model=[], expires=None,
-                 duration=None, ip_address=None, user_agent=None,
+                 duration=None, ip_address=None, user_agent="",
                  regeneration_interval=None, next_regeneration=None, **kwargs):
         # if session_id is True, we're loading a previously initialized session
         if session_id:
@@ -125,7 +125,7 @@ class BaseSession(collections.MutableMapping):
         self._delete_cookie = False
 
     def __repr__(self):
-        return '<session id: %s data: %s>' % (self.session_id, self.data)
+        return '<Session id: %s -> Data: %s>' % (self.session_id, self.data)
 
     def __str__(self):
         return self.session_id
@@ -195,7 +195,7 @@ class BaseSession(collections.MutableMapping):
         # store it in self.regeneration_interval to prevent
         # converting in later calls and return the datetime
         # of next planned regeneration
-        v = self.regeneration_intervalself.user_agent
+        v = self.regeneration_interval
         if v is None:  # never regenerate
             return None
         elif isinstance(v, datetime.timedelta):
