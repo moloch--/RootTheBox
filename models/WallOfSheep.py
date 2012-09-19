@@ -44,9 +44,14 @@ class WallOfSheep(BaseObject):
         return User.by_id(self.cracker_id)
 
     @classmethod
-    def get_all(cls):
+    def all(cls):
         ''' Returns all team objects '''
         return dbsession.query(cls).order_by(desc(cls.created)).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_user_id(cls, user_id):

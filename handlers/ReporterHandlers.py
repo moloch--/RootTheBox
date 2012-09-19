@@ -23,7 +23,7 @@ import logging
 from models import User, Box
 from libs.Notification import Notification
 from libs.WebSocketManager import WebSocketManager
-from tornado.web import RequestHandler, asynchronous  # @UnresolvedImport
+from tornado.web import RequestHandler, asynchronous
 
 
 class ReporterRegistrationHandler(RequestHandler):
@@ -32,7 +32,6 @@ class ReporterRegistrationHandler(RequestHandler):
         ''' Sets up database connection '''
         self.dbsession = dbsession
 
-    @asynchronous
     def get(self, *args, **kwargs):
         ''' Registers a reporting service on a remote box '''
         box = Box.by_ip_address(self.request.remote_ip)

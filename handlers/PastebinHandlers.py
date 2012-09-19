@@ -18,17 +18,16 @@ Created on Mar 18, 2012
    See the License for the specific language governing permissions and
    limitations under the License.
 '''
-from models import User, PasteBin
+
+import logging
+
+from models import dbsession, User, PasteBin
 from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
-from tornado.web import RequestHandler  # @UnresolvedImport
-import logging
+from tornado.web import RequestHandler
 
 
 class PastebinHandler(RequestHandler):
-
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
 
     @authenticated
     def get(self, *args, **kwargs):

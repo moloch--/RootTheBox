@@ -22,10 +22,12 @@ from models import Team
 from libs.Session import SessionManager
 from tornado.web import UIModule
 
+
 class Sidebar(UIModule):
-    
+
     def render(self, *args, **kwargs):
         session_manager = SessionManager.Instance()
-        session = session_manager.get_session(self.handler.get_secure_cookie('auth'), self.request.remote_ip)
+        session = session_manager.get_session(
+            self.handler.get_secure_cookie('auth'), self.request.remote_ip)
         if session != None:
-            return self.render_string('sidebar/user.html', ranks = Team.get_all())
+            return self.render_string('sidebar/user.html', ranks=Team.get_all())

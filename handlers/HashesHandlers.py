@@ -27,10 +27,10 @@ from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification
 from libs.ScoreUpdate import ScoreUpdate
 from libs.Session import SessionManager
-from handlers.BaseHandlers import UserBaseHandler
+from handlers.BaseHandlers import BaseHandler
 
 
-class HashesHandler(UserBaseHandler):
+class HashesHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -131,9 +131,6 @@ class HashesHandler(UserBaseHandler):
 
 class HashesAjaxHandler(RequestHandler):
 
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
-
     @authenticated
     def get(self, *args, **kwargs):
         ''' Renders a user details div, requested via AJAX '''
@@ -148,9 +145,8 @@ class HashesAjaxHandler(RequestHandler):
             self.render("hashes/user_details.html", user=user)
 
 
-class WallOfSheepHandler(UserBaseHandler):
+class WallOfSheepHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        wall_of_sheep = WallOfSheep.get_all()
-        self.render("wall_of_sheep/view.html", wall=wall_of_sheep)
+        self.render("wall_of_sheep/view.html", wall=WallOfSheep.get_all())

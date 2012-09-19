@@ -39,9 +39,14 @@ class Notification(BaseObject):
     _icon = Column(Unicode(255))
 
     @classmethod
-    def by_id(cls, notify_id):
-        ''' Return the notification object whose notification id is "notify_id" '''
-        return dbsession.query(cls).filter_by(id=notify_id).first()
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()
 
     @property
     def icon():

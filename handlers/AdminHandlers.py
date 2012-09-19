@@ -34,12 +34,12 @@ from libs.SecurityDecorators import *
 from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification
 from models import Team, Box
-from handlers.BaseHandlers import AdminBaseHandler
+from handlers.BaseHandlers import BaseHandler
 from tornado.web import RequestHandler
 from string import ascii_letters, digits
 
 
-class AdminCreateHandler(AdminBaseHandler):
+class AdminCreateHandler(BaseHandler):
     ''' Handler used to create game objects '''
 
     @authorized('admin')
@@ -110,12 +110,13 @@ class AdminCreateHandler(AdminBaseHandler):
             )
             self.dbsession.add(team)
             self.dbsession.flush()
-            self.render("admin/view/team.html", errors=None, teams=Team.get_all())
+            self.render(
+                "admin/view/team.html", errors=None, teams=Team.get_all())
         else:
             self.render("admin/create/team.html", errors=form.errors)
 
 
-class AdminViewHandler(AdminBaseHandler):
+class AdminViewHandler(BaseHandler):
     ''' View game objects '''
 
     @authorized('admin')
@@ -134,7 +135,8 @@ class AdminViewHandler(AdminBaseHandler):
             self.render("public/404.html")
 
     def view_corporations(self):
-        self.render("admin/view/corporation.html", errors=None, corporations=Corporation.get_all())
+        self.render("admin/view/corporation.html", errors=None,
+                    corporations=Corporation.get_all())
 
     def view_boxes(self):
         self.render("admin/view/box.html", errors=None, boxes=Box.get_all())
@@ -149,7 +151,7 @@ class AdminViewHandler(AdminBaseHandler):
         self.render("admin/view/user.html", errors=None, users=User.get_all())
 
 
-class AdminEditHandler(AdminBaseHandler):
+class AdminEditHandler(BaseHandler):
     ''' Edit game objects '''
 
     @authorized('admin')

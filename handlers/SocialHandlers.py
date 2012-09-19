@@ -20,20 +20,14 @@ Created on Mar 13, 2012
 '''
 
 from models.User import User
+from tornado.web import RequestHandler
+from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import authenticated
-from tornado.web import RequestHandler  # @UnresolvedImport
-from libs.Session import SessionManager
 from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification
 
 
-class SocialHomeHandler(RequestHandler):
-
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
-        self.session_manager = SessionManager.Instance()
-        self.session = self.session_manager.get_session(
-            self.get_secure_cookie('auth'), self.request.remote_ip)
+class SocialHomeHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -46,7 +40,6 @@ class SocialHomeHandler(RequestHandler):
             token = self.get_argument("token")
         except:
             self.render('se/submit.html', message="Please enter a token!")
-
         user = User.by_user_name(self.session.data['user_name'])
         se_manager = SEManager.Instance()
         challenge = se_manager.active_challenge

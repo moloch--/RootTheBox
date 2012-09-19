@@ -30,6 +30,16 @@ class Permission(BaseObject):
     name = Column(Unicode(64), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
+    @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()
+
     def __repr__(self):
         return ('<Permission - name: %s, user_id: %d>' % (self.permission_name, self.user_id)).encode('utf-8')
 

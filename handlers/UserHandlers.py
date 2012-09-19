@@ -28,15 +28,14 @@ from uuid import uuid1
 from base64 import b64encode, b64decode
 from models import User, Team, FileUpload
 from mimetypes import guess_type
-from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
 from tornado.web import RequestHandler
-from BaseHandlers import UserBaseHandler
+from BaseHandlers import BaseHandler
 from string import ascii_letters, digits
 from recaptcha.client import captcha
 
 
-class HomeHandler(UserBaseHandler):
+class HomeHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -45,7 +44,7 @@ class HomeHandler(UserBaseHandler):
         self.render('user/home.html', user=user)
 
 
-class ShareUploadHandler(UserBaseHandler):
+class ShareUploadHandler(BaseHandler):
     ''' Handles file shares for teams '''
 
     @authenticated
@@ -100,7 +99,7 @@ class ShareUploadHandler(UserBaseHandler):
         self.redirect("/user/shares")
 
 
-class ShareDownloadHandler(UserBaseHandler):
+class ShareDownloadHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -127,24 +126,8 @@ class ShareDownloadHandler(UserBaseHandler):
             self.finish()
 
 
-class SettingsHandler(RequestHandler):
+class SettingsHandler(BaseHandler):
     ''' Does NOT extend BaseUserHandler '''
-
-    def initialize(self, dbsession):
-        ''' Database and URI setup '''
-        self.dbsession = dbsession
-        self.session_manager = SessionManager.Instance()
-        self.session = self.session_manager.get_session(
-            self.get_secure_cookie('auth'), self.request.remote_ip)
-        self.post_functions = {
-            '/avatar': self.post_avatar,
-            '/password': self.post_password
-        }
-
-    def get_current_user(self):
-        if self.session != None:
-            return User.by_name(self.session.data['name'])
-        return None
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -154,8 +137,12 @@ class SettingsHandler(RequestHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
-        if len(args) == 1 and args[0] in self.post_functions.keys():
-            self.post_functions[args[0]]()
+        post_functions = {
+            '/avatar': self.post_avatar,
+            '/password': self.post_password
+        }
+        if len(args) == 1 and args[0] in post_functions.keys():
+            post_functions[args[0]]()
         else:
             self.render("user/settings.html", success=None, errors=None)
 
@@ -181,7 +168,8 @@ class SettingsHandler(RequestHandler):
                     avatar.close()
                     self.dbsession.add(user)
                     self.dbsession.flush()
-                    self.render("user/settings.html", success="Successfully changed avatar", errors=None)
+                    self.render("user/settings.html",
+                                success="Successfully changed avatar", errors=None)
                 else:
                     self.render("user/settings.html", success=None,
                                 errors=["Invalid image format"])
@@ -211,11 +199,12 @@ class SettingsHandler(RequestHandler):
                         errors=["Please fill out recaptcha"])
             return
         if self.response.is_valid():
-            self.set_password(user, self.get_argument('old_password'),  
-                self.get_argument('new_password'),  
-                self.get_argument('new_password_two'))
+            self.set_password(user, self.get_argument('old_password'),
+                              self.get_argument('new_password'),
+                              self.get_argument('new_password_two'))
         else:
-            self.render("user/settings.html", success=None, errors=["Invalid recaptcha"])
+            self.render("user/settings.html", success=None,
+                        errors=["Invalid recaptcha"])
 
     def set_password(self, user, old_password, new_password, new_password_two):
         ''' Sets a users password '''
@@ -226,24 +215,28 @@ class SettingsHandler(RequestHandler):
                     user.password = new_password
                     self.dbsession.add(user)
                     self.dbsession.flush()
-                    self.redirect("/user/settings.html", success="Successfully updated password", errors=None)
+                    self.redirect("/user/settings.html",
+                                  success="Successfully updated password", errors=None)
                 else:
                     message = "Password must be less than %d chars" % config.max_password_length
-                    self.render("user/settings.html", success=None, errors=[message])
+                    self.render(
+                        "user/settings.html", success=None, errors=[message])
             else:
-                self.render("user/settings.html", success=None, errors=["New password's didn't match"])
+                self.render("user/settings.html",
+                            success=None, errors=["New password's didn't match"])
         else:
-            self.render("user/settings.html", success=None, errors=["Invalid old password"])
+            self.render("user/settings.html", success=None,
+                        errors=["Invalid old password"])
 
 
-class TeamViewHandler(UserBaseHandler):
+class TeamViewHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
         self.render("user/team.html", teams=Team.get_all())
 
 
-class TeamAjaxHandler(UserBaseHandler):
+class TeamAjaxHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -259,9 +252,8 @@ class TeamAjaxHandler(UserBaseHandler):
             self.render("blank.html")
 
 
-class ReporterHandler(UserBaseHandler):
+class ReporterHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
         self.render("user/reporter.html")
-

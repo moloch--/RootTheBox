@@ -33,7 +33,8 @@ class Box(BaseObject):
     ''' Box definition '''
 
     uuid = Column(Unicode(36), unique=True, nullable=False, default=get_uuid)
-    corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
+    corporation_id = Column(
+        Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(64), unique=True, nullable=False)
     ip_address = Column(Unicode(16), unique=True, nullable=False)
     description = Column(Unicode(2048))
@@ -41,9 +42,14 @@ class Box(BaseObject):
     avatar = Column(Unicode(64), default=unicode("default_avatar.gif"))
 
     @classmethod
-    def get_all(cls):
-        ''' Returns a list of all boxes in the database '''
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
         return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_name(cls, name):

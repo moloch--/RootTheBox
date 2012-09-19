@@ -28,8 +28,19 @@ from models.BaseGameObject import BaseObject
 class Flag(BaseObject):
     ''' Flag definition '''
 
-    game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
+    game_level_id = Column(
+        Integer, ForeignKey('game_level.id'), nullable=False)
     name = Column(Unicode(255), nullable=False)
     token = Column(Unicode(255), nullable=False)
     description = Column(Unicode(255), nullable=False)
     money = Column(Integer, nullable=False)
+
+    @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()

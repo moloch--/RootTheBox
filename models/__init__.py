@@ -53,12 +53,14 @@ from models.WallOfSheep import WallOfSheep
 #from models.Notification import Notification
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
-#from models.Item import Item
+from models.Theme import Theme
 
 # calling this will create the tables at the database
 __create__ = lambda: (
     setattr(engine, 'echo', True), metadata.create_all(engine))
 
 # Bootstrap the database with some shit
+
+
 def __boot_strap__():
     import setup.bootstrap

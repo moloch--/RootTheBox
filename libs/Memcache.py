@@ -19,10 +19,9 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
-
+import pylibmc
 import hashlib
 import logging
-import memcache
 
 from base64 import b64encode
 
@@ -30,12 +29,12 @@ from base64 import b64encode
 class FileCache(object):
     ''' Simple wrapper for memcached '''
 
-    MAX_FILE_SIZE = 1024 * 1024 * 10 # 10 Mb
+    MAX_FILE_SIZE = 1024 * 1024 * 10  # 10 Mb
 
     @classmethod
     def get(cls, file_path):
         ''' Loads file from disk or memory cache '''
-        mem = memcache.Client(['127.0.0.1:11211'], debug=False)
+        mem = pylibmc.Client(['127.0.0.1'], binary=True)
         key = b64encode(file_path)
         data = mem.get(key)
         if data == None:
@@ -60,5 +59,3 @@ class FileCache(object):
         ''' Flush memory cache '''
         mem = memcache.Client(['127.0.0.1:11211'], debug=False)
         mem.flush_all()
-
-

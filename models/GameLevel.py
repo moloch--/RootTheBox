@@ -34,5 +34,15 @@ class GameLevel(BaseObject):
     number = Column(Integer, nullable=False)
     buyout = Column(Integer, nullable=False)
     banner_uri = Column(Unicode(255), nullable=False)
-    flags = relationship("Flag", backref=backref("GameLevel", lazy="joined"), cascade="all, delete-orphan")
-    
+    flags = relationship("Flag", backref=backref(
+        "GameLevel", lazy="joined"), cascade="all, delete-orphan")
+
+    @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()

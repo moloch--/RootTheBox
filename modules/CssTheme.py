@@ -18,14 +18,16 @@ Created on Mar 14, 2012
     limitations under the License.
 '''
 
-from libs.Session import SessionManager
+
 from tornado.web import UIModule
-from models import Blog
 from models import Theme
+
 
 class CssTheme(UIModule):
 
     def render(self, *args, **kwargs):
-        blog = Blog.get_active()
-        return self.render_string("theme/css.html", theme=Theme.by_id(blog.theme_id))
-        
+        default_id = 3
+        if self.handler.session != None:
+            return self.render_string("theme/css.html", theme=Theme.by_id(self.handler.session['theme_id']))
+        else:
+            return self.render_string("theme/css.html", theme=Theme.by_id(default_id))

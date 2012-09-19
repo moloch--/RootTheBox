@@ -52,9 +52,12 @@ class User(BaseObject):
             self, '_handle', self.__class__.filter_string(handle, " _-"))
     ))
     team_id = Column(Integer, ForeignKey('team.id'))
-    pastes = relationship("PasteBin", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
-    permissions = relationship("Permission", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
-    notifications = relationship("Notification", backref=backref("User", lazy="joined"), cascade="all, delete-orphan")
+    pastes = relationship("PasteBin", backref=backref("User",
+                                                      lazy="joined"), cascade="all, delete-orphan")
+    permissions = relationship("Permission", backref=backref("User",
+                                                             lazy="joined"), cascade="all, delete-orphan")
+    notifications = relationship("Notification", backref=backref(
+        "User", lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
@@ -62,6 +65,7 @@ class User(BaseObject):
         lambda self, password: setattr(
             self, '_password', self.__class__._hash_password(password))
     ))
+    theme_id = Column(Integer, ForeignKey('theme.id'), default=1, nullable=False)
 
     @property
     def permissions(self):
@@ -90,16 +94,16 @@ class User(BaseObject):
             return None
         else:
             return dbsession.query(Team).filter_by(id=self.team_id).first()
+    
+    @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
 
     @classmethod
-    def get_all(cls):
-        ''' Return all non-admin user objects '''
-        return dbsession.query(cls).filter(cls.account != 'admin').all()
-
-    @classmethod
-    def get_free_agents(cls):
-        ''' Return all non-admin user objects without a team '''
-        return dbsession.query(cls).filter_by(team_id=None).filter(cls.account != 'admin').all()
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_account(cls, account):
@@ -119,7 +123,8 @@ class User(BaseObject):
     @classmethod
     def add_to_team(cls, team_account):
         ''' Add user to team based on team account '''
-        team = dbsession.query(Team).filter_by(account=unicode(team_account)).first()
+        team = dbsession.query(
+            Team).filter_by(account=unicode(team_account)).first()
         cls.team_id = team.id
 
     @classmethod

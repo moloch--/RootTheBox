@@ -35,6 +35,16 @@ class FileUpload(BaseObject):
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
 
     @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()
+        
+    @classmethod
     def by_uuid(cls, uuid):
         ''' Return the user object whose uuid is "uuid" '''
         return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()

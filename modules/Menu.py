@@ -28,11 +28,8 @@ class Menu(UIModule):
 
     def render(self, *args, **kwargs):
         ''' Renders the top menu '''
-        session_manager = SessionManager.Instance()
-        session = session_manager.get_session(
-            self.handler.get_secure_cookie('auth'), self.request.remote_ip)
-        if session != None:
-            if session.data['menu'] == 'user':
+        if self.handler.session != None:
+            if self.handler.session['menu'] == 'user':
                 user = User.by_handle(session.data['handle'])
                 return self.render_string('menu/user.html', handle=user.handle, team_name=user.team.name)
             elif session.data['menu'] == 'admin':

@@ -48,19 +48,24 @@ class Team(BaseObject):
     uuid = Column(Unicode(36), unique=True, nullable=False, default=get_uuid)
 
     @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()
+
+    @classmethod
     def by_name(cls, team_name):
         ''' Return the team object based on "team_name" '''
-        return dbsession.query(cls).filter_by(name=unicode(team_name)).first()  
+        return dbsession.query(cls).filter_by(name=unicode(team_name)).first()
 
     @classmethod
     def by_team_id(cls, team_id):
         ''' Return the team object based one id '''
-        return dbsession.query(cls).filter_by(id=team_id).first()  
-
-    @classmethod
-    def get_all(cls):
-        ''' Returns all team objects '''
-        return dbsession.query(cls).all()
+        return dbsession.query(cls).filter_by(id=team_id).first()
 
     @classmethod
     def by_uuid(cls, team_uuid):

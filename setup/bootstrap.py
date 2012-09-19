@@ -28,7 +28,7 @@ import getpass
 
 from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
-from models import dbsession, User, Permission
+from models import dbsession, User, Permission, Theme
 
 # Fills the database with some startup data.
 config = ConfigManager.Instance()
@@ -45,8 +45,31 @@ else:
     if password1 == password2 and 12 <= len(password1):
         password = password1
     else:
-        print WARN + 'Error: Passwords did not match, or were less than 12 chars'
+        print WARN + \
+            'Error: Passwords did not match, or were less than 12 chars'
         os._exit(1)
+
+css_files = [
+    ("Bootstrap", 'bootstrap.min.css'),
+    ("Amelia", 'amelia.min.css'), 
+    ("Cyborg", 'cyborg.min.css'), 
+    ("Readable", 'readable.min.css'), 
+    ("Slate", 'slate.min.css'),
+    ("Spruce", 'spruce.min.css'), 
+    ("United", 'united.min.css'),
+    ("Cerulean", 'cerulean.min.css'),
+    ("Journal", 'journal.min.css'),  
+    ("Simplex", 'simplex.min.css'),
+    ("Spacelab", 'spacelab.min.css'),
+    ("Superhero", 'superhero.min.css'),
+]
+for css in css_files:
+    theme = Theme(
+        name=css[0],
+        cssfile=css[1],
+    )
+    dbsession.add(theme)
+    dbsession.flush()
 
 # User Account
 user = User(

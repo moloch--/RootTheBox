@@ -51,6 +51,7 @@ class ConfigManager(object):
         self.config = ConfigParser.SafeConfigParser()
         self.config.readfp(open(self.cfg_path, 'r'))
         self.__server__()
+        self.__sessions__()
         self.__security__()
         self.__database__()
         self.__recaptcha__()
@@ -59,11 +60,13 @@ class ConfigManager(object):
         ''' Load network configurations '''
         self.listen_port = self.config.getint("Server", 'port')
         self.debug = self.config.getboolean("Server", 'debug')
-        host = self.config.get("Server", 'websocket_host')
-        if host == "AUTO":
-            self.websocket_host = HostNetworkConfig.get_ip_address()
-        else:
-            self.websocket_host = host
+        self.domain = self.config.get("Server", 'domain')
+
+    def __sessions__(self):
+        self.memcached_server = self.config.get("Sessions", 'memcached')
+        self.session_age = self.config.getint("Sessions", 'session_age')
+        self.session_regeneration_interval = self.config.getint(
+            "Sessions", 'session_regeneration_interval')
 
     def __security__(self):
         ''' Load security configurations '''
@@ -71,12 +74,14 @@ class ConfigManager(object):
         if not '127.0.0.1' in ips:
             ips.append('127.0.0.1')
         self.admin_ips = tuple(ips)
-        self.max_password_length = int(self.config.get("Security", 'max_password_length'))
+        self.max_password_length = int(
+            self.config.get("Security", 'max_password_length'))
 
     def __recaptcha__(self):
         ''' Loads recaptcha settings '''
         self.recaptcha_enable = self.config.getboolean("Recaptcha", 'enable')
-        self.recaptcha_private_key = self.config.get("Recaptcha", 'private_key')
+        self.recaptcha_private_key = self.config.get(
+            "Recaptcha", 'private_key')
 
     def __database__(self):
         ''' Loads database connection information '''

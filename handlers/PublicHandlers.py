@@ -27,13 +27,13 @@ from models.Team import Team
 from libs.Form import Form
 from libs.ConfigManager import ConfigManager
 from libs.Session import SessionManager
-from handlers.BaseHandlers import UserBaseHandler
+from handlers.BaseHandlers import BaseHandler
 from tornado.web import RequestHandler
 from recaptcha.client import captcha
 from string import ascii_letters, digits
 
 
-class HomePageHandler(RequestHandler):
+class HomePageHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
@@ -67,10 +67,12 @@ class LoginHandler(RequestHandler):
 
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''
-        logging.info("Successful login: %s/%s from %s" % (user.account, user.handle, self.request.remote_ip))
+        logging.info("Successful login: %s/%s from %s" % (user.
+                                                          account, user.handle, self.request.remote_ip))
         session_manager = SessionManager.Instance()
         sid, session = session_manager.start_session()
-        self.set_secure_cookie(name='auth', value=str(sid), expires_days=1, HttpOnly=True)
+        self.set_secure_cookie(
+            name='auth', value=str(sid), expires_days=1, HttpOnly=True)
         session.data['handle'] = str(user.handle)
         session.data['ip'] = str(self.request.remote_ip)
         if user.has_permission('admin'):
@@ -81,7 +83,8 @@ class LoginHandler(RequestHandler):
     def failed_login(self):
         ''' Called if username or password is invalid '''
         logging.info("Failed login attempt from %s " % self.request.remote_ip)
-        self.render('public/login.html', errors=["Bad username and/or password, try again"])
+        self.render('public/login.html', errors=[
+            "Bad username and/or password, try again"])
 
 
 class UserRegistraionHandler(RequestHandler):
@@ -100,7 +103,8 @@ class UserRegistraionHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''
-        self.render("public/registration.html", errors=None, teams=Team.get_all())
+        self.render(
+            "public/registration.html", errors=None, teams=Team.get_all())
 
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
@@ -123,7 +127,8 @@ class UserRegistraionHandler(RequestHandler):
                 self.render('public/registration.html',
                             errors=['Password must be 1-%d characters' % config.max_password_length], teams=Team.get_all())
             elif len(self.request.arguments['team'][0]) == 0 or Team.by_uuid(self.request.arguments['team'][0]) == None:
-                self.render('public/registration.html', errors=["Please select a team to join"], teams=Team.get_all())
+                self.render('public/registration.html', errors=[
+                    "Please select a team to join"], teams=Team.get_all())
             else:
                 team = Team.by_uuid(self.request.arguments['team'][0])
                 user = User(
@@ -136,9 +141,11 @@ class UserRegistraionHandler(RequestHandler):
                 self.dbsession.flush()
             self.redirect('/login')
         elif 0 < len(self.form.errors):
-            self.render('public/registration.html', errors=self.form.errors, teams=Team.get_all())
+            self.render('public/registration.html',
+                        errors=self.form.errors, teams=Team.get_all())
         else:
-            self.render('public/registration.html', errors=['Unknown error'], teams=Team.get_all())
+            self.render('public/registration.html', errors=[
+                'Unknown error'], teams=Team.get_all())
 
 
 class AboutHandler(RequestHandler):
@@ -148,10 +155,10 @@ class AboutHandler(RequestHandler):
         self.render('public/about.html')
 
 
-class LogoutHandler(UserBaseHandler):
+class LogoutHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Clears cookies and session data '''
-        self.session_manager.remove_session(self.get_secure_cookie('auth'))
+        self.session.delete()
         self.clear_all_cookies()
         self.redirect("/")

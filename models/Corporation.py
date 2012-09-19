@@ -31,4 +31,15 @@ class Corporation(BaseObject):
 
     name = Column(Unicode(64), unique=True, nullable=False)
     description = Column(Unicode(1024), nullable=False)
-    boxes = relationship("Box", backref=backref("Corporation", lazy="joined"), cascade="all, delete-orphan")
+    boxes = relationship("Box", backref=backref(
+        "Corporation", lazy="joined"), cascade="all, delete-orphan")
+
+    @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, ident):
+        ''' Returns a the object with id of ident '''
+        return dbsession.query(cls).filter_by(id=ident).first()

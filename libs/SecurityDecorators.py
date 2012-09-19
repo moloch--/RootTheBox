@@ -22,9 +22,7 @@ Created on Mar 13, 2012
 import logging
 import functools
 
-
 from models.User import User
-from libs.Session import SessionManager
 
 
 def authenticated(method):
@@ -32,10 +30,7 @@ def authenticated(method):
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        session_manager = SessionManager.Instance()
-        session = session_manager.get_session(
-            self.get_secure_cookie('auth'), self.request.remote_ip)
-        if session != None:
+        if self.session != None:
             return method(self, *args, **kwargs)
         self.redirect(self.application.settings['login_url'])
     return wrapper
@@ -61,11 +56,8 @@ def authorized(permission):
     def func(method):
         @functools.wraps(method)
         def wrapper(self, *args, **kwargs):
-            session_manager = SessionManager.Instance()
-            session = session_manager.get_session(
-                self.get_secure_cookie('auth'), self.request.remote_ip)
-            if session != None:
-                user = User.by_handle(session.data['handle'])
+            if self.session != None:
+                user = User.by_handle(self.session['handle'])
                 if user != None and user.has_permission(permission):
                     return method(self, *args, **kwargs)
             logging.warn("Attempted unauthorized access from %s to %s" %

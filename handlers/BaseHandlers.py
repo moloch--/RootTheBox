@@ -21,70 +21,61 @@ Created on Mar 15, 2012
 
 
 import logging
+import pylibmc
 
 from models import User
+from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
-from libs.Session import SessionManager
+from libs.Sessions import MemcachedSession
 from tornado.web import RequestHandler
 
 
-class FormHandler(RequestHandler):
-    ''' This deals with forms, and form validation'''
-
-    def validate_form(self):
-        ''' When called, this will check agianst self.form and arguments passed '''
-        arguments = self.request.arguments
-        results = self.form.__validate__(arguments)
-        return results
-
-
-class UserBaseHandler(RequestHandler):
+class BaseHandler(RequestHandler):
     ''' User handlers extend this class '''
 
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
-        self.session_manager = SessionManager.Instance()
-        self.session = self.session_manager.get_session(
-            self.get_secure_cookie('auth'), self.request.remote_ip)
+    def initialize(self):
+        self.session = None
+        self.config = ConfigManager.Instance()
+        session_id = self.get_secure_cookie('session_id')
+        if session_id != None:
+            self.conn = pylibmc.Client(
+                [self.config.memcached_server], binary=True)
+            self.conn.behaviors['no_block'] = 1  # async I/O
+            self.session = self.create_session(session_id)
+            self.session.refresh()  # advance expiry time and save session
+            self.set_secure_cookie(
+                'session_id',
+                self.session.session_id,
+                expires_days=1,
+                expires=self.session.expires,
+                path='/',
+                HttpOnly=True,
+            )
 
     def get_current_user(self):
+        ''' Get current user object from database '''
         if self.session != None:
-            return User.by_handle(self.session.data['handle'])
+            return User.by_handle(self.session['handle'])
         return None
 
-    @authenticated
-    def put(self, *args, **kwargs):
-        ''' Log odd behavior, this should never get legitimately called '''
-        logging.warn("%s attempted to use PUT method" % self.request.remote_ip)
-        self.render("public/404.html")
-
-    @authenticated
-    def delete(self, *args, **kwargs):
-        ''' Log odd behavior, this should never get legitimately called '''
-        logging.warn(
-            "%s attempted to use DELETE method" % self.request.remote_ip)
-        self.render("public/404.html")
-
-    @authenticated
-    def head(self, *args, **kwargs):
-        ''' Log odd behavior, this should never get legitimately called '''
-        logging.warn(
-            "%s attempted to use HEAD method" % self.request.remote_ip)
-        self.render("public/404.html")
-
-    @authenticated
-    def options(self, *args, **kwargs):
-        ''' Log odd behavior, this should never get legitimately called '''
-        logging.warn(
-            "%s attempted to use OPTIONS method" % self.request.remote_ip)
-        self.render("public/404.html")
-
-
-class AdminBaseHandler(RequestHandler):
-    ''' Admin handlers extend this class '''
-
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
+    def create_session(self, session_id=None):
+        ''' Creates a new session '''
+        kw = {
+            'duration': self.config.session_age,
+            'ip_address': self.request.remote_ip,
+            'regeneration_interval': self.config.session_regeneration_interval,
+        }
+        new_session = None
+        old_session = None
+        old_session = MemcachedSession.load(session_id, self.conn)
+        if old_session is None or old_session._is_expired():  # create new session
+            new_session = MemcachedSession(self.conn, **kw)
+        if old_session is not None:
+            if old_session._should_regenerate():
+                old_session.refresh(new_session_id=True)
+                # TODO: security checks
+            return old_session
+        return new_session
 
     @authenticated
     def put(self, *args, **kwargs):

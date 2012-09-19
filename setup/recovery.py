@@ -69,7 +69,6 @@ class RecoveryConsole(cmd.Cmd):
                 permissions += str("%s)" % user.permissions_names[-1])
             print(INFO + user.name + permissions)
 
-
     def do_delete(self, username):
         '''
         Delete a user from the database

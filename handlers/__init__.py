@@ -27,9 +27,9 @@ import logging
 from time import sleep
 from os import urandom, path
 from base64 import b64encode
-from models import dbsession
 from modules.Menu import Menu
 from modules.Sidebar import Sidebar
+from modules.CssTheme import CssTheme
 from libs.ConsoleColors import *
 from libs.Memcache import FileCache
 from libs.Session import SessionManager
@@ -47,10 +47,10 @@ from handlers.PublicHandlers import *
 from handlers.HashesHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
-from handlers.StaticFileHandler import StaticFileHandler
 from handlers.WebsocketHandlers import *
 from handlers.ScoreboardHandlers import *
 
+from handlers.StaticFileHandler import StaticFileHandler
 
 config = ConfigManager.Instance()
 app = Application([
@@ -62,69 +62,51 @@ app = Application([
                    StaticFileHandler, {'path': 'files/avatars'}),
 
                   # Reporter Handlers - Communication with reporters
-                  (r'/reporter/register', ReporterRegistrationHandler, {
-                   'dbsession': dbsession}),
+                  (r'/reporter/register', ReporterRegistrationHandler),
 
                   # User Handlers - Serves user related pages
                   # File share Handlers
-                  (r'/user/shares/download(.*)', ShareDownloadHandler, {
-                   'dbsession': dbsession}),
+                  (r'/user/shares/download(.*)', ShareDownloadHandler),
                   (r'/user/share/files',
-                   ShareUploadHandler, {'dbsession': dbsession}),
+                   ShareUploadHandler),
+                  
                   # Text share Handlers
-                  (r'/user/share/text',
-                   PastebinHandler, {'dbsession':dbsession}),
-                  (r'/pastebin/view(.*)',
-                   DisplayPostHandler, {'dbsession':dbsession}),
-                  (r'/pastebin/delete(.*)',
-                   DeletePostHandler, {'dbsession':dbsession}),
+                  (r'/user/share/text', PastebinHandler),
+                  (r'/pastebin/view(.*)', DisplayPostHandler),
+                  (r'/pastebin/delete(.*)', DeletePostHandler),
+                  
                   # User handlers
-                  (r'/user/settings(.*)',
-                   SettingsHandler, {'dbsession': dbsession}),
-                  (r'/user/team/ajax(.*)',
-                   TeamAjaxHandler, {'dbsession': dbsession}),
-                  (r'/user/team',
-                   TeamViewHandler, {'dbsession': dbsession}),
-                  (r'/user/reporter',
-                   ReporterHandler, {'dbsession': dbsession}),
-                  (r'/user', HomeHandler, {'dbsession': dbsession}),
+                  (r'/user/settings(.*)', SettingsHandler),
+                  (r'/user/team/ajax(.*)', TeamAjaxHandler),
+                  (r'/user/team', TeamViewHandler),
+                  (r'/user/reporter', ReporterHandler),
+                  (r'/user', HomeHandler),
 
                   # Hashes Handlers - Serves hash related pages
-                  (r'/hashes',
-                   HashesHandler, {'dbsession': dbsession}),
-                  (r'/hashes/ajax(.*)',
-                   HashesAjaxHandler, {'dbsession': dbsession}),
-                  (r'/wallofsheep',
-                   WallOfSheepHandler, {'dbsession': dbsession}),
+                  (r'/hashes', HashesHandler),
+                  (r'/hashes/ajax(.*)', HashesAjaxHandler),
+                  (r'/wallofsheep', WallOfSheepHandler),
 
                   # Scoreboard Handlers - Severs scoreboard related
                   # pages
-                  (r'/scoreboard',
-                   ScoreBoardHandler, {'dbsession': dbsession}),
-                  (r'/all_time(.*)',
-                   AllTimeHandler, {'dbsession': dbsession}),
-                  (r'/pie_chart(.*)',
-                   PieChartHandler, {'dbsession': dbsession}),
-                  (r'/bar_chart(.*)',
-                   BarChartHandler, {'dbsession': dbsession}),
+                  (r'/scoreboard', ScoreBoardHandler),
+                  (r'/all_time(.*)', AllTimeHandler),
+                  (r'/pie_chart(.*)', PieChartHandler),
+                  (r'/bar_chart(.*)', BarChartHandler),
 
                   # Admin Handlers - Administration pages
-                  (r'/admin/create/(.*)',
-                   AdminCreateHandler, {'dbsession':dbsession}),
-                  (r'/admin/view/(.*)',
-                   AdminViewHandler, {'dbsession':dbsession}),
-                  
+                  (r'/admin/create/(.*)', AdminCreateHandler),
+                  (r'/admin/view/(.*)', AdminViewHandler),
+
                   # WebSocket Handlers - Websocket communication
                   # handlers
                   (r'/websocket', WebsocketHandler),
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),
-                  (r'/registration', UserRegistraionHandler,
-                   {'dbsession': dbsession}),
+                  (r'/registration', UserRegistraionHandler),
                   (r'/about', AboutHandler),
-                  (r'/logout', LogoutHandler,
-                   {'dbsession': dbsession}),
+                  (r'/logout', LogoutHandler),
                   (r'/', HomePageHandler),
 
                   # Error handlers - Serves error pages
@@ -135,55 +117,57 @@ app = Application([
                   (r'/(.*)', NotFoundHandler)
                   ],
 
-    # Randomly generated secret key
-    cookie_secret=b64encode(urandom(64)),
+                  # Randomly generated secret key
+                  cookie_secret=b64encode(urandom(64)),
 
-    # Ip addresses that access the admin interface
-    admin_ips=config.admin_ips,
+                  # Ip addresses that access the admin interface
+                  admin_ips=config.admin_ips,
 
-    # Template directory
-    template_path = 'templates',
+                  # Template directory
+                  template_path='templates',
 
-    # Request that does not pass @authorized will be
-    # redirected here
-    forbidden_url = '/403',
+                  # Request that does not pass @authorized will be
+                  # redirected here
+                  forbidden_url='/403',
 
-    # Requests that does not pass @authenticated  will be
-    # redirected here
-    login_url = '/login',
+                  # Requests that does not pass @authenticated  will be
+                  # redirected here
+                  login_url='/login',
 
-    # UI Modules
-    ui_modules = {"Menu": Menu, "Sidebar": Sidebar},
+                  # UI Modules
+                  ui_modules={"Menu": Menu, "CssTheme": CssTheme, "Sidebar": Sidebar},
 
-    # Enable XSRF forms
-    xsrf_cookies = True,
+                  # Enable XSRF forms
+                  xsrf_cookies=True,
 
-    # Recaptcha Settings
-    recaptcha_enable = config.recaptcha_enable,
-    recaptcha_private_key = config.recaptcha_private_key,
+                  # Recaptcha Settings
+                  recaptcha_enable=config.recaptcha_enable,
+                  recaptcha_private_key=config.recaptcha_private_key,
 
-    # WebSocket Host IP Address
-    ws_ip_address = config.websocket_host,
-    ws_port = config.listen_port,
+                  # WebSocket Host IP Address
+                  ws_ip_address=config.domain,
+                  ws_port=config.listen_port,
 
-    # Special file directories
-    avatar_dir = path.abspath('files/avatars/'),
-    shares_dir = path.abspath('files/shares/'),
+                  # Special file directories
+                  avatar_dir=path.abspath('files/avatars/'),
+                  shares_dir=path.abspath('files/shares/'),
 
-    # Milli-Seconds between scoring
-    ticks = int(60 * 1000),
+                  # Milli-Seconds between scoring
+                  ticks=int(60 * 1000),
 
-    # Milli-Seconds between session clean up
-    clean_up_timeout = int(60 * 1000),
+                  # Milli-Seconds between session clean up
+                  clean_up_timeout=int(60 * 1000),
 
-    # Debug mode
-    debug = config.debug,
+                  # Debug mode
+                  debug=config.debug,
 
-    # Application version
-    version = '0.3'
-)
+                  # Application version
+                  version='0.3'
+                  )
 
 # Main entry point
+
+
 def start_game():
     ''' Main entry point for the application '''
     sockets = netutil.bind_sockets(config.listen_port)
@@ -191,8 +175,9 @@ def start_game():
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
     session_manager = SessionManager.Instance()
-    scoring = PeriodicCallback(scoring_round, app.settings['ticks'], io_loop=io_loop)
-    session_clean_up = PeriodicCallback(session_manager.clean_up, 
+    scoring = PeriodicCallback(
+        scoring_round, app.settings['ticks'], io_loop=io_loop)
+    session_clean_up = PeriodicCallback(session_manager.clean_up,
                                         app.settings['clean_up_timeout'], io_loop=io_loop)
     scoring.start()
     session_clean_up.start()
