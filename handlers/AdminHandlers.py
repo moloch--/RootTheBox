@@ -73,6 +73,14 @@ class AdminCreateHandler(BaseHandler):
 
     def create_corporation(self):
         form = Form(name="Enter a name")
+        if form.validate(self.request.arguments):
+            corporation = Corporation(
+                name=self.get_argument('name')
+            )
+            dbsession.add(corporation)
+            dbsession.flush()
+        else:
+            self.render("admin/create/corporation.html", errors=form.errors)
 
     def create_box(self):
         form = Form(
@@ -92,7 +100,7 @@ class AdminCreateHandler(BaseHandler):
             )
             dbsession.add(box)
             dbsession.flush()
-            self.render("admin/view/box.html", boxes=Box.get_all())
+            self.render("admin/view/box.html")
         else:
             self.render("admin/create/box.html", errors=form.errors)
 
@@ -111,7 +119,7 @@ class AdminCreateHandler(BaseHandler):
             self.dbsession.add(team)
             self.dbsession.flush()
             self.render(
-                "admin/view/team.html", errors=None, teams=Team.get_all())
+                "admin/view/team.html", errors=None)
         else:
             self.render("admin/create/team.html", errors=form.errors)
 
@@ -135,20 +143,19 @@ class AdminViewHandler(BaseHandler):
             self.render("public/404.html")
 
     def view_corporations(self):
-        self.render("admin/view/corporation.html", errors=None,
-                    corporations=Corporation.get_all())
+        self.render("admin/view/corporation.html", errors=None)
 
     def view_boxes(self):
-        self.render("admin/view/box.html", errors=None, boxes=Box.get_all())
+        self.render("admin/view/box.html", errors=None)
 
     def view_flags(self):
-        self.render("admin/view/flag.html", errors=None, flags=Flag.get_all())
+        self.render("admin/view/flag.html", errors=None)
 
     def view_teams(self):
-        self.render("admin/view/team.html", errors=None, teams=Team.get_all())
+        self.render("admin/view/team.html", errors=None)
 
     def view_users(self):
-        self.render("admin/view/user.html", errors=None, users=User.get_all())
+        self.render("admin/view/user.html", errors=None)
 
 
 class AdminEditHandler(BaseHandler):

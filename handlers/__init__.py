@@ -155,9 +155,6 @@ app = Application([
                   # Milli-Seconds between scoring
                   ticks=int(60 * 1000),
 
-                  # Milli-Seconds between session clean up
-                  clean_up_timeout=int(60 * 1000),
-
                   # Debug mode
                   debug=config.debug,
 
@@ -189,5 +186,4 @@ def start_game():
     except KeyboardInterrupt:
         print('\r' + WARN + 'Shutdown Everything!')
         FileCache.flush()
-        session_clean_up.stop()
         io_loop.stop()

@@ -21,20 +21,18 @@ Created on Mar 18, 2012
 
 import logging
 
+from handlers.BaseHandlers import BaseHandler
 from models import dbsession, User, PasteBin
-from libs.Session import SessionManager
 from libs.SecurityDecorators import authenticated
-from tornado.web import RequestHandler
 
 
-class PastebinHandler(RequestHandler):
+
+class PastebinHandler(BaseHandler):
+
 
     @authenticated
     def get(self, *args, **kwargs):
-        session_manager = SessionManager.Instance()
-        session = session_manager.get_session(
-            self.get_secure_cookie('auth'), self.request.remote_ip)
-        user = User.by_user_name(session.data['user_name'])
+        user = self.get_current_user()
         if user.team != None:
             self.render('pastebin/view.html', posts=user.team.posts)
         else:
@@ -48,11 +46,7 @@ class PastebinHandler(RequestHandler):
         except:
             self.render(
                 'pastebin/error.html', errors="Please Enter something!")
-
-        session_manager = SessionManager.Instance()
-        session = session_manager.get_session(
-            self.get_secure_cookie('auth'), self.request.remote_ip)
-        user = User.by_user_name(session.data['user_name'])
+        user = self.get_current_user()
         post = Post(
             name=new_name,
             contents=content,
@@ -63,17 +57,12 @@ class PastebinHandler(RequestHandler):
         self.redirect('/pastebin')
 
 
-class DisplayPostHandler(RequestHandler):
+class DisplayPostHandler(BaseHandler):
 
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
 
     @authenticated
     def get(self, *args, **kwargs):
-        session_manager = SessionManager.Instance()
-        session = session_manager.get_session(
-            self.get_secure_cookie('auth'), self.request.remote_ip)
-        user = User.by_user_name(session.data['user_name'])
+        user = self.get_current_user()
         try:
             post_id = self.get_argument("post_id")
         except:
@@ -91,17 +80,12 @@ class DisplayPostHandler(RequestHandler):
             self.render('pastebin/view.html', posts=[])
 
 
-class DeletePostHandler(RequestHandler):
+class DeletePostHandler(BaseHandler):
 
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
 
     @authenticated
     def get(self, *args, **kwargs):
-        session_manager = SessionManager.Instance()
-        session = session_manager.get_session(
-            self.get_secure_cookie('auth'), self.request.remote_ip)
-        user = User.by_user_name(session.data['user_name'])
+        user = self.get_current_user()
         try:
             post_id = self.get_argument("post_id")
         except:

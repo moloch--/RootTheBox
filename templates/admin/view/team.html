@@ -34,7 +34,8 @@
             </tr>
           </thead>
           <tbody>
-            {% for team in teams %}
+            {% from models import Team %}
+            {% for team in Team.all() %}
                 <tr>
                   <td>{{ team.name }}</td>
                   <td>{{ team.motto }}</td>
@@ -46,7 +47,7 @@
                     </a>
                   </td>
                 </tr>
-          {% end %}
+            {% end %}
           </tbody>
       </table>
     </div>

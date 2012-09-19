@@ -26,7 +26,6 @@ from models.User import User
 from models.Team import Team
 from libs.Form import Form
 from libs.ConfigManager import ConfigManager
-from libs.Session import SessionManager
 from handlers.BaseHandlers import BaseHandler
 from tornado.web import RequestHandler
 from recaptcha.client import captcha
