@@ -20,51 +20,75 @@ from os import system
 from sys import argv
 from time import sleep
 from datetime import datetime
-from subprocess import call
-from handlers import start_game
-from models import __create__, __boot_strap__
-from libs import ConsoleColors
+from libs.ConsoleColors import *
 
 
-curr_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
+current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 
 def serve():
-    ''' Serves the application '''
-    if len(argv) == 2:
-        print(ConsoleColors.INFO +
-              '%s : Starting up the server, please wait ...' % curr_time())
-        start_game()
+    ''' Starts the application '''
+    from libs.ConfigManager import ConfigManager  # Sets up logging
+    from handlers import start_server
+    print(INFO + '%s : Starting application ... ' %
+          current_time())
+    start_server()
 
 
 def create():
-    ''' Creates the database '''
-    # Create the table schemas
-    # usage: python . create
-    #Bootstrap the database with some objects
-    #usage: python . create bs
-    print(ConsoleColors.INFO + '%s : creating the database.' % curr_time())
-    __create__()
-    if len(argv) == 3 and argv[2] == 'bootstrap':
-        __boot_strap__()
+    ''' Creates/bootstraps the database '''
+    from libs.ConfigManager import ConfigManager  # Sets up logging
+    from models import create_tables, boot_strap
+    print(INFO + '%s : Creating the database ... ' %
+          current_time())
+    create_tables()
+    if len(argv) == 3 and (argv[2] == 'bootstrap' or argv[2] == '-b'):
+        print('\n\n\n' + INFO +
+              '%s : Bootstrapping the database ... \n' % current_time())
+        boot_strap()
 
 
-def test():
-    ''' Run unit tests '''
-    # usage: python . test
-    print('[*] %s : testing the application.' % curr_time())
-    # calling nose's nosetests to test the application using the 'tests' module
-    call(['nosetests', '-v', 'tests'])
+def recovery():
+    ''' Starts the recovery console '''
+    from libs.ConfigManager import ConfigManager  # Sets up logging
+    from setup.recovery import RecoveryConsole
+    print(INFO + '%s : Starting recovery console ... ' %
+          current_time())
+    console = RecoveryConsole()
+    try:
+        console.cmdloop()
+    except KeyboardInterrupt:
+        print(INFO + "Have a nice day!")
 
 
-if len(argv) == 1:
-    argv.append("serve")
-options = {
-    'serve': serve,
-    'create': create,
-    'test': test,
-}
-if argv[1] in options.keys():
-    options[argv[1]]()
-else:
-    print(ConsoleColors.WARN + 'Error: PEBKAC')
+def help():
+    ''' Displays a helpful message '''
+    print('\n\t\t' + bold + R + "*** " + underline +
+          'Root the Box: A Game of Hackers' + W + bold + R + " ***" + W)
+    print('\t' + bold + 'python . help' + W +
+          '             - Display this helpful message')
+    print('\t' + bold + 'python . serve' + W +
+          '            - Starts the web server')
+    print('\t' + bold + 'python . create' + W +
+          '           - Inits the database tables only')
+    print('\t' + bold + 'python . create bootstrap' + W +
+          ' - Inits the database tables and creates an admin account')
+    print('\t' + bold + 'python . recovery' + W +
+          '         - Starts the recovery console')
+
+### Main
+if __name__ == '__main__':
+    options = {
+        'help': help,
+        'serve': serve,
+        'create': create,
+        'recovery': recovery,
+    }
+    if len(argv) == 1:
+        help()
+    else:
+        if argv[1] in options:
+            options[argv[1]]()
+        else:
+            print(WARN + str(
+                'PEBKAC (%s): Command not found, see "python . help".' % argv[1]))

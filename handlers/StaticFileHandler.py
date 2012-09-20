@@ -33,7 +33,7 @@ import datetime
 import mimetypes
 import threading
 
-from tornado.web import RequestHandler
+from tornado.web import RequestHandler, HTTPError
 from libs.Memcache import FileCache
 
 

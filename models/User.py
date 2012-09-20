@@ -73,7 +73,7 @@ class User(BaseObject):
         return dbsession.query(Permission).filter_by(user_id=self.id)
 
     @property
-    def permissions_accounts(self):
+    def permissions_names(self):
         '''Return a list with all permissions accounts granted to the user.'''
         return [permission.name for permission in self.permissions]
 
@@ -101,6 +101,11 @@ class User(BaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
+    def all_users(cls):
+        ''' Return all non-admin user objects '''
+        return filter(lambda user: user.has_permission('admin') == False, cls.all())
+
+    @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
         return dbsession.query(cls).filter_by(id=ident).first()
@@ -114,18 +119,6 @@ class User(BaseObject):
     def by_handle(cls, handle):
         ''' Return the user object whose user is "handle" '''
         return dbsession.query(cls).filter_by(handle=unicode(handle)).first()
-
-    @classmethod
-    def by_id(cls, user_id):
-        ''' Return the user object whose user id is "user_id" '''
-        return dbsession.query(cls).filter_by(id=user_id).first()
-
-    @classmethod
-    def add_to_team(cls, team_account):
-        ''' Add user to team based on team account '''
-        team = dbsession.query(
-            Team).filter_by(account=unicode(team_account)).first()
-        cls.team_id = team.id
 
     @classmethod
     def _hash_password(cls, password):
@@ -160,8 +153,8 @@ class User(BaseObject):
         return unicode(sha_hash.hexdigest())
 
     def has_permission(self, permission):
-        ''' Return True if 'permission' is in permissions_accounts '''
-        return True if permission in self.permissions_accounts else False
+        ''' Return True if 'permission' is in permissions_names '''
+        return True if permission in self.permissions_names else False
 
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
@@ -181,5 +174,8 @@ class User(BaseObject):
         ''' Return most recent notifications '''
         return self.notifications.sort(key=lambda notify: notify.created)[:limit]
 
+    def __str__(self):
+        return self.handle
+
     def __repr__(self):
-        return ('<User - account: %s, display: %s, team_id: %d>' % (self.user_account, self.handle, self.team_id)).encode('utf-8')
+        return ('<User - account: %s, handle: %s>' % (self.account, self.handle))

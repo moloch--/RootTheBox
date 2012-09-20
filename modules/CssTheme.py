@@ -21,13 +21,15 @@ Created on Mar 14, 2012
 
 from tornado.web import UIModule
 from models import Theme
+from libs.ConfigManager import ConfigManager
 
 
 class CssTheme(UIModule):
 
     def render(self, *args, **kwargs):
-        default_id = 3
+        config = ConfigManager.Instance()
+        default_theme = config.default_theme
         if self.handler.session != None:
-            return self.render_string("theme/css.html", theme=Theme.by_id(self.handler.session['theme_id']))
+            return self.render_string("theme/css.html", theme=self.handler.session['theme'])
         else:
-            return self.render_string("theme/css.html", theme=Theme.by_id(default_id))
+            return self.render_string("theme/css.html", theme=default_theme)

@@ -22,12 +22,13 @@ Created on Mar 12, 2012
 
 import logging
 
+from uuid import uuid4
+from random import randint
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession
-from models.Box import Box
-from models.BaseGameObject import BaseObject, get_uuid
+from models import dbsession, Box
+from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits
 
 
@@ -42,10 +43,10 @@ class Team(BaseObject):
     ))
     motto = Column(Unicode(255))
     members = relationship("User", backref="Team")
-    listen_port = Column(Integer, unique=True, nullable=False)
+    listen_port = Column(Integer, default=lambda: randint(1024, 65535), unique=True, nullable=False)
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
     money = Column(Integer, default=0, nullable=False)
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=get_uuid)
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
 
     @classmethod
     def all(cls):

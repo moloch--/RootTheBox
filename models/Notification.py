@@ -22,6 +22,7 @@ Created on Mar 12, 2012
 
 import os
 import json
+import imghdr
 
 from libs.Memcache import FileCache
 from sqlalchemy import Column, ForeignKey
@@ -57,9 +58,13 @@ class Notification(BaseObject):
     def icon(self, file_path):
         ''' Sets path to icon file '''
         if os.path.exists(file_path):
-            self._icon = file_path
+            ext = imghdr.what(file_path)
+            if ext in ['png', 'jpeg', 'gif', 'bmp']:
+                self._icon = file_path
+            else:
+                raise ValueError("Not an image file.")
         else:
-            raise ValueError
+            raise ValueError("Path does not exist.")
 
     def to_json(self):
         ''' Creates a JSON version of the notification '''

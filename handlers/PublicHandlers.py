@@ -22,8 +22,7 @@ Created on Mar 13, 2012
 
 import logging
 
-from models.User import User
-from models.Team import Team
+from models import User, Team, Theme
 from libs.Form import Form
 from libs.ConfigManager import ConfigManager
 from handlers.BaseHandlers import BaseHandler
@@ -67,8 +66,9 @@ class LoginHandler(BaseHandler):
         logging.info("Successful login: %s/%s from %s" % (user.
                                                           account, user.handle, self.request.remote_ip))
         self.start_session()
+        theme = Theme.by_id(user.theme_id)
         self.session['handle'] = ''.join(user.handle) # Don't leave a ref to user object
-        self.session['theme_id'] = user.theme_id
+        self.session['theme'] = ''.join(theme.cssfile)
         if user.has_permission('admin'):
             self.session['menu'] = 'admin'
         else:

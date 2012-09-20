@@ -61,6 +61,7 @@ class ConfigManager(object):
         self.listen_port = self.config.getint("Server", 'port')
         self.debug = self.config.getboolean("Server", 'debug')
         self.domain = self.config.get("Server", 'domain')
+        self.default_theme = self.config.get("Server", "theme")
 
     def __sessions__(self):
         self.memcached_server = self.config.get("Sessions", 'memcached')

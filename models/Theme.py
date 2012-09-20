@@ -20,6 +20,7 @@ Created on Mar 12, 2012
 '''
 
 
+from uuid import uuid4
 from string import ascii_letters, digits
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
@@ -45,6 +46,7 @@ class Theme(BaseObject):
         lambda self, cssfile: setattr(self, '_cssfile',
                                         self.__class__._filter_string(cssfile, "."))
     ))
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
 
     @classmethod
     def all(cls):
@@ -65,6 +67,11 @@ class Theme(BaseObject):
     def by_name(cls, theme_name):
         ''' Return the object whose name is theme_name '''
         return dbsession.query(cls).filter_by(name=theme_name).first()
+
+    @classmethod
+    def by_cssfile(cls, file_name):
+        ''' Return the object whose name is theme_name '''
+        return dbsession.query(cls).filter_by(cssfile=file_name).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):

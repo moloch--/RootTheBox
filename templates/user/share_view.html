@@ -11,10 +11,20 @@
 {% block content %}
 	<h1>File Sharing</h1>
 	<br />
+	{% if errors != None and len(errors) != 0 %}
+      {% for error in errors %}
+	      <div class="alert alert-error">
+	        <a class="close" data-dismiss="alert" href="#">×</a>
+	        <h4 class="alert-heading">ERROR</h4>
+	        {{ error }}
+	      </div>
+	  {% end %}
+	{% end %}
 	<h2>Upload a File</h2>
-	<form style="height:159px" id="form1" action="/user/shares" method="post" enctype="multipart/form-data">  
+	<form action="/user/shares" method="post" enctype="multipart/form-data">  
       {% raw xsrf_form_html() %}
-      <fieldset><legend>File Upload</legend>
+      <fieldset>
+      	<legend>File Upload</legend>
         <p class="first">
           <label for="file_data">File (Max 50Mb)</label>
           <input type="file" name="file_data" id="file_data" />
@@ -28,20 +38,21 @@
         <button type="submit"> Upload File </button>
       </p>
     </form>
-	<br /> <br />
+	<br />
+	<br />
 	<h2>Download a File</h2>
 	<script>
 		$(function() {
 			$( "#accordion" ).accordion();
 		});
 		$(function() {
-			$( ".dl_crack_me button" ).button()  
+			$( ".downloadshare button" ).button()  
 		});
 	</script>
 
 	<div id="accordion">
 		{% if len(shares) == 0 %}
-			There are currently no shared files.
+			<strong>There are currently no shared files.</strong>
 		{% else %}
 			{% for share in shares %}
 				<h3><a href="#"><strong>{{ share.file_name }}</strong>&nbsp;&nbsp;&nbsp;{{ share.content }} </a></h3>
@@ -52,7 +63,7 @@
 						<p class="share_description">
 							{{ share.description }}
 						</p>
-						<div class="dl_crack_me">
+						<div class="downloadshare">
 							<button onclick="window.open('/user/shares/download?uuid={{ share.uuid }}', '_newtab');" >
 								Download {{ share.file_name }}
 							</button>

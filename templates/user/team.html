@@ -1,9 +1,7 @@
 {% extends "../main.html" %}
 
 {% block header %}
-<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
-<script type="text/javascript" src="/static/js/jquery.pikachoose.js"></script>
-<link href="/static/css/vader/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/static/js/libs/jquery/jquery.pikachoose.js"></script>
 <link type="text/css" href="/static/css/team_styles.css" rel="stylesheet" />
 <link type="text/css" href="/static/css/team_css3.css" rel="stylesheet" />
 {% end %}
@@ -34,9 +32,10 @@
 	</script>
 	<form>
 		<div id="radio">
-			{% for team in teams %}
-				<input type="radio" id="{{ team.id }}" name="radio" onclick="load_team({{ team.id }})" />
-				<label for="{{ team.id }}">{{ team.team_name }}</label>
+			{% from models import Team %}
+			{% for team in Team.all() %}
+				<input type="radio" id="{{ team.uuid }}" name="radio" onclick="load_team({{ team.uuid }})" />
+				<label for="{{ team.uuid }}">{{ team.name }}</label>
 			{% end %}
 		</div>
 	</form>

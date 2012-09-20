@@ -50,17 +50,17 @@ from models.User import User
 from models.FileUpload import FileUpload
 from models.WallOfSheep import WallOfSheep
 #from models.Flag import Flag
-#from models.Notification import Notification
+from models.Notification import Notification
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
 from models.Theme import Theme
 
 # calling this will create the tables at the database
-__create__ = lambda: (
+create_tables = lambda: (
     setattr(engine, 'echo', True), metadata.create_all(engine))
 
 # Bootstrap the database with some shit
 
 
-def __boot_strap__():
+def boot_strap():
     import setup.bootstrap

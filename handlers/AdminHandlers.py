@@ -113,8 +113,6 @@ class AdminCreateHandler(BaseHandler):
             team = Team(
                 name=unicode(self.request.arguments['team'][0]),
                 motto=unicode(self.request.arguments['motto'][0]),
-                listen_port=randint(30000, 65000),
-                money=0,
             )
             self.dbsession.add(team)
             self.dbsession.flush()

@@ -1,0 +1,17 @@
+<!-- Wrapping the Recaptcha create method in a javascript function -->
+<script type="text/javascript" src="https://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+<script type="text/javascript">
+      function showRecaptcha(element) {
+         Recaptcha.create("6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf", element, {
+           theme: "blackglass",
+           callback: null});
+       }
+      $(document).ready(function() {
+    	  showRecaptcha('recaptcha_div'); 
+       });
+</script>
+<p>
+  <label for="recaptch_div">Are you a Cylon?</label>
+  <div id="recaptcha_div">
+  </div>
+</p>

@@ -25,14 +25,14 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession
-from models.BaseGameObject import BaseObject, get_uuid
+from models.BaseGameObject import BaseObject
 from models import association_table
 
 
 class Box(BaseObject):
     ''' Box definition '''
 
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=get_uuid)
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     corporation_id = Column(
         Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(64), unique=True, nullable=False)

@@ -28,7 +28,7 @@ from time import sleep
 from os import urandom, path
 from base64 import b64encode
 from modules.Menu import Menu
-from modules.Sidebar import Sidebar
+from modules.Recaptcha import Recaptcha
 from modules.CssTheme import CssTheme
 from libs.ConsoleColors import *
 from libs.Memcache import FileCache
@@ -67,8 +67,7 @@ app = Application([
                   # User Handlers - Serves user related pages
                   # File share Handlers
                   (r'/user/shares/download(.*)', ShareDownloadHandler),
-                  (r'/user/share/files',
-                   ShareUploadHandler),
+                  (r'/user/share/files', ShareUploadHandler),
                   
                   # Text share Handlers
                   (r'/user/share/text', PastebinHandler),
@@ -135,7 +134,7 @@ app = Application([
                   login_url='/login',
 
                   # UI Modules
-                  ui_modules={"Menu": Menu, "CssTheme": CssTheme, "Sidebar": Sidebar},
+                  ui_modules={"Menu": Menu, "CssTheme": CssTheme, "Recaptcha": Recaptcha},
 
                   # Enable XSRF forms
                   xsrf_cookies=True,
@@ -165,7 +164,7 @@ app = Application([
 # Main entry point
 
 
-def start_game():
+def start_server():
     ''' Main entry point for the application '''
     sockets = netutil.bind_sockets(config.listen_port)
     server = HTTPServer(app)
