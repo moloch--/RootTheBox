@@ -26,7 +26,7 @@ import logging
 
 from uuid import uuid4
 from base64 import b64encode, b64decode
-from models import User, Team, FileUpload, Theme
+from models import dbsession, User, Team, FileUpload, Theme
 from mimetypes import guess_type
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated
@@ -52,7 +52,7 @@ class ShareUploadHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Renders upload file page '''
         user = self.get_current_user()
-        self.render("user/share_view.html", errors=None, shares=user.team.files)
+        self.render("user/share_files.html", errors=None, shares=user.team.files)
 
     @authenticated
     def post(self, *args, **kwargs):
@@ -64,13 +64,13 @@ class ShareUploadHandler(BaseHandler):
         if form.validate(self.request.arguments):
             user = self.get_current_user()
             if 0 == len(self.request.files.keys()):
-                self.render("user/share_view.html", errors=["No file data."], shares=user.team.files)
+                self.render("user/share_files.html", errors=["No file data."], shares=user.team.files)
             elif 50 * (1024 * 1024) < len(self.request.files['file_data'][0]['body']):
-                self.render("user/share_view.html", errors=["File too large."], shares=user.team.files)
+                self.render("user/share_files.html", errors=["File too large."], shares=user.team.files)
             else:
                 self.create_file(user)
         else:
-            self.render("user/share_view.html", errors=form.errors, shares=user.team.files)
+            self.render("user/share_files.html", errors=form.errors, shares=user.team.files)
 
     def create_file(self, user):
         ''' Saves uploaded file '''
@@ -79,9 +79,9 @@ class ShareUploadHandler(BaseHandler):
         file_name = filter(lambda char: char in char_white_list, file_name)
         content = guess_type(file_name)
         if content[0] == None:
-            self.render("user/share_view.html", errors=["Unknown file content, please zip and upload"], shares=user.team.files)
+            self.render("user/share_files.html", errors=["Unknown file content, please zip and upload"], shares=user.team.files)
         else:
-            uuid = str(uuid4())
+            uuid = unicode(uuid4())
             filePath = self.application.settings['shares_dir'] + '/' + uuid
             save = open(filePath, 'w')
             data = b64encode(self.request.files['file_data'][0]['body'])
@@ -90,13 +90,13 @@ class ShareUploadHandler(BaseHandler):
             file_upload = FileUpload(
                 file_name=unicode(file_name),
                 content=unicode(str(content[0])),
-                uuid=unicode(uuid),
-                description=unicode(description),
+                uuid=uuid,
+                description=unicode(self.get_argument('description')),
                 byte_size=len(self.request.files['file_data'][0]['body']),
                 team_id=user.team.id
             )
-            self.dbsession.add(file_upload)
-            self.redirect("/user/shares")
+            dbsession.add(file_upload)
+            self.redirect("/user/share/files")
 
 
 class ShareDownloadHandler(BaseHandler):
@@ -170,8 +170,8 @@ class SettingsHandler(BaseHandler):
                     avatar = open(file_path, 'wb')
                     avatar.write(self.request.files['avatar'][0]['body'])
                     avatar.close()
-                    self.dbsession.add(user)
-                    self.dbsession.flush()
+                    dbsession.add(user)
+                    dbsession.flush()
                     self.render_page(success=["Successfully changed avatar"])
                 else:
                     self.render_page(errors=["Invalid image format"])
@@ -198,6 +198,7 @@ class SettingsHandler(BaseHandler):
             self.render_page(errors=["Invalid recaptcha"])
 
     def post_theme(self, *args, **kwargs):
+        ''' Change per-user theme '''
         form = Form(
             theme_uuid="Please select a theme",
         )
@@ -206,6 +207,10 @@ class SettingsHandler(BaseHandler):
             if theme != None:
                 self.session['theme'] = ''.join(theme.cssfile)
                 self.session.save()
+                user = self.get_current_user()
+                user.theme_id = theme.id
+                dbsession.add(user)
+                dbsession.flush()
                 self.render_page()
             else:
                 self.render_page(errors=["Theme does not exist."])
@@ -219,8 +224,8 @@ class SettingsHandler(BaseHandler):
             if new_password == new_password_two:
                 if len(new_password) <= config.max_password_length:
                     user.password = new_password
-                    self.dbsession.add(user)
-                    self.dbsession.flush()
+                    dbsession.add(user)
+                    dbsession.flush()
                     self.render_page(success=["Successfully updated password"])
                 else:
                     message = "Password must be less than %d chars" % config.max_password_length

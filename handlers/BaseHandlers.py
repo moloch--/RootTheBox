@@ -42,20 +42,16 @@ class BaseHandler(RequestHandler):
                 [self.config.memcached_server], binary=True)
             self.conn.behaviors['no_block'] = 1  # async I/O
             self.session = self._create_session(session_id)
-            self.session.refresh()  # advance expiry time and save session
-            self.set_secure_cookie(
-                'session_id',
-                self.session.session_id,
-                expires_days=1,
-                expires=self.session.expires,
-                path='/',
-                HttpOnly=True,
-            )
+            self.session.refresh()
 
     def get_current_user(self):
         ''' Get current user object from database '''
         if self.session != None:
-            return User.by_handle(self.session['handle'])
+            try:
+                return User.by_handle(self.session['handle'])
+            except KeyError:
+                logging.exeception("Malformed session.")
+                repr(self.session)
         return None
 
     def start_session(self):
