@@ -25,10 +25,10 @@ pip install --upgrade pip &&
 pip install --upgrade virtualenv
 
 echo "[*] Installing packages ..."
-apt-get install mysql-server memcached python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha python-jsonpickle
+apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha python-jsonpickle
 
 echo "[*] Installing tornado/sqlalchemy ..."
 /usr/local/bin/pip install tornado
 /usr/local/bin/pip install sqlalchemy
-/usr/local/bin/pip install python-memcached
+/usr/local/bin/pip install pylibmc
 echo "[*] Setup Completed."
