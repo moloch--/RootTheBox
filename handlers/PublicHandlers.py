@@ -67,7 +67,8 @@ class LoginHandler(BaseHandler):
                                                           account, user.handle, self.request.remote_ip))
         self.start_session()
         theme = Theme.by_id(user.theme_id)
-        self.session['handle'] = ''.join(user.handle) # Don't leave a ref to user object
+        self.session['user_id'] = int(user.id)
+        self.session['handle'] = ''.join(user.handle)
         self.session['theme'] = ''.join(theme.cssfile)
         if user.has_permission('admin'):
             self.session['menu'] = 'admin'

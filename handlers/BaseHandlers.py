@@ -50,7 +50,7 @@ class BaseHandler(RequestHandler):
             try:
                 return User.by_handle(self.session['handle'])
             except KeyError:
-                logging.exeception("Malformed session.")
+                logging.exception("Malformed session.")
                 repr(self.session)
         return None
 

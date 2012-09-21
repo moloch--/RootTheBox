@@ -22,7 +22,6 @@ import models
 import logging
 from libs.Singleton import *
 from libs.Session import SessionManager
-from libs.CachedScores import CachedScores
 import tornado
 
 
@@ -32,7 +31,6 @@ class WebSocketManager():
     def __init__(self):
         self.connections = []
         self.currentUpdates = []
-        self.cachedScores = CachedScores()
 
     def get_updates(self, connection):
         totalMessage = ''

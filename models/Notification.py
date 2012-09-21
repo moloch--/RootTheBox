@@ -24,9 +24,11 @@ import os
 import json
 import imghdr
 
+from urlparse import urlparse
 from libs.Memcache import FileCache
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.types import Unicode, Integer, Boolean
+from models import dbsession
 from models.BaseGameObject import BaseObject
 
 
@@ -37,7 +39,8 @@ class Notification(BaseObject):
     title = Column(Unicode(255), nullable=False)
     message = Column(Unicode(255), nullable=False)
     viewed = Column(Boolean, default=False)
-    _icon = Column(Unicode(255))
+    icon_url = Column(Unicode(255), nullable=True)
+    category = Column(Unicode(64), nullable=False) # Success/Info/Warning/Error/Custom
 
     @classmethod
     def all(cls):
@@ -49,28 +52,23 @@ class Notification(BaseObject):
         ''' Returns a the object with id of ident '''
         return dbsession.query(cls).filter_by(id=ident).first()
 
-    @property
-    def icon():
-        ''' Gets icon data from disk or cache '''
-        return FileCache.get(self._icon)
+    @classmethod
+    def by_user_id(cls, user_id):
+        ''' Return notifications for a single user '''
+        return dbsession.query(cls).filter_by(user_id=user_id).order_by(desc(cls.created)).all()
 
-    @icon.setter
-    def icon(self, file_path):
-        ''' Sets path to icon file '''
-        if os.path.exists(file_path):
-            ext = imghdr.what(file_path)
-            if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                self._icon = file_path
-            else:
-                raise ValueError("Not an image file.")
-        else:
-            raise ValueError("Path does not exist.")
+    @classmethod
+    def new_messages(cls, user_id):
+        ''' Return all notification which have not been viewed '''
+        ls = cls.by_user_id(user_id)
+        return filter(lambda note: note.viewed == False, ls)
 
     def to_json(self):
         ''' Creates a JSON version of the notification '''
         notification = {
-            title: self.title,
-            message: self.message,
-            icon: self.icon
+            'category': self.category,
+            'title': self.title,
+            'message': self.message,
+            'icon_url': self.icon_url,
         }
         return json.dumps(notification)

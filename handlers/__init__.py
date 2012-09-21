@@ -47,13 +47,14 @@ from handlers.PublicHandlers import *
 from handlers.HashesHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
-from handlers.WebsocketHandlers import *
+from handlers.NotifySocketHandlers import *
 from handlers.ScoreboardHandlers import *
 
 from handlers.StaticFileHandler import StaticFileHandler
 
 config = ConfigManager.Instance()
 app = Application([
+  
                   # Static Handlers - Serves static CSS, JavaScript and
                   # image files
                   (r'/static/(.*)',
@@ -99,7 +100,7 @@ app = Application([
 
                   # WebSocket Handlers - Websocket communication
                   # handlers
-                  (r'/websocket', WebsocketHandler),
+                  (r'/notifications', NotifySocketHandler),
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),
@@ -162,8 +163,6 @@ app = Application([
                   )
 
 # Main entry point
-
-
 def start_server():
     ''' Main entry point for the application '''
     sockets = netutil.bind_sockets(config.listen_port)

@@ -3,24 +3,38 @@
 {% block title %}User Index{% end %}
 
 {% block content %}
-<h1>Root the Box</h1>
-<h2>Game of Hackers</h2>
-	<p>
-		Welcome to Root the Box {{ user.handle }} <br />
-	</p>
-	{% if user.team != None %}
-		<p>
-			You are on team {{ user.team.name }} <br />
-		</p>
-		<p>
-		Your bank account balance ${{ user.team.money }} <br />
-		</p>
-	{% else %}
-		<p>
-			You are not on a team.
-		</p>
-	{% end %}
-	{% if user.avatar %}
-		<img src="/avatars/{{ user.avatar }}" />
-	{% end %}
+	<script>
+	$(document).ready(function() {
+        var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/notifications");
+	    ws.onmessage = function (evt) {
+	    	notification = jQuery.parseJSON(evt.data);
+	        if(notification['category'] == 'success') {
+	        	Notifier.success(notification['message'], notification['title']);
+	        } else if (notification['category'] == 'info') {
+	        	Notifier.info(notification['message'], notification['title']);
+	        } else if (notification['category'] == 'warning') {
+	        	Notifier.warning(notification['message'], notification['title']);
+	        } else if (notification['category'] == 'error') {
+	        	Notifier.error(notification['message'], notification['title']);
+	        } else if (notification['category'] == 'custom') {
+	        	Notifier.notify(notification['message'], notification['title'], notification['icon_url']);
+	        }
+	    };
+    });
+	</script>
+	<div class="row">
+		<div class="span4 well">
+			<h2>{{ user.handle }}</h2>
+			<img src="/avatars/{{ user.avatar }}" />
+		</div>
+		<div class="span7 well">
+			<h2>Notifications</h2>
+			{% from models import Notification %}
+			{% for notify in Notification.by_user_id(user.id) %}
+				<div class="well">
+					{{ notify.title }}:{{ notify.message }}
+				</div>
+			{% end %}
+		</div>
+	</div>
 {% end %}

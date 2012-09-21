@@ -25,6 +25,7 @@ import getpass
 
 from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
+from libs.Notifier import Notifier
 from models import dbsession, User, Permission, Team
 
 
@@ -136,6 +137,15 @@ class RecoveryConsole(cmd.Cmd):
             print(INFO + "Successfully created new team.")
         except:
             print(WARN + "Failed to create new team.")
+
+    def do_broadcast(self, ignore):
+        ''' 
+        Send a broadcast notification 
+        Usage: broadcast
+        '''
+        title=raw_input(PROMPT + "Title: ")
+        message=raw_input(PROMPT + "Message: ")
+        Notifier.broadcast_success(title, message)
 
     def do_grant(self, username):
         '''
