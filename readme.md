@@ -30,3 +30,7 @@ Setup TL;DR
 * 'python . create bootstrap' to create, and init the database
 * 'python . serve' To start the application
 
+Other
+------------------------
+Total Physical Source Lines of Code (SLOC) = 4,382
+
