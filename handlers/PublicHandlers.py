@@ -22,7 +22,6 @@ Created on Mar 13, 2012
 
 import logging
 
-from models import dbsession, User, Team, Theme
 from libs.Form import Form
 from libs.Notifier import Notifier
 from libs.ConfigManager import ConfigManager
@@ -30,6 +29,7 @@ from handlers.BaseHandlers import BaseHandler
 from tornado.web import RequestHandler
 from recaptcha.client import captcha
 from string import ascii_letters, digits
+from models import dbsession, User, Team, Theme, RegistrationToken
 
 
 class HomePageHandler(BaseHandler):
@@ -120,24 +120,33 @@ class UserRegistraionHandler(BaseHandler):
                 self.render('public/registration.html',
                             errors=['Password must be 1-%d characters' % config.max_password_length])
             elif len(self.request.arguments['team'][0]) == 0 or Team.by_uuid(self.request.arguments['team'][0]) == None:
-                self.render('public/registration.html', errors=[
-                    "Please select a team to join"], teams=Team.get_all())
+                self.render('public/registration.html', errors=["Please select a team to join"])
+            elif RegistrationToken.by_value(self.get_argument('token')) == None and config.debug == False:
+                self.render('public/registration.html', errors=["Invalid registration token"])
             else:
-                team = Team.by_uuid(self.request.arguments['team'][0])
-                user = User(
-                    account=unicode(self.request.arguments['account']),
-                    handle=unicode(self.request.arguments['handle']),
-                    team_id=team.id,
-                    password=str(self.request.arguments['pass1'][0]),
-                )
-                dbsession.add(user)
-                dbsession.flush()
-                message = "%s has joined %s!" % (user.handle, team.name)
-                Notifier.broadcast_success("New Player", message)
-            self.redirect('/login')
+                self.create_user()
+                self.redirect('/login')
         else:
             self.render('public/registration.html',
                         errors=form.errors)
+
+    def create_user(self):
+        ''' Add user to the database '''
+        team = Team.by_uuid(self.request.arguments['team'][0])
+        user = User(
+            account=unicode(self.request.arguments['account']),
+            handle=unicode(self.request.arguments['handle']),
+            team_id=team.id,
+            password=str(self.request.arguments['pass1'][0]),
+        )
+        token = RegistrationToken.by_value(self.get_argument('token'))
+        if token != None: # May be None if debug mode is on
+            token.used = True
+            dbsession.add(token)
+        dbsession.add(user)
+        dbsession.flush()
+        message = "%s has joined %s!" % (user.handle, team.name)
+        Notifier.broadcast_success("New Player", message)
 
 
 class AboutHandler(BaseHandler):

@@ -1,0 +1,31 @@
+{% extends "../main.html" %}
+
+{% block title %}Award Challenge{% end %}
+
+{% block content %}
+	<div class="container">
+		<table class="table table-hover">
+			<thead>
+                <tr>
+                	<th>#</th>
+                	<th>Token</th>
+                	<th>Used</th>
+                	<th><!-- Delete --></th>
+                </tr>
+            </thead>
+            <tbody>
+            	{% from models import RegistartionToken %}
+            	{% for token in RegistrationToken.all() %}
+	                <tr>
+	                  <td>{{ token.id }}</td>
+	                  <td>{{ token.value }}</td>
+	                  <td>{{ token.used }}</td>
+	                  <td>
+	                  	<button class="btn btn-danger btn-mini" type="button">Delete</button>
+	                  </td>
+	                </tr>
+	            {% end %}
+            </tbody>
+		</table>
+	</div>
+{% end %}

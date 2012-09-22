@@ -54,6 +54,7 @@ from models.Notification import Notification
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
 from models.Theme import Theme
+from models.RegistrationToken import RegistrationToken
 
 # calling this will create the tables at the database
 create_tables = lambda: (

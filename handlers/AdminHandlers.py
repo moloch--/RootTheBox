@@ -33,7 +33,7 @@ from libs.Form import Form
 from libs.SecurityDecorators import *
 from libs.WebSocketManager import WebSocketManager
 from libs.Notification import Notification
-from models import Team, Box
+from models import Team, Box, RegistrationToken
 from handlers.BaseHandlers import BaseHandler
 from tornado.web import RequestHandler
 from string import ascii_letters, digits
@@ -188,3 +188,24 @@ class AdminEditHandler(BaseHandler):
 
     def edit_users(self):
         pass
+
+
+class AdminCreateTokenHandler(BaseHandler):
+    ''' Used to create registration tokens '''
+
+    @authorized('admin')
+    @restrict_ip_address
+    def get(self, *args, **kwargs):
+        token = RegistrationToken()
+        dbsession.add(token)
+        dbsession.flush()
+        self.render('admin/tokens/generate_tokens.html', token=token)
+
+
+class AdminViewTokenHandler(BaseHandler):
+    ''' Used to create registration tokens '''
+
+    @authorized('admin')
+    @restrict_ip_address
+    def get(self, *args, **kwargs):
+        self.render('admin/tokens/view_tokens.html')
