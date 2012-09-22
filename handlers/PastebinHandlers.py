@@ -97,11 +97,7 @@ class DeletePasteHandler(BaseHandler):
             paste_uuid = self.get_argument("paste_uuid")
             paste = PasteBin.by_uuid(paste_uuid)
             user = self.get_current_user()
-            if paste == None or paste.team_id != user.team.id:
-                self.render("pastebin/view.html", errors=["Paste does not exist."])
-            else:
+            if paste != None and paste.team_id == user.team.id:
                 dbsession.delete(paste)
                 dbsession.flush()
-                self.redirect("/user/share/pastebin")
-        else:
-            self.render("pastebin/view.html", errors=form.errors)
+        self.redirect("/user/share/pastebin")

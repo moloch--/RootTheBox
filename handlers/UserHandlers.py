@@ -103,6 +103,7 @@ class ShareUploadHandler(BaseHandler):
 
 
 class ShareDownloadHandler(BaseHandler):
+    ''' Download shared files from here '''
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -155,11 +156,11 @@ class SettingsHandler(BaseHandler):
 
     def post_avatar(self, *args, **kwargs):
         ''' Saves avatar - Reads file header an only allows approved formats '''
-        user = User.by_name(self.session.data['name'])
+        user = User.by_id(self.session['user_id'])
         if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
             if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
                 if user.avatar == "default_avatar.jpeg":
-                    user.avatar = unicode(str(uuid1()))
+                    user.avatar = unicode(uuid4())
                 elif os.path.exists(self.application.settings['avatar_dir'] + '/' + user.avatar):
                     os.unlink(self.application.
                               settings['avatar_dir'] + '/' + user.avatar)
@@ -257,30 +258,6 @@ class SettingsHandler(BaseHandler):
                 return False
         else:
             return True
-
-
-class TeamViewHandler(BaseHandler):
-
-    @authenticated
-    def get(self, *args, **kwargs):
-        self.render("user/team.html")
-
-
-class TeamAjaxHandler(BaseHandler):
-
-    @authenticated
-    def get(self, *args, **kwargs):
-        ''' Serves team information '''
-        try:
-            team_uuid = self.get_argument("team_uuid")
-        except:
-            self.render("blank.html")
-        team = Team.by_uuid(team_uuid)
-        if team != None:
-            self.render("user/team_ajax.html", team=team)
-        else:
-            self.render("blank.html")
-
 
 class ReporterHandler(BaseHandler):
 

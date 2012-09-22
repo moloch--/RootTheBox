@@ -3,6 +3,7 @@
 {% block title %}PasteBin{% end %}
 
 {% block content %}
+	{% include ../notifier.html %}
 	<script>
 		function get_paste(uuid) {
 			$.get('/user/share/pastebin/display?paste_uuid='+uuid, function(data) {

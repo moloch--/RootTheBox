@@ -2,21 +2,50 @@
 
 {% block title %}User Index{% end %}
 
+{% block header %}
+<script type="text/javascript" src="/static/js/libs/pikachoose/jquery.jcarousel.min.js"></script>
+<script type="text/javascript" src="/static/js/libs/pikachoose/jquery.pikachoose.js"></script>
+<link type="text/css" rel="stylesheet" href="/static/css/team_css3.css" />
+<link type="text/css" rel="stylesheet" href="/static/css/team_styles.css" />
+{% end %}
+
 {% block content %}
 	{% include ../notifier.html %}
 	<div class="row">
-		<div class="span4 well">
-			<h2>{{ user.handle }}</h2>
-			<img src="/avatars/{{ user.avatar }}" />
-		</div>
 		<div class="span7 well">
+			<h3>Welcome Agent {{ user.handle }}</h3>
+			<strong>Current Level:</strong> 0 <br />
+			<strong>Bank Account:</strong> ${{ user.team.money }} <br />
+			<strong>Active Bots:</strong> 0 <br />
+			<strong>Flags Captured:</strong> 0 <br />
+		</div>
+		<div class="span11 well">
 			<h2>Notifications</h2>
 			{% from models import Notification %}
 			{% for notify in Notification.by_user_id(user.id) %}
 				<div class="well">
-					{{ notify.title }}:{{ notify.message }}
+					<strong>{{ notify.title }}</strong> {{ notify.created.strftime("%I:%M%p") }}<br />
+					{{ notify.message }}
 				</div>
 			{% end %}
 		</div>
 	</div>
+	<div class="row">
+		<div class="span7 well">
+			<h3>{{ user.team.name }}</h3>
+			<div class="pikachoose">
+				<ul id="pikame">
+					{% for teammate in user.team.members %}
+						<li><a href="#"><img src="/avatars/{{ teammate.avatar }}" alt="picture" /></a>
+						<span>{{ teammate.handle }}</span></li>
+					{% end %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function() {
+			$("#pikame").PikaChoose();
+		});
+	</script>
 {% end %}

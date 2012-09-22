@@ -22,7 +22,7 @@ Created on Mar 13, 2012
 
 import logging
 
-from models import User, Team, Theme
+from models import dbsession, User, Team, Theme
 from libs.Form import Form
 from libs.Notifier import Notifier
 from libs.ConfigManager import ConfigManager
@@ -130,8 +130,8 @@ class UserRegistraionHandler(BaseHandler):
                     team_id=team.id,
                     password=str(self.request.arguments['pass1'][0]),
                 )
-                self.dbsession.add(user)
-                self.dbsession.flush()
+                dbsession.add(user)
+                dbsession.flush()
                 message = "%s has joined %s!" % (user.handle, team.name)
                 Notifier.broadcast_success("New Player", message)
             self.redirect('/login')

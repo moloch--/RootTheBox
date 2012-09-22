@@ -3,7 +3,7 @@
 		<a class="brand">PasteBin</a>
 		<ul class="nav">
 			<li><a onclick="create()" href="#">Create</a></li>
-			<li><a onclick="delete_paste('{{ paste.uuid }}')" href="#">Delete</a></li>
+			<li><a href="/user/share/pastebin/delete?paste_uuid={{ paste.uuid }}">Delete</a></li>
 		</ul>
 	</div>
 </div>
@@ -19,10 +19,10 @@
 			{% end %}
 		{% end %}
 		{% if paste != None %}
-			<h3>{{ paste.name }}: {{ paste.created }}</h3>
-			<pre>
+			<h3>{{ paste.name }} - {{ paste.created.strftime("%I:%M%p") }}</h3>
+<pre>
 {{ paste.contents }}
-			</pre>
+</pre>
 		{% end %}
     </div>
 </div><!--/row-->

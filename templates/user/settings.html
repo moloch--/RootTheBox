@@ -8,89 +8,91 @@
 {% block title %}Settings{% end %}
 
 {% block content %}
-	<h1>Settings</h1>
-	<br />
-  {% if errors != None and len(errors) != 0 %}
-    {% for error in errors %}
-      <div class="alert alert-error">
-        <a class="close" data-dismiss="alert" href="#">×</a>
-        <h4 class="alert-heading">ERROR</h4>
-        {{ error }}
-      </div>
+  {% include ../notifier.html %}
+  <div class="container">
+  	<h1>Settings</h1>
+  	<br />
+    {% if errors != None and len(errors) != 0 %}
+      {% for error in errors %}
+        <div class="alert alert-error">
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">ERROR</h4>
+          {{ error }}
+        </div>
+      {% end %}
     {% end %}
-  {% end %}
-  {% if success != None and len(success) != 0 %}
-    {% for message in success %}
-      <div class="alert alert-error">
-        <a class="close" data-dismiss="alert" href="#">×</a>
-        <h4 class="alert-heading">SUCCESS</h4>
-        {{ message }}
-      </div>
+    {% if success != None and len(success) != 0 %}
+      {% for message in success %}
+        <div class="alert alert-error">
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">SUCCESS</h4>
+          {{ message }}
+        </div>
+      {% end %}
     {% end %}
-  {% end %}
-  <div class="row">
-    <div class="span5 well">
-        <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">  
-          {% raw xsrf_form_html() %}
-          <fieldset>
-          	<legend>Change Avatar</legend>
-            <p>
-              <label for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
-              <input type="file" name="avatar" id="avatar" />
-            </p>  
-          </fieldset>
-          <p class="submit">
-            <button class="btn btn-primary btn-large" type="submit"> Change Avatar </button>
-          </p>
-        </form>
-    </div>
-    <div class="span6 well">
-      <form action="/user/settings/theme" method="post">  
-          {% raw xsrf_form_html() %}
-          <fieldset>
-            <legend>Change Theme&nbsp;&nbsp;(Current theme: {{ current_theme.name }})</legend>
+    <div class="row">
+      <div class="span5 well">
+          <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">  
+            {% raw xsrf_form_html() %}
+            <fieldset>
+            	<legend>Change Avatar</legend>
               <p>
-                <label for="theme_uuid">Select a Theme</label>
-                <select name="theme_uuid">
-                    <option value=""></option>
-                    {% from models import Theme %}
-                    {% for theme in Theme.all() %}
-                      <option value="{{ theme.uuid }}">{{ theme.name }}</option>
-                    {% end %}
-                </select>
-              </p>
+                <label for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
+                <input type="file" name="avatar" id="avatar" />
+              </p>  
+            </fieldset>
+            <p class="submit">
+              <button class="btn btn-primary btn-large" type="submit"> Change Avatar </button>
+            </p>
+          </form>
+      </div>
+      <div class="span6 well">
+        <form action="/user/settings/theme" method="post">  
+            {% raw xsrf_form_html() %}
+            <fieldset>
+              <legend>Change Theme&nbsp;&nbsp;(Current theme: {{ current_theme.name }})</legend>
+                <p>
+                  <label for="theme_uuid">Select a Theme</label>
+                  <select name="theme_uuid">
+                      <option value=""></option>
+                      {% from models import Theme %}
+                      {% for theme in Theme.all() %}
+                        <option value="{{ theme.uuid }}">{{ theme.name }}</option>
+                      {% end %}
+                  </select>
+                </p>
+            </fieldset>
+            <p class="submit">
+              <button class="btn btn-primary btn-large" type="submit"> Change Theme </button>
+            </p>   
+          </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span5 well">
+        <form action="/user/settings/changepassword" method="post" autocomplete="off">  
+          {% raw xsrf_form_html() %}
+          <fieldset>
+            <legend>Change Password</legend>
+            <p>
+              <label for="old_password">Old Password</label>
+              <input type="password" name="old_password" id="old_password" />
+            </p>  
+            <p>
+              <label for="new_password">New Password</label>
+              <input type="password" name="new_password" id="new_password" />
+            </p>
+            <p>
+              <label for="new_password2">Confirm New Password</label>
+              <input type="password" name="new_password2" id="new_password2" />
+            </p>
+            {% module Recaptcha() %}
           </fieldset>
-          <p class="submit">
-            <button class="btn btn-primary btn-large" type="submit"> Change Theme </button>
-          </p>   
+            <p class="submit">
+              <button class="btn btn-primary btn-large" type="submit"> Change Password </button>
+            </p>  
         </form>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="span5 well">
-      <form action="/user/settings/changepassword" method="post" autocomplete="off">  
-        {% raw xsrf_form_html() %}
-        <fieldset>
-          <legend>Change Password</legend>
-          <p>
-            <label for="old_password">Old Password</label>
-            <input type="password" name="old_password" id="old_password" />
-          </p>  
-          <p>
-            <label for="new_password">New Password</label>
-            <input type="password" name="new_password" id="new_password" />
-          </p>
-          <p>
-            <label for="new_password2">Confirm New Password</label>
-            <input type="password" name="new_password2" id="new_password2" />
-          </p>
-          {% module Recaptcha() %}
-        </fieldset>
-          <p class="submit">
-            <button class="btn btn-primary btn-large" type="submit"> Change Password </button>
-          </p>  
-      </form>
-    </div>
-
   </div>
 {% end %}
