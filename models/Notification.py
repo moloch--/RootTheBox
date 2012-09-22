@@ -40,7 +40,7 @@ class Notification(BaseObject):
     message = Column(Unicode(255), nullable=False)
     viewed = Column(Boolean, default=False)
     icon_url = Column(Unicode(255), nullable=True)
-    category = Column(Unicode(64), nullable=False) # Success/Info/Warning/Error/Custom
+    category = Column(Unicode(64), nullable=False)
 
     @classmethod
     def all(cls):

@@ -3,25 +3,7 @@
 {% block title %}User Index{% end %}
 
 {% block content %}
-	<script>
-	$(document).ready(function() {
-        var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/notifications");
-	    ws.onmessage = function (evt) {
-	    	notification = jQuery.parseJSON(evt.data);
-	        if(notification['category'] == 'success') {
-	        	Notifier.success(notification['message'], notification['title']);
-	        } else if (notification['category'] == 'info') {
-	        	Notifier.info(notification['message'], notification['title']);
-	        } else if (notification['category'] == 'warning') {
-	        	Notifier.warning(notification['message'], notification['title']);
-	        } else if (notification['category'] == 'error') {
-	        	Notifier.error(notification['message'], notification['title']);
-	        } else if (notification['category'] == 'custom') {
-	        	Notifier.notify(notification['message'], notification['title'], notification['icon_url']);
-	        }
-	    };
-    });
-	</script>
+	{% include ../notifier.html %}
 	<div class="row">
 		<div class="span4 well">
 			<h2>{{ user.handle }}</h2>
