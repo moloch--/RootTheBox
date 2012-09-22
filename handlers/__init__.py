@@ -63,36 +63,30 @@ app = Application([
                    StaticFileHandler, {'path': 'files/avatars'}),
 
                   # Reporter Handlers - Communication with reporters
-                  (r'/reporter/register', ReporterRegistrationHandler),
+                  #(r'/reporter/register', ReporterRegistrationHandler),
 
                   # User Handlers - Serves user related pages
                   # File share Handlers
                   (r'/user/shares/download(.*)', ShareDownloadHandler),
                   (r'/user/share/files', ShareUploadHandler),
                   
-                  # Text share Handlers
-                  (r'/user/share/text', PastebinHandler),
-                  (r'/pastebin/view(.*)', DisplayPostHandler),
-                  (r'/pastebin/delete(.*)', DeletePostHandler),
+                  # PasteBin text sharing handlers
+                  (r'/user/share/pastebin', PasteHandler),
+                  (r'/user/share/pastebin/create', CreatePasteHandler),
+                  (r'/user/share/pastebin/display', DisplayPasteHandler),
+                  (r'/user/share/pastebin/delete', DeletePasteHandler),
                   
                   # User handlers
-                  (r'/user/settings(.*)', SettingsHandler),
-                  (r'/user/team/ajax(.*)', TeamAjaxHandler),
-                  (r'/user/team', TeamViewHandler),
-                  (r'/user/reporter', ReporterHandler),
                   (r'/user', HomeHandler),
+                  (r'/user/settings(.*)', SettingsHandler),
 
-                  # Hashes Handlers - Serves hash related pages
-                  (r'/hashes', HashesHandler),
-                  (r'/hashes/ajax(.*)', HashesAjaxHandler),
-                  (r'/wallofsheep', WallOfSheepHandler),
 
                   # Scoreboard Handlers - Severs scoreboard related
                   # pages
-                  (r'/scoreboard', ScoreBoardHandler),
-                  (r'/all_time(.*)', AllTimeHandler),
-                  (r'/pie_chart(.*)', PieChartHandler),
-                  (r'/bar_chart(.*)', BarChartHandler),
+                  #(r'/scoreboard', ScoreBoardHandler),
+                  #(r'/all_time(.*)', AllTimeHandler),
+                  #(r'/pie_chart(.*)', PieChartHandler),
+                  #(r'/bar_chart(.*)', BarChartHandler),
 
                   # Admin Handlers - Administration pages
                   (r'/admin/create/(.*)', AdminCreateHandler),
@@ -111,8 +105,9 @@ app = Application([
 
                   # Error handlers - Serves error pages
                   (r'/403', UnauthorizedHandler),
-                  (r'/(.*).php(.*)', NoobHandler),
+                  (r'/(.*).php', NoobHandler),
                   (r'/admin', NoobHandler),
+                  (r'(.*)phpmyadmin(.*)', NoobHandler),
                   (r'/administrator', NoobHandler),
                   (r'/(.*)', NotFoundHandler)
                   ],

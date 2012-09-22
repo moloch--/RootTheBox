@@ -1,20 +1,28 @@
-{% extends "../main.html" %}
-
-{% block header %}
-	<script type="text/javascript" src="/static/js/sh/shCore.js"></script>
-	<script type="text/javascript" src="/static/js/sh/shBrushJScript.js"></script>
-	<link type="text/css" rel="stylesheet" href="/static/css/sh/shCoreDefault.css"/>
-	<script type="text/javascript">SyntaxHighlighter.all();</script>
-{% end %}
-
-{% block title %}Pastebin{% end %}
-
-{% block content %}
-	<h1>{{ name }}</h1>
-	<br />
-		<a href="/pastebin">&lt;&lt; Back</a>
-		<pre class="brush: js;">
-			{{ contents }}
-		</pre>
-	<a href="/pastebin">&lt;&lt; Back</a>
-{% end %}
+<div class="navbar navbar-inverse">
+	<div class="navbar-inner">
+		<a class="brand">PasteBin</a>
+		<ul class="nav">
+			<li><a onclick="create()" href="#">Create</a></li>
+			<li><a onclick="delete_paste('{{ paste.uuid }}')" href="#">Delete</a></li>
+		</ul>
+	</div>
+</div>
+<div class="row-fluid">
+    <div class="span12 well animated fadeIn">
+		{% if errors != None and len(errors) != 0 %}
+			{% for error in errors %}
+				<div class="alert alert-error">
+					<a class="close" data-dismiss="alert" href="#">×</a>
+					<h4 class="alert-heading">ERROR</h4>
+					{{ error }}
+				</div>
+			{% end %}
+		{% end %}
+		{% if paste != None %}
+			<h3>{{ paste.name }}: {{ paste.created }}</h3>
+			<pre>
+{{ paste.contents }}
+			</pre>
+		{% end %}
+    </div>
+</div><!--/row-->

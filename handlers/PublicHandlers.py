@@ -24,6 +24,7 @@ import logging
 
 from models import User, Team, Theme
 from libs.Form import Form
+from libs.Notifier import Notifier
 from libs.ConfigManager import ConfigManager
 from handlers.BaseHandlers import BaseHandler
 from tornado.web import RequestHandler
@@ -78,7 +79,7 @@ class LoginHandler(BaseHandler):
 
     def failed_login(self):
         ''' Called if username or password is invalid '''
-        logging.info("Failed login attempt from %s " % self.request.remote_ip)
+        logging.info("Failed login attempt from: %s" % self.request.remote_ip)
         self.render('public/login.html', errors=[
             "Bad username and/or password, try again"])
 
@@ -131,13 +132,12 @@ class UserRegistraionHandler(BaseHandler):
                 )
                 self.dbsession.add(user)
                 self.dbsession.flush()
+                message = "%s has joined %s!" % (user.handle, team.name)
+                Notifier.broadcast_success("New Player", message)
             self.redirect('/login')
-        elif 0 < len(self.form.errors):
-            self.render('public/registration.html',
-                        errors=self.form.errors)
         else:
-            self.render('public/registration.html', errors=[
-                'Unknown error'])
+            self.render('public/registration.html',
+                        errors=form.errors)
 
 
 class AboutHandler(BaseHandler):

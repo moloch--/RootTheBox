@@ -85,16 +85,6 @@ def award_points(box, user, auth):
         value = box.user_value
         description = "%s got user level access on %s" % (
             user.display_name, box.box_name)
-    action = Action(
-        classification=unicode("Box Pwnage"),
-        description=unicode(description),
-        value=value,
-        user_id=user.id
-    )
-    user.dirty = True
-    dbsession.add(action)
-    dbsession.add(user)
-    dbsession.flush()
 
 
 class AuthenticateReporter():

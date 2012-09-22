@@ -1,60 +1,41 @@
 {% extends "../main.html" %}
 
-{% block header %}
-	<script type="text/javascript" src="/static/js/sh/shCore.js"></script>
-	<script type="text/javascript" src="/static/js/sh/shBrushJScript.js"></script>
-	<link type="text/css" rel="stylesheet" href="/static/css/sh/shCoreDefault.css"/>
-	<script type="text/javascript">
-	SyntaxHighlighter.all();
-	</script>
-{% end %}
-
-{% block title %}Pastebin{% end %}
+{% block title %}PasteBin{% end %}
 
 {% block content %}
-
-	<h1>Pastebin</h1>
-	<h2>Existing Posts</h2>
-	<div id="postList">
-		{% if len(posts) == 0 %}
-			No Existing Posts
-		{% else %}
-			<ol>
-			{% for post in posts %}
-				<li>
-					<a href="/pastebin/view?post_id={{post.id}}">{{post.name}}</a> : 
-					<a href="/pastebin/delete?post_id={{post.id}}">Delete</a>
-				</li>
-			{% end %}
-			<ol>
-		{% end %}
-	</div>
-	<br />
-	<h2>Create New Post</h2>
-	<div id="tinymce">
-	<form method="post" action="/pastebin">
-		{% raw xsrf_form_html() %}
-		<lable>Post Name:</label> <input type="text" name="name"> <br />
-		<textarea id="post_content" name="content" style="width: 100%; height: 100px"></textarea>
-		<input type="submit" value="Submit Post!">
-	</form>
-	</div>
-	<br />
-	<h2>Preview</h2>
-	<div id="preview_container">
-		<pre class="brush: js;" id="preview">
-		</pre>
-	</div>
-
 	<script>
-	$("#post_content").keyup(function(event) {
-		$('#preview_container').html("<pre class=\"brush: js;\" id=\"preview\"></pre>");
-		$('#preview').text($(this).val());
-		SyntaxHighlighter.highlight();
-	});
-	
-	function clean(text) {
-		
-	}
+		function get_paste(uuid) {
+			$.get('/user/share/pastebin/display?paste_uuid='+uuid, function(data) {
+				$('#display-paste').html(data);
+			});
+		}
+		function create() {
+			$.get('/user/share/pastebin/create', function(data) {
+				$('#display-paste').html(data);
+			});
+		}
 	</script>
+	<div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+            	<li class="nav-header">Team Shares</li>
+            	{% from models import PasteBin %}
+            	{% for paste in PasteBin.by_team_id(user.team.id) %}
+            		<li><a onclick="get_paste('{{ paste.uuid }}')" href="#">{{ paste.name }}</a></li>
+            	{% end %}
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div id="display-paste" class="span9">
+			<div class="navbar navbar-inverse">
+				<div class="navbar-inner">
+					<a class="brand">PasteBin</a>
+					<ul class="nav">
+						<li><a onclick="create()" href="#">Create</a></li>
+					</ul>
+				</div>
+			</div>
+        </div><!--/span-->
+    </div>
 {% end %}

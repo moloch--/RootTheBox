@@ -3,65 +3,67 @@
 {% block title %}Registration{% end %}
 
 {% block content %}
-  <h1>Registration</h1>
-  <br />
-  {% if errors != None and len(errors) != 0 %}
-    {% for error in errors %}
-      <div class="alert alert-error">
-        <a class="close" data-dismiss="alert" href="#">×</a>
-        <h4 class="alert-heading">ERROR</h4>
-        {{ error }}
-      </div>
+  <div class="container">
+    <h1>Registration</h1>
+    <br />
+    {% if errors != None and len(errors) != 0 %}
+      {% for error in errors %}
+        <div class="alert alert-error">
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">ERROR</h4>
+          {{ error }}
+        </div>
+      {% end %}
     {% end %}
-  {% end %}
-    <style> 
-    .black-option
-    { 
-     color: black; 
-     font-size: 2em; 
-    } 
-   </style> 
-    <div class="well">
-      <form action="/registration" method="post">  
-        {% raw xsrf_form_html() %}
-        <fieldset><legend>Agent Enrollment</legend>
-          <p>
-            <label for="account">Account Name (Alpha-numeric Only)</label>
-            <input name="account" id="account" placeholder="Account Name" type="text" />
+      <style> 
+      .black-option
+      { 
+       color: black; 
+       font-size: 2em; 
+      } 
+     </style> 
+      <div class="well">
+        <form action="/registration" method="post">  
+          {% raw xsrf_form_html() %}
+          <fieldset><legend>Agent Enrollment</legend>
+            <p>
+              <label for="account">Account Name (Alpha-numeric Only)</label>
+              <input name="account" id="account" placeholder="Account Name" type="text" />
+            </p>
+            <p>
+              <label for="handle">Hacker Name (Alpha-numeric Only)</label>
+              <input name="handle" placeholder="Hacker Name" type="text" />
+            </p>
+            <p>
+              <label for="team">Join Team</label>
+              <select name="team">
+                <option value=""></option>
+                {% from models import Team %}
+                {% for team in Team.all() %}
+                  <option class="black-option" value="{{ team.uuid }}">{{ team.name }}</option>
+                {% end %}
+              </select>
+            </p>
+            <p>
+              <label for="pass1">Password (Ascii Only)</label>
+              <input name="pass1" placeholder="Password" type="password" autocomplete="off" />
+            </p>
+            <p>
+              <label for="pass2">Confirm Password</label>
+              <input name="pass2" placeholder="Confirm Password" type="password" autocomplete="off" />
+            </p>
+            <p>
+              <label for="token">Registration Token</label>
+              <input name="token" placeholder="Token" type="text" autocomplete="off" />
+            </p>     
+          </fieldset>
+          <p class="submit">
+            <button class="btn btn-primary btn-large" type="submit">&nbsp;Register Account&nbsp;</button>
           </p>
-          <p>
-            <label for="handle">Hacker Name (Alpha-numeric Only)</label>
-            <input name="handle" placeholder="Hacker Name" type="text" />
-          </p>
-          <p>
-            <label for="team">Join Team</label>
-            <select name="team">
-              <option value=""></option>
-              {% from models import Team %}
-              {% for team in Team.all() %}
-                <option class="black-option" value="{{ team.uuid }}">{{ team.name }}</option>
-              {% end %}
-            </select>
-          </p>
-          <p>
-            <label for="pass1">Password (Ascii Only)</label>
-            <input name="pass1" placeholder="Password" type="password" autocomplete="off" />
-          </p>
-          <p>
-            <label for="pass2">Confirm Password</label>
-            <input name="pass2" placeholder="Confirm Password" type="password" autocomplete="off" />
-          </p>
-          <p>
-            <label for="token">Registration Token</label>
-            <input name="token" placeholder="Token" type="text" autocomplete="off" />
-          </p>     
-        </fieldset>
-        <p class="submit">
-          <button class="btn btn-primary btn-large" type="submit">&nbsp;Register Account&nbsp;</button>
-        </p>
-      </form>
-    </div>
-    <script>
-        document.getElementById('account').focus();
-    </script>
+        </form>
+      </div>
+      <script>
+          document.getElementById('account').focus();
+      </script>
+  </div>
 {% end %}

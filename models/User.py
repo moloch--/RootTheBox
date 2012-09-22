@@ -52,8 +52,6 @@ class User(BaseObject):
             self, '_handle', self.__class__.filter_string(handle, " _-"))
     ))
     team_id = Column(Integer, ForeignKey('team.id'))
-    pastes = relationship("PasteBin", backref=backref("User",
-                                                      lazy="joined"), cascade="all, delete-orphan")
     permissions = relationship("Permission", backref=backref("User",
                                                              lazy="joined"), cascade="all, delete-orphan")
     notifications = relationship("Notification", backref=backref(

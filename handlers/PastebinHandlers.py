@@ -23,81 +23,85 @@ import logging
 
 from handlers.BaseHandlers import BaseHandler
 from models import dbsession, User, PasteBin
+from libs.Form import Form
 from libs.SecurityDecorators import authenticated
 
 
-
-class PastebinHandler(BaseHandler):
-
+class PasteHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
+        ''' Reners the main page for PasteBin '''
+        self.render('pastebin/view.html', user=self.get_current_user())
+
+
+class CreatePasteHandler(BaseHandler):
+    ''' Handles team based text sharing '''
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        ''' AJAX // Display team text shares '''
         user = self.get_current_user()
-        if user.team != None:
-            self.render('pastebin/view.html', posts=user.team.posts)
-        else:
-            self.render('pastebin/view.html', posts=[])
+        self.render('pastebin/create.html', errors=None)
 
     @authenticated
     def post(self, *args, **kwargs):
-        try:
-            content = self.get_argument("content")
-            new_name = self.get_argument("name")
-        except:
-            self.render(
-                'pastebin/error.html', errors="Please Enter something!")
-        user = self.get_current_user()
-        post = Post(
-            name=new_name,
-            contents=content,
-            user_id=user.id)
-        user.posts.append(post)
-        self.dbsession.add(user)
-        self.dbsession.flush()
-        self.redirect('/pastebin')
+        ''' Creates a new text share '''
+        form = Form(
+            name="Please enter a name",
+            content="Please provide some content",
+        )
+        if form.validate(self.request.arguments):
+            user = self.get_current_user()
+            paste = PasteBin(
+                name=unicode(self.get_argument("name")),
+                contents=unicode(self.get_argument("content")),
+                team_id=user.team.id
+            )
+            dbsession.add(paste)
+            dbsession.flush()
+        self.redirect('/user/share/pastebin')
 
 
-class DisplayPostHandler(BaseHandler):
-
+class DisplayPasteHandler(BaseHandler):
+    ''' Displays shared texts '''
 
     @authenticated
     def get(self, *args, **kwargs):
-        user = self.get_current_user()
-        try:
-            post_id = self.get_argument("post_id")
-        except:
-            self.render('pastebin/error.html', errors="Invalid post id!")
-
-        if user.team != None:
-            posts = user.team.posts
-            post = self.dbsession.query(Post).filter_by(id=post_id).first()
-            if(post in posts):
-                self.render('pastebin/display.html',
-                            contents=post.contents, name=post.name)
+        ''' AJAX // Retrieves a paste from the database '''
+        form = Form(
+            paste_uuid="Paste does not exist.",
+        )
+        if form.validate(self.request.arguments):
+            paste_uuid = self.get_argument("paste_uuid")
+            user = self.get_current_user()
+            paste = PasteBin.by_uuid(paste_uuid)
+            if paste == None or paste.team_id != user.team.id:
+                self.render("pastebin/display.html", errors=["Paste does not exist."], paste=None)
             else:
-                self.render('pastebin/error.html', errors="Invalid Post Id!")
+                self.render("pastebin/display.html", errors=None, paste=paste)
         else:
-            self.render('pastebin/view.html', posts=[])
+            self.render("pastebin/display.html", errors=form.errors, paste=None)
 
 
-class DeletePostHandler(BaseHandler):
-
+class DeletePasteHandler(BaseHandler):
+    ''' Deletes shared texts '''
 
     @authenticated
     def get(self, *args, **kwargs):
-        user = self.get_current_user()
-        try:
-            post_id = self.get_argument("post_id")
-        except:
-            self.render('pastebin/error.html', errors="Invalid post id!")
-
-        if user.team != None:
-            posts = user.team.posts
-            post = self.dbsession.query(Post).filter_by(id=post_id).first()
-            if(post in posts):
-                self.dbsession.delete(post)
-                self.dbsession.flush()
-                posts = user.team.posts
-            self.redirect('/pastebin')
+        ''' AJAX // Delete a paste object from the database '''
+        form = Form(
+            paste_uuid="Paste does not exist.",
+        )
+        if form.validate(self.request.arguments):
+            paste_uuid = self.get_argument("paste_uuid")
+            paste = PasteBin.by_uuid(paste_uuid)
+            user = self.get_current_user()
+            if paste == None or paste.team_id != user.team.id:
+                self.render("pastebin/view.html", errors=["Paste does not exist."])
+            else:
+                dbsession.delete(paste)
+                dbsession.flush()
+                self.redirect("/user/share/pastebin")
         else:
-            self.render('pastebin/view.html', posts=[])
+            self.render("pastebin/view.html", errors=form.errors)

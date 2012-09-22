@@ -19,8 +19,11 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
-from sqlalchemy import Column, ForeignKey
+
+from uuid import uuid4
+from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.types import Unicode, Integer
+from models import dbsession
 from models.BaseGameObject import BaseObject
 
 
@@ -29,7 +32,8 @@ class PasteBin(BaseObject):
 
     name = Column(Unicode(255), nullable=False)
     contents = Column(Unicode(2048), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
 
     @classmethod
     def all(cls):
@@ -40,6 +44,19 @@ class PasteBin(BaseObject):
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
         return dbsession.query(cls).filter_by(id=ident).first()
+
+    @classmethod
+    def by_uuid(cls, paste_uuid):
+        ''' Get a paste object by uuid '''
+        return dbsession.query(cls).filter_by(uuid=paste_uuid).first()
+
+    @classmethod
+    def by_team_id(cls, team_id):
+        ''' Return all paste objects for a given team '''
+        return dbsession.query(cls).filter_by(team_id=team_id).order_by(desc(cls.created)).all()
+
+    def __str__(self):
+        return self.name
 
     def __repr__(self):
         return ('<Post - name:%s, user_id:%d>' % (self.name, self.user_id))

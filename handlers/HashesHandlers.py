@@ -31,6 +31,7 @@ from handlers.BaseHandlers import BaseHandler
 
 
 class HashesHandler(BaseHandler):
+    ''' Displays user password hashes '''
 
     @authenticated
     def get(self, *args, **kwargs):

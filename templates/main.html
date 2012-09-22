@@ -25,13 +25,12 @@
     <script src="/static/js/jquery.js" type="text/javascript"></script>
     <script src="/static/js/notifier.js" type="text/javascript" ></script>
     <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
+    {% block header %}{% end %}
   </head>
   <body>
     {% module Menu() %}
-    <div class="container">
-      <div class="animated fadeIn">
+    <div class="container-fluid animated fadeIn">
           {% block content %} Content Missing {% end %}
-      </div><!--/row-->
       <hr>
       <footer>
         <p>
@@ -41,6 +40,5 @@
         </p>
       </footer>
     </div><!--/.fluid-container--> 
-    {% block body %} {% end %}
   </body>
 </html>

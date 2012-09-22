@@ -19,9 +19,11 @@ Created on Sep 20, 2012
     limitations under the License.
 '''
 
+
 import logging
 import threading
 
+from urlparse import urlparse
 from libs.Singleton import Singleton
 from models import dbsession, Notification, User, Team
 
@@ -213,6 +215,10 @@ class Notifier(object):
             category=category,
         )
         if icon != None:
-            notification.icon = icon
+            url = urlparse(icon)
+            if url.scheme == 'http':
+                notification.icon = icon
+            else:
+                logging.warn("Notifier failed to parse icon url.")
         dbsession.add(notification)
         dbsession.flush()

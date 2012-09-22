@@ -29,6 +29,7 @@ from base64 import b64encode, b64decode
 from models import dbsession, User, Team, FileUpload, Theme
 from mimetypes import guess_type
 from libs.Form import Form
+from libs.Notifier import Notifier
 from libs.SecurityDecorators import authenticated
 from tornado.web import RequestHandler
 from BaseHandlers import BaseHandler
@@ -96,6 +97,8 @@ class ShareUploadHandler(BaseHandler):
                 team_id=user.team.id
             )
             dbsession.add(file_upload)
+            message = "%s shared %s" % (user.handle, file_name)
+            Notifier.team_success(user.team, "File Shared", message)
             self.redirect("/user/share/files")
 
 

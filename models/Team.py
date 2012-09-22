@@ -45,6 +45,7 @@ class Team(BaseObject):
     members = relationship("User", backref="Team")
     listen_port = Column(Integer, default=lambda: randint(1024, 65535), unique=True, nullable=False)
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
+    pastes = relationship("PasteBin", backref=backref("Team", lazy="dynamic"))
     money = Column(Integer, default=0, nullable=False)
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
 
@@ -77,23 +78,6 @@ class Team(BaseObject):
     def filter_string(cls, string, extra_chars=''):
         char_white_list = ascii_letters + digits + extra_chars
         return filter(lambda char: char in char_white_list, string)
-
-    @property
-    def pastes(self):
-        ''' Returns all of the pastes the team has '''
-        pastes = []
-        for user in self.members:
-            pastes += user.pastes
-        pastes.sort(key=lambda paste: paste.created)
-        return pastes
-
-    @property
-    def boxes(self):
-        ''' Returns a list of box object controlled by the team members '''
-        boxes = []
-        for user in self.members:
-            boxes += user.controlled_boxes
-        return boxes
 
     def file_by_file_name(self, file_name):
         ''' Return file object based on file_name '''
