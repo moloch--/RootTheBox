@@ -25,13 +25,14 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, Boolean
 from models.BaseGameObject import BaseObject
+from models import dbsession
 
 
 class RegistrationToken(BaseObject):
     ''' User definition '''
 
-    value = Column(Unicode(6, unique=True, nullable=False, default=lambda: unicode(urandom(3).encode('hex'))))
-    used = Column(Boolean(nullable=False, default=False))
+    value = Column(Unicode(6), unique=True, nullable=False, default=lambda: unicode(urandom(3).encode('hex')))
+    used = Column(Boolean(), nullable=False, default=False)
 
     @classmethod
     def all(cls):

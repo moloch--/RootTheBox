@@ -121,7 +121,7 @@ class UserRegistraionHandler(BaseHandler):
                             errors=['Password must be 1-%d characters' % config.max_password_length])
             elif len(self.request.arguments['team'][0]) == 0 or Team.by_uuid(self.request.arguments['team'][0]) == None:
                 self.render('public/registration.html', errors=["Please select a team to join"])
-            elif RegistrationToken.by_value(self.get_argument('token')) == None and config.debug == False:
+            elif RegistrationToken.by_value(self.get_argument('token').lower()) == None and config.debug == False:
                 self.render('public/registration.html', errors=["Invalid registration token"])
             else:
                 self.create_user()
@@ -139,7 +139,7 @@ class UserRegistraionHandler(BaseHandler):
             team_id=team.id,
             password=str(self.request.arguments['pass1'][0]),
         )
-        token = RegistrationToken.by_value(self.get_argument('token'))
+        token = RegistrationToken.by_value(self.get_argument('token').lower())
         if token != None: # May be None if debug mode is on
             token.used = True
             dbsession.add(token)

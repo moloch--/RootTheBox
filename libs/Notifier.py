@@ -70,14 +70,15 @@ class NotifyManager(object):
     def __refresh__(self):
         ''' Check for new notifications and send them to clients '''
         self.lock.acquire()
-        connections = list(self.connections)
+        connections = dict(self.connections)
         self.lock.release()
         logging.debug("Refreshing all websocket(s) ...")
-        for wsocket in connections:
-            logging.debug("Looking for notification for user id: %s" % str(wsocket.user_id))
-            messages = Notification.new_messages(wsocket.user_id)
+        for user_id in connections.keys():
+            logging.debug("Looking for notification for user id: %s" % str(user_id))
+            messages = Notification.new_messages(user_id)
             if 0 < len(messages):
-                logging.debug("Sending %d notifications to user id %s." % (len(messages), str(wsocket.user_id)))
+                logging.debug("Sending %d notifications to user id %s." % (len(messages), str(user_id)))
+                wsocket = connections[user_id]
                 for message in messages:
                     wsocket.write_message(message.to_json())
                     message.viewed = True
