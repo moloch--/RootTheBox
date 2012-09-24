@@ -92,7 +92,7 @@ class Notifier(object):
     ''' Handles the creation of notification objects '''
 
     @classmethod
-    def ad_hoc_success(cls, user, title, message):
+    def user_success(cls, user, title, message):
         ''' Create success notification for a single user '''
         cls.__create__(user, title, message, SUCCESS)
         notifyManager = NotifyManager.Instance()
@@ -115,7 +115,7 @@ class Notifier(object):
         notifyManager.refresh()
 
     @classmethod
-    def ad_hoc_info(cls, user, title, message):
+    def user_info(cls, user, title, message):
         ''' Create info notification for a single user '''
         cls.__create__(user, title, message, INFO)
         notifyManager = NotifyManager.Instance()
@@ -138,7 +138,7 @@ class Notifier(object):
         notifyManager.refresh()
 
     @classmethod
-    def ad_hoc_warning(cls, user, title, message):
+    def user_warning(cls, user, title, message):
         ''' Create warning notification for a single user '''
         cls.__create__(user, title, message, WARNING)
         notifyManager = NotifyManager.Instance()
@@ -161,7 +161,7 @@ class Notifier(object):
         notifyManager.refresh()
 
     @classmethod
-    def ad_hoc_error(cls, user, title, message):
+    def user_error(cls, user, title, message):
         ''' Create error notification for a single user '''
         cls.__create__(user, title, message, ERROR)
         notifyManager = NotifyManager.Instance()
@@ -184,7 +184,7 @@ class Notifier(object):
         notifyManager.refresh()
 
     @classmethod
-    def ad_hoc_custom(cls, user, title, message, icon):
+    def user_custom(cls, user, title, message, icon):
         ''' Create custom notification for a single user '''
         cls.__create__(user, title, message, CUSTOM, icon)
         notifyManager = NotifyManager.Instance()
