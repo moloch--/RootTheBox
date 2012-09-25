@@ -51,10 +51,10 @@ MIN_X = 80
 
 
 ###################
-# > Simple Bot
+# > Simple bot
 ###################
-class Bot(object):
-    ''' Simple Bot object for storing info '''
+class bot(object):
+    ''' Simple bot object for storing info '''
 
     def __init__(self, name, ip_address, port):
         self.name = name
@@ -71,7 +71,7 @@ class FlagMonitor(object):
     ''' Manages all flags and state changes '''
 
     def __init__(self):
-        self.Botes = []
+        self.bots = []
         self.display_name = None
         self.team_port = None
         self.team_members = []
@@ -103,7 +103,7 @@ class FlagMonitor(object):
         self.loading_bar.addstr(1, 1, self.load_message, curses.A_BOLD)
         self.loading_bar.refresh()
         time.sleep(0.5)
-        self.__Botes__()
+        self.__bots__()
         self.__agent__()
         self.__team__()
         self.loading_bar.clear()
@@ -116,8 +116,8 @@ class FlagMonitor(object):
             self.__title__()
             self.__grid__()
             self.screen.refresh()
-            for Bot in self.Botes:
-                self.__Bot__(Bot, self.Botes.index(Bot))
+            for bot in self.bots:
+                self.__bot__(bot, self.botes.index(bot))
                 self.screen.refresh()
             select = self.screen.getch()
             if select == ord("q"):
@@ -128,7 +128,7 @@ class FlagMonitor(object):
 
     def __title__(self):
         ''' Create title and footer '''
-        title = " Root the Bot - Flag Monitor "
+        title = " Root the Box: Botnet Command and Control "
         version = "[ v0.1 ]"
         agent = "[ " + self.display_name + " ]"
         self.screen.addstr(
@@ -146,12 +146,12 @@ class FlagMonitor(object):
             2, pos_x + len(self.ip_title), curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, 2, self.ip_title)
         pos_x += len(self.ip_title)
-        self.name_title = "         Bot  Name         "
+        self.name_title = "         Box  Name         "
         self.screen.vline(2, pos_x + len(self.name_title) + 1,
                           curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, pos_x + 1, self.name_title)
         pos_x += len(self.name_title)
-        self.flag_title = "   Flag Status   "
+        self.flag_title = "   Bot Status   "
         self.screen.vline(2, pos_x + len(self.flag_title) + 2,
                           curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, pos_x + 2, self.flag_title)
@@ -167,36 +167,34 @@ class FlagMonitor(object):
         self.start_flag_pos = self.start_name_pos + len(self.name_title) + 2
         self.start_ping_pos = self.start_flag_pos + len(self.flag_title) + 1
 
-    def __Bot__(self, Bot, index):
-        ''' Draws a Bot on the screen '''
+    def __bot__(self, bot, index):
+        ''' Draws a bot on the screen '''
         pos_y = 4 + index
-        self.screen.addstr(pos_y, self.start_ip_pos, Bot.ip_address)
+        self.screen.addstr(pos_y, self.start_ip_pos, bot.ip_address)
         self.screen.addstr(
-            pos_y, self.start_name_pos, Bot.name[:len(self.name_title)])
-        if Bot.state == None:
+            pos_y, self.start_name_pos, bot.name[:len(self.name_title)])
+        if bot.state == None:
             self.screen.addstr(pos_y, self.start_flag_pos, " NOT  CAPTURED ")
-        elif Bot.state == self.IS_CAPTURED:
+        elif bot.state == self.IS_CAPTURED:
             self.screen.addstr(pos_y, self.start_flag_pos,
                                " FLAG  PLANTED ", curses.color_pair(self.IS_CAPTURED))
-        elif Bot.state == self.TEAM_CAPTURED:
+        elif bot.state == self.TEAM_CAPTURED:
             self.screen.addstr(pos_y, self.start_flag_pos,
                                " TEAM CAPTURED ", curses.color_pair(self.TEAM_CAPTURED))
-        else:
-            pass
 
-    def update_Bot_status(self, Bot):
-        ''' Pings Bot and updates its status '''
-        response = self.ping_Bot(Bot.ip_address, self.team_port)
+    def update_bot_status(self, bot):
+        ''' Pings bot and updates its status '''
+        response = self.ping_bot(bot.ip_address, self.team_port)
         if response != None:
             if response == self.display_name:
-                Bot.state = self.IS_CAPTURED
+                bot.state = self.IS_CAPTURED
             elif response in self.team_members:
-                Bot.state = self.TEAM_CAPTURED
-        elif Bot.state != None:
-            Bot.state = self.WAS_CAPTURED
+                bot.state = self.TEAM_CAPTURED
+        elif bot.state != None:
+            bot.state = self.WAS_CAPTURED
 
-    def ping_Bot(self, ip_address, port):
-        ''' Pings a Bot (not ICMP) '''
+    def ping_bot(self, ip_address, port):
+        ''' Pings a bot (not ICMP) '''
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
@@ -212,14 +210,14 @@ class FlagMonitor(object):
         ''' Reads a file at path returns the file contents or None '''
         path = os.path.abspath(path)
         if os.path.exists(path) and os.path.isfile(path):
-            Bot_file = open(path, 'r')
-            for line in Bot_file.readlines():
+            bot_file = open(path, 'r')
+            for line in bot_file.readlines():
                 if len(line) == 0 or line[0] == "#":
                     continue
                 plain_text = line.strip()
                 name, ip_address = line.split(";")
-                self.Botes.append(Bot(name, ip_address, port))
-            Bot_file.close()
+                self.botes.append(bot(name, ip_address, port))
+            bot_file.close()
         else:
             sys.stdout.write("[!] Error: File does not exist (%s)\n" %
                              (os.path.abspath(path),))
@@ -227,7 +225,7 @@ class FlagMonitor(object):
             os._exit(1)
 
     def load_from_url(self):
-        ''' Load Botes from scoring engine '''
+        ''' Load botes from scoring engine '''
         pass
 
     def __agent__(self):
@@ -253,8 +251,8 @@ class FlagMonitor(object):
         ''' Download team configuration '''
         pass
 
-    def __Botes__(self):
-        ''' Load Botes from url and/or file '''
+    def __bots__(self):
+        ''' Load botes from url and/or file '''
         if self.load_file != None:
             self.load_from_file(self.load_file)
         if self.load_url != None:
@@ -325,7 +323,8 @@ class FlagMonitor(object):
         self.screen.refresh()
         # (5) Initializing memory address
         memory = " > Initializing memory: "
-        for index in range(0, 2 ** 32, 2 ** 12):
+        for index in range(0, 2 ** 32, 2 ** 20):
+            time.sleep(0.02)
             self.screen.addstr(5, 2, memory + str("0x%08X" % index))
             self.screen.refresh()
             if self.stop_thread:
@@ -347,11 +346,11 @@ class FlagMonitor(object):
 ###################
 def help():
     ''' Displays a helpful message '''
-    sys.stdout.write("Root the Bot - Flag Manager\n")
+    sys.stdout.write("Root the Box - Flag Manager\n")
     sys.stdout.write("Usage:\n")
     sys.stdout.write("\tFileManager.py <options>\n")
     sys.stdout.write("Options:\n")
-    sys.stdout.write("\t-f, --file <path>...........................Load Botes from file\n")
+    sys.stdout.write("\t-f, --file <path>...........................Load botes from file\n")
     sys.stdout.write(
         "\t-a, --agent <name>..........................Define agent name\n")
     sys.stdout.write(

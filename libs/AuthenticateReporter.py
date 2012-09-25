@@ -36,15 +36,18 @@ from models import dbsession
 from libs.WebSocketManager import WebSocketManager
 
 
-# Scoring configuration
+### Scoring Configuration ###
 TIMEOUT = 1
 XID_SIZE = 24
 BUFFER_SIZE = 1024
 
 
 def scoring_round():
-    ''' Multi-threaded scoring '''
-    boxes = list(Box.get_all())
+    ''' 
+    Executed as a periodic callback for main io_loop: Iterates of all the boxes
+    and scores each box.
+    '''
+    boxes = list(Box.all())
     logging.info("Starting scoring round with %d boxes" % len(boxes))
     for box in boxes:
         score_box(box)
@@ -52,31 +55,34 @@ def scoring_round():
 
 
 def score_box(box):
-    ''' Scores a single box '''
+    ''' 
+    Spawns threads for each team, each thread attempts to authenticate it's team
+    using the team's listen_port.
+    '''
     logging.info("Scoring reporters on %s" % (box.box_name,))
     threads = []
-    for user in box.users:
-        thread = threading.Thread(target=score_user, args=(box, user))
+    for team in box.teams:
+        thread = threading.Thread(target=score_team, args=(box, team))
         threads.append(thread)
         thread.start()
-        for thread in threads:
-            thread.join(timeout=TIMEOUT)
+    for thread in threads:
+        thread.join(timeout=TIMEOUT)
 
 
-def score_user(box, user):
-    ''' Scores a single user/team '''
-    auth = AuthenticateReporter(box, user)
+def score_team(box, team):
+    ''' Executed as a thread: scores a single team '''
+    auth = AuthenticateReporter(box, team)
     auth.check_validity()
     if auth.confirmed_access != None:
-        award_points(box, user, auth)
+        award_points(box, team, auth)
     else:
-        user.lost_control(box)
-        dbsession.add(user)
+        team.lost_control(box)
+        dbsession.add(team)
         dbsession.flush()
 
 
-def award_points(box, user, auth):
-    ''' Creates action based on pwnage '''
+def award_money(box, team, auth):
+    ''' Awards money if everything authenticated properly '''
     if auth.confirmed_access:
         value = box.root_value
         description = "%s got root access on %s" % (
@@ -87,12 +93,13 @@ def award_points(box, user, auth):
             user.display_name, box.box_name)
 
 
-class AuthenticateReporter():
+class AuthenticateReporter(object):
+    ''' Authenticates a remote reporter '''
 
-    def __init__(self, box, user):
+    def __init__(self, box, team):
         self.sha = sha256()
         self.box = box
-        self.port = user.team.listen_port
+        self.port = team.listen_port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.settimeout(TIMEOUT)
         self.confirmed_access = None

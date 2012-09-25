@@ -81,6 +81,8 @@ class ShareUploadHandler(BaseHandler):
         content = guess_type(file_name)
         if content[0] == None:
             self.render("user/share_files.html", errors=["Unknown file content, please zip and upload"], shares=user.team.files)
+        elif len(file_name) < 1:
+            self.render("user/share_files.html", errors=["Invalid file name"])
         else:
             uuid = unicode(uuid4())
             filePath = self.application.settings['shares_dir'] + '/' + uuid
@@ -110,13 +112,11 @@ class ShareDownloadHandler(BaseHandler):
         try:
             uuid = self.get_argument('uuid')
         except:
-            self.render("user/error.html",
-                        operation="File Download", errors="Missing parameter")
+            uuid = ""
         user = self.get_current_user()
         share = FileUpload.by_uuid(uuid)
         if share == None or share.team_id != user.team_id:
-            self.render("user/error.html",
-                        operation="File Download", errors="File does not exist")
+            self.render("user/share_error.html")
         else:
             upload = open(self.application.settings['shares_dir'] + '/' + share.uuid, 'r')
             data = upload.read()
@@ -160,17 +160,14 @@ class SettingsHandler(BaseHandler):
         if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
             if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
                 if user.avatar == "default_avatar.jpeg":
-                    user.avatar = unicode(uuid4())
-                elif os.path.exists(self.application.settings['avatar_dir'] + '/' + user.avatar):
-                    os.unlink(self.application.
-                              settings['avatar_dir'] + '/' + user.avatar)
+                    user.avatar = unicode(uuid4()) + u".jpeg"
                 ext = imghdr.what(
                     "", h=self.request.files['avatar'][0]['body'])
                 if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                    user.avatar = user.avatar[:user.
-                                              avatar.rfind('.')] + "." + ext
-                    file_path = self.application.settings[
-                        'avatar_dir'] + '/' + user.avatar
+                    if os.path.exists(self.application.settings['avatar_dir'] + '/' + user.avatar):
+                        os.unlink(self.application.settings['avatar_dir'] + '/' + user.avatar)
+                    user.avatar = unicode(user.avatar[:user.avatar.rfind('.')] + "." + ext)
+                    file_path = self.application.settings['avatar_dir'] + '/' + user.avatar
                     avatar = open(file_path, 'wb')
                     avatar.write(self.request.files['avatar'][0]['body'])
                     avatar.close()
@@ -178,7 +175,7 @@ class SettingsHandler(BaseHandler):
                     dbsession.flush()
                     self.render_page(success=["Successfully changed avatar"])
                 else:
-                    self.render_page(errors=["Invalid image format"])
+                    self.render_page(errors=["Invalid image format, must be: .png .jpeg .gif or .bmp"])
             else:
                 self.render_page(errors=["The image is too large"])
         else:

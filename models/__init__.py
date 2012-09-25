@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 '''
+Created on Sep 12, 2012
+
+@author: moloch
+
     Copyright [2012] [Redacted Labs]
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,9 +38,9 @@ engine = create_engine(db_connection)
 Session = sessionmaker(bind=engine, autocommit=True)
 dbsession = Session(autoflush=True)
 
-association_table = Table('user_to_box', BaseObject.metadata,
-                          Column('user_id',
-                                 Integer, ForeignKey('user.id'), nullable=False),
+association_table = Table('team_to_box', BaseObject.metadata,
+                          Column('team_id',
+                                 Integer, ForeignKey('team.id'), nullable=False),
                           Column('box_id',
                                  Integer, ForeignKey('box.id'), nullable=False)
                           )
@@ -61,7 +65,5 @@ create_tables = lambda: (
     setattr(engine, 'echo', True), metadata.create_all(engine))
 
 # Bootstrap the database with some shit
-
-
 def boot_strap():
     import setup.bootstrap

@@ -148,7 +148,7 @@ app = Application([
                   shares_dir=path.abspath('files/shares/'),
 
                   # Milli-Seconds between scoring
-                  ticks=int(60 * 1000),
+                  ticks=int(5 * 60 * 1000),
 
                   # Debug mode
                   debug=config.debug,
@@ -164,9 +164,9 @@ def start_server():
     server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
-    #scoring = PeriodicCallback(
-    #    scoring_round, app.settings['ticks'], io_loop=io_loop)
-    #scoring.start()
+    scoring = PeriodicCallback(
+        scoring_round, app.settings['ticks'], io_loop=io_loop)
+    scoring.start()
     try:
         for count in range(3, 0, -1):
             sys.stdout.write(
