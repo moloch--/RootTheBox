@@ -42,7 +42,7 @@ class Team(BaseObject):
             self, '_name', self.__class__.filter_string(name, " -_"))
     ))
     motto = Column(Unicode(255))
-    members = relationship("User", backref="Team")
+    members = relationship("User", backref=backref("Team", lazy="joined"), cascade="all, delete-orphan")
     listen_port = Column(Integer, default=lambda: randint(1024, 65535), unique=True, nullable=False)
     files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
     pastes = relationship("PasteBin", backref=backref("Team", lazy="dynamic"))

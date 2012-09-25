@@ -38,7 +38,8 @@ from libs.Memcache import FileCache
 
 
 class StaticFileHandler(RequestHandler):
-    """A simple handler that can serve static content from a directory.
+    '''
+    A simple handler that can serve static content from a directory.
 
     To map a path to this handler for a static data directory /var/www,
     you would add a line to your application like::
@@ -55,7 +56,7 @@ class StaticFileHandler(RequestHandler):
     want browsers to cache a file indefinitely, send them to, e.g.,
     /static/images/myimage.png?v=xxx. Override ``get_cache_time`` method for
     more fine-grained cache control.
-    """
+    '''
     CACHE_MAX_AGE = 86400 * 365 * 10  # 10 years
 
     _static_hashes = {}
@@ -134,23 +135,25 @@ class StaticFileHandler(RequestHandler):
             self.set_header("Content-Length", len(data))
 
     def set_extra_headers(self, path):
-        """For subclass to add extra headers to the response"""
+        '''For subclass to add extra headers to the response'''
         pass
 
     def get_cache_time(self, path, modified, mime_type):
-        """Override to customize cache control behavior.
+        '''
+        Override to customize cache control behavior.
 
         Return a positive number of seconds to trigger aggressive caching or 0
         to mark resource as cacheable, only.
 
         By default returns cache expiry of 10 years for resources requested
         with "v" argument.
-        """
+        '''
         return self.CACHE_MAX_AGE if "v" in self.request.arguments else 0
 
     @classmethod
     def make_static_url(cls, settings, path):
-        """Constructs a versioned url for the given path.
+        '''
+        Constructs a versioned url for the given path.
 
         This method may be overridden in subclasses (but note that it is
         a class method rather than an instance method).
@@ -158,7 +161,7 @@ class StaticFileHandler(RequestHandler):
         ``settings`` is the `Application.settings` dictionary.  ``path``
         is the static path being requested.  The url returned should be
         relative to the current host.
-        """
+        '''
         static_url_prefix = settings.get('static_url_prefix', '/static/')
         version_hash = cls.get_version(settings, path)
         if version_hash:
@@ -167,7 +170,8 @@ class StaticFileHandler(RequestHandler):
 
     @classmethod
     def get_version(cls, settings, path):
-        """Generate the version string to be used in static URLs.
+        '''
+        Generate the version string to be used in static URLs.
 
         This method may be overridden in subclasses (but note that it
         is a class method rather than a static method).  The default
@@ -177,7 +181,7 @@ class StaticFileHandler(RequestHandler):
         is the relative location of the requested asset on the filesystem.
         The returned value should be a string, or ``None`` if no version
         could be determined.
-        """
+        '''
         abs_path = os.path.join(settings["static_path"], path)
         with cls._lock:
             hashes = cls._static_hashes
@@ -194,12 +198,13 @@ class StaticFileHandler(RequestHandler):
         return None
 
     def parse_url_path(self, url_path):
-        """Converts a static URL path into a filesystem path.
+        '''
+        Converts a static URL path into a filesystem path.
 
         ``url_path`` is the path component of the URL with
         ``static_url_prefix`` removed.  The return value should be
         filesystem path relative to ``static_path``.
-        """
+        '''
         if os.path.sep != "/":
             url_path = url_path.replace("/", os.path.sep)
         return url_path

@@ -28,12 +28,10 @@ import threading
 
 
 from os import urandom
-from models import Box
 from hashlib import sha256
 from base64 import b64encode
-from tornado import iostream
-from models import dbsession
-from libs.WebSocketManager import WebSocketManager
+from models import dbsession, Team, Box
+from libs.Notifier import Notifier
 
 
 ### Scoring Configuration ###
@@ -59,14 +57,14 @@ def score_box(box):
     Spawns threads for each team, each thread attempts to authenticate it's team
     using the team's listen_port.
     '''
-    logging.info("Scoring reporters on %s" % (box.box_name,))
+    logging.info("Scoring reporters on %s" % (box.name,))
     threads = []
     for team in box.teams:
         thread = threading.Thread(target=score_team, args=(box, team))
         threads.append(thread)
         thread.start()
     for thread in threads:
-        thread.join(timeout=TIMEOUT)
+        thread.join(timeout=TIMEOUT + 1)
 
 
 def score_team(box, team):
@@ -75,22 +73,27 @@ def score_team(box, team):
     auth.check_validity()
     if auth.confirmed_access != None:
         award_points(box, team, auth)
+        if not box in team.boxes:
+            team.boxes.append(box)
+            message = "%s got %s access on %s!" % (team.name, auth.confirmed_access, box.name)
+            Notifier.broadcast_success("Box Pwned", message)
     else:
-        team.lost_control(box)
+        team.boxes.remove(box)
         dbsession.add(team)
         dbsession.flush()
+        message = "Lost communication with bot on %s." % box.name
+        Notifier.team_warning("Lost Access", message)
 
 
 def award_money(box, team, auth):
     ''' Awards money if everything authenticated properly '''
-    if auth.confirmed_access:
-        value = box.root_value
-        description = "%s got root access on %s" % (
-            user.display_name, box.box_name)
+    team = Team.by_id(team.id) # Refresh object
+    if auth.confirmed_access == 'root':
+        team.money += box.root_award
     else:
-        value = box.user_value
-        description = "%s got user level access on %s" % (
-            user.display_name, box.box_name)
+        team.money += box.user_award
+    dbsession.add(team)
+    dbsession.flush
 
 
 class AuthenticateReporter(object):
@@ -107,30 +110,33 @@ class AuthenticateReporter(object):
 
     def check_validity(self):
         ''' Checks the validity of a reporter on a box '''
-        logging.info("Checking for reporter at %s:%s" % (self.box.
+        logging.info("Checking for reporter -> %s:%s" % (self.box.
                                                          ip_address, self.port))
         try:
             self.sock.connect((self.box.ip_address, self.port))
             self.pending_access = self.sock.recv(BUFFER_SIZE)
-            if self.pending_access == 'root':
-                    self.sha.update(self.box.root_key)
-                    self.verify_response()
-            elif self.pending_access == 'user':
-                    self.sha.update(self.box.user_key)
-                    self.verify_response()
+            if self.pending_access.lower() == 'root':
+                self.sha.update(self.box.root_key)
+                self.verify_response()
+            elif self.pending_access.lower() == 'user':
+                self.sha.update(self.box.user_key)
+                self.verify_response()
             else:
-                    logging.info("Reporter provided an invalid access level")
+                logging.info("Reporter provided an invalid access level.")
         except:
-            logging.info("Failed to connect to reporter")
+            logging.info("Failed to connect to reporter.")
 
     def verify_response(self):
         ''' Verifies zero-knowledge proof '''
         self.send_xid()
         response = self.sock.recv(BUFFER_SIZE)
         if response == self.sha.hexdigest():
-            self.confirmed_access = bool(self.pending_access == 'root')
+            if self.pending_access == 'root':
+                self.confirmed_access = u'root'
+            else:
+                self.confirmed_access = u'user'
         else:
-            logging.info("Reporter's response was invalid")
+            logging.warn("Reporter's response was invalid.")
 
     def send_xid(self):
         ''' Sends transaction id to client '''

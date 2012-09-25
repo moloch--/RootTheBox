@@ -30,7 +30,7 @@ from models.BaseGameObject import BaseObject
 class GameLevel(BaseObject):
     ''' Game Level definition '''
 
-    name = Column(Unicode(255), nullable=False)
+    name = Column(Unicode(64), unique=True, nullable=False)
     number = Column(Integer, nullable=False)
     buyout = Column(Integer, nullable=False)
     banner_uri = Column(Unicode(255), nullable=False)

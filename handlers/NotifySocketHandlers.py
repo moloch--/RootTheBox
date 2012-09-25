@@ -75,8 +75,11 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         ''' Troll the haxors '''
-        self.write_message("ERROR 1146 (42S02): Table 'rtb.%s' doesn't exist." % message) # Hehe
+        self.write_message("ERROR 1146 (42S02): Table 'rtb.%s' doesn't exist." % message)
 
     def on_close(self):
         ''' Lost connection to client '''
-        self.manager.remove_connection(self)
+        try:
+            self.manager.remove_connection(self)
+        except KeyError:
+            logging.warn("WebSocket connection has already been closed.")

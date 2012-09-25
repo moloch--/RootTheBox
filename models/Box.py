@@ -39,9 +39,11 @@ class Box(BaseObject):
     ip_address = Column(Unicode(16), unique=True, nullable=False)
     description = Column(Unicode(2048))
     difficulty = Column(Unicode(255), nullable=False)
-    avatar = Column(Unicode(64), default=unicode("default_avatar.gif"))
-    user_key = Column(Unicode(64), unique=True, nullable=False)
+    avatar = Column(Unicode(64), default=u"default_avatar.gif")
     root_key = Column(Unicode(64), unique=True, nullable=False)
+    root_award = Column(Integer, nullable=False)
+    user_key = Column(Unicode(64), unique=True, nullable=False)
+    user_reward = Column(Integer, nullable=False)
     teams = relationship("Team", secondary=association_table, backref="Box")
 
     @classmethod

@@ -46,25 +46,27 @@ class NotifyManager(object):
         self.lock = threading.Lock()
 
     def refresh(self):
-        ''' Non-blocking call '''
+        ''' Non-blocking call to __refresh__ '''
         threading.Thread(target=self.__refresh__).start()
 
     def add_connection(self, wsocket):
         ''' Add a connection '''
         self.lock.acquire()
-        self.connections[wsocket.user_id] = wsocket
+        if self.connections.has_key(wsocket.user_id):
+            self.connections[wsocket.user_id].append(wsocket)
+        else:
+            self.connections[wsocket.user_id] = [wsocket]
         self.lock.release()
         messages = Notification.new_messages(wsocket.user_id)
         for message in messages:
-            wsocket.write_message(message.to_json())
-            message.viewed = True
-            dbsession.add(message)
-            dbsession.flush()
+            self.__send__(message, self.connections[wsocket.user_id])
 
     def remove_connection(self, wsocket):
         ''' Remove connection '''
         self.lock.acquire()
-        del self.connections[wsocket.user_id]
+        self.connections[wsocket.user_id].remove(wsocket)
+        if len(self.connections[wsocket.user_id]) <= 0:
+            del self.connections[wsocket.user_id]
         self.lock.release()
 
     def __refresh__(self):
@@ -73,19 +75,27 @@ class NotifyManager(object):
         connections = dict(self.connections)
         self.lock.release()
         for user_id in connections.keys():
-            logging.debug("Looking for notification for user id: %s" % str(user_id))
-            messages = Notification.new_messages(user_id)
-            if 0 < len(messages):
-                logging.debug("Sending %d notification(s) to user id %s." % (len(messages), str(user_id)))
-                wsocket = connections[user_id]
-                for message in messages:
-                    wsocket.write_message(message.to_json())
-                    message = Notification.by_id(message.id) # Refresh object
-                    message.viewed = True
-                    dbsession.add(message)
-                    dbsession.flush()
-            else:
-                logging.debug("No new notifications for user id %s." % str(wsocket.user_id))
+            try:
+                logging.debug("Looking for notification for user id: %s" % str(user_id))
+                messages = Notification.new_messages(user_id)
+                if 0 < len(messages):
+                    logging.debug("Sending %d notification(s) to user id %s." % (len(messages), str(user_id)))
+                    wsockets = connections[user_id]
+                    for message in messages:
+                        message = Notification.by_id(message.id) # Refresh object, to avoid stale data
+                        self.__send__(message, wsockets)
+                else:
+                    logging.debug("No new notifications for user id %s." % str(wsocket.user_id))
+            except:
+                logging.exception("Exception while writing notification to websocket.")
+
+    def __send__(self, message, wsockets):
+        ''' Send a message to all websockets '''
+        for wsocket in wsockets:
+            wsocket.write_message(message.to_json())
+            message.viewed = True
+            dbsession.add(message)
+            dbsession.flush()
 
 
 class Notifier(object):

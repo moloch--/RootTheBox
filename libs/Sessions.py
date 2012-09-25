@@ -14,14 +14,16 @@ Every session object can be handled as a dictionary:
 
 '''
 
-import base64
-import collections
-import datetime
-import os
-import cPickle as pickle
+
 import re
+import os
 import time
 import types
+import base64
+import datetime
+import collections
+import cPickle as pickle
+
 
 SID_SIZE = 32  # Size in bytes
 
