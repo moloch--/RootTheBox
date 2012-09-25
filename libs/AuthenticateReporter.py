@@ -5,7 +5,7 @@ Created on Feb 28, 2012
 
 @author: moloch
 
-    Copyright [2012] [Redacted Labs]
+    Copyright 2012 Root the Box
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -73,10 +73,6 @@ def score_team(box, team):
     auth.check_validity()
     if auth.confirmed_access != None:
         award_points(box, team, auth)
-        if not box in team.boxes:
-            team.boxes.append(box)
-            message = "%s got %s access on %s!" % (team.name, auth.confirmed_access, box.name)
-            Notifier.broadcast_success("Box Pwned", message)
     else:
         team.boxes.remove(box)
         dbsession.add(team)

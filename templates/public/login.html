@@ -16,22 +16,26 @@
       {% end %}
     {% end %}
     <div class="well">
-      <form action="/login" method="post" autocomplete="off">  
+      <form class="form-horizontal" action="/login" method="post" autocomplete="off">  
         {% raw xsrf_form_html() %}
-        <fieldset>
           <legend>Login</legend>
-          <p>
-            <label for="account">Account Name</label>
-            <input name="account" id="account" placeholder="Account Name" type="text" />
-          </p>
-          <p>
-            <label for="password">Password</label>
-            <input name="password" placeholder="Password" type="password" />
-          </p>     
-        </fieldset>
-        <p class="submit">
-          <button class="btn btn-primary btn-large" type="submit">Authenticate</button>
-        </p>   
+          <div class="control-group">
+            <label class="control-label" for="account">Account Name</label>
+            <div class="controls">
+              <input name="account" id="account" placeholder="Account Name" type="text"/>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="passwd">Password</label>
+            <div class="controls">
+              <input name="password" id="passwd" placeholder="Password" type="password" />
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <button class="btn btn-primary btn-large" type="submit">Authenticate</button>
+            </div>
+          </div>
       </form>
     </div>
     <script>

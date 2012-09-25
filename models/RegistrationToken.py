@@ -4,7 +4,7 @@ Created on Sep 22, 2012
 
 @author: moloch
 
-    Copyright [2012] [Redacted Labs]
+    Copyright 2012 Root the Box
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class RegistrationToken(BaseObject):
     ''' User definition '''
 
     value = Column(Unicode(6), unique=True, nullable=False, default=lambda: unicode(urandom(3).encode('hex')))
-    used = Column(Boolean(), nullable=False, default=False)
+    used = Column(Boolean, nullable=False, default=False)
 
     @classmethod
     def all(cls):

@@ -4,7 +4,7 @@ Created on Mar 13, 2012
 
 @author: moloch
 
-    Copyright [2012] [Redacted Labs]
+    Copyright 2012 Root the Box
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,30 +20,25 @@ Created on Mar 13, 2012
 '''
 import logging
 
-from models import User, Box
-from libs.Notification import Notification
-from libs.WebSocketManager import WebSocketManager
-from tornado.web import RequestHandler, asynchronous
+from models import dbsession, User, Box
+from libs.Notifier import Notifier
+from tornado.web import RequestHandler
 
 
 class ReporterRegistrationHandler(RequestHandler):
-
-    def initialize(self, dbsession):
-        ''' Sets up database connection '''
-        self.dbsession = dbsession
 
     def get(self, *args, **kwargs):
         ''' Registers a reporting service on a remote box '''
         box = Box.by_ip_address(self.request.remote_ip)
         if box != None:
             try:
-                display_name = self.get_argument("handle")
-                user = User.by_display_name(display_name)
-                if user != None and not user.team.is_controlling(box):
-                    user.give_control(box)
-                    self.dbsession.add(user)
-                    self.dbsession.flush()
-                    self.notify(user, box)
+                handle = self.get_argument("handle")
+                user = User.by_handle(handle)
+                if user != None:
+                    if not box in user.team.boxes:
+                        user.team.boxes.append(box)
+                        dbsession.add(team)
+                        dbsession.flush()
                     self.write(unicode(user.team.listen_port))
                 else:
                     self.write("Invalid handle")
@@ -55,9 +50,7 @@ class ReporterRegistrationHandler(RequestHandler):
 
     def notify(self, user, box):
         ''' Sends notification of box ownage '''
-        title = "Box Owned!"
-        message = "%s owned %s" % (user.display_name, box.box_name)
-        notify = Notification(title, message, file_location=self.
-                              application.settings['avatar_dir'] + '/' + user.avatar)
-        ws_manager = WebSocketManager.Instance()
-        ws_manager.send_all(notify)
+        title = "Pwnage Report"
+        message = "%s added %s to their botnet." % (user.team.name, box.name)
+        icon = '/avatars/' + user.avatar
+        Notifier.broadcast_custom(title, message, icon)

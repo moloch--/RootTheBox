@@ -4,7 +4,7 @@ Created on Sep 20, 2012
 
 @author: moloch
 
-    Copyright [2012] [Redacted Labs]
+    Copyright 2012 Root the Box
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -93,9 +93,9 @@ class NotifyManager(object):
         ''' Send a message to all websockets '''
         for wsocket in wsockets:
             wsocket.write_message(message.to_json())
-            message.viewed = True
-            dbsession.add(message)
-            dbsession.flush()
+        message.viewed = True
+        dbsession.add(message)
+        dbsession.flush()
 
 
 class Notifier(object):
@@ -105,114 +105,105 @@ class Notifier(object):
     def user_success(cls, user, title, message):
         ''' Create success notification for a single user '''
         cls.__create__(user, title, message, SUCCESS)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def team_success(cls, team, title, message):
         ''' Create success notification to each user on a team '''
         for user in team.members:
             cls.__create__(user, title, message, SUCCESS)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def broadcast_success(cls, title, message):
         ''' Send a success notification to all users '''
         for user in User.all_users():
             cls.__create__(user, title, message, SUCCESS)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def user_info(cls, user, title, message):
         ''' Create info notification for a single user '''
         cls.__create__(user, title, message, INFO)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def team_info(cls, team, title, message):
         ''' Create info notification to each user on a team '''
         for user in team.members:
             cls.__create__(user, title, message, INFO)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def broadcast_info(cls, title, message):
         ''' Send a info notification to all users '''
         for user in User.all_users():
             cls.__create__(user, title, message, INFO)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def user_warning(cls, user, title, message):
         ''' Create warning notification for a single user '''
         cls.__create__(user, title, message, WARNING)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def team_warning(cls, team, title, message):
         ''' Create warning notification to each user on a team '''
         for user in team.members:
             cls.__create__(user, title, message, WARNING)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def broadcast_warning(cls, title, message):
         ''' Send a warning notification to all users '''
         for user in User.all_users():
             cls.__create__(user, title, message, WARNING)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def user_error(cls, user, title, message):
         ''' Create error notification for a single user '''
         cls.__create__(user, title, message, ERROR)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def team_error(cls, team, title, message):
         ''' Create error notification to each user on a team '''
         for user in team.members:
             cls.__create__(user, title, message, ERROR)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def broadcast_error(cls, title, message):
         ''' Send a error notification to all users '''
         for user in User.all_users():
             cls.__create__(user, title, message, ERROR)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def user_custom(cls, user, title, message, icon):
         ''' Create custom notification for a single user '''
         cls.__create__(user, title, message, CUSTOM, icon)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def team_custom(cls, team, title, message, icon):
         ''' Create custom notification to each user on a team '''
         for user in team.members:
             cls.__create__(user, title, message, CUSTOM, icon)
-        notifyManager = NotifyManager.Instance()
-        notifyManager.refresh()
+        cls.__refresh__()
 
     @classmethod
     def broadcast_custom(cls, title, message, icon):
         ''' Send a custom notification to all users '''
         for user in User.all_users():
             cls.__create__(user, title, message, CUSTOM, icon)
+        cls.__refresh__()
+
+    @classmethod
+    def __refresh__(cls):
+        ''' Refresh websocket manager '''
         notifyManager = NotifyManager.Instance()
         notifyManager.refresh()
 
@@ -226,10 +217,6 @@ class Notifier(object):
             category=category,
         )
         if icon != None:
-            url = urlparse(icon)
-            if url.scheme == 'http':
-                notification.icon = icon
-            else:
-                logging.warn("Notifier failed to parse icon url.")
+            notification.icon = icon
         dbsession.add(notification)
         dbsession.flush()

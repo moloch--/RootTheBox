@@ -4,7 +4,7 @@ Created on Mar 13, 2012
 
 @author: moloch
 
- Copyright [2012] [Redacted Labs]
+ Copyright 2012 Root the Box
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

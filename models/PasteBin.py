@@ -4,7 +4,7 @@ Created on Mar 12, 2012
 
 @author: moloch
 
-    Copyright [2012] [Redacted Labs]
+    Copyright 2012 Root the Box
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ from models.BaseGameObject import BaseObject
 class PasteBin(BaseObject):
     ''' PasteBin definition '''
 
-    name = Column(Unicode(255), nullable=False)
+    name = Column(Unicode(64), nullable=False)
     contents = Column(Unicode(2048), nullable=False)
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
