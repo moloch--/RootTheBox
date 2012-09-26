@@ -28,7 +28,7 @@ import getpass
 
 from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
-from models import dbsession, User, Permission, Theme
+from models import dbsession, User, Permission, Theme, MarketItem
 
 # Fills the database with some startup data.
 config = ConfigManager.Instance()
@@ -49,6 +49,7 @@ else:
             'Error: Passwords did not match, or were less than 12 chars'
         os._exit(1)
 
+# Theme objects
 css_files = [
     ("Bootstrap", 'bootstrap.min.css'),
     ("Amelia", 'amelia.min.css'), 
@@ -71,22 +72,42 @@ for css in css_files:
     dbsession.add(theme)
     dbsession.flush()
 
-# User Account
+# Market Items
+item = MarketItem(
+    name=u"Password Hashes",
+    price=10000,
+    description=u"View other user's password hashes.",
+    permission_name=u"hashes"
+)
+dbsession.add(item)
+dbsession.flush()
+
+item = MarketItem(
+    name=u"SWAT",
+    price=100000,
+    description=u"SWAT other players in the game.",
+    permission_name=u"swat"
+)
+dbsession.add(item)
+dbsession.flush()
+
+# Admin User Account
 user = User(
-    account=unicode('admin'),
-    handle=unicode('God'),
+    account=u'admin',
+    handle=u'God',
     password=password
 )
 dbsession.add(user)
 dbsession.flush()
 
 permission = Permission(
-    name=unicode('admin'),
+    name=u'admin',
     user_id=user.id
 )
 dbsession.add(permission)
 dbsession.flush()
 
+# Display Details
 if config.debug:
     environ = bold + R + "Developement boot strap" + W
     details = ", default admin password is '%s'." % password

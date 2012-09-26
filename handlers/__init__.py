@@ -45,12 +45,13 @@ from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
 from handlers.PublicHandlers import *
 from handlers.HashesHandlers import *
+from handlers.MarketHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
-from handlers.NotifySocketHandlers import *
 from handlers.ScoreboardHandlers import *
-
+from handlers.NotifySocketHandlers import *
 from handlers.StaticFileHandler import StaticFileHandler
+
 
 config = ConfigManager.Instance()
 app = Application([
@@ -76,17 +77,13 @@ app = Application([
                   (r'/user/share/pastebin/display', DisplayPasteHandler),
                   (r'/user/share/pastebin/delete', DeletePasteHandler),
                   
+                  # Market handlers
+                  (r'/user/market', MarketViewHandler),
+                  (r'/user/market/details', MarketDetailsHandler),
+
                   # User handlers
                   (r'/user', HomeHandler),
                   (r'/user/settings(.*)', SettingsHandler),
-
-
-                  # Scoreboard Handlers - Severs scoreboard related
-                  # pages
-                  #(r'/scoreboard', ScoreBoardHandler),
-                  #(r'/all_time(.*)', AllTimeHandler),
-                  #(r'/pie_chart(.*)', PieChartHandler),
-                  #(r'/bar_chart(.*)', BarChartHandler),
 
                   # Admin Handlers - Administration pages
                   (r'/admin/create/(.*)', AdminCreateHandler),
@@ -95,6 +92,13 @@ app = Application([
                   # WebSocket Handlers - Websocket communication
                   # handlers
                   (r'/notifications', NotifySocketHandler),
+
+                  # Scoreboard Handlers - Severs scoreboard related
+                  # pages
+                  #(r'/scoreboard', ScoreBoardHandler),
+                  #(r'/all_time(.*)', AllTimeHandler),
+                  #(r'/pie_chart(.*)', PieChartHandler),
+                  #(r'/bar_chart(.*)', BarChartHandler),
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),
