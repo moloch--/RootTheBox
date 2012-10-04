@@ -20,6 +20,7 @@ Created on Mar 13, 2012
 -------------
 
 Modification of the tornado web StaticFileHandler
+caches files less than 1Mb using Memcached
 
 '''
 

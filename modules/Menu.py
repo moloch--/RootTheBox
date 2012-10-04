@@ -31,7 +31,7 @@ class Menu(UIModule):
         if self.handler.session != None:
             user = User.by_handle(self.handler.session['handle'])
             if self.handler.session['menu'] == 'user':
-                return self.render_string('menu/user.html', handle=user.handle, team_name=user.team.name)
+                return self.render_string('menu/user.html', user=user)
             elif self.handler.session['menu'] == 'admin':
                 return self.render_string('menu/admin.html', handle=user.handle)
         return self.render_string('menu/public.html')

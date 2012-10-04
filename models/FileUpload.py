@@ -55,4 +55,4 @@ class FileUpload(BaseObject):
         return dbsession.query(cls).filter_by(file_name=unicode(file_name)).first()
 
     def __repr__(self):
-        return ('<File - name: %s, type: %s>' % (self.file_name, self.content))
+        return u'<File - name: %s, type: %s>' % (self.file_name, self.content)

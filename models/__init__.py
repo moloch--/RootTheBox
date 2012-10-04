@@ -38,12 +38,19 @@ engine = create_engine(db_connection)
 Session = sessionmaker(bind=engine, autocommit=True)
 dbsession = Session(autoflush=True)
 
-association_table = Table('team_to_box', BaseObject.metadata,
-                          Column('team_id',
-                                 Integer, ForeignKey('team.id'), nullable=False),
-                          Column('box_id',
-                                 Integer, ForeignKey('box.id'), nullable=False)
-                          )
+team_to_box = Table('team_to_box', BaseObject.metadata,
+                        Column('team_id',
+                            Integer, ForeignKey('team.id'), nullable=False),
+                        Column('box_id',
+                            Integer, ForeignKey('box.id'), nullable=False)
+                        )
+
+team_to_item = Table('team_to_item', BaseObject.metadata,
+                        Column('team_id',
+                            Integer, ForeignKey('team.id'), nullable=False),
+                        Column('item_id',
+                            Integer, ForeignKey('market_item.id'), nullable=False)
+                        )
 
 # import models
 from models.Box import Box

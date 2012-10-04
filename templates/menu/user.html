@@ -19,7 +19,6 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li><a href="/user/missions">Missions</a></li>
-                  <li><a href="/user/hashes">Password Hashes</a></li>
                   <li><a href="/user/market">Black Market</a></li>
                 </ul>
               </li>
@@ -34,6 +33,30 @@
                 </ul>
               </li>
               <li><a href="/scoreboard">Scoreboard</a></li>
+              {% if user.has_item(u"New York Federal Reserve") %}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    New York Reserve
+                  <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/hashes">Hashes</a></li>
+                    <li><a href="/wallofsheep">Wall of Sheep</a></li>
+                  </ul>
+                </li>
+              {% end %}
+              {% if user.has_item(u"SWAT") %}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    S.W.A.T.
+                  <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/hashes">Hashes</a></li>
+                    <li><a href="/wallofsheep">Wall of Sheep</a></li>
+                  </ul>
+                </li>   
+              {% end %}
               <li><a href="/about">About</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -41,7 +64,7 @@
           <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
               <i class="icon-user"></i> 
-              {{ handle }}
+              {{ user.handle }}
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">

@@ -15,14 +15,15 @@
 		<div class="span5">
 			<div class="row">
 				<div class="span11 offset1 well">
-					<h3>Welcome Agent {{ user.handle }}</h3>
+					<h3>Welcome {{ user.handle }}</h3>
 					<strong>Current Level:</strong> 0 <br />
 					<strong>Bank Account:</strong> ${{ user.team.money }} <br />
 					<strong>Active Bots:</strong> 0 <br />
 					<strong>Flags Captured:</strong> 0 <br />
 				</div>
 				<div class="span11 offset1 well">
-					<h3>{{ user.team.name }}</h3>
+                    <h3 style="display: inline;">{{ user.team.name }}</h3>
+                    <h4 style="display: inline;">&nbsp;&nbsp;&nbsp;&quot;{{ user.team.motto }}&quot;</h4>
 					<div class="pikachoose">
 						<ul id="pikame">
 							{% for teammate in user.team.members %}

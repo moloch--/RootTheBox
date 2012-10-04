@@ -20,14 +20,12 @@ Created on Mar 12, 2012
 '''
 
 
-import logging
-
 from uuid import uuid4
 from random import randint
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column #ForeignKey
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession, association_table, Box
+from models import dbsession, team_to_box, team_to_item
 from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits
 
@@ -48,7 +46,9 @@ class Team(BaseObject):
     pastes = relationship("PasteBin", backref=backref("Team", lazy="dynamic"))
     money = Column(Integer, default=0, nullable=False)
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
-    boxes = relationship("Box", secondary=association_table, backref="Team")
+    boxes = relationship("Box", secondary=team_to_box, backref="Team")
+    items = relationship("MarketItem", secondary=team_to_item, backref="Team")
+
 
     @classmethod
     def all(cls):
@@ -56,9 +56,9 @@ class Team(BaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, identifier):
+        ''' Returns a the object with id of identifier '''
+        return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_name(cls, team_name):
@@ -82,14 +82,14 @@ class Team(BaseObject):
 
     def file_by_file_name(self, file_name):
         ''' Return file object based on file_name '''
-        return files.filter_by(file_name=file_name).first()
+        return self.files.filter_by(file_name=file_name).first()
 
     def file_by_uuid(self, uuid):
         ''' Return file object based on uuid '''
-        return files.filter_by(uuid=uuid).first()
+        return self.files.filter_by(uuid=uuid).first()
 
     def __repr__(self):
-        return ('<Team - name: %s, score: %d>' % (self.team_name, self.score)).encode('utf-8')
+        return u'<Team - name: %s, money: %d>' % (self.name, self.money)
 
     def __str__(self):
         return unicode(self.name)

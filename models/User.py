@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
 Created on Mar 12, 2012
 
@@ -20,19 +21,14 @@ Created on Mar 12, 2012
 '''
 
 
-import logging
-
 from string import ascii_letters, digits, printable
 from hashlib import md5, sha256
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
-from sqlalchemy.types import Unicode, Integer, Boolean
+from sqlalchemy.types import Unicode, Integer
 from libs.ConfigManager import ConfigManager
-from models import dbsession, association_table
-from models.Box import Box
-from models.Team import Team
-from models.Permission import Permission
-from models.Notification import Notification
+from models import dbsession, Team, Permission
+from models.MarketItem import MarketItem
 from models.BaseGameObject import BaseObject
 
 
@@ -65,34 +61,6 @@ class User(BaseObject):
     ))
     theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
 
-    @property
-    def permissions(self):
-        '''Return a set with all permissions granted to the user.'''
-        return dbsession.query(Permission).filter_by(user_id=self.id)
-
-    @property
-    def permissions_names(self):
-        '''Return a list with all permissions accounts granted to the user.'''
-        return [permission.name for permission in self.permissions]
-
-    @property
-    def team_name(self):
-        ''' Return a list with all groups accounts the user is a member of '''
-        if self.team_id == None:
-            return None
-        else:
-            team = dbsession.query(
-                Team).filter_by(id=self.team_id).first()
-            return team.account
-
-    @property
-    def team(self):
-        ''' Return a the uesr's team object '''
-        if self.team_id == None:
-            return None
-        else:
-            return dbsession.query(Team).filter_by(id=self.team_id).first()
-    
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
@@ -104,9 +72,9 @@ class User(BaseObject):
         return filter(lambda user: user.has_permission('admin') == False, cls.all())
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, identifier):
+        ''' Returns a the object with id of identifier '''
+        return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_account(cls, account):
@@ -150,6 +118,39 @@ class User(BaseObject):
             sha_hash.update(preimage + sha_hash.hexdigest() + str(count))
         return unicode(sha_hash.hexdigest())
 
+    @property
+    def permissions(self):
+        '''Return a set with all permissions granted to the user.'''
+        return dbsession.query(Permission).filter_by(user_id=self.id)
+
+    @property
+    def permissions_names(self):
+        '''Return a list with all permissions accounts granted to the user.'''
+        return [permission.name for permission in self.permissions]
+
+    @property
+    def team_name(self):
+        ''' Return a list with all groups accounts the user is a member of '''
+        if self.team_id == None:
+            return None
+        else:
+            team = dbsession.query(
+                Team).filter_by(id=self.team_id).first()
+            return team.account
+
+    @property
+    def team(self):
+        ''' Return a the user's team object '''
+        if self.team_id == None:
+            return None
+        else:
+            return dbsession.query(Team).filter_by(id=self.team_id).first()
+
+    def has_item(self, item_name):
+        ''' Check to see if a team has purchased an item '''
+        item = MarketItem.by_name(item_name)
+        return True if item in self.team.items else False
+
     def has_permission(self, permission):
         ''' Return True if 'permission' is in permissions_names '''
         return True if permission in self.permissions_names else False
@@ -158,7 +159,7 @@ class User(BaseObject):
         ''' Check the password against existing credentials '''
         attempt = filter(lambda char: char in printable[:-5], attempt)
         if not isinstance(attempt, unicode):
-            attempt = attempt.encode('utf-8')
+            attempt = unicode(attempt)
         if self.has_permission('admin'):
             return self.password == self.admin_hash(attempt)
         else:
@@ -176,4 +177,4 @@ class User(BaseObject):
         return self.handle
 
     def __repr__(self):
-        return ('<User - account: %s, handle: %s>' % (self.account, self.handle))
+        return u'<User - account: %s, handle: %s>' % (self.account, self.handle)

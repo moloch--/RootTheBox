@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
 Created on Mar 15, 2012
 
@@ -65,13 +66,13 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
         return new_session
 
     def open(self):
-        ''' When we recieve a new websocket connect '''
+        ''' When we receive a new websocket connect '''
         if self.session != None:
             logging.debug("Opened new websocket with user id: %s" % str(self.session['user_id']))
             self.user_id = self.session['user_id']
             self.manager.add_connection(self)
         else:
-            logging.debug("NotifySocketHandler recieved no session data.")
+            logging.debug("NotifySocketHandler received no session data.")
 
     def on_message(self, message):
         ''' Troll the haxors '''

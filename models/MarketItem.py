@@ -38,7 +38,6 @@ class MarketItem(BaseObject):
     price = Column(Integer, nullable=False)
     image = Column(Unicode(255))
     description = Column(Unicode(1024))
-    permission_name = Column(Unicode(64), nullable=False)
 
     @classmethod
     def all(cls):
@@ -70,3 +69,11 @@ class MarketItem(BaseObject):
             'uuid': self.uuid,
         }
         return msg
+
+    def __eq__(self, other):
+        ''' Equivalency '''
+        return self.uuid == other.uuid
+
+    def __ne__(self, other):
+        ''' Not Equivalent '''
+        return not self == other

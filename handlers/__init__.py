@@ -21,8 +21,6 @@ Created on Mar 13, 2012
 
 
 import sys
-import models
-import logging
 
 from time import sleep
 from os import urandom, path
@@ -32,11 +30,9 @@ from modules.Recaptcha import Recaptcha
 from modules.CssTheme import CssTheme
 from libs.ConsoleColors import *
 from libs.Memcache import FileCache
-from libs.Session import SessionManager
-from libs.HostNetworkConfig import HostNetworkConfig
 from libs.AuthenticateReporter import scoring_round
 from libs.ConfigManager import ConfigManager
-from tornado import netutil, options
+from tornado import netutil
 from tornado.web import Application
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
@@ -49,13 +45,13 @@ from handlers.MarketHandlers import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
+from handlers.ShareUploadHandlers import *
 from handlers.NotifySocketHandlers import *
 from handlers.StaticFileHandler import StaticFileHandler
 
 
 config = ConfigManager.Instance()
 app = Application([
-  
                   # Static Handlers - Serves static CSS, JavaScript and
                   # image files
                   (r'/static/(.*)',
@@ -66,8 +62,8 @@ app = Application([
                   # Reporter Handlers - Communication with reporters
                   #(r'/reporter/register', ReporterRegistrationHandler),
 
-                  # User Handlers - Serves user related pages
-                  # File share Handlers
+                  # ShareUploadHandlers - Serves file sharing
+                  # related pages
                   (r'/user/shares/download(.*)', ShareDownloadHandler),
                   (r'/user/share/files', ShareUploadHandler),
                   
@@ -111,7 +107,7 @@ app = Application([
                   (r'/403', UnauthorizedHandler),
                   (r'/(.*).php', NoobHandler),
                   (r'/admin', NoobHandler),
-                  (r'(.*)phpmyadmin(.*)', NoobHandler),
+                  (r'/(.*)phpmyadmin(.*)', NoobHandler),
                   (r'/administrator', NoobHandler),
                   (r'/(.*)', NotFoundHandler)
                   ],
@@ -134,7 +130,11 @@ app = Application([
                   login_url='/login',
 
                   # UI Modules
-                  ui_modules={"Menu": Menu, "CssTheme": CssTheme, "Recaptcha": Recaptcha},
+                  ui_modules={
+                      "Menu": Menu, 
+                      "CssTheme": CssTheme, 
+                      "Recaptcha": Recaptcha,
+                  },
 
                   # Enable XSRF forms
                   xsrf_cookies=True,
@@ -168,8 +168,7 @@ def start_server():
     server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
-    scoring = PeriodicCallback(
-        scoring_round, app.settings['ticks'], io_loop=io_loop)
+    scoring = PeriodicCallback(scoring_round, app.settings['ticks'], io_loop=io_loop)
     scoring.start()
     try:
         for count in range(3, 0, -1):
@@ -178,6 +177,8 @@ def start_server():
             sys.stdout.flush()
             sleep(1)
         sys.stdout.write("\r" + INFO + "The game has begun, good hunting!\n")
+        if config.debug:
+            sys.stdout.write(WARN + "WARNING: Debug mode is enabled.\n")
         sys.stdout.flush()
         io_loop.start()
     except KeyboardInterrupt:

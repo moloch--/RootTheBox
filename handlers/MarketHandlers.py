@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
 Created on Sep 25, 2012
 
@@ -20,10 +21,8 @@ Created on Sep 25, 2012
 '''
 
 
-import json
-
 from BaseHandlers import BaseHandler
-from models import dbsession, MarketItem, Permission, Team
+from models import dbsession, MarketItem, Team
 from libs.Notifier import Notifier
 from libs.SecurityDecorators import authenticated
 
@@ -42,16 +41,16 @@ class MarketViewHandler(BaseHandler):
         ''' Called to purchase an item '''
         try:
             uuid = self.get_argument('uuid')
-        except:
+        except KeyError:
             uuid = ""
         item = MarketItem.by_uuid(uuid)
-        if item != None:
+        if not item is None:
             user = self.get_current_user()
             team = Team.by_id(user.team.id) # Refresh object
-            if user.has_permission(item.permission_name):
+            if user.has_item(item.name):
                 self.render('market/view.html', user=user, errors=["You have already purchased this item."])
             elif team.money < item.price:
-                message = "You only have $%d you cannot afford to purchase this item." % (team.money,)
+                message = "You only have $%d, you cannot afford to purchase this item." % (team.money,)
                 self.render('market/view.html', user=user, errors=[message])
             else:
                 self.purchase_item(team, item)
@@ -59,18 +58,13 @@ class MarketViewHandler(BaseHandler):
                 Notifier.team_success(team, "Upgrade Purchased", message)
                 self.redirect('/market')
         else:
-            self.render('market/view.html', user=user, errors=["Item does not exist."])
+            self.render('market/view.html', user=self.get_current_user(), errors=["Item does not exist."])
 
     def purchase_item(self, team, item):
         ''' Conducts the actual purchase of an item '''
         team.money -= item.price
+        team.items.append(item)
         dbsession.add(team)
-        for member in team.members:
-            perm = Permission(
-                user_id=member.id,
-                name=item.permission_name,
-            )
-            dbsession.add(perm)
         dbsession.flush()
 
 
@@ -82,10 +76,10 @@ class MarketDetailsHandler(BaseHandler):
         ''' Get details on an item '''
         try:
             uuid = self.get_argument('uuid')
-        except:
+        except KeyError:
             uuid = ""
         item = MarketItem.by_uuid(uuid)
-        if item == None:
+        if item is None:
             self.write({'Error': 'Item does not exist.'})
         else:
             self.write(item.to_json())

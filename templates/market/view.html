@@ -10,7 +10,6 @@
 				$("#uuid").val(uuid);
 				$.getJSON('/user/market/details?uuid='+uuid, function(data) {
 					$.each(data, function(key, val) {
-						console.log('Key: '+key+' & Value: ' + val)
 					  	if (key !== "image") {
 					    	$("#" + key).html(val);
 					    } else {
@@ -79,7 +78,7 @@
 							<td>{{ item.name }}</td>
 							<td>${{ item.price }}</td>
 							<td>
-							{% if not user.has_permission(item.permission_name) %}
+							{% if not user.has_item(item.name) %}
 								<button class="btn btn-mini" 
 										data-toggle="modal" 
 										href="#item-details" 

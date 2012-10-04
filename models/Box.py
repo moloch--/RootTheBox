@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
 Created on Mar 11, 2012
 
@@ -22,11 +23,10 @@ Created on Mar 11, 2012
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship, backref, synonym
+from sqlalchemy.orm import relationship
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession
+from models import dbsession, team_to_box
 from models.BaseGameObject import BaseObject
-from models import association_table
 
 
 class Box(BaseObject):
@@ -39,12 +39,12 @@ class Box(BaseObject):
     ip_address = Column(Unicode(16), unique=True, nullable=False)
     description = Column(Unicode(2048))
     difficulty = Column(Unicode(255), nullable=False)
-    avatar = Column(Unicode(64), default=u"default_avatar.gif")
+    avatar = Column(Unicode(64), default=u"default_avatar.jpg")
     root_key = Column(Unicode(64), unique=True, nullable=False)
     root_award = Column(Integer, nullable=False)
     user_key = Column(Unicode(64), unique=True, nullable=False)
     user_reward = Column(Integer, nullable=False)
-    teams = relationship("Team", secondary=association_table, backref="Box")
+    teams = relationship("Team", secondary=team_to_box, backref="Box")
 
     @classmethod
     def all(cls):
@@ -52,9 +52,9 @@ class Box(BaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, identifier):
+        ''' Returns a the object with id of identifier '''
+        return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_name(cls, name):
@@ -67,7 +67,7 @@ class Box(BaseObject):
         return dbsession.query(cls).filter_by(ip_address=unicode(ip_address)).first()
 
     def __repr__(self):
-        return u'<Box - name: %s, root_value: %d, user_value: %d>' % (self.box_name, self.root_key, self.user_key)
+        return u'<Box - name: %s>' % (self.box_name,)
 
     def __unicode__(self):
         return self.box_name
