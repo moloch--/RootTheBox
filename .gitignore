@@ -23,3 +23,6 @@ pip-log.txt
 # Eclipse
 .project
 .pydevproject
+
+# PyCharm
+.idea/
