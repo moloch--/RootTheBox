@@ -77,7 +77,6 @@ item = MarketItem(
     name=u"Underground Source Code Market",
     price=5000,
     description=u"Buy leaked source code.",
-    permission_name=u"sourcecode"
 )
 dbsession.add(item)
 dbsession.flush()
@@ -86,7 +85,6 @@ item = MarketItem(
     name=u"New York Federal Reserve",
     price=10000,
     description=u"Gain access to the internal New York Federal Reserve banking system, allowing you to transfer funds to/from accounts.",
-    permission_name=u"hashes"
 )
 dbsession.add(item)
 dbsession.flush()
@@ -95,7 +93,6 @@ item = MarketItem(
     name=u"SWAT",
     price=100000,
     description=u"Gain access to the internal police computer system, allowing you to insert fraudlent arrest warrents for other players.",
-    permission_name=u"swat"
 )
 dbsession.add(item)
 dbsession.flush()

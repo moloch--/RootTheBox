@@ -136,10 +136,7 @@ class User(BaseObject):
     @property
     def team(self):
         ''' Return a the user's team object '''
-        if self.team_id == None:
-            raise ValueError("User does not have team.")
-        else:
-            return dbsession.query(Team).filter_by(id=self.team_id).first()
+        return dbsession.query(Team).filter_by(id=self.team_id).first()
 
     def has_item(self, item_name):
         ''' Check to see if a team has purchased an item '''

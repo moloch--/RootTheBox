@@ -1,43 +1,31 @@
 {% extends "../main.html" %}
 
-{% block header %}
-<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
-<link href="/static/css/custom-theme/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
-{% end %}
-
 {% block title %}Wall of Sheep{% end %}
 
 {% block content %}
-	<h1>Wall of Sheep</h1>
-	<br />
-	<!-- Start Wall -->
-	<script>
-		$(function() {
-			$( "#accordion" ).accordion({
-				event: "mouseover"
-			});
-		});
-	</script>
-
-	<div class="wall_of_sheep">
+	<div class="container well">
 		{% if len(wall) == 0 %}
 			<h2>No Sheep Yet</h2>
 		{% else %}
+            <!--
 			<div id="accordion">
 				{% for sheep in wall %}
-					<h3><a href="#"><strong>{{ sheep.user.display_name }}</strong> - ({{ sheep.point_value }})</a></h3>
+					<h3><a href="#"><strong>{{ sheep.user.handle }}</strong> (${{ sheep.money }})</a></h3>
 					<div>
 						<div id="sheep_avatar">
 							<img src="/avatars/{{ sheep.user.avatar }}" height=50 width=100 />
 						</div>
 						<div id="sheep_text">
-							<p> {{ sheep.user.display_name }}'s password "{{ sheep.preimage }}" was broken by
-								{{ sheep.cracker.display_name }} for {{ sheep.point_value }} points. </p>
+							<p>
+							    {{ sheep.cracker.handle }} cracked {{ sheep.user.handle }}'s password
+							    "{{ sheep.preimage }}" and stole ${{ sheep.money }} from his team's bank account.
+							</p>
 						</div>
 					</div>
 				{% end %}
 			</div>
+			-->
 		{% end %}
-	</div>
+    </div>
 	<!-- End Wall -->
 {% end %}

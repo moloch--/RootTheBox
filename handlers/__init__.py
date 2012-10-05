@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
 Created on Mar 13, 2012
 
@@ -49,7 +50,7 @@ from handlers.ShareUploadHandlers import *
 from handlers.NotifySocketHandlers import *
 from handlers.StaticFileHandler import StaticFileHandler
 
-
+### Setup and URLs ###
 config = ConfigManager.Instance()
 app = Application([
                   # Static Handlers - Serves static CSS, JavaScript and
@@ -66,13 +67,13 @@ app = Application([
                   # related pages
                   (r'/user/shares/download(.*)', ShareDownloadHandler),
                   (r'/user/share/files', ShareUploadHandler),
-                  
+
                   # PasteBin text sharing handlers
                   (r'/user/share/pastebin', PasteHandler),
                   (r'/user/share/pastebin/create', CreatePasteHandler),
                   (r'/user/share/pastebin/display', DisplayPasteHandler),
                   (r'/user/share/pastebin/delete', DeletePasteHandler),
-                  
+
                   # Market handlers
                   (r'/user/market', MarketViewHandler),
                   (r'/user/market/details', MarketDetailsHandler),
@@ -93,7 +94,6 @@ app = Application([
                   # pages
                   (r'/scoreboard', ScoreboardHandler),
                   (r'/scoreboard/game_data', GameDataHandler),
-
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),
