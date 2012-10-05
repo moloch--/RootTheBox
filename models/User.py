@@ -131,18 +131,13 @@ class User(BaseObject):
     @property
     def team_name(self):
         ''' Return a list with all groups accounts the user is a member of '''
-        if self.team_id == None:
-            return None
-        else:
-            team = dbsession.query(
-                Team).filter_by(id=self.team_id).first()
-            return team.account
+        return self.team.name
 
     @property
     def team(self):
         ''' Return a the user's team object '''
         if self.team_id == None:
-            return None
+            raise ValueError("User does not have team.")
         else:
             return dbsession.query(Team).filter_by(id=self.team_id).first()
 

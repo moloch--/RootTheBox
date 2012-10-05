@@ -25,7 +25,8 @@ from random import randint
 from sqlalchemy import Column #ForeignKey
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession, team_to_box, team_to_item
+from models import dbsession, team_to_box, team_to_item, \
+    team_to_flag, team_to_game_level
 from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits
 
@@ -46,9 +47,10 @@ class Team(BaseObject):
     pastes = relationship("PasteBin", backref=backref("Team", lazy="dynamic"))
     money = Column(Integer, default=0, nullable=False)
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    flags = relationship("Flag", secondary=team_to_flag, backref="Team")
     boxes = relationship("Box", secondary=team_to_box, backref="Team")
     items = relationship("MarketItem", secondary=team_to_item, backref="Team")
-
+    game_levels = relationship("GameLevel", secondary=team_to_game_level, backref="Team")
 
     @classmethod
     def all(cls):

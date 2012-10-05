@@ -22,7 +22,7 @@ Created on Feb 24, 2012
 Flag program, teams need to execute this on boxes
 in order to gain points.  This code supports both
 Windows and Linux.  A .exe can be generated for
-ease of use on Winodws boxes using py2exe and the
+ease of use on Windows boxes using py2exe and the
 build_flag.py script.
 
 '''
@@ -68,7 +68,7 @@ class RtbClient(object):
             self.__reporter__()
         else:
             sys.stdout.write(
-                '[!] Error: Failed to acquire configuration infomation\n')
+                '[!] Error: Failed to acquire configuration information\n')
 
     def load_key_file(self):
         ''' Loads the key file '''
@@ -138,7 +138,7 @@ class RtbClient(object):
         if os.path.exists(path) and os.path.isfile(path):
             key_file = open(path, 'r')
             key_data = key_file.read()
-            key_file.close
+            key_file.close()
             return key_data.strip()
         else:
             return None
@@ -231,7 +231,7 @@ def help():
     sys.stdout.flush()
 
 if __name__ == '__main__':
-    ''' float main() '''
+    # float main()
     try:
         if "--help" in sys.argv or "-h" in sys.argv or "/?" in sys.argv:
             help()

@@ -36,6 +36,8 @@ from string import ascii_letters, digits
 class ShareUploadHandler(BaseHandler):
     ''' Handles file shares for teams '''
 
+    MAX_FILE_SIZE = 50 * (1024 * 1024) # 50Mb
+
     @authenticated
     def get(self, *args, **kwargs):
         ''' Renders upload file page '''
@@ -47,13 +49,13 @@ class ShareUploadHandler(BaseHandler):
         ''' Shit form validation '''
         form = Form(
             description="Please enter a description",
-            )
+        )
         user = self.get_current_user()
         if form.validate(self.request.arguments):
             user = self.get_current_user()
             if 0 == len(self.request.files.keys()):
                 self.render("user/share_files.html", errors=["No file data."], shares=user.team.files)
-            elif 50 * (1024 * 1024) < len(self.request.files['file_data'][0]['body']):
+            elif self.MAX_FILE_SIZE < len(self.request.files['file_data'][0]['body']):
                 self.render("user/share_files.html", errors=["File too large."], shares=user.team.files)
             else:
                 self.create_file(user)
@@ -96,10 +98,8 @@ class ShareDownloadHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        try:
-            uuid = self.get_argument('uuid')
-        except:
-            uuid = ""
+        ''' Get a file and send it to the user '''
+        uuid = self.get_argument('uuid', default="", strip=True)
         user = self.get_current_user()
         share = FileUpload.by_uuid(uuid)
         if share == None or share.team_id != user.team_id:
@@ -110,6 +110,6 @@ class ShareDownloadHandler(BaseHandler):
             self.set_header('Content-Type', share.content)
             self.set_header('Content-Length', share.byte_size)
             self.set_header('Content-Disposition', 'attachment; filename=%s' % share.file_name)
-            self.write(b64decode(data))  # Send file back to user
+            self.write(b64decode(str(data)))  # Send file back to user
             upload.close()
             self.finish()

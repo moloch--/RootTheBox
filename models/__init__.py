@@ -52,6 +52,20 @@ team_to_item = Table('team_to_item', BaseObject.metadata,
                             Integer, ForeignKey('market_item.id'), nullable=False)
                         )
 
+team_to_flag = Table('team_to_flag', BaseObject.metadata,
+                        Column('team_id',
+                            Integer, ForeignKey('team.id'), nullable=False),
+                        Column('flag_id',
+                            Integer, ForeignKey('flag.id'), nullable=False)
+                    )
+
+team_to_game_level = Table('team_to_game_level', BaseObject.metadata,
+                        Column('team_id',
+                            Integer, ForeignKey('team.id'), nullable=False),
+                        Column('game_level_id',
+                            Integer, ForeignKey('game_level.id'), nullable=False)
+                    )
+
 # import models
 from models.Box import Box
 from models.PasteBin import PasteBin

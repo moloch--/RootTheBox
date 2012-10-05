@@ -1,62 +1,71 @@
-
-
-{% extends "../main.html" %} 
+{% extends "../main.html" %}
 
 {% block header %}
-<script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharts.com/modules/exporting.js"></script>
-<script type="text/javascript" src="/static/js/jquery-ui-1.8.18.custom.min.js"></script>
-<link href="/static/css/custom-theme/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+    <script src="/static/js/libs/highcharts.js"></script>
+    <script src="/static/js/libs/exporting.js"></script>
+    <script src="/static/js/jquery.js"></script>
 {% end %} 
 
-{% block title %}Scoreboard{% end %} {% block content %}
-<br>
-		<div id="pie" style="margin-left:-85px; min-width: 500px; width:800px; height: 400px;"></div>
-<script>
-var pc;
-$(document).ready(function() {
-	pc = new Highcharts.Chart({
-		chart: {
-			renderTo: 'pie',
-			plotBackgroundColor: null,
-			plotBorderWidth: null,
-			plotShadow: false,
-			backgroundColor:'transparent'
-		},
-		title: {
-			text: 'Point Distribution'
-		},
-		tooltip: {
-			formatter: function() {
-				return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
-			}
-		},
-		plotOptions: {
-			pie: {
-				allowPointSelect: true,
-				showInLegend: true,
-				cursor: 'pointer',
-				dataLabels: {
-					enabled: true,
-					color: '#000000',
-					connectorColor: '#000000',
-					formatter: function() {
-						return '<b>'+ this.point.name +'</b>';
-					}
-				}
-			}
-		},
-		series: [{
-			type: 'pie',
-			name: 'Browser share',
-			data: [
-				{% for team in teams %}
-					['{{team.team_name}}' , {{cached_scores.find_current_score_by_team(team.team_name)}}],
-				{% end %}
-			]
-		}]
-	});
-});
-</script>
-
+{% block title %}Scoreboard{% end %}
+{% block content %}
+    {% from models import Team %}
+    <div class="well container">
+        <div id="pie" style="margin-left:-85px; min-width: 500px; width:800px; height: 400px;">
+            <!-- Pie Chart Here -->
+        </div>
+        <script>
+            var piechart;
+            $(document).ready(function() {
+                piechart = new Highcharts.Chart({
+                    chart: {
+                        renderTo: 'pie',
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        backgroundColor:'transparent'
+                    },
+                    title: {
+                        text: 'Money Distribution'
+                    },
+                    tooltip: {
+                        formatter: function() {
+                            return '<strong>'+ this.point.name +'</strong>: '+ this.percentage +' %';
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            showInLegend: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                color: '#FFFFFF',
+                                connectorColor: '#FFFFFF',
+                                formatter: function() {
+                                    return '<strong>'+ this.point.name + ' ($' + this.point.y + ')</strong>';
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        type: 'pie',
+                        name: 'Browser share',
+                        data: [
+                            {% for team in Team.all() %}
+                                ['{{ team.name }}' , {{ team.money }}],
+                            {% end %}
+                        ]
+                    }]
+                });
+            });
+            $(document).ready(function() {
+                var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/scoreboard/game_data");
+                ws.onmessage = function (evt) {
+                    update = jQuery.parseJSON(evt.data);
+                    console.log(update);
+                    //piechart.series.setData();
+                };
+            });
+        </script>
+    </div>
 {% end %}

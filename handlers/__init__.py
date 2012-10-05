@@ -91,10 +91,9 @@ app = Application([
 
                   # Scoreboard Handlers - Severs scoreboard related
                   # pages
-                  #(r'/scoreboard', ScoreBoardHandler),
-                  #(r'/all_time(.*)', AllTimeHandler),
-                  #(r'/pie_chart(.*)', PieChartHandler),
-                  #(r'/bar_chart(.*)', BarChartHandler),
+                  (r'/scoreboard', ScoreboardHandler),
+                  (r'/scoreboard/game_data', GameDataHandler),
+
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),

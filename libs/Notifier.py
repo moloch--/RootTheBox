@@ -23,9 +23,8 @@ Created on Sep 20, 2012
 import logging
 import threading
 
-from urlparse import urlparse
 from libs.Singleton import Singleton
-from models import dbsession, Notification, User, Team
+from models import dbsession, Notification, User
 
 
 ### Constants ###
@@ -85,7 +84,7 @@ class NotifyManager(object):
                         message = Notification.by_id(message.id) # Refresh object, to avoid stale data
                         self.__send__(message, wsockets)
                 else:
-                    logging.debug("No new notifications for user id %s." % str(wsocket.user_id))
+                    logging.debug("No new notifications for user id %s." % str(user_id))
             except:
                 logging.exception("Exception while writing notification to websocket.")
 

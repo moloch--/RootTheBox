@@ -25,7 +25,7 @@ import pylibmc
 import logging
 import tornado.websocket
 
-from libs.SecurityDecorators import *
+
 from libs.Notifier import NotifyManager
 from libs.Sessions import MemcachedSession
 from libs.ConfigManager import ConfigManager

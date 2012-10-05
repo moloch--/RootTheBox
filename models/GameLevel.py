@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
 Created on Mar 12, 2012
 
@@ -23,7 +24,7 @@ Created on Mar 12, 2012
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer
 from sqlalchemy.orm import relationship, backref
-from models.Flag import Flag
+from models import dbsession
 from models.BaseGameObject import BaseObject
 
 
@@ -32,6 +33,7 @@ class GameLevel(BaseObject):
 
     name = Column(Unicode(64), unique=True, nullable=False)
     number = Column(Integer, nullable=False)
+    next_level = Column(Integer, ForeignKey('game_level.id'))
     buyout = Column(Integer, nullable=False)
     banner_uri = Column(Unicode(255), nullable=False)
     flags = relationship("Flag", backref=backref(

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
 Created on Mar 12, 2012
 
@@ -22,6 +23,7 @@ Created on Mar 12, 2012
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer
+from models import dbsession
 from models.BaseGameObject import BaseObject
 
 

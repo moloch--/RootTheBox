@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-'''
-Created on Mar 15, 2012
 
-@author: haddaway
+'''
+Created on Oct 04, 2012
+
+@author: moloch
 
     Copyright 2012 Root the Box
 
@@ -19,48 +20,83 @@ Created on Mar 15, 2012
     limitations under the License.
 '''
 
-from tornado.web import RequestHandler
-from models.Team import Team
-from libs.WebSocketManager import WebSocketManager
+
+import logging
+import pylibmc
+import tornado.websocket
+
+from handlers.BaseHandlers import BaseHandler
+from libs.Sessions import MemcachedSession
+from libs.ConfigManager import ConfigManager
+from libs.ScoreboardManager import ScoreboardManager
 
 
-class ScoreBoardHandler(RequestHandler):
+class GameDataHandler(tornado.websocket.WebSocketHandler):
+    '''
+    Get Score data via websocket
+    '''
 
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
-
-    def get(self, *args, **kwargs):
-        ''' Display the scoreboard Page '''
-        self.render('scoreboard/view.html', teams=Team.get_all(
-        ), cached_scores=WebSocketManager.Instance().cachedScores)
-
-
-class AllTimeHandler(RequestHandler):
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
-
-    def get(self, *args, **kwargs):
-        ''' Display the All Time Page '''
-        self.render('scoreboard/all_time.html', teams=Team.get_all(
-        ), cached_scores=WebSocketManager.Instance().cachedScores)
+    def initialize(self):
+        ''' Setup sessions '''
+        self.session = None
+        self.manager = ScoreboardManager.Instance()
+        self.config = ConfigManager.Instance()
+        session_id = self.get_secure_cookie('session_id')
+        if session_id != None:
+            self.conn = pylibmc.Client(
+                [self.config.memcached_server], binary=True)
+            self.conn.behaviors['no_block'] = 1  # Async I/O
+            self.session = self._create_session(session_id)
+            self.session.refresh()
 
 
-class PieChartHandler(RequestHandler):
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
+    def _create_session(self, session_id=None):
+        ''' Creates a new session '''
+        kwargs = {
+            'duration': self.config.session_age,
+            'ip_address': self.request.remote_ip,
+            'regeneration_interval': self.config.session_regeneration_interval,
+        }
+        new_session = None
+        old_session = MemcachedSession.load(session_id, self.conn)
+        if old_session is None or old_session._is_expired():
+            new_session = MemcachedSession(self.conn, **kwargs)
+        if old_session is not None:
+            if old_session._should_regenerate():
+                old_session.refresh()
+            return old_session
+        return new_session
 
-    def get(self, *args, **kwargs):
-        ''' Display the Pie Chart Page '''
-        self.render('scoreboard/pie_chart.html', teams=Team.get_all(
-        ), cached_scores=WebSocketManager.Instance().cachedScores)
+    def open(self):
+        ''' When we receive a new websocket connect '''
+        if self.session != None:
+            logging.debug("Opened new websocket with user id: %s" % str(self.session['user_id']))
+            self.user_id = self.session['user_id']
+            self.manager.add_connection(self)
+        else:
+            self.user_id = 'public'
+            self.manager.add_connection(self)
+
+    def on_message(self, message):
+        ''' Troll the haxors '''
+        if "'" in message:
+            self.write_message("[SQL Server] Unclosed quotation mark before the character string ''.")
+        else:
+            self.write_message("[SQL Server] Syntax error near '%s'." % message)
+
+    def on_close(self):
+        ''' Lost connection to client '''
+        try:
+            self.manager.remove_connection(self)
+        except KeyError:
+            logging.warn("WebSocket connection has already been closed.")
 
 
-class BarChartHandler(RequestHandler):
+class ScoreboardHandler(BaseHandler):
+    '''
+    Renders real-time scoreboard pages
+    '''
 
-    def initialize(self, dbsession):
-        self.dbsession = dbsession
-
-    def get(self, *args, **kwargs):
-        ''' Display the Bar Chart Page '''
-        self.render('scoreboard/bar_chart.html', teams=Team.get_all(
-        ), cached_scores=WebSocketManager.Instance().cachedScores)
+    def get(self):
+        ''' Render pie chart '''
+        self.render('scoreboard/pie_chart.html')
