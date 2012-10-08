@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 '''
 Created on Mar 13, 2012
 
@@ -172,10 +171,3 @@ class SettingsHandler(BaseHandler):
                 return False
         else:
             return True
-
-class ReporterHandler(BaseHandler):
-    ''' Download bots '''
-
-    @authenticated
-    def get(self, *args, **kwargs):
-        self.render("user/reporter.html")

@@ -21,6 +21,7 @@ Created on Mar 12, 2012
 
 from sqlalchemy.types import Unicode, Integer
 from sqlalchemy import Column, ForeignKey
+from models import dbsession
 from models.BaseGameObject import BaseObject
 
 
@@ -41,7 +42,7 @@ class Permission(BaseObject):
         return dbsession.query(cls).filter_by(id=ident).first()
 
     def __repr__(self):
-        return ('<Permission - name: %s, user_id: %d>' % (self.permission_name, self.user_id)).encode('utf-8')
+        return u'<Permission - name: %s, user_id: %d>' % (self.name, self.user_id)
 
     def __unicode__(self):
         return self.name

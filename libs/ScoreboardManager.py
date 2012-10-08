@@ -37,9 +37,10 @@ class ScoreboardManager(object):
         self.lock = threading.Lock()
 
     @classmethod
-    def refresh(self):
+    def refresh(cls):
         ''' Non-blocking call to __refresh__ '''
-        threading.Thread(target=self.__refresh__).start()
+        manager = cls.Instance()
+        threading.Thread(target=manager.__refresh__).start()
 
     def add_connection(self, wsocket):
         ''' Add a connection '''
@@ -77,4 +78,3 @@ class ScoreboardManager(object):
                 'levels': [level.number for level in team.game_levels],
             }
         return data
-

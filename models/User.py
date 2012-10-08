@@ -21,7 +21,7 @@ Created on Mar 12, 2012
 '''
 
 
-from string import ascii_letters, digits, printable
+from os import urandom
 from hashlib import md5, sha256
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
@@ -30,6 +30,7 @@ from libs.ConfigManager import ConfigManager
 from models import dbsession, Team, Permission
 from models.MarketItem import MarketItem
 from models.BaseGameObject import BaseObject
+from string import ascii_letters, digits, printable
 
 
 class User(BaseObject):
@@ -60,6 +61,7 @@ class User(BaseObject):
             self, '_password', self.__class__._hash_password(password))
     ))
     theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
+    psk = Column(Unicode(64), default=lambda: unicode(urandom(32).encode('hex')))
 
     @classmethod
     def all(cls):

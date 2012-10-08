@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 '''
 Root the Box - Authenticate Reporter
 Created on Feb 28, 2012
@@ -72,7 +73,7 @@ def score_team(box, team):
     auth = AuthenticateReporter(box, team)
     auth.check_validity()
     if auth.confirmed_access != None:
-        award_points(box, team, auth)
+        award_money(box, team, auth)
     else:
         team.boxes.remove(box)
         dbsession.add(team)
@@ -89,7 +90,7 @@ def award_money(box, team, auth):
     else:
         team.money += box.user_award
     dbsession.add(team)
-    dbsession.flush
+    dbsession.flush()
 
 
 class AuthenticateReporter(object):

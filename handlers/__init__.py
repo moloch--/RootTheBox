@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 '''
 Created on Mar 13, 2012
 
@@ -48,10 +47,15 @@ from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
 from handlers.ShareUploadHandlers import *
 from handlers.NotifySocketHandlers import *
-from handlers.StaticFileHandler import StaticFileHandler
 
 ### Setup and URLs ###
 config = ConfigManager.Instance()
+
+if config.cache_files:
+    from handlers.StaticFileHandler import StaticFileHandler
+else:
+    from tornado.web import StaticFileHandler
+
 app = Application([
                   # Static Handlers - Serves static CSS, JavaScript and
                   # image files
@@ -182,5 +186,6 @@ def start_server():
         io_loop.start()
     except KeyboardInterrupt:
         print('\r' + WARN + 'Shutdown Everything!')
+    finally:
         FileCache.flush()
         io_loop.stop()

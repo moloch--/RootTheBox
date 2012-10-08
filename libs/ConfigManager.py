@@ -45,7 +45,7 @@ class ConfigManager(object):
         self.cfg_path = os.path.abspath(cfg_file)
         if not (os.path.exists(self.cfg_path) and os.path.isfile(self.cfg_path)):
             logging.critical("No configuration file found at %s, cannot continue." %
-                             cfg_path)
+                             self.cfg_path)
             os._exit(1)
         logging.info('Loading config from %s' % self.cfg_path)
         self.config = ConfigParser.SafeConfigParser()
@@ -62,6 +62,7 @@ class ConfigManager(object):
         self.debug = self.config.getboolean("Server", 'debug')
         self.domain = self.config.get("Server", 'domain')
         self.default_theme = self.config.get("Server", "theme")
+        self.cache_files = self.config.getboolean("Server", "cache_files")
 
     def __sessions__(self):
         self.memcached_server = self.config.get("Sessions", 'memcached')

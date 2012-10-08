@@ -20,7 +20,6 @@ Created on Mar 12, 2012
 '''
 
 import pylibmc
-import hashlib
 import logging
 
 from base64 import b64encode

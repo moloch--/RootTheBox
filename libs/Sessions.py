@@ -18,11 +18,13 @@ Every session object can be handled as a dictionary:
 import re
 import os
 import time
-import types
 import base64
+import logging
 import datetime
 import collections
 import cPickle as pickle
+
+from os import _exit
 
 
 SID_SIZE = 32  # Size in bytes
@@ -305,4 +307,5 @@ try:
             self.connection.delete(self.session_id)
 
 except ImportError:
-    pass
+    logging.exception("Failed to import PyLibmc, no session support.")
+    _exit(1)

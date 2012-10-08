@@ -380,7 +380,7 @@ def get_value(token):
         if index + 1 < len(sys.argv):
             return sys.argv[index + 1]
         else:
-            raise ValueError
+            raise ValueError("Missing parameter")
     except ValueError:
         sys.stdout.write("[!] Error: No value for parameter (%s)\n" % (token,))
         sys.stdout.flush()

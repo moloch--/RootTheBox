@@ -20,23 +20,12 @@ Created on Mar 13, 2012
 '''
 
 
-import imghdr
-import base64
-import logging
 
-from os import path
-from uuid import uuid1
-from random import randint
-from base64 import b64encode
-from mimetypes import guess_type
 from libs.Form import Form
 from libs.SecurityDecorators import *
-from libs.WebSocketManager import WebSocketManager
-from libs.Notification import Notification
-from models import Team, Box, RegistrationToken
+from models import dbsession, Team, Box, Corporation, RegistrationToken
 from handlers.BaseHandlers import BaseHandler
-from tornado.web import RequestHandler
-from string import ascii_letters, digits
+
 
 
 class AdminCreateHandler(BaseHandler):

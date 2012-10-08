@@ -64,4 +64,4 @@ class WallOfSheep(BaseObject):
         return dbsession.query(cls).filter_by(cracker_id=cracker_id).all()
 
     def __repr__(self):
-        return ('<WallOfSheep - preimage: %s, user_id: %d>' % (self.preimage, self.user_id)).encode('utf-8')
+        return u'<WallOfSheep - preimage: %s, user_id: %d>' % (self.preimage, self.user_id)
