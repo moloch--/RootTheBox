@@ -101,7 +101,7 @@ app = Application([
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),
-                  (r'/registration', UserRegistraionHandler),
+                  (r'/registration', UserRegistrationHandler),
                   (r'/about', AboutHandler),
                   (r'/logout', LogoutHandler),
                   (r'/', HomePageHandler),

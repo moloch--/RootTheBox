@@ -30,8 +30,10 @@ from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
 from models import dbsession, User, Permission, Theme, MarketItem
 
+
 # Fills the database with some startup data.
 config = ConfigManager.Instance()
+password = ""
 
 if config.debug:
     password = 'nimda123'
@@ -101,8 +103,11 @@ dbsession.flush()
 user = User(
     account=u'admin',
     handle=u'God',
-    password=password
+    algorithm=u'scrypt',
 )
+dbsession.add(user)
+dbsession.flush()
+user.password = password
 dbsession.add(user)
 dbsession.flush()
 

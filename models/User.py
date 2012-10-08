@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 '''
 Created on Mar 12, 2012
 
@@ -21,12 +20,13 @@ Created on Mar 12, 2012
 '''
 
 
+import scrypt
+
 from os import urandom
-from hashlib import md5, sha256
+from hashlib import md5, sha1, sha256
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
-from sqlalchemy.types import Unicode, Integer
-from libs.ConfigManager import ConfigManager
+from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession, Team, Permission
 from models.MarketItem import MarketItem
 from models.BaseGameObject import BaseObject
@@ -49,8 +49,8 @@ class User(BaseObject):
             self, '_handle', self.__class__.filter_string(handle, " _-"))
     ))
     team_id = Column(Integer, ForeignKey('team.id'))
-    permissions = relationship("Permission", backref=backref("User",
-                                                             lazy="joined"), cascade="all, delete-orphan")
+    permissions = relationship("Permission", backref=backref(
+        "User", lazy="joined"), cascade="all, delete-orphan")
     notifications = relationship("Notification", backref=backref(
         "User", lazy="joined"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
@@ -58,10 +58,12 @@ class User(BaseObject):
     password = synonym('_password', descriptor=property(
         lambda self: self._password,
         lambda self, password: setattr(
-            self, '_password', self.__class__._hash_password(password))
+            self, '_password', self.__class__._hash_password(self.algorithm, password, self.salt))
     ))
+    algorithm = Column(Unicode(8), default=u"md5", nullable=False)
     theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
     psk = Column(Unicode(64), default=lambda: unicode(urandom(32).encode('hex')))
+    salt = Column(String(32), default=lambda: urandom(16).encode('hex'))
 
     @classmethod
     def all(cls):
@@ -89,36 +91,9 @@ class User(BaseObject):
         return dbsession.query(cls).filter_by(handle=unicode(handle)).first()
 
     @classmethod
-    def _hash_password(cls, password):
-        ''' Hashes the password using Md5/Sha256 :D '''
-        config = ConfigManager.Instance()
-        password = filter(lambda char: char in printable[:-5], password)
-        if config.max_password_length <= len(password):
-            password = cls.admin_hash(password)
-        else:
-            password = cls.user_hash(password)
-        return password
-
-    @classmethod
     def filter_string(cls, string, extra_chars=''):
         char_white_list = ascii_letters + digits + extra_chars
         return filter(lambda char: char in char_white_list, string)
-
-    @classmethod
-    def user_hash(cls, preimage):
-        ''' Single round md5 '''
-        md5_hash = md5()
-        md5_hash.update(preimage)
-        return unicode(md5_hash.hexdigest())
-
-    @classmethod
-    def admin_hash(cls, preimage):
-        ''' 25,000 rounds of sha256 '''
-        sha_hash = sha256()
-        sha_hash.update(preimage)
-        for count in range(1, 25000):
-            sha_hash.update(preimage + sha_hash.hexdigest() + str(count))
-        return unicode(sha_hash.hexdigest())
 
     @property
     def permissions(self):
@@ -131,14 +106,29 @@ class User(BaseObject):
         return [permission.name for permission in self.permissions]
 
     @property
-    def team_name(self):
-        ''' Return a list with all groups accounts the user is a member of '''
-        return self.team.name
-
-    @property
     def team(self):
         ''' Return a the user's team object '''
         return dbsession.query(Team).filter_by(id=self.team_id).first()
+
+    @classmethod
+    def _hash_password(cls, algorithm_name, password, salt):
+        ''' Hashes the password using Md5/Sha256 :D '''
+        algorithms = {'md5': md5, 'sha1': sha1, 'sha256': sha256}
+        password = filter(lambda char: char in printable[:-5], password)
+        if algorithm_name == u'scrypt':
+            return cls.__scrypt__(password, salt)
+        elif algorithm_name in algorithms.keys():
+            algo = algorithms[algorithm_name]()
+            algo.update(password)
+            return unicode(algo.hexdigest())
+        else:
+            raise ValueError("Algorithm not supported.")
+
+    @classmethod
+    def __scrypt__(cls, password, salt):
+        ''' Uses scrypt to hash the password '''
+        scrypt_hash = scrypt.hash(password, salt)
+        return unicode(scrypt_hash.encode('hex'))
 
     def has_item(self, item_name):
         ''' Check to see if a team has purchased an item '''
@@ -152,12 +142,9 @@ class User(BaseObject):
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
         attempt = filter(lambda char: char in printable[:-5], attempt)
-        if not isinstance(attempt, unicode):
-            attempt = unicode(attempt)
-        if self.has_permission('admin'):
-            return self.password == self.admin_hash(attempt)
-        else:
-            return self.password == self.user_hash(unicode(attempt))
+        result = self._hash_password(self.algorithm, attempt, self.salt)
+        return bool(self.password == result)
+
 
     def get_new_notifications(self):
         ''' Returns any unread messages '''

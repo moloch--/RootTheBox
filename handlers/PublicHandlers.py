@@ -84,7 +84,7 @@ class LoginHandler(BaseHandler):
             "Bad username and/or password, try again"])
 
 
-class UserRegistraionHandler(BaseHandler):
+class UserRegistrationHandler(BaseHandler):
     ''' Registration Code '''
 
     def get(self, *args, **kwargs):
@@ -104,13 +104,13 @@ class UserRegistraionHandler(BaseHandler):
         )
         if form.validate(self.request.arguments):
             config = ConfigManager.Instance()
-            if User.by_account(self.request.arguments['account']) != None:
+            if User.by_account(self.get_argument('account')) != None:
                 self.render('public/registration.html',
                             errors=['Account name already taken'])
             elif self.request.arguments['account'] == self.request.arguments['handle']:
                 self.render('public/registration.html',
                             errors=['Account name and hacker name must differ'])
-            elif User.by_handle(self.request.arguments['handle']) != None:
+            elif User.by_handle(self.get_argument('handle')) != None:
                 self.render(
                     'public/registration.html', errors=['Handle already taken'])
             elif not self.request.arguments['pass1'] == self.request.arguments['pass2']:
@@ -119,7 +119,7 @@ class UserRegistraionHandler(BaseHandler):
             elif not 0 < len(self.request.arguments['pass1']) <= config.max_password_length:
                 self.render('public/registration.html',
                             errors=['Password must be 1-%d characters' % config.max_password_length])
-            elif len(self.request.arguments['team'][0]) == 0 or Team.by_uuid(self.request.arguments['team'][0]) == None:
+            elif len(self.get_argument('team')) == 0 or Team.by_uuid(self.get_arguments('team')) == None:
                 self.render('public/registration.html', errors=["Please select a team to join"])
             elif RegistrationToken.by_value(self.get_argument('token').lower()) == None and config.debug == False:
                 self.render('public/registration.html', errors=["Invalid registration token"])
@@ -134,11 +134,13 @@ class UserRegistraionHandler(BaseHandler):
         ''' Add user to the database '''
         team = Team.by_uuid(self.request.arguments['team'][0])
         user = User(
-            account=unicode(self.request.arguments['account']),
-            handle=unicode(self.request.arguments['handle']),
+            account=unicode(self.get_argument('account')),
+            handle=unicode(self.get_argument('handle')),
             team_id=team.id,
-            password=str(self.request.arguments['pass1'][0]),
         )
+        dbsession.add(user)
+        dbsession.flush()
+        user.password = self.get_argument('pass1')
         token = RegistrationToken.by_value(self.get_argument('token').lower())
         if token != None: # May be None if debug mode is on
             token.used = True
