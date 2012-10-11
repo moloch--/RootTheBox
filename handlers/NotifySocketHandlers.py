@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 '''
 Created on Mar 15, 2012
 
@@ -67,7 +66,7 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
 
     def open(self):
         ''' When we receive a new websocket connect '''
-        if self.session != None:
+        if self.session is not None:
             logging.debug("Opened new websocket with user id: %s" % str(self.session['user_id']))
             self.user_id = self.session['user_id']
             self.manager.add_connection(self)

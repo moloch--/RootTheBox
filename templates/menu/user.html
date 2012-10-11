@@ -32,31 +32,29 @@
                   <li><a href="/user/share/pastebin">PasteBin</a></li>
                 </ul>
               </li>
-              <li><a href="/scoreboard">Scoreboard</a></li>
-              {% if user.has_item(u"New York Federal Reserve") %}
+              {% if len(user.team.items) != 0 %}
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    New York Reserve
+                    Unlocks
                   <b class="caret"></b>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a href="/hashes">Hashes</a></li>
-                    <li><a href="/wallofsheep">Wall of Sheep</a></li>
+                    {% if user.has_item("Source Code Market") %}
+                        <li><a href="/srcmarket">Source Code Market</a></li>
+                    {% end %}
+                    {% if user.has_item("Password Security") %}
+                        <li><a href="/passwdsec">Password Security</a></li>
+                    {% end %}
+                    {% if user.has_item("New York Federal Reserve") %}
+                        <li><a href="/fed">New York Federal Reserve</a></li>
+                    {% end %}
+                    {% if user.has_item("SWAT") %}
+                        <li><a href="/swat">S.W.A.T.</a></li>
+                    {% end %}
                   </ul>
                 </li>
               {% end %}
-              {% if user.has_item(u"SWAT") %}
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    S.W.A.T.
-                  <b class="caret"></b>
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li><a href="/hashes">Hashes</a></li>
-                    <li><a href="/wallofsheep">Wall of Sheep</a></li>
-                  </ul>
-                </li>   
-              {% end %}
+              <li><a href="/scoreboard">Scoreboard</a></li>
               <li><a href="/about">About</a></li>
             </ul>
           </div><!--/.nav-collapse -->

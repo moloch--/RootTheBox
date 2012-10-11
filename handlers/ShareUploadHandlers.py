@@ -88,7 +88,7 @@ class ShareUploadHandler(BaseHandler):
                 team_id=user.team.id
             )
             dbsession.add(file_upload)
-            message = "%s shared %s" % (user.handle, file_name)
+            message = "%s shared the file '%s'" % (user.handle, file_name)
             Notifier.team_success(user.team, "File Shared", message)
             self.redirect("/user/share/files")
 
@@ -107,9 +107,10 @@ class ShareDownloadHandler(BaseHandler):
         else:
             upload = open(self.application.settings['shares_dir'] + '/' + share.uuid, 'r')
             data = upload.read()
+            # Watch out for http header injection!
             self.set_header('Content-Type', share.content)
             self.set_header('Content-Length', share.byte_size)
             self.set_header('Content-Disposition', 'attachment; filename=%s' % share.file_name)
-            self.write(b64decode(str(data)))  # Send file back to user
+            self.write(b64decode(data))  # Send file back to user
             upload.close()
             self.finish()

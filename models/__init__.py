@@ -82,6 +82,7 @@ from models.GameLevel import GameLevel
 from models.Theme import Theme
 from models.RegistrationToken import RegistrationToken
 from models.MarketItem import MarketItem
+from models.IpAddress import IpAddress
 
 # calling this will create the tables at the database
 create_tables = lambda: (

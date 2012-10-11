@@ -119,7 +119,7 @@ class UserRegistrationHandler(BaseHandler):
             elif not 0 < len(self.request.arguments['pass1']) <= config.max_password_length:
                 self.render('public/registration.html',
                             errors=['Password must be 1-%d characters' % config.max_password_length])
-            elif len(self.get_argument('team')) == 0 or Team.by_uuid(self.get_arguments('team')) == None:
+            elif len(self.get_argument('team')) == 0 or Team.by_uuid(self.get_argument('team')) == None:
                 self.render('public/registration.html', errors=["Please select a team to join"])
             elif RegistrationToken.by_value(self.get_argument('token').lower()) == None and config.debug == False:
                 self.render('public/registration.html', errors=["Invalid registration token"])
@@ -132,7 +132,7 @@ class UserRegistrationHandler(BaseHandler):
 
     def create_user(self):
         ''' Add user to the database '''
-        team = Team.by_uuid(self.request.arguments['team'][0])
+        team = Team.by_uuid(self.get_argument('team'))
         user = User(
             account=unicode(self.get_argument('account')),
             handle=unicode(self.get_argument('handle')),

@@ -71,7 +71,8 @@ class RecoveryConsole(cmd.Cmd):
                     permissions += str("%s)" % user.permissions_names[-1])
                 if user.team != None:
                     team = " from " + bold + str(user.team) + W + " "
-                print(INFO + bold + user.account + W + " a.k.a. " + bold + user.handle + W + team + permissions)
+                print(INFO + bold + user.account + W + " a.k.a. " + bold +
+                      user.handle + W + team + permissions)
         elif obj.lower() == "team" or obj.lower() == "teams":
             for team in Team.all():
                 print(INFO + team.name)

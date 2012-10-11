@@ -22,7 +22,7 @@ Created on Mar 12, 2012
 
 from uuid import uuid4
 from random import randint
-from sqlalchemy import Column #ForeignKey
+from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession, team_to_box, team_to_item, \
@@ -43,14 +43,14 @@ class Team(BaseObject):
     motto = Column(Unicode(255))
     members = relationship("User", backref=backref("Team", lazy="joined"), cascade="all, delete-orphan")
     listen_port = Column(Integer, default=lambda: randint(1024, 65535), unique=True, nullable=False)
-    files = relationship("FileUpload", backref=backref("Team", lazy="dynamic"))
-    pastes = relationship("PasteBin", backref=backref("Team", lazy="dynamic"))
-    money = Column(Integer, default=0, nullable=False)
+    files = relationship("FileUpload", backref=backref("Team", lazy="select"))
+    pastes = relationship("PasteBin", backref=backref("Team", lazy="select"))
+    money = Column(Integer, default=100, nullable=False)
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
-    flags = relationship("Flag", secondary=team_to_flag, backref="Team")
-    boxes = relationship("Box", secondary=team_to_box, backref="Team")
-    items = relationship("MarketItem", secondary=team_to_item, backref="Team")
-    game_levels = relationship("GameLevel", secondary=team_to_game_level, backref="Team")
+    flags = relationship("Flag", secondary=team_to_flag, backref=backref("Team", lazy="select"))
+    boxes = relationship("Box", secondary=team_to_box, backref=backref("Team", lazy="select"))
+    items = relationship("MarketItem", secondary=team_to_item, backref=backref("Team", lazy="joined"))
+    game_levels = relationship("GameLevel", secondary=team_to_game_level, backref=backref("Team", lazy="select"))
 
     @classmethod
     def all(cls):
@@ -84,11 +84,11 @@ class Team(BaseObject):
 
     def file_by_file_name(self, file_name):
         ''' Return file object based on file_name '''
-        return self.files.filter_by(file_name=file_name).first()
-
-    def file_by_uuid(self, uuid):
-        ''' Return file object based on uuid '''
-        return self.files.filter_by(uuid=uuid).first()
+        ls = self.files.filter_by(file_name=file_name)
+        if 0 < len(ls):
+            return ls[0]
+        else:
+            return None
 
     def __repr__(self):
         return u'<Team - name: %s, money: %d>' % (self.name, self.money)

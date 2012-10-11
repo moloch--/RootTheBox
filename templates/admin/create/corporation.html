@@ -3,30 +3,36 @@
 {% block title %}Login{% end %}
 
 {% block content %}
-  <h1>Create Game Object</h1>
-  <br />
-  {% if errors != None and len(errors) != 0 %}
-    {% for error in errors %}
-      <div class="alert alert-error">
-        <a class="close" data-dismiss="alert" href="#">×</a>
-        <h4 class="alert-heading">ERROR</h4>
-        {{ error }}
-      </div>
+  <div class="container">
+    <h1>Create Game Object</h1>
+    <br />
+    {% if errors != None and len(errors) != 0 %}
+      {% for error in errors %}
+        <div class="alert alert-error">
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">ERROR</h4>
+          {{ error }}
+        </div>
+      {% end %}
     {% end %}
-  {% end %}
-  <div class="well">
-    <form action="/admin/create/corporation" method="post">  
-      {% raw xsrf_form_html() %}
-      <fieldset>
-        <legend>Create Corporation</legend>
-        <p>
-          <label for="corporation">Corporation Name</label>
-          <input name="corporation" placeholder="Corporation Name" type="text" />
-        </p>
-      </fieldset>
-      <p class="submit">
-        <button class="btn btn-primary btn-large" type="submit">Create Corporation</button>
-      </p>   
-    </form>
+    <div class="well">
+      <form action="/admin/create/corporation" method="post">  
+        {% raw xsrf_form_html() %}
+        <fieldset>
+          <legend>Create Corporation</legend>
+          <p>
+            <label for="corporation_name">Corporation Name</label>
+            <input name="corporation_name" placeholder="Corporation Name" type="text" />
+          </p>
+          <p>
+            <label for="description">Description</label>
+            <input name="description" placeholder="Description" type="text" />
+          </p>
+        </fieldset>
+        <p class="submit">
+          <button class="btn btn-primary" type="submit">Create Corporation</button>
+        </p>   
+      </form>
+    </div>
   </div>
 {% end %}

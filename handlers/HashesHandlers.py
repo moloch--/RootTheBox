@@ -29,6 +29,8 @@ from handlers.BaseHandlers import BaseHandler
 class HashesHandler(BaseHandler):
     ''' Displays user password hashes '''
 
+    MIN_ACCOUNT = 100
+
     @authenticated
     def get(self, *args, **kwargs):
         ''' Renders hashes page '''
@@ -44,9 +46,9 @@ class HashesHandler(BaseHandler):
         if target is None or user is None or target.has_permission("admin"):
             self.render_page(errors=["That user does not exist"])
         elif target in user.team.members:
-            self.render_page(errors=["You can't crack hashes from your own team"])
-        elif target.money <= 0:
-            self.render_page(errors=["Target user's team must have a bank account balance greater than zero"])
+            self.render_page(errors=["We got a badass over here; trying to crack his own team's hashes"])
+        elif target.money <= self.MIN_ACCOUNT:
+            self.render_page(errors=["Target user's team must have a bank account balance greater than %d" % self.MIN_ACCOUNT])
         elif target.validate_password(preimage):
             stolen_money = self.steal_money(user, target)
             self.add_to_wall(user, target, preimage, stolen_money)

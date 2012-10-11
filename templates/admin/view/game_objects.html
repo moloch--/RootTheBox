@@ -1,0 +1,114 @@
+{% extends "../../main.html" %}
+
+{% block title %}Game Objects{% end %}
+
+{% block content %}
+    <!-- Edit Corporation -->
+    <div id="editCorporationModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Edit Corporation</h3>
+        </div>
+        <div class="modal-body">
+        <form id="edit-corporation" method="post" action="/admin/edit/corporation">
+            {% raw xsrf_form_html() %}
+            <input name="corporation_name" type="text" placeholder="Corporation Name" />
+            <input name="description" type="text" placeholder="Description" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button class="btn btn-primary" type="button" onclick="">Save</button>
+        </div>
+    </div>
+    <!-- Edit Box -->
+    <div id="editBoxModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Edit Box</h3>
+        </div>
+        <div class="modal-body">
+        <form id="edit-box" method="post" action="/admin/edit/box">
+            {% raw xsrf_form_html() %}
+            <input name="box_name" type="text" placeholder="Box Name" />
+            <select name="corporation_uuid">
+                <option value=""></option>
+                {% from models import Corporation %}
+                {% for corporation in Corporation.all() %}
+                    <option value="{{ corporation.uuid }}">{{ corporation.name }}</option>
+                {% end %}
+            </select>
+            <input name="ip_address" type="text" placeholder="IP Address" />
+            <input name="description" type="text" placeholder="Description" />
+            <input name="difficulty" type="text" placeholder="Difficutly Rating" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button type="button" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+    <!-- Edit Flag -->
+    <div id="editFlagModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Edit Flag</h3>
+        </div>
+        <div class="modal-body">
+        <form id="edit-box" method="post" action="/admin/edit/flag">
+            {% raw xsrf_form_html() %}
+            <input name="flag_name" type="text" placeholder="Flag Name" />
+            <input name="token" type="text" placeholder="Token Value" />
+            <input name="description" type="text" placeholder="Description" />
+            <input name="value" type="text" placeholder="Reward Value" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button type="button" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+    <!-- Start Visable -->
+    <h1>Game Objects</h1>
+    <br />
+    {% from models import Corporation %}
+    {% for corporation in Corporation.all() %}
+    <div class="well">
+        <h2 style="display:inline;">{{ corporation.name }}</h2>
+        <a class="btn btn-small" data-toggle="modal" href="#editCorporationModal">
+            Edit
+        </a>        
+        {% for box in corporation.boxes %}
+            <h3 style="display:inline;">{{ box.name }}</h3>
+                <a class="btn btn-small" data-toggle="modal" href="#editBoxModal">
+                    Edit
+                </a>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Flag</th>
+                        <th>Token</th>
+                        <th>Value</th>
+                        <th><!-- Edit Button --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for flag in box.flags %}
+                        <tr>
+                            <td>{{ flag.id }}</td>
+                            <td>{{ flag.name }}</td>
+                            <td>{{ flag.token }}</td>
+                            <td>${{ flag.value }}</td>
+                            <td>
+                                <a class="btn btn-mini" data-toggle="modal" href="#editFlagModal">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+        {% end %}
+    </div>
+{% end %}

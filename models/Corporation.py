@@ -20,9 +20,11 @@ Created on Mar 12, 2012
 '''
 
 
+from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Integer
 from sqlalchemy.orm import relationship, backref
+from models import dbsession
 from models.BaseGameObject import BaseObject
 
 
@@ -30,6 +32,7 @@ class Corporation(BaseObject):
     ''' Corporation definition '''
 
     name = Column(Unicode(64), unique=True, nullable=False)
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     description = Column(Unicode(1024), nullable=False)
     boxes = relationship("Box", backref=backref(
         "Corporation", lazy="joined"), cascade="all, delete-orphan")
@@ -43,3 +46,13 @@ class Corporation(BaseObject):
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
         return dbsession.query(cls).filter_by(id=ident).first()
+
+    @classmethod
+    def by_name(cls, corp_name):
+        ''' Returns a the object with name of corp_name '''
+        return dbsession.query(cls).filter_by(name=corp_name).first()
+
+    @classmethod
+    def by_uuid(cls, uuid):
+        ''' Return an object based on uuid '''
+        return dbsession.query(cls).filter_by(uuid=uuid).first()

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 '''
 Created on Sep 25, 2012
 
@@ -56,7 +55,7 @@ class MarketViewHandler(BaseHandler):
                 self.purchase_item(team, item)
                 message = "%s purchased %s from the black market." % (user.handle, item.name)
                 Notifier.team_success(team, "Upgrade Purchased", message)
-                self.redirect('/market')
+                self.redirect('/user/market')
         else:
             self.render('market/view.html', user=self.get_current_user(), errors=["Item does not exist."])
 

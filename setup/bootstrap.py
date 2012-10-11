@@ -28,7 +28,7 @@ import getpass
 
 from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
-from models import dbsession, User, Permission, Theme, MarketItem
+from models import dbsession, User, Permission, Theme, MarketItem, GameLevel
 
 
 # Fills the database with some startup data.
@@ -76,9 +76,17 @@ for css in css_files:
 
 # Market Items
 item = MarketItem(
-    name=u"Underground Source Code Market",
+    name=u"Source Code Market",
     price=5000,
     description=u"Buy leaked source code.",
+)
+dbsession.add(item)
+dbsession.flush()
+
+item = MarketItem(
+    name=u"Password Security",
+    price=7500,
+    description=u"Allows your team to upgrade their password hashes to SHA1, and SHA256.",
 )
 dbsession.add(item)
 dbsession.flush()
@@ -97,6 +105,14 @@ item = MarketItem(
     description=u"Gain access to the internal police computer system, allowing you to insert fraudlent arrest warrents for other players.",
 )
 dbsession.add(item)
+dbsession.flush()
+
+# Game Levels
+game_level = GameLevel(
+    number=0,
+    buyout=0,
+)
+dbsession.add(game_level)
 dbsession.flush()
 
 # Admin User Account

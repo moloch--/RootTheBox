@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 '''
 Created on Mar 12, 2012
 
@@ -21,7 +20,9 @@ Created on Mar 12, 2012
 '''
 
 
-from sqlalchemy import Column, ForeignKey
+import itertools
+
+from sqlalchemy import Column, ForeignKey, asc
 from sqlalchemy.types import Unicode, Integer
 from sqlalchemy.orm import relationship, backref
 from models import dbsession
@@ -31,20 +32,40 @@ from models.BaseGameObject import BaseObject
 class GameLevel(BaseObject):
     ''' Game Level definition '''
 
-    name = Column(Unicode(64), unique=True, nullable=False)
-    number = Column(Integer, nullable=False)
-    next_level = Column(Integer, ForeignKey('game_level.id'))
+    number = Column(Integer, unique=True, nullable=False)
+    next_level_id = Column(Integer, ForeignKey('game_level.id'))
     buyout = Column(Integer, nullable=False)
-    banner_uri = Column(Unicode(255), nullable=False)
-    flags = relationship("Flag", backref=backref(
-        "GameLevel", lazy="joined"), cascade="all, delete-orphan")
+    boxes = relationship("Box", backref=backref("GameLevel", lazy="joined"), cascade="all, delete-orphan")
 
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return dbsession.query(cls).order_by(asc(cls.number)).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
         return dbsession.query(cls).filter_by(id=ident).first()
+
+    @classmethod
+    def by_number(cls, number):
+        ''' Returns a the object with number of number '''
+        return dbsession.query(cls).filter_by(number=number).first()
+
+    @property
+    def flags(self):
+        ''' Return all flags for the level '''
+        return list(itertools.chain(*self.boxes.flags))
+
+    def next(self):
+        ''' Return the next level, or None '''
+        if self.next_level_id is not None:
+            return self.by_id(self.next_level_id)
+        else:
+            return None
+
+    def __cmp__(self, other):
+        if self.number < other.number:
+            return -1
+        else:
+            return 1

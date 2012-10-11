@@ -215,7 +215,7 @@ class Notifier(object):
             message=unicode(message),
             category=category,
         )
-        if icon != None:
+        if icon is not None:
             notification.icon = icon
         dbsession.add(notification)
         dbsession.flush()

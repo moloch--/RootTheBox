@@ -16,7 +16,7 @@
 '''
 
 
-from os import system
+from os import system, path
 from sys import argv
 from time import sleep
 from datetime import datetime
@@ -60,6 +60,18 @@ def recovery():
     except KeyboardInterrupt:
         print(INFO + "Have a nice day!")
 
+def setup():
+    ''' Imports a setup file '''
+    from libs.ConfigManager import ConfigManager  # Sets up logging
+    if 3 == len(argv) and path.exists(argv[2]) and path.isfile(argv[2]):
+        print(INFO + "%s : Import setup file '%s' ..." % (current_time(), argv[2]))
+        __import__(argv[2])
+    elif 3 == len(argv):
+        print(WARN + "File not found: %s" % argv[1])
+    else:
+        print(INFO + "%s : Running default setup file 'setup/game.py' ..." % (current_time(),))
+        from setup import game
+        print(INFO + "Setup file completed.")
 
 def help():
     ''' Displays a helpful message '''
@@ -75,6 +87,8 @@ def help():
           ' - Inits the database tables and creates an admin account')
     print('\t' + bold + 'python . recovery' + W +
           '         - Starts the recovery console')
+    print('\t' + bold + 'python . setup <file>' + W +
+          '         - Imports objects from setup/game.py or <file>')
 
 ### Main
 if __name__ == '__main__':
@@ -83,6 +97,7 @@ if __name__ == '__main__':
         'serve': serve,
         'create': create,
         'recovery': recovery,
+        'setup': setup,
     }
     if len(argv) == 1:
         help()

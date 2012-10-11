@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 '''
 Created on Mar 12, 2012
 
@@ -21,6 +20,7 @@ Created on Mar 12, 2012
 '''
 
 
+from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer
 from models import dbsession
@@ -30,12 +30,12 @@ from models.BaseGameObject import BaseObject
 class Flag(BaseObject):
     ''' Flag definition '''
 
-    game_level_id = Column(
-        Integer, ForeignKey('game_level.id'), nullable=False)
     name = Column(Unicode(255), nullable=False)
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     token = Column(Unicode(255), nullable=False)
     description = Column(Unicode(255), nullable=False)
-    money = Column(Integer, nullable=False)
+    value = Column(Integer, nullable=False)
+    box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
 
     @classmethod
     def all(cls):
@@ -46,3 +46,13 @@ class Flag(BaseObject):
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
         return dbsession.query(cls).filter_by(id=ident).first()
+
+    @classmethod
+    def by_name(cls, corp_name):
+        ''' Returns a the object with name of corp_name '''
+        return dbsession.query(cls).filter_by(name=corp_name).first()
+
+    @classmethod
+    def by_uuid(cls, uuid):
+        ''' Return and object based on a uuid '''
+        return dbsession.query(cls).filter_by(uuid=uuid).first()

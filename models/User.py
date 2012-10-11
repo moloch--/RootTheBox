@@ -52,7 +52,7 @@ class User(BaseObject):
     permissions = relationship("Permission", backref=backref(
         "User", lazy="joined"), cascade="all, delete-orphan")
     notifications = relationship("Notification", backref=backref(
-        "User", lazy="joined"), cascade="all, delete-orphan")
+        "User", lazy="select"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
@@ -126,13 +126,15 @@ class User(BaseObject):
 
     @classmethod
     def __scrypt__(cls, password, salt):
-        ''' Uses scrypt to hash the password '''
+        ''' Uses scrypt to hash the password using a random salt '''
         scrypt_hash = scrypt.hash(password, salt)
         return unicode(scrypt_hash.encode('hex'))
 
     def has_item(self, item_name):
         ''' Check to see if a team has purchased an item '''
         item = MarketItem.by_name(item_name)
+        if item is None:
+            raise ValueError("Item '%s' not in database." % str(item_name))
         return True if item in self.team.items else False
 
     def has_permission(self, permission):
@@ -144,7 +146,6 @@ class User(BaseObject):
         attempt = filter(lambda char: char in printable[:-5], attempt)
         result = self._hash_password(self.algorithm, attempt, self.salt)
         return bool(self.password == result)
-
 
     def get_new_notifications(self):
         ''' Returns any unread messages '''
