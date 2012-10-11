@@ -55,7 +55,6 @@ class AdminCreateHandler(BaseHandler):
             'box': self.create_box,
             'flag': self.create_flag,
             'team': self.create_team,
-            'token': self.create_registration_token,
             'game_level': self.create_game_level,
         }
         if len(args) == 1 and args[0] in self.game_objects.keys():
@@ -79,7 +78,7 @@ class AdminCreateHandler(BaseHandler):
                 )
                 dbsession.add(corporation)
                 dbsession.flush()
-                self.redirect('/admin/view/corporation')
+                self.redirect('/admin/view/game_objects')
         else:
             self.render("admin/create/corporation.html", errors=form.errors)
 
@@ -101,7 +100,7 @@ class AdminCreateHandler(BaseHandler):
             )
             dbsession.add(box)
             dbsession.flush()
-            self.render("admin/view/box.html")
+            self.redirect('/admin/view/game_objects')
         else:
             self.render("admin/create/box.html", errors=form.errors)
 
@@ -119,7 +118,7 @@ class AdminCreateHandler(BaseHandler):
             )
             dbsession.add(flag)
             dbsession.flush()
-            self.redirect('/admin/view/token')
+            self.redirect('/admin/view/game_objects')
         else:
             self.render("admin/create/flag.html", errors=form.errors)
 
@@ -136,13 +135,6 @@ class AdminCreateHandler(BaseHandler):
             self.redirect('/admin/view/team')
         else:
             self.render("admin/create/team.html", errors=form.errors)
-
-    def create_registration_token(self):
-        ''' Adds a registration token to the db and displays the value '''
-        token = RegistrationToken()
-        dbsession.add(token)
-        dbsession.flush()
-        self.render('admin/create/token.html', token=token)
 
     def create_game_level(self):
         ''' '''
@@ -187,11 +179,12 @@ class AdminViewHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Calls a view function based on URI '''
         uri = {
-            'game': self.view_corporations,
+            'game_objects': self.view_game_objects,
+            'game_levels': self.view_game_levels,
             'user': self.view_user_objects,
         }
-        if len(args) == 1 and args[0] in self.uri.keys():
-            self.uri[args[0]]()
+        if len(args) == 1 and args[0] in uri.keys():
+            uri[args[0]]()
         else:
             self.render("public/404.html")
 
@@ -199,9 +192,35 @@ class AdminViewHandler(BaseHandler):
         ''' Renders the view corporations page '''
         self.render("admin/view/game_objects.html", errors=None)
 
+    def view_game_levels(self):
+        self.render("admin/view/game_levels.html", errors=None)
+
     def view_user_objects(self):
         ''' Renders the view registration token page '''
-        self.render('admin/view/token.html', errors=None)
+        self.render('admin/view/user_objects.html', errors=None)
+
+
+class AdminAjaxObjectDataHandler(BaseHandler):
+
+    @authorized('admin')
+    @restrict_ip_address
+    def get(self, *args, **kwargs):
+        game_objects = {
+            'corporation': Corporation,
+            'box': Box,
+            'flag': Flag,
+        }
+        obj_name = self.get_argument('game_object', '')
+        uuid = self.get_argument('uuid', '')
+        if obj_name in game_objects.keys():
+            obj = game_objects[obj].by_uuid(uuid)
+            if obj is not None:
+                self.write(obj.to_dict())
+            else:
+                self.write({'Error':'Invalid uuid.'})
+        else:
+            self.write({'Error':'Invalid object type.'})
+        self.finish()
 
 
 class AdminEditHandler(BaseHandler):
@@ -237,3 +256,44 @@ class AdminEditHandler(BaseHandler):
 
     def edit_users(self):
         pass
+
+
+class AdminRegTokenHandler(BaseHandler):
+    ''' Manages registration tokens '''
+
+    @authorized('admin')
+    @restrict_ip_address
+    def get(self, *args, **kwargs):
+        uri = {
+            'create': self.create,
+            'view': self.view,
+        }
+        if len(args) == 1 and args[0] in uri.keys():
+            uri[args[0]]()
+        else:
+            self.render("public/404.html")
+
+    @authorized('admin')
+    @restrict_ip_address
+    def post(self, *args, **kwargs):
+        ''' Used to delete regtokens '''
+        token_value = self.get_argument('token_value', '__NULL__')
+        reg_token = RegistrationToken.by_value(token_value)
+        if reg_token is not None:
+            dbsession.delete(reg_token)
+            dbsession.flush()
+            self.redirect('/admin/regtoken/view')
+        else:
+            logging.info("Token with value '%s' does not exist." % str(token_value))
+            self.render('admin/view/token.html', errors=["Token does not exist"])
+
+    def create(self):
+        ''' Adds a registration token to the db and displays the value '''
+        token = RegistrationToken()
+        dbsession.add(token)
+        dbsession.flush()
+        self.render('admin/create/token.html', token=token)
+    
+    def view(self):
+        ''' View all reg tokens '''
+        self.render('admin/view/token.html', errors=None)

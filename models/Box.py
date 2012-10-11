@@ -38,7 +38,8 @@ class Box(BaseObject):
     description = Column(Unicode(2048))
     difficulty = Column(Unicode(255), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
-    teams = relationship("Team", secondary=team_to_box, backref="Box")
+    teams = relationship("Team", secondary=team_to_box, backref=backref("Box", lazy="joined"))
+    flags = relationship("Flag", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
 
     @classmethod
     def all(cls):
@@ -49,6 +50,11 @@ class Box(BaseObject):
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
         return dbsession.query(cls).filter_by(id=identifier).first()
+
+    @classmethod
+    def by_uuid(cls, uuid):
+        ''' Return and object based on a uuid '''
+        return dbsession.query(cls).filter_by(uuid=uuid).first()
 
     @classmethod
     def by_name(cls, name):
@@ -72,12 +78,26 @@ class Box(BaseObject):
     @property
     def ipv4(self):
         ''' Return a list of all ipv4 addresses '''
-        return [ip.v4 for ip in self.ip_addresses]
+        ips = [ip.v4 for ip in self.ip_addresses]
+        return filter(lambda ip: ip is not None, ips)
 
     @property
     def ipv6(self):
         ''' Return a list of all ipv6 addresses '''
-        return [ip.v6 for ip in self.ip_addresses]
+        ips = [ip.v6 for ip in self.ip_addresses]
+        return filter(lambda ip: ip is not None, ips)
+
+    def to_dict(self):
+        ''' Returns editable data as a dictionary '''
+        return dict(
+            name=self.name, 
+            corporation_id=self.corporation_id,
+            ipv4=self.ipv4,
+            ipv6=self.ipv6,
+            description=self.description,
+            difficulty=self.difficulty,
+            game_level_id=self.game_level_id,
+        )
 
     def __repr__(self):
         return u'<Box - name: %s>' % (self.box_name,)

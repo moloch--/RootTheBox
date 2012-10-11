@@ -30,14 +30,23 @@
                 <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a href="/admin/view/user_objects">Teams &amp; Users</a></li>
+                  <li><a href="/admin/view/user_objects">User Objects</a></li>
                   <li><a href="/admin/view/game_objects">Game Objects</a></li>
                   <li><a href="/admin/view/game_levels">Game Levels</a></li>
                 </ul>
               </li>
               <!-- Other -->
               <li><a href="/admin/notifications">Notifications</a></li>
-              <li><a href="/admin/regtokens">Reg Tokens</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  RegTokens
+                <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/admin/regtoken/create">Create</a></li>
+                  <li><a href="/admin/regtoken/view">View &amp; Delete</a></li>
+                </ul>
+              </li>
             </ul>
             <div class="btn-group pull-right">
                   <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -46,7 +55,7 @@
                       <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">
-                      <li><a href="/settings">Settings</a></li>
+                      <li><a href="/user/settings">Settings</a></li>
                       <li class="divider"></li>
                       <li><a href="/logout">Logout</a></li>
                   </ul>

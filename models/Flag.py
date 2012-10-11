@@ -56,3 +56,13 @@ class Flag(BaseObject):
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
         return dbsession.query(cls).filter_by(uuid=uuid).first()
+
+    def to_dict(self):
+        ''' Returns editable data as a dictionary '''
+        return dict(
+            name=self.name, 
+            token=self.token, 
+            description=self.description, 
+            value=self.value, 
+            box_id=self.box_id
+        )

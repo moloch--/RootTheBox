@@ -66,10 +66,16 @@ class IpAddress(BaseObject):
             return ip_address
 
     def __repr__(self):
-        return u"<IpAddress - v4: %s, v6: %s>" % (self.v4, self.v6)
+        return u"<IpAddress - v4: %s, v6: %s>" % (str(self.v4), str(self.v6))
 
     def __str__(self):
-        return self.v4 # Defaults to v4
+        if self.v6 is not None:
+            return self.v6
+        else:
+            return self.v4
 
     def __eq__(self, other):
-        return self.v4 == other.v4 or self.v6 == other.v6
+        if self.v6 is not None:
+            return self.v6 == other.v6
+        else:
+            return self.v4 == other.v4

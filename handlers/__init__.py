@@ -87,6 +87,7 @@ app = Application([
                   (r'/user/settings(.*)', SettingsHandler),
 
                   # Admin Handlers - Administration pages
+                  (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
                   (r'/admin/create/(.*)', AdminCreateHandler),
                   (r'/admin/view/(.*)', AdminViewHandler),
 

@@ -56,3 +56,10 @@ class Corporation(BaseObject):
     def by_uuid(cls, uuid):
         ''' Return an object based on uuid '''
         return dbsession.query(cls).filter_by(uuid=uuid).first()
+
+    def to_dict(self):
+        ''' Returns editable data as a dictionary '''
+        return dict(
+            name=self.name, 
+            description=self.description
+        )

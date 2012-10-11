@@ -69,46 +69,140 @@
         </div>
     </div>
     <!-- Start Visable -->
-    <h1>Game Objects</h1>
-    <br />
-    {% from models import Corporation %}
-    {% for corporation in Corporation.all() %}
-    <div class="well">
-        <h2 style="display:inline;">{{ corporation.name }}</h2>
-        <a class="btn btn-small" data-toggle="modal" href="#editCorporationModal">
-            Edit
-        </a>        
-        {% for box in corporation.boxes %}
-            <h3 style="display:inline;">{{ box.name }}</h3>
-                <a class="btn btn-small" data-toggle="modal" href="#editBoxModal">
-                    Edit
-                </a>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Flag</th>
-                        <th>Token</th>
-                        <th>Value</th>
-                        <th><!-- Edit Button --></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for flag in box.flags %}
-                        <tr>
-                            <td>{{ flag.id }}</td>
-                            <td>{{ flag.name }}</td>
-                            <td>{{ flag.token }}</td>
-                            <td>${{ flag.value }}</td>
-                            <td>
-                                <a class="btn btn-mini" data-toggle="modal" href="#editFlagModal">
-                                    Edit
+    <div class="row-fluid">
+        <div class="span2" />
+            <ul class="nav nav-tabs nav-stacked affix">
+                {% for corporation in Corporation.all() %}
+                    <li><a href="#{{ corporation.uuid }}"><i class="icon-chevron-right"></i>{{ corporation.name }}</a></li>
+                {% end %}
+            </ul>
+        </div>
+        <div class="span10">
+            <h1>Game Objects</h1>
+            <br />
+            {% for corporation in Corporation.all() %}
+                <div id="{{ corporation.uuid }}" class="well">
+                    <h2 style="display:inline;">{{ corporation.name }}&nbsp;&nbsp;</h2>
+                    <a class="btn btn-small" data-toggle="modal" href="#editCorporationModal">
+                        Edit Corp
+                    </a>
+                    <br />
+                    <br />
+                    {% for box in corporation.boxes %}
+                        <div class="well">
+                            <h3 style="display:inline;">{{ box.name }}&nbsp;&nbsp;</h3>
+                                <a class="btn btn-small" data-toggle="modal" href="#editBoxModal">
+                                    Edit Box
                                 </a>
-                            </td>
-                        </tr>
+                            <br />
+                            <br />
+                            <div class="row-fluid">
+                                <div class="well span4">
+                                    <h4 style="display:inline;">IPv4 Addresses&nbsp;&nbsp;</h4>
+                                    <a class="btn btn-small" data-toggle="modal" href="#editBoxModal">
+                                        Add IPv4
+                                    </a>
+                                    <br />
+                                    <hr>
+                                    {% if len(box.ipv4) != 0 %}
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>IPv4 Address</th>
+                                                    <th><!-- Delete --></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for ip in box.ipv4 %}
+                                                    <tr>
+                                                        <td>{{ box.ipv4.index(ip) + 1}}</td>
+                                                        <td>{{ ip }}</td>
+                                                        <td>
+                                                            <button class="btn btn-danger btn-mini" type="button" onclick="">
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <strong>No IPv4 Addresses</strong>
+                                    {% end %}
+                                </div>
+                                <div class="well span4">
+                                    <h4 style="display:inline;">IPv6 Addresses&nbsp;&nbsp;</h4>
+                                    <a class="btn btn-small" data-toggle="modal" href="#editBoxModal">
+                                        Add IPv6
+                                    </a>
+                                    <br />
+                                    <hr>
+                                    {% if len(box.ipv6) != 0 %}
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>IPv6 Address</th>
+                                                    <th><!-- Delete --></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for ip in box.ipv6 %}
+                                                    <tr>
+                                                        <td>{{ box.ipv6.index(ip) + 1 }}</td>
+                                                        <td>{{ ip }}</td>
+                                                        <td>
+                                                            <button class="btn btn-danger btn-mini" type="button" onclick="">
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <strong>No IPv6 Addresses</strong>
+                                    {% end %}
+                                </div>
+                            </div>
+                            <div class="well">
+                                <h4>Flags on {{ box.name }}</h4>
+                                <hr>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Token</th>
+                                            <th>Value</th>
+                                            <th><!-- Edit Button --></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for flag in box.flags %}
+                                            <tr>
+                                                <td>{{ flag.id }}</td>
+                                                <td>{{ flag.name }}</td>
+                                                <td>{{ flag.description }}</td>
+                                                <td>{{ flag.token }}</td>
+                                                <td>${{ flag.value }}</td>
+                                                <td>
+                                                    <a class="btn btn-mini" data-toggle="modal" href="#editFlagModal">
+                                                        Edit Flag
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% end %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <br />
                     {% end %}
-                </tbody>
-            </table>
-        {% end %}
+                </div>
+            {% end %}
+        </div>
     </div>
 {% end %}
