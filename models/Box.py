@@ -36,7 +36,7 @@ class Box(BaseObject):
     name = Column(Unicode(64), unique=True, nullable=False)
     ip_addresses = relationship("IpAddress", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
     description = Column(Unicode(2048))
-    difficulty = Column(Unicode(255), nullable=False)
+    difficulty = Column(Unicode(64), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
     teams = relationship("Team", secondary=team_to_box, backref=backref("Box", lazy="joined"))
     flags = relationship("Flag", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
@@ -54,7 +54,7 @@ class Box(BaseObject):
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=uuid).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_name(cls, name):
@@ -92,8 +92,6 @@ class Box(BaseObject):
         return dict(
             name=self.name, 
             corporation_id=self.corporation_id,
-            ipv4=self.ipv4,
-            ipv6=self.ipv6,
             description=self.description,
             difficulty=self.difficulty,
             game_level_id=self.game_level_id,
@@ -101,6 +99,9 @@ class Box(BaseObject):
 
     def __repr__(self):
         return u'<Box - name: %s>' % (self.box_name,)
+
+    def __str__(self):
+        return self.box_name.encode('ascii', 'ignore')
 
     def __unicode__(self):
         return self.box_name

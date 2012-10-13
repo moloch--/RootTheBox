@@ -23,7 +23,7 @@ Created on Mar 13, 2012
 from libs.Form import Form
 from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, \
-    Corporation, RegistrationToken
+    Corporation, RegistrationToken, GameLevel
 from handlers.BaseHandlers import BaseHandler
 
 
@@ -85,22 +85,25 @@ class AdminCreateHandler(BaseHandler):
     def create_box(self):
         ''' Create a box object '''
         form = Form(
-            name="Enter a box name",
-            ip_address="Enter an IP address",
+            box_name="Enter a box name",
             description="Enter a description",
             difficulty="Select a difficulty",
-            avatar="Please upload an avatar",
+            corporation_uuid="Please select a corporation",
+            game_level="Please select a game level",
         )
         if form.validate(self.request.arguments):
-            box = Box(
-                name=unicode(self.get_argument('name')),
-                ip_address=unicode(self.get_argument('ip_address')),
-                description=unicode(self.get_argument('description')),
-                difficulty=unicode(self.get_argument('difficulty')),
-            )
-            dbsession.add(box)
-            dbsession.flush()
-            self.redirect('/admin/view/game_objects')
+            try:
+                if Box.by_name(self.get_argument('box_name')) is not None:
+                    self.render("admin/create/box.html", errors=["Box name already exists"])
+                elif Corporation.by_uuid(self.get_argument('corporation_uuid')) is None:
+                    self.render("admin/create/box.html", errors=["Corporation does not exist"])
+                elif GameLevel.by_number(int(self.get_argument('game_level'))) is None:
+                    self.render("admin/create/box.html", errors=["Game level does not exist"])
+                else:
+                    self.__mkbox__()
+                    self.redirect('/admin/view/game_objects')
+            except ValueError:
+                self.render('admin/view/create.html', errors=["Invalid level number"])
         else:
             self.render("admin/create/box.html", errors=form.errors)
 
@@ -108,56 +111,86 @@ class AdminCreateHandler(BaseHandler):
         ''' Create a flag '''
         form = Form(
             box_uuid="Please select a box",
-            name="Please enter a name",
+            flag_name="Please enter a name",
             token="Please enter a token value",
+            reward="Please enter a reward value",
+            description="Please enter a flag description",
         )
         if form.validate(self.request.arguments):
-            flag = Flag(
-                name=unicode(self.get_argument('name')),
-                token=unicode(self.get_argument('token'))
-            )
-            dbsession.add(flag)
-            dbsession.flush()
-            self.redirect('/admin/view/game_objects')
+            try:
+                if Flag.by_name(self.get_argument('flag_name')) is not None:
+                    self.render('admin/create/flag.html', errors=["Name already exists"])
+                elif Flag.by_token(self.get_argument('token')) is not None:
+                    self.render('admin/create/flag.html', errors=["Token value is not unique"])
+                elif Box.by_uuid(self.get_argument('box_uuid')) is None:
+                    self.render('admin/create/flag.html', errors=["Box does not exist"])
+                else:
+                    reward = int(self.get_argument('reward', 'NaN'))
+                    self.__mkflag__(reward)
+                    self.redirect('/admin/view/game_objects')
+            except ValueError:
+                self.render('admin/create/flag.html', errors=["Invalid reward value"])
         else:
             self.render("admin/create/flag.html", errors=form.errors)
 
     def create_team(self):
         ''' Create a new team in the database '''
-        form = Form(team="Enter a team name", motto="Enter a team motto")
+        form = Form(team_name="Enter a team name", motto="Enter a team motto")
         if form.validate(self.request.arguments):
             team = Team(
-                name=unicode(self.get_argument('team')),
+                name=unicode(self.get_argument('team_name')),
                 motto=unicode(self.get_argument('motto')),
             )
             dbsession.add(team)
             dbsession.flush()
-            self.redirect('/admin/view/team')
+            self.redirect('/admin/view/user_objects')
         else:
             self.render("admin/create/team.html", errors=form.errors)
 
     def create_game_level(self):
         ''' '''
         form = Form(
-            number="Please enter a level number",
+            level_number="Please enter a level number",
             buyout="Please enter a buyout value",
         )
         if form.validate(self.request.arguments):
-            if 0 < self.get_argument('number'):
-                self.render('admin/create/game_level.html', errors=["Number must be greater than 0"])
-            elif GameLevel.by_number(self.get_argument('number')) is not None:
-                self.render('admin/create/game_level.html', errors=["Game level number must be unique"])
-            else:
-                new_level = GameLevel(
-                    number=self.get_argument('number'),
-                    buyout=self.get_argument('buyout'),
-                )
-                self.__mklevel__(new_level)
+            try:
+                game_level = int(self.get_argument('level_number'))
+                buyout = int(self.get_argument('buyout'))
+                if game_level <= 0:
+                    self.render('admin/create/game_level.html', errors=["Level number must be greater than 0"])
+                elif GameLevel.by_number(game_level) is not None:
+                    self.render('admin/create/game_level.html', errors=["Game level number must be unique"])
+                elif buyout < 0:
+                    self.render('admin/create/game_level.html', errors=["Buyout value must be greater than or equal to 0"])
+                else:
+                    self.__mklevel__(game_level, buyout)
+                    self.redirect('/admin/view/game_levels')
+            except ValueError:
+                self.render('admin/create/game_level.html', errors=["Invalid level number"])
         else:
             self.render('admin/create/game_level.html', errors=form.errors)
 
-    def __mklevel__(self, new_level):
+    def __mkbox__(self):
+        ''' Creates a box in the database '''
+        corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
+        level = GameLevel.by_number(int(self.get_argument('game_level')))
+        box = Box(
+            name=unicode(self.get_argument('box_name')),
+            description=unicode(self.get_argument('description')),
+            difficulty=unicode(self.get_argument('difficulty')),
+            corporation_id=corp.id,
+            game_level_id=level.id,
+        )
+        dbsession.add(box)
+        dbsession.flush()
+
+    def __mklevel__(self, game_level, buyout):
         ''' Creates a new level in the database, and keeps everything sorted '''
+        new_level = GameLevel(
+            number=game_level,
+            buyout=buyout,
+        )
         game_levels = GameLevel.all()
         game_levels.append(new_level)
         game_levels = sorted(game_levels)
@@ -168,6 +201,19 @@ class AdminCreateHandler(BaseHandler):
             index += 1
         game_levels[-1].next_level_id = None
         dbsession.add(game_levels[-1])
+        dbsession.flush()
+
+    def __mkflag__(self, reward):
+        ''' Creates a flag in the database '''
+        box = Box.by_uuid(self.get_argument('box_uuid'))
+        flag = Flag(
+            name=unicode(self.get_argument('flag_name')),
+            token=unicode(self.get_argument('token')),
+            description=unicode(self.get_argument('description')),
+            box_id=box.id,
+            value=reward,
+        )
+        dbsession.add(flag)
         dbsession.flush()
 
 
@@ -181,7 +227,7 @@ class AdminViewHandler(BaseHandler):
         uri = {
             'game_objects': self.view_game_objects,
             'game_levels': self.view_game_levels,
-            'user': self.view_user_objects,
+            'user_objects': self.view_user_objects,
         }
         if len(args) == 1 and args[0] in uri.keys():
             uri[args[0]]()
@@ -201,6 +247,7 @@ class AdminViewHandler(BaseHandler):
 
 
 class AdminAjaxObjectDataHandler(BaseHandler):
+    ''' Handles AJAX data for admin handlers '''
 
     @authorized('admin')
     @restrict_ip_address
@@ -210,10 +257,10 @@ class AdminAjaxObjectDataHandler(BaseHandler):
             'box': Box,
             'flag': Flag,
         }
-        obj_name = self.get_argument('game_object', '')
+        obj_name = self.get_argument('obj', '')
         uuid = self.get_argument('uuid', '')
         if obj_name in game_objects.keys():
-            obj = game_objects[obj].by_uuid(uuid)
+            obj = game_objects[obj_name].by_uuid(uuid)
             if obj is not None:
                 self.write(obj.to_dict())
             else:

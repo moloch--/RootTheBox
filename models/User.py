@@ -95,24 +95,18 @@ class User(BaseObject):
         char_white_list = ascii_letters + digits + extra_chars
         return filter(lambda char: char in char_white_list, string)
 
-    @property
-    def permissions(self):
-        '''Return a set with all permissions granted to the user.'''
-        return dbsession.query(Permission).filter_by(user_id=self.id)
-
-    @property
-    def permissions_names(self):
-        '''Return a list with all permissions accounts granted to the user.'''
-        return [permission.name for permission in self.permissions]
-
-    @property
-    def team(self):
-        ''' Return a the user's team object '''
-        return dbsession.query(Team).filter_by(id=self.team_id).first()
-
     @classmethod
     def _hash_password(cls, algorithm_name, password, salt):
-        ''' Hashes the password using Md5/Sha256 :D '''
+        ''' 
+        Hashes the password using Md5/Sha1/Sha256/Scrypt; scrypt
+        should only used for the admin accounts.
+
+        @param algorithm_name: The hashing algorithm to be used
+        @param password: Preimage to be hashed, non-ascii chars are ignored
+        @param salt: Salt for password, only used with the scrypt algorithm
+        @return: Unicode hexadecimal string of the hash digest
+        @rtype: unicode
+        '''
         algorithms = {'md5': md5, 'sha1': sha1, 'sha256': sha256}
         password = filter(lambda char: char in printable[:-5], password)
         if algorithm_name == u'scrypt':
@@ -126,9 +120,31 @@ class User(BaseObject):
 
     @classmethod
     def __scrypt__(cls, password, salt):
-        ''' Uses scrypt to hash the password using a random salt '''
+        ''' 
+        Uses scrypt to hash the password using a random salt 
+
+        @param password: The preimage to be hashed
+        @param salt: The auto-generated hash
+        @return: Unicode hexadecimal string of the hash digest
+        @rtype: unicode
+        '''
         scrypt_hash = scrypt.hash(password, salt)
         return unicode(scrypt_hash.encode('hex'))
+
+    @property
+    def permissions(self):
+        ''' Return a set with all permissions granted to the user '''
+        return dbsession.query(Permission).filter_by(user_id=self.id)
+
+    @property
+    def permissions_names(self):
+        ''' Return a list with all permissions accounts granted to the user '''
+        return [permission.name for permission in self.permissions]
+
+    @property
+    def team(self):
+        ''' Return a the user's team object '''
+        return dbsession.query(Team).filter_by(id=self.team_id).first()
 
     def has_item(self, item_name):
         ''' Check to see if a team has purchased an item '''
@@ -148,11 +164,22 @@ class User(BaseObject):
         return bool(self.password == result)
 
     def get_new_notifications(self):
-        ''' Returns any unread messages '''
+        ''' 
+        Returns any unread messages 
+
+        @return: List of unread messages
+        @rtype: List of Notification objects
+        '''
         return filter(lambda notification: notification.viewed == False, self.notifications)
 
     def get_notifications(self, limit=10):
-        ''' Return most recent notifications '''
+        ''' 
+        Returns most recent notifications 
+
+        @param limit: Max number of notifications to return, defaults to 10
+        @return: Most recent notifications
+        @rtype: List of Notification objects
+        '''
         return self.notifications.sort(key=lambda notify: notify.created)[:limit]
 
     def __str__(self):

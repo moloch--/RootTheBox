@@ -1,0 +1,60 @@
+{% extends "../../main.html" %}
+
+{% block title %}Game Levels{% end %}
+
+{% block content %}
+    <!-- Edit Level -->
+    <div id="editLevelModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Edit Level</h3>
+        </div>
+        <div class="modal-body">
+        <form id="edit-level" method="post" action="/admin/edit/game_level">
+            {% raw xsrf_form_html() %}
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button class="btn btn-primary" type="button" onclick="">Save</button>
+        </div>
+    </div>
+	<h1>Game Levels</h1>
+    <br />
+    {% from models import GameLevel %}
+    {% for level in GameLevel.all() %}
+    	<div class="well">
+    		<h2 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;</h2>
+    		<h3 style="display:inline;">Buyout: ${{ level.buyout }}&nbsp;&nbsp;</h3>
+            <a class="btn" data-toggle="modal" href="#editLevelModal">
+                Edit Level
+            </a>
+            <br />
+            <br />
+            {% if len(level.boxes) != 0 %}
+        		<table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Box Name</th>
+                            <th>Number of Flags</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	{% for box in level.boxes %}
+                    		<tr>
+                    			<td>{{ level.boxes.index(box) + 1 }}</td>
+                    			<td>{{ box.name }}</td>
+                    			<td>
+                    				{{ len(box.flags) }}
+                    			</td>
+                    		</tr>
+                    	{% end %}
+                    </tbody>
+                </table>
+            {% else %}
+                <strong>No boxes on this level yet.</strong>
+            {% end %}
+    	</div>
+    {% end %}
+{% end %}

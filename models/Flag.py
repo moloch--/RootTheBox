@@ -23,7 +23,7 @@ Created on Mar 12, 2012
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer
-from models import dbsession
+from models import dbsession, Box
 from models.BaseGameObject import BaseObject
 
 
@@ -50,19 +50,25 @@ class Flag(BaseObject):
     @classmethod
     def by_name(cls, corp_name):
         ''' Returns a the object with name of corp_name '''
-        return dbsession.query(cls).filter_by(name=corp_name).first()
+        return dbsession.query(cls).filter_by(name=unicode(corp_name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=uuid).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+
+    @classmethod
+    def by_token(cls, token):
+        ''' Return and object based on a token '''
+        return dbsession.query(cls).filter_by(token=unicode(token)).first()
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
+        box = Box.by_id(self.box_id)
         return dict(
-            name=self.name, 
-            token=self.token, 
-            description=self.description, 
-            value=self.value, 
-            box_id=self.box_id
+            flag_name=self.name,
+            flag_token=self.token,
+            flag_description=self.description,
+            flag_value=self.value,
+            flag_box_uuid=box.uuid,
         )

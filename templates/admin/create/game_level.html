@@ -1,10 +1,10 @@
 {% extends "../../main.html" %}
 
-{% block title %}Create Team{% end %}
+{% block title %}Create Game Level{% end %}
 
 {% block content %}
     <div class="container">
-        <h1>Create Team</h1>
+        <h1>Create Game Level</h1>
         <br />
         {% if errors != None and len(errors) != 0 %}
             {% for error in errors %}
@@ -16,25 +16,25 @@
             {% end %}
         {% end %}
         <div class="well">
-            <form class="form-horizontal" action="/admin/create/team" method="post">  
+            <form class="form-horizontal" action="/admin/create/game_level" method="post">  
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
-                    <label class="control-label" for="team_name">Team Name</label>
+                    <label class="control-label" for="level_number">Level Number</label>
                     <div class="controls">
-                        <input autofocus id="team_name" name="team_name" type="text" placeholder="Team Name">
+                        <input autofocus id="level_number" name="level_number" type="text" placeholder="Level Number">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="motto">Motto</label>
+                    <label class="control-label" for="buyout">Buyout Price</label>
                     <div class="controls">
-                        <input id="motto" name="motto" type="text" placeholder="Team Motto">
+                        <input id="buyout" name="buyout" type="text" placeholder="Level Number">
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        <button class="btn btn-primary" type="submit">Create Team</button>
+                        <button class="btn btn-primary" type="submit">Create Game Level</button>
                     </div>
-                </div>   
+                </div> 
             </form>
         </div>
     </div>
