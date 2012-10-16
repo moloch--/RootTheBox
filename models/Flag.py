@@ -66,9 +66,10 @@ class Flag(BaseObject):
         ''' Returns editable data as a dictionary '''
         box = Box.by_id(self.box_id)
         return dict(
-            flag_name=self.name,
-            flag_token=self.token,
-            flag_description=self.description,
-            flag_value=self.value,
-            flag_box_uuid=box.uuid,
+            name=self.name,
+            uuid=self.uuid,
+            token=self.token,
+            description=self.description,
+            value=self.value,
+            box=box.uuid,
         )

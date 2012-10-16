@@ -25,6 +25,8 @@ from sqlalchemy import Column, ForeignKey, or_
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession, team_to_box, IpAddress
+from models.GameLevel import GameLevel
+from models.Corporation import Corporation
 from models.BaseGameObject import BaseObject
 
 
@@ -89,12 +91,15 @@ class Box(BaseObject):
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
+        corp = Corporation.by_id(self.corporation_id)
+        game_level = GameLevel.by_id(self.game_level_id)
         return dict(
             name=self.name, 
-            corporation_id=self.corporation_id,
+            uuid=self.uuid,
+            corporation=corp.uuid,
             description=self.description,
             difficulty=self.difficulty,
-            game_level_id=self.game_level_id,
+            game_level=game_level.uuid,
         )
 
     def __repr__(self):

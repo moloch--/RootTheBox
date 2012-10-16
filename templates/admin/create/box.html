@@ -37,9 +37,9 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="corporation_uuid">Corporation</label>
+                    <label class="control-label" for="corporation">Corporation</label>
                     <div class="controls">
-                        <select name="corporation_uuid">
+                        <select id="corporation" name="corporation_uuid">
                             <option value=""></option>
                             {% from models import Corporation %}
                             {% for corp in Corporation.all() %}
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="motto">Description</label>
+                    <label class="control-label" for="description">Description</label>
                     <div class="controls">
                         <input id="description" name="description" type="text" placeholder="Description">
                     </div>

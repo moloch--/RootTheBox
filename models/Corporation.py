@@ -60,6 +60,7 @@ class Corporation(BaseObject):
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
         return dict(
+            uuid=self.uuid,
             name=self.name,
             description=self.description,
         )

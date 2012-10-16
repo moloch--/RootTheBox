@@ -89,6 +89,7 @@ app = Application([
                   # Admin Handlers - Administration pages
                   (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
                   (r'/admin/create/(.*)', AdminCreateHandler),
+                  (r'/admin/edit/(.*)', AdminEditHandler),
                   (r'/admin/view/(.*)', AdminViewHandler),
                   (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
 

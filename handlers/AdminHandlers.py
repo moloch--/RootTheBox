@@ -148,7 +148,7 @@ class AdminCreateHandler(BaseHandler):
             self.render("admin/create/team.html", errors=form.errors)
 
     def create_game_level(self):
-        ''' '''
+        ''' Creates a game level '''
         form = Form(
             level_number="Please enter a level number",
             buyout="Please enter a buyout value",
@@ -277,26 +277,130 @@ class AdminEditHandler(BaseHandler):
     @restrict_ip_address
     def post(self, *args, **kwargs):
         ''' Calls an edit function based on URL '''
-        self.game_objects = {
+        uri = {
             'corporation': self.edit_corporations,
             'box': self.edit_boxes,
             'flag': self.edit_flags,
             'team': self.edit_teams,
             'user': self.edit_users,
         }
-        if len(args) == 1 and args[0] in self.game_objects.keys():
-            self.game_objects[args[0]]()
+        if len(args) == 1 and args[0] in uri.keys():
+            uri[args[0]]()
         else:
             self.render("public/404.html")
 
     def edit_corporations(self):
-        pass
+        ''' Updates corporation object in the database '''
+        form = Form(
+            uuid="Object not selected",
+            name="Missing corporation name",
+            description="Missing description",
+        )
+        if form.validate(self.request.arguments):
+            corp = Corporation.by_uuid(self.get_argument('uuid'))
+            if corp is not None:
+                if self.get_argument('name') != corp.name:
+                    logging.info("Updated corporation name %s -> %s" % (corp.name, self.get_argument('name'),))
+                    corp.name = unicode(self.get_argument('name'))
+                if self.get_argument('description') != corp.description:
+                    logging.info("Updated corporation description %s -> %s" % (corp.description, self.get_argument('description'),))
+                    corp.description = unicode(self.get_argument('description'))
+                dbsession.add(corp)
+                dbsession.flush()
+                self.redirect('/admin/view/game_objects')
+            else:
+                self.render("admin/view/game_objects.html", errors=["Corporation does not exist"])
+        else:
+            self.render("admin/view/game_objects.html", errors=form.errors)
 
     def edit_boxes(self):
-        pass
+        ''' Edit existing boxes in the database '''
+        form = Form(
+            uuid="Object not selected",
+            name="Missing box name",
+            corporation_uuid="Please select a corporation",
+            description="Please enter a description",
+            difficulty="Please enter a difficulty",
+        )
+        if form.validate(self.request.arguments):
+            box = Box.by_uuid(self.get_argument('uuid'))
+            if box is not None:
+                errors = []
+                if self.get_argument('name') != box.name:
+                    if Box.by_name(self.get_argument('name')) is None:
+                        logging.info("Updated box name %s -> %s" % (box.name, self.get_argument('name'),))
+                        box.name = unicode(self.get_argument('name'))
+                    else:
+                        errors.append("Box name already exists")
+                corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
+                if corp is not None and corp.id != box.corporation_id:
+                    logging.info("Updated %s's corporation %s -> %s" % (box.name, box.corporation_id, corp.id,))
+                    box.corporation_id = corp.id
+                elif corp is None:
+                    errors.append("Corporation does not exist")
+                if self.get_argument('description') != box.description:
+                    logging.info("Updated %s's description %s -> %s" % (box.name, box.description, self.get_argument('description'),))
+                    box.description = unicode(self.get_argument('description'))
+                if self.get_argument('difficulty') != box.difficulty:
+                    logging.info("Updated %s's difficulty %s -> %s" % (box.name, box.difficulty, self.get_argument('difficulty'),))
+                    box.difficulty = unicode(self.get_argument('difficulty'))
+                dbsession.add(box)
+                dbsession.flush()
+                self.render("admin/view/game_objects.html", errors=errors)
+            else:
+                self.render("admin/view/game_objects.html", errors=["Box does not exist"])
+        else:
+            self.render("admin/view/game_objects.html", errors=form.errors)
 
     def edit_flags(self):
-        pass
+        ''' Super ugly code, yes - Edit existing flags in the database '''
+        form = Form(
+            uuid="Object not selected",
+            name="Please enter a name",
+            token="Please enter a toke value",
+            description="Please provide a description",
+            value="Please enter a reward value",
+            box_uuid="Please select a box",
+        )
+        if form.validate(self.request.arguments):
+            flag = Flag.by_uuid(self.get_argument('uuid'))
+            if flag is not None:
+                errors = []
+                if flag.name != self.get_argument('name'):
+                    if Flag.by_name(unicode(self.get_argument('name'))) is None:
+                        logging.info("Updated flag name %s -> %s" % (flag.name, self.get_argument('name'),))
+                        flag.name = unicode(self.get_argument('name'))
+                    else:
+                        errors.append("Flag name already exists")
+                if flag.token != self.get_argument('token'):
+                    if Flag.by_token(unicode(self.get_argument('token'))) is None:
+                        logging.info("Updated %s's token %s -> %s" % (flag.name, flag.token, self.get_argument('token'),))
+                        flag.token = unicode(self.get_argument('token'))
+                    else:
+                        errors.append("Token is not unique")
+                if flag.description != self.get_argument('description'):
+                    logging.info("Updated %s's description %s -> %s" % (flag.name, flag.description, self.get_argument('description'),))
+                    flag.description = unicode(self.get_argument('description'))
+                try:
+                    reward_value = int(self.get_argument('value'))
+                    if reward_value != flag.value:
+                        logging.info("Updated %s's value %d -> %d" % (flag.value, reward_value,))
+                        flag.value = reward_value
+                except ValueError:
+                    errors.append("Invalid reward amount")
+                box = Box.by_uuid(self.get_argument('box_uuid'))
+                if box is not None and box.id != flag.box_id:
+                    logging.info("Updated %s's box %d -> %d" % (flag.name, flag.box_id, box.id))
+                    flag.box_id = box.id
+                elif box is None:
+                    errors.append("Box does not exist")
+                dbsession.add(flag)
+                dbsession.flush()
+                self.render("admin/view/game_objects.html", errors=errors)
+            else:
+                self.render("admin/view/game_objects.html", errors=["Flag does not exist"])
+        else:
+            self.render("admin/view/game_objects.html", errors=form.errors)
 
     def edit_teams(self):
         pass
@@ -331,7 +435,6 @@ class AdminRegTokenHandler(BaseHandler):
             dbsession.flush()
             self.redirect('/admin/regtoken/view')
         else:
-            logging.info("Token with value '%s' does not exist." % str(token_value))
             self.render('admin/view/token.html', errors=["Token does not exist"])
 
     def create(self):
