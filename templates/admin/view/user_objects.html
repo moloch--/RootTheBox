@@ -10,25 +10,32 @@
             <h3>Edit Team</h3>
         </div>
         <div class="modal-body">
-        <form id="edit-team" class="form-horizontal" method="post" action="/admin/edit/team">
-            {% raw xsrf_form_html() %}
-            <div class="control-group">
-                <label class="control-label" for="team_name">Team Name</label>
-                <div class="controls">
-                  <input id="team_name" name="team_name" type="text" placeholder="Team Name">
+            <form id="edit-team" class="form-horizontal" method="post" action="/admin/edit/team">
+                {% raw xsrf_form_html() %}
+                <input id="team_uuid" name="uuid" type="hidden" />
+                <div class="control-group">
+                    <label class="control-label" for="team_name">Team Name</label>
+                    <div class="controls">
+                      <input id="team_name" name="name" type="text" placeholder="Team Name">
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="team_motto">Team Motto</label>
-                <div class="controls">
-                  <input id="team_motto" name="team_motto" type="text" placeholder="Team Name">
+                <div class="control-group">
+                    <label class="control-label" for="team_motto">Team Motto</label>
+                    <div class="controls">
+                      <input id="team_motto" name="motto" type="text" placeholder="Team Motto">
+                    </div>
                 </div>
-            </div>
-        </form>
+                <div class="control-group">
+                    <label class="control-label" for="team_listen_port">Botnet Listen Port</label>
+                    <div class="controls">
+                      <input id="team_listen_port" name="listen_port" type="text" placeholder="Botnet Listen Port">
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" onclick="document.forms['edit-team'].submit();">Save</button>
         </div>
     </div>
     <!-- Edit User -->
@@ -38,45 +45,46 @@
             <h3>Edit User</h3>
         </div>
         <div class="modal-body">
-        <form id="edit-team" class="form-horizontal" method="post" action="/admin/edit/user">
-            {% raw xsrf_form_html() %}
-            <div class="control-group">
-                <label class="control-label" for="account">Account</label>
-                <div class="controls">
-                  <input id="account" name="account" type="text" placeholder="Account Name">
+            <form id="edit-team" class="form-horizontal" method="post" action="/admin/edit/user">
+                {% raw xsrf_form_html() %}
+                <input id="user_uuid" name="uuid" type="hidden" />
+                <div class="control-group">
+                    <label class="control-label" for="user_account">Account</label>
+                    <div class="controls">
+                      <input id="user_account" name="account" type="text" placeholder="Account Name">
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="handle">Handle</label>
-                <div class="controls">
-                  <input id="handle" name="handle" type="text" placeholder="Handle">
+                <div class="control-group">
+                    <label class="control-label" for="user_handle">Handle</label>
+                    <div class="controls">
+                      <input id="user_handle" name="handle" type="text" placeholder="Handle">
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="algorithm">Hash Algorithm</label>
-                <div class="controls">
-                    <select id="algorithm" name="algorithm">
-                        <option value=""></option>
-                        <option value="md5">MD5</option>
-                        <option value="sha1">SHA1</option>
-                        <option value="sha256">SHA-256</option>
-                        <option value="scrypt">Scrypt</option>
-                    </select>
+                <div class="control-group">
+                    <label class="control-label" for="user_hash_algorithm">Hash Algorithm</label>
+                    <div class="controls">
+                        <select id="user_hash_algorithm" name="hash_algorithm">
+                            <option value=""></option>
+                            <option value="md5">MD5</option>
+                            <option value="sha1">SHA1</option>
+                            <option value="sha256">SHA-256</option>
+                            <option value="scrypt">Scrypt</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="team">Team</label>
-                <div class="controls">
-                    <select id="team" name="team">
-                        <option value=""></option>
-                        {% from models import Team %}
-                        {% for team in Team.all() %}
-                            <option value="{{ team.uuid }}">{{ team.name }}</option>
-                        {% end %}
-                    </select>
+                <div class="control-group">
+                    <label class="control-label" for="user_team_uuid">Team</label>
+                    <div class="controls">
+                        <select id="user_team_uuid" name="team">
+                            <option value=""></option>
+                            {% from models import Team %}
+                            {% for team in Team.all() %}
+                                <option value="{{ team.uuid }}">{{ team.name }}</option>
+                            {% end %}
+                        </select>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -102,7 +110,8 @@
         <div class="well">
             <h2 style="display:inline;">{{ team.name }}&nbsp;&nbsp;</h2>
             <h3 style="display:inline;">&quot;{{ team.motto }}&quot;&nbsp;&nbsp;</h3>
-            <a class="btn btn-primary" data-toggle="modal" href="#editTeamModal">
+            <a class="btn btn-primary" data-toggle="modal" href="#editTeamModal" 
+                onclick="get_details('team', '{{ team.uuid }}')">
                  Edit Team
             </a>
             <br />
@@ -124,7 +133,7 @@
                             <td>{{ user.algorithm }}</td>
                             <td>
                               <a class="btn btn-mini" data-toggle="modal" href="#editUserModal" 
-                                    onclick="get_details('user', {{ user.uuid }})">
+                                    onclick="get_details('user', '{{ user.uuid }}')">
                                 Edit User
                               </a>
                             </td>

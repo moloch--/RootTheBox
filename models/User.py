@@ -66,6 +66,7 @@ class User(BaseObject):
     theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
     psk = Column(Unicode(64), default=lambda: unicode(urandom(32).encode('hex')))
     salt = Column(String(32), default=lambda: urandom(16).encode('hex'))
+    algorithms = {'md5': md5, 'sha1': sha1, 'sha256': sha256}
 
     @classmethod
     def all(cls):
@@ -114,12 +115,11 @@ class User(BaseObject):
         @return: Unicode hexadecimal string of the hash digest
         @rtype: unicode
         '''
-        algorithms = {'md5': md5, 'sha1': sha1, 'sha256': sha256}
         password = filter(lambda char: char in printable[:-5], password)
-        if algorithm_name == u'scrypt':
+        if algorithm_name == 'scrypt':
             return cls.__scrypt__(password, salt)
-        elif algorithm_name in algorithms.keys():
-            algo = algorithms[algorithm_name]()
+        elif algorithm_name in self.algorithms.keys():
+            algo = self.algorithms[algorithm_name]()
             algo.update(password)
             return unicode(algo.hexdigest())
         else:
@@ -188,6 +188,16 @@ class User(BaseObject):
         @rtype: List of Notification objects
         '''
         return self.notifications.sort(key=lambda notify: notify.created)[:limit]
+
+    def to_dict(self):
+        team = Team.by_id(self.team_id)
+        return dict(
+            uuid=self.uuid,
+            handle=self.handle,
+            account=self.account,
+            hash_algorithm=self.algorithm,
+            team_uuid=team.uuid,
+        )
 
     def __str__(self):
         return self.handle

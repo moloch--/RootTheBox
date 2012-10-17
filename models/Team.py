@@ -77,6 +77,13 @@ class Team(BaseObject):
         char_white_list = ascii_letters + digits + extra_chars
         return filter(lambda char: char in char_white_list, string)
 
+    def to_dict(self):
+        return dict(
+            name=self.name, 
+            motto=self.motto,
+            listen_port=self.listen_port,
+        )
+
     def file_by_file_name(self, file_name):
         ''' Return file object based on file_name '''
         ls = self.files.filter_by(file_name=file_name)

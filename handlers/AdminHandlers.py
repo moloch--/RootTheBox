@@ -256,6 +256,8 @@ class AdminAjaxObjectDataHandler(BaseHandler):
             'corporation': Corporation,
             'box': Box,
             'flag': Flag,
+            'user': User,
+            'team': Team,
         }
         obj_name = self.get_argument('obj', '')
         uuid = self.get_argument('uuid', '')
@@ -405,10 +407,82 @@ class AdminEditHandler(BaseHandler):
             self.render("admin/view/game_objects.html", errors=form.errors)
 
     def edit_teams(self):
-        pass
+        ''' Edit existing team objects in the database '''
+        form = Form(
+            uuid="No team selected",
+            name="Please enter a name",
+            motto="Please enter a motto",
+            listen_port="Please enter a listen port"
+        )
+        if form.validate(self.request.arguments):
+            team = Team.by_uuid(self.get_argument('uuid'))
+            if team is not None:
+                errors = []
+                if team.name != self.get_argument('name'):
+                    logging.info("Updated team name %s -> %s" % (team.name, self.get_argument('name'),))
+                    team.name = unicode(self.get_argument('name'))
+                if team.motto != self.get_argument('motto'):
+                    logging.info("Updated %s's motto %s -> %s" % (team.name, team.motto, self.get_argument('motto'),))
+                    team.motto = unicode(self.get_argument('motto'))
+                try:
+                    lport = int(self.get_argument('listen_port'))
+                    if lport != team.listen_port:
+                        logging.info("Updated %s's listen port %d -> %d" % (team.name, team.listen_port, lport,))
+                except ValueError:
+                    errors.append("Invalid listen port %s " % self.get_argument('listen_port'))
+                dbsession.add(team)
+                dbsession.flush()
+                self.redirect("/admin/view/user_objects")
+            else:
+                self.render("admin/view/user_objects.html", errors=["Team does not exist"])
+        else:
+            self.render("admin/view/user_objects.html", errors=form.errors)
 
     def edit_users(self):
-        pass
+        ''' Update user objects in the database '''
+        form = Form(
+            uuid="User not selected",
+            account="Please enter an account name",
+            handle="Please enter a handle name",
+            hash_algorithm="Please select a hash algorithm",
+            team_uuid="Please select a team",
+        )
+        if form.validate(self.request.arguments):
+            errors = []
+            user = User.by_uuid(self.get_argument('uuid'))
+            if user is not None:
+                if user.account != self.get_argument('account'):
+                    if User.by_account(self.get_argument('account')) is None:
+                        logging.info("Updated user account %s -> %s" % (user.account, self.get_argument('account'),))
+                        user.account = unicode(self.get_argument('account'))
+                    else:
+                        errors.append("Account name is already in use")
+                if user.handle != self.get_argument('handle'):
+                    if User.by_handle(self.get_argument('handle')) is None:
+                        logging.info("Updated user handle %s -> %s" % (user.handle, self.get_argument('handle'),))
+                        user.handle = unicode(self.get_argument('handle'))
+                    else:
+                        errors.append("Handle is already in use")
+                if self.get_argument('hash_algorithm') in user.algorithms.keys():
+                    if user.algorithm != self.get_argument('hash_algorithm'):
+                        logging.info("Updated %s's hashing algorithm %s -> %s" % (user.handle, user.algorithm, self.get_argument('hash_algorithm')))
+                        user.algorithm = self.get_argument('hash_algorithm')
+                else:
+                    errors.append("Not a valid hash algorithm")
+                team = Team.by_uuid(self.get_argument('team_uuid'))
+                if team is not None:
+                    if user.team_id != team.id:
+                        logging.info("Updated %s's team %s -> %s" % (user.handle, user.team_id, team.name))
+                        user.team_id = team.id
+                else:
+                    errors.append("Team does not exist in database")
+                dbsession.add(user)
+                dbsession.flush()
+            else:
+                errors.append("User does not exist")
+            self.render("admin/view/user_objects.html", errors=errors)
+        else:
+            self.render("admin/view/user_objects.html", errors=form.errors)
 
     def edit_ipv4(self):
         ''' Add ipv4 addresses to a box (sorta edits the box object) '''
@@ -502,6 +576,7 @@ class AdminDeleteHandler(BaseHandler):
         else:
             logging.info("Flag (%s) does not exist in the database" % self.get_argument('uuid', '__NULL__'))
             self.render("admin/view/game_objects.html", errors=["Flag does not exist in database"])
+
 
 class AdminRegTokenHandler(BaseHandler):
     ''' Manages registration tokens '''
