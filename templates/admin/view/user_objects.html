@@ -83,6 +83,17 @@
             <button type="button" class="btn btn-primary">Save</button>
         </div>
     </div>
+    <script>
+        function get_details(obj, uuid) {
+            $("#" + obj + "_uuid").val(uuid);
+            $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
+                $.each(data, function(key, value) {
+                    console.log("#" + obj + "_" + key + " -> " + value);
+                    $("#" + obj + "_" + key).val(value);
+                });
+            });
+        }
+    </script>
     <!-- Start Visable -->
     <h1>User Objects</h1>
     <br />
@@ -112,7 +123,8 @@
                             <td>{{ user.handle }}</td>
                             <td>{{ user.algorithm }}</td>
                             <td>
-                              <a class="btn btn-mini" data-toggle="modal" href="#editUserModal">
+                              <a class="btn btn-mini" data-toggle="modal" href="#editUserModal" 
+                                    onclick="get_details('user', {{ user.uuid }})">
                                 Edit User
                               </a>
                             </td>

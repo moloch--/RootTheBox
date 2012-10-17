@@ -24,7 +24,8 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, or_
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode
-from models import dbsession, team_to_box, IpAddress
+from models import dbsession, team_to_box
+from models.IpAddress import IpAddress
 from models.GameLevel import GameLevel
 from models.Corporation import Corporation
 from models.BaseGameObject import BaseObject
@@ -36,7 +37,7 @@ class Box(BaseObject):
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(64), unique=True, nullable=False)
-    ip_addresses = relationship("IpAddress", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
+    IpAddresses = relationship("IpAddress", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
     description = Column(Unicode(2048))
     difficulty = Column(Unicode(64), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
@@ -64,11 +65,12 @@ class Box(BaseObject):
         return dbsession.query(cls).filter_by(name=unicode(name)).first()
 
     @classmethod
-    def by_ip_address(cls, ip_address):
+    def by_ip_address(cls, ip_addr):
         ''' Returns a box object based on an ip address, supports both ipv4 and ipv6 '''
-        ip = dbsession.query(IpAddress).filter(or_(IpAddress.v4 == ip_address, IpAddress.v6 == ip_address)).first()
-        if ip is not None:
-            return dbsession.query(cls).filter_by(id=ip.box_id).first()
+        db_ip = dbsession.query(IpAddress).filter(or_(IpAddress.v4 == ip_addr, IpAddress.v6 == ip_addr)).first()
+        #ip = dbsession.query(IpAddress).filter_by(v4=IpAddress).first()
+        if db_ip is not None:
+            return dbsession.query(cls).filter_by(id=db_ip.box_id).first()
         else:
             return None
 
@@ -80,13 +82,13 @@ class Box(BaseObject):
     @property
     def ipv4(self):
         ''' Return a list of all ipv4 addresses '''
-        ips = [ip.v4 for ip in self.ip_addresses]
+        ips = [ip.v4 for ip in self.IpAddresses]
         return filter(lambda ip: ip is not None, ips)
 
     @property
     def ipv6(self):
         ''' Return a list of all ipv6 addresses '''
-        ips = [ip.v6 for ip in self.ip_addresses]
+        ips = [ip.v6 for ip in self.IpAddresses]
         return filter(lambda ip: ip is not None, ips)
 
     def to_dict(self):

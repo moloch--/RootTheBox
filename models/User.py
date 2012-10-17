@@ -23,6 +23,7 @@ Created on Mar 12, 2012
 import scrypt
 
 from os import urandom
+from uuid import uuid4
 from hashlib import md5, sha1, sha256
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
@@ -60,6 +61,7 @@ class User(BaseObject):
         lambda self, password: setattr(
             self, '_password', self.__class__._hash_password(self.algorithm, password, self.salt))
     ))
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     algorithm = Column(Unicode(8), default=u"md5", nullable=False)
     theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
     psk = Column(Unicode(64), default=lambda: unicode(urandom(32).encode('hex')))
@@ -79,6 +81,11 @@ class User(BaseObject):
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
         return dbsession.query(cls).filter_by(id=identifier).first()
+
+    @classmethod
+    def by_uuid(cls, uuid):
+        ''' Return and object based on a uuid '''
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_account(cls, account):

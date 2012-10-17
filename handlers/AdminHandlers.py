@@ -19,11 +19,11 @@ Created on Mar 13, 2012
     limitations under the License.
 '''
 
-
+from string import digits
 from libs.Form import Form
 from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, \
-    Corporation, RegistrationToken, GameLevel
+    Corporation, RegistrationToken, GameLevel, IpAddress
 from handlers.BaseHandlers import BaseHandler
 
 
@@ -283,6 +283,8 @@ class AdminEditHandler(BaseHandler):
             'flag': self.edit_flags,
             'team': self.edit_teams,
             'user': self.edit_users,
+            'ipv4': self.edit_ipv4,
+            'ipv6': self.edit_ipv6,
         }
         if len(args) == 1 and args[0] in uri.keys():
             uri[args[0]]()
@@ -408,6 +410,98 @@ class AdminEditHandler(BaseHandler):
     def edit_users(self):
         pass
 
+    def edit_ipv4(self):
+        ''' Add ipv4 addresses to a box (sorta edits the box object) '''
+        form = Form(box_uuid="Select a box", ipv4="Please provide a list of IPv4 addresses")
+        if form.validate(self.request.arguments):
+            errors = []
+            box = Box.by_uuid(self.get_argument('box_uuid'))
+            if box is not None:
+                ips_string = self.get_argument('ipv4').replace('\n', ',')
+                ips = filter(lambda char: char in "1234567890.,", ips_string).split(",")
+                for ip in filter(lambda ip: 0 < len(ip), ips):
+                    try:
+                        box = Box.by_ip_address(ip)
+                        if box is None:
+                            addr = IpAddress(box_id=box.id, v4=ip)
+                            dbsession.add(addr)
+                        else:
+                            errors.append("%s has already been assigned to %s." % (ip, box.name,))
+                    except ValueError:
+                        errors.append("'%s' is not a valid IPv4 address" % str(ip[:15]))
+                dbsession.flush()
+            else:
+                errors.append("Box does not exist")
+            self.render("admin/view/game_objects.html", errors=errors)
+        else:
+            self.render("admin/view/game_objects.html", errors=form.errors)
+
+    def edit_ipv6(self):
+        ''' Add ipv6 addresses to a box (sorta edits the box object) '''
+        form = Form(box_uuid="Select a box", ipv6="Please provide a list of IPv6 addresses")
+        if form.validate(self.request.arguments):
+            errors = []
+            box = Box.by_uuid(self.get_argument('box_uuid'))
+            if box is not None:
+                ips_string = self.get_argument('ipv6').replace('\n', ',').lower()
+                ips = filter(lambda char: char in "1234567890abcdef:,", ips_string).split(",")
+                for ip in filter(lambda ip: 0 < len(ip), ips):
+                    try:
+                        box = Box.by_ip_address(ip)
+                        if box is None:
+                            addr = IpAddress(box_id=box.id, v6=ip)
+                            dbsession.add(addr)
+                        else:
+                            errors.append("%s has already been assigned to %s." % (ip, box.name,))
+                    except ValueError:
+                        errors.append("'%s' is not a valid IPv6 address" % str(ip[:39]))
+                dbsession.flush()
+            else:
+                errors.append("Box does not exist")
+            self.render("admin/view/game_objects.html", errors=errors)
+        else:
+            self.render("admin/view/game_objects.html", errors=form.errors)
+
+
+class AdminDeleteHandler(BaseHandler):
+    ''' Manages registration tokens '''
+
+    @authorized('admin')
+    @restrict_ip_address
+    def post(self, *args, **kwargs):
+        ''' Used to delete database objects '''
+        uri = {
+            'ip': self.del_ip,
+            'flag': self.del_flag,
+        }
+        if len(args) == 1 and args[0] in uri.keys():
+            uri[args[0]]()
+        else:
+            self.render("public/404.html")
+
+    def del_ip(self):
+        ''' Delete an ip address object '''
+        ip = IpAddress.by_address(self.get_argument('ip', '__NULL__'))
+        if ip is not None:
+            logging.info("Deleted IP address: '%s'" % str(ip))
+            dbsession.delete(ip)
+            dbsession.flush()
+            self.redirect("/admin/view/game_objects")
+        else:
+            logging.info("IP address (%s) does not exist in database" % self.get_argument('ip', '__NULL__'))
+            self.render("admin/view/game_objects.html", errors=["IP does not exist in database"])
+
+    def del_flag(self):
+        ''' '''
+        flag = Flag.by_uuid(self.get_argument('uuid', '__NULL__'))
+        if flag is not None:
+            logging.info("Deleted flag: %s " % flag.name)
+            dbsession.delete(flag)
+            dbsession.flush()
+            self.redirect('/admin/view/game_objects')
+        else:
+            logging.info("Flag (%s) does not exist in the database" % self.get_argument('uuid', '__NULL__'))
+            self.render("admin/view/game_objects.html", errors=["Flag does not exist in database"])
 
 class AdminRegTokenHandler(BaseHandler):
     ''' Manages registration tokens '''

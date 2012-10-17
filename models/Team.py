@@ -61,21 +61,16 @@ class Team(BaseObject):
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
         return dbsession.query(cls).filter_by(id=identifier).first()
+    
+    @classmethod
+    def by_uuid(cls, uuid):
+        ''' Return and object based on a uuid '''
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_name(cls, team_name):
         ''' Return the team object based on "team_name" '''
         return dbsession.query(cls).filter_by(name=unicode(team_name)).first()
-
-    @classmethod
-    def by_team_id(cls, team_id):
-        ''' Return the team object based one id '''
-        return dbsession.query(cls).filter_by(id=team_id).first()
-
-    @classmethod
-    def by_uuid(cls, team_uuid):
-        ''' Return the job object whose user uuid is "team_uuid" '''
-        return dbsession.query(cls).filter_by(uuid=unicode(team_uuid)).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):

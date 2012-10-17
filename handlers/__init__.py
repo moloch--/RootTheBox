@@ -91,6 +91,7 @@ app = Application([
                   (r'/admin/create/(.*)', AdminCreateHandler),
                   (r'/admin/edit/(.*)', AdminEditHandler),
                   (r'/admin/view/(.*)', AdminViewHandler),
+                  (r'/admin/delete/(.*)', AdminDeleteHandler),
                   (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
 
                   # WebSocket Handlers - Websocket communication

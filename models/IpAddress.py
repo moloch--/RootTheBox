@@ -26,6 +26,7 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Integer, Unicode
+from models import dbsession
 from models.BaseGameObject import BaseObject
 
 
@@ -48,6 +49,29 @@ class IpAddress(BaseObject):
     ))
 
     @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, identifier):
+        ''' Returns a the object with id of identifier '''
+        return dbsession.query(cls).filter_by(id=identifier).first()
+
+    @classmethod
+    def by_uuid(cls, uuid):
+        ''' Return and object based on a uuid '''
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+
+    @classmethod
+    def by_address(cls, addr):
+        ''' Return and object based on an address '''
+        ip = dbsession.query(cls).filter_by(v4=unicode(addr)).first()
+        if ip is None:
+            ip = dbsession.query(cls).filter_by(v6=unicode(addr)).first()
+        return ip
+
+    @classmethod
     def format_v4(cls, ip_address):
         ''' Checks the format of the string to confirm its a valid ipv4 address '''
         regex = re.compile(r"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b")
@@ -64,6 +88,12 @@ class IpAddress(BaseObject):
             raise ValueError("Invalid Ipv6 Address: '%s'" % str(ip_address))
         else:
             return ip_address
+
+    def is_v4(self):
+        return bool(self.v4 is not None)
+
+    def is_v6(self):
+        return bool(self.v6 is not None)
 
     def __repr__(self):
         return u"<IpAddress - v4: %s, v6: %s>" % (str(self.v4), str(self.v6))
