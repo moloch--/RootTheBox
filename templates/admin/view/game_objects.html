@@ -179,7 +179,7 @@
                 <label class="control-label" for="ipv6">New IPv6 Addresses</label>
                 <div class="controls">
                     <textarea id="ipv6" name="ipv6" type="text" style="width:auto"
-                        placeholder="Example: 2001:feeb:daed:ffe4:9090:9090:0d4b:ed0c" rows="10" cols="32" >
+                        placeholder="Example: 2001:feeb:daed:ffe4:9090:9090:0d4b:ed0c" rows="10" cols="40" >
                     </textarea>
                 </div>
             </div>
@@ -284,134 +284,142 @@
                     </a>
                     <br />
                     <br />
-                    {% for box in corporation.boxes %}
-                        <div class="well">
-                            <h3 style="display:inline;">{{ box.name }}&nbsp;&nbsp;</h3>
-                                <a class="btn btn-small" data-toggle="modal" href="#editBoxModal"
-                                    onclick="get_details('box', '{{ box.uuid }}')">
-                                    Edit Box
-                                </a>
-                            <br />
-                            <br />
-                            <div class="row-fluid">
-                                <div class="well span4">
-                                    <h4 style="display:inline;">IPv4 Addresses&nbsp;&nbsp;</h4>
-                                    <a class="btn btn-small" data-toggle="modal" href="#addIpv4Modal" 
-                                        onclick="set_box_uuid('ipv4', '{{ box.uuid }}')">
-                                        Add IPv4
-                                    </a>
-                                    <br />
-                                    <hr>
-                                    {% if len(box.ipv4) != 0 %}
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Address</th>
-                                                    <th><!-- Delete --></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for ip in box.ipv4 %}
-                                                    <tr>
-                                                        <td>{{ box.ipv4.index(ip) + 1}}</td>
-                                                        <td>{{ ip }}</td>
-                                                        <td>
-                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delIpModal"
-                                                                onclick="set_delip('{{ ip }}')">
-                                                                Delete
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                {% end %}
-                                            </tbody>
-                                        </table>
-                                    {% else %}
-                                        <strong>No IPv4 Addresses</strong>
-                                    {% end %}
-                                </div>
-                                <div class="well span4">
-                                    <h4 style="display:inline;">IPv6 Addresses&nbsp;&nbsp;</h4>
-                                    <a class="btn btn-small" data-toggle="modal" href="#addIpv6Modal"
-                                        onclick="set_box_uuid('ipv6', '{{ box.uuid }}')">
-                                        Add IPv6
-                                    </a>
-                                    <br />
-                                    <hr>
-                                    {% if len(box.ipv6) != 0 %}
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Address</th>
-                                                    <th><!-- Delete --></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for ip in box.ipv6 %}
-                                                    <tr>
-                                                        <td>{{ box.ipv6.index(ip) + 1 }}</td>
-                                                        <td>{{ ip }}</td>
-                                                        <td>
-                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delIpModal"
-                                                                onclick="set_delip('{{ ip }}')">
-                                                                Delete
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                {% end %}
-                                            </tbody>
-                                        </table>
-                                    {% else %}
-                                        <strong>No IPv6 Addresses</strong>
-                                    {% end %}
-                                </div>
-                            </div>
+                    {% if len(corporation.boxes) != 0 %}
+                        {% for box in corporation.boxes %}
                             <div class="well">
-                                <h4 style="display:inline;">Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;</h4>
-                                <a class="btn btn-mini" data-toggle="modal" href="/admin/create/flag">
-                                    Add Flags
-                                </a>
-                                <hr>
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Name</th>
-                                            <th>Description</th>
-                                            <th>Token</th>
-                                            <th>Value</th>
-                                            <th><!-- Edit Button --></th>
-                                            <th><!-- Delete Button --></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for flag in box.flags %}
-                                            <tr>
-                                                <td>{{ box.flags.index(flag) + 1 }}</td>
-                                                <td>{{ flag.name }}</td>
-                                                <td>{{ flag.description }}</td>
-                                                <td>{{ flag.token }}</td>
-                                                <td>${{ flag.value }}</td>
-                                                <td>
-                                                    <a class="btn btn-mini" data-toggle="modal" href="#editFlagModal"
-                                                        onclick="get_details('flag', '{{ flag.uuid }}')">
-                                                        Edit Flag
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delFlagModal"
-                                                        onclick="set_delflag('{{ flag.uuid }}')">
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                <h3 style="display:inline;">{{ box.name }}&nbsp;&nbsp;</h3>
+                                    <a class="btn btn-small" data-toggle="modal" href="#editBoxModal"
+                                        onclick="get_details('box', '{{ box.uuid }}')">
+                                        Edit Box
+                                    </a>
+                                <br />
+                                <br />
+                                <div class="row-fluid">
+                                    <div class="well span4">
+                                        <h4 style="display:inline;">IPv4 Addresses&nbsp;&nbsp;</h4>
+                                        <a class="btn btn-small" data-toggle="modal" href="#addIpv4Modal" 
+                                            onclick="set_box_uuid('ipv4', '{{ box.uuid }}')">
+                                            Add IPv4
+                                        </a>
+                                        <br />
+                                        <hr>
+                                        {% if len(box.ipv4) != 0 %}
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Address</th>
+                                                        <th><!-- Delete --></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for ip in box.ipv4 %}
+                                                        <tr>
+                                                            <td>{{ box.ipv4.index(ip) + 1}}</td>
+                                                            <td>{{ ip }}</td>
+                                                            <td>
+                                                                <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delIpModal"
+                                                                    onclick="set_delip('{{ ip }}')">
+                                                                    Delete
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% end %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <strong>No IPv4 Addresses</strong>
                                         {% end %}
-                                    </tbody>
-                                </table>
+                                    </div>
+                                    <div class="well span4">
+                                        <h4 style="display:inline;">IPv6 Addresses&nbsp;&nbsp;</h4>
+                                        <a class="btn btn-small" data-toggle="modal" href="#addIpv6Modal"
+                                            onclick="set_box_uuid('ipv6', '{{ box.uuid }}')">
+                                            Add IPv6
+                                        </a>
+                                        <br />
+                                        <hr>
+                                        {% if len(box.ipv6) != 0 %}
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Address</th>
+                                                        <th><!-- Delete --></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for ip in box.ipv6 %}
+                                                        <tr>
+                                                            <td>{{ box.ipv6.index(ip) + 1 }}</td>
+                                                            <td>{{ ip }}</td>
+                                                            <td>
+                                                                <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delIpModal"
+                                                                    onclick="set_delip('{{ ip }}')">
+                                                                    Delete
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% end %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <strong>No IPv6 Addresses</strong>
+                                        {% end %}
+                                    </div>
+                                </div>
+                                <div class="well">
+                                    <h4 style="display:inline;">Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;</h4>
+                                    <a class="btn btn-mini" data-toggle="modal" href="/admin/create/flag">
+                                        Add Flags
+                                    </a>
+                                    <hr>
+                                    {% if len(box.flags) != 0 %}
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                    <th>Description</th>
+                                                    <th>Token</th>
+                                                    <th>Value</th>
+                                                    <th><!-- Edit Button --></th>
+                                                    <th><!-- Delete Button --></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for flag in box.flags %}
+                                                    <tr>
+                                                        <td>{{ box.flags.index(flag) + 1 }}</td>
+                                                        <td>{{ flag.name }}</td>
+                                                        <td>{{ flag.description }}</td>
+                                                        <td>{{ flag.token }}</td>
+                                                        <td>${{ flag.value }}</td>
+                                                        <td>
+                                                            <a class="btn btn-mini" data-toggle="modal" href="#editFlagModal"
+                                                                onclick="get_details('flag', '{{ flag.uuid }}')">
+                                                                Edit Flag
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delFlagModal"
+                                                                onclick="set_delflag('{{ flag.uuid }}')">
+                                                                Delete
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <strong>No flags on this box yet, <a href="/admin/create/flag">add some</a></strong>
+                                    {% end %}
+                                </div>
                             </div>
-                        </div>
-                        <br />
+                            <br />
+                        {% end %}
+                    {% else %}
+                        <strong>No boxes in this corporation yet, <a href="/admin/create/box">add some</a></strong>
                     {% end %}
                 </div>
             {% end %}

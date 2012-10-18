@@ -17,6 +17,10 @@ Created on Mar 13, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+----------------------------------------------------------------------------
+
+There's a lot of code in here ...
+
 '''
 
 from string import digits
@@ -74,7 +78,7 @@ class AdminCreateHandler(BaseHandler):
             else:
                 corporation = Corporation(
                     name=unicode(self.get_argument('corporation_name')),
-                    description=unicode(self.get_argument('description'))
+                    description=unicode(self.get_argument('description')),
                 )
                 dbsession.add(corporation)
                 dbsession.flush()
@@ -186,7 +190,11 @@ class AdminCreateHandler(BaseHandler):
         dbsession.flush()
 
     def __mklevel__(self, game_level, buyout):
-        ''' Creates a new level in the database, and keeps everything sorted '''
+        ''' 
+        Creates a new level in the database, the levels are basically a linked-list
+        where each level points to the next, and the last points to None.  This 
+        function creates a new level and sorts everything based on the 'number' attrib
+        '''
         new_level = GameLevel(
             number=game_level,
             buyout=buyout,
@@ -199,6 +207,8 @@ class AdminCreateHandler(BaseHandler):
             level.next_level_id = game_levels[index + 1].id
             dbsession.add(level)
             index += 1
+        game_levels[0].number = 0
+        dbsession.add(game_levels[0])
         game_levels[-1].next_level_id = None
         dbsession.add(game_levels[-1])
         dbsession.flush()
@@ -253,11 +263,12 @@ class AdminAjaxObjectDataHandler(BaseHandler):
     @restrict_ip_address
     def get(self, *args, **kwargs):
         game_objects = {
+            'game_level': GameLevel,
             'corporation': Corporation,
-            'box': Box,
             'flag': Flag,
             'user': User,
             'team': Team,
+            'box': Box,
         }
         obj_name = self.get_argument('obj', '')
         uuid = self.get_argument('uuid', '')
@@ -287,6 +298,8 @@ class AdminEditHandler(BaseHandler):
             'user': self.edit_users,
             'ipv4': self.edit_ipv4,
             'ipv6': self.edit_ipv6,
+            'game_level': self.edit_game_level,
+            'box_level': self.box_level,
         }
         if len(args) == 1 and args[0] in uri.keys():
             uri[args[0]]()
@@ -412,7 +425,7 @@ class AdminEditHandler(BaseHandler):
             uuid="No team selected",
             name="Please enter a name",
             motto="Please enter a motto",
-            listen_port="Please enter a listen port"
+            listen_port="Please enter a listen port",
         )
         if form.validate(self.request.arguments):
             team = Team.by_uuid(self.get_argument('uuid'))
@@ -428,6 +441,7 @@ class AdminEditHandler(BaseHandler):
                     lport = int(self.get_argument('listen_port'))
                     if lport != team.listen_port:
                         logging.info("Updated %s's listen port %d -> %d" % (team.name, team.listen_port, lport,))
+                        team.listen_port = lport
                 except ValueError:
                     errors.append("Invalid listen port %s " % self.get_argument('listen_port'))
                 dbsession.add(team)
@@ -451,24 +465,34 @@ class AdminEditHandler(BaseHandler):
             errors = []
             user = User.by_uuid(self.get_argument('uuid'))
             if user is not None:
+                # Update user account name
                 if user.account != self.get_argument('account'):
                     if User.by_account(self.get_argument('account')) is None:
                         logging.info("Updated user account %s -> %s" % (user.account, self.get_argument('account'),))
                         user.account = unicode(self.get_argument('account'))
                     else:
                         errors.append("Account name is already in use")
+                # Update user handle
                 if user.handle != self.get_argument('handle'):
                     if User.by_handle(self.get_argument('handle')) is None:
                         logging.info("Updated user handle %s -> %s" % (user.handle, self.get_argument('handle'),))
                         user.handle = unicode(self.get_argument('handle'))
                     else:
                         errors.append("Handle is already in use")
+                # Update hashing algoritm
                 if self.get_argument('hash_algorithm') in user.algorithms.keys():
                     if user.algorithm != self.get_argument('hash_algorithm'):
-                        logging.info("Updated %s's hashing algorithm %s -> %s" % (user.handle, user.algorithm, self.get_argument('hash_algorithm')))
-                        user.algorithm = self.get_argument('hash_algorithm')
+                        if 0 < len(self.get_argument('password', '')):
+                            logging.info("Updated %s's hashing algorithm %s -> %s" % (user.handle, user.algorithm, self.get_argument('hash_algorithm')))
+                            user.algorithm = self.get_argument('hash_algorithm')
+                        else:
+                            errors.append("You must provide a password when updating the hashing algorithm")
                 else:
                     errors.append("Not a valid hash algorithm")
+                # Update password
+                if 0 < len(self.get_argument('password', '')):
+                    user.password = self.get_argument('password')
+                # Update team
                 team = Team.by_uuid(self.get_argument('team_uuid'))
                 if team is not None:
                     if user.team_id != team.id:
@@ -536,6 +560,61 @@ class AdminEditHandler(BaseHandler):
         else:
             self.render("admin/view/game_objects.html", errors=form.errors)
 
+    def edit_game_level(self):
+        ''' Update game level objects '''
+        form = Form(uuid="Select an object", number="Enter a level number", buyout="Enter a buyout value")
+        if form.validate(self.request.arguments):
+            errors = []
+            level = GameLevel.by_uuid(self.get_argument('uuid'))
+            try:
+                new_number = int(self.get_argument('number'))
+                new_buyout = int(self.get_argument('buyout'))
+                if level.number != new_number and GameLevel.by_number(new_number) is None:
+                    level.number = new_number
+                    dbsession.add(level)
+                    dbsession.flush()
+                    # Fix the linked-list
+                    game_levels = sorted(GameLevel.all())
+                    index = 0
+                    for game_level in game_levels[:-1]:
+                        game_level.next_level_id = game_levels[index + 1].id
+                        dbsession.add(game_level)
+                        index += 1
+                    game_levels[0].number = 0
+                    dbsession.add(game_levels[0])
+                    game_levels[-1].next_level_id = None
+                    dbsession.add(game_levels[-1])
+                    dbsession.flush()
+                if GameLevel.by_number(new_number) is not None:
+                    errors.append("GameLevel number is not unique")
+                if level.buyout != new_buyout:
+                    level.buyout = new_buyout
+                    dbsession.add(level)
+                    dbsession.flush()                    
+            except ValueError:
+                errors.append("That was not a number ... maybe you should go back to school")
+            self.render("admin/view/game_levels.html", errors=errors)
+        else:
+            self.render("admin/view/game_levels.html", errors=form.errors)
+
+    def box_level(self):
+        ''' Changes a boxs level '''
+        form = Form(box_uuid="No box selected", level_uuid="No level selected")
+        if form.validate(self.request.arguments):
+            errors = []
+            box = Box.by_uuid(self.get_argument('box_uuid'))
+            level = GameLevel.by_uuid(self.get_argument('level_uuid'))
+            if box is not None and level is not None:
+                box.game_level_id = level.id
+                dbsession.add(box)
+                dbsession.flush()
+            elif box is None:
+                errors.append("Box does not exist")
+            elif level is None:
+                errors.append("GameLevel does not exist")
+            self.render("admin/view/game_levels.html", errors=errors)
+        else:
+            self.render("admin/view/game_levels.html", errors=form.errors)
 
 class AdminDeleteHandler(BaseHandler):
     ''' Manages registration tokens '''
@@ -566,7 +645,7 @@ class AdminDeleteHandler(BaseHandler):
             self.render("admin/view/game_objects.html", errors=["IP does not exist in database"])
 
     def del_flag(self):
-        ''' '''
+        ''' Delete a flag object from the database '''
         flag = Flag.by_uuid(self.get_argument('uuid', '__NULL__'))
         if flag is not None:
             logging.info("Deleted flag: %s " % flag.name)

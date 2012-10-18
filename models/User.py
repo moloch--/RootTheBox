@@ -118,8 +118,8 @@ class User(BaseObject):
         password = filter(lambda char: char in printable[:-5], password)
         if algorithm_name == 'scrypt':
             return cls.__scrypt__(password, salt)
-        elif algorithm_name in self.algorithms.keys():
-            algo = self.algorithms[algorithm_name]()
+        elif algorithm_name in cls.algorithms.keys():
+            algo = cls.algorithms[algorithm_name]()
             algo.update(password)
             return unicode(algo.hexdigest())
         else:

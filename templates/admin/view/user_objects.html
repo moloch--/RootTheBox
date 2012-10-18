@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}View Teams{% end %}
+{% block title %}User Objects{% end %}
 
 {% block content %}
     <!-- Edit Team -->
@@ -16,19 +16,19 @@
                 <div class="control-group">
                     <label class="control-label" for="team_name">Team Name</label>
                     <div class="controls">
-                      <input id="team_name" name="name" type="text" placeholder="Team Name">
+                        <input id="team_name" name="name" type="text" placeholder="Team Name">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="team_motto">Team Motto</label>
                     <div class="controls">
-                      <input id="team_motto" name="motto" type="text" placeholder="Team Motto">
+                        <input id="team_motto" name="motto" type="text" placeholder="Team Motto">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="team_listen_port">Botnet Listen Port</label>
                     <div class="controls">
-                      <input id="team_listen_port" name="listen_port" type="text" placeholder="Botnet Listen Port">
+                        <input id="team_listen_port" name="listen_port" type="text" placeholder="Botnet Listen Port">
                     </div>
                 </div>
             </form>
@@ -45,13 +45,13 @@
             <h3>Edit User</h3>
         </div>
         <div class="modal-body">
-            <form id="edit-team" class="form-horizontal" method="post" action="/admin/edit/user">
+            <form id="edit-user" class="form-horizontal" method="post" action="/admin/edit/user">
                 {% raw xsrf_form_html() %}
                 <input id="user_uuid" name="uuid" type="hidden" />
                 <div class="control-group">
                     <label class="control-label" for="user_account">Account</label>
                     <div class="controls">
-                      <input id="user_account" name="account" type="text" placeholder="Account Name">
+                        <input id="user_account" name="account" type="text" placeholder="Account Name">
                     </div>
                 </div>
                 <div class="control-group">
@@ -64,18 +64,22 @@
                     <label class="control-label" for="user_hash_algorithm">Hash Algorithm</label>
                     <div class="controls">
                         <select id="user_hash_algorithm" name="hash_algorithm">
-                            <option value=""></option>
                             <option value="md5">MD5</option>
                             <option value="sha1">SHA1</option>
                             <option value="sha256">SHA-256</option>
-                            <option value="scrypt">Scrypt</option>
                         </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="user_password">Password</label>
+                    <div class="controls">
+                        <input id="user_password" name="password" type="password" placeholder="New Password">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="user_team_uuid">Team</label>
                     <div class="controls">
-                        <select id="user_team_uuid" name="team">
+                        <select id="user_team_uuid" name="team_uuid">
                             <option value=""></option>
                             {% from models import Team %}
                             {% for team in Team.all() %}
@@ -88,7 +92,7 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" onclick="document.forms['edit-user'].submit();">Save</button>
         </div>
     </div>
     <script>
@@ -103,44 +107,59 @@
         }
     </script>
     <!-- Start Visable -->
-    <h1>User Objects</h1>
-    <br />
-    {% from models import Team %}
-    {% for team in Team.all() %}
-        <div class="well">
-            <h2 style="display:inline;">{{ team.name }}&nbsp;&nbsp;</h2>
-            <h3 style="display:inline;">&quot;{{ team.motto }}&quot;&nbsp;&nbsp;</h3>
-            <a class="btn btn-primary" data-toggle="modal" href="#editTeamModal" 
-                onclick="get_details('team', '{{ team.uuid }}')">
-                 Edit Team
-            </a>
+    <div class="row-fluid">
+        <div class="span10 offset1">
+            <h1>User Objects</h1>
             <br />
-            <h3>Members of {{ team.name }}</h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Account</th>
-                        <th>Handle</th>
-                        <th>Hash Algorithm</th>
-                        <th><!-- Edit Button --></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in team.members %}
-                        <tr>
-                            <td>{{ user.account }}</td>
-                            <td>{{ user.handle }}</td>
-                            <td>{{ user.algorithm }}</td>
-                            <td>
-                              <a class="btn btn-mini" data-toggle="modal" href="#editUserModal" 
-                                    onclick="get_details('user', '{{ user.uuid }}')">
-                                Edit User
-                              </a>
-                            </td>
-                        </tr>
-                    {% end %}
-                </tbody>
-            </table>
+            {% if errors != None and len(errors) != 0 %}
+                {% for error in errors %}
+                    <div class="alert alert-error">
+                        <a class="close" data-dismiss="alert" href="#">×</a>
+                        <h4 class="alert-heading">ERROR</h4>
+                        {{ error }}
+                    </div>
+                {% end %}
+            {% end %}
+            {% from models import Team %}
+            {% for team in Team.all() %}
+                <div class="well">
+                    <h2 style="display:inline;">{{ team.name }}&nbsp;&nbsp;</h2>
+                    <h3 style="display:inline;">&quot;{{ team.motto }}&quot;&nbsp;&nbsp;</h3>
+                    <a class="btn btn-primary" data-toggle="modal" href="#editTeamModal" 
+                        onclick="get_details('team', '{{ team.uuid }}')">
+                        Edit Team
+                    </a>
+                    <br />
+                    <h3>Members of {{ team.name }}</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Account</th>
+                                <th>Handle</th>
+                                <th>Hash Algorithm</th>
+                                <th>Password Hash</th>
+                                <th><!-- Edit Button --></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in team.members %}
+                                <tr>
+                                    <td>{{ user.account }}</td>
+                                    <td>{{ user.handle }}</td>
+                                    <td>{{ user.algorithm }}</td>
+                                    <td>{{ user.password }}</td>
+                                    <td>
+                                        <a class="btn btn-mini" data-toggle="modal" href="#editUserModal" 
+                                            onclick="get_details('user', '{{ user.uuid }}')">
+                                            Edit User
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% end %}
+                        </tbody>
+                    </table>
+                </div>
+            {% end %}
         </div>
-    {% end %}
+    </div>
 {% end %}

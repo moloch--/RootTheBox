@@ -50,6 +50,11 @@ class GameLevel(BaseObject):
         return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
+    def by_uuid(cls, uuid):
+        ''' Return and object based on a uuid '''
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+
+    @classmethod
     def by_number(cls, number):
         ''' Returns a the object with number of number '''
         return dbsession.query(cls).filter_by(number=number).first()
@@ -65,6 +70,13 @@ class GameLevel(BaseObject):
             return self.by_id(self.next_level_id)
         else:
             return None
+
+    def to_dict(self):
+        return dict(
+            uuid=self.uuid,
+            number=self.number,
+            buyout=self.buyout,
+        )
 
     def __cmp__(self, other):
         if self.number < other.number:
