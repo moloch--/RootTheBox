@@ -59,7 +59,7 @@ class MarketItem(BaseObject):
         ''' Returns an object with a given name '''
         return dbsession.query(cls).filter_by(name=unicode(name)).first()
 
-    def to_json(self):
+    def to_dict(self):
         ''' Returns object data as json object '''
         msg = {
             'name': self.name,

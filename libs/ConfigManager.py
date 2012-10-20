@@ -65,6 +65,7 @@ class ConfigManager(object):
         self.cache_files = self.config.getboolean("Server", "cache_files")
 
     def __sessions__(self):
+        ''' Session settings '''
         self.memcached_server = self.config.get("Sessions", 'memcached')
         self.session_age = self.config.getint("Sessions", 'session_age')
         self.session_regeneration_interval = self.config.getint(

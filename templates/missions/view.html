@@ -1,0 +1,35 @@
+{% extends "../main.html" %}
+
+{% block title %}Missions{% end %}
+
+{% block content %}
+	<div class="container">
+		<h1>Missions</h1>
+		<br />
+		{% from models.GameLevel import GameLevel %}
+		{% for level in GameLevel.all() %}
+			<div class="well">
+				<h2>Level #{{ level.number }}</h2>
+				{% if level in team.game_levels %}
+					<h3>{{ level }}
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>#</td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{{ level.number }}</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				{% else %}
+					<strong>You do not have access to this level yet, buy it for <a href="">${{ level.buyout }}</a></strong>
+				{% end %}
+			</div>
+		{% end %}
+	</div>
+{% end %}

@@ -30,7 +30,7 @@ def authenticated(method):
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        if self.session != None:
+        if self.session is not None:
             return method(self, *args, **kwargs)
         self.redirect(self.application.settings['login_url'])
     return wrapper
@@ -56,9 +56,9 @@ def authorized(permission):
     def func(method):
         @functools.wraps(method)
         def wrapper(self, *args, **kwargs):
-            if self.session != None:
+            if self.session is not None:
                 user = User.by_handle(self.session['handle'])
-                if user != None and user.has_permission(permission):
+                if user is not None and user.has_permission(permission):
                     return method(self, *args, **kwargs)
             logging.warn("Attempted unauthorized access from %s to %s" %
                          (self.request.remote_ip, self.request.uri))

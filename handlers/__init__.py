@@ -42,6 +42,7 @@ from handlers.ErrorHandlers import *
 from handlers.PublicHandlers import *
 from handlers.HashesHandlers import *
 from handlers.MarketHandlers import *
+from handlers.MissionsHandler import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
@@ -50,7 +51,6 @@ from handlers.NotifySocketHandlers import *
 
 ### Setup and URLs ###
 config = ConfigManager.Instance()
-
 if config.cache_files:
     from handlers.StaticFileHandler import StaticFileHandler
 else:
@@ -81,6 +81,9 @@ app = Application([
                   # Market handlers
                   (r'/user/market', MarketViewHandler),
                   (r'/user/market/details', MarketDetailsHandler),
+
+                  # Mission handlers
+                  (r'/user/missions', MissionsHandler),
 
                   # User handlers
                   (r'/user', HomeHandler),
@@ -179,8 +182,7 @@ def start_server():
     scoring.start()
     try:
         for count in range(3, 0, -1):
-            sys.stdout.write(
-                "\r" + INFO + "The game will begin in ... %d" % (count,))
+            sys.stdout.write("\r" + INFO + "The game will begin in ... %d" % (count,))
             sys.stdout.flush()
             sleep(1)
         sys.stdout.write("\r" + INFO + "The game has begun, good hunting!\n")

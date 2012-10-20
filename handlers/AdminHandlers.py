@@ -567,8 +567,8 @@ class AdminEditHandler(BaseHandler):
             errors = []
             level = GameLevel.by_uuid(self.get_argument('uuid'))
             try:
-                new_number = int(self.get_argument('number'))
-                new_buyout = int(self.get_argument('buyout'))
+                new_number = int(self.get_argument('number', 'NaN'))
+                new_buyout = int(self.get_argument('buyout', 'NaN'))
                 if level.number != new_number and GameLevel.by_number(new_number) is None:
                     level.number = new_number
                     dbsession.add(level)

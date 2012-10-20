@@ -38,10 +38,7 @@ class MarketViewHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Called to purchase an item '''
-        try:
-            uuid = self.get_argument('uuid')
-        except KeyError:
-            uuid = ""
+        uuid = self.get_argument('uuid', '')
         item = MarketItem.by_uuid(uuid)
         if not item is None:
             user = self.get_current_user()
@@ -73,13 +70,10 @@ class MarketDetailsHandler(BaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
         ''' Get details on an item '''
-        try:
-            uuid = self.get_argument('uuid')
-        except KeyError:
-            uuid = ""
+        uuid = self.get_argument('uuid', '')
         item = MarketItem.by_uuid(uuid)
         if item is None:
             self.write({'Error': 'Item does not exist.'})
         else:
-            self.write(item.to_json())
+            self.write(item.to_dict())
         self.finish()

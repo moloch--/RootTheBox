@@ -36,7 +36,7 @@ class FileCache(object):
         mem = pylibmc.Client(['127.0.0.1'], binary=True)
         key = b64encode(file_path)
         data = mem.get(key)
-        if data == None:
+        if data is None:
             f = open(file_path, 'r')
             data = f.read()
             f.close()
@@ -47,14 +47,14 @@ class FileCache(object):
                     logging.error("Failed to properly cache image file.")
         return data
 
-    @classmethod
-    def delete(cls, file_path):
+    @staticmethod
+    def delete(file_path):
         ''' Remove file from memory cache '''
         mem = pylibmc.Client(['127.0.0.1:11211'], binary=True)
         mem.delete(b64encode(file_path))
 
-    @classmethod
-    def flush(cls):
+    @staticmethod
+    def flush():
         ''' Flush memory cache '''
         mem = pylibmc.Client(['127.0.0.1:11211'], binary=True)
         mem.flush_all()
