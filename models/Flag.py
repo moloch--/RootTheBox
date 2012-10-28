@@ -22,7 +22,7 @@ Created on Mar 12, 2012
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, Integer
+from sqlalchemy.types import Unicode, Integer, Boolean
 from models import dbsession, Box
 from models.BaseGameObject import BaseObject
 
@@ -35,6 +35,7 @@ class Flag(BaseObject):
     token = Column(Unicode(255), nullable=False)
     description = Column(Unicode(255), nullable=False)
     value = Column(Integer, nullable=False)
+    is_file = Column(Boolean, default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
 
     @classmethod

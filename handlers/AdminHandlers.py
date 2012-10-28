@@ -23,6 +23,7 @@ There's a lot of code in here ...
 
 '''
 
+
 from string import digits
 from libs.Form import Form
 from libs.SecurityDecorators import *
@@ -118,6 +119,7 @@ class AdminCreateHandler(BaseHandler):
             flag_name="Please enter a name",
             token="Please enter a token value",
             reward="Please enter a reward value",
+            is_file="Please select a file setting",
             description="Please enter a flag description",
         )
         if form.validate(self.request.arguments):
@@ -220,6 +222,7 @@ class AdminCreateHandler(BaseHandler):
             name=unicode(self.get_argument('flag_name')),
             token=unicode(self.get_argument('token')),
             description=unicode(self.get_argument('description')),
+            is_file=bool(self.get_argument('is_file', 'false') == 'true'),
             box_id=box.id,
             value=reward,
         )
@@ -519,8 +522,7 @@ class AdminEditHandler(BaseHandler):
                 ips = filter(lambda char: char in "1234567890.,", ips_string).split(",")
                 for ip in filter(lambda ip: 0 < len(ip), ips):
                     try:
-                        box = Box.by_ip_address(ip)
-                        if box is None:
+                        if Box.by_ip_address(ip) is None:
                             addr = IpAddress(box_id=box.id, v4=ip)
                             dbsession.add(addr)
                         else:

@@ -77,6 +77,10 @@ class Team(BaseObject):
         char_white_list = ascii_letters + digits + extra_chars
         return filter(lambda char: char in char_white_list, string)
 
+    @property
+    def levels(self):
+        return sorted(self.game_levels)
+
     def to_dict(self):
         return dict(
             name=self.name, 

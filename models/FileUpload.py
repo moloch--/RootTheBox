@@ -19,15 +19,23 @@ Created on Mar 15, 2012
     limitations under the License.
 '''
 
+
 from models import dbsession
-from sqlalchemy.types import Unicode, Integer
 from sqlalchemy import Column, ForeignKey
+from sqlalchemy.orm import synonym
+from sqlalchemy.types import Unicode, Integer
 from models.BaseGameObject import BaseObject
+from string import ascii_letters, digits
 
 
 class FileUpload(BaseObject):
 
-    file_name = Column(Unicode(255), nullable=False)
+    _file_name = Column(Unicode(64), unique=True, nullable=False)
+    file_name = synonym('_file_name', descriptor=property(
+        lambda self: self._file_name,
+        lambda self, file_name: setattr(
+            self, '_file_name', self.__class__.filter_string(file_name, "-_"))
+    ))
     content = Column(Unicode(255), nullable=False)
     uuid = Column(Unicode(64), unique=True, nullable=False)
     description = Column(Unicode(1024), nullable=False)
@@ -53,6 +61,11 @@ class FileUpload(BaseObject):
     def by_file_name(cls, file_name):
         ''' Return the user object whose file name is "file_name" '''
         return dbsession.query(cls).filter_by(file_name=unicode(file_name)).first()
+
+    @classmethod
+    def filter_string(cls, string, extra_chars=''):
+        char_white_list = ascii_letters + digits + extra_chars
+        return filter(lambda char: char in char_white_list, string)
 
     def __repr__(self):
         return u'<File - name: %s, type: %s>' % (self.file_name, self.content)

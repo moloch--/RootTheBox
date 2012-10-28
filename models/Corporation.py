@@ -64,3 +64,6 @@ class Corporation(BaseObject):
             name=self.name,
             description=self.description,
         )
+
+    def __str__(self):
+        return self.name

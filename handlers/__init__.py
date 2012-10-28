@@ -84,6 +84,7 @@ app = Application([
 
                   # Mission handlers
                   (r'/user/missions', MissionsHandler),
+                  (r'/user/missions/(.*)', MissionsHandler),
 
                   # User handlers
                   (r'/user', HomeHandler),

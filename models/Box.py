@@ -37,7 +37,7 @@ class Box(BaseObject):
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(64), unique=True, nullable=False)
-    IpAddresses = relationship("IpAddress", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
+    ip_addresses = relationship("IpAddress", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
     description = Column(Unicode(2048))
     difficulty = Column(Unicode(64), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
@@ -82,13 +82,17 @@ class Box(BaseObject):
     @property
     def ipv4(self):
         ''' Return a list of all ipv4 addresses '''
-        ips = [ip.v4 for ip in self.IpAddresses]
+        ips = [ip.v4 for ip in self.ip_addresses]
         return filter(lambda ip: ip is not None, ips)
+
+    @property
+    def corporation_name(self):
+        return str(Corporation.by_id(self.corporation_id))
 
     @property
     def ipv6(self):
         ''' Return a list of all ipv6 addresses '''
-        ips = [ip.v6 for ip in self.IpAddresses]
+        ips = [ip.v6 for ip in self.ip_addresses]
         return filter(lambda ip: ip is not None, ips)
 
     def to_dict(self):
@@ -108,7 +112,4 @@ class Box(BaseObject):
         return u'<Box - name: %s>' % (self.box_name,)
 
     def __str__(self):
-        return self.box_name.encode('ascii', 'ignore')
-
-    def __unicode__(self):
         return self.box_name

@@ -17,10 +17,10 @@
 				<div class="span11 offset1 well">
 					<h3>Welcome {{ user.handle }}</h3>
 					{% if user.team is not None %}
-						<strong>Current Level:</strong> 0 <br />
+						<strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
 						<strong>Bank Account:</strong> ${{ user.team.money }} <br />
 						<strong>Active Bots:</strong> 0 <br />
-						<strong>Flags Captured:</strong> 0 <br />
+						<strong>Flags Captured:</strong> {{ len(user.team.flags) }}<br />
 					{% else %}
 						<strong>You are not on a team</strong>
 					{% end %}
@@ -32,8 +32,10 @@
 						<div class="pikachoose">
 							<ul id="pikame">
 								{% for teammate in user.team.members %}
-									<li><a href="#"><img src="/avatars/{{ teammate.avatar }}" alt="picture" /></a>
-									<span>{{ teammate.handle }}</span></li>
+									<li>
+										<a href="#"><img src="/avatars/{{ teammate.avatar }}" alt="picture" /></a>
+										<span>{{ teammate.handle }}</span>
+									</li>
 								{% end %}
 							</ul>
 						</div>
