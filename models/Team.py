@@ -79,6 +79,7 @@ class Team(BaseObject):
 
     @property
     def levels(self):
+        ''' Sorted game_levels '''
         return sorted(self.game_levels)
 
     def to_dict(self):
@@ -91,10 +92,7 @@ class Team(BaseObject):
     def file_by_file_name(self, file_name):
         ''' Return file object based on file_name '''
         ls = self.files.filter_by(file_name=file_name)
-        if 0 < len(ls):
-            return ls[0]
-        else:
-            return None
+        return ls[0] if 0 < len(ls) else None
 
     def __repr__(self):
         return u'<Team - name: %s, money: %d>' % (self.name, self.money)

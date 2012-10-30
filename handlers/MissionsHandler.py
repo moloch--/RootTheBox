@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Created on Mar 15, 2012
+Created on Oct 28, 2012
 
 @author: moloch
 
@@ -81,16 +81,16 @@ class MissionsHandler(BaseHandler):
 
     def buyout(self, *args, **kwargs):
         ''' Buyout and unlock a level '''
-        form = Form(level_uuid="Please select a level")
+        form = Form(uuid="Level parameter missing")
         user = self.get_current_user()
         if form.validate(self.request.arguments):
-            level = GameLevel.by_uuid(self.get_argument('level_uuid', ''))
+            level = GameLevel.by_uuid(self.get_argument('uuid', ''))
             if level is not None:
                 if level.buyout < user.team.money:
                     user.team.money -= level.buyout
-                    user.team.levels.append(level)
+                    user.team.game_levels.append(level)
                     dbsession.add(user.team)
-                    self.redirect("/missions")
+                    self.redirect("/user/missions")
                 else:
                     self.render("missions/view.html", team=user.team, errors=["You do not have enough money to unlock this level"])
             else:
@@ -103,7 +103,7 @@ class MissionsHandler(BaseHandler):
         user = self.get_current_user()
         if user_token is not None and flag.token == user_token:
             user.team.money += flag.value
-            user.team.flags.append(flag)
+            user.team.flags.append(Flag.by_id(flag.id))
             dbsession.add(user.team)
             dbsession.flush()
             self.redirect("/user/missions")
