@@ -19,17 +19,18 @@ if [ "$(id -u)" != "0" ]; then
 	exit 1
 fi
 
-echo "[*] Installing pip ..."
-apt-get install python-pip python-dev build-essential && 
-pip install --upgrade pip &&
-pip install --upgrade virtualenv
+echo "[*] Installing pip/gcc ..."
+apt-get install python-pip python-dev build-essential
 
 echo "[*] Installing packages ..."
 apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha
 
-echo "[*] Installing tornado/sqlalchemy ..."
+echo "[*] Installing python libs ..."
+/usr/local/bin/pip install --upgrade pip
+/usr/local/bin/pip install --upgrade virtualenv
 /usr/local/bin/pip install tornado
 /usr/local/bin/pip install scrypt
 /usr/local/bin/pip install sqlalchemy
 /usr/local/bin/pip install pylibmc
+echo ""
 echo "[*] Setup Completed."

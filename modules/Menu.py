@@ -20,7 +20,6 @@ Created on Mar 14, 2012
 '''
 
 
-from libs.Session import SessionManager
 from tornado.web import UIModule
 from models import User
 

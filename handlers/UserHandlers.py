@@ -116,12 +116,10 @@ class SettingsHandler(BaseHandler):
 
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
-        form = Form(
-            theme_uuid="Please select a theme",
-        )
+        form = Form(theme_uuid="Please select a theme",)
         if form.validate(self.request.arguments):
             theme = Theme.by_uuid(self.get_argument('theme_uuid'))
-            if theme != None:
+            if theme is not None:
                 self.session['theme'] = ''.join(theme.cssfile)
                 self.session.save()
                 user = self.get_current_user()
@@ -165,7 +163,7 @@ class SettingsHandler(BaseHandler):
                 )
             except KeyError:
                 logging.exception("Recaptcha API called failed.")
-            if response != None and response.is_valid:
+            if response is not None and response.is_valid:
                 return True
             else:
                 return False
