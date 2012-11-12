@@ -31,7 +31,7 @@ from handlers.BaseHandlers import BaseHandler
 
 
 class MissionsHandler(BaseHandler):
-    ''' Displays user password hashes '''
+    ''' Renders pages related to Missions/Flag submissions '''
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -56,7 +56,7 @@ class MissionsHandler(BaseHandler):
         Accepts flag submissions, a flag can be either a string or a file,
         if the flag submission is a file the MD5 hexdigest is used.
         '''
-        form = Form(flag_type="OMFG SQL INJECTION, WHAT DO!?!?")
+        form = Form(flag_type="Missing flag type")
         user = self.get_current_user()
         if form.validate(self.request.arguments):
             flag = Flag.by_uuid(self.get_argument('uuid', ''))
@@ -66,9 +66,7 @@ class MissionsHandler(BaseHandler):
                     self.__chkflag__(flag, token)
                 elif self.get_argument('flag_type').lower() == 'file':
                     if 0 < len(self.request.files['file_data'][0]['body']):
-                        digest = md5()
-                        digest.update(self.request.files['file_data'][0]['body'])
-                        self.__chkflag__(flag, digest.hexdigest())
+                        self.__chkflag__(flag, self.request.files['file_data'][0]['body'])
                     else:
                         logging.info("No file data in flag submission.")
                         self.render("missions/view.html", team=user.team, errors=["No file data"])
@@ -101,9 +99,10 @@ class MissionsHandler(BaseHandler):
     def __chkflag__(self, flag, user_token):
         ''' Compares a user provided token to the token in the db '''
         user = self.get_current_user()
-        if user_token is not None and flag.token == user_token:
+        if flag == user_token:
+            logging.debug(str(user.team) + " has captured a flag: " + repr(flag))
+            user.team.flags.append(flag)
             user.team.money += flag.value
-            user.team.flags.append(Flag.by_id(flag.id))
             dbsession.add(user.team)
             dbsession.flush()
             self.redirect("/user/missions")

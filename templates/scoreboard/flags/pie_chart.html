@@ -1,4 +1,4 @@
-{% extends "../main.html" %}
+{% extends "../../main.html" %}
 
 {% block header %}
     <script src="/static/js/libs/highcharts.js"></script>
@@ -35,7 +35,12 @@
                             backgroundColor:'transparent'
                         },
                         title: {
-                            text: '<strong>Current Bank Account Balance</strong>'
+                            text: '<strong>Flags Captured</strong>',
+                            style: {
+                                color: '#FFFFFF',
+                                font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
+                                'text-shadow': '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
+                            },
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <strong>{point.percentage}%</strong>',
@@ -51,7 +56,7 @@
                                     connectorColor: '#FFFFFF',
                                     formatter: function() {
                                         return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">'+
-                                                this.point.name+' ($'+this.point.y+')</div>: '+(this.percentage).toString().slice(0,5)+'%';
+                                                this.point.name+' ('+this.point.y+' Flags)</div>: '+(this.percentage).toString().slice(0,5)+'%';
                                     }
                                 }
                             }
@@ -61,7 +66,7 @@
                             name: 'Team Money',
                             data: [
                                     {% for team in Team.all() %}
-                                        ['{{ team.name }}' , {{ team.money }}],
+                                        ['{{ team.name }}' , {{ len(team.flags) }}],
                                     {% end %}
                             ]
                         }]

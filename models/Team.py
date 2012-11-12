@@ -58,6 +58,11 @@ class Team(BaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
+    def ranks(cls):
+        ''' Returns a list of all objects in the database '''
+        return sorted(dbsession.query(cls).all())
+
+    @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
         return dbsession.query(cls).filter_by(id=identifier).first()
@@ -98,4 +103,12 @@ class Team(BaseObject):
         return u'<Team - name: %s, money: %d>' % (self.name, self.money)
 
     def __str__(self):
-        return unicode(self.name)
+        return self.name.encode('ascii', 'ignore')
+
+    def __cmp__(self, other):
+        if len(self.flags) < len(other.flags):
+            return 1
+        elif len(self.flags) == len(other.flags):
+            return 0
+        else:
+            return -1

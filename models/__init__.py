@@ -83,6 +83,7 @@ from models.Theme import Theme
 from models.RegistrationToken import RegistrationToken
 from models.MarketItem import MarketItem
 from models.IpAddress import IpAddress
+from models.Snapshot import Snapshot
 
 # calling this will create the tables at the database
 create_tables = lambda: (

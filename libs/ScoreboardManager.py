@@ -23,9 +23,11 @@ Created on Oct 04, 2012
 
 import threading
 
-from models import Team
 from uuid import uuid4
+from models import Team
+from datetime import datetime
 from libs.Singleton import Singleton
+from libs.GameHistory import GameHistory
 
 
 @Singleton
@@ -37,7 +39,7 @@ class ScoreboardManager(object):
     def __init__(self):
         self.lock = threading.Lock()
         self.uuid = str(uuid4())
-        self.ticks = 0
+        self.history = GameHistory.Instance()
 
     @classmethod
     def refresh(cls):
@@ -62,28 +64,16 @@ class ScoreboardManager(object):
             del self.connections[wsocket.user_id]
         self.lock.release()
 
-    def __refresh__(self):
+    def send_history(self, wsocket, count=10):
+        if 0 < count: 
+            count *= -1 
+        wsocket.write_message(self.history[count:])
+
+    def refresh(self):
         ''' Check for new notifications and send them to clients '''
+        self.history.take_snapshot()
         self.lock.acquire()
         connections = dict(self.connections)
         for wsocket in connections:
-            wsocket.write_message(self.game_data)
+            wsocket.write_message(self.history[-1])
         self.lock.release()
-
-    @property
-    def game_data(self):
-        ''' Gets game data returns it as a dict '''
-        data = {}
-        for team in Team.all():
-            data[team.name] = {
-                'money': int(team.money),
-                'flags': [flag.name for flag in team.flags],
-                'levels': [level.number for level in team.game_levels],
-            }
-        return data
-
-
-def scoreboard_tick():
-    ''' Periodic callback '''
-    manager = ScoreboardManager.Instance()
-    manager.refresh() # Non-blocking call

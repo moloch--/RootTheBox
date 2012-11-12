@@ -31,6 +31,7 @@ from modules.CssTheme import CssTheme
 from libs.ConsoleColors import *
 from libs.Memcache import FileCache
 from libs.AuthenticateReporter import scoring_round
+from libs.GameHistory import GameHistory
 from libs.ConfigManager import ConfigManager
 from tornado import netutil
 from tornado.web import Application
@@ -105,6 +106,8 @@ app = Application([
                   # Scoreboard Handlers - Severs scoreboard related
                   # pages
                   (r'/scoreboard', ScoreboardHandler),
+                  (r'/scoreboard/money/(.*)', ScoreboardMoneyHandler),
+                  (r'/scoreboard/flags/(.*)', ScoreboardFlagHandler),
                   (r'/scoreboard/game_data', GameDataHandler),
 
                   # Public handlers - Serves all public pages
@@ -162,9 +165,6 @@ app = Application([
                   avatar_dir=path.abspath('files/avatars/'),
                   shares_dir=path.abspath('files/shares/'),
 
-                  # Milli-Seconds between scoring
-                  ticks=int(5 * 60 * 1000),
-
                   # Debug mode
                   debug=config.debug,
 
@@ -179,7 +179,7 @@ def start_server():
     server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
-    scoring = PeriodicCallback(scoring_round, app.settings['ticks'], io_loop=io_loop)
+    scoring = PeriodicCallback(scoring_round, int(5 * 60 * 1000), io_loop=io_loop)
     scoring.start()
     try:
         for count in range(3, 0, -1):
@@ -190,6 +190,9 @@ def start_server():
         if config.debug:
             sys.stdout.write(WARN + "WARNING: Debug mode is enabled.\n")
         sys.stdout.flush()
+        game_history = GameHistory.Instance()
+        history_callback = PeriodicCallback(game_history.take_snapshot, int(60 * 1000), io_loop=io_loop)
+        history_callback.start()
         io_loop.start()
     except KeyboardInterrupt:
         print('\r' + WARN + 'Shutdown Everything!')

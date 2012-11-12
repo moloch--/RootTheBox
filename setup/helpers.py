@@ -92,7 +92,7 @@ def __mkipv4__(box, address):
     return ip
 
 def __mkipv6__(box, address):
-    print(INFO + "IPv6 address '%s' now belongs to %s" % (address, box.name,))
+    print(INFO + "IPv6 address %s belongs to %s" % (address, bold+box.name+W,))
     ip = IpAddress(
         v6=unicode(address),
     )
@@ -118,12 +118,13 @@ def create_box(name, corporation, difficulty, game_level, ipv4_addresses=[], ipv
         __mkipv6__(box, ip_address)
     return box
 
-def create_flag(name, token, value, box, description="No description", is_file=False):
+def create_flag(name, token, value, box, description="No description", is_file=False, is_regex=False, is_hash=False):
     print(INFO + "Create flag: " + bold + name + W)
     flag = Flag(
         name=unicode(name),
-        token=unicode(description),
-        is_file=is_file,
+        token=unicode(token),
+        is_regex=is_regex,
+        is_hash=is_hash,
         description=unicode(description),
         value=value,
         box_id=box.id,

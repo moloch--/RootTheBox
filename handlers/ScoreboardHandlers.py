@@ -93,10 +93,52 @@ class GameDataHandler(tornado.websocket.WebSocketHandler):
 
 
 class ScoreboardHandler(BaseHandler):
+
+    def get(self, *args, **kargs):
+        self.render('scoreboard/summary.html')
+
+
+class ScoreboardMoneyHandler(BaseHandler):
     '''
     Renders real-time scoreboard pages
     '''
 
-    def get(self):
+    def get(self, *args, **kargs):
         ''' Render pie chart '''
-        self.render('scoreboard/pie_chart.html')
+        uri = {
+            'pie_chart': self.pie_chart,
+            'bar_chart': self.bar_chart,
+        }
+        if 1 == len(args) and args[0] in uri.keys():
+            uri[args[0]]()
+        else:
+            self.render('public/404.html')
+
+    def pie_chart(self):
+        self.render('scoreboard/money/pie_chart.html')
+
+    def bar_chart(self):
+        self.render('scoreboard/money/bar_chart.html')
+
+
+class ScoreboardFlagHandler(BaseHandler):
+    '''
+    Renders real-time scoreboard pages
+    '''
+
+    def get(self, *args, **kargs):
+        ''' Render pie chart '''
+        uri = {
+            'pie_chart': self.pie_chart,
+            'bar_chart': self.bar_chart,
+        }
+        if 1 == len(args) and args[0] in uri.keys():
+            uri[args[0]]()
+        else:
+            self.render('public/404.html')
+
+    def pie_chart(self):
+        self.render('scoreboard/flags/pie_chart.html')
+
+    def bar_chart(self):
+        self.render('scoreboard/flags/bar_chart.html')

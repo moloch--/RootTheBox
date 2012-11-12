@@ -16,59 +16,87 @@
             {% end %}
         {% end %}
         <div class="well">
-            <form class="form-horizontal" action="/admin/create/flag" method="post">  
-                {% raw xsrf_form_html() %}
-                <div class="control-group">
-                    <label class="control-label" for="flag_name">Flag Name</label>
-                    <div class="controls">
-                        <input autofocus id="flag_name" name="flag_name" type="text" placeholder="Flag Name">
-                    </div>
+            <div class="row">
+                <div class="span4">
+                    <form class="form-horizontal" action="/admin/create/flag" method="post">  
+                        {% raw xsrf_form_html() %}
+                        <div class="control-group">
+                            <label class="control-label" for="flag_name">Flag Name</label>
+                            <div class="controls">
+                                <input autofocus id="flag_name" name="flag_name" type="text" placeholder="Flag Name">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="token">Token Value</label>
+                            <div class="controls">
+                                <input id="token" name="token" type="text" placeholder="Token Value">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="description">Description</label>
+                            <div class="controls">
+                                <input id="description" name="description" type="text" placeholder="Description">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="reward">Reward</label>
+                            <div class="controls">
+                                <input id="reward" name="reward" type="text" placeholder="$ Reward">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="box_uuid">Box</label>
+                            <div class="controls">
+                                <select name="box_uuid">
+                                    <option value=""></option>
+                                    {% from models import Box %}
+                                    {% for box in Box.all() %}
+                                        <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation_name }})</option>
+                                    {% end %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="is_file">Flag is a File</label>
+                            <div class="controls">
+                                <input type="checkbox" name="is_file" value="yes">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="flag_type">Match options</label>
+                            <div class="controls">
+                                <input type="radio" name="flag_type" value="string" />&nbsp;&nbsp;String<br /><br />
+                                <input type="radio" name="flag_type" value="regex" />&nbsp;&nbsp;Regex<br /><br />
+                                <input type="radio" name="flag_type" value="hash" />&nbsp;&nbsp;MD5 Hash<br /><br />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn btn-primary" type="submit">Create Flag</button>
+                            </div>
+                        </div>   
+                    </form>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="token">Token Value</label>
-                    <div class="controls">
-                        <input id="token" name="token" type="text" placeholder="Token Value">
-                    </div>
+                <div class="offset3 span4">
+                    <p>
+                        <blockquote>
+                            <small>
+                                <strong>Tokens:</strong> When a user submits a flag, their submission is compared against the 'Token Value';
+                                tokens can be strings, regular expressions or MD5 hashes.  If the 'Match Option' is set to 
+                                'String' the user must submit the exact same string to capture the flag.  If 'Regex' is 
+                                set the 'Token Value' is treated as a regular expression; the user must submit a string which matches this expression to 
+                                capture the flag.  
+                                If the match option is set to 'MD5 Hash' the digest of the user's submission will be compared with the 'Token Value'.
+                                <br />
+                                <br />
+                                <i>Note:  If the flag is a file the MD5 of the user's submission will always
+                                be compared to the 'Token Value', reguardless of the chosen 'Match Option'.
+                                </i>
+                            </small>
+                        </blockquote>
+                    </p>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="is-file">File</label>
-                    <div class="controls">
-                        <select id="is-file" name="is_file">
-                            <option value="false">False</option>
-                            <option value="true">True</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="motto">Description</label>
-                    <div class="controls">
-                        <input id="description" name="description" type="text" placeholder="Description">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="motto">Reward</label>
-                    <div class="controls">
-                        <input id="reward" name="reward" type="text" placeholder="$ Reward">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="box_uuid">Box</label>
-                    <div class="controls">
-                        <select name="box_uuid">
-                            <option value=""></option>
-                            {% from models import Box %}
-                            {% for box in Box.all() %}
-                                <option value="{{ box.uuid }}">{{ box.name }}</option>
-                            {% end %}
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit">Create Flag</button>
-                    </div>
-                </div>   
-            </form>
+            </div>
         </div>
     </div>
 {% end %}

@@ -88,13 +88,14 @@ def help():
     print('\t' + bold + 'python . recovery' + W +
           '         - Starts the recovery console')
     print('\t' + bold + 'python . setup <file>' + W +
-          '         - Imports objects from setup/game.py or <file>')
+          '     - Runs a game setup script from "setup/game.py" or <file>')
 
 ### Main
 if __name__ == '__main__':
     options = {
         'help': help,
         'serve': serve,
+        'start': serve,
         'create': create,
         'recovery': recovery,
         'setup': setup,
@@ -105,5 +106,4 @@ if __name__ == '__main__':
         if argv[1] in options:
             options[argv[1]]()
         else:
-            print(WARN + str(
-                'PEBKAC (%s): Command not found, see "python . help".' % argv[1]))
+            print(WARN + 'PEBKAC (%s): Command not found, see "python . help".' % argv[1])

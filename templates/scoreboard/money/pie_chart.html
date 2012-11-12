@@ -1,4 +1,4 @@
-{% extends "../main.html" %}
+{% extends "../../main.html" %}
 
 {% block header %}
     <script src="/static/js/libs/highcharts.js"></script>
@@ -6,6 +6,7 @@
 {% end %} 
 
 {% block title %}Scoreboard{% end %}
+
 {% block content %}
     {% from models import Team %}
     <div class="well container">
@@ -34,7 +35,12 @@
                             backgroundColor:'transparent'
                         },
                         title: {
-                            text: '<strong>Current Bank Account Balance</strong>'
+                            text: '<strong>Current Bank Account Balance</strong>',
+                            style: {
+                                color: '#FFFFFF',
+                                font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
+                                'text-shadow': '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
+                            },
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <strong>{point.percentage}%</strong>',
@@ -57,7 +63,7 @@
                         },
                         series: [{
                             type: 'pie',
-                            name: 'Browser share',
+                            name: 'Team Money',
                             data: [
                                     {% for team in Team.all() %}
                                         ['{{ team.name }}' , {{ team.money }}],

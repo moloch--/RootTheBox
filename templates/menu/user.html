@@ -36,14 +36,14 @@
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     Unlocks
-                  <b class="caret"></b>
+                    <b class="caret"></b>
                   </a>
                   <ul class="dropdown-menu">
                     {% if user.has_item("Source Code Market") %}
-                        <li><a href="/srcmarket">Source Code Market</a></li>
+                        <li><a href="/source_code_market">Source Code Market</a></li>
                     {% end %}
                     {% if user.has_item("Password Security") %}
-                        <li><a href="/passwdsec">Password Security</a></li>
+                        <li><a href="/password_security">Password Security</a></li>
                     {% end %}
                     {% if user.has_item("New York Federal Reserve") %}
                         <li><a href="/fed">New York Federal Reserve</a></li>
@@ -54,7 +54,17 @@
                   </ul>
                 </li>
               {% end %}
-              <li><a href="/scoreboard">Scoreboard</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  Scoreboard
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/scoreboard">Summary</a></li>
+                  <li><a href="/scoreboard/flags">Flags</a></li>
+                  <li><a href="/scoreboard/money">Money</a></li>
+                </ul>
+              </li>
               <li><a href="/about">About</a></li>
             </ul>
           </div><!--/.nav-collapse -->

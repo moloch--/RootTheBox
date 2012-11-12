@@ -20,6 +20,9 @@ Created on Mar 12, 2012
 '''
 
 
+import re
+import hashlib
+
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer, Boolean
@@ -36,6 +39,8 @@ class Flag(BaseObject):
     description = Column(Unicode(255), nullable=False)
     value = Column(Integer, nullable=False)
     is_file = Column(Boolean, default=False)
+    is_hash = Column(Boolean, default=False)
+    is_regex = Column(Boolean, default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
 
     @classmethod
@@ -74,3 +79,38 @@ class Flag(BaseObject):
             value=self.value,
             box=box.uuid,
         )
+
+    def __hsh__(self, data):
+        ''' Token is MD5 of data '''
+        md = hashlib.md5()
+        md.update(data)
+        return unicode(md.hexdigest())
+
+    def __regex__(other):
+        ''' Token is regex matched against other '''
+        regex = re.compile(self.token)
+        return bool(regex.match(other))
+
+    def __str__(self):
+        return self.token.encode('ascii', 'ignore')
+
+    def __unicode__(self):
+        return self.token
+
+    def __eq__(self, other):
+        ''' Compare to self.token '''
+        if not isinstance(other, basestring):
+            return str(self) == str(other)
+        if self.is_hash or self.is_file:
+            return self.token == self.__hsh__(other)
+        elif self.is_regex:
+            return self.__regex__(other)
+        else:
+            return self.token == other
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __repr__(self):
+        return "<Flag - name:%s, is_file:%s, is_hash:%s, is_regex:%s>" % \
+            (self.name, str(self.is_file), str(self.is_hash), str(self.is_regex),)
