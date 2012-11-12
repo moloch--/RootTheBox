@@ -20,21 +20,38 @@ Created on Mar 11, 2012
 '''
 
 
+import json
+
 from uuid import uuid4
 from sqlalchemy import Column
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import String
-from models import dbsession
+from models import dbsession, snapshot_to_snapshot_team
 from models.BaseGameObject import BaseObject
 
 
 class Snapshot(BaseObject):
     ''' Snapshot of game data '''
 
-    game_data = Column(String(4096), nullable=False) # JSON
+    # Has many 'SnapshotTeam' objects
+    teams = relationship("SnapshotTeam", secondary=snapshot_to_snapshot_team, backref=backref("Snapshot", lazy="joined"))
     
     @property
     def key(self):
         return self.to_key(self.id)
+
+    def to_dict(self):
+        data = {}
+        for team in self.teams:
+            data[str(team.name)] = {
+                'money': team.money,
+                'game_levels': [str(level) for level in team.game_levels],
+                'flags': [str(flag) for flag in team.flags],
+            }
+        return data
+
+    def to_json(self):
+        return json.dumps(self.to_dict())
 
     @classmethod
     def all(cls):

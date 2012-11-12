@@ -78,6 +78,9 @@ class GameLevel(BaseObject):
             buyout=self.buyout,
         )
 
+    def __str__(self):
+        return str(self.number)
+
     def __cmp__(self, other):
         if self.number < other.number:
             return -1

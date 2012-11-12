@@ -24,7 +24,7 @@ import pylibmc
 import logging
 
 from uuid import uuid4
-from models import dbsession, Snapshot, Team
+from models import dbsession, Snapshot, SnapshotTeam, Team
 from sqlalchemy import func 
 from libs.Singleton import Singleton
 
@@ -42,32 +42,37 @@ class GameHistory():
 
     def __load__(self):
         ''' Moves snapshots from db into the cache '''
-        logging.debug("Loading snapshots from database ...")
+        logging.debug("Loading game history from database ...")
+        if 0 == len(Snapshot.all()):
+            self.__now__() # Take initial snapshot
         for snapshot in Snapshot.all():
             if not snapshot.key in self.cache:
-                self.cache.set(snapshot.key, snapshot.game_data)
+                logging.debug("Loaded snapshot taken on %s." % str(snapshot.created))
+                self.cache.set(snapshot.key, snapshot.to_json())
 
     def take_snapshot(self):
         ''' Take a snapshot of the current game data '''
         logging.debug("Taking game data snapshot.")
-        snapshot = Snapshot(
-            game_data=json.dumps(self.now()),
-        )
-        dbsession.add(snapshot)
-        dbsession.flush()
-        self.cache.set(snapshot.key, snapshot.game_data)
+        snapshot = self.__now__()
+        self.cache.set(snapshot.key, snapshot.to_json())
         return snapshot
     
-    def now(self):
-        ''' Gets game data returns it as a dict '''
-        data = {}
+    def __now__(self):
+        ''' Returns snapshot object it as a dict '''
+        snapshot = Snapshot()
         for team in Team.all():
-            data[team.name] = {
-                'money': int(team.money),
-                'flags': [flag.name for flag in team.flags],
-                'levels': [level.number for level in team.game_levels],
-            }
-        return data
+            snapshot_team = SnapshotTeam(
+                team_id=team.id,
+                money=team.money,
+            )
+            snapshot_team.game_levels = team.game_levels
+            snapshot_team.flags = team.flags
+            dbsession.add(snapshot_team)
+            dbsession.flush()
+            snapshot.teams.append(snapshot_team)
+        dbsession.add(snapshot)
+        dbsession.flush()
+        return snapshot
 
     def __len__(self):
         return dbsession.query(func.max(Snapshot.id)) 

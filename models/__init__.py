@@ -67,6 +67,27 @@ team_to_game_level = Table('team_to_game_level', BaseObject.metadata,
                                 Integer, ForeignKey('game_level.id'), nullable=False)
                         )
 
+snapshot_to_snapshot_team = Table('snapshot_to_snapshot_team', BaseObject.metadata,
+                            Column('snapshot_id',
+                                Integer, ForeignKey('snapshot.id'), nullable=False),
+                            Column('snapshot_team_id',
+                                Integer, ForeignKey('snapshot_team.id'), nullable=False)
+                        )
+
+snapshot_team_to_flag = Table('snapshot_team_to_flag', BaseObject.metadata,
+                            Column('snapshot_team_id',
+                                Integer, ForeignKey('snapshot_team.id'), nullable=False),
+                            Column('flag_id',
+                                Integer, ForeignKey('flag.id'), nullable=False)
+                        )
+
+snapshot_team_to_game_level = Table('snapshot_team_to_game_level', BaseObject.metadata,
+                            Column('snapshot_team_id',
+                                Integer, ForeignKey('snapshot_team.id'), nullable=False),
+                            Column('gam_level_id',
+                                Integer, ForeignKey('game_level.id'), nullable=False)
+                        )
+
 # import models
 from models.Box import Box
 from models.PasteBin import PasteBin
@@ -84,6 +105,7 @@ from models.RegistrationToken import RegistrationToken
 from models.MarketItem import MarketItem
 from models.IpAddress import IpAddress
 from models.Snapshot import Snapshot
+from models.SnapshotTeam import SnapshotTeam
 
 # calling this will create the tables at the database
 create_tables = lambda: (

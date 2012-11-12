@@ -92,10 +92,10 @@ class Flag(BaseObject):
         return bool(regex.match(other))
 
     def __str__(self):
-        return self.token.encode('ascii', 'ignore')
+        return self.name.encode('ascii', 'ignore')
 
     def __unicode__(self):
-        return self.token
+        return self.name
 
     def __eq__(self, other):
         ''' Compare to self.token '''
