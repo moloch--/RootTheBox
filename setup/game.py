@@ -23,124 +23,36 @@ Created on Oct 10, 2012
 
 This file lets you script the game setup; if you're not familair with
 Python I recommend using the WebUI to setup the game as it takes care of all
-the details for you.  Remember to use unicode strings to avoid type warnings.
+the details for you.
 
 '''
 
+from setup.helpers import *
+from libs.ConsoleColors import *
 from models import dbsession, GameLevel, IpAddress, Flag, Box, Corporation, User, Team
 
 level_0 = GameLevel.all()[0] # Level 0 is created by the bootstrap
 
-# Create teams
-team_a = Team(
-    name=u"The A Team",
-    motto=u"Pdc",
-)
-team_a.game_levels.append(level_0)
-dbsession.add(team_a)
-dbsession.flush()
+################ [ CREATE YOUR GAME OBJECTS HERE ] ################
 
-team_b = Team(
-    name=u"The B Team",
-    motto=u"Always 2nd Best",
-)
-team_b.game_levels.append(level_0)
-dbsession.add(team_b)
-dbsession.flush()
+team_a = create_team("The A Team", "Pdc Baby")
+team_b = create_team("The B Team", "Always 2nd Best")
 
-# Create users
-user = User(
-    account=u"joe",
-    handle=u"moloch",
-    team_id=team_a.id,
-)
-dbsession.add(user)
-dbsession.flush()
-user.password = "asdf"
-dbsession.add(user)
-dbsession.flush()
+joe = create_user("joe", "moloch", "asdf", team_a)
+john = create_user("john", "hathcox", "password", team_a)
 
-user = User(
-    account=u"haxor",
-    handle=u"l33t",
-    team_id=team_b.id,
-)
-dbsession.add(user)
-dbsession.flush()
-user.password = "asdf"
-dbsession.add(user)
-dbsession.flush()
+steve = create_user("steve", "stormcrow", "qwerty", team_b)
+rick = create_user("rick", "wildicv", "foobar", team_b)
 
-# Create corps
-seatec = Corporation(
-    name=u"SEATEC Astronomy",
-    description=u"No More Secrets",
-)
-dbsession.add(seatec)
-dbsession.flush()
+level_1 = create_game_level(1, 5000)
+level_2 = create_game_level(2, 7500)
 
-# Create boxes
-box_rhea = Box(
-    name=u"Rhea",
-    corporation_id=seatec.id,
-    difficulty=u"Easy",
-    game_level_id=level_0.id,
-)
-dbsession.add(box_rhea)
-dbsession.flush()
+seatec = create_corporation("SEATEC Astronomy", "No more secrets")
+microshaft = create_corporation("Micro$haft", "All we want, is your money")
 
-ip = IpAddress(
-    v4=u"192.168.1.50",
-)
-box_rhea.ip_addresses.append(ip)
-dbsession.add(ip)
-dbsession.add(box_rhea)
-dbsession.flush()
+seatec_mail = create_box("Mail Server", seatec, "Easy", level_0, ipv4_addresses=["192.168.2.50"])
+seatec_fw = create_box("Firewall", seatec, "Hard", level_0, ipv4_addresses=["192.168.2.1"])
 
-box_titan = Box(
-    name=u"Titan",
-    corporation_id=seatec.id,
-    difficulty=u"Medium",
-    game_level_id=level_0.id,
-)
-dbsession.add(box_titan)
-dbsession.flush()
-
-ip = IpAddress(
-    v4=u"192.168.1.100",
-)
-box_titan.ip_addresses.append(ip)
-dbsession.add(ip)
-dbsession.add(box_titan)
-dbsession.flush()
-
-# Create flags
-flag = Flag(
-    name=u"Database access",
-    token=u"p@ssw0rd",
-    description=u"Obtain the sql database root password",
-    value=1000,
-    box_id=box_rhea.id,
-)
-dbsession.add(flag)
-dbsession.flush()
-
-flag = Flag(
-    name=u"Call Me Maybe",
-    token=u"867-5309",
-    description=u"Obtain the administrators home phone number",
-    value=2500,
-    box_id=box_rhea.id,
-)
-dbsession.add(flag)
-dbsession.flush()
-
-flag = Flag(
-    name=u"That's not my browser history!",
-    token=u"http://milfisland.xxx",
-    description=u"Find the last porn site visted by the CEO",
-    value=1500,
-    box_id=box_titan.id,
-)
-dbsession.add(flag)
-dbsession.flush()
+microshaft_web = create_box("Web Server", microshaft, "Medium", level_1, ipv4_addresses=["192.168.3.2"])
+microshaft_dev = create_box("Stage Server", microshaft, "Medium", level_1, ipv4_addresses=["192.168.3.4"])
+microshaft_laptop = create_box("CEO Laptop", microshaft, "Hard", level_2, ipv4_addresses=["192.168.3.25"])

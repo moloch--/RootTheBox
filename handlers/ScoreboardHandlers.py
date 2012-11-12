@@ -79,7 +79,7 @@ class GameDataHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         ''' Troll the haxors '''
-        if "'" in message:
+        if "'" in message or '"' in message:
             self.write_message("[SQL Server] Unclosed quotation mark before the character string ''.")
         else:
             self.write_message("[SQL Server] Syntax error near '%s'." % message)

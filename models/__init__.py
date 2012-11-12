@@ -44,14 +44,14 @@ team_to_box = Table('team_to_box', BaseObject.metadata,
                             Integer, ForeignKey('team.id'), nullable=False),
                         Column('box_id',
                             Integer, ForeignKey('box.id'), nullable=False)
-                        )
+                    )
 
 team_to_item = Table('team_to_item', BaseObject.metadata,
                         Column('team_id',
                             Integer, ForeignKey('team.id'), nullable=False),
                         Column('item_id',
                             Integer, ForeignKey('market_item.id'), nullable=False)
-                        )
+                    )
 
 team_to_flag = Table('team_to_flag', BaseObject.metadata,
                         Column('team_id',
@@ -61,11 +61,11 @@ team_to_flag = Table('team_to_flag', BaseObject.metadata,
                     )
 
 team_to_game_level = Table('team_to_game_level', BaseObject.metadata,
-                        Column('team_id',
-                            Integer, ForeignKey('team.id'), nullable=False),
-                        Column('game_level_id',
-                            Integer, ForeignKey('game_level.id'), nullable=False)
-                    )
+                            Column('team_id',
+                                Integer, ForeignKey('team.id'), nullable=False),
+                            Column('game_level_id',
+                                Integer, ForeignKey('game_level.id'), nullable=False)
+                        )
 
 # import models
 from models.Box import Box

@@ -6,7 +6,6 @@
 {% end %} 
 
 {% block title %}Scoreboard{% end %}
-
 {% block content %}
     {% from models import Team %}
     <div class="well container">
@@ -58,7 +57,7 @@
                         },
                         series: [{
                             type: 'pie',
-                            name: 'Team Money',
+                            name: 'Browser share',
                             data: [
                                     {% for team in Team.all() %}
                                         ['{{ team.name }}' , {{ team.money }}],

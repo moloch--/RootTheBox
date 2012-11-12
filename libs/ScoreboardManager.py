@@ -24,6 +24,7 @@ Created on Oct 04, 2012
 import threading
 
 from models import Team
+from uuid import uuid4
 from libs.Singleton import Singleton
 
 
@@ -35,6 +36,8 @@ class ScoreboardManager(object):
 
     def __init__(self):
         self.lock = threading.Lock()
+        self.uuid = str(uuid4())
+        self.ticks = 0
 
     @classmethod
     def refresh(cls):
@@ -78,3 +81,9 @@ class ScoreboardManager(object):
                 'levels': [level.number for level in team.game_levels],
             }
         return data
+
+
+def scoreboard_tick():
+    ''' Periodic callback '''
+    manager = ScoreboardManager.Instance()
+    manager.refresh() # Non-blocking call
