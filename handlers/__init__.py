@@ -169,7 +169,7 @@ app = Application([
                   debug=config.debug,
 
                   # Application version
-                  version='0.3'
+                  version='0.3.0'
                   )
 
 # Main entry point
@@ -197,5 +197,7 @@ def start_server():
     except KeyboardInterrupt:
         print('\r' + WARN + 'Shutdown Everything!')
     finally:
-        FileCache.flush()
         io_loop.stop()
+        if config.debug and raw_input("Flush Memcache? [Y/n]: ").lower() == 'y':
+            print('Flushing cache ...')
+            FileCache.flush()

@@ -16,7 +16,7 @@
 '''
 
 
-from os import system, path
+from os import path
 from sys import argv
 from time import sleep
 from datetime import datetime
@@ -30,8 +30,7 @@ def serve():
     ''' Starts the application '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from handlers import start_server
-    print(INFO + '%s : Starting application ... ' %
-          current_time())
+    print(INFO + '%s : Starting application ... ' % current_time())
     start_server()
 
 
@@ -43,7 +42,7 @@ def create():
           current_time())
     create_tables()
     if len(argv) == 3 and (argv[2] == 'bootstrap' or argv[2] == '-b'):
-        print('\n\n\n' + INFO +
+        print('\n\n\n' + INFO + \
               '%s : Bootstrapping the database ... \n' % current_time())
         boot_strap()
 
@@ -67,7 +66,7 @@ def setup():
         print(INFO + "%s : Import setup file '%s' ..." % (current_time(), argv[2]))
         __import__(argv[2])
     elif 3 == len(argv):
-        print(WARN + "File not found: %s" % argv[1])
+        print(WARN + "File not found: %s" % argv[2])
     else:
         print(INFO + "%s : Running default setup file 'setup/game.py' ..." % (current_time(),))
         from setup import game
@@ -82,9 +81,9 @@ def help():
     print('\t' + bold + 'python . serve' + W +
           '            - Starts the web server')
     print('\t' + bold + 'python . create' + W +
-          '           - Inits the database tables only')
+          '           - Creates the database tables only')
     print('\t' + bold + 'python . create bootstrap' + W +
-          ' - Inits the database tables and creates an admin account')
+          ' - Creates the database tables and inits them with data')
     print('\t' + bold + 'python . recovery' + W +
           '         - Starts the recovery console')
     print('\t' + bold + 'python . setup <file>' + W +
@@ -106,4 +105,4 @@ if __name__ == '__main__':
         if argv[1] in options:
             options[argv[1]]()
         else:
-            print(WARN + 'PEBKAC (%s): Command not found, see "python . help".' % argv[1])
+            print(WARN + 'PEBKAC (%s): Command not found, see "python . help"' % argv[1])

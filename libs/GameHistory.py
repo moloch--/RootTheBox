@@ -30,7 +30,7 @@ from libs.Singleton import Singleton
 
 
 @Singleton
-class GameHistory():
+class GameHistory(object):
     '''
     List-like object to store game history, with cache to avoid
     multiple large database reads.
@@ -39,23 +39,22 @@ class GameHistory():
     def __init__(self):
         self.cache = pylibmc.Client(['127.0.0.1'], binary=True)
         self.__load__()
+        self.epoch = Snapshot.by_id(1).created
 
     def __load__(self):
         ''' Moves snapshots from db into the cache '''
         logging.debug("Loading game history from database ...")
         if 0 == len(Snapshot.all()):
-            self.__now__() # Take initial snapshot
+            self.__now__() # Take starting snapshot akin to (0, 0, 0)
         for snapshot in Snapshot.all():
             if not snapshot.key in self.cache:
                 logging.debug("Loaded snapshot taken on %s." % str(snapshot.created))
-                self.cache.set(snapshot.key, snapshot.to_json())
+                self.cache.set(snapshot.key, snapshot.to_dict())
 
     def take_snapshot(self):
         ''' Take a snapshot of the current game data '''
-        logging.debug("Taking game data snapshot.")
         snapshot = self.__now__()
-        self.cache.set(snapshot.key, snapshot.to_json())
-        return snapshot
+        self.cache.set(snapshot.key, snapshot.to_dict())
     
     def __now__(self):
         ''' Returns snapshot object it as a dict '''
@@ -75,9 +74,11 @@ class GameHistory():
         return snapshot
 
     def __len__(self):
+        ''' Return length of the game history '''
         return dbsession.query(func.max(Snapshot.id)) 
 
     def __getitem__(self, key):
+        ''' Implements slices and indexs '''
         if isinstance(key, slice):
             return [self[index] for index in xrange(*key.indices(len(self)))]
         elif isinstance(key, int):
