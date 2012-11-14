@@ -37,6 +37,7 @@ class EventManager(object):
         self.scoreboard = ScoreboardManager.Instance()
 
     def joined_team(self, user):
+        ''' Callback when a user joins a team'''
         message = "%s has joined your team." % user.handle
         self.notifier.team_success(user.team, "New Team Member", message)
 
@@ -45,6 +46,26 @@ class EventManager(object):
         self.scoreboard.refresh()
         self.notifier.broadcast_success("Flag Capture", "%s has captured '%s'." % (user.team.name, flag.name,))
 
+    def unlocked_level(self, user, level):
+        ''' Callback for when a team unlocks a new level '''
+        self.scoreboard.refresh()
+        message = "%s unlocked level #%d" % (user.team.name, level.number)
+        self.notifier.broadcast_success("Level Unlocked", message)
+
     def team_file_share(self, user, file_upload):
+        ''' Callback when a team file share is created '''
         message = "%s has shared a file called '%s'" % (user.handle, file_upload.file_name,)
         self.notifier.team_success(user.team, "File Share", message)
+
+    def purchased_item(self, user, item):
+        ''' Callback when a team purchases an item '''
+        self.scoreboard.refresh()
+        message = "%s purchased %s from the black market." % (user.handle, item.name)
+        self.notifier.team_success(user.team, "Upgrade Purchased", message)
+        message2 = "%s unlocked %s." % (user.team.name, item.name)
+        self.notifier.broadcast_warning("Competitor Upgrade", message2)
+
+    def paste_bin(self, user, paste):
+        ''' Callback when a pastebin is created '''
+        message = "%s posted to the team paste-bin." % user.handle
+        self.notifier.team_success(user.team, "Text Share", message)

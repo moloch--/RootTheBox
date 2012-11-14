@@ -22,7 +22,7 @@ Created on Sep 25, 2012
 
 from BaseHandlers import BaseHandler
 from models import dbsession, MarketItem, Team
-from libs.Notifier import Notifier
+
 from libs.SecurityDecorators import authenticated
 
 
@@ -50,8 +50,7 @@ class MarketViewHandler(BaseHandler):
                 self.render('market/view.html', user=user, errors=[message])
             else:
                 self.purchase_item(team, item)
-                message = "%s purchased %s from the black market." % (user.handle, item.name)
-                Notifier.team_success(team, "Upgrade Purchased", message)
+                self.event_manager.purchased_item(user, item)
                 self.redirect('/user/market')
         else:
             self.render('market/view.html', user=self.get_current_user(), errors=["Item does not exist."])

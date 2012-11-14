@@ -1,5 +1,4 @@
-{% from models.Team import Team %}
-{% for (index, team) in enumerate(Team.ranks()) %}
+{% for (index, team) in enumerate(teams) %}
     <tr>
         <td>{{ index }}</td>
         <td>{{ team.name }}</td>

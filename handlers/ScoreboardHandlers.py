@@ -30,7 +30,7 @@ from libs.GameHistory import GameHistory
 from libs.Sessions import MemcachedSession
 from libs.ConfigManager import ConfigManager
 from libs.Scoreboard import ScoreboardManager
-
+from models import Team
 
 class GameDataHandler(tornado.websocket.WebSocketHandler):
     '''
@@ -111,7 +111,7 @@ class ScoreboardAjaxHandler(BaseHandler):
 
     def summary_table(self):
         ''' Render the "leaderboard" snippit '''
-        self.render('scoreboard/summary_table.html')
+        self.render('scoreboard/summary_table.html', teams=Team.all())
 
 
 class ScoreboardMoneyHandler(BaseHandler):

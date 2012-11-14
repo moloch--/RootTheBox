@@ -8,7 +8,20 @@
 {% block title %}Scoreboard{% end %}
 
 {% block content %}
+    {% include ../notifier.html %}
     {% from models import Team %}
+    <!-- Team Details -->
+    <div id="loadingModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Loading ...</h3>
+        </div>
+        <div class="modal-body">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 100%;"></div>
+            </div>
+        </div>
+    </div>
     <!-- Team Details -->
     <div id="teamDetailsModal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
@@ -49,7 +62,7 @@
                     </tr>
                 </thead>
                 <tbody id="summary_table">
-                    <!-- Ajax -->
+                    <!-- AJAX -->
                 </tbody>
             </table>
         </div>
@@ -107,7 +120,7 @@
                         },
                         series: [{
                             type: 'pie',
-                            name: 'Team Money',
+                            name: 'Flags Captured',
                             data: [
                             ]
                         }]
@@ -163,15 +176,11 @@
                 });
             });
             
-            /* Update table */
-            function update_summary_table() {
-
-            }
-
             /* Update code */
             $(document).ready(function() {
-                
+                $('#loadingModal').show();
                 var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/scoreboard/game_data");
+                
                 ws.onmessage = function(event) {
                     game_data = jQuery.parseJSON(event.data);
                     console.log(game_data);
@@ -189,6 +198,11 @@
                     });
                     console.log(flag_ls);
                     flag_chart.series[0].setData(flag_ls, true);
+
+                    /* Update Table */
+                    $.get('/scoreboard/ajax/summary', function(data) {
+                        $('#summary_table').html(data);
+                    });
                 };
             });
         </script>

@@ -134,10 +134,9 @@ class SettingsHandler(BaseHandler):
 
     def set_password(self, user, old_password, new_password, new_password_two):
         ''' Sets a users password '''
-        config = ConfigManager.Instance()
         if user.validate_password(old_password):
             if new_password == new_password_two:
-                if len(new_password) <= config.max_password_length:
+                if len(new_password) <= self.config.max_password_length:
                     user.password = new_password
                     dbsession.add(user)
                     dbsession.flush()

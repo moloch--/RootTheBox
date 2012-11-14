@@ -34,7 +34,7 @@ class Snapshot(BaseObject):
     ''' Snapshot of game data '''
 
     # Has many 'SnapshotTeam' objects
-    teams = relationship("SnapshotTeam", secondary=snapshot_to_snapshot_team, backref=backref("Snapshot", lazy="joined"))
+    teams = relationship("SnapshotTeam", secondary=snapshot_to_snapshot_team, backref=backref("Snapshot", lazy="subquery"))
     
     @property
     def key(self):

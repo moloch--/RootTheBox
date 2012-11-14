@@ -44,6 +44,7 @@ from handlers.ErrorHandlers import *
 from handlers.PublicHandlers import *
 from handlers.HashesHandlers import *
 from handlers.MarketHandlers import *
+from handlers.UpgradeHandlers import *
 from handlers.MissionsHandler import *
 from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
@@ -83,6 +84,8 @@ app = Application([
                   # Market handlers
                   (r'/user/market', MarketViewHandler),
                   (r'/user/market/details', MarketDetailsHandler),
+                  # Upgrade handlers
+                  (r'/password_security', PasswordSecurityHandler),
 
                   # Mission handlers
                   (r'/user/missions', MissionsHandler),
@@ -187,10 +190,6 @@ def start_server():
     scoring = PeriodicCallback(scoring_round, int(5 * 60 * 1000), io_loop=io_loop)
     scoring.start()
     try:
-        for count in range(3, 0, -1):
-            sys.stdout.write("\r" + INFO + "The game will begin in ... %d" % (count,))
-            sys.stdout.flush()
-            sleep(1)
         sys.stdout.write("\r" + INFO + "The game has begun, good hunting!\n")
         if config.debug:
             sys.stdout.write(WARN + "WARNING: Debug mode is enabled.\n")

@@ -69,9 +69,9 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
         if self.session is not None:
             logging.debug("Opened new websocket with user id: %s" % str(self.session['user_id']))
             self.user_id = self.session['user_id']
-            self.manager.add_connection(self)
         else:
-            logging.debug("NotifySocketHandler received no session data.")
+            logging.debug("No session, closing Notifier websocket with remote host %s" % self.request.remote_ip)
+            self.close()
 
     def on_message(self, message):
         ''' Troll the haxors '''
@@ -79,7 +79,8 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         ''' Lost connection to client '''
-        try:
-            self.manager.remove_connection(self)
-        except KeyError:
-            logging.warn("WebSocket connection has already been closed.")
+        if self.session is not None:
+            try:
+                self.manager.remove_connection(self)
+            except KeyError:
+                logging.warn("WebSocket connection has already been closed.")

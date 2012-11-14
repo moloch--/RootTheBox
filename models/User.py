@@ -189,6 +189,14 @@ class User(BaseObject):
         '''
         return self.notifications.sort(key=lambda notify: notify.created)[:limit]
 
+    def next_algorithm(self):
+        if self.algorithm == 'md5':
+            return 'sha1'
+        elif self.algorithm == 'sha1':
+            return 'sha256'
+        else:
+            return None
+
     def to_dict(self):
         team = Team.by_id(self.team_id)
         return dict(

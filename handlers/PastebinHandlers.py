@@ -24,7 +24,6 @@ import logging
 from handlers.BaseHandlers import BaseHandler
 from models import dbsession, User, PasteBin
 from libs.Form import Form
-from libs.Notifier import Notifier
 from libs.SecurityDecorators import authenticated
 
 
@@ -62,8 +61,7 @@ class CreatePasteHandler(BaseHandler):
             )
             dbsession.add(paste)
             dbsession.flush()
-            message = "%s posted to the team patebin." % user.handle
-            Notifier.team_success(user.team, "Paste Share", message)
+            self.event_manager.paste_bin(user, paste)
         self.redirect('/user/share/pastebin')
 
 

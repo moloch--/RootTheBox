@@ -81,11 +81,12 @@ class MissionsHandler(BaseHandler):
         user = self.get_current_user()
         if form.validate(self.request.arguments):
             level = GameLevel.by_uuid(self.get_argument('uuid', ''))
-            if level is not None:
+            if level is not None and user is not None:
                 if level.buyout < user.team.money:
-                    user.team.money -= level.buyout
                     user.team.game_levels.append(level)
+                    user.team.money -= level.buyout
                     dbsession.add(user.team)
+                    self.event_manager.unlocked_level(user, level)
                     self.redirect("/user/missions")
                 else:
                     self.render("missions/view.html", team=user.team, errors=["You do not have enough money to unlock this level"])

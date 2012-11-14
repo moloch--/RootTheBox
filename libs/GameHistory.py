@@ -25,7 +25,7 @@ import logging
 
 from uuid import uuid4
 from models import dbsession, Snapshot, SnapshotTeam, Team
-from sqlalchemy import func 
+from sqlalchemy import desc
 from libs.Singleton import Singleton
 
 
@@ -43,13 +43,18 @@ class GameHistory(object):
 
     def __load__(self):
         ''' Moves snapshots from db into the cache '''
-        logging.debug("Loading game history from database ...")
-        if 0 == len(Snapshot.all()):
-            self.__now__() # Take starting snapshot akin to (0, 0, 0)
-        for snapshot in Snapshot.all():
-            if not snapshot.key in self.cache:
-                logging.debug("Loaded snapshot taken on %s." % str(snapshot.created))
-                self.cache.set(snapshot.key, snapshot.to_dict())
+        logging.info("Loading game history from database ...")
+        if Snapshot.by_id(1) is None:
+            self.__now__() # Take starting snapshot (0, 0, 0)
+        try:
+            last = len(self)
+            for (index, snapshot) in enumerate(Snapshot.all()):
+                if not snapshot.key in self.cache:
+                    logging.info("Cached snapshot (%d/%d)" % (snapshot.id, last))
+                    self.cache.set(snapshot.key, snapshot.to_dict())
+            logging.info("History load complete.")
+        except KeyboardInterrupt:
+            logging.info("History load stopped by user.")
 
     def take_snapshot(self):
         ''' Take a snapshot of the current game data '''
@@ -75,7 +80,7 @@ class GameHistory(object):
 
     def __len__(self):
         ''' Return length of the game history '''
-        return dbsession.query(func.max(Snapshot.id)) 
+        return dbsession.query(Snapshot).order_by(desc(Snapshot.id)).first().id
 
     def __getitem__(self, key):
         ''' Implements slices and indexs '''
