@@ -22,10 +22,8 @@ Created on Oct 28, 2012
 
 import logging
 
-from hashlib import md5
 from models import dbsession, User, GameLevel, Flag
 from libs.Form import Form
-from libs.Notifier import Notifier
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
 
@@ -51,7 +49,7 @@ class MissionsHandler(BaseHandler):
         else:
             self.render("public/404.html")
 
-    def flag(self, *args, **kwargs):
+    def flag(self):
         '''
         Accepts flag submissions, a flag can be either a string or a file,
         if the flag submission is a file the MD5 hexdigest is used.
@@ -77,7 +75,7 @@ class MissionsHandler(BaseHandler):
         else:
             self.render("missions/view.html", team=user.team, errors=form.errors)
 
-    def buyout(self, *args, **kwargs):
+    def buyout(self):
         ''' Buyout and unlock a level '''
         form = Form(uuid="Level parameter missing")
         user = self.get_current_user()
@@ -100,11 +98,11 @@ class MissionsHandler(BaseHandler):
         ''' Compares a user provided token to the token in the db '''
         user = self.get_current_user()
         if flag == user_token:
-            logging.debug(str(user.team) + " has captured a flag: " + repr(flag))
             user.team.flags.append(flag)
             user.team.money += flag.value
             dbsession.add(user.team)
             dbsession.flush()
+            self.event_manager.flag_capture(user, flag)
             self.redirect("/user/missions")
         else:
             self.render("missions/view.html", team=user.team, errors=["Invalid flag submission"])

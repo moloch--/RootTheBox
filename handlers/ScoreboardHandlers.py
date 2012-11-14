@@ -26,9 +26,10 @@ import pylibmc
 import tornado.websocket
 
 from handlers.BaseHandlers import BaseHandler
+from libs.GameHistory import GameHistory
 from libs.Sessions import MemcachedSession
 from libs.ConfigManager import ConfigManager
-from libs.ScoreboardManager import ScoreboardManager
+from libs.Scoreboard import ScoreboardManager
 
 
 class GameDataHandler(tornado.websocket.WebSocketHandler):
@@ -39,7 +40,7 @@ class GameDataHandler(tornado.websocket.WebSocketHandler):
     def initialize(self):
         ''' Setup sessions '''
         self.session = None
-        self.manager = ScoreboardManager.Instance()
+        self.scoreboard_manager = ScoreboardManager.Instance()
         self.config = ConfigManager.Instance()
         session_id = self.get_secure_cookie('session_id')
         if session_id != None:
@@ -72,22 +73,20 @@ class GameDataHandler(tornado.websocket.WebSocketHandler):
         if self.session != None:
             logging.debug("Opened new websocket with user id: %s" % str(self.session['user_id']))
             self.user_id = self.session['user_id']
-            self.manager.add_connection(self)
+            self.scoreboard_manager.add_connection(self)
         else:
             self.user_id = 'public'
-            self.manager.add_connection(self)
+            self.scoreboard_manager.add_connection(self)
+        self.write_message(self.scoreboard_manager.now())
 
     def on_message(self, message):
-        ''' Troll the haxors '''
-        if "'" in message or '"' in message:
-            self.write_message("[SQL Server] Unclosed quotation mark before the character string ''.")
-        else:
-            self.write_message("[SQL Server] Syntax error near '%s'." % message)
+        ''' Send current state '''
+        self.write_message(self.scoreboard_manager.now())
 
     def on_close(self):
         ''' Lost connection to client '''
         try:
-            self.manager.remove_connection(self)
+            self.scoreboard_manager.remove_connection(self)
         except KeyError:
             logging.warn("WebSocket connection has already been closed.")
 
@@ -96,6 +95,23 @@ class ScoreboardHandler(BaseHandler):
 
     def get(self, *args, **kargs):
         self.render('scoreboard/summary.html')
+
+
+class ScoreboardAjaxHandler(BaseHandler):
+
+    def get(self, *args, **kargs):
+        ''' Renders AJAX snippit based on URI '''
+        uri = {
+            'summary': self.summary_table,
+        }
+        if 1 == len(args) and args[0] in uri.keys():
+            uri[args[0]]()
+        else:
+            self.render('public/404.html')
+
+    def summary_table(self):
+        ''' Render the "leaderboard" snippit '''
+        self.render('scoreboard/summary_table.html')
 
 
 class ScoreboardMoneyHandler(BaseHandler):

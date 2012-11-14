@@ -35,6 +35,7 @@ class BaseHandler(RequestHandler):
 
     def initialize(self):
         self.session = None
+        self.event_manager = self.application.settings['event_manager']
         self.config = ConfigManager.Instance()
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
@@ -52,6 +53,8 @@ class BaseHandler(RequestHandler):
             except KeyError:
                 logging.exception("Malformed session.")
                 repr(self.session)
+            except:
+                logging.exception("Unknown error in: get_current_user()")
         return None
 
     def start_session(self):

@@ -23,7 +23,6 @@ Created on Mar 13, 2012
 import logging
 
 from libs.Form import Form
-from libs.Notifier import Notifier
 from libs.ConfigManager import ConfigManager
 from handlers.BaseHandlers import BaseHandler
 from tornado.web import RequestHandler
@@ -147,8 +146,8 @@ class UserRegistrationHandler(BaseHandler):
             dbsession.add(token)
         dbsession.add(user)
         dbsession.flush()
-        message = "%s has joined %s!" % (user.handle, team.name)
-        Notifier.broadcast_success("New Player", message)
+        self.event_manager.joined_team(user)
+       
 
 
 class AboutHandler(BaseHandler):

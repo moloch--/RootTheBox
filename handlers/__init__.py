@@ -32,6 +32,7 @@ from libs.ConsoleColors import *
 from libs.Memcache import FileCache
 from libs.AuthenticateReporter import scoring_round
 from libs.GameHistory import GameHistory
+from libs.EventManager import EventManager
 from libs.ConfigManager import ConfigManager
 from tornado import netutil
 from tornado.web import Application
@@ -106,6 +107,7 @@ app = Application([
                   # Scoreboard Handlers - Severs scoreboard related
                   # pages
                   (r'/scoreboard', ScoreboardHandler),
+                  (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
                   (r'/scoreboard/money/(.*)', ScoreboardMoneyHandler),
                   (r'/scoreboard/flags/(.*)', ScoreboardFlagHandler),
                   (r'/scoreboard/game_data', GameDataHandler),
@@ -164,6 +166,9 @@ app = Application([
                   # Special file directories
                   avatar_dir=path.abspath('files/avatars/'),
                   shares_dir=path.abspath('files/shares/'),
+                  
+                  # Event manager
+                  event_manager=EventManager.Instance(),
 
                   # Debug mode
                   debug=config.debug,
@@ -198,6 +203,7 @@ def start_server():
         print('\r' + WARN + 'Shutdown Everything!')
     finally:
         io_loop.stop()
-        if config.debug and raw_input("Flush Memcache? [Y/n]: ").lower() == 'y':
-            print('Flushing cache ...')
+        if config.debug and raw_input(PROMPT + "Flush Memcache? [Y/n]: ").lower() == 'y':
+            print(INFO + 'Flushing cache ...'),
             FileCache.flush()
+            print('OK')

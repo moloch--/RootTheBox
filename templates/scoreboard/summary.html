@@ -9,14 +9,29 @@
 
 {% block content %}
     {% from models import Team %}
+    <!-- Team Details -->
+    <div id="teamDetailsModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Team Details</h3>
+        </div>
+        <div class="modal-body">
+            <p>
+                Put team details here.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+        </div>
+    </div>
     <div class="row-fluid">
         <h1 class="offset1">Scoreboard</h1>
         <br />
         <div class="well span5 offset1" id="pie_flags" >
-                <!-- Pie Chart Here -->
+            <!-- Pie Chart Here -->
         </div>
         <div class="well span5" id="pie_money">
-                <!-- Pie Chart Here -->
+            <!-- Pie Chart Here -->
         </div>
     </div>
     <div class="row-fluid">
@@ -27,30 +42,24 @@
                         <th>#</th>
                         <th>Team</th>
                         <th>Flags Captured</th>
+                        <th>Botnet</th>
                         <th>Bank Account</th>
                         <th>Game Level</th>
+                        <th><!-- Details --></th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% from models.Team import Team %}
-                    {% for (index, team) in enumerate(Team.ranks()) %}
-                        <tr>
-                            <td>{{ index }}</td>
-                            <td>{{ team.name }}</td>
-                            <td>{{ len(team.flags) }}</td>
-                            <td>${{ team.money }}</td>
-                            <td>{{ team.levels[-1].number }} </td>
-                        </tr>
-                    {% end %}
+                <tbody id="summary_table">
+                    <!-- Ajax -->
                 </tbody>
             </table>
         </div>
     </div>
     <!-- Scripts -->
         <script>
+            var flag_chart;
             $(function () {
-                var chart;
                 $(document).ready(function() {
+                    /* Options for both graphs*/
                     Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
                         return {
                             radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
@@ -60,7 +69,8 @@
                             ]
                         };
                     });
-                    chart = new Highcharts.Chart({
+                    /* Flag Chart */
+                    flag_chart = new Highcharts.Chart({
                         chart: {
                             renderTo: 'pie_flags',
                             plotBackgroundColor: null,
@@ -77,7 +87,7 @@
                             },
                         },
                         tooltip: {
-                            pointFormat: '{series.name}: <strong>{point.percentage}%</strong>',
+                            pointFormat: '{series.name}: {point.y} flags <strong>{point.percentage}%</strong>',
                             percentageDecimals: 1
                         },
                         plotOptions: {
@@ -90,7 +100,7 @@
                                     connectorColor: '#FFFFFF',
                                     formatter: function() {
                                         return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">'+
-                                                this.point.name+'</div>: '+(this.percentage).toString().slice(0,5)+'%';
+                                                this.point.name+'</div>';
                                     }
                                 }
                             }
@@ -99,29 +109,16 @@
                             type: 'pie',
                             name: 'Team Money',
                             data: [
-                                    {% for team in Team.all() %}
-                                        ['{{ team.name }}' , {{ len(team.flags) }}],
-                                    {% end %}
                             ]
                         }]
                     });
                 });
             });
+            /* Money Chart */
+            var money_chart;
             $(function () {
-                var chart;
                 $(document).ready(function() {
-                    /*
-                    Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
-                        return {
-                            radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
-                            stops: [
-                                [0, color],
-                                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]
-                            ]
-                        };
-                    });
-                    */
-                    chart = new Highcharts.Chart({
+                    money_chart = new Highcharts.Chart({
                         chart: {
                             renderTo: 'pie_money',
                             plotBackgroundColor: null,
@@ -130,7 +127,7 @@
                             backgroundColor:'transparent'
                         },
                         title: {
-                            text: '<strong>Current Bank Account Balance</strong>',
+                            text: '<strong>Bank Account</strong>',
                             style: {
                                 color: '#FFFFFF',
                                 font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -138,7 +135,7 @@
                             },
                         },
                         tooltip: {
-                            pointFormat: '{series.name}: <strong>{point.percentage}%</strong>',
+                            pointFormat: '{series.name}: ${point.y} <strong>{point.percentage}%</strong>',
                             percentageDecimals: 1
                         },
                         plotOptions: {
@@ -151,7 +148,7 @@
                                     connectorColor: '#FFFFFF',
                                     formatter: function() {
                                         return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">'+
-                                                this.point.name+'</div>: '+(this.percentage).toString().slice(0,5)+'%';
+                                                this.point.name+'</div>';
                                     }
                                 }
                             }
@@ -160,20 +157,38 @@
                             type: 'pie',
                             name: 'Team Money',
                             data: [
-                                    {% for team in Team.all() %}
-                                        ['{{ team.name }}' , {{ team.money }}],
-                                    {% end %}
                             ]
                         }]
                     });
                 });
             });
+            
+            /* Update table */
+            function update_summary_table() {
+
+            }
+
+            /* Update code */
             $(document).ready(function() {
+                
                 var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/scoreboard/game_data");
                 ws.onmessage = function(event) {
-                    update = jQuery.parseJSON(event.data);
-                    console.log(update);
-                    //piechart.series.setData();
+                    game_data = jQuery.parseJSON(event.data);
+                    console.log(game_data);
+                    /* Update Money */
+                    var money_ls = [];
+                    $.each(game_data, function(index, item) {
+                        money_ls.push([index.toString(), item.money]);
+                    });
+                    console.log(money_ls);
+                    money_chart.series[0].setData(money_ls, true);
+                    /* Update Flags */
+                    var flag_ls = [];
+                    $.each(game_data, function(index, item) {
+                        flag_ls.push([index.toString(), item.flags.length]);
+                    });
+                    console.log(flag_ls);
+                    flag_chart.series[0].setData(flag_ls, true);
                 };
             });
         </script>

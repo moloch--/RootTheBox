@@ -1,0 +1,17 @@
+{% from models.Team import Team %}
+{% for (index, team) in enumerate(Team.ranks()) %}
+    <tr>
+        <td>{{ index }}</td>
+        <td>{{ team.name }}</td>
+        <td>{{ len(team.flags) }}</td>
+        <td>0</td>
+        <td>${{ team.money }}</td>
+        <td>{{ team.levels[-1].number }} </td>
+        <td>
+            <a class="btn btn-mini" data-toggle="modal" href="#teamDetailsModal"
+                onclick="get_details('{{ team.uuid }}')">
+                Details
+            </a>
+        </td>
+    </tr>
+{% end %}

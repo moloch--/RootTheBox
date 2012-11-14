@@ -30,11 +30,11 @@ from string import ascii_letters, digits
 
 class FileUpload(BaseObject):
 
-    _file_name = Column(Unicode(64), unique=True, nullable=False)
+    _file_name = Column(Unicode(64), nullable=False)
     file_name = synonym('_file_name', descriptor=property(
         lambda self: self._file_name,
         lambda self, file_name: setattr(
-            self, '_file_name', self.__class__.filter_string(file_name, "-_"))
+            self, '_file_name', self.__class__.filter_string(file_name, ".-_"))
     ))
     content = Column(Unicode(255), nullable=False)
     uuid = Column(Unicode(64), unique=True, nullable=False)

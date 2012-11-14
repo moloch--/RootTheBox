@@ -108,8 +108,7 @@ from models.Snapshot import Snapshot
 from models.SnapshotTeam import SnapshotTeam
 
 # calling this will create the tables at the database
-create_tables = lambda: (
-    setattr(engine, 'echo', True), metadata.create_all(engine))
+create_tables = lambda: (setattr(engine, 'echo', True), metadata.create_all(engine))
 
 # Bootstrap the database with some shit
 def boot_strap():

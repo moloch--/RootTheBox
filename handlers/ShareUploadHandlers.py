@@ -21,13 +21,14 @@ Created on Mar 13, 2012
 
 
 import os
+import time
+import logging
 
 from uuid import uuid4
 from base64 import b64encode, b64decode
 from models import dbsession, FileUpload
 from mimetypes import guess_type
 from libs.Form import Form
-from libs.Notifier import Notifier
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
 from string import ascii_letters, digits
@@ -42,7 +43,7 @@ class ShareUploadHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Renders upload file page '''
         user = self.get_current_user()
-        self.render("user/share_files.html", errors=None, shares=user.team.files)
+        self.render("share_upload/share_files.html", errors=None, shares=user.team.files)
 
     @authenticated
     def post(self, *args, **kwargs):
@@ -52,15 +53,15 @@ class ShareUploadHandler(BaseHandler):
         )
         user = self.get_current_user()
         if form.validate(self.request.arguments):
-            user = self.get_current_user()
             if 0 == len(self.request.files.keys()):
-                self.render("user/share_files.html", errors=["No file data."], shares=user.team.files)
+                self.render("share_upload/share_files.html", errors=["No file data."], shares=user.team.files)
             elif self.MAX_FILE_SIZE < len(self.request.files['file_data'][0]['body']):
-                self.render("user/share_files.html", errors=["File too large."], shares=user.team.files)
+                self.render("share_upload/share_files.html", errors=["File too large."], shares=user.team.files)
             else:
                 self.create_file(user)
+                self.redirect("/user/share/files")
         else:
-            self.render("user/share_files.html", errors=form.errors, shares=user.team.files)
+            self.render("share_upload/share_files.html", errors=form.errors, shares=user.team.files)
 
     def create_file(self, user):
         ''' Saves uploaded file '''
@@ -69,9 +70,9 @@ class ShareUploadHandler(BaseHandler):
         file_name = filter(lambda char: char in char_white_list, file_name)
         content = guess_type(file_name)
         if content[0] == None:
-            self.render("user/share_files.html", errors=["Unknown file content, please zip and upload"], shares=user.team.files)
+            self.render("share_upload/share_files.html", errors=["Unknown file content, please zip and upload"], shares=user.team.files)
         elif len(file_name) < 1:
-            self.render("user/share_files.html", errors=["Invalid file name"])
+            self.render("share_upload/share_files.html", errors=["Invalid file name"])
         else:
             uuid = unicode(uuid4())
             filePath = self.application.settings['shares_dir'] + '/' + uuid
@@ -88,9 +89,8 @@ class ShareUploadHandler(BaseHandler):
                 team_id=user.team.id
             )
             dbsession.add(file_upload)
-            message = "%s shared the file '%s'" % (user.handle, file_name)
-            Notifier.team_success(user.team, "File Shared", message)
-            self.redirect("/user/share/files")
+            dbsession.flush()
+            self.event_manager.team_file_share(user, file_upload)
 
 
 class ShareDownloadHandler(BaseHandler):
@@ -103,7 +103,7 @@ class ShareDownloadHandler(BaseHandler):
         user = self.get_current_user()
         share = FileUpload.by_uuid(uuid)
         if share == None or share.team_id != user.team_id:
-            self.render("user/share_error.html")
+            self.render("share_upload/share_error.html")
         else:
             upload = open(self.application.settings['shares_dir'] + '/' + share.uuid, 'r')
             data = upload.read()

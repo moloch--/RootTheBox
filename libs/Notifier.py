@@ -24,6 +24,7 @@ import logging
 import threading
 
 from libs.Singleton import Singleton
+from libs.SecurityDecorators import async
 from models import dbsession, Notification, User
 
 
@@ -43,10 +44,6 @@ class NotifyManager(object):
 
     def __init__(self):
         self.lock = threading.Lock()
-
-    def refresh(self):
-        ''' Non-blocking call to __refresh__ '''
-        threading.Thread(target=self.__refresh__).start()
 
     def add_connection(self, wsocket):
         ''' Add a connection '''
@@ -68,7 +65,8 @@ class NotifyManager(object):
             del self.connections[wsocket.user_id]
         self.lock.release()
 
-    def __refresh__(self):
+    #@async
+    def refresh(self):
         ''' Check for new notifications and send them to clients '''
         self.lock.acquire()
         connections = dict(self.connections)

@@ -21,6 +21,7 @@ Created on Mar 13, 2012
 
 import logging
 import functools
+from threading import Thread
 
 from models.User import User
 
@@ -65,3 +66,13 @@ def authorized(permission):
             self.redirect(self.application.settings['forbidden_url'])
         return wrapper
     return func
+
+def async(method):
+    ''' Quick and easy async functions'''
+    
+    @functools.wraps(method)
+    def __async__(*args, **kwargs):
+        worker = Thread(target=method, args=args, kwargs=kwargs)
+        worker.start()
+        return worker
+    return __async__

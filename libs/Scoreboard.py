@@ -21,6 +21,7 @@ Created on Oct 04, 2012
 '''
 
 
+import json
 import threading
 
 from uuid import uuid4
@@ -28,6 +29,7 @@ from models import Team
 from datetime import datetime
 from libs.Singleton import Singleton
 from libs.GameHistory import GameHistory
+from libs.SecurityDecorators import async
 
 
 @Singleton
@@ -38,14 +40,6 @@ class ScoreboardManager(object):
 
     def __init__(self):
         self.lock = threading.Lock()
-        self.uuid = str(uuid4())
-        self.history = GameHistory.Instance()
-
-    @classmethod
-    def refresh(cls):
-        ''' Non-blocking call to __refresh__ '''
-        manager = cls.Instance()
-        threading.Thread(target=manager.__refresh__).start()
 
     def add_connection(self, wsocket):
         ''' Add a connection '''
@@ -64,16 +58,23 @@ class ScoreboardManager(object):
             del self.connections[wsocket.user_id]
         self.lock.release()
 
-    def send_history(self, wsocket, count=10):
-        if 0 < count: 
-            count *= -1 
-        wsocket.write_message(self.history[count:])
-
+    #@async
     def refresh(self):
         ''' Check for new notifications and send them to clients '''
-        self.history.take_snapshot()
         self.lock.acquire()
-        connections = dict(self.connections)
-        for wsocket in connections:
-            wsocket.write_message(self.history[-1])
+        wsockets = dict(self.connections)
+        for name in wsockets.keys():
+            for wsock in wsockets[name]:
+                wsock.write_message(self.now())
         self.lock.release()
+
+    def now(self):
+        ''' Returns the current game state '''
+        data = {}
+        for team in Team.all():
+            data[team.name] = {
+                'money': team.money,
+                'flags': [str(flag) for flag in team.flags],
+                'game_levels': [str(lvl) for lvl in team.game_levels],
+            }
+        return json.dumps(data)
