@@ -32,5 +32,5 @@ Setup TL;DR
 
 Other
 ------------------------
-Total Physical Source Lines of Code (SLOC) = 4,382
+Total Physical Source Lines of Code (SLOC) = 5,959
 

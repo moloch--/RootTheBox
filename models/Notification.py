@@ -26,7 +26,9 @@ import imghdr
 
 from urlparse import urlparse
 from libs.Memcache import FileCache
+from libs.SecurityDecorators import debug
 from sqlalchemy import Column, ForeignKey, desc
+from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, Integer, Boolean
 from models import dbsession
 from models.BaseGameObject import BaseObject
@@ -35,7 +37,8 @@ from models.BaseGameObject import BaseObject
 class Notification(BaseObject):
     ''' Notification definition '''
 
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    event_uuid = Column(Unicode(36), nullable=False)
     title = Column(Unicode(255), nullable=False)
     message = Column(Unicode(255), nullable=False)
     viewed = Column(Boolean, default=False)
@@ -45,7 +48,7 @@ class Notification(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return dbsession.query(cls).filter_by(user_id=None).all()
 
     @classmethod
     def by_id(cls, ident):
@@ -60,8 +63,19 @@ class Notification(BaseObject):
     @classmethod
     def new_messages(cls, user_id):
         ''' Return all notification which have not been viewed '''
-        ls = cls.by_user_id(user_id)
-        return filter(lambda note: note.viewed == False, ls)
+        return dbsession.query(cls).filter(and_(cls.user_id == user_id, cls.viewed == False)).all()
+
+    @classmethod
+    def by_event_uuid(cls, uuid):
+        ''' Always returns anonymous notification '''
+        return dbsession.query(cls).filter_by(event_uuid=uuid).filter_by(user_id=None).first()
+
+    @classmethod
+    def delivered(cls, user_id, uuid):
+        notify = dbsession.query(cls).filter(and_(cls.event_uuid == uuid, cls.user_id == user_id)).first()
+        notify.viewed = True
+        dbsession.add(notify)
+        dbsession.flush()
 
     def to_json(self):
         ''' Creates a JSON version of the notification '''

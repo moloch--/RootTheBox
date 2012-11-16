@@ -404,7 +404,7 @@ class AdminEditHandler(BaseHandler):
                 try:
                     reward_value = int(self.get_argument('value'))
                     if reward_value != flag.value:
-                        logging.info("Updated %s's value %d -> %d" % (flag.value, reward_value,))
+                        logging.info("Updated %s's value %d -> %d" % (flag.name, flag.value, reward_value,))
                         flag.value = reward_value
                 except ValueError:
                     errors.append("Invalid reward amount")

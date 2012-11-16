@@ -26,10 +26,12 @@ import pylibmc
 import tornado.websocket
 
 from handlers.BaseHandlers import BaseHandler
+from libs.SecurityDecorators import debug
 from libs.GameHistory import GameHistory
 from libs.Sessions import MemcachedSession
 from libs.ConfigManager import ConfigManager
-from libs.Scoreboard import ScoreboardManager
+from libs.Scoreboard import Scoreboard
+from libs.EventManager import EventManager
 from models import Team
 
 class GameDataHandler(tornado.websocket.WebSocketHandler):
@@ -39,59 +41,32 @@ class GameDataHandler(tornado.websocket.WebSocketHandler):
 
     def initialize(self):
         ''' Setup sessions '''
-        self.session = None
-        self.scoreboard_manager = ScoreboardManager.Instance()
-        self.config = ConfigManager.Instance()
-        session_id = self.get_secure_cookie('session_id')
-        if session_id != None:
-            self.conn = pylibmc.Client(
-                [self.config.memcached_server], binary=True)
-            self.conn.behaviors['no_block'] = 1  # Async I/O
-            self.session = self._create_session(session_id)
-            self.session.refresh()
+        self.manager = EventManager.Instance()
 
-
-    def _create_session(self, session_id=None):
-        ''' Creates a new session '''
-        kwargs = {
-            'duration': self.config.session_age,
-            'ip_address': self.request.remote_ip,
-            'regeneration_interval': self.config.session_regeneration_interval,
-        }
-        new_session = None
-        old_session = MemcachedSession.load(session_id, self.conn)
-        if old_session is None or old_session._is_expired():
-            new_session = MemcachedSession(self.conn, **kwargs)
-        if old_session is not None:
-            if old_session._should_regenerate():
-                old_session.refresh()
-            return old_session
-        return new_session
-
+    @debug
     def open(self):
         ''' When we receive a new websocket connect '''
-        if self.session != None:
-            logging.debug("Opened new websocket with user id: %s" % str(self.session['user_id']))
-            self.user_id = self.session['user_id']
-            self.scoreboard_manager.add_connection(self)
-        else:
-            self.user_id = 'public'
-            self.scoreboard_manager.add_connection(self)
-        self.write_message(self.scoreboard_manager.now())
+        self.manager.scoreboard_connections.append(self)
+        self.write_message(self.manager.scoreboard.now())
 
+    @debug
     def on_message(self, message):
         ''' Send current state '''
-        self.write_message(self.scoreboard_manager.now())
+        pass
 
+    @debug
     def on_close(self):
         ''' Lost connection to client '''
         try:
-            self.scoreboard_manager.remove_connection(self)
+            self.manager.scoreboard_connections.remove(self)
         except KeyError:
-            logging.warn("WebSocket connection has already been closed.")
+            logging.warn("[Web Socket] Connection has already been closed.")
 
 
 class ScoreboardHandler(BaseHandler):
+    '''
+    Main summary page
+    '''
 
     def get(self, *args, **kargs):
         self.render('scoreboard/summary.html')
@@ -111,12 +86,12 @@ class ScoreboardAjaxHandler(BaseHandler):
 
     def summary_table(self):
         ''' Render the "leaderboard" snippit '''
-        self.render('scoreboard/summary_table.html', teams=Team.all())
+        self.render('scoreboard/summary_table.html', teams=Team.ranks())
 
 
 class ScoreboardMoneyHandler(BaseHandler):
     '''
-    Renders real-time scoreboard pages
+    Renders money-spec pages
     '''
 
     def get(self, *args, **kargs):
@@ -139,7 +114,7 @@ class ScoreboardMoneyHandler(BaseHandler):
 
 class ScoreboardFlagHandler(BaseHandler):
     '''
-    Renders real-time scoreboard pages
+    Renders flag-spec pages
     '''
 
     def get(self, *args, **kargs):

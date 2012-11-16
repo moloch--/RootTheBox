@@ -20,9 +20,10 @@ Created on Mar 13, 2012
 
 
 import logging
+import inspect
 import functools
-from threading import Thread
 
+from threading import Thread
 from models.User import User
 
 
@@ -55,6 +56,7 @@ def authorized(permission):
     ''' Checks user's permissions '''
 
     def func(method):
+
         @functools.wraps(method)
         def wrapper(self, *args, **kwargs):
             if self.session is not None:
@@ -67,6 +69,7 @@ def authorized(permission):
         return wrapper
     return func
 
+
 def async(method):
     ''' Quick and easy async functions'''
     
@@ -76,3 +79,20 @@ def async(method):
         worker.start()
         return worker
     return __async__
+
+
+def debug(method):
+    ''' Logs a function call '''
+
+    @functools.wraps(method)
+    def wrapper(*args, **kwargs):
+        class_name = "" 
+        if hasattr(method, "im_class"): 
+            method.im_class.__name__
+        else:
+            class_name = args[0].__class__.__name__
+        logging.debug("Call to -> %s.%s()" % (class_name, method.__name__,))
+        value = method(*args, **kwargs)
+        logging.debug("Return from <- %s.%s()" % (class_name, method.__name__,))
+        return value
+    return wrapper

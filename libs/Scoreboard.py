@@ -27,46 +27,15 @@ import threading
 from uuid import uuid4
 from models import Team
 from datetime import datetime
-from libs.Singleton import Singleton
 from libs.GameHistory import GameHistory
 from libs.SecurityDecorators import async
 
 
-@Singleton
-class ScoreboardManager(object):
+class Scoreboard(object):
     ''' Manages websocket connections (mostly thread safe) '''
 
-    connections = {}
-
     def __init__(self):
-        self.lock = threading.Lock()
-
-    def add_connection(self, wsocket):
-        ''' Add a connection '''
-        self.lock.acquire()
-        if self.connections.has_key(wsocket.user_id):
-            self.connections[wsocket.user_id].append(wsocket)
-        else:
-            self.connections[wsocket.user_id] = [wsocket]
-        self.lock.release()
-
-    def remove_connection(self, wsocket):
-        ''' Remove connection '''
-        self.lock.acquire()
-        self.connections[wsocket.user_id].remove(wsocket)
-        if len(self.connections[wsocket.user_id]) <= 0:
-            del self.connections[wsocket.user_id]
-        self.lock.release()
-
-    #@async
-    def refresh(self):
-        ''' Check for new notifications and send them to clients '''
-        self.lock.acquire()
-        wsockets = dict(self.connections)
-        for name in wsockets.keys():
-            for wsock in wsockets[name]:
-                wsock.write_message(self.now())
-        self.lock.release()
+        self.history = GameHistory.Instance()
 
     def now(self):
         ''' Returns the current game state '''

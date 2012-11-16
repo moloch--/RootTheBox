@@ -23,6 +23,7 @@ Created on Mar 13, 2012
 import logging
 
 from libs.Form import Form
+from libs.SecurityDecorators import debug
 from libs.ConfigManager import ConfigManager
 from handlers.BaseHandlers import BaseHandler
 from tornado.web import RequestHandler
@@ -33,6 +34,7 @@ from models import dbsession, User, Team, Theme, RegistrationToken
 
 class HomePageHandler(BaseHandler):
 
+    @debug
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render("public/home.html")
@@ -41,10 +43,12 @@ class HomePageHandler(BaseHandler):
 class LoginHandler(BaseHandler):
     ''' Takes care of the login process '''
 
+    @debug
     def get(self, *args, **kwargs):
         ''' Display the login page '''
         self.render('public/login.html', errors=None)
 
+    @debug
     def post(self, *args, **kwargs):
         ''' Checks submitted username and password '''
         form = Form(
@@ -61,14 +65,15 @@ class LoginHandler(BaseHandler):
         else:
             self.render('public/login.html', errors=self.form.errors)
 
+    @debug
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''
-        logging.info("Successful login: %s/%s from %s" % (user.
-                                                          account, user.handle, self.request.remote_ip))
+        logging.info("Successful login: %s/%s from %s" % (user.account, user.handle, self.request.remote_ip,))
         self.start_session()
         theme = Theme.by_id(user.theme_id)
+        self.session['team_id'] = int(user.team.id)
         self.session['user_id'] = int(user.id)
-        self.session['handle'] = ''.join(user.handle)
+        self.session['handle'] = ''.join(user.handle) # Copy string
         self.session['theme'] = ''.join(theme.cssfile)
         if user.has_permission('admin'):
             self.session['menu'] = 'admin'
@@ -76,6 +81,7 @@ class LoginHandler(BaseHandler):
             self.session['menu'] = 'user'
         self.session.save()
 
+    @debug
     def failed_login(self):
         ''' Called if username or password is invalid '''
         logging.info("Failed login attempt from: %s" % self.request.remote_ip)
@@ -86,11 +92,13 @@ class LoginHandler(BaseHandler):
 class UserRegistrationHandler(BaseHandler):
     ''' Registration Code '''
 
+    @debug
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''
         self.render(
             "public/registration.html", errors=None)
 
+    @debug
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
         form = Form(
@@ -129,6 +137,7 @@ class UserRegistrationHandler(BaseHandler):
             self.render('public/registration.html',
                         errors=form.errors)
 
+    @debug
     def create_user(self):
         ''' Add user to the database '''
         team = Team.by_uuid(self.get_argument('team'))

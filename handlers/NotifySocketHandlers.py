@@ -24,10 +24,11 @@ import pylibmc
 import logging
 import tornado.websocket
 
-
-from libs.Notifier import NotifyManager
+from libs.SecurityDecorators import debug
 from libs.Sessions import MemcachedSession
 from libs.ConfigManager import ConfigManager
+from libs.EventManager import EventManager
+from models import Notification
 
 
 class NotifySocketHandler(tornado.websocket.WebSocketHandler):
@@ -35,7 +36,7 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
 
     def initialize(self):
         self.session = None
-        self.manager = NotifyManager.Instance()
+        self.manager = EventManager.Instance()
         self.config = ConfigManager.Instance()
         session_id = self.get_secure_cookie('session_id')
         if session_id != None:
@@ -55,32 +56,38 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
         new_session = None
         old_session = None
         old_session = MemcachedSession.load(session_id, self.conn)
-        if old_session is None or old_session._is_expired():  # Create new session
+        if old_session is None or old_session._is_expired():
             new_session = MemcachedSession(self.conn, **kw)
         if old_session is not None:
-            if old_session._should_regenerate():
-                old_session.refresh(new_session_id=True)
-                logging.debug(" *** Refreshing Session ***")
             return old_session
         return new_session
 
+    @debug
     def open(self):
         ''' When we receive a new websocket connect '''
         if self.session is not None:
-            logging.debug("Opened new websocket with user id: %s" % str(self.session['user_id']))
+            logging.debug("[Web Socket] Opened new websocket with user id: %s" % str(self.session['user_id']))
+            self.team_id = self.session['team_id']
             self.user_id = self.session['user_id']
+            notifications = Notification.new_messages(self.session['user_id'])
+            logging.info("[Web Socket] %d new notification(s) for user id %d" % (len(notifications), self.session['user_id']))
+            for notify in notifications:
+                self.write_message(notify.to_json())
+                Notification.delivered(notify.user_id, notify.event_uuid)
         else:
-            logging.debug("No session, closing Notifier websocket with remote host %s" % self.request.remote_ip)
-            self.close()
+            logging.info("[Web Socket] Opened public notification socket.")
+            self.team_id = 'public_team'
+            self.user_id = 'public_user'
+        self.manager.add_connection(self)
 
     def on_message(self, message):
         ''' Troll the haxors '''
         self.write_message("ERROR 1146 (42S02): Table 'rtb.%s' doesn't exist." % message)
 
+    @debug
     def on_close(self):
         ''' Lost connection to client '''
-        if self.session is not None:
-            try:
-                self.manager.remove_connection(self)
-            except KeyError:
-                logging.warn("WebSocket connection has already been closed.")
+        try:
+            self.manager.remove_connection(self)
+        except KeyError:
+            logging.warn("[Web Socket] Manager does not have a refrence to self.")

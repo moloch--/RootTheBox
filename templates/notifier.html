@@ -1,7 +1,7 @@
 <script>
 	$(document).ready(function() {
-        var ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/notifications");
-	    ws.onmessage = function (evt) {
+        var notifier_ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/notifications");
+	    notifier_ws.onmessage = function (evt) {
 	    	notification = jQuery.parseJSON(evt.data);
 	        if(notification['category'] == 'success') {
 	        	Notifier.success(notification['message'], notification['title']);

@@ -86,7 +86,6 @@ class BaseHandler(RequestHandler):
         if old_session is not None:
             if old_session._should_regenerate():
                 old_session.refresh(new_session_id=True)
-                logging.debug(" *** Refreshing Session ***")
             return old_session
         return new_session
 

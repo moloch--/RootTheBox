@@ -13,6 +13,8 @@ sdist
 develop-eggs
 .installed.cfg
 
+# Screen files
+*.0
 
 # Log files
 *.log

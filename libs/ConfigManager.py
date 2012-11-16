@@ -26,16 +26,14 @@ import getpass
 import logging
 import ConfigParser
 
-from libs import ConsoleColors
+from libs.ConsoleColors import *
 from libs.Singleton import Singleton
 from libs.HostNetworkConfig import HostNetworkConfig
 
 
 # .basicConfig must be called prior to ANY call to logging.XXXX so make sure
 # this module gets imported prior to any logging!
-logging.basicConfig(format='\r[%(levelname)s] %(asctime)s - %(message)s',
-                    level=logging.DEBUG)
-
+logging.basicConfig(format='\r[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
 
 @Singleton
 class ConfigManager(object):
@@ -59,6 +57,18 @@ class ConfigManager(object):
     def __server__(self):
         ''' Load network configurations '''
         self.listen_port = self.config.getint("Server", 'port')
+        log_level = self.config.get("Server", 'logging')
+        logger = logging.getLogger()
+        if log_level.lower() == 'debug':
+            logger.setLevel(logging.DEBUG)
+        elif log_level.lower() == 'info':
+            logger.setLevel(logging.INFO)
+        elif log_level.lower() == 'warn':
+            logger.setLevel(logging.WARN)
+        else:
+            sys.stdout.write(WARN + "Logging level has not been set.\n")
+            logger.setLevel(logging.NOTSET)
+        sys.stdout.flush()
         self.debug = self.config.getboolean("Server", 'debug')
         self.domain = self.config.get("Server", 'domain')
         self.default_theme = self.config.get("Server", "theme")
@@ -92,11 +102,11 @@ class ConfigManager(object):
         self.db_name = self.config.get("Database", 'name', "rootthebox")
         user = self.config.get("Database", 'user', "RUNTIME")
         if user == 'RUNTIME':
-            user = raw_input(ConsoleColors.PROMPT + "Database User: ")
+            user = raw_input(PROMPT + "Database User: ")
         self.db_user = user
         password = self.config.get("Database", 'password', "RUNTIME")
         if password == 'RUNTIME':
-            sys.stdout.write(ConsoleColors.PROMPT + "Database ")
+            sys.stdout.write(PROMPT + "Database ")
             sys.stdout.flush()
             password = getpass.getpass()
         self.db_password = password
