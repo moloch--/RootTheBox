@@ -27,7 +27,7 @@ from uuid import uuid4
 from models import dbsession, Snapshot, SnapshotTeam, Team
 from sqlalchemy import desc
 from libs.Singleton import Singleton
-
+from libs.SecurityDecorators import async
 
 @Singleton
 class GameHistory(object):
@@ -38,9 +38,10 @@ class GameHistory(object):
 
     def __init__(self):
         self.cache = pylibmc.Client(['127.0.0.1'], binary=True)
+        self.epoch = None
         self.__load__()
-        self.epoch = Snapshot.by_id(1).created
 
+    @async
     def __load__(self):
         ''' Moves snapshots from db into the cache '''
         logging.info("Loading game history from database ...")
@@ -48,6 +49,7 @@ class GameHistory(object):
             self.__now__() # Take starting snapshot (0, 0, 0)
         try:
             last = len(self)
+            self.epoch = Snapshot.by_id(1).created
             for (index, snapshot) in enumerate(Snapshot.all()):
                 if not snapshot.key in self.cache:
                     logging.info("Cached snapshot (%d/%d)" % (snapshot.id, last))

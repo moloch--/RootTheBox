@@ -25,8 +25,8 @@ import logging
 from libs.Notifier import Notifier
 from libs.Singleton import Singleton
 from libs.Scoreboard import Scoreboard
-from libs.SecurityDecorators import debug
-from models import User, Flag, FileUpload, Notification
+from libs.SecurityDecorators import debug, async
+from models import Notification
 
 
 @Singleton
@@ -37,6 +37,7 @@ class EventManager(object):
     '''
 
     def __init__(self):
+        self.botnets = {}
         self.notify_connections = {}
         self.scoreboard_connections = []
         self.scoreboard = Scoreboard()
@@ -59,6 +60,31 @@ class EventManager(object):
             del self.notify_connections[wsocket.team_id][wsocket.user_id]
 
     @debug
+    def add_bot(self, bot_socket):
+        ''' Add a bot to a team's botnet '''
+        if not self.botnets.has_key(bot_socket.team.id):
+            self.botnets[bot_socket.team.id] = {}
+        if self.botnets[bot_socket.team.id].has_key(bot_socket.box.id):
+            self.botnets[bot_socket.team.id][bot_socket.box.id].close()
+            del self.botnets[bot_socket.team.id][bot_socket.box.id]
+        self.botnets[bot_socket.team.id][bot_socket.box.id] = bot_socket
+
+    @debug
+    def remove_bot(self, bot_socket):
+        ''' Remove ref to bot connection '''
+        del self.botnets[bot_socket.team.id][bot_socket.box.id]
+
+    @debug
+    def bot_count(self, team):
+        ''' Get number of current bots owned by a given team '''
+        if self.botnets.has_key(team.id):
+            return len(self.botnets[team.id].keys())
+        else:
+            return 0
+
+    # [ Push Updates ] -----------------------------------------------------
+
+    @debug
     def refresh_scorboard(self):
         ''' Push to everyone '''
         update = self.scoreboard.now()
@@ -68,7 +94,6 @@ class EventManager(object):
     @debug
     def push_broadcast_notification(self, event_uuid):
         ''' Push to everyone '''
-        logging.debug("Pushing broadcast notification with uuid %s" % event_uuid)
         json = Notification.by_event_uuid(event_uuid).to_json()
         for team_id in self.notify_connections.keys():
             for user_id in self.notify_connections[team_id].keys():
@@ -96,12 +121,7 @@ class EventManager(object):
                 wsocket.write_message(json)
                 Notification.delivered(wsocket.user_id, event_uuid)
 
-    @debug
-    def joined_team(self, user):
-        ''' Callback when a user joins a team'''
-        message = "%s has joined your team." % user.handle
-        evt_id = Notifier.team_success(user.team, "New Team Member", message)
-        self.push_team_notification(evt_id, user.team.id)
+    # [ Broadcast Events ] -------------------------------------------------
 
     @debug
     def flag_capture(self, user, flag):
@@ -116,26 +136,56 @@ class EventManager(object):
         self.refresh_scorboard()
         message = "%s unlocked level #%d" % (user.team.name, level.number)
         evt_id = Notifier.broadcast_success("Level Unlocked", message)
+        self.push_broadcast_notification(evt_id)
+
+    @debug
+    def purchased_item(self, user, item):
+        ''' Callback when a team purchases an item '''
+        self.refresh_scorboard()
+        message = "%s purchased %s from the black market." % (user.handle, item.name)
+        evt_id = Notifier.team_success(user.team, "Upgrade Purchased", message)
+        self.push_broadcast_notification(evt_id)
+        message2 = "%s unlocked %s." % (user.team.name, item.name)
+        evt_id2 = Notifier.broadcast_warning("Competitor Upgrade", message2)
+        self.push_broadcast_notification(evt_id2)
+
+    # [ Team Events ] ------------------------------------------------------
+
+    @debug
+    def joined_team(self, user):
+        ''' Callback when a user joins a team'''
+        message = "%s has joined your team." % user.handle
+        evt_id = Notifier.team_success(user.team, "New Team Member", message)
+        self.push_team_notification(evt_id, user.team.id)
 
     @debug
     def team_file_share(self, user, file_upload):
         ''' Callback when a team file share is created '''
         message = "%s has shared a file called '%s'" % (user.handle, file_upload.file_name,)
         evt_id = Notifier.team_success(user.team, "File Share", message)
-
-    @debug
-    def purchased_item(self, user, item):
-        ''' Callback when a team purchases an item '''
-        self.refresh_scorboard()
-        
-        message = "%s purchased %s from the black market." % (user.handle, item.name)
-        evt_id = Notifier.team_success(user.team, "Upgrade Purchased", message)
-        
-        message2 = "%s unlocked %s." % (user.team.name, item.name)
-        evt_id = Notifier.broadcast_warning("Competitor Upgrade", message2)
+        self.push_team_notification(evt_id)
 
     @debug
     def paste_bin(self, user, paste):
         ''' Callback when a pastebin is created '''
-        message = "%s posted to the team paste-bin." % user.handle
+        message = "%s posted to the team paste-bin" % user.handle
         evt_id = Notifier.team_success(user.team, "Text Share", message)
+        self.push_team_notification(evt_id)
+
+    @debug
+    def new_bot(self, bot):
+        message = "New bot connected to botnet from %s " % (bot.box.name,)
+        evt_id = Notifier.team_success(bot.team, "Botnet", message)
+        self.push_team_notification(evt_id)
+
+    @debug
+    def lost_bot(self, bot):
+        message = "Lost communication with bot on %s" % (bot.box.name,)
+        evt_id = Notifier.team_warning(bot.team, "Botnet", message)
+        self.push_team_notification(evt_id)
+
+    # [ User Events ] ------------------------------------------------------
+
+    @debug
+    def password_cracked(self, sheep):
+        pass

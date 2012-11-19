@@ -64,7 +64,7 @@ def authorized(permission):
                 if user is not None and user.has_permission(permission):
                     return method(self, *args, **kwargs)
             logging.warn("Attempted unauthorized access from %s to %s" %
-                         (self.request.remote_ip, self.request.uri))
+                            (self.request.remote_ip, self.request.uri))
             self.redirect(self.application.settings['forbidden_url'])
         return wrapper
     return func
@@ -77,7 +77,6 @@ def async(method):
     def __async__(*args, **kwargs):
         worker = Thread(target=method, args=args, kwargs=kwargs)
         worker.start()
-        return worker
     return __async__
 
 
@@ -86,11 +85,7 @@ def debug(method):
 
     @functools.wraps(method)
     def wrapper(*args, **kwargs):
-        class_name = "" 
-        if hasattr(method, "im_class"): 
-            method.im_class.__name__
-        else:
-            class_name = args[0].__class__.__name__
+        class_name = args[0].__class__.__name__
         logging.debug("Call to -> %s.%s()" % (class_name, method.__name__,))
         value = method(*args, **kwargs)
         logging.debug("Return from <- %s.%s()" % (class_name, method.__name__,))

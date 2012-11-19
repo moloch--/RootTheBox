@@ -38,6 +38,7 @@ from tornado import netutil
 from tornado.web import Application
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
+from handlers.BotHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
@@ -68,7 +69,7 @@ app = Application([
                    StaticFileHandler, {'path': 'files/avatars'}),
 
                   # Reporter Handlers - Communication with reporters
-                  #(r'/reporter/register', ReporterRegistrationHandler),
+                  (r'/botnet/register', BotHandler),
 
                   # ShareUploadHandlers - Serves file sharing
                   # related pages

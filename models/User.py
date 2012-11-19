@@ -190,6 +190,7 @@ class User(BaseObject):
         return self.notifications.sort(key=lambda notify: notify.created)[:limit]
 
     def next_algorithm(self):
+        ''' Returns next algo '''
         if self.algorithm == 'md5':
             return 'sha1'
         elif self.algorithm == 'sha1':
@@ -199,16 +200,16 @@ class User(BaseObject):
 
     def to_dict(self):
         team = Team.by_id(self.team_id)
-        return dict(
-            uuid=self.uuid,
-            handle=self.handle,
-            account=self.account,
-            hash_algorithm=self.algorithm,
-            team_uuid=team.uuid,
-        )
+        return {
+            'uuid': self.uuid,
+            'handle': self.handle,
+            'account': self.account,
+            'hash_algorithm': self.algorithm,
+            'team_uuid': team.uuid,
+        }
 
     def __str__(self):
         return self.handle
 
     def __repr__(self):
-        return u'<User - account: %s, handle: %s>' % (self.account, self.handle)
+        return u'<User - account: %s, handle: %s>' % (self.account, self.handle,)

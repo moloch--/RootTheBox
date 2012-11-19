@@ -70,12 +70,12 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
             self.team_id = self.session['team_id']
             self.user_id = self.session['user_id']
             notifications = Notification.new_messages(self.session['user_id'])
-            logging.info("[Web Socket] %d new notification(s) for user id %d" % (len(notifications), self.session['user_id']))
+            logging.debug("[Web Socket] %d new notification(s) for user id %d" % (len(notifications), self.session['user_id']))
             for notify in notifications:
                 self.write_message(notify.to_json())
                 Notification.delivered(notify.user_id, notify.event_uuid)
         else:
-            logging.info("[Web Socket] Opened public notification socket.")
+            logging.debug("[Web Socket] Opened public notification socket.")
             self.team_id = 'public_team'
             self.user_id = 'public_user'
         self.manager.add_connection(self)
