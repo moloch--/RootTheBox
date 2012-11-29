@@ -48,7 +48,7 @@ class EventManager(object):
         if wsocket.user_id in self.notify_connections[wsocket.team_id]:
             self.notify_connections[wsocket.team_id][wsocket.user_id].append(wsocket)
         else:
-            self.notify_connections[wsocket.team_id][wsocket.user_id] = [wsocket,]
+            self.notify_connections[wsocket.team_id][wsocket.user_id] = [wsocket]
 
     @debug
     def remove_connection(self, wsocket):
@@ -125,7 +125,9 @@ class EventManager(object):
     def flag_capture(self, user, flag):
         ''' Callback for when a flag is captured '''
         self.refresh_scorboard()
-        evt_id = Notifier.broadcast_success("Flag Capture", "%s has captured '%s'." % (user.team.name, flag.name,))
+        evt_id = Notifier.broadcast_success(
+            "Flag Capture", "%s has captured '%s'." % (user.team.name, flag.name,)
+        )
         self.push_broadcast_notification(evt_id)
 
     @debug

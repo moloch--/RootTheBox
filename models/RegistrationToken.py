@@ -21,9 +21,8 @@ Created on Sep 22, 2012
 
 
 from os import urandom
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym, relationship, backref
-from sqlalchemy.types import Unicode, Integer, Boolean
+from sqlalchemy import Column
+from sqlalchemy.types import Unicode, Boolean
 from models.BaseGameObject import BaseObject
 from models import dbsession
 
@@ -31,7 +30,9 @@ from models import dbsession
 class RegistrationToken(BaseObject):
     ''' User definition '''
 
-    value = Column(Unicode(6), unique=True, nullable=False, default=lambda: unicode(urandom(3).encode('hex')))
+    value = Column(Unicode(6), unique=True, nullable=False,
+        default=lambda: unicode(urandom(3).encode('hex'))
+    )
     used = Column(Boolean, nullable=False, default=False)
 
     @classmethod

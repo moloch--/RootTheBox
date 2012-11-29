@@ -18,7 +18,8 @@ Created on Oct 10, 2012
 '''
 
 from libs.ConsoleColors import *
-from models import dbsession, GameLevel, IpAddress, Flag, Box, Corporation, User, Team
+from models import dbsession, GameLevel, IpAddress, \
+    Flag, Box, Corporation, User, Team
 
 
 def create_game_level(level_number, buyout):
@@ -44,6 +45,7 @@ def create_game_level(level_number, buyout):
     dbsession.flush()
     return new_level
 
+
 def create_team(name, motto):
     print(INFO + "Create team: " + bold + name + W)
     team = Team(
@@ -55,6 +57,7 @@ def create_team(name, motto):
     dbsession.add(team)
     dbsession.flush()
     return team
+
 
 def create_user(account, handle, password, team):
     print(INFO + "Create user: " + bold + account + W)
@@ -70,6 +73,7 @@ def create_user(account, handle, password, team):
     dbsession.flush()
     return user
 
+
 def create_corporation(name, description="No description"):
     print(INFO + "Create corporation: " + bold + name + W)
     corp = Corporation(
@@ -79,6 +83,7 @@ def create_corporation(name, description="No description"):
     dbsession.add(corp)
     dbsession.flush()
     return corp
+
 
 def __mkipv4__(box, address):
     print(INFO + "IPv4 address '%s' now belongs to %s" % (address, box.name,))
@@ -91,8 +96,11 @@ def __mkipv4__(box, address):
     dbsession.flush()
     return ip
 
+
 def __mkipv6__(box, address):
-    print(INFO + "IPv6 address %s belongs to %s" % (address, bold+box.name+W,))
+    print(INFO + "IPv6 address %s belongs to %s" % (
+            address, str(bold+box.name+W),)
+    )
     ip = IpAddress(
         v6=unicode(address),
     )
@@ -102,7 +110,9 @@ def __mkipv6__(box, address):
     dbsession.flush()
     return ip
 
-def create_box(name, corporation, difficulty, game_level, ipv4_addresses=[], ipv6_addresses=[]):
+
+def create_box(name, corporation, difficulty, game_level,
+                ipv4_addresses=[], ipv6_addresses=[]):
     print(INFO + "Creat box: " + bold + name + W)
     box = Box(
         name=unicode(name),
@@ -118,7 +128,9 @@ def create_box(name, corporation, difficulty, game_level, ipv4_addresses=[], ipv
         __mkipv6__(box, ip_address)
     return box
 
-def create_flag(name, token, value, box, description="No description", is_file=False, is_regex=False, is_hash=False):
+
+def create_flag(name, token, value, box, description="No description",
+                is_file=False, is_regex=False, is_hash=False):
     print(INFO + "Create flag: " + bold + name + W)
     flag = Flag(
         name=unicode(name),

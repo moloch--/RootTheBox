@@ -24,7 +24,6 @@ import sys
 import getpass
 
 from libs.ConsoleColors import *
-from libs.ConfigManager import ConfigManager
 from libs.Notifier import Notifier
 from models import dbsession, User, Permission, Team
 
@@ -44,7 +43,7 @@ class RecoveryConsole(cmd.Cmd):
         Usage: reset <handle>
         '''
         user = User.by_handle(username)
-        if user == None:
+        if user is None:
             print(WARN + str("%s user not found in database." % username))
         else:
             sys.stdout.write(PROMPT + "New ")
@@ -69,7 +68,7 @@ class RecoveryConsole(cmd.Cmd):
                     for perm in user.permissions_names[:-1]:
                         permissions += perm + str(", ")
                     permissions += str("%s)" % user.permissions_names[-1])
-                if user.team != None:
+                if user.team is not None:
                     team = " from " + bold + str(user.team) + W + " "
                 print(INFO + bold + user.account + W + " a.k.a. " + bold +
                       user.handle + W + team + permissions)
@@ -85,7 +84,7 @@ class RecoveryConsole(cmd.Cmd):
         Usage: delete <handle>
         '''
         user = User.by_handle(username)
-        if user == None:
+        if user is None:
             print(WARN + str("%s user not found in database." % username))
         else:
             username = user.handle
@@ -140,12 +139,12 @@ class RecoveryConsole(cmd.Cmd):
             print(WARN + "Failed to create new team.")
 
     def do_broadcast(self, ignore):
-        ''' 
-        Send a broadcast notification 
+        '''
+        Send a broadcast notification
         Usage: broadcast
         '''
-        title=raw_input(PROMPT + "Title: ")
-        message=raw_input(PROMPT + "Message: ")
+        title = raw_input(PROMPT + "Title: ")
+        message = raw_input(PROMPT + "Message: ")
         Notifier.broadcast_success(title, message)
 
     def do_grant(self, username):
@@ -154,7 +153,7 @@ class RecoveryConsole(cmd.Cmd):
         Usage: grant <handle>
         '''
         user = User.by_handle(username)
-        if user == None:
+        if user is None:
             print(WARN + str("%s user not found in database." % username))
         else:
             name = raw_input(PROMPT + "Add permission: ")
@@ -174,7 +173,7 @@ class RecoveryConsole(cmd.Cmd):
         Usage: strip <handle>
         '''
         user = User.by_handle(username)
-        if user == None:
+        if user is None:
             print(WARN + str("%s user not found in database." % username))
         else:
             username = user.handle
@@ -193,7 +192,7 @@ class RecoveryConsole(cmd.Cmd):
     def do_chteam(self, username):
         ''' Change team '''
         user = User.by_handle(username)
-        if user == None:
+        if user is None:
             print(WARN + str("%s user not found in database." % username))
         else:
             print(INFO + "Available teams:")
@@ -201,11 +200,14 @@ class RecoveryConsole(cmd.Cmd):
                 print(" %d. %s" % (team.id, team.name))
             team_id = raw_input(PROMPT + "Set user's team to: ")
             team = Team.by_id(team_id)
-            if team != None:
+            if team is not None:
                 user.team_id = team.id
                 dbsession.add(user)
                 dbsession.flush()
-                print(INFO + "Successfully changed %s's team to %s." % (user.handle, team.name))
+                print(INFO + "Successfully changed %s's team to %s." % (
+                            user.handle, team.name
+                    )
+                )
             else:
                 print(WARN + "Team does not exist.")
 
@@ -215,7 +217,7 @@ class RecoveryConsole(cmd.Cmd):
         Usage: id <user_id>
         '''
         user = User.by_id(user_id)
-        if user == None:
+        if user is None:
             print(WARN + str("%s user not found in database." % username))
         else:
             print INFO + repr(user)

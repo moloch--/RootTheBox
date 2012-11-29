@@ -20,11 +20,11 @@ Created on Mar 11, 2012
 '''
 
 
-from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import Unicode, Integer
-from models import dbsession, Team, snapshot_team_to_flag, snapshot_team_to_game_level
+from sqlalchemy.types import Integer
+from models import dbsession, Team, snapshot_team_to_flag, \
+    snapshot_team_to_game_level
 from models.BaseGameObject import BaseObject
 
 

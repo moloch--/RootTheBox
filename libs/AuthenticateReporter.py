@@ -26,7 +26,6 @@ import socket
 import logging
 import threading
 
-
 from os import urandom
 from hashlib import sha256
 from base64 import b64encode

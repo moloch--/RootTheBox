@@ -53,7 +53,9 @@ class PasteBin(BaseObject):
     @classmethod
     def by_team_id(cls, team_id):
         ''' Return all paste objects for a given team '''
-        return dbsession.query(cls).filter_by(team_id=team_id).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).filter_by(
+            team_id=team_id
+        ).order_by(desc(cls.created)).all()
 
     def __str__(self):
         return self.name

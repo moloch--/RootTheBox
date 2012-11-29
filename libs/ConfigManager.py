@@ -32,22 +32,25 @@ from libs.Singleton import Singleton
 
 # .basicConfig must be called prior to ANY call to logging.XXXX so make sure
 # this module gets imported prior to any logging!
-logging.basicConfig(format='\r[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(
+    format='\r[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG
+)
+
 
 @Singleton
 class ConfigManager(object):
     '''  Central class which handles any user-controlled settings '''
 
     def __init__(self, cfg_file='rootthebox.cfg'):
-        self.cfg_path = os.path.abspath(cfg_file)
-        if not (os.path.exists(self.cfg_path) and os.path.isfile(self.cfg_path)):
+        self.conf = os.path.abspath(cfg_file)
+        if not (os.path.exists(self.conf) and os.path.isfile(self.conf)):
             logging.critical(
-                "No configuration file found at %s." % self.cfg_path
+                "No configuration file found at: %s." % self.conf
             )
             os._exit(1)
-        logging.info('Loading config from %s' % self.cfg_path)
+        logging.info('Loading config from: %s' % self.conf)
         self.config = ConfigParser.SafeConfigParser()
-        self.config.readfp(open(self.cfg_path, 'r'))
+        self.config.readfp(open(self.conf, 'r'))
         self.__server__()
         self.__sessions__()
         self.__security__()
@@ -78,8 +81,9 @@ class ConfigManager(object):
         ''' Session settings '''
         self.memcached_server = self.config.get("Sessions", 'memcached')
         self.session_age = self.config.getint("Sessions", 'session_age')
-        self.session_regeneration_interval = self.config.getint(
-            "Sessions", 'session_regeneration_interval')
+        self.session_regeneration_interval = self.config.getint("Sessions",
+            'session_regeneration_interval'
+        )
 
     def __security__(self):
         ''' Load security configurations '''
@@ -88,7 +92,8 @@ class ConfigManager(object):
             ips.append('127.0.0.1')
         self.admin_ips = tuple(ips)
         self.max_password_length = int(
-            self.config.get("Security", 'max_password_length'))
+            self.config.get("Security", 'max_password_length')
+        )
 
     def __recaptcha__(self):
         ''' Loads recaptcha settings '''

@@ -28,10 +28,12 @@ class Menu(UIModule):
 
     def render(self, *args, **kwargs):
         ''' Renders the top menu '''
-        if self.handler.session != None:
+        if self.handler.session is not None:
             user = User.by_handle(self.handler.session['handle'])
             if self.handler.session['menu'] == 'user':
                 return self.render_string('menu/user.html', user=user)
             elif self.handler.session['menu'] == 'admin':
-                return self.render_string('menu/admin.html', handle=user.handle)
+                return self.render_string('menu/admin.html',
+                    handle=user.handle
+                )
         return self.render_string('menu/public.html')
