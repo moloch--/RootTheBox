@@ -22,10 +22,7 @@ Created on Mar 11, 2012
 
 import json
 
-from uuid import uuid4
-from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import String
 from models import dbsession, snapshot_to_snapshot_team
 from models.BaseGameObject import BaseObject
 
@@ -35,7 +32,7 @@ class Snapshot(BaseObject):
 
     # Has many 'SnapshotTeam' objects
     teams = relationship("SnapshotTeam", secondary=snapshot_to_snapshot_team, backref=backref("Snapshot", lazy="subquery"))
-    
+
     @property
     def key(self):
         return self.to_key(self.id)

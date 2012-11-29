@@ -24,9 +24,9 @@ import logging
 import tornado.websocket
 
 from libs.SecurityDecorators import debug
-from libs.Sessions import MemcachedSession
 from libs.ConfigManager import ConfigManager
 from libs.EventManager import EventManager
+from models import Box, User
 
 
 class BotHandler(tornado.websocket.WebSocketHandler):
@@ -57,9 +57,9 @@ class BotHandler(tornado.websocket.WebSocketHandler):
     @debug
     def on_message(self, message):
         ''' Troll the haxors '''
-        team = User.by_handle(message)
-        if team is not None:
-            self.team = team
+        user = User.by_handle(message)
+        if user is not None:
+            self.team = user.team
             self.write_message("team ok")
             self.manager.add_bot(self)
             self.manager.new_bot(self)
@@ -71,7 +71,7 @@ class BotHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         ''' Lost connection to bot '''
         try:
-            if is_active():
+            if self.is_active():
                 self.manager.remove_bot(self)
         except KeyError:
             logging.warn("[Bot] Manager does not have a refrence to self.")

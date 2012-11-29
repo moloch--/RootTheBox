@@ -19,15 +19,14 @@ Created on Nov 11, 2012
 '''
 
 
-import json
 import pylibmc
 import logging
 
-from uuid import uuid4
 from models import dbsession, Snapshot, SnapshotTeam, Team
 from sqlalchemy import desc
 from libs.Singleton import Singleton
 from libs.SecurityDecorators import async
+
 
 @Singleton
 class GameHistory(object):
@@ -46,13 +45,15 @@ class GameHistory(object):
         ''' Moves snapshots from db into the cache '''
         logging.info("Loading game history from database ...")
         if Snapshot.by_id(1) is None:
-            self.__now__() # Take starting snapshot (0, 0, 0)
+            self.__now__()  # Take starting snapshot
         try:
             last = len(self)
             self.epoch = Snapshot.by_id(1).created
             for (index, snapshot) in enumerate(Snapshot.all()):
                 if not snapshot.key in self.cache:
-                    logging.info("Cached snapshot (%d/%d)" % (snapshot.id, last))
+                    logging.info(
+                        "Cached snapshot (%d/%d)" % (snapshot.id, last)
+                    )
                     self.cache.set(snapshot.key, snapshot.to_dict())
             logging.info("History load complete.")
         except KeyboardInterrupt:
@@ -62,7 +63,7 @@ class GameHistory(object):
         ''' Take a snapshot of the current game data '''
         snapshot = self.__now__()
         self.cache.set(snapshot.key, snapshot.to_dict())
-    
+
     def __now__(self):
         ''' Returns snapshot object it as a dict '''
         snapshot = Snapshot()
@@ -89,7 +90,7 @@ class GameHistory(object):
         if isinstance(key, slice):
             return [self[index] for index in xrange(*key.indices(len(self)))]
         elif isinstance(key, int):
-            if key < 0: # Handle negative indices
+            if key < 0:  # Handle negative indices
                 key += len(self)
             if key >= len(self):
                 raise IndexError("The index (%d) is out of range." % key)
@@ -100,8 +101,8 @@ class GameHistory(object):
     def __at__(self, index):
         ''' Get snapshot at specific index '''
         if Snapshot.to_key(index) in self.cache:
-            return self.cache.get(key)
+            return self.cache.get(index)
         else:
-            snapshot = Snapshot.by_id(key)
+            snapshot = Snapshot.by_id(index)
             self.cache.set(snapshot.key, snapshot.game_data)
             return snapshot

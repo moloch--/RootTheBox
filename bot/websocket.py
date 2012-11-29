@@ -744,7 +744,7 @@ class WebSocketApp(object):
                 if logger.isEnabledFor(logging.DEBUG):
                     logger.error(e)
 
-# [ Console Colors ]#######################################################################
+# [ Console Colors ] ######################################################################
 import platform
 
 if platform.system().lower() in ['linux', 'darwin']:
@@ -813,7 +813,7 @@ INFO = bold + C + "[*] " + W
 WARN = bold + R + "[!] " + W
 PROMPT = bold + P + "[?] " + W
 
-###########################################################################################
+# [ Bot Code ] ############################################################################
 
 class Bot(object):
 

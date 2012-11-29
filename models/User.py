@@ -76,7 +76,7 @@ class User(BaseObject):
     @classmethod
     def all_users(cls):
         ''' Return all non-admin user objects '''
-        return filter(lambda user: user.has_permission('admin') == False, cls.all())
+        return filter(lambda user: user.has_permission('admin') is False, cls.all())
 
     @classmethod
     def by_id(cls, identifier):
@@ -105,7 +105,7 @@ class User(BaseObject):
 
     @classmethod
     def _hash_password(cls, algorithm_name, password, salt):
-        ''' 
+        '''
         Hashes the password using Md5/Sha1/Sha256/Scrypt; scrypt
         should only used for the admin accounts.
 
@@ -127,8 +127,8 @@ class User(BaseObject):
 
     @classmethod
     def __scrypt__(cls, password, salt):
-        ''' 
-        Uses scrypt to hash the password using a random salt 
+        '''
+        Uses scrypt to hash the password using a random salt
 
         @param password: The preimage to be hashed
         @param salt: The auto-generated hash
@@ -171,17 +171,18 @@ class User(BaseObject):
         return bool(self.password == result)
 
     def get_new_notifications(self):
-        ''' 
-        Returns any unread messages 
+        '''
+        Returns any unread messages
 
         @return: List of unread messages
         @rtype: List of Notification objects
         '''
-        return filter(lambda notification: notification.viewed == False, self.notifications)
+        return filter(lambda notification: notification.viewed is False,
+                    self.notifications)
 
     def get_notifications(self, limit=10):
-        ''' 
-        Returns most recent notifications 
+        '''
+        Returns most recent notifications
 
         @param limit: Max number of notifications to return, defaults to 10
         @return: Most recent notifications

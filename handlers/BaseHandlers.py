@@ -39,7 +39,10 @@ class BaseHandler(RequestHandler):
         self.config = ConfigManager.Instance()
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
-            self.conn = pylibmc.Client([self.config.memcached_server], binary=True)
+            self.conn = pylibmc.Client(
+                [self.config.memcached_server],
+                binary=True
+            )
             self.conn.behaviors['no_block'] = 1  # async I/O
             self.session = self._create_session(session_id)
             self.session.refresh()
@@ -81,7 +84,7 @@ class BaseHandler(RequestHandler):
         new_session = None
         old_session = None
         old_session = MemcachedSession.load(session_id, self.conn)
-        if old_session is None or old_session._is_expired():  # create new session
+        if old_session is None or old_session._is_expired():
             new_session = MemcachedSession(self.conn, **kw)
         if old_session is not None:
             if old_session._should_regenerate():
@@ -105,17 +108,20 @@ class BaseHandler(RequestHandler):
     def delete(self, *args, **kwargs):
         ''' Log odd behavior, this should never get legitimately called '''
         logging.warn(
-            "%s attempted to use DELETE method" % self.request.remote_ip)
+            "%s attempted to use DELETE method" % self.request.remote_ip
+        )
         self.render("public/404.html")
 
     def head(self, *args, **kwargs):
         ''' Log odd behavior, this should never get legitimately called '''
         logging.warn(
-            "%s attempted to use HEAD method" % self.request.remote_ip)
+            "%s attempted to use HEAD method" % self.request.remote_ip
+        )
         self.render("public/404.html")
 
     def options(self, *args, **kwargs):
         ''' Log odd behavior, this should never get legitimately called '''
         logging.warn(
-            "%s attempted to use OPTIONS method" % self.request.remote_ip)
+            "%s attempted to use OPTIONS method" % self.request.remote_ip
+        )
         self.render("public/404.html")

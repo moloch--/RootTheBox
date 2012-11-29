@@ -20,12 +20,7 @@ Created on Sep 20, 2012
 '''
 
 
-import logging
-import threading
-
 from uuid import uuid4
-from libs.Singleton import Singleton
-from libs.SecurityDecorators import async
 from models import dbsession, Notification, User
 
 
@@ -35,6 +30,7 @@ INFO = u"info"
 WARNING = u"warning"
 ERROR = u"error"
 CUSTOM = u"custom"
+
 
 class Notifier(object):
     ''' Handles the creation of notification objects '''
@@ -138,7 +134,7 @@ class Notifier(object):
     def broadcast_error(cls, title, message):
         ''' Send a error notification to all users '''
         event_uuid = unicode(uuid4())
-        cls.__anonymous__(user, title, message, ERROR, event_uuid, icon)
+        cls.__anonymous__(title, message, ERROR, event_uuid)
         for user in User.all_users():
             cls.__create__(user, title, message, ERROR, event_uuid)
         return event_uuid

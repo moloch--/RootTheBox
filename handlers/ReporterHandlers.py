@@ -20,26 +20,23 @@ Created on Mar 13, 2012
 '''
 
 
-import logging
-
 from models import dbsession, User, Box
-from libs.Notifier import Notifier
-from tornado.web import RequestHandler
+from handlers.BaseHandlers import BaseHandler
 
 
-class ReporterRegistrationHandler(RequestHandler):
+class ReporterRegistrationHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Registers a reporting service on a remote box '''
         box = Box.by_ip_address(self.request.remote_ip)
-        if box != None:
+        if box is not None:
             try:
                 handle = self.get_argument("handle")
                 user = User.by_handle(handle)
-                if user != None:
+                if user is not None:
                     if not box in user.team.boxes:
                         user.team.boxes.append(box)
-                        dbsession.add(team)
+                        dbsession.add(user.team)
                         dbsession.flush()
                     self.write(unicode(user.team.listen_port))
                 else:
@@ -50,9 +47,3 @@ class ReporterRegistrationHandler(RequestHandler):
             self.write("Invalid ip address")
         self.finish()
 
-    def notify(self, user, box):
-        ''' Sends notification of box ownage '''
-        title = "Pwnage Report"
-        message = "%s added %s to their botnet." % (user.team.name, box.name)
-        icon = '/avatars/' + user.avatar
-        Notifier.broadcast_custom(title, message, icon)

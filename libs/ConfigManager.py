@@ -28,7 +28,6 @@ import ConfigParser
 
 from libs.ConsoleColors import *
 from libs.Singleton import Singleton
-from libs.HostNetworkConfig import HostNetworkConfig
 
 
 # .basicConfig must be called prior to ANY call to logging.XXXX so make sure
@@ -42,8 +41,9 @@ class ConfigManager(object):
     def __init__(self, cfg_file='rootthebox.cfg'):
         self.cfg_path = os.path.abspath(cfg_file)
         if not (os.path.exists(self.cfg_path) and os.path.isfile(self.cfg_path)):
-            logging.critical("No configuration file found at %s, cannot continue." %
-                             self.cfg_path)
+            logging.critical(
+                "No configuration file found at %s." % self.cfg_path
+            )
             os._exit(1)
         logging.info('Loading config from %s' % self.cfg_path)
         self.config = ConfigParser.SafeConfigParser()

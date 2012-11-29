@@ -27,7 +27,6 @@ import logging
 from uuid import uuid4
 from models import dbsession, User, Theme
 from libs.Form import Form
-from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
 from recaptcha.client import captcha
@@ -66,22 +65,33 @@ class SettingsHandler(BaseHandler):
     def render_page(self, errors=None, success=None):
         ''' Small wrap for self.render to cut down on lenghty params '''
         current_theme = Theme.by_cssfile(self.session["theme"])
-        self.render("user/settings.html", errors=errors, success=success, current_theme=current_theme)
+        self.render(
+            "user/settings.html",
+            errors=errors,
+            success=success,
+            current_theme=current_theme
+        )
 
     def post_avatar(self, *args, **kwargs):
-        ''' Saves avatar - Reads file header an only allows approved formats '''
+        '''
+        Saves avatar - Reads file header an only allows approved formats
+        '''
         user = User.by_id(self.session['user_id'])
-        if self.request.files.has_key('avatar') and len(self.request.files['avatar']) == 1:
+        if 'avatar' in self.request.files:
             if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
                 if user.avatar == "default_avatar.jpeg":
                     user.avatar = unicode(uuid4()) + u".jpeg"
                 ext = imghdr.what(
                     "", h=self.request.files['avatar'][0]['body'])
+                avatar_path = str(self.application.settings['avatar_dir'] +
+                    '/' + user.avatar)
                 if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                    if os.path.exists(self.application.settings['avatar_dir'] + '/' + user.avatar):
-                        os.unlink(self.application.settings['avatar_dir'] + '/' + user.avatar)
-                    user.avatar = unicode(user.avatar[:user.avatar.rfind('.')] + "." + ext)
-                    file_path = self.application.settings['avatar_dir'] + '/' + user.avatar
+                    if os.path.exists(avatar_path):
+                        os.unlink(avatar_path)
+                    user.avatar = unicode(user.avatar[:user.avatar.rfind('.')]
+                        + "." + ext)
+                    file_path = str(self.application.settings['avatar_dir'] +
+                        '/' + user.avatar)
                     avatar = open(file_path, 'wb')
                     avatar.write(self.request.files['avatar'][0]['body'])
                     avatar.close()
@@ -89,7 +99,10 @@ class SettingsHandler(BaseHandler):
                     dbsession.flush()
                     self.render_page(success=["Successfully changed avatar"])
                 else:
-                    self.render_page(errors=["Invalid image format, must be: .png .jpeg .gif or .bmp"])
+                    self.render_page(
+                        errors=[str("Invalid image format, avatar must be:"
+                            + ".png .jpeg .gif or .bmp")]
+                    )
             else:
                 self.render_page(errors=["The image is too large"])
         else:
@@ -104,15 +117,18 @@ class SettingsHandler(BaseHandler):
             recaptcha_challenge_field="Please solve the captcha",
             recaptcha_response_field="Please solve the captcha",
         )
-        if self.check_recaptcha():
-            self.set_password(
-                self.get_current_user(),
-                self.get_argument('old_password'),
-                self.get_argument('new_password'),
-                self.get_argument('new_password_two')
-            )
+        if form.validate(self.request.arguments):
+            if self.check_recaptcha():
+                self.set_password(
+                    self.get_current_user(),
+                    self.get_argument('old_password'),
+                    self.get_argument('new_password'),
+                    self.get_argument('new_password_two')
+                )
+            else:
+                self.render_page(errors=["Invalid recaptcha"])
         else:
-            self.render_page(errors=["Invalid recaptcha"])
+            self.render_page(errors=form.errors)
 
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
@@ -142,7 +158,8 @@ class SettingsHandler(BaseHandler):
                     dbsession.flush()
                     self.render_page(success=["Successfully updated password"])
                 else:
-                    message = "Password must be less than %d chars" % config.max_password_length
+                    message = "Password must be less than %d chars" \
+                        % self.config.max_password_length
                     self.render_page(errors=[message])
             else:
                 self.render_page(errors=["New password's didn't match"])

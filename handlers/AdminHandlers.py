@@ -24,7 +24,6 @@ There's a lot of code in here ...
 '''
 
 
-from string import digits
 from libs.Form import Form
 from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, \
@@ -74,11 +73,15 @@ class AdminCreateHandler(BaseHandler):
             description="Please enter a description",
         )
         if form.validate(self.request.arguments):
-            if Corporation.by_name(self.get_argument('corporation_name')) is not None:
-                self.render("admin/create/corporation.html", errors=["Name already exists"])
+            corp_name = self.get_argument('corporation_name')
+            if Corporation.by_name(corp_name) is not None:
+                self.render(
+                    "admin/create/corporation.html",
+                    errors=["Name already exists"]
+                )
             else:
                 corporation = Corporation(
-                    name=unicode(self.get_argument('corporation_name')),
+                    name=unicode(corp_name),
                     description=unicode(self.get_argument('description')),
                 )
                 dbsession.add(corporation)
@@ -192,10 +195,11 @@ class AdminCreateHandler(BaseHandler):
         dbsession.flush()
 
     def __mklevel__(self, game_level, buyout):
-        ''' 
-        Creates a new level in the database, the levels are basically a linked-list
-        where each level points to the next, and the last points to None.  This 
-        function creates a new level and sorts everything based on the 'number' attrib
+        '''
+        Creates a new level in the database, the levels are basically a
+        linked-list where each level points to the next, and the last points to
+        None.  This function creates a new level and sorts everything based on
+        the 'number' attrib
         '''
         new_level = GameLevel(
             number=game_level,
@@ -280,9 +284,9 @@ class AdminAjaxObjectDataHandler(BaseHandler):
             if obj is not None:
                 self.write(obj.to_dict())
             else:
-                self.write({'Error':'Invalid uuid.'})
+                self.write({'Error': 'Invalid uuid.'})
         else:
-            self.write({'Error':'Invalid object type.'})
+            self.write({'Error': 'Invalid object type.'})
         self.finish()
 
 
@@ -320,10 +324,12 @@ class AdminEditHandler(BaseHandler):
             corp = Corporation.by_uuid(self.get_argument('uuid'))
             if corp is not None:
                 if self.get_argument('name') != corp.name:
-                    logging.info("Updated corporation name %s -> %s" % (corp.name, self.get_argument('name'),))
+                    logging.info("Updated corporation name %s -> %s" %
+                        (corp.name, self.get_argument('name'),))
                     corp.name = unicode(self.get_argument('name'))
                 if self.get_argument('description') != corp.description:
-                    logging.info("Updated corporation description %s -> %s" % (corp.description, self.get_argument('description'),))
+                    logging.info("Updated corporation description %s -> %s" %
+                        (corp.description, self.get_argument('description'),))
                     corp.description = unicode(self.get_argument('description'))
                 dbsession.add(corp)
                 dbsession.flush()
@@ -348,21 +354,25 @@ class AdminEditHandler(BaseHandler):
                 errors = []
                 if self.get_argument('name') != box.name:
                     if Box.by_name(self.get_argument('name')) is None:
-                        logging.info("Updated box name %s -> %s" % (box.name, self.get_argument('name'),))
+                        logging.info("Updated box name %s -> %s" %
+                            (box.name, self.get_argument('name'),))
                         box.name = unicode(self.get_argument('name'))
                     else:
                         errors.append("Box name already exists")
                 corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
                 if corp is not None and corp.id != box.corporation_id:
-                    logging.info("Updated %s's corporation %s -> %s" % (box.name, box.corporation_id, corp.id,))
+                    logging.info("Updated %s's corporation %s -> %s" %
+                        (box.name, box.corporation_id, corp.id,))
                     box.corporation_id = corp.id
                 elif corp is None:
                     errors.append("Corporation does not exist")
                 if self.get_argument('description') != box.description:
-                    logging.info("Updated %s's description %s -> %s" % (box.name, box.description, self.get_argument('description'),))
+                    logging.info("Updated %s's description %s -> %s" %
+                        (box.name, box.description, self.get_argument('description'),))
                     box.description = unicode(self.get_argument('description'))
                 if self.get_argument('difficulty') != box.difficulty:
-                    logging.info("Updated %s's difficulty %s -> %s" % (box.name, box.difficulty, self.get_argument('difficulty'),))
+                    logging.info("Updated %s's difficulty %s -> %s" %
+                        (box.name, box.difficulty, self.get_argument('difficulty'),))
                     box.difficulty = unicode(self.get_argument('difficulty'))
                 dbsession.add(box)
                 dbsession.flush()
@@ -388,29 +398,34 @@ class AdminEditHandler(BaseHandler):
                 errors = []
                 if flag.name != self.get_argument('name'):
                     if Flag.by_name(unicode(self.get_argument('name'))) is None:
-                        logging.info("Updated flag name %s -> %s" % (flag.name, self.get_argument('name'),))
+                        logging.info("Updated flag name %s -> %s" %
+                            (flag.name, self.get_argument('name'),))
                         flag.name = unicode(self.get_argument('name'))
                     else:
                         errors.append("Flag name already exists")
                 if flag.token != self.get_argument('token'):
                     if Flag.by_token(unicode(self.get_argument('token'))) is None:
-                        logging.info("Updated %s's token %s -> %s" % (flag.name, flag.token, self.get_argument('token'),))
+                        logging.info("Updated %s's token %s -> %s" %
+                            (flag.name, flag.token, self.get_argument('token'),))
                         flag.token = unicode(self.get_argument('token'))
                     else:
                         errors.append("Token is not unique")
                 if flag.description != self.get_argument('description'):
-                    logging.info("Updated %s's description %s -> %s" % (flag.name, flag.description, self.get_argument('description'),))
+                    logging.info("Updated %s's description %s -> %s" %
+                        (flag.name, flag.description, self.get_argument('description'),))
                     flag.description = unicode(self.get_argument('description'))
                 try:
                     reward_value = int(self.get_argument('value'))
                     if reward_value != flag.value:
-                        logging.info("Updated %s's value %d -> %d" % (flag.name, flag.value, reward_value,))
+                        logging.info("Updated %s's value %d -> %d" %
+                            (flag.name, flag.value, reward_value,))
                         flag.value = reward_value
                 except ValueError:
                     errors.append("Invalid reward amount")
                 box = Box.by_uuid(self.get_argument('box_uuid'))
                 if box is not None and box.id != flag.box_id:
-                    logging.info("Updated %s's box %d -> %d" % (flag.name, flag.box_id, box.id))
+                    logging.info("Updated %s's box %d -> %d" %
+                        (flag.name, flag.box_id, box.id))
                     flag.box_id = box.id
                 elif box is None:
                     errors.append("Box does not exist")
@@ -435,23 +450,29 @@ class AdminEditHandler(BaseHandler):
             if team is not None:
                 errors = []
                 if team.name != self.get_argument('name'):
-                    logging.info("Updated team name %s -> %s" % (team.name, self.get_argument('name'),))
+                    logging.info("Updated team name %s -> %s" %
+                        (team.name, self.get_argument('name'),))
                     team.name = unicode(self.get_argument('name'))
                 if team.motto != self.get_argument('motto'):
-                    logging.info("Updated %s's motto %s -> %s" % (team.name, team.motto, self.get_argument('motto'),))
+                    logging.info("Updated %s's motto %s -> %s" %
+                        (team.name, team.motto, self.get_argument('motto'),))
                     team.motto = unicode(self.get_argument('motto'))
                 try:
                     lport = int(self.get_argument('listen_port'))
                     if lport != team.listen_port:
-                        logging.info("Updated %s's listen port %d -> %d" % (team.name, team.listen_port, lport,))
+                        logging.info("Updated %s's listen port %d -> %d" %
+                            (team.name, team.listen_port, lport,))
                         team.listen_port = lport
                 except ValueError:
-                    errors.append("Invalid listen port %s " % self.get_argument('listen_port'))
+                    errors.append("Invalid listen port %s " %
+                        self.get_argument('listen_port'))
                 dbsession.add(team)
                 dbsession.flush()
                 self.redirect("/admin/view/user_objects")
             else:
-                self.render("admin/view/user_objects.html", errors=["Team does not exist"])
+                self.render("admin/view/user_objects.html",
+                    errors=["Team does not exist"]
+                )
         else:
             self.render("admin/view/user_objects.html", errors=form.errors)
 
@@ -471,14 +492,16 @@ class AdminEditHandler(BaseHandler):
                 # Update user account name
                 if user.account != self.get_argument('account'):
                     if User.by_account(self.get_argument('account')) is None:
-                        logging.info("Updated user account %s -> %s" % (user.account, self.get_argument('account'),))
+                        logging.info("Updated user account %s -> %s" %
+                            (user.account, self.get_argument('account'),))
                         user.account = unicode(self.get_argument('account'))
                     else:
                         errors.append("Account name is already in use")
                 # Update user handle
                 if user.handle != self.get_argument('handle'):
                     if User.by_handle(self.get_argument('handle')) is None:
-                        logging.info("Updated user handle %s -> %s" % (user.handle, self.get_argument('handle'),))
+                        logging.info("Updated user handle %s -> %s" %
+                            (user.handle, self.get_argument('handle'),))
                         user.handle = unicode(self.get_argument('handle'))
                     else:
                         errors.append("Handle is already in use")
@@ -486,7 +509,8 @@ class AdminEditHandler(BaseHandler):
                 if self.get_argument('hash_algorithm') in user.algorithms.keys():
                     if user.algorithm != self.get_argument('hash_algorithm'):
                         if 0 < len(self.get_argument('password', '')):
-                            logging.info("Updated %s's hashing algorithm %s -> %s" % (user.handle, user.algorithm, self.get_argument('hash_algorithm')))
+                            logging.info("Updated %s's hashing algorithm %s -> %s" %
+                                (user.handle, user.algorithm, self.get_argument('hash_algorithm')))
                             user.algorithm = self.get_argument('hash_algorithm')
                         else:
                             errors.append("You must provide a password when updating the hashing algorithm")
@@ -499,7 +523,8 @@ class AdminEditHandler(BaseHandler):
                 team = Team.by_uuid(self.get_argument('team_uuid'))
                 if team is not None:
                     if user.team_id != team.id:
-                        logging.info("Updated %s's team %s -> %s" % (user.handle, user.team_id, team.name))
+                        logging.info("Updated %s's team %s -> %s" %
+                            (user.handle, user.team_id, team.name))
                         user.team_id = team.id
                 else:
                     errors.append("Team does not exist in database")
@@ -526,7 +551,9 @@ class AdminEditHandler(BaseHandler):
                             addr = IpAddress(box_id=box.id, v4=ip)
                             dbsession.add(addr)
                         else:
-                            errors.append("%s has already been assigned to %s." % (ip, box.name,))
+                            errors.append("%s has already been assigned to %s."
+                                % (ip, box.name,)
+                            )
                     except ValueError:
                         errors.append("'%s' is not a valid IPv4 address" % str(ip[:15]))
                 dbsession.flush()
@@ -592,7 +619,7 @@ class AdminEditHandler(BaseHandler):
                 if level.buyout != new_buyout:
                     level.buyout = new_buyout
                     dbsession.add(level)
-                    dbsession.flush()                    
+                    dbsession.flush()
             except ValueError:
                 errors.append("That was not a number ... maybe you should go back to school")
             self.render("admin/view/game_levels.html", errors=errors)
@@ -617,6 +644,7 @@ class AdminEditHandler(BaseHandler):
             self.render("admin/view/game_levels.html", errors=errors)
         else:
             self.render("admin/view/game_levels.html", errors=form.errors)
+
 
 class AdminDeleteHandler(BaseHandler):
     ''' Manages registration tokens '''
@@ -693,7 +721,7 @@ class AdminRegTokenHandler(BaseHandler):
         dbsession.add(token)
         dbsession.flush()
         self.render('admin/create/token.html', token=token)
-    
+
     def view(self):
         ''' View all reg tokens '''
         self.render('admin/view/token.html', errors=None)

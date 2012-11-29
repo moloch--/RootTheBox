@@ -20,12 +20,10 @@ Created on Sep 20, 2012
 '''
 
 
-import logging
-
 from libs.Notifier import Notifier
 from libs.Singleton import Singleton
 from libs.Scoreboard import Scoreboard
-from libs.SecurityDecorators import debug, async
+from libs.SecurityDecorators import debug
 from models import Notification
 
 
@@ -45,9 +43,9 @@ class EventManager(object):
     @debug
     def add_connection(self, wsocket):
         ''' Add a connection '''
-        if not self.notify_connections.has_key(wsocket.team_id):
+        if not wsocket.team_id in self.notify_connections:
             self.notify_connections[wsocket.team_id] = {}
-        if self.notify_connections[wsocket.team_id].has_key(wsocket.user_id):            
+        if wsocket.user_id in self.notify_connections[wsocket.team_id]:
             self.notify_connections[wsocket.team_id][wsocket.user_id].append(wsocket)
         else:
             self.notify_connections[wsocket.team_id][wsocket.user_id] = [wsocket,]
@@ -62,9 +60,9 @@ class EventManager(object):
     @debug
     def add_bot(self, bot_socket):
         ''' Add a bot to a team's botnet '''
-        if not self.botnets.has_key(bot_socket.team.id):
+        if not bot_socket.team.id in self.botnets:
             self.botnets[bot_socket.team.id] = {}
-        if self.botnets[bot_socket.team.id].has_key(bot_socket.box.id):
+        if bot_socket.box.id in self.botnets[bot_socket.team.id]:
             self.botnets[bot_socket.team.id][bot_socket.box.id].close()
             del self.botnets[bot_socket.team.id][bot_socket.box.id]
         self.botnets[bot_socket.team.id][bot_socket.box.id] = bot_socket
@@ -77,7 +75,7 @@ class EventManager(object):
     @debug
     def bot_count(self, team):
         ''' Get number of current bots owned by a given team '''
-        if self.botnets.has_key(team.id):
+        if team.id in self.botnets:
             return len(self.botnets[team.id].keys())
         else:
             return 0
@@ -102,11 +100,11 @@ class EventManager(object):
                     if wsocket.user_id != 'public_user':
                         Notification.delivered(user_id, event_uuid)
 
-    @debug 
+    @debug
     def push_team_notification(self, event_uuid, team_id):
         ''' Push to one team '''
         json = Notification.by_event_uuid(event_uuid).to_json()
-        if self.notify_connections.has_key(team_id):
+        if team_id in self.notify_connections:
             for user_id in self.notify_connections[team_id].keys():
                 for wsocket in self.notify_connections[team_id][user_id]:
                     wsocket.write_message(json)
@@ -116,7 +114,7 @@ class EventManager(object):
     def push_user_notification(self, event_uuid, team_id, user_id):
         ''' Push to one user '''
         json = Notification.by_event_uuid(event_uuid).to_json()
-        if self.notify_connections.has_key(team_id) and self.notify_connections[team_id].has_key(user_id):
+        if team_id in self.notify_connections and user_id in self.notify_connections[team_id]:
             for wsocket in self.notify_connections[team_id][user_id]:
                 wsocket.write_message(json)
                 Notification.delivered(wsocket.user_id, event_uuid)

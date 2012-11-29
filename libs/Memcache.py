@@ -29,7 +29,7 @@ from base64 import b64encode
 class FileCache(object):
     ''' Simple wrapper for memcached '''
 
-    MAX_FILE_SIZE = 1024 * 1024 # 1 Mb
+    MAX_FILE_SIZE = 1024 * 1024  # 1 Mb
 
     @classmethod
     def get(cls, file_path):

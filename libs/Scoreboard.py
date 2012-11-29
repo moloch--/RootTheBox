@@ -22,13 +22,9 @@ Created on Oct 04, 2012
 
 
 import json
-import threading
 
-from uuid import uuid4
 from models import Team
-from datetime import datetime
 from libs.GameHistory import GameHistory
-from libs.SecurityDecorators import async
 
 
 class Scoreboard(object):
@@ -39,11 +35,11 @@ class Scoreboard(object):
 
     def now(self):
         ''' Returns the current game state '''
-        data = {}
+        game_state = {}
         for team in Team.all():
-            data[team.name] = {
+            game_state[team.name] = {
                 'money': team.money,
                 'flags': [str(flag) for flag in team.flags],
                 'game_levels': [str(lvl) for lvl in team.game_levels],
             }
-        return json.dumps(data)
+        return json.dumps(game_state)

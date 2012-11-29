@@ -18,7 +18,6 @@
 
 from os import path
 from sys import argv
-from time import sleep
 from datetime import datetime
 from libs.ConsoleColors import *
 
@@ -69,7 +68,7 @@ def setup():
         print(WARN + "File not found: %s" % argv[2])
     else:
         print(INFO + "%s : Running default setup file 'setup/game.py' ..." % (current_time(),))
-        from setup import game
+        from setup import game  # Runs the setup script
         print(INFO + "Setup file completed.")
 
 def help():
@@ -102,7 +101,7 @@ if __name__ == '__main__':
     if len(argv) == 1:
         help()
     else:
-        if argv[1] in options:
+        if argv[1] in options.keys():
             options[argv[1]]()
         else:
             print(WARN + 'PEBKAC (%s): Command not found, see "python . help"' % argv[1])

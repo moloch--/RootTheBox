@@ -26,7 +26,6 @@ import cPickle as pickle
 
 from os import _exit
 
-
 SID_SIZE = 32  # Size in bytes
 
 
@@ -49,11 +48,12 @@ class BaseSession(collections.MutableMapping):
 
     To create a new storage system for the sessions, subclass BaseSession
     and define save(), load() and delete(). For inspiration, check out any
-    of the already available classes and documentation to aformentioned functions.
+    of the already available classes and documentation to aformentioned
+    functions.
     '''
-    def __init__(self, session_id=None, data=None, security_model=[], expires=None,
-                 duration=None, ip_address=None, user_agent="",
-                 regeneration_interval=None, next_regeneration=None, **kwargs):
+    def __init__(self, session_id=None, data=None, security_model=[],
+                expires=None, duration=None, ip_address=None, user_agent="",
+                regeneration_interval=None, next_regeneration=None, **kwargs):
         # if session_id is True, we're loading a previously initialized session
         if session_id:
             self.session_id = session_id
@@ -72,8 +72,8 @@ class BaseSession(collections.MutableMapping):
         self.user_agent = user_agent
         self.security_model = security_model
         self.regeneration_interval = regeneration_interval
-        self.next_regeneration = next_regeneration or self._next_regeneration_at(
-        )
+        self.next_regeneration = next_regeneration or \
+            self._next_regeneration_at()
         self._delete_cookie = False
 
     def __repr__(self):
@@ -162,10 +162,11 @@ class BaseSession(collections.MutableMapping):
 
         return datetime.datetime.utcnow() + self.regeneration_interval
 
-    def refresh(self, duration=None, new_session_id=False):  # the opposite of invalidate
+    def refresh(self, duration=None, new_session_id=False):
         '''
         Prolongs the session validity. You can specify for how long passing a
-        value in the duration argument (the same rules as for session_age apply).
+        value in the duration argument (the same rules as for session_age
+        apply).
         Be aware that henceforward this particular session may have different
         expiry date, not respecting the global setting.
 
@@ -222,7 +223,7 @@ class BaseSession(collections.MutableMapping):
         return pickle.loads(base64.decodestring(datastring))
 
 try:
-    import pylibmc
+    import pylibmc  # lint:ok
 
     class MemcachedSession(BaseSession):
         '''
@@ -254,7 +255,9 @@ try:
                 return ['127.0.0.1']
 
         def _serialize_expires(self):
-            ''' Determines what value of expires is stored to DB during save().'''
+            '''
+            Determines what value of expires is stored to DB during save().
+            '''
             if self.expires is None:
                 return '-1'
             else:
@@ -282,7 +285,9 @@ try:
                 # http://code.google.com/p/memcached/wiki/FAQ#What_are_the_limi
                 # ts_on_setting_expire_time?_%28why_is_there_a_30_d
                 self.connection.set(
-                    self.session_id, value, time=timedelta.max.seconds * 30)
+                    self.session_id, value,
+                        time=datetime.timedelta.max.seconds * 30
+                    )
             else:
                 live_sec = self.expires - datetime.datetime.utcnow()
                 self.connection.set(

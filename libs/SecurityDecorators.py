@@ -20,7 +20,6 @@ Created on Mar 13, 2012
 
 
 import logging
-import inspect
 import functools
 
 from threading import Thread
@@ -47,7 +46,8 @@ def restrict_ip_address(method):
             return method(self, *args, **kwargs)
         else:
             logging.warn("Attempted unauthorized access from %s to %s" %
-                         (self.request.remote_ip, self.request.uri))
+                (self.request.remote_ip, self.request.uri,)
+            )
             self.redirect(self.application.settings['forbidden_url'])
     return wrapper
 
@@ -64,7 +64,8 @@ def authorized(permission):
                 if user is not None and user.has_permission(permission):
                     return method(self, *args, **kwargs)
             logging.warn("Attempted unauthorized access from %s to %s" %
-                            (self.request.remote_ip, self.request.uri))
+                (self.request.remote_ip, self.request.uri,)
+            )
             self.redirect(self.application.settings['forbidden_url'])
         return wrapper
     return func
@@ -72,7 +73,7 @@ def authorized(permission):
 
 def async(method):
     ''' Quick and easy async functions'''
-    
+
     @functools.wraps(method)
     def __async__(*args, **kwargs):
         worker = Thread(target=method, args=args, kwargs=kwargs)
@@ -88,6 +89,8 @@ def debug(method):
         class_name = args[0].__class__.__name__
         logging.debug("Call to -> %s.%s()" % (class_name, method.__name__,))
         value = method(*args, **kwargs)
-        logging.debug("Return from <- %s.%s()" % (class_name, method.__name__,))
+        logging.debug(
+            "Return from <- %s.%s()" % (class_name, method.__name__,)
+        )
         return value
     return wrapper

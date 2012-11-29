@@ -20,12 +20,18 @@ Created on Mar 13, 2012
 '''
 
 
+import logging
+
 from handlers.BaseHandlers import BaseHandler
 
 
 class NotFoundHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
+        ''' Renders the 404 page '''
+        self.render("public/404.html")
+
+    def post(self, *args, **kwargs):
         ''' Renders the 404 page '''
         self.render("public/404.html")
 

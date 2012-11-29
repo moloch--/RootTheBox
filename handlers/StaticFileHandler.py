@@ -30,6 +30,7 @@ import time
 import stat
 import email
 import hashlib
+import logging
 import datetime
 import mimetypes
 import threading

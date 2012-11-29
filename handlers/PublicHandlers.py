@@ -26,9 +26,6 @@ from libs.Form import Form
 from libs.SecurityDecorators import debug
 from libs.ConfigManager import ConfigManager
 from handlers.BaseHandlers import BaseHandler
-from tornado.web import RequestHandler
-from recaptcha.client import captcha
-from string import ascii_letters, digits
 from models import dbsession, User, Team, Theme, RegistrationToken
 
 
@@ -57,7 +54,8 @@ class LoginHandler(BaseHandler):
         )
         if form.validate(self.request.arguments):
             user = User.by_account(self.request.arguments['account'][0])
-            if user != None and user.validate_password(self.request.arguments['password'][0]):
+            password_attempt = self.request.arguments['password'][0]
+            if user is not None and user.validate_password(password_attempt):
                 self.successful_login(user)
                 self.redirect('/user')
             else:
@@ -68,12 +66,13 @@ class LoginHandler(BaseHandler):
     @debug
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''
-        logging.info("Successful login: %s/%s from %s" % (user.account, user.handle, self.request.remote_ip,))
+        logging.info("Successful login: %s/%s from %s" %
+            (user.account, user.handle, self.request.remote_ip,))
         self.start_session()
         theme = Theme.by_id(user.theme_id)
         self.session['team_id'] = int(user.team.id)
         self.session['user_id'] = int(user.id)
-        self.session['handle'] = ''.join(user.handle) # Copy string
+        self.session['handle'] = ''.join(user.handle)  # Copy string
         self.session['theme'] = ''.join(theme.cssfile)
         if user.has_permission('admin'):
             self.session['menu'] = 'admin'
@@ -111,25 +110,30 @@ class UserRegistrationHandler(BaseHandler):
         )
         if form.validate(self.request.arguments):
             config = ConfigManager.Instance()
-            if User.by_account(self.get_argument('account')) != None:
+            if User.by_account(self.get_argument('account')) is not None:
                 self.render('public/registration.html',
                             errors=['Account name already taken'])
             elif self.request.arguments['account'] == self.request.arguments['handle']:
                 self.render('public/registration.html',
                             errors=['Account name and hacker name must differ'])
-            elif User.by_handle(self.get_argument('handle')) != None:
+            elif User.by_handle(self.get_argument('handle')) is not None:
                 self.render(
                     'public/registration.html', errors=['Handle already taken'])
             elif not self.request.arguments['pass1'] == self.request.arguments['pass2']:
-                self.render(
-                    'public/registration.html', errors=['Passwords do not match'])
+                self.render('public/registration.html',
+                    errors=['Passwords do not match']
+                )
             elif not 0 < len(self.request.arguments['pass1']) <= config.max_password_length:
                 self.render('public/registration.html',
-                            errors=['Password must be 1-%d characters' % config.max_password_length])
-            elif len(self.get_argument('team')) == 0 or Team.by_uuid(self.get_argument('team')) == None:
+                    errors=['Password must be 1-%d characters'
+                                % config.max_password_length]
+                )
+            elif Team.by_uuid(self.get_argument('team'), '__NONE__') is None:
                 self.render('public/registration.html', errors=["Please select a team to join"])
-            elif RegistrationToken.by_value(self.get_argument('token').lower()) == None and config.debug == False:
-                self.render('public/registration.html', errors=["Invalid registration token"])
+            elif RegistrationToken.by_value(self.get_argument('token').lower()) is None and config.debug is False:
+                self.render('public/registration.html',
+                    errors=["Invalid registration token"]
+                )
             else:
                 self.create_user()
                 self.redirect('/login')
@@ -150,13 +154,12 @@ class UserRegistrationHandler(BaseHandler):
         dbsession.flush()
         user.password = self.get_argument('pass1')
         token = RegistrationToken.by_value(self.get_argument('token').lower())
-        if token != None: # May be None if debug mode is on
+        if token is not None:  # May be None if debug mode is on
             token.used = True
             dbsession.add(token)
         dbsession.add(user)
         dbsession.flush()
         self.event_manager.joined_team(user)
-       
 
 
 class AboutHandler(BaseHandler):
@@ -170,7 +173,7 @@ class LogoutHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Clears cookies and session data '''
-        if self.session != None:
+        if self.session is not None:
             self.session.delete()
         self.clear_all_cookies()
         self.redirect("/")

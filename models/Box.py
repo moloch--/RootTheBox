@@ -44,6 +44,7 @@ class Box(BaseObject):
     teams = relationship("Team", secondary=team_to_box, backref=backref("Box", lazy="joined"))
     flags = relationship("Flag", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
 
+
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
@@ -66,8 +67,13 @@ class Box(BaseObject):
 
     @classmethod
     def by_ip_address(cls, ip_addr):
-        ''' Returns a box object based on an ip address, supports both ipv4 and ipv6 '''
-        db_ip = dbsession.query(IpAddress).filter(or_(IpAddress.v4 == ip_addr, IpAddress.v6 == ip_addr)).first()
+        '''
+        Returns a box object based on an ip address, supports both ipv4
+        and ipv6
+        '''
+        db_ip = dbsession.query(IpAddress).filter(
+            or_(IpAddress.v4 == ip_addr, IpAddress.v6 == ip_addr)
+        ).first()
         #ip = dbsession.query(IpAddress).filter_by(v4=IpAddress).first()
         if db_ip is not None:
             return dbsession.query(cls).filter_by(id=db_ip.box_id).first()
@@ -100,7 +106,7 @@ class Box(BaseObject):
         corp = Corporation.by_id(self.corporation_id)
         game_level = GameLevel.by_id(self.game_level_id)
         return dict(
-            name=self.name, 
+            name=self.name,
             uuid=self.uuid,
             corporation=corp.uuid,
             description=self.description,

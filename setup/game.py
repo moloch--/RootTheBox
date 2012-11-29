@@ -25,9 +25,8 @@ the details for you.
 
 from setup.helpers import *
 from libs.ConsoleColors import *
-from models import dbsession, GameLevel, IpAddress, Flag, Box, Corporation, User, Team
 
-level_0 = GameLevel.all()[0] # Level 0 is created by the bootstrap
+level_0 = GameLevel.all()[0]  # Level 0 is created by the bootstrap
 
 ################ [ CREATE YOUR GAME OBJECTS HERE ] ################
 # Create teams

@@ -86,7 +86,7 @@ class Flag(BaseObject):
         md.update(data)
         return unicode(md.hexdigest())
 
-    def __regex__(other):
+    def __regex__(self, other):
         ''' Token is regex matched against other '''
         regex = re.compile(self.token)
         return bool(regex.match(other))

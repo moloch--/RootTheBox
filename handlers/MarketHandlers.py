@@ -42,7 +42,7 @@ class MarketViewHandler(BaseHandler):
         item = MarketItem.by_uuid(uuid)
         if not item is None:
             user = self.get_current_user()
-            team = Team.by_id(user.team.id) # Refresh object
+            team = Team.by_id(user.team.id)  # Refresh object
             if user.has_item(item.name):
                 self.render('market/view.html', user=user, errors=["You have already purchased this item."])
             elif team.money < item.price:

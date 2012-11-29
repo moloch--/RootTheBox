@@ -97,9 +97,9 @@ class HashesAjaxHandler(BaseHandler):
         handle = self.get_argument("handle", default="")
         target = User.by_handle(handle)
         if user is None or target in user.team.members:
-            self.write({"Error":"No Data"})
+            self.write({"Error": "No Data"})
         elif user.has_item("New York Federal Reserve"):
-            self.render({target.handle:target.password})
+            self.render({target.handle: target.password})
         else:
-            self.write({"Error":"No Data"})
+            self.write({"Error": "No Data"})
 

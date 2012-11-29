@@ -22,7 +22,6 @@ Created on Feb 28, 2012
 '''
 
 
-import time
 import socket
 import logging
 import threading
@@ -35,14 +34,14 @@ from models import dbsession, Team, Box
 from libs.Notifier import Notifier
 
 
-### Scoring Configuration ###
+### Constants ###
 TIMEOUT = 1
 XID_SIZE = 24
 BUFFER_SIZE = 1024
 
 
 def scoring_round():
-    ''' 
+    '''
     Executed as a periodic callback for main io_loop: Iterates of all the boxes
     and scores each box.
     '''
@@ -54,9 +53,9 @@ def scoring_round():
 
 
 def score_box(box):
-    ''' 
-    Spawns threads for each team, each thread attempts to authenticate it's team
-    using the team's listen_port.
+    '''
+    Spawns threads for each team, each thread attempts to authenticate it's
+    team using the team's listen_port.
     '''
     logging.info("Scoring reporters on %s" % (box.name,))
     threads = []
@@ -72,7 +71,7 @@ def score_team(box, team):
     ''' Executed as a thread: scores a single team '''
     auth = AuthenticateReporter(box, team)
     auth.check_validity()
-    if auth.confirmed_access != None:
+    if auth.confirmed_access is not None:
         award_money(box, team, auth)
     else:
         team.boxes.remove(box)
@@ -84,7 +83,7 @@ def score_team(box, team):
 
 def award_money(box, team, auth):
     ''' Awards money if everything authenticated properly '''
-    team = Team.by_id(team.id) # Refresh object
+    team = Team.by_id(team.id)  # Refresh object
     if auth.confirmed_access == 'root':
         team.money += box.root_award
     else:
@@ -107,8 +106,9 @@ class AuthenticateReporter(object):
 
     def check_validity(self):
         ''' Checks the validity of a reporter on a box '''
-        logging.info("Checking for reporter -> %s:%s" % (self.box.
-                                                         ip_address, self.port))
+        logging.info(
+            "Checking for reporter -> %s:%s" % (self.box.ip_address, self.port)
+        )
         try:
             self.sock.connect((self.box.ip_address, self.port))
             self.pending_access = self.sock.recv(BUFFER_SIZE)

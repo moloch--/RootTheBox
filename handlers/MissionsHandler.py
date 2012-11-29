@@ -22,7 +22,7 @@ Created on Oct 28, 2012
 
 import logging
 
-from models import dbsession, User, GameLevel, Flag
+from models import dbsession, GameLevel, Flag
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
@@ -64,16 +64,33 @@ class MissionsHandler(BaseHandler):
                     self.__chkflag__(flag, token)
                 elif self.get_argument('flag_type').lower() == 'file':
                     if 0 < len(self.request.files['file_data'][0]['body']):
-                        self.__chkflag__(flag, self.request.files['file_data'][0]['body'])
+                        file_data = self.request.files['file_data'][0]['body']
+                        self.__chkflag__(flag, file_data)
                     else:
                         logging.info("No file data in flag submission.")
-                        self.render("missions/view.html", team=user.team, errors=["No file data"])
+                        self.render(
+                            "missions/view.html",
+                            team=user.team,
+                            errors=["No file data"]
+                        )
                 else:
-                    self.render("missions/view.html", team=user.team, errors=["Invalid flag type"])
+                    self.render(
+                        "missions/view.html",
+                        team=user.team,
+                        errors=["Invalid flag type"]
+                    )
             else:
-                self.render("missions/view.html", team=user.team, errors=["Flag does not exist"])
+                self.render(
+                    "missions/view.html",
+                    team=user.team,
+                    errors=["Flag does not exist"]
+                )
         else:
-            self.render("missions/view.html", team=user.team, errors=form.errors)
+            self.render(
+                "missions/view.html",
+                team=user.team,
+                errors=form.errors
+            )
 
     def buyout(self):
         ''' Buyout and unlock a level '''
@@ -89,11 +106,25 @@ class MissionsHandler(BaseHandler):
                     self.event_manager.unlocked_level(user, level)
                     self.redirect("/user/missions")
                 else:
-                    self.render("missions/view.html", team=user.team, errors=["You do not have enough money to unlock this level"])
+                    self.render(
+                        "missions/view.html",
+                        team=user.team,
+                        errors=[
+                            "You do not have enough money to unlock this level"
+                        ]
+                    )
             else:
-                self.render("missions/view.html", team=user.team, errors=["Level does not exist"])
+                self.render(
+                    "missions/view.html",
+                    team=user.team,
+                    errors=["Level does not exist"]
+                )
         else:
-            self.render("missions/view.html", team=user.team, errors=form.errors)
+            self.render(
+                "missions/view.html",
+                team=user.team,
+                errors=form.errors
+            )
 
     def __chkflag__(self, flag, user_token):
         ''' Compares a user provided token to the token in the db '''
@@ -106,4 +137,8 @@ class MissionsHandler(BaseHandler):
             self.event_manager.flag_capture(user, flag)
             self.redirect("/user/missions")
         else:
-            self.render("missions/view.html", team=user.team, errors=["Invalid flag submission"])
+            self.render(
+                "missions/view.html",
+                team=user.team,
+                errors=["Invalid flag submission"]
+            )

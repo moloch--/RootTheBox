@@ -39,7 +39,7 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
         self.manager = EventManager.Instance()
         self.config = ConfigManager.Instance()
         session_id = self.get_secure_cookie('session_id')
-        if session_id != None:
+        if session_id is not None:
             self.conn = pylibmc.Client(
                 [self.config.memcached_server], binary=True)
             self.conn.behaviors['no_block'] = 1  # async I/O
@@ -66,11 +66,15 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         ''' When we receive a new websocket connect '''
         if self.session is not None:
-            logging.debug("[Web Socket] Opened new websocket with user id: %s" % str(self.session['user_id']))
+            logging.debug("[Web Socket] Opened new websocket with user id: %s"
+                % str(self.session['user_id'])
+            )
             self.team_id = self.session['team_id']
             self.user_id = self.session['user_id']
             notifications = Notification.new_messages(self.session['user_id'])
-            logging.debug("[Web Socket] %d new notification(s) for user id %d" % (len(notifications), self.session['user_id']))
+            logging.debug("[Web Socket] %d new notification(s) for user id %d"
+                % (len(notifications), self.session['user_id'])
+            )
             for notify in notifications:
                 self.write_message(notify.to_json())
                 Notification.delivered(notify.user_id, notify.event_uuid)
@@ -82,7 +86,9 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         ''' Troll the haxors '''
-        self.write_message("ERROR 1146 (42S02): Table 'rtb.%s' doesn't exist." % message)
+        self.write_message("ERROR 1146 (42S02): Table 'rtb.%s' doesn't exist."
+            % message
+        )
 
     @debug
     def on_close(self):
@@ -90,4 +96,4 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
         try:
             self.manager.remove_connection(self)
         except KeyError:
-            logging.warn("[Web Socket] Manager does not have a refrence to self.")
+            logging.warn("[Web Socket] Manager has no ref to self.")

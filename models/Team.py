@@ -66,7 +66,7 @@ class Team(BaseObject):
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
         return dbsession.query(cls).filter_by(id=identifier).first()
-    
+
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
@@ -89,7 +89,7 @@ class Team(BaseObject):
 
     def to_dict(self):
         return dict(
-            name=self.name, 
+            name=self.name,
             motto=self.motto,
             listen_port=self.listen_port,
         )
