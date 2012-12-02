@@ -92,7 +92,7 @@ dbsession.add(item)
 dbsession.flush()
 
 item = MarketItem(
-    name=u"New York Federal Reserve",
+    name=u"Federal Reserve",
     price=10000,
     description=u"Gain access to the internal New York Federal Reserve banking system, allowing you to transfer funds to/from accounts.",
 )

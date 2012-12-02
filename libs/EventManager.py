@@ -126,8 +126,9 @@ class EventManager(object):
         ''' Callback for when a flag is captured '''
         self.refresh_scorboard()
         evt_id = Notifier.broadcast_success(
-            "Flag Capture", "%s has captured '%s'." % (user.team.name, flag.name,)
-        )
+            "Flag Capture", "%s has captured '%s'." % (
+                user.team.name, flag.name,
+        ))
         self.push_broadcast_notification(evt_id)
 
     @debug
@@ -142,7 +143,9 @@ class EventManager(object):
     def purchased_item(self, user, item):
         ''' Callback when a team purchases an item '''
         self.refresh_scorboard()
-        message = "%s purchased %s from the black market." % (user.handle, item.name)
+        message = "%s purchased %s from the black market." % (
+            user.handle, item.name
+        )
         evt_id = Notifier.team_success(user.team, "Upgrade Purchased", message)
         self.push_broadcast_notification(evt_id)
         message2 = "%s unlocked %s." % (user.team.name, item.name)
@@ -161,7 +164,9 @@ class EventManager(object):
     @debug
     def team_file_share(self, user, file_upload):
         ''' Callback when a team file share is created '''
-        message = "%s has shared a file called '%s'" % (user.handle, file_upload.file_name,)
+        message = "%s has shared a file called '%s'" % (
+            user.handle, file_upload.file_name,
+        )
         evt_id = Notifier.team_success(user.team, "File Share", message)
         self.push_team_notification(evt_id)
 
@@ -184,8 +189,19 @@ class EventManager(object):
         evt_id = Notifier.team_warning(bot.team, "Botnet", message)
         self.push_team_notification(evt_id)
 
-    # [ User Events ] ------------------------------------------------------
+    # [ Misc Events ] ------------------------------------------------------
 
     @debug
-    def password_cracked(self, sheep):
-        pass
+    def cracked_password(self, cracker, victim, password, value):
+        user_msg = "Your password '%s' was cracked by %s." % (
+            password, cracker.handle,
+        )
+        evt_id = Notifier.user_warning(victim, "Security Breach", user_msg)
+        self.push_user_notification(evt_id)
+        message = "%s hacked %s's bank account and stole $%d" % (
+            cracker.handle, victim.team.name, value,
+        )
+        evt_id = Notifier.broadcast_custom("Password Cracked",
+            message, cracker.avatar
+        )
+        self.push_broadcast_notification(evt_id)

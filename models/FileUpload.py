@@ -51,7 +51,7 @@ class FileUpload(BaseObject):
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
         return dbsession.query(cls).filter_by(id=ident).first()
-        
+
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return the user object whose uuid is "uuid" '''
@@ -60,7 +60,9 @@ class FileUpload(BaseObject):
     @classmethod
     def by_file_name(cls, file_name):
         ''' Return the user object whose file name is "file_name" '''
-        return dbsession.query(cls).filter_by(file_name=unicode(file_name)).first()
+        return dbsession.query(cls).filter_by(
+            file_name=unicode(file_name)
+        ).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):

@@ -94,3 +94,22 @@ def debug(method):
         )
         return value
     return wrapper
+
+
+def has_item(name):
+    ''' Checks user's permissions '''
+
+    def func(method):
+
+        @functools.wraps(method)
+        def wrapper(self, *args, **kwargs):
+            user = self.get_current_user()
+            if user is not None and user.has_item(name):
+                return method(self, *args, **kwargs)
+            else:
+                logging.warn("Attempted unauthorized access from %s to %s" % (
+                    self.request.remote_ip, self.request.uri,
+                ))
+                self.redirect(self.application.settings['forbidden_url'])
+        return wrapper
+    return func

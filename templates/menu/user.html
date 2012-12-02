@@ -45,8 +45,8 @@
                     {% if user.has_item("Password Security") %}
                         <li><a href="/password_security">Password Security</a></li>
                     {% end %}
-                    {% if user.has_item("New York Federal Reserve") %}
-                        <li><a href="/fed">New York Federal Reserve</a></li>
+                    {% if user.has_item("Federal Reserve") %}
+                        <li><a href="/federal_reserve">Federal Reserve</a></li>
                     {% end %}
                     {% if user.has_item("SWAT") %}
                         <li><a href="/swat">S.W.A.T.</a></li>
@@ -71,7 +71,7 @@
           <!-- Right Side -->
           <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="icon-user"></i> 
+              <i class="icon-user"></i>
               {{ user.handle }}
               <span class="caret"></span>
             </a>

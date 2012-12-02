@@ -58,7 +58,7 @@ class WebSocket(object):
         self.onmessage = kwargs.pop('onmessage', None)
         self.onerror = kwargs.pop('onerror', None)
         self.onclose = kwargs.pop('onclose', None)
-        if kwargs: 
+        if kwargs:
             raise ValueError('Unexpected argument(s): %s' % ', '.join(kwargs.values()))
         self._dispatcher = _Dispatcher(self)
 
@@ -76,10 +76,10 @@ class WebSocket(object):
             host = p.hostname
         else:
             raise ValueError('URL must be absolute')
-    
+
         if p.fragment:
             raise ValueError('URL must not contain a fragment component')
-    
+
         if p.scheme == 'ws':
             secure = False
             port = p.port or 80
@@ -110,7 +110,7 @@ class _Dispatcher(asyncore.dispatcher):
         asyncore.dispatcher.__init__(self)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect((ws.host, ws.port))
-        
+
         self.ws = ws
         self._read_buffer = ''
         self._write_buffer = ''
@@ -120,20 +120,20 @@ class _Dispatcher(asyncore.dispatcher):
             hostport = '%s:%d' % (self.ws.host, self.ws.port)
         else:
             hostport = self.ws.host
-            
+
         fields = [
             'Upgrade: WebSocket',
             'Connection: Upgrade',
             'Host: ' + hostport,
             'Origin: http://' + hostport,
         ]
-        if self.ws.protocol: 
+        if self.ws.protocol:
             fields['Sec-WebSocket-Protocol'] = self.ws.protocol
         if self.ws.cookie_jar:
             cookies = filter(lambda c: _cookie_for_domain(c, _eff_host(self.ws.host)) and \
                              _cookie_for_path(c, self.ws.resource) and \
                              not c.is_expired(), self.ws.cookie_jar)
-            
+
             for cookie in cookies:
                 fields.append('Cookie: %s=%s' % (cookie.name, cookie.value))
         self.write(_utf8('GET %s HTTP/1.1\r\n' \
@@ -169,13 +169,11 @@ class _Dispatcher(asyncore.dispatcher):
         return len(self._write_buffer) > 0
 
     def write(self, data):
-        self._write_buffer += data # TODO: separate buffer for handshake from data to
-                                   # prevent mix-up when send() is called before
-                                   # handshake is complete?
+        self._write_buffer += data
 
     def _read_until(self, delimiter, callback):
         self._read_buffer += self.recv(4096)
-        pos = self._read_buffer.find(delimiter)+len(delimiter)+1
+        pos = self._read_buffer.find(delimiter) + len(delimiter) + 1
         if pos > 0:
             data = self._read_buffer[:pos]
             self._read_buffer = self._read_buffer[pos:]
@@ -202,6 +200,7 @@ class _Dispatcher(asyncore.dispatcher):
         if self.ws.onopen:
             self.ws.onopen()
 
+
 def _parse_http_header(header):
 
     def split_field(field):
@@ -211,13 +210,15 @@ def _parse_http_header(header):
     if len(lines) > 0:
         start_line = lines[0]
     else:
-        start_line = None 
+        start_line = None
     return (start_line, dict(map(split_field, lines[1:])))
+
 
 def _eff_host(host):
     if host.find('.') == -1 and not _IPV4_RE.search(host):
         return host + '.local'
     return host
+
 
 def _cookie_for_path(cookie, path):
     if not cookie.path or path == '' or path == '/':
@@ -225,11 +226,12 @@ def _cookie_for_path(cookie, path):
     path = _PATH_SEP.split(path)[1:]
     cookie_path = _PATH_SEP.split(cookie.path)[1:]
     for p1, p2 in map(lambda *ps: ps, path, cookie_path):
-        if p1 == None:
+        if p1 is None:
             return True
         elif p1 != p2:
             return False
     return True
+
 
 def _cookie_for_domain(cookie, domain):
     if not cookie.domain:
@@ -238,6 +240,7 @@ def _cookie_for_domain(cookie, domain):
         return domain.endswith(cookie.domain)
     else:
         return cookie.domain == domain
+
 
 def _utf8(s):
     return s.encode('utf-8')
@@ -314,7 +317,7 @@ class RtbBot(object):
     def __init__(self, team_name, domain, port):
         uri = str('ws://%s:%s' % (domain, port,))
         sys.stdout.write(INFO + "Connecting to: " + uri)
-        self.ws = WebSocket(uri, 
+        self.ws = WebSocket(uri,
             onopen=self.on_open,
             onmessage=self.on_message,
             onclose=self.on_close
@@ -340,7 +343,7 @@ class RtbBot(object):
             else:
                 sys.stdout.write('\r' + WARN + "TEAM: " + bold + R + " -- error -- \n" + W)
                 os._exit(1)
-        elif is_active():
+        elif self.is_active():
             sys.stdout.write("\rXID: -- okay --\n")
             sha = sha256()
             sha.update(message)
@@ -357,15 +360,18 @@ class RtbBot(object):
     def is_active(self):
         return (self.validate_box and self.validate_team)
 
+
 def help():
     ''' Displays a helpful message '''
     sys.stdout.write("Root the Box - Bot - v0.1 \n")
     sys.stdout.write("Usage:\n\tbot.py <team name>\n")
     sys.stdout.write("Options:\n")
-    sys.stdout.write("\t--help...............................Display this helpful message\n")
+    sys.stdout.write(
+        "\t--help...............................Display this helpful message\n"
+    )
     sys.stdout.flush()
 
-#####################################################################################
+##############################################################################
 if __name__ == '__main__':
     # float main()
     try:

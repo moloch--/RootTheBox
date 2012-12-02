@@ -21,8 +21,6 @@ Created on Mar 13, 2012
 
 
 import os
-import time
-import logging
 
 from uuid import uuid4
 from base64 import b64encode, b64decode
@@ -37,13 +35,15 @@ from string import ascii_letters, digits
 class ShareUploadHandler(BaseHandler):
     ''' Handles file shares for teams '''
 
-    MAX_FILE_SIZE = 50 * (1024 * 1024) # 50Mb
+    FSIZE = 50 * (1024 * 1024)  # Max file size 50Mb
 
     @authenticated
     def get(self, *args, **kwargs):
         ''' Renders upload file page '''
         user = self.get_current_user()
-        self.render("share_upload/share_files.html", errors=None, shares=user.team.files)
+        self.render("share_upload/share_files.html",
+            errors=None, shares=user.team.files
+        )
 
     @authenticated
     def post(self, *args, **kwargs):
@@ -54,25 +54,38 @@ class ShareUploadHandler(BaseHandler):
         user = self.get_current_user()
         if form.validate(self.request.arguments):
             if 0 == len(self.request.files.keys()):
-                self.render("share_upload/share_files.html", errors=["No file data."], shares=user.team.files)
-            elif self.MAX_FILE_SIZE < len(self.request.files['file_data'][0]['body']):
-                self.render("share_upload/share_files.html", errors=["File too large."], shares=user.team.files)
+                self.render("share_upload/share_files.html",
+                    errors=["No file data."], shares=user.team.files
+                )
+            elif self.FSIZE < len(self.request.files['file_data'][0]['body']):
+                self.render("share_upload/share_files.html",
+                    errors=["File too large."], shares=user.team.files
+                )
             else:
                 self.create_file(user)
                 self.redirect("/user/share/files")
         else:
-            self.render("share_upload/share_files.html", errors=form.errors, shares=user.team.files)
+            self.render("share_upload/share_files.html",
+                errors=form.errors, shares=user.team.files
+            )
 
     def create_file(self, user):
         ''' Saves uploaded file '''
-        file_name = os.path.basename(self.request.files['file_data'][0]['filename'])
+        file_name = os.path.basename(
+            self.request.files['file_data'][0]['filename']
+        )
         char_white_list = ascii_letters + digits + "-._"
         file_name = filter(lambda char: char in char_white_list, file_name)
         content = guess_type(file_name)
-        if content[0] == None:
-            self.render("share_upload/share_files.html", errors=["Unknown file content, please zip and upload"], shares=user.team.files)
+        if content[0] is None:
+            self.render("share_upload/share_files.html",
+                errors=["Unknown file content, please zip and upload"],
+                shares=user.team.files
+            )
         elif len(file_name) < 1:
-            self.render("share_upload/share_files.html", errors=["Invalid file name"])
+            self.render("share_upload/share_files.html",
+                errors=["Invalid file name"]
+            )
         else:
             uuid = unicode(uuid4())
             filePath = self.application.settings['shares_dir'] + '/' + uuid
@@ -102,15 +115,18 @@ class ShareDownloadHandler(BaseHandler):
         uuid = self.get_argument('uuid', default="", strip=True)
         user = self.get_current_user()
         share = FileUpload.by_uuid(uuid)
-        if share == None or share.team_id != user.team_id:
+        if share is None or share.team_id != user.team_id:
             self.render("share_upload/share_error.html")
         else:
-            upload = open(self.application.settings['shares_dir'] + '/' + share.uuid, 'r')
+            upload = open(self.application.settings['shares_dir'] +
+                '/' + share.uuid, 'r'
+            )
             data = upload.read()
-            # Watch out for http header injection!
             self.set_header('Content-Type', share.content)
             self.set_header('Content-Length', share.byte_size)
-            self.set_header('Content-Disposition', 'attachment; filename=%s' % share.file_name)
-            self.write(b64decode(data))  # Send file back to user
+            self.set_header('Content-Disposition', 'attachment; filename=%s' %
+                share.file_name  # Chars whitelisted by FileUpload object
+            )
+            self.write(b64decode(data))
             upload.close()
             self.finish()

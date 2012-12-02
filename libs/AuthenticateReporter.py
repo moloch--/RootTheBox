@@ -96,6 +96,7 @@ class AuthenticateReporter(object):
 
     def __init__(self, box, team):
         self.sha = sha256()
+        self.sha_round2 = sha256()
         self.box = box
         self.port = team.listen_port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -126,7 +127,7 @@ class AuthenticateReporter(object):
         ''' Verifies zero-knowledge proof '''
         self.send_xid()
         response = self.sock.recv(BUFFER_SIZE)
-        if response == self.sha.hexdigest():
+        if response == self.hmac:
             if self.pending_access == 'root':
                 self.confirmed_access = u'root'
             else:
@@ -139,3 +140,5 @@ class AuthenticateReporter(object):
         xid = b64encode(urandom(XID_SIZE))
         self.sock.sendall(xid)
         self.sha.update(xid)
+        self.round2.update(self.sha.hexdigest())
+        self.hmac = self.round2.hexdigest()

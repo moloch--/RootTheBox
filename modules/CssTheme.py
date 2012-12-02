@@ -21,7 +21,6 @@ Created on Mar 14, 2012
 
 
 from tornado.web import UIModule
-from models import Theme
 from libs.ConfigManager import ConfigManager
 
 
@@ -30,7 +29,9 @@ class CssTheme(UIModule):
     def render(self, *args, **kwargs):
         config = ConfigManager.Instance()
         default_theme = config.default_theme
-        if self.handler.session != None:
-            return self.render_string("theme/css.html", theme=self.handler.session['theme'])
+        if self.handler.session is not None:
+            return self.render_string("theme/css.html",
+                theme=self.handler.session['theme']
+            )
         else:
             return self.render_string("theme/css.html", theme=default_theme)

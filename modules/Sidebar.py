@@ -30,5 +30,7 @@ class Sidebar(UIModule):
         session_manager = SessionManager.Instance()
         session = session_manager.get_session(
             self.handler.get_secure_cookie('auth'), self.request.remote_ip)
-        if session != None:
-            return self.render_string('sidebar/user.html', ranks=Team.get_all())
+        if session is not None:
+            return self.render_string('sidebar/user.html',
+                ranks=Team.get_all()
+            )

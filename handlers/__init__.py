@@ -22,7 +22,6 @@ Created on Mar 13, 2012
 
 import sys
 
-from time import sleep
 from os import urandom, path
 from base64 import b64encode
 from modules.Menu import Menu
@@ -58,7 +57,7 @@ config = ConfigManager.Instance()
 if config.cache_files:
     from handlers.StaticFileHandler import StaticFileHandler
 else:
-    from tornado.web import StaticFileHandler
+    from tornado.web import StaticFileHandler  # lint:ok
 
 app = Application([
                   # Static Handlers - Serves static CSS, JavaScript and
@@ -85,8 +84,11 @@ app = Application([
                   # Market handlers
                   (r'/user/market', MarketViewHandler),
                   (r'/user/market/details', MarketDetailsHandler),
+
                   # Upgrade handlers
                   (r'/password_security', PasswordSecurityHandler),
+                  (r'/federal_reserve', FederalReserveHandler),
+                  (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
 
                   # Mission handlers
                   (r'/user/missions', MissionsHandler),
@@ -151,8 +153,8 @@ app = Application([
 
                   # UI Modules
                   ui_modules={
-                      "Menu": Menu, 
-                      "CssTheme": CssTheme, 
+                      "Menu": Menu,
+                      "CssTheme": CssTheme,
                       "Recaptcha": Recaptcha,
                   },
 
@@ -170,7 +172,7 @@ app = Application([
                   # Special file directories
                   avatar_dir=path.abspath('files/avatars/'),
                   shares_dir=path.abspath('files/shares/'),
-                  
+
                   # Event manager
                   event_manager=EventManager.Instance(),
 
@@ -181,6 +183,7 @@ app = Application([
                   version='0.3.0'
                   )
 
+
 # Main entry point
 def start_server():
     ''' Main entry point for the application '''
@@ -188,7 +191,9 @@ def start_server():
     server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
-    scoring = PeriodicCallback(scoring_round, int(5 * 60 * 1000), io_loop=io_loop)
+    scoring = PeriodicCallback(scoring_round, int(5 * 60 * 1000),
+        io_loop=io_loop
+    )
     scoring.start()
     try:
         sys.stdout.write("\r" + INFO + "The game has begun, good hunting!\n")
@@ -196,14 +201,17 @@ def start_server():
             sys.stdout.write(WARN + "WARNING: Debug mode is enabled.\n")
         sys.stdout.flush()
         game_history = GameHistory.Instance()
-        history_callback = PeriodicCallback(game_history.take_snapshot, int(60 * 1000), io_loop=io_loop)
+        history_callback = PeriodicCallback(game_history.take_snapshot,
+            int(60 * 1000), io_loop=io_loop
+        )
         history_callback.start()
         io_loop.start()
     except KeyboardInterrupt:
         print('\r' + WARN + 'Shutdown Everything!')
     finally:
         io_loop.stop()
-        if config.debug and raw_input(PROMPT + "Flush Memcache? [Y/n]: ").lower() == 'y':
+        if config.debug and \
+                raw_input(PROMPT + "Flush Memcache? [Y/n]: ").lower() == 'y':
             print(INFO + 'Flushing cache ...'),
             FileCache.flush()
             print('OK')

@@ -105,6 +105,12 @@ class Team(BaseObject):
     def __str__(self):
         return self.name.encode('ascii', 'ignore')
 
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __cmp__(self, other):
         if len(self.flags) < len(other.flags):
             return 1

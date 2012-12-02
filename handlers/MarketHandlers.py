@@ -44,16 +44,22 @@ class MarketViewHandler(BaseHandler):
             user = self.get_current_user()
             team = Team.by_id(user.team.id)  # Refresh object
             if user.has_item(item.name):
-                self.render('market/view.html', user=user, errors=["You have already purchased this item."])
+                self.render('market/view.html',
+                    user=user,
+                    errors=["You have already purchased this item."]
+                )
             elif team.money < item.price:
-                message = "You only have $%d, you cannot afford to purchase this item." % (team.money,)
+                message = "You only have $%d" % (team.money,)
                 self.render('market/view.html', user=user, errors=[message])
             else:
                 self.purchase_item(team, item)
                 self.event_manager.purchased_item(user, item)
                 self.redirect('/user/market')
         else:
-            self.render('market/view.html', user=self.get_current_user(), errors=["Item does not exist."])
+            self.render('market/view.html',
+                user=self.get_current_user(),
+                errors=["Item does not exist."]
+            )
 
     def purchase_item(self, team, item):
         ''' Conducts the actual purchase of an item '''

@@ -68,26 +68,22 @@ class MissionsHandler(BaseHandler):
                         self.__chkflag__(flag, file_data)
                     else:
                         logging.info("No file data in flag submission.")
-                        self.render(
-                            "missions/view.html",
+                        self.render("missions/view.html",
                             team=user.team,
                             errors=["No file data"]
                         )
                 else:
-                    self.render(
-                        "missions/view.html",
+                    self.render("missions/view.html",
                         team=user.team,
                         errors=["Invalid flag type"]
                     )
             else:
-                self.render(
-                    "missions/view.html",
+                self.render("missions/view.html",
                     team=user.team,
                     errors=["Flag does not exist"]
                 )
         else:
-            self.render(
-                "missions/view.html",
+            self.render("missions/view.html",
                 team=user.team,
                 errors=form.errors
             )
@@ -106,22 +102,19 @@ class MissionsHandler(BaseHandler):
                     self.event_manager.unlocked_level(user, level)
                     self.redirect("/user/missions")
                 else:
-                    self.render(
-                        "missions/view.html",
+                    self.render("missions/view.html",
                         team=user.team,
                         errors=[
                             "You do not have enough money to unlock this level"
                         ]
                     )
             else:
-                self.render(
-                    "missions/view.html",
+                self.render("missions/view.html",
                     team=user.team,
                     errors=["Level does not exist"]
                 )
         else:
-            self.render(
-                "missions/view.html",
+            self.render("missions/view.html",
                 team=user.team,
                 errors=form.errors
             )
@@ -137,8 +130,7 @@ class MissionsHandler(BaseHandler):
             self.event_manager.flag_capture(user, flag)
             self.redirect("/user/missions")
         else:
-            self.render(
-                "missions/view.html",
+            self.render("missions/view.html",
                 team=user.team,
                 errors=["Invalid flag submission"]
             )

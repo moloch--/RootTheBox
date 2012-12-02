@@ -1,0 +1,112 @@
+{% extends "../main.html" %}
+
+{% block title %}Federal Reserve{% end %}
+
+{% block header %}
+<script src="/static/js/terminal-0.4.22.min.js" type="text/javascript"></script>
+<script src="/static/js/mousewheel-min.js" type="text/javascript"></script>
+<link href="/static/css/terminal.css" rel="stylesheet" />
+{% end %}
+
+{% block content %}
+    {% if user.has_item("Federal Reserve") %}
+        {% include ../notifier.html %}
+
+        <div class="container">
+            <h1>Federal Reserve Bank</h1>
+            <br />
+            <div class="well" >
+                <h3>Mainframe Interface</h3>
+                <div id="console" style="width: auto; height: 500px;">
+                </div>
+            </div>
+            <script>
+                function get_longest(line, diplay_buffer) {
+                    tmp = []
+                    for (var index = 0; index < display_buffer[0].length; index++) {
+                        tmp.push(display_buffer[index][line]);
+                    }
+                    longest = tmp.reduce(function (a, b) {
+                         return a.toString().length > b.toString().length ? a : b;
+                    });
+                    return longest.length;
+                }
+                function str_multi(str, num) {
+
+                    return num ? Array(num + 1).join(str) : "";
+                }
+                function print_info(term, message) {
+                    term.echo("[[;#0066FF;#000]\[*\]] " + message.toString());
+                }
+                function print_error(term, message) {
+                    term.echo("[[;#FF0000;#000]\[!\]] " + message.toString());
+                }
+                function print_data(term, display_buffer) {
+                    col_widths = []
+                    for (var index = 0; index < display_buffer[0].length; index++) {
+                        col_widths[index] = get_longest(index, display_buffer);
+                    }
+                    div_str = "+"
+                    for (var index = 0; index < col_widths.length; index++) {
+                        div_str += "-" + str_multi("-", col_widths[index]) + "-";
+                        div_str += "+";
+                    }
+                    for (var index = 0; index < display_buffer.length; index++) {
+                        term.echo(div_str);
+                        buf = "|";
+                        for (var inner_index = 0; inner_index < display_buffer[index].length; inner_index++) {
+                            info = display_buffer[index][inner_index].toString();
+                            padding = col_widths[inner_index] - info.length;
+                            buf = buf + " " + info + str_multi(" ", padding) + " ";
+                            buf += "|";
+                        }
+                        term.echo(buf);
+                    }
+                    term.echo(div_str);
+                }
+                function greetings(term) {
+                    print_info(term, "Hooking mainframe ...");
+                }
+                $('#console').terminal({
+                        accounts: function() {
+                            term = this;
+                            $.getJSON('/federal_reserve/json/ls?data=accounts', function(data) {
+                                if ('accounts' in data) {
+                                    display_buffer = [];
+                                    display_buffer[0] = ["id", "Account Name"];
+                                    for (var index=0; index < data['accounts'].length; index++) {
+                                        line = []
+                                        line[0] = (index + 1).toString();
+                                        line[1] = data['accounts'][index].toString();
+                                        display_buffer[index + 1] = line;
+                                    }
+                                    console.log(display_buffer);
+                                    term.echo(" ");
+                                    print_data(term, display_buffer);
+                                    term.echo(" ");
+                                    print_info(term, "Request completed.");
+                                } else {
+                                    print_error(term, "ERROR: Request failed.")
+                                }
+                            });
+                        },
+                        help: function() {
+                            this.echo(" ");
+                            this.echo("     [[b;;]accounts]             - Get a list of active bank accounts")
+                            this.echo("     [[b;;]info <account name>]  - Retrieve information on a given account")
+                            this.echo("     [[b;;]user <username>]       - Retrieve information on a given user")
+                            this.echo(" ");
+                        }
+                    }, {
+                        prompt: 'fed > ',
+                        name: 'console',
+                        greetings: null,
+                        onInit: function(term) {
+                            greetings(term);
+                        },
+                    }
+                );
+            </script>
+        </div>
+    {% end %}
+{% end %}
