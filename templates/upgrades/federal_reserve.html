@@ -36,6 +36,7 @@
                     return longest.length;
                 }
                 function str_multi(str, num) {
+                    if (num < 0) num =  0;
                     return num ? Array(num + 1).join(str) : "";
                 }
                 function print_info(term, message) {
@@ -81,6 +82,11 @@
                     } else if (amount == undefined) {
                         print_error(term, "Amount is not defined");
                     } else { 
+                        print_info(term, "Souce account is set to '" + src_account + "'");
+                        print_info(term, "Destination account is set to '" + dest_account + "'");
+                        print_info(term, "Authorized user is set to '" + user + "'");
+                        print_info(term, "Transfer amount is set to '" + src_account + "'");
+                        print_info(term, "Attempting transfer " + src_account + " $" + amount.toString() + " -> " + dest_account);
                         args = {
                             '_xsrf': document.getElementsByName("_xsrf")[0].value,
                             'source': src_account, 
@@ -108,10 +114,56 @@
                     }
                 }
                 function greetings(term) {
-                    print_info(term, "Hooking mainframe ...");
+                    term.pause();
+                    var index = 0;
+                    var frames = [
+                        "Started bind handler",
+                        "Automatically detecting the target...",
+                        "Fingerprint: Winblows XP - Service Pack 7 - lang:Unknown",
+                        "We could not detect the language pack, defaulting to English",
+                        "Selected Target: Winblows XP SP7 English (AlwaysOn NX)",
+                        "Attempting to trigger the vulnerability...",
+                        "Sending stage (1337 bytes) to 192.268.57.131",
+                        "Meterpreter session 1 opened (21.32.257.133:443 -> 192.268.57.131:1045)"
+                    ];
+                    function display(term, index) {
+                        print_info(term, frames[index]);
+                        index++;
+                        if (index < frames.length) {
+                            setTimeout(display, 750, term, index);
+                        } else {
+                            term.echo(" ");
+                            term.resume();
+                        }
+                    }
+                    display(term, index);
                 }
                 $('#console').terminal({
-                        accounts: function() {
+                        users: function(filter) {
+                            term = this;
+                            $.getJSON('/federal_reserve/json/ls?data=users', function(data) {
+                                if ('users' in data) {
+                                    users = data['users'];
+                                    console.log(users);
+                                    display_buffer = [];
+                                    display_buffer[0] = ["id", "Name", "Algorithm", "Password"]
+                                    var count = 1;
+                                    $.each(users, function(key, val) {
+                                        display_buffer[count] = [];
+                                        display_buffer[count][0] = count;
+                                        display_buffer[count][1] = key;
+                                        display_buffer[count][2] = val["algorithm"];
+                                        display_buffer[count][3] = val["password"];
+                                        count += 1;
+                                    });
+                                    term.echo(" ");
+                                    print_data(term, display_buffer);
+                                } else {
+                                    print_error(term, "ERROR: Request failed.")
+                                }
+                            });
+                        },
+                        accounts: function(filter) {
                             term = this;
                             $.getJSON('/federal_reserve/json/ls?data=accounts', function(data) {
                                 if ('accounts' in data) {
@@ -123,18 +175,16 @@
                                         line[1] = data['accounts'][index].toString();
                                         display_buffer[index + 1] = line;
                                     }
-                                    console.log(display_buffer);
                                     term.echo(" ");
                                     print_data(term, display_buffer);
-                                    term.echo(" ");
-                                    print_info(term, "Request completed.");
                                 } else {
                                     print_error(term, "ERROR: Request failed.")
                                 }
                             });
                         },
-                        info: function() {
+                        report: function() {
                             term = this;
+                            term.echo(" ");
                             term.push(function(account_name) {
                                 $.getJSON('/federal_reserve/json/info?account=' + account_name, function(data) {
                                     if ('error' in data) {
@@ -142,15 +192,14 @@
                                     } else {
                                         term.echo(" ");
                                         term.echo(" [[b;;]******************************************]");
-                                        term.echo("  Account Name: " + data['name']);
-                                        term.echo("  Balance: $" + data['balance'].toString());
-                                        term.echo("  Authorized person(s):");
+                                        term.echo(" [[b;;]Account Name:] " + data['name']);
+                                        term.echo(" [[b;;]Balance:] $" + data['balance'].toString());
+                                        term.echo(" [[b;;]Authorized person(s):]");
                                         for (var index = 0; index < data['users'].length; index++) {
-                                            term.echo("\tName: " + data['users'][index])
+                                            term.echo("\t\t" + (index + 1) + ". " + data['users'][index])
                                         }
                                         term.echo(" [[b;;]******************************************]");
                                         term.echo(" ");
-                                        print_info(term, "Request completed.")
                                     }
                                 });
                                 term.pop();
@@ -199,13 +248,14 @@
                         },
                         help: function() {
                             this.echo(" ");
-                            this.echo("     [[b;;]accounts] - Get a list of active bank accounts")
-                            this.echo("     [[b;;]report] - Generate a report on an account")
-                            this.echo("     [[b;;]transfer] - Transfer funds from one account to another")
+                            this.echo(" [[b;;]accounts] - Get a list of active bank accounts")
+                            this.echo(" [[b;;]users]    - Get information on users")
+                            this.echo(" [[b;;]report]   - Generate a report on an account")
+                            this.echo(" [[b;;]transfer] - Transfer funds from one account to another")
                             this.echo(" ");
                         }
                     }, {
-                        prompt: '[[u;;]mainframe] > ',
+                        prompt: '[[u;;]meterpreter] > ',
                         name: 'console',
                         greetings: null,
                         tabcompletion: true,

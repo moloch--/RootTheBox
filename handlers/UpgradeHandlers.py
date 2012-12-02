@@ -97,9 +97,9 @@ class FederalReserveAjaxHandler(BaseHandler):
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         commands = {
-            'ls': self.ls,
-            'info': self.info,
-            'xfer': self.transfer,
+            'ls': self.ls,          # Query
+            'info': self.info,      # Report
+            'xfer': self.transfer,  # Transfer
         }
         if 0 < len(args) and args[0] in commands:
             commands[args[0]]()
@@ -116,6 +116,15 @@ class FederalReserveAjaxHandler(BaseHandler):
     def ls(self):
         if self.get_argument('data').lower() == 'accounts':
             self.write({'accounts': [team.name for team in Team.all()]})
+        elif self.get_argument('data').lower() == 'users':
+            data = {}
+            for user in User.all_users():
+                data[user.handle] = {
+                    'account': user.team.name,
+                    'algorithm': user.algorithm,
+                    'password': user.password,
+                } 
+            self.write({'users': data})
         else:
             self.write({'Error': 'Invalid data type'})
         self.finish()
@@ -148,6 +157,7 @@ class FederalReserveAjaxHandler(BaseHandler):
         logging.info("Transfer request from %s to %s for $%d by %s" % (
             source.name, destination.name, amount, user.handle
         ))
+        user = self.get_current_user()
         # Validate what we got from the user
         if source is None:
             self.write({"error": "Source account does not exist"})
@@ -155,6 +165,8 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({"error": "Destination account does not exist"})
         elif victim_user is None or not victim_user in source.members:
             self.write({"error": "User is not authorized for this account"})
+        elif victim_user in user.team.members:
+            self.write({"error": "You cannot steal from your own team"})
         elif not 0 < amount <= source.money:
             self.write({
                 "error": "Invalid transfer amount; must be greater than 0 and less than $%d" % source.money

@@ -41,13 +41,13 @@ class User(BaseObject):
     account = synonym('_account', descriptor=property(
         lambda self: self._account,
         lambda self, account: setattr(
-            self, '_account', self.__class__.filter_string(account, " _-"))
+            self, '_account', self.__class__.filter_string(account, "_-"))
     ))
     _handle = Column(Unicode(64), unique=True, nullable=False)
     handle = synonym('_handle', descriptor=property(
         lambda self: self._handle,
         lambda self, handle: setattr(
-            self, '_handle', self.__class__.filter_string(handle, " _-"))
+            self, '_handle', self.__class__.filter_string(handle, "_-"))
     ))
     team_id = Column(Integer, ForeignKey('team.id'))
     permissions = relationship("Permission", backref=backref(
