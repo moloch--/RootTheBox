@@ -16,11 +16,15 @@
             <h1>Federal Reserve Bank</h1>
             <br />
             <div class="well" >
-                <h3>Mainframe Interface</h3>
+                <form id="csrf">
+                    {% raw xsrf_form_html() %}
+                </form>
+                <h3>Mainframe Console</h3>
                 <div id="console" style="width: auto; height: 500px;">
                 </div>
             </div>
             <script>
+                var password;
                 function get_longest(line, diplay_buffer) {
                     tmp = []
                     for (var index = 0; index < display_buffer[0].length; index++) {
@@ -32,7 +36,6 @@
                     return longest.length;
                 }
                 function str_multi(str, num) {
-
                     return num ? Array(num + 1).join(str) : "";
                 }
                 function print_info(term, message) {
@@ -64,6 +67,46 @@
                     }
                     term.echo(div_str);
                 }
+                function attempt_xfer(term, password) {
+                    var src_account = localStorage['src_account'];
+                    var dest_account = localStorage['dest_account'];
+                    var amount = localStorage['amount'];
+                    var user = localStorage['user'];
+                    if (src_account == undefined) {
+                        print_error(term, "Source account is not defined");
+                    } else if (dest_account == undefined) {
+                        print_error(term, "Destination account is not defined");
+                    } else if (user == undefined) {
+                        print_error(term, "Authorized user is not defined");
+                    } else if (amount == undefined) {
+                        print_error(term, "Amount is not defined");
+                    } else { 
+                        args = {
+                            '_xsrf': document.getElementsByName("_xsrf")[0].value,
+                            'source': src_account, 
+                            'destination': dest_account,
+                            'user': user,
+                            'amount': amount,
+                            'password': password,
+                        }
+                        $.post('/federal_reserve/json/xfer', args, function(results) {
+                            console.log(results);
+                            term.echo(" ");
+                            if (results == null) {
+                                print_error(term, "ERROR: Malformed response from server");
+                            } else {
+                                if ('success' in results) {
+                                    term.echo("[[b;#00FF00;]\[$\]] " + results['success']);
+                                } else if ('error' in results) {
+                                    print_error(term, "ERROR: " + results['error']);
+                                } else {
+                                    print_error(term, "ERROR: Unknown response from server");
+                                }
+                            }
+                            term.echo(" ");
+                        });
+                    }
+                }
                 function greetings(term) {
                     print_info(term, "Hooking mainframe ...");
                 }
@@ -90,17 +133,82 @@
                                 }
                             });
                         },
+                        info: function() {
+                            term = this;
+                            term.push(function(account_name) {
+                                $.getJSON('/federal_reserve/json/info?account=' + account_name, function(data) {
+                                    if ('error' in data) {
+                                        print_error(term, "The account '" + account_name + "' does not exist");
+                                    } else {
+                                        term.echo(" ");
+                                        term.echo(" [[b;;]******************************************]");
+                                        term.echo("  Account Name: " + data['name']);
+                                        term.echo("  Balance: $" + data['balance'].toString());
+                                        term.echo("  Authorized person(s):");
+                                        for (var index = 0; index < data['users'].length; index++) {
+                                            term.echo("\tName: " + data['users'][index])
+                                        }
+                                        term.echo(" [[b;;]******************************************]");
+                                        term.echo(" ");
+                                        print_info(term, "Request completed.")
+                                    }
+                                });
+                                term.pop();
+                            }, {
+                                prompt: "[[;#990066;#000]\[?\]] Account Name: "
+                            });
+                        },
+                        transfer: function() {
+                            term = this;
+                            term.echo(" ");
+                            term.echo("[[b;;]*** TRANSFER FUNDS ***]");
+                            term.echo(" ");
+                            term.push(function(user) {
+                                localStorage.setItem("user", user);
+                                term.pop();
+                                term.set_mask(true);
+                                term.push(function(passwd) {
+                                        attempt_xfer(term, passwd);
+                                        term.set_mask(false);
+                                        term.pop();
+                                    }, {
+                                        prompt: "\tPassword: ",
+                                    }
+                                );
+                            }, {
+                                prompt: "[[;#990066;#000]\[?\]] Authorized User: ",
+                            });
+                            term.push(function(amount) {
+                                localStorage.setItem("amount", amount);
+                                term.pop();
+                            }, {
+                                prompt: "[[;#990066;#000]\[?\]] Transfer Amount: $",
+                            });
+                            term.push(function(src_account) {
+                                localStorage.setItem("src_account", src_account);
+                                term.pop();
+                            }, {
+                                prompt: "[[;#990066;#000]\[?\]] Source Account Name (transfer from): ",
+                            });
+                            term.push(function(dest_account) {
+                                localStorage.setItem("dest_account", dest_account);
+                                term.pop();
+                            }, {
+                                prompt: "[[;#990066;#000]\[?\]] Destination Account Name (transfer to): "
+                            });
+                        },
                         help: function() {
                             this.echo(" ");
-                            this.echo("     [[b;;]accounts]             - Get a list of active bank accounts")
-                            this.echo("     [[b;;]info <account name>]  - Retrieve information on a given account")
-                            this.echo("     [[b;;]user <username>]       - Retrieve information on a given user")
+                            this.echo("     [[b;;]accounts] - Get a list of active bank accounts")
+                            this.echo("     [[b;;]report] - Generate a report on an account")
+                            this.echo("     [[b;;]transfer] - Transfer funds from one account to another")
                             this.echo(" ");
                         }
                     }, {
-                        prompt: 'fed > ',
+                        prompt: '[[u;;]mainframe] > ',
                         name: 'console',
                         greetings: null,
+                        tabcompletion: true,
                         onInit: function(term) {
                             greetings(term);
                         },

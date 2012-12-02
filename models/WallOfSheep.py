@@ -28,8 +28,8 @@ from models.BaseGameObject import BaseObject
 
 class WallOfSheep(BaseObject):
 
-    preimage = Column(Unicode(32), nullable=False)
-    point_value = Column(Integer, nullable=False)
+    preimage = Column(Unicode(16), nullable=False)
+    value = Column(Integer, nullable=False)
     victim_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     cracker_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 

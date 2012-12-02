@@ -197,7 +197,7 @@ class EventManager(object):
             password, cracker.handle,
         )
         evt_id = Notifier.user_warning(victim, "Security Breach", user_msg)
-        self.push_user_notification(evt_id)
+        self.push_user_notification(evt_id, victim.team.id, victim.id)
         message = "%s hacked %s's bank account and stole $%d" % (
             cracker.handle, victim.team.name, value,
         )

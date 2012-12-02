@@ -20,6 +20,8 @@ Created on Sep 25, 2012
 '''
 
 
+import logging
+
 from BaseHandlers import BaseHandler
 from models import dbsession, User, WallOfSheep, Team
 from libs.Form import Form
@@ -85,64 +87,30 @@ class FederalReserveHandler(BaseHandler):
     @authenticated
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
-        self.render_page(None)
-
-    @authenticated
-    @has_item("Federal Reserve")
-    def post(self, *args, **kwargs):
-        ''' Attempt to steal money '''
-        form = Form(
-            handle="Please select a user",
-            password="Please enter a password"
-        )
-        if form.validate(self.request.arguments):
-            victim = User.by_handle(self.get_argument('handle'))
-            if victim is not None:
-                if victim.validate_password(self.get_argument('password')):
-                    self.theft(victim)
-                    self.render('upgrades/theft.html')
-                else:
-                    self.render_page(["Incorrect password, try again."])
-            else:
-                self.render_page(["User does not exist."])
-        else:
-            self.render_page(form.errors)
-
-    def render_page(self, errors):
-        ''' Wraps self.render to add params '''
         user = self.get_current_user()
-        self.render('upgrades/federal_reserve.html', user=user, errors=errors)
-
-    def theft(self, victim):
-        ''' Successfully cracked a password '''
-        user = self.get_current_user()
-        value = int(victim.team.money * 0.85)
-        password = self.get_argument('password')
-        user.team.money += value
-        victim.team.money = 0
-        dbsession.add(user.team)
-        dbsession.add(victim.team)
-        sheep = WallOfSheep(
-            preimage=unicode(password),
-            cracker_id=user.id,
-            victim_id=victim.id,
-        )
-        dbsession.add(sheep)
-        dbsession.flush()
-        self.event_manager.cracked_password(user, victim, password, value)
+        self.render('upgrades/federal_reserve.html', user=user)
 
 
 class FederalReserveAjaxHandler(BaseHandler):
 
-    @debug
+    @authenticated
+    @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         commands = {
             'ls': self.ls,
+            'info': self.info,
+            'xfer': self.transfer,
         }
         if 0 < len(args) and args[0] in commands:
             commands[args[0]]()
         else:
-            self.render("public/404.html")
+            self.write({'error': 'No argument'})
+            self.finish()
+
+    @authenticated
+    @has_item("Federal Reserve")
+    def post(self, *args, **kwargs):
+        self.get(*args, **kwargs)
 
     @debug
     def ls(self):
@@ -152,6 +120,78 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({'Error': 'Invalid data type'})
         self.finish()
 
+    @debug
+    def info(self):
+        team_name = self.get_argument('account')
+        team = Team.by_name(team_name)
+        if team is not None:
+            self.write({
+                'name': team.name,
+                'balance': team.money,
+                'users': [user.handle for user in team.members]
+            })
+        else:
+            self.write({'error': 'Account does not exist'})
+        self.finish()
+
+    @debug
+    def transfer(self):
+        user = self.get_current_user()
+        source = Team.by_name(self.get_argument('source', '__NONE__'))
+        destination = Team.by_name(self.get_argument('destination', '__NONE__'))
+        try:
+            amount = int(self.get_argument('amount', 0))
+        except ValueError:
+            amount = 0
+        victim_user = User.by_handle(self.get_argument('user', None))
+        password = self.get_argument('password', '')
+        logging.info("Transfer request from %s to %s for $%d by %s" % (
+            source.name, destination.name, amount, user.handle
+        ))
+        # Validate what we got from the user
+        if source is None:
+            self.write({"error": "Source account does not exist"})
+        elif destination is None:
+            self.write({"error": "Destination account does not exist"})
+        elif victim_user is None or not victim_user in source.members:
+            self.write({"error": "User is not authorized for this account"})
+        elif not 0 < amount <= source.money:
+            self.write({
+                "error": "Invalid transfer amount; must be greater than 0 and less than $%d" % source.money
+            })
+        elif destination == source:
+            self.write({
+                "error": "Source and destination are the same account"
+            })
+        elif victim_user.validate_password(password):
+            xfer = self.theft(victim_user, destination, amount)
+            self.write({
+                "success": 
+                "Confirmed transfer to '%s' for $%d (after 15%s commission)" % (destination.name, xfer, '%')
+            })
+        else:
+            self.write({"error": "Incorrect password for account, try again"})
+        self.finish()
+
+    def theft(self, victim, destination, amount):
+        ''' Successfully cracked a password '''
+        victim.team.money -= amount
+        value = int(amount * 0.85)
+        password = self.get_argument('password')
+        destination.money += value
+        dbsession.add(destination)
+        dbsession.add(victim.team)
+        user = self.get_current_user()
+        sheep = WallOfSheep(
+            preimage=unicode(password),
+            cracker_id=user.id,
+            victim_id=victim.id,
+            value=value,
+        )
+        dbsession.add(sheep)
+        dbsession.flush()
+        self.event_manager.cracked_password(user, victim, password, value)
+        return value
 
 class SourceCodeMarketHandler(BaseHandler):
 

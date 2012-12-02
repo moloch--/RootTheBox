@@ -22,7 +22,7 @@ Created on Mar 13, 2012
 
 import sys
 
-from os import urandom, path
+from os import urandom, path, _exit
 from base64 import b64encode
 from modules.Menu import Menu
 from modules.Recaptcha import Recaptcha
@@ -215,3 +215,4 @@ def start_server():
             print(INFO + 'Flushing cache ...'),
             FileCache.flush()
             print('OK')
+        _exit(1)
