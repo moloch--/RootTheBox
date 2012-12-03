@@ -27,7 +27,7 @@
                 var password;
                 function get_longest(line, diplay_buffer) {
                     tmp = []
-                    for (var index = 0; index < display_buffer[0].length; index++) {
+                    for (var index = 0; index < display_buffer.length; index++) {
                         tmp.push(display_buffer[index][line]);
                     }
                     longest = tmp.reduce(function (a, b) {
