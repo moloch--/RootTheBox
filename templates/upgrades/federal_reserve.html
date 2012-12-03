@@ -188,7 +188,7 @@
                             term.push(function(account_name) {
                                 $.getJSON('/federal_reserve/json/info?account=' + account_name, function(data) {
                                     if ('error' in data) {
-                                        print_error(term, "The account '" + account_name + "' does not exist");
+                                        print_error(term, "The account '" + account_name.toString() + "' does not exist");
                                     } else {
                                         term.echo(" ");
                                         term.echo(" [[b;;]******************************************]");

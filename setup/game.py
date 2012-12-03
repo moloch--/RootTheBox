@@ -62,7 +62,10 @@ microshaft_dev = create_box("Stage Server", microshaft, "Medium", level_1, ipv4_
 microshaft_laptop = create_box("CEO Laptop", microshaft, "Hard", level_2, ipv4_addresses=["192.168.3.25"])
 
 # Create Flags
-# create_flag(FLAG_NAME, TOKEN, REWARD_VALUE, BOX_OBJECT, DESCRIPTION, IS_FILE, IS_HASH)
+# create_flag(FLAG_NAME, TOKEN, REWARD_VALUE, BOX_OBJECT, DESCRIPTION, IS_FILE, IS_REGEX, IS_HASH)
+# IS_FILE: The user should submit a file, the token is the md5 of the file
+# IS_REGEX: The user should submit a string, the token is a regex if the string matches the flag submission is successful
+# IS_HASH:  The user's submissions should be hashed with md5 before getting compared to the stored token
 create_flag("DB Access", "p@ssw0rd", 1000, seatec_mail, "Get the MySQL root password for the mail server")
 create_flag("Guess this", "toor", 1500, seatec_mail, "Get the root password for the mail server")
 create_flag("Troy", "lulwat", 2500, seatec_fw, "Get the password for the SEATEC firewall administrator")
