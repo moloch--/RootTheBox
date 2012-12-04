@@ -154,9 +154,6 @@ class FederalReserveAjaxHandler(BaseHandler):
             amount = 0
         victim_user = User.by_handle(self.get_argument('user', None))
         password = self.get_argument('password', '')
-        logging.info("Transfer request from %s to %s for $%d by %s" % (
-            source.name, destination.name, amount, user.handle
-        ))
         user = self.get_current_user()
         # Validate what we got from the user
         if source is None:
@@ -176,6 +173,9 @@ class FederalReserveAjaxHandler(BaseHandler):
                 "error": "Source and destination are the same account"
             })
         elif victim_user.validate_password(password):
+            logging.info("Transfer request from %s to %s for $%d by %s" % (
+                source.name, destination.name, amount, user.handle
+            ))
             xfer = self.theft(victim_user, destination, amount)
             self.write({
                 "success": 
