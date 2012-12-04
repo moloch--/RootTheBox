@@ -6,7 +6,7 @@
     <div class="container">
         <h1>Create Team</h1>
         <br />
-        {% if errors != None and len(errors) != 0 %}
+        {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">×</a>

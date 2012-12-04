@@ -201,8 +201,8 @@ def start_server():
             sys.stdout.write(WARN + "WARNING: Debug mode is enabled.\n")
         sys.stdout.flush()
         game_history = GameHistory.Instance()
-        history_callback = PeriodicCallback(game_history.take_snapshot,
-            int(60 * 1000), io_loop=io_loop
+        history_callback = PeriodicCallback(
+            game_history.take_snapshot, int(60 * 1000), io_loop=io_loop
         )
         history_callback.start()
         io_loop.start()
