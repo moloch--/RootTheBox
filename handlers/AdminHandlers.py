@@ -21,6 +21,8 @@ Created on Mar 13, 2012
 
 There's a lot of code in here ...
 
+This file contains all of the adminstrative functions.
+
 '''
 
 

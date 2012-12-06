@@ -17,6 +17,11 @@ Created on Mar 13, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+----------------------------------------------------------------------------
+
+This file holds publically exposed handlers (handlers that to not require
+any authentication) with the exception of error handlers and the scoreboard
+
 '''
 
 

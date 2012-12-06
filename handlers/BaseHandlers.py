@@ -17,6 +17,11 @@ Created on Mar 15, 2012
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+----------------------------------------------------------------------------
+
+This file contains the base handler, all other handlers (aside from 
+web socket handlers) should inherit from this base class.
+
 '''
 
 
