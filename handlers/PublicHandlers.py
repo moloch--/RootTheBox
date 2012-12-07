@@ -75,7 +75,8 @@ class LoginHandler(BaseHandler):
             (user.account, user.handle, self.request.remote_ip,))
         self.start_session()
         theme = Theme.by_id(user.theme_id)
-        self.session['team_id'] = int(user.team.id)
+        if user.team is not None:
+            self.session['team_id'] = int(user.team.id)
         self.session['user_id'] = int(user.id)
         self.session['handle'] = ''.join(user.handle)  # Copy string
         self.session['theme'] = ''.join(theme.cssfile)
