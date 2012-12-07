@@ -73,7 +73,7 @@ class ConfigManager(object):
             logger.setLevel(logging.NOTSET)
         sys.stdout.flush()
         self.debug = self.config.getboolean("Server", 'debug')
-        self.domain = self.config.get("Server", 'domain')
+        self.domain = self.config.get("Server", 'domain').replace(' ', '')
         self.default_theme = self.config.get("Server", "theme")
         self.cache_files = self.config.getboolean("Server", "cache_files")
 
