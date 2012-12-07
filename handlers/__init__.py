@@ -42,7 +42,6 @@ from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
 from handlers.PublicHandlers import *
-from handlers.HashesHandlers import *
 from handlers.MarketHandlers import *
 from handlers.UpgradeHandlers import *
 from handlers.MissionsHandler import *

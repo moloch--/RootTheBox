@@ -14,7 +14,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-pip --upgrade virtualenv
 pip install tornado
 pip install scrypt
 pip install sqlalchemy
