@@ -168,14 +168,14 @@ class EventManager(object):
             user.handle, file_upload.file_name,
         )
         evt_id = Notifier.team_success(user.team, "File Share", message)
-        self.push_team_notification(evt_id)
+        self.push_team_notification(evt_id, user.team.id)
 
     @debug
     def paste_bin(self, user, paste):
         ''' Callback when a pastebin is created '''
         message = "%s posted to the team paste-bin" % user.handle
         evt_id = Notifier.team_success(user.team, "Text Share", message)
-        self.push_team_notification(evt_id)
+        self.push_team_notification(evt_id, user.team.id)
 
     @debug
     def new_bot(self, bot):
