@@ -26,11 +26,18 @@ echo "[*] Installing packages ..."
 apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha
 
 echo "[*] Installing python libs ..."
-/usr/local/bin/pip install --upgrade pip
-/usr/local/bin/pip install --upgrade virtualenv
-/usr/local/bin/pip install tornado
-/usr/local/bin/pip install scrypt
-/usr/local/bin/pip install sqlalchemy
-/usr/local/bin/pip install pylibmc
+
+if [ -f /usr/local/bin/pip ]
+  then
+    pip_path="/usr/local/bin/pip"
+else
+	pip_path="/usr/bin/pip"
+fi
+$pip_path install --upgrade pip
+$pip_path install --upgrade virtualenv
+$pip_path install tornado
+$pip_path install scrypt
+$pip_path install sqlalchemy
+$pip_path install pylibmc
 echo ""
 echo "[*] Setup Completed."
