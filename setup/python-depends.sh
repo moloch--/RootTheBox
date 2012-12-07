@@ -14,20 +14,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-if [ "$(id -u)" != "0" ]; then
-	echo "[!] This script must be run as root." 1>&2
-	exit 1
-fi
-
-echo "[*] Installing pip/gcc ..."
-apt-get install python-pip python-dev build-essential
-
-echo "[*] Installing packages ..."
-apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha
-
-echo "[*] Installing python libs ..."
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-sh "$DIR/python-depends.sh"
-
-echo ""
-echo "[*] Setup Completed."
+pip install --upgrade pip
+pip --upgrade virtualenv
+pip install tornado
+pip install scrypt
+pip install sqlalchemy
+pip install pylibmc
