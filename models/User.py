@@ -120,7 +120,9 @@ class User(BaseObject):
         @return: Unicode hexadecimal string of the hash digest
         @rtype: unicode
         '''
-        password = filter(lambda char: char in printable[:-5], password)
+        password = filter(
+            lambda char: char in printable[:-5], password
+        ).encode('ascii')
         if algorithm_name == 'scrypt':
             return cls.__scrypt__(password, salt)
         elif algorithm_name in cls.algorithms:
