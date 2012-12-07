@@ -14,6 +14,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+hash -r
+
 pip install --upgrade pip
 pip --upgrade virtualenv
 pip install tornado
