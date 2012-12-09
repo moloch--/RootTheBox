@@ -1,0 +1,19 @@
+{% extends "../main.html" %}
+
+{% block title %}All Notifications{% end %}
+
+{% block content %}
+	<div class="row-fluid">
+		<div class="span6 offset2">
+			<h2>All Notifications</h2>
+			<br />
+			{% from models import Notification %}
+			{% for notify in Notification.by_user_id(user.id) %}
+				<div class="well">
+					<strong>{{ notify.title }}</strong> {{ notify.created.strftime("%I:%M%p") }}<br />
+						{{ notify.message }}
+				</div>
+			{% end %}
+		</div>
+	</div>
+{% end %}

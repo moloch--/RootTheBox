@@ -47,9 +47,11 @@
 			</div>
 		</div>
 		<div class="span5 offset1 well">
-			<h2>Notifications</h2>
+			<h2 style="display:inline;">Notifications</h2>
+			<h4 style="display:inline;float:right;"><a href="/all_notifications">See All &raquo;</a></h4>
+			<hr>
 			{% from models import Notification %}
-			{% for notify in Notification.by_user_id(user.id) %}
+			{% for notify in Notification.by_user_id(user.id)[-5:] %}
 				<div class="well">
 					<strong>{{ notify.title }}</strong> {{ notify.created.strftime("%I:%M%p") }}<br />
 					{{ notify.message }}

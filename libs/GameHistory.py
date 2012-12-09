@@ -48,7 +48,7 @@ class GameHistory(object):
             self.__now__()  # Take starting snapshot
         try:
             max_index = len(self)
-            start_index = 1 if len(self) <= 10 else max_index - 10
+            start_index = 1 if len(self) <= 10 else max_index - 9
             self.epoch = Snapshot.by_id(1).created
             for index in range(start_index, max_index + 1):
                 snapshot = Snapshot.by_id(index)

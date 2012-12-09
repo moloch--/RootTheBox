@@ -64,13 +64,26 @@ class MissionsHandler(BaseHandler):
             flag = Flag.by_uuid(self.get_argument('uuid', ''))
             if flag is not None:
                 if self.get_argument('flag_type').lower() == 'text':
-                    token = self.get_argument('flag', None)
-                    self.__chkflag__(flag, token)
+                    token = self.get_argument('token', None)
+                    errors = self.__chkflag__(flag, token)
+                    if len(errors) == 0:
+                        self.flag_captured()
+                    else:
+                        self.render("missions/view.html",
+                            team=user.team,
+                            errors=errors
+                        )
                 elif self.get_argument('flag_type').lower() == 'file':
-                    if 0 < len(self.request.files['file_data'][0]['body']):
-                        file_data = self.request.files['file_data'][0]['body']
-                        self.__chkflag__(flag, file_data)
-                        self.__chklevel__()
+                    if 0 < len(self.request.files['flag'][0]['body']):
+                        file_data = self.request.files['flag'][0]['body']
+                        errors = self.__chkflag__(flag, file_data)
+                        if len(errors) == 0:
+                            self.flag_captured()
+                        else:
+                            self.render("missions/view.html",
+                                team=user.team,
+                                errors=errors
+                            )
                     else:
                         logging.info("No file data in flag submission.")
                         self.render("missions/view.html",
@@ -124,30 +137,36 @@ class MissionsHandler(BaseHandler):
                 errors=form.errors
             )
 
+    def flag_captured(self):
+        self.__chklevel__()
+        self.redirect("/user/missions")
+
     def __chkflag__(self, flag, user_token):
         ''' Compares a user provided token to the token in the db '''
         user = self.get_current_user()
-        if flag == user_token:
+        if user_token is not None and flag == user_token:
             user.team.flags.append(flag)
             user.team.money += flag.value
             dbsession.add(user.team)
             dbsession.flush()
             self.event_manager.flag_capture(user, flag)
-            self.redirect("/user/missions")
+            return []
         else:
-            self.render("missions/view.html",
-                team=user.team,
-                errors=["Invalid flag submission"]
-            )
+            return ["Invalid flag submission"]
 
     def __chklevel__(self):
         user = self.get_current_user()
         level = user.team.game_levels[-1]
+        logging.info("%s completed %d of %d flags on level %d." % (
+                user.team.name, len(user.team.level_flags(level.number)), 
+                len(level.flags), level.number,
+            )
+        )
         if len(user.team.level_flags(level.number)) == len(level.flags):
             logging.info("%s has completed level #%d" % (user.team.name, level.number,))
             if level.next_level_id is not None:
                 next_level = GameLevel.by_id(level.next_level_id)
-                user.team.append(next_level)
+                user.team.game_levels.append(next_level)
                 dbsession.add(user.team)
                 dbsession.flush()
                 self.event_manager.unlocked_level(user, level)

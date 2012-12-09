@@ -59,11 +59,12 @@ class PasswordSecurityHandler(BaseHandler):
                 self.render_page(["Invalid password"])
             elif not passwd == self.get_argument('new_password2'):
                 self.render_page(["New passwords do not match"])
-            elif not 0 < user.team.money <= self.config.password_upgrade:
+            elif user.team.money < self.config.password_upgrade:
                 self.render_page(["You cannot afford to upgrade your hash"])
             elif len(passwd) <= self.config.max_password_length:
                 user.team.money -= self.config.password_upgrade
                 dbsession.add(user.team)
+                dbsession.flush()
                 self.update_password(passwd)
                 self.render_page()
             else:

@@ -53,7 +53,7 @@ from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
 from handlers.ShareUploadHandlers import *
-from handlers.NotifySocketHandlers import *
+from handlers.NotificationHandlers import *
 
 ### Setup and URLs ###
 config = ConfigManager.Instance()
@@ -112,6 +112,7 @@ app = Application([
                   # WebSocket Handlers - Websocket communication
                   # handlers
                   (r'/notifications', NotifySocketHandler),
+                  (r'/all_notifications', AllNotificationsHandler),
 
                   # Scoreboard Handlers - Severs scoreboard related
                   # pages

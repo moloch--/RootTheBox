@@ -135,6 +135,7 @@ def create_flag(name, token, value, box, description="No description",
     flag = Flag(
         name=unicode(name),
         token=unicode(token),
+        is_file=is_file,
         is_regex=is_regex,
         is_hash=is_hash,
         description=unicode(description),

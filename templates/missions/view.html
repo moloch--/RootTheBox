@@ -18,7 +18,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag_token">Flag</label>
                     <div class="controls">
-                        <input autofocus id="flag_token" name="flag" type="text" placeholder="Flag" />
+                        <input autofocus id="flag_token" name="token" type="text" placeholder="Flag" />
                     </div>
                 </div>
             </form>
@@ -104,78 +104,80 @@
 	    {% end %}
 		{% from models.GameLevel import GameLevel %}
 		{% for level in GameLevel.all() %}
-			<div class="well">
-				<h2 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h2>
-                {% if len(team.level_flags(level.number)) != 0 %}
-                    <div class="progress">
-                        <div class="bar" style="width: {{ (len(team.level_flags(level.number)) /  len(level.flags)) * 100 }}%;">
-                            {{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}
+            {% if len(team.level_flags(level.number)) != len(level.flags) %}
+			    <div class="well">
+    				<h2 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h2>
+                    {% if len(team.level_flags(level.number)) != 0 %}
+                        <div class="progress">
+                            <div class="bar" style="width: {{ (len(team.level_flags(level.number)) /  len(level.flags)) * 100 }}%;">
+                                {{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}
+                            </div>
                         </div>
-                    </div>
-                {% end %}
-				{% if level in team.game_levels %}
-					{% for box in level.boxes %}
-						<hr>
-						<h3>{{ box.corporation_name }} - {{ box.name }}</h3>
-						<table class="table table-hover">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>Name</th>
-									<th>Description</th>
-									<th>Reward</th>
-									<th><!-- Submit --></th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for flag in box.flags %}
-									{% if flag in team.flags %}
-										<tr class="success">
-									{% else %}
-										<tr>
-									{% end %}
-										<td>{{ box.flags.index(flag) +1 }}</td>
-										<td>{{ flag.name }}</td>
-										<td>{{ flag.description }}</td>
-										<td>${{ flag.value }}</td>
-										{% if flag in team.flags %}
-											<td><!-- Button --></td>
-										{% else %}
-											{% if flag.is_file %}
-												<td>
-													<a class="btn btn-mini" data-toggle="modal" 
-														href="#submitFileFlagModal" onclick="set_uuid('file', '{{ flag.uuid }}')">
-	                                                    Submit
-	                                                </a>
-												</td>
-											{% else %}
-												<td>
-													<a class="btn btn-mini" data-toggle="modal" 
-														href="#submitTextFlagModal" onclick="set_uuid('text', '{{ flag.uuid }}')">
-	                                                    Submit
-	                                                </a>
-												</td>
-											{% end %}
-										{% end %}
-									</tr>
-								{% end %}
-							</tbody>
-						</table>
-					{% end %}
-				{% else %}
-					<a class="btn" data-toggle="modal" href="#unlockLevelModal"
-						onclick="set_level_uuid('{{ level.uuid }}', '{{ level.buyout }}')">
-	                    Unlock
-	                </a>
-					<hr>
-					<br />
-					<strong>
-						You do not have access to this level yet.
-					</strong>
-					<br />
-					<br />
-				{% end %}
-			</div>
+                    {% end %}
+    				{% if level in team.game_levels %}
+    					{% for box in level.boxes %}
+    						<hr>
+    						<h3>{{ box.corporation_name }} - {{ box.name }}</h3>
+    						<table class="table table-hover">
+    							<thead>
+    								<tr>
+    									<th>#</th>
+    									<th>Name</th>
+    									<th>Description</th>
+    									<th>Reward</th>
+    									<th><!-- Submit --></th>
+    								</tr>
+    							</thead>
+    							<tbody>
+    								{% for flag in box.flags %}
+    									{% if flag in team.flags %}
+    										<tr class="success">
+    									{% else %}
+    										<tr>
+    									{% end %}
+    										<td>{{ box.flags.index(flag) +1 }}</td>
+    										<td>{{ flag.name }}</td>
+    										<td>{{ flag.description }}</td>
+    										<td>${{ flag.value }}</td>
+    										{% if flag in team.flags %}
+    											<td><!-- Button --></td>
+    										{% else %}
+    											{% if flag.is_file %}
+    												<td>
+    													<a class="btn btn-mini" data-toggle="modal" 
+    														href="#submitFileFlagModal" onclick="set_uuid('file', '{{ flag.uuid }}')">
+    	                                                    Submit
+    	                                                </a>
+    												</td>
+    											{% else %}
+    												<td>
+    													<a class="btn btn-mini" data-toggle="modal" 
+    														href="#submitTextFlagModal" onclick="set_uuid('text', '{{ flag.uuid }}')">
+    	                                                    Submit
+    	                                                </a>
+    												</td>
+    											{% end %}
+    										{% end %}
+    									</tr>
+    								{% end %}
+    							</tbody>
+    						</table>
+    					{% end %}
+    				{% else %}
+    					<a class="btn" data-toggle="modal" href="#unlockLevelModal"
+    						onclick="set_level_uuid('{{ level.uuid }}', '{{ level.buyout }}')">
+    	                    Unlock
+    	                </a>
+    					<hr>
+    					<br />
+    					<strong>
+    						You do not have access to this level yet.
+    					</strong>
+    					<br />
+    					<br />
+    				{% end %}
+    			</div>
+            {% end %}
 		{% end %}
 	</div>
 {% end %}

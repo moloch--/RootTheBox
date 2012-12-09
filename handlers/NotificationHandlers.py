@@ -24,10 +24,11 @@ import pylibmc
 import logging
 import tornado.websocket
 
-from libs.SecurityDecorators import debug
+from libs.SecurityDecorators import debug, authenticated
 from libs.Sessions import MemcachedSession
 from libs.ConfigManager import ConfigManager
 from libs.EventManager import EventManager
+from handlers.BaseHandlers import BaseHandler
 from models import Notification
 
 
@@ -97,3 +98,11 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
             self.manager.remove_connection(self)
         except KeyError:
             logging.warn("[Web Socket] Manager has no ref to self.")
+
+
+class AllNotificationsHandler(BaseHandler):
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        user = self.get_current_user()
+        self.render("notifications/view.html", user=user)
