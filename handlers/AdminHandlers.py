@@ -47,7 +47,7 @@ class AdminCreateHandler(BaseHandler):
             'team': 'admin/create/team.html',
             'game_level': 'admin/create/game_level.html'
         }
-        if len(args) == 1 and args[0] in self.game_objects.keys():
+        if len(args) == 1 and args[0] in self.game_objects:
             self.render(self.game_objects[args[0]], errors=None)
         else:
             self.render("public/404.html")
@@ -63,7 +63,7 @@ class AdminCreateHandler(BaseHandler):
             'team': self.create_team,
             'game_level': self.create_game_level,
         }
-        if len(args) == 1 and args[0] in self.game_objects.keys():
+        if len(args) == 1 and args[0] in self.game_objects:
             self.game_objects[args[0]]()
         else:
             self.render("public/404.html")
@@ -248,7 +248,7 @@ class AdminViewHandler(BaseHandler):
             'game_levels': self.view_game_levels,
             'user_objects': self.view_user_objects,
         }
-        if len(args) == 1 and args[0] in uri.keys():
+        if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")
@@ -310,7 +310,7 @@ class AdminEditHandler(BaseHandler):
             'game_level': self.edit_game_level,
             'box_level': self.box_level,
         }
-        if len(args) == 1 and args[0] in uri.keys():
+        if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")
@@ -659,7 +659,7 @@ class AdminDeleteHandler(BaseHandler):
             'ip': self.del_ip,
             'flag': self.del_flag,
         }
-        if len(args) == 1 and args[0] in uri.keys():
+        if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")
@@ -699,7 +699,7 @@ class AdminRegTokenHandler(BaseHandler):
             'create': self.create,
             'view': self.view,
         }
-        if len(args) == 1 and args[0] in uri.keys():
+        if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")

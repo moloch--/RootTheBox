@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 '''
 Created on Oct 04, 2012
 
@@ -68,9 +67,7 @@ class GameDataHandler(tornado.websocket.WebSocketHandler):
 
 
 class ScoreboardHandler(BaseHandler):
-    '''
-    Main summary page
-    '''
+    ''' Main summary page '''
 
     def get(self, *args, **kargs):
         self.render('scoreboard/summary.html')
@@ -83,7 +80,7 @@ class ScoreboardAjaxHandler(BaseHandler):
         uri = {
             'summary': self.summary_table,
         }
-        if 1 == len(args) and args[0] in uri.keys():
+        if 1 == len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render('public/404.html')
@@ -104,7 +101,7 @@ class ScoreboardMoneyHandler(BaseHandler):
             'pie_chart': self.pie_chart,
             'bar_chart': self.bar_chart,
         }
-        if 1 == len(args) and args[0] in uri.keys():
+        if 1 == len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render('public/404.html')
@@ -127,7 +124,7 @@ class ScoreboardFlagHandler(BaseHandler):
             'pie_chart': self.pie_chart,
             'bar_chart': self.bar_chart,
         }
-        if 1 == len(args) and args[0] in uri.keys():
+        if 1 == len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render('public/404.html')

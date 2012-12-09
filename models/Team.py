@@ -87,12 +87,15 @@ class Team(BaseObject):
         ''' Sorted game_levels '''
         return sorted(self.game_levels)
 
+    def level_flags(self, lvl):
+        return filter(lambda flag: flag.game_level.number == lvl, self.flags)
+
     def to_dict(self):
-        return dict(
-            name=self.name,
-            motto=self.motto,
-            listen_port=self.listen_port,
-        )
+        return {
+            'name': self.name,
+            'motto': self.motto,
+            'listen_port': self.listen_port,
+        }
 
     def file_by_file_name(self, file_name):
         ''' Return file object based on file_name '''

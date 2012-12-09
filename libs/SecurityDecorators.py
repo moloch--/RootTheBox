@@ -82,7 +82,7 @@ def async(method):
 
 
 def debug(method):
-    ''' Logs a function call '''
+    ''' Logs a method call '''
 
     @functools.wraps(method)
     def wrapper(*args, **kwargs):

@@ -16,7 +16,11 @@ Created on Mar 13, 2012
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
-    limitations under the License.
+    limitations under the License
+----------------------------------------------------------------------------
+
+This is the main file the defines what URLs get routed to what handlers
+
 '''
 
 
@@ -190,8 +194,8 @@ def start_server():
     server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
-    scoring = PeriodicCallback(scoring_round, int(5 * 60 * 1000),
-        io_loop=io_loop
+    scoring = PeriodicCallback(
+        scoring_round, int(5 * 60 * 1000), io_loop=io_loop
     )
     scoring.start()
     try:

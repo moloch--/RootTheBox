@@ -47,12 +47,14 @@ class GameHistory(object):
         if Snapshot.by_id(1) is None:
             self.__now__()  # Take starting snapshot
         try:
-            last = len(self)
+            max_index = len(self)
+            start_index = 1 if len(self) <= 10 else max_index - 10
             self.epoch = Snapshot.by_id(1).created
-            for (index, snapshot) in enumerate(Snapshot.all()):
+            for index in range(start_index, max_index + 1):
+                snapshot = Snapshot.by_id(index)
                 if not snapshot.key in self.cache:
                     logging.info(
-                        "Cached snapshot (%d/%d)" % (snapshot.id, last)
+                        "Cached snapshot (%d/%d)" % (snapshot.id, max_index)
                     )
                     self.cache.set(snapshot.key, snapshot.to_dict())
             logging.info("History load complete.")

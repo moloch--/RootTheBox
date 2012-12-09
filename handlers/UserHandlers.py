@@ -17,6 +17,10 @@ Created on Mar 13, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+----------------------------------------------------------------------------
+
+This file contains code for managing user accounts
+
 '''
 
 
@@ -82,7 +86,8 @@ class SettingsHandler(BaseHandler):
                 if user.avatar == "default_avatar.jpeg":
                     user.avatar = unicode(uuid4()) + u".jpeg"
                 ext = imghdr.what(
-                    "", h=self.request.files['avatar'][0]['body'])
+                    "", h=self.request.files['avatar'][0]['body']
+                )
                 avatar_path = str(self.application.settings['avatar_dir'] +
                     '/' + user.avatar)
                 if ext in ['png', 'jpeg', 'gif', 'bmp']:
@@ -148,10 +153,10 @@ class SettingsHandler(BaseHandler):
         else:
             self.render_page(errors=form.errors)
 
-    def set_password(self, user, old_password, new_password, new_password_two):
+    def set_password(self, user, old_password, new_password, new_password2):
         ''' Sets a users password '''
         if user.validate_password(old_password):
-            if new_password == new_password_two:
+            if new_password == new_password2:
                 if len(new_password) <= self.config.max_password_length:
                     user.password = new_password
                     dbsession.add(user)

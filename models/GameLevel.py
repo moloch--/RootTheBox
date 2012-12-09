@@ -62,7 +62,11 @@ class GameLevel(BaseObject):
     @property
     def flags(self):
         ''' Return all flags for the level '''
-        return list(itertools.chain(*self.boxes.flags))
+        flags = []
+        for box in self.boxes:
+            for flag in box.flags:
+                flags.append(flag)
+        return flags
 
     def next(self):
         ''' Return the next level, or None '''

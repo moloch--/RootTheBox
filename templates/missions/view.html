@@ -3,6 +3,7 @@
 {% block title %}Missions{% end %}
 
 {% block content %}
+    {% include ../notifier.html %}
     <!-- Submit text flag -->
     <div id="submitTextFlagModal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
@@ -17,7 +18,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag_token">Flag</label>
                     <div class="controls">
-                        <input id="flag_token" name="flag" type="text" placeholder="Flag" />
+                        <input autofocus id="flag_token" name="flag" type="text" placeholder="Flag" />
                     </div>
                 </div>
             </form>
@@ -40,7 +41,7 @@
             <form class="form-horizontal" id="submit-file-flag" method="post" enctype="multipart/form-data" action="/user/missions/flag">
                 {% raw xsrf_form_html() %}
                 <input name="flag_type" type="hidden" value="file" />
-                <input id="flag_uuid_file" name="uuid" value="" type="hidden" />
+                <input autofocus id="flag_uuid_file" name="uuid" value="" type="hidden" />
                 <div class="control-group">
                     <label class="control-label" for="flag_file">Flag</label>
                     <div class="controls">
@@ -92,7 +93,7 @@
 	<div class="container">
 		<h1>Missions</h1>
 		<br />
-	    {% if errors != None and len(errors) != 0 %}
+	    {% if errors is not None and len(errors) != 0 %}
 	     	{% for error in errors %}
 	        	<div class="alert alert-error">
 	          		<a class="close" data-dismiss="alert" href="#">×</a>
@@ -104,7 +105,14 @@
 		{% from models.GameLevel import GameLevel %}
 		{% for level in GameLevel.all() %}
 			<div class="well">
-				<h2 style="display: inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h2>
+				<h2 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h2>
+                {% if len(team.level_flags(level.number)) != 0 %}
+                    <div class="progress">
+                        <div class="bar" style="width: {{ (len(team.level_flags(level.number)) /  len(level.flags)) * 100 }}%;">
+                            {{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}
+                        </div>
+                    </div>
+                {% end %}
 				{% if level in team.game_levels %}
 					{% for box in level.boxes %}
 						<hr>
@@ -153,7 +161,7 @@
 								{% end %}
 							</tbody>
 						</table>
-					{%end %}
+					{% end %}
 				{% else %}
 					<a class="btn" data-toggle="modal" href="#unlockLevelModal"
 						onclick="set_level_uuid('{{ level.uuid }}', '{{ level.buyout }}')">

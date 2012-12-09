@@ -17,6 +17,10 @@ Created on Oct 28, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+----------------------------------------------------------------------------
+
+This file contains the code for displaying flags / recv flag submissions
+
 '''
 
 
@@ -66,6 +70,7 @@ class MissionsHandler(BaseHandler):
                     if 0 < len(self.request.files['file_data'][0]['body']):
                         file_data = self.request.files['file_data'][0]['body']
                         self.__chkflag__(flag, file_data)
+                        self.__chklevel__()
                     else:
                         logging.info("No file data in flag submission.")
                         self.render("missions/view.html",
@@ -134,3 +139,15 @@ class MissionsHandler(BaseHandler):
                 team=user.team,
                 errors=["Invalid flag submission"]
             )
+
+    def __chklevel__(self):
+        user = self.get_current_user()
+        level = user.team.game_levels[-1]
+        if len(user.team.level_flags(level.number)) == len(level.flags):
+            logging.info("%s has completed level #%d" % (user.team.name, level.number,))
+            if level.next_level_id is not None:
+                next_level = GameLevel.by_id(level.next_level_id)
+                user.team.append(next_level)
+                dbsession.add(user.team)
+                dbsession.flush()
+                self.event_manager.unlocked_level(user, level)

@@ -31,7 +31,8 @@ from libs.Form import Form
 from libs.SecurityDecorators import debug
 from libs.ConfigManager import ConfigManager
 from handlers.BaseHandlers import BaseHandler
-from models import dbsession, User, Team, Theme, RegistrationToken
+from models import dbsession, User, Team, Theme, \
+    RegistrationToken
 
 
 class HomePageHandler(BaseHandler):
@@ -123,7 +124,8 @@ class UserRegistrationHandler(BaseHandler):
             passwd = self.request.arguments['pass1']
             if User.by_account(account) is not None:
                 self.render('public/registration.html',
-                            errors=['Account name already taken'])
+                    errors=['Account name already taken']
+                )
             elif account == handle:
                 self.render('public/registration.html',
                     errors=['Account name and hacker name must differ']

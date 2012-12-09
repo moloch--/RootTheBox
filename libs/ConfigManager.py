@@ -87,12 +87,16 @@ class ConfigManager(object):
 
     def __security__(self):
         ''' Load security configurations '''
-        ips = self.config.get("Security", 'admin_ips', "127.0.0.1").split(',')
+        ips = self.config.get("Security", 'admin_ips', "127.0.0.1").replace(" ", "")
+        ips = ips.split(',')
         if not '127.0.0.1' in ips:
             ips.append('127.0.0.1')
         self.admin_ips = tuple(ips)
-        self.max_password_length = int(
-            self.config.get("Security", 'max_password_length')
+        self.max_password_length = self.config.getint(
+            "Security", 'max_password_length'
+        )
+        self.password_upgrade = self.config.getint(
+            "Security", 'password_upgrade'
         )
 
     def __recaptcha__(self):
@@ -103,6 +107,7 @@ class ConfigManager(object):
 
     def __database__(self):
         ''' Loads database connection information '''
+        self.log_sql = self.config.getboolean("Database", 'log_sql')
         self.db_server = self.config.get("Database", 'server', "localhost")
         self.db_name = self.config.get("Database", 'name', "rootthebox")
         user = self.config.get("Database", 'user', "RUNTIME")

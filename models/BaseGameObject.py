@@ -38,7 +38,8 @@ class BaseGameObject(object):
         return (
             name[0].lower() +
             re.sub(r'([A-Z])',
-                   lambda letter: "_" + letter.group(0).lower(), name[1:])
+                   lambda letter: "_" + letter.group(0).lower(), name[1:]
+            )
         )
     id = Column(Integer, primary_key=True)  # lint:ok
     created = Column(DateTime, default=datetime.now)

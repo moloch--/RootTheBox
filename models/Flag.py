@@ -68,6 +68,14 @@ class Flag(BaseObject):
         ''' Return and object based on a token '''
         return dbsession.query(cls).filter_by(token=unicode(token)).first()
 
+    @property
+    def box(self):
+        return Box.by_id(self.box_id)
+
+    @property
+    def game_level(self):
+        return self.box.game_level
+
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
         box = Box.by_id(self.box_id)

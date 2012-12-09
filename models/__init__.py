@@ -35,7 +35,7 @@ db_connection = 'mysql://%s:%s@%s/%s' % (
 
 # set the connection string here
 engine = create_engine(db_connection)
-
+setattr(engine, 'echo', config.log_sql)
 Session = sessionmaker(bind=engine, autocommit=True)
 dbsession = Session(autoflush=True)
 

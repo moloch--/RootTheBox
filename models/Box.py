@@ -101,6 +101,10 @@ class Box(BaseObject):
         ips = [ip.v6 for ip in self.ip_addresses]
         return filter(lambda ip: ip is not None, ips)
 
+    @property
+    def game_level(self):
+        return GameLevel.by_id(self.game_level_id)
+
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
         corp = Corporation.by_id(self.corporation_id)
