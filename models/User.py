@@ -121,7 +121,7 @@ class User(BaseObject):
         @rtype: unicode
         '''
         password = filter(lambda char: char in printable[:-5], password)
-        password = ''.join(password).encode('ascii')
+        password = password.encode('ascii')
         if algorithm_name == 'scrypt':
             return cls.__scrypt__(password, salt)
         elif algorithm_name in cls.algorithms:

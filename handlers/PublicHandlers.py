@@ -121,7 +121,7 @@ class UserRegistrationHandler(BaseHandler):
             account = self.get_argument('account').lower()
             handle = self.get_argument('handle').lower()
             rtok = self.get_argument('token', '__none__').lower()
-            passwd = self.request.arguments['pass1']
+            passwd = self.get_argument('pass1')
             if User.by_account(account) is not None:
                 self.render('public/registration.html',
                     errors=['Account name already taken']
@@ -134,7 +134,7 @@ class UserRegistrationHandler(BaseHandler):
                 self.render('public/registration.html',
                     errors=['Handle already taken']
                 )
-            elif not passwd == self.request.arguments['pass2']:
+            elif not passwd == self.get_argument('pass2'):
                 self.render('public/registration.html',
                     errors=['Passwords do not match']
                 )

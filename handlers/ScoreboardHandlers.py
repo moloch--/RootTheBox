@@ -99,7 +99,7 @@ class ScoreboardAjaxHandler(BaseHandler):
                 'game_levels': [],
             }
             for lvl in team.levels:
-                level_details = {
+                lvl_details = {
                     'number': lvl.number,
                     'captured': [flag.name for flag in team.level_flags(lvl.number)],
                     'total': len(lvl.flags),
