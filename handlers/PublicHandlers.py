@@ -67,7 +67,7 @@ class LoginHandler(BaseHandler):
             else:
                 self.failed_login()
         else:
-            self.render('public/login.html', errors=self.form.errors)
+            self.render('public/login.html', errors=form.errors)
 
     @debug
     def successful_login(self, user):
