@@ -51,10 +51,10 @@ class PasswordSecurityHandler(BaseHandler):
             new_password1="Enter a new password",
             new_password2="Confirm your new password",
         )
-        user = self.get_current_user()
-        passwd = self.get_argument('new_password1')
-        old_passwd = self.get_argument('old_password')
         if form.validate(self.request.arguments):
+            user = self.get_current_user()
+            passwd = self.get_argument('new_password1')
+            old_passwd = self.get_argument('old_password')
             if not user.validate_password(old_passwd):
                 self.render_page(["Invalid password"])
             elif not passwd == self.get_argument('new_password2'):

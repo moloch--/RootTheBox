@@ -11,18 +11,6 @@
     {% include ../notifier.html %}
     {% from models import Team %}
     <!-- Team Details -->
-    <div id="loadingModal" class="modal hide fade" style="display: none; ">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Loading ...</h3>
-        </div>
-        <div class="modal-body">
-            <div class="progress progress-striped active">
-                <div class="bar" style="width: 100%;"></div>
-            </div>
-        </div>
-    </div>
-    <!-- Team Details -->
     <div id="teamDetailsModal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
@@ -69,6 +57,11 @@
     </div>
     <!-- Scripts -->
         <script>
+            function team_details(uuid) {
+                $.getJSON('/scoreboard/ajax/team?uuid='+uuid, function(data) {
+                    console.log(data);
+                });
+            }
             var flag_chart;
             $(function () {
                 $(document).ready(function() {

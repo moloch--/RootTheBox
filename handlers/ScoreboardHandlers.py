@@ -79,6 +79,7 @@ class ScoreboardAjaxHandler(BaseHandler):
         ''' Renders AJAX snippit based on URI '''
         uri = {
             'summary': self.summary_table,
+            'team': self.team_details,
         }
         if 1 == len(args) and args[0] in uri:
             uri[args[0]]()
@@ -88,6 +89,26 @@ class ScoreboardAjaxHandler(BaseHandler):
     def summary_table(self):
         ''' Render the "leaderboard" snippit '''
         self.render('scoreboard/summary_table.html', teams=Team.ranks())
+
+    def team_details(self):
+        uuid = self.get_argument('uuid', '')
+        team = Team.by_uuid(uuid)
+        if team is not None:
+            details = {
+                'name': team.name,
+                'game_levels': [],
+            }
+            for lvl in team.levels:
+                level_details = {
+                    'number': lvl.number,
+                    'captured': [flag.name for flag in team.level_flags(lvl.number)],
+                    'total': len(lvl.flags),
+                }
+                details['game_levels'].append(lvl_details)
+            self.write(details)
+        else:
+            self.write({'error': 'Team does not exist'})
+        self.finish()
 
 
 class ScoreboardMoneyHandler(BaseHandler):

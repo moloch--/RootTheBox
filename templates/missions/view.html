@@ -109,7 +109,7 @@
     				<h2 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h2>
                     {% if len(team.level_flags(level.number)) != 0 %}
                         <div class="progress">
-                            <div class="bar" style="width: {{ (len(team.level_flags(level.number)) /  len(level.flags)) * 100 }}%;">
+                            <div class="bar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;">
                                 {{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}
                             </div>
                         </div>
