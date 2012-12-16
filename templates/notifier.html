@@ -1,6 +1,9 @@
 <script>
+	var notifier_ws;
 	$(document).ready(function() {
-        var notifier_ws = new WebSocket("ws://{{ handler.application.settings['ws_ip_address'] }}:{{ handler.application.settings['ws_port'] }}/notifications");
+        notifier_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:" +
+        	"{{ handler.application.settings['port'] }}/notifications/wsocket/updates"
+        );
 	    notifier_ws.onmessage = function (evt) {
 	    	notification = jQuery.parseJSON(evt.data);
 	        if(notification['category'] == 'success') {
@@ -12,7 +15,7 @@
 	        } else if (notification['category'] == 'error') {
 	        	Notifier.error(notification['message'], notification['title']);
 	        } else if (notification['category'] == 'custom') {
-	        	Notifier.notify(notification['message'], notification['title'], notification['icon_url']);
+	        	Notifier.notify(notification['message'], notification['title'], '/avatars/' + notification['icon_url']);
 	        }
 	    };
     });

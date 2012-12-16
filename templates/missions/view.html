@@ -25,8 +25,16 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <script>
+                function submit_text_flag() {
+                    if (notifier_ws !== undefined) {
+                        notifier_ws.close();
+                    }
+                    document.forms['submit-text-flag'].submit();
+                }
+            </script>
             <button class="btn btn-primary" type="button" 
-            		onclick="document.forms['submit-text-flag'].submit();">
+            		onclick="submit_text_flag();">
             	Submit
             </button>
         </div>
@@ -52,8 +60,16 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <script>
+                function submit_file_flag() {
+                    if (notifier_ws !== undefined) {
+                        notifier_ws.close();
+                    }
+                    document.forms['submit-file-flag'].submit();
+                }
+            </script>
             <button class="btn btn-primary" type="button" 
-            		onclick="document.forms['submit-file-flag'].submit();">
+            		onclick="submit_file_flag();">
             	Submit
             </button>
         </div>

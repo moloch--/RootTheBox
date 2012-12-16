@@ -1,0 +1,31 @@
+{% extends "../../main.html" %}
+
+{% block header %}
+    <script src="/static/js/libs/highcharts.js"></script>
+    <script src="/static/js/libs/modules/exporting.js"></script>
+{% end %} 
+
+{% block content %}
+	<div class="container">
+		<h1>Game History</h1>
+		<br />
+		<div class="well">
+
+		</div>
+		<script>
+			$(document).ready(function() {
+		        var history_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:" + \
+		        	"{{ handler.application.settings['port'] }}/scoreboard/wsocket/game_history"
+		        );
+			    history_ws.onmessage = function (evt) {
+			    	msg = jQuery.parseJSON(evt.data);
+			        if('error' in msg) {
+			        	console.log(msg);
+			        } else {
+			        	console.log(msg);
+			        }
+			    };
+		    });
+		</script>
+    </div>
+{% end %}

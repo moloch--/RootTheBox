@@ -138,6 +138,10 @@ class MissionsHandler(BaseHandler):
             )
 
     def flag_captured(self):
+        ''' 
+        Successfully captured flag, checks for if level has been completed 
+        and redirects user back to the missions page.
+        '''
         self.__chklevel__()
         self.redirect("/user/missions")
 
@@ -148,6 +152,8 @@ class MissionsHandler(BaseHandler):
             user.team.flags.append(flag)
             user.team.money += flag.value
             dbsession.add(user.team)
+            flag.value = int(flag.value * 0.90)
+            dbsession.add(flag)
             dbsession.flush()
             self.event_manager.flag_capture(user, flag)
             return []

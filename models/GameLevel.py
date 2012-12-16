@@ -20,8 +20,6 @@ Created on Mar 12, 2012
 '''
 
 
-import itertools
-
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, asc
 from sqlalchemy.types import Unicode, Integer

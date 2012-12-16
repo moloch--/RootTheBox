@@ -37,7 +37,7 @@ class GameHistory(object):
 
     def __init__(self):
         self.cache = pylibmc.Client(['127.0.0.1'], binary=True)
-        self.epoch = None
+        self.epoch = None  # Date/time of first snapshot
         self.__load__()
 
     @async
@@ -46,15 +46,15 @@ class GameHistory(object):
         logging.info("Loading game history from database ...")
         if Snapshot.by_id(1) is None:
             self.__now__()  # Take starting snapshot
+        self.epoch = Snapshot.by_id(1).created
         try:
             max_index = len(self)
             start_index = 1 if len(self) <= 10 else max_index - 9
-            self.epoch = Snapshot.by_id(1).created
             for index in range(start_index, max_index + 1):
                 snapshot = Snapshot.by_id(index)
                 if not snapshot.key in self.cache:
                     logging.info(
-                        "Cached snapshot (%d/%d)" % (snapshot.id, max_index)
+                        "Cached snapshot (%03d of %03d)" % (snapshot.id, max_index)
                     )
                     self.cache.set(snapshot.key, snapshot.to_dict())
             logging.info("History load complete.")

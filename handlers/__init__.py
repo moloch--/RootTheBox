@@ -109,10 +109,9 @@ app = Application([
                   (r'/admin/delete/(.*)', AdminDeleteHandler),
                   (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
 
-                  # WebSocket Handlers - Websocket communication
-                  # handlers
-                  (r'/notifications', NotifySocketHandler),
-                  (r'/all_notifications', AllNotificationsHandler),
+                  # Notificaiton handlers
+                  (r'/notifications/all', AllNotificationsHandler),
+                  (r'/notifications/wsocket/updates', NotifySocketHandler),
 
                   # Scoreboard Handlers - Severs scoreboard related
                   # pages
@@ -120,7 +119,8 @@ app = Application([
                   (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
                   (r'/scoreboard/money/(.*)', ScoreboardMoneyHandler),
                   (r'/scoreboard/flags/(.*)', ScoreboardFlagHandler),
-                  (r'/scoreboard/game_data', GameDataHandler),
+                  (r'/scoreboard/wsocket/game_data', GameDataHandler),
+                  (r'/scoreboard/wsocket/game_history', GameDataHandler),
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),
@@ -170,8 +170,8 @@ app = Application([
                   recaptcha_private_key=config.recaptcha_private_key,
 
                   # WebSocket Host IP Address
-                  ws_ip_address=config.domain,
-                  ws_port=config.listen_port,
+                  domain=config.domain,
+                  port=config.listen_port,
 
                   # Special file directories
                   avatar_dir=path.abspath('files/avatars/'),

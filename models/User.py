@@ -56,7 +56,7 @@ class User(BaseObject):
     ))
     team_id = Column(Integer, ForeignKey('team.id'))
     permissions = relationship("Permission", backref=backref(
-        "User", lazy="joined"), cascade="all, delete-orphan")
+        "User", lazy="select"), cascade="all, delete-orphan")
     notifications = relationship("Notification", backref=backref(
         "User", lazy="select"), cascade="all, delete-orphan")
     avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
@@ -71,7 +71,11 @@ class User(BaseObject):
     theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
     psk = Column(Unicode(64), default=lambda: unicode(urandom(32).encode('hex')))
     salt = Column(String(32), default=lambda: urandom(16).encode('hex'))
-    algorithms = {'md5': md5, 'sha1': sha1, 'sha256': sha256}
+    algorithms = {
+        'md5': (md5, 1,), 
+        'sha1': (sha1, 2,), 
+        'sha256': (sha256, 3,),
+    }
 
     @classmethod
     def all(cls):
@@ -121,11 +125,11 @@ class User(BaseObject):
         @rtype: unicode
         '''
         password = filter(lambda char: char in printable[:-5], password)
-        password = password.encode('ascii')
+        password = password.encode('ascii') # Scrypt doesn't like unicode
         if algorithm_name == 'scrypt':
             return cls.__scrypt__(password, salt)
         elif algorithm_name in cls.algorithms:
-            algo = cls.algorithms[algorithm_name]()
+            algo = cls.algorithms[algorithm_name][0]()
             algo.update(password)
             return unicode(algo.hexdigest())
         else:
@@ -172,9 +176,11 @@ class User(BaseObject):
 
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
-        attempt = filter(lambda char: char in printable[:-5], attempt)
-        result = self._hash_password(self.algorithm, attempt, self.salt)
-        return bool(self.password == result)
+        if self._password is not None:
+            result = self._hash_password(self.algorithm, attempt, self.salt)
+            return self.password == result
+        else:
+            return False
 
     def get_new_notifications(self):
         '''
@@ -183,8 +189,9 @@ class User(BaseObject):
         @return: List of unread messages
         @rtype: List of Notification objects
         '''
-        return filter(lambda notification: notification.viewed is False,
-                    self.notifications)
+        return filter(
+            lambda notify: notify.viewed is False, self.notifications
+        )
 
     def get_notifications(self, limit=10):
         '''
@@ -198,14 +205,21 @@ class User(BaseObject):
 
     def next_algorithm(self):
         ''' Returns next algo '''
-        if self.algorithm == 'md5':
-            return 'sha1'
-        elif self.algorithm == 'sha1':
-            return 'sha256'
-        else:
-            return None
+        current = self.get_algorithm(self.algorithm)
+        return self.get_algorithm(current[1] + 1)
+
+    def get_algorithm(self, index):
+        ''' Return algorithm tuple based on string or int '''
+        if isinstance(index, basestring) and index in self.algorithms:
+            return self.algorithms[index]
+        elif isinstance(index, int):
+            for key in self.algorithms.keys():
+                if index == self.algorithms[key][1]:
+                    return self.algorithms[key]
+        return None
 
     def to_dict(self):
+        ''' Return public data as dictionary '''
         team = Team.by_id(self.team_id)
         return {
             'uuid': self.uuid,

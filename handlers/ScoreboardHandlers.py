@@ -24,10 +24,12 @@ This file contains handlers related to the scoreboard.
 '''
 
 
+import json
 import logging
 import pylibmc
-import tornado.websocket
 
+
+from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import debug
 from libs.GameHistory import GameHistory
@@ -37,7 +39,7 @@ from libs.Scoreboard import Scoreboard
 from libs.EventManager import EventManager
 from models import Team
 
-class GameDataHandler(tornado.websocket.WebSocketHandler):
+class GameDataHandler(WebSocketHandler):
     '''
     Get Score data via websocket
     '''
@@ -91,6 +93,7 @@ class ScoreboardAjaxHandler(BaseHandler):
         self.render('scoreboard/summary_table.html', teams=Team.ranks())
 
     def team_details(self):
+        ''' Returns team details in JSON form '''
         uuid = self.get_argument('uuid', '')
         team = Team.by_uuid(uuid)
         if team is not None:
@@ -155,3 +158,49 @@ class ScoreboardFlagHandler(BaseHandler):
 
     def bar_chart(self):
         self.render('scoreboard/flags/bar_chart.html')
+
+
+class ScoreboardHistoryHandler(BaseHandler):
+
+    def get(self, *args, **kwargs):
+        self.render('scoreboard/history/view.html')
+
+
+class ScoreboardHistorySocketHandler(WebSocketHandler):
+
+    def initialize(self):
+        ''' Setup sessions '''
+        self.manager = EventManager.Instance()
+        self.game_history = GameHistory.Instance()
+
+    @debug
+    def open(self):
+        ''' When we receive a new websocket connect '''
+        self.manager.history_connections.append(self)
+        self.write_message(self.get_history())
+
+    @debug
+    def on_message(self, message):
+        ''' Send current state '''
+        try:
+            count = int(message)
+            if len(self.game_history) < count:
+                count = len(self.game_history)
+            self.write_message(self.get_history(count))
+        except ValueError:
+            self.write_message({'error': 'Not a number'})
+        except:
+            self.write_message({'error': "Something didn't work ..."})
+
+    @debug
+    def on_close(self):
+        ''' Lost connection to client '''
+        try:
+            self.manager.history_connections.remove(self)
+        except KeyError:
+            logging.warn("[Web Socket] Connection has already been closed.")
+
+    def get_history(self, length=9):
+        ''' Send history in JSON '''
+        length = abs(length) + 1
+        return json.dumps({'history': self.game_history[(-1 * length):]})

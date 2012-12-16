@@ -29,8 +29,9 @@
                     localStorage["cwd"] = "~";
                 }
                 function get_longest(line, diplay_buffer) {
-                    tmp = []
+                    tmp = [];
                     for (var index = 0; index < display_buffer.length; index++) {
+                        // console.log("[" + line + "]" + "[" + index + "]: " + display_buffer[index][line]);
                         tmp.push(display_buffer[index][line]);
                     }
                     longest = tmp.reduce(function (a, b) {
@@ -92,11 +93,9 @@
                     } else if (amount == undefined) {
                         print_error(term, "Amount is not defined");
                     } else { 
-                        print_info(term, "Souce account is set to '" + src_account + "'");
-                        print_info(term, "Destination account is set to '" + dest_account + "'");
-                        print_info(term, "Authorized user is set to '" + user + "'");
-                        print_info(term, "Transfer amount is set to '" + src_account + "'");
-                        print_info(term, "Attempting transfer " + src_account + " $" + amount.toString() + " -> " + dest_account);
+                        term.pause();
+                        term.echo(" ");
+                        print_info(term, "Attempting to transfer $" + amount.toString() + "'" + src_account + "' -> '" + dest_account + "'");
                         args = {
                             '_xsrf': document.getElementsByName("_xsrf")[0].value,
                             'source': src_account, 
@@ -120,6 +119,7 @@
                                 }
                             }
                             term.echo(" ");
+                            term.resume();
                         });
                     }
                 }
@@ -183,6 +183,9 @@
                 $('#console').terminal({
                         users: function(filter) {
                             term = this;
+                            term.echo(" ");
+                            print_info(term, "Querying database, please wait ...");
+                            term.pause();
                             $.getJSON('/federal_reserve/json/ls?data=users', function(data) {
                                 if ('users' in data) {
                                     users = data['users'];
@@ -204,9 +207,13 @@
                                     print_error(term, "ERROR: Request failed.")
                                 }
                             });
+                            term.resume();
                         },
                         accounts: function(filter) {
                             term = this;
+                            term.echo(" ");
+                            print_info(term, "Querying database, please wait ...");
+                            term.pause();
                             $.getJSON('/federal_reserve/json/ls?data=accounts', function(data) {
                                 if ('accounts' in data) {
                                     display_buffer = [];
@@ -223,12 +230,16 @@
                                     print_error(term, "ERROR: Request failed.")
                                 }
                             });
+                            term.resume();
                         },
                         report: function() {
                             term = this;
                             term.echo(" ");
                             term.push(function(account_name) {
                                 $.getJSON('/federal_reserve/json/info?account=' + account_name, function(data) {
+                                    term.echo(" ");
+                                    print_info(term, "Querying database, please wait ...");
+                                    term.pause();
                                     if ('error' in data) {
                                         print_error(term, "The account '" + account_name + "' does not exist");
                                     } else {
@@ -243,6 +254,7 @@
                                         term.echo(" [[b;;]******************************************]");
                                         term.echo(" ");
                                     }
+                                    term.resume();
                                 });
                                 term.pop();
                             }, {
