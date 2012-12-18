@@ -38,6 +38,7 @@ class EventManager(object):
         self.botnets = {}
         self.notify_connections = {}
         self.scoreboard_connections = []
+        self.history_connections = []
         self.scoreboard = Scoreboard()
 
     @debug
@@ -88,6 +89,12 @@ class EventManager(object):
         update = self.scoreboard.now()
         for wsocket in self.scoreboard_connections:
             wsocket.write_message(update)
+
+    @debug
+    def push_history(self, snapshot):
+        ''' Push latest snapshot to everyone '''
+        for wsocket in self.history_connections:
+            wsocket.write_message({'update': snapshot})
 
     @debug
     def push_broadcast_notification(self, event_uuid):

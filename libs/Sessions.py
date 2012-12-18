@@ -157,8 +157,7 @@ class BaseSession(collections.MutableMapping):
         elif isinstance(v, basestring):
             self.regeneration_interval = datetime.timedelta(seconds=int(v))
         else:
-            self.regeneration_interval = datetime.timedelta(
-                seconds=240)  # 4 mins
+            self.regeneration_interval = datetime.timedelta(seconds=240)
 
         return datetime.datetime.utcnow() + self.regeneration_interval
 

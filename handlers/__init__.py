@@ -116,11 +116,12 @@ app = Application([
                   # Scoreboard Handlers - Severs scoreboard related
                   # pages
                   (r'/scoreboard', ScoreboardHandler),
+                  (r'/scoreboard/history/(.*)', ScoreboardHistoryHandler),
                   (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
                   (r'/scoreboard/money/(.*)', ScoreboardMoneyHandler),
                   (r'/scoreboard/flags/(.*)', ScoreboardFlagHandler),
                   (r'/scoreboard/wsocket/game_data', GameDataHandler),
-                  (r'/scoreboard/wsocket/game_history', GameDataHandler),
+                  (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
 
                   # Public handlers - Serves all public pages
                   (r'/login', LoginHandler),

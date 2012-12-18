@@ -39,6 +39,7 @@ from libs.Scoreboard import Scoreboard
 from libs.EventManager import EventManager
 from models import Team
 
+
 class GameDataHandler(WebSocketHandler):
     '''
     Get Score data via websocket
@@ -163,7 +164,28 @@ class ScoreboardFlagHandler(BaseHandler):
 class ScoreboardHistoryHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        self.render('scoreboard/history/view.html')
+        uri = {
+            'money': self.money,
+            'flags': self.flags,
+        }
+        if 1 == len(args) and args[0] in uri:
+            uri[args[0]]()
+        else:
+            self.render('public/404.html')
+
+    def money(self):
+        game_history = GameHistory.Instance()
+        history = {}
+        for team in Team.all():
+            history[team.name] = game_history.get_money_history_by_name(team.name, -10)
+        self.render('scoreboard/history/money.html', history=history)
+
+    def flags(self):
+        game_history = GameHistory.Instance()
+        history = {}
+        for team in Team.all():
+            history[team.name] = game_history.get_flag_history_by_name(team.name, -10)
+        self.render('scoreboard/history/flags.html', history=history)
 
 
 class ScoreboardHistorySocketHandler(WebSocketHandler):
@@ -186,7 +208,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
             count = int(message)
             if len(self.game_history) < count:
                 count = len(self.game_history)
-            self.write_message(self.get_history(count))
+            self.write_message({'history': self.get_history(count)})
         except ValueError:
             self.write_message({'error': 'Not a number'})
         except:

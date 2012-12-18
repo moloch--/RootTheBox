@@ -21,10 +21,15 @@ Created on Mar 11, 2012
 
 
 import json
+import datetime
 
 from sqlalchemy.orm import relationship, backref
 from models import dbsession, snapshot_to_snapshot_team
 from models.BaseGameObject import BaseObject
+
+### Constants ###
+# Ignore time zone for now
+UNIX_EPOCH = datetime.datetime(year=1970, month=1, day=1)
 
 
 class Snapshot(BaseObject):
@@ -45,7 +50,8 @@ class Snapshot(BaseObject):
                 'game_levels': [str(level) for level in team.game_levels],
                 'flags': [str(flag) for flag in team.flags],
             }
-        return data
+        unix_time = self.created - UNIX_EPOCH
+        return {'timestamp': unix_time.total_seconds(), 'scoreboard': data}
 
     def to_json(self):
         return json.dumps(self.to_dict())

@@ -24,14 +24,10 @@ Created on Oct 04, 2012
 import json
 
 from models import Team
-from libs.GameHistory import GameHistory
 
 
 class Scoreboard(object):
     ''' Manages websocket connections (mostly thread safe) '''
-
-    def __init__(self):
-        self.history = GameHistory.Instance()
 
     def now(self):
         ''' Returns the current game state '''
