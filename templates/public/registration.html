@@ -3,14 +3,14 @@
 {% block title %}Registration{% end %}
 
 {% block header %}
-<script src="/static/js/garlic.min.js" type="text/javascript">></script>
+<script src="/static/js/garlic.min.js" type="text/javascript"></script>
 {% end %}
 
 {% block content %}
     <div class="container">
         <h1>Registration</h1>
         <br />
-        {% if errors != None and len(errors) != 0 %}
+        {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">×</a>
@@ -26,17 +26,17 @@
                 <div class="control-group">
                     <label class="control-label" for="account">Account Name</label>
                     <div class="controls">
-                        <input autofocus id="account" name="account" placeholder="Account Name" type="text"
-                            rel="popover"
+                        <input autofocus required id="account" name="account" placeholder="Account Name" type="text"
+                            rel="popover" pattern="^[a-zA-Z0-9 ]{3,15}$"
                             data-original-title="Account Selection"
-                            data-content="Your account must be 3-15 alpha-numeric characters" />
+                            data-content="Your account name must be 3-15 alpha-numeric characters" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="handle">Hacker Name</label>
                     <div class="controls">
-                        <input id="handle" name="handle" placeholder="Hacker Name" type="text" 
-                            rel="popover"
+                        <input required id="handle" name="handle" placeholder="Hacker Name" type="text" 
+                            rel="popover" pattern="^[a-ZA-Z0-9 ]{3,15}$"
                             data-original-title="Hacker Name Selection"
                             data-content="Your handle must be 3-15 alpha-numeric characters" />
                     </div>
@@ -56,7 +56,7 @@
                 <div class="control-group">
                     <label class="control-label" for="pass1">Password</label>
                     <div class="controls">
-                        <input id="pass1" name="pass1" placeholder="Password" type="password" 
+                        <input required id="pass1" name="pass1" placeholder="Password" type="password" 
                             autocomplete="off" data-storage="false"
                             rel="popover"
                             data-original-title="Password"
@@ -66,7 +66,7 @@
                 <div class="control-group">
                     <label class="control-label" for="pass2">Confirm Password</label>
                     <div class="controls">
-                        <input id="pass2" name="pass2" placeholder="Confirm Password" type="password" 
+                        <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password" 
                             autocomplete="off" data-storage="false"
                             rel="popover"
                             data-original-title="Confirm Password"
@@ -76,8 +76,8 @@
                 <div class="control-group">
                     <label class="control-label" for="token">Registration Token</label>
                     <div class="controls">
-                        <input id="regtoken" name="token" placeholder="Token" type="text"
-                            rel="popover"
+                        <input required id="regtoken" name="token" placeholder="Token" type="text"
+                            rel="popover" pattern="^[a-fA-F0-9]{1,6}$"
                             data-original-title="Registration Token"
                             data-content="Get your registration token from reception" />
                     </div>
@@ -91,7 +91,7 @@
         </div>
     </div>
     <script>
-        $(function () {
+        $(function() {
             $("#account").popover({placement:'right', trigger:'focus'});
             $("#handle").popover({placement:'right', trigger:'focus'});
             $("#pass1").popover({placement:'right', trigger:'focus'});

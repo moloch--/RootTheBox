@@ -20,23 +20,30 @@ Created on Mar 12, 2012
 '''
 
 
-import json
-
 from uuid import uuid4
-from sqlalchemy import Column
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer
 from models.BaseGameObject import BaseObject
 from models import dbsession
+from string import ascii_letters, digits
 
 
-class MarketItem(BaseObject):
-    ''' Item definition '''
+class SourceCode(BaseObject):
+    ''' 
+    Holds the source code for a box which can be purchased from the source code market 
+    '''
 
+    box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+    _file_name = Column(Unicode(64), nullable=False)
+    file_name = synonym('_file_name', descriptor=property(
+        lambda self: self._file_name,
+        lambda self, file_name: setattr(
+            self, '_file_name', self.__class__.filter_string(file_name, ".-_"))
+    ))
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
-    name = Column(Unicode(64), nullable=False)
     price = Column(Integer, nullable=False)
-    image = Column(Unicode(255))
-    description = Column(Unicode(1024))
+    description = Column(Unicode(1024), nullable=False)
 
     @classmethod
     def all(cls):
@@ -54,25 +61,17 @@ class MarketItem(BaseObject):
         return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
-    def by_name(cls, name):
-        ''' Returns an object with a given name '''
-        return dbsession.query(cls).filter_by(name=unicode(name)).first()
+    def by_box_id(cls, bid):
+        return dbsession.query(cls).filter_by(box_id=bid).first()
+
+    @classmethod
+    def filter_string(cls, string, extra_chars=''):
+        char_white_list = ascii_letters + digits + extra_chars
+        return filter(lambda char: char in char_white_list, string)
 
     def to_dict(self):
-        ''' Returns object data as json object '''
-        msg = {
-            'name': self.name,
+        return {
+            'file_name': self.file_name,
             'price': self.price,
-            'image': self.image,
             'description': self.description,
-            'uuid': self.uuid,
         }
-        return msg
-
-    def __eq__(self, other):
-        ''' Equivalency '''
-        return self.uuid == other.uuid
-
-    def __ne__(self, other):
-        ''' Not Equivalent '''
-        return not self == other

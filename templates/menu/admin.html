@@ -1,66 +1,76 @@
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="/">
-            Root the Box
-          </a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  Create
-                <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a href="/admin/create/team">Create Team</a></li>
-                  <li><a href="/admin/create/game_level">Create Game Level</a></li>
-                  <li><a href="/admin/create/corporation">Create Corporation</a></li>
-                  <li><a href="/admin/create/box">Create Box</a></li>
-                  <li><a href="/admin/create/flag">Create Flag</a></li>
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">
+                Root the Box
+            </a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Create
+                        <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/admin/create/team">Create Team</a></li>
+                            <li><a href="/admin/create/game_level">Create Game Level</a></li>
+                            <li><a href="/admin/create/corporation">Create Corporation</a></li>
+                            <li><a href="/admin/create/box">Create Box</a></li>
+                            <li><a href="/admin/create/flag">Create Flag</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            View &amp; Edit
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/admin/view/user_objects">User Objects</a></li>
+                            <li><a href="/admin/view/game_objects">Game Objects</a></li>
+                            <li><a href="/admin/view/game_levels">Game Levels</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Upgrades
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/admin/upgrades/source_code_market">Source Code Market</a></li>
+                            <li><a href="/admin/upgrades/swat">SWAT</a></li>
+                        </ul>
+                    </li>
+                    <!-- Other -->
+                    <li><a href="/admin/notifications">Notifications</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            RegTokens
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/admin/regtoken/create">Create</a></li>
+                            <li><a href="/admin/regtoken/view">View &amp; Delete</a></li>
+                        </ul>
+                    </li>
                 </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  View &amp; Edit
-                <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a href="/admin/view/user_objects">User Objects</a></li>
-                  <li><a href="/admin/view/game_objects">Game Objects</a></li>
-                  <li><a href="/admin/view/game_levels">Game Levels</a></li>
-                </ul>
-              </li>
-              <!-- Other -->
-              <li><a href="/admin/notifications">Notifications</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  RegTokens
-                <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a href="/admin/regtoken/create">Create</a></li>
-                  <li><a href="/admin/regtoken/view">View &amp; Delete</a></li>
-                </ul>
-              </li>
-            </ul>
-            <div class="btn-group pull-right">
-                  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                      <i class="icon-user"></i>
-                      {{ handle }}
-                      <span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu">
-                      <li><a href="/user/settings">Settings</a></li>
-                      <li class="divider"></li>
-                      <li><a href="/logout">Logout</a></li>
-                  </ul>
-            </div>
-          </div><!--/.nav-collapse -->
+                <div class="btn-group pull-right">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="icon-user"></i>
+                            {{ handle }}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/user/settings">Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div><!--/.nav-collapse -->
         </div>
-      </div>
     </div>
+</div>

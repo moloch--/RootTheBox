@@ -29,6 +29,7 @@ from models.IpAddress import IpAddress
 from models.GameLevel import GameLevel
 from models.Corporation import Corporation
 from models.BaseGameObject import BaseObject
+from models.SourceCode import SourceCode
 
 
 class Box(BaseObject):
@@ -43,7 +44,6 @@ class Box(BaseObject):
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
     teams = relationship("Team", secondary=team_to_box, backref=backref("Box", lazy="joined"))
     flags = relationship("Flag", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
-
 
     @classmethod
     def all(cls):
@@ -74,7 +74,6 @@ class Box(BaseObject):
         db_ip = dbsession.query(IpAddress).filter(
             or_(IpAddress.v4 == ip_addr, IpAddress.v6 == ip_addr)
         ).first()
-        #ip = dbsession.query(IpAddress).filter_by(v4=IpAddress).first()
         if db_ip is not None:
             return dbsession.query(cls).filter_by(id=db_ip.box_id).first()
         else:
@@ -105,18 +104,22 @@ class Box(BaseObject):
     def game_level(self):
         return GameLevel.by_id(self.game_level_id)
 
+    @property
+    def source_code(self):
+        return SourceCode.by_box_id(self.id)
+
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
         corp = Corporation.by_id(self.corporation_id)
         game_level = GameLevel.by_id(self.game_level_id)
-        return dict(
-            name=self.name,
-            uuid=self.uuid,
-            corporation=corp.uuid,
-            description=self.description,
-            difficulty=self.difficulty,
-            game_level=game_level.uuid,
-        )
+        return {
+            'name': self.name,
+            'uuid': self.uuid,
+            'corporation': corp.uuid,
+            'description': self.description,
+            'difficulty': self.difficulty,
+            'game_level': game_level.uuid,
+        }
 
     def __repr__(self):
         return u'<Box - name: %s>' % (self.box_name,)

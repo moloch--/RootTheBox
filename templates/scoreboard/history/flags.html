@@ -115,7 +115,7 @@
 					flags = update['scoreboard'][key]['flags'].length;
 					index = get_index_by_name(key);
 					if (index !== undefined) {
-						var shift = (10 <= chart.series[index].data.length);
+						var shift = (30 <= chart.series[index].data.length);
 						var scores = [timestamp, flags];
 						chart.series[index].addPoint(scores, true, shift);
 					} else {

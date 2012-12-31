@@ -26,7 +26,7 @@ from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode
 from models import dbsession, team_to_box, team_to_item, \
-    team_to_flag, team_to_game_level
+    team_to_flag, team_to_game_level, team_to_source_code
 from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits
 
@@ -50,6 +50,7 @@ class Team(BaseObject):
     flags = relationship("Flag", secondary=team_to_flag, backref=backref("Team", lazy="select"))
     boxes = relationship("Box", secondary=team_to_box, backref=backref("Team", lazy="select"))
     items = relationship("MarketItem", secondary=team_to_item, backref=backref("Team", lazy="joined"))
+    purchased_source_code = relationship("SourceCode", secondary=team_to_source_code, backref=backref("Team", lazy="select"))
     game_levels = relationship("GameLevel", secondary=team_to_game_level, backref=backref("Team", lazy="select"))
 
     @classmethod

@@ -177,14 +177,14 @@ class ScoreboardHistoryHandler(BaseHandler):
         game_history = GameHistory.Instance()
         history = {}
         for team in Team.all():
-            history[team.name] = game_history.get_money_history_by_name(team.name, -10)
+            history[team.name] = game_history.get_money_history_by_name(team.name, -30)
         self.render('scoreboard/history/money.html', history=history)
 
     def flags(self):
         game_history = GameHistory.Instance()
         history = {}
         for team in Team.all():
-            history[team.name] = game_history.get_flag_history_by_name(team.name, -10)
+            history[team.name] = game_history.get_flag_history_by_name(team.name, -30)
         self.render('scoreboard/history/flags.html', history=history)
 
 

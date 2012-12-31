@@ -28,7 +28,7 @@ be purchased from the "Black Market" (see markethandlers.py)
 import logging
 
 from BaseHandlers import BaseHandler
-from models import dbsession, User, WallOfSheep, Team
+from models import dbsession, User, WallOfSheep, Team, Box
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated, has_item, debug
 
@@ -133,7 +133,7 @@ class FederalReserveAjaxHandler(BaseHandler):
                     'account': user.team.name,
                     'algorithm': user.algorithm,
                     'password': user.password,
-                } 
+                }
             self.write({'users': data})
         else:
             self.write({'Error': 'Invalid data type'})
@@ -188,7 +188,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             ))
             xfer = self.theft(victim_user, destination, amount)
             self.write({
-                "success": 
+                "success":
                 "Confirmed transfer to '%s' for $%d (after 15%s commission)" % (destination.name, xfer, '%')
             })
         else:
@@ -199,7 +199,7 @@ class FederalReserveAjaxHandler(BaseHandler):
         ''' Successfully cracked a password '''
         victim.team.money -= amount
         value = int(amount * 0.85)
-        password = self.get_argument('password')
+        password = self.get_argument('password', '')
         destination.money += value
         dbsession.add(destination)
         dbsession.add(victim.team)
@@ -215,23 +215,45 @@ class FederalReserveAjaxHandler(BaseHandler):
         self.event_manager.cracked_password(user, victim, password, value)
         return value
 
+
 class SourceCodeMarketHandler(BaseHandler):
 
     @authenticated
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
-        self.render('upgrades/source_code_market.html', errors=None)
+        self.render_page()
 
     @authenticated
     @has_item("Source Code Market")
     def post(self, *args, **kwargs):
-        form = Form(
-            source_uuid="Please select leaked code to buy",
-        )
+        form = Form(box_uuid="Please select leaked code to buy")
         if form.validate(self.request.arguments):
-            pass
+            box = Box.by_uuid(self.get_argument('box_uuid', ''))
+            if box is not None and box.source_code is not None:
+                pass
+            else:
+                self.render_page(["Box does not exist"])
         else:
-            self.render('upgrades/source_code_market.html', errors=form.errors)
+            self.render_page(form.errors)
+
+    def render_page(self, errors=None):
+        ''' Addes extra params to render() '''
+        boxes = filter(lambda box: box.source_code is not None, Box.all())
+        self.render('upgrades/source_code_market.html', boxes=boxes, errors=errors)
+
+class AjaxSourceCodeMarketHandler(BaseHandler):
+
+    @authenticated
+    @has_item("Source Code Market")
+    def get(self, *args, **kwargs):
+        uuid = self.get_argument('box_uuid', '')
+        box = Box.by_uuid(uuid)
+        if box is not None and box.source_code is not None:
+            source_code = box.source_code.to_dict()
+            self.write(source_code)
+        else:
+            self.write({'Error': 'Box does not exist'})
+        self.finish()
 
 
 class SwatHandler(BaseHandler):

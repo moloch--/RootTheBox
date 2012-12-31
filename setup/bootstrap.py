@@ -53,18 +53,18 @@ else:
 
 # Theme objects
 css_files = [
-    ("Bootstrap", 'bootstrap.min.css'),
-    ("Amelia", 'amelia.min.css'),
-    ("Cyborg", 'cyborg.min.css'),
-    ("Readable", 'readable.min.css'),
-    ("Slate", 'slate.min.css'),
-    ("Spruce", 'spruce.min.css'),
-    ("United", 'united.min.css'),
-    ("Cerulean", 'cerulean.min.css'),
-    ("Journal", 'journal.min.css'),
-    ("Simplex", 'simplex.min.css'),
-    ("Spacelab", 'spacelab.min.css'),
-    ("Superhero", 'superhero.min.css'),
+    (u"Bootstrap", u'bootstrap.min.css'),
+    (u"Amelia", u'amelia.min.css'),
+    (u"Cyborg", u'cyborg.min.css'),
+    (u"Readable", u'readable.min.css'),
+    (u"Slate", u'slate.min.css'),
+    (u"Spruce", u'spruce.min.css'),
+    (u"United", u'united.min.css'),
+    (u"Cerulean", u'cerulean.min.css'),
+    (u"Journal", u'journal.min.css'),
+    (u"Simplex", u'simplex.min.css'),
+    (u"Spacelab", u'spacelab.min.css'),
+    (u"Superhero", u'superhero.min.css'),
 ]
 for css in css_files:
     theme = Theme(

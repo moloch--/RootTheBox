@@ -18,7 +18,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag_token">Flag</label>
                     <div class="controls">
-                        <input autofocus id="flag_token" name="token" type="text" placeholder="Flag" />
+                        <input autofocus required id="flag_token" name="token" type="text" placeholder="Flag" />
                     </div>
                 </div>
             </form>
@@ -33,8 +33,7 @@
                     document.forms['submit-text-flag'].submit();
                 }
             </script>
-            <button class="btn btn-primary" type="button" 
-            		onclick="submit_text_flag();">
+            <button class="btn btn-primary" type="button" onclick="submit_text_flag();">
             	Submit
             </button>
         </div>
@@ -90,8 +89,7 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button class="btn btn-primary" type="button" 
-            		onclick="document.forms['unlock-level'].submit();">
+            <button class="btn btn-primary" type="button" onclick="document.forms['unlock-level'].submit();">
             	Unlock
             </button>
         </div>

@@ -3,5 +3,84 @@
 {% block title %}Source Code Market{% end %}
 
 {% block content %}
+   <!-- Buy Source Code -->
+    <div id="buySourceCodeModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Buy Source Code</h3>
+        </div>
+        <div class="modal-body">
+            <form id="buy-src" class="form-horizontal" action="/upgrades/source_code_market" method="post">
+                {% raw xsrf_form_html() %}
+                <input id="buy_box_uuid" type="hidden" name="box_uuid" value="" />
+            </form>
+            <p>
+            	Are you sure you want to buy this code?
+        	</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button class="btn btn-primary" type="button" onclick="document.forms['buy-src'].submit();">
+                Buy
+            </button>
+        </div>
+    </div><!-- End Modal -->
+    <script>
+        function buy_src(box_uuid) {
+            $("#buy_box_uuid").val(box_uuid);
+        }
+    </script>
+	<div class="container">
+        <h1>Source Code Market</h1>
+        <br />
+        {% if errors is not None and len(errors) != 0 %}
+            {% for error in errors %}
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">ERROR</h4>
+                    {{ error }}
+                </div>
+            {% end %}
+        {% end %}
+        <div class="well">
+        	<h3>Source Code for Sale</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Box</th>
+                        <th>Level</th>
+                        <th>Price</th>
+                        <th><!-- Button --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, box in enumerate(boxes) %}
+                    	<tr>
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ box.name }}</td>
+                            <td>{{ box.game_level.number }}</td>
+                            <td>${{ box.source_code.price }}</td>
+                            {% if box.source_code in user.team.purchased_source_code %}
+                            <td>
+                                <a class="btn btn-mini" data-toggle="modal"
+                                    onclick="download_src('{{ box.uuid }}')">
+                                    Download
+                                </a>
+                            </td>
+                            {% else %}
+                            <td>
+                                <a class="btn btn-mini" data-toggle="modal" href="#buySourceCodeModal"
+                                    onclick="buy_src('{{ box.uuid }}')">
+                                    Buy Source
+                                </a>
+                            </td>
+                            {% end %}
+                    	</tr>
+                    {% end %}
+                </tbody>
+            </table>
+    	</div>
+    </div>
 
 {% end %}

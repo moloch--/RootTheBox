@@ -66,9 +66,9 @@ app = Application([
                   # Static Handlers - Serves static CSS, JavaScript and
                   # image files
                   (r'/static/(.*)',
-                   StaticFileHandler, {'path': 'static'}),
+                      StaticFileHandler, {'path': 'static'}),
                   (r'/avatars/(.*)',
-                   StaticFileHandler, {'path': 'files/avatars'}),
+                      StaticFileHandler, {'path': 'files/avatars'}),
 
                   # Reporter Handlers - Communication with reporters
                   (r'/botnet/register', BotHandler),
@@ -78,7 +78,7 @@ app = Application([
                   (r'/user/shares/download(.*)', ShareDownloadHandler),
                   (r'/user/share/files', ShareUploadHandler),
 
-                  # PasteBin text sharing handlers
+                  # PasteBin - text sharing handlers
                   (r'/user/share/pastebin', PasteHandler),
                   (r'/user/share/pastebin/create', CreatePasteHandler),
                   (r'/user/share/pastebin/display', DisplayPasteHandler),
@@ -92,6 +92,7 @@ app = Application([
                   (r'/password_security', PasswordSecurityHandler),
                   (r'/federal_reserve', FederalReserveHandler),
                   (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
+                  (r'/source_code_market', SourceCodeMarketHandler),
 
                   # Mission handlers
                   (r'/user/missions', MissionsHandler),
@@ -108,6 +109,7 @@ app = Application([
                   (r'/admin/view/(.*)', AdminViewHandler),
                   (r'/admin/delete/(.*)', AdminDeleteHandler),
                   (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
+                  (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
 
                   # Notificaiton handlers
                   (r'/notifications/all', AllNotificationsHandler),
@@ -163,7 +165,7 @@ app = Application([
                       "Recaptcha": Recaptcha,
                   },
 
-                  # Enable XSRF forms
+                  # Enable XSRF forms; not optional
                   xsrf_cookies=True,
 
                   # Recaptcha Settings
@@ -177,6 +179,7 @@ app = Application([
                   # Special file directories
                   avatar_dir=path.abspath('files/avatars/'),
                   shares_dir=path.abspath('files/shares/'),
+                  source_code_market_dir=path.abspath('files/source_code_market'),
 
                   # Event manager
                   event_manager=EventManager.Instance(),

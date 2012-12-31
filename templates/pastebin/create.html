@@ -8,7 +8,7 @@
 </div>
 <div class="row-fluid">
     <div class="span12 well animated fadeIn">
-		{% if errors != None and len(errors) != 0 %}
+		{% if errors is not None and len(errors) != 0 %}
 			{% for error in errors %}
 				<div class="alert alert-error">
 					<a class="close" data-dismiss="alert" href="#">×</a>
@@ -17,13 +17,13 @@
 				</div>
 			{% end %}
 		{% end %}
-		<form action="/user/share/pastebin/create" method="post" autocomplete="off">  
+		<form id="create-paste" action="/user/share/pastebin/create" method="post" autocomplete="off">  
 		    {% raw xsrf_form_html() %}
 		    <fieldset>
 		    <legend>Create New Paste</legend>
 		    	<p>
 		        	<label for="name">Name</label>
-		            <input autofocus name="name" id="name" placeholder="Paste Name" type="text" />
+		            <input autofocus required name="name" id="name" placeholder="Paste Name" type="text" />
 		        </p>
 		        <p>
 		            <label for="content">Content</label>
@@ -31,8 +31,16 @@
 		            </textarea>
 		        </p>
 		    </fieldset>
+		    <script>
+		    	function submit_paste() {
+		    		if (notifier_ws !== undefined) {
+                        notifier_ws.close();
+                    }
+                    document.forms['create-paste'].submit();
+		    	}
+		    </script>
 		    <p class="submit">
-		        <button class="btn btn-primary" type="submit">Create New Paste</button>
+		        <button class="btn btn-primary" onclick="submit_paste()">Create New Paste</button>
 		    </p>   
 		</form>
     </div>

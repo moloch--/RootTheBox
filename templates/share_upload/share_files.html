@@ -18,21 +18,29 @@
 		{% end %}
 		<div class="row">
 			<div class="span4 well">
-				<form action="/user/share/files" method="post" enctype="multipart/form-data">  
+				<form id="share-file" action="/user/share/files" method="post" enctype="multipart/form-data">  
 			      {% raw xsrf_form_html() %}
 			      <fieldset>
 			      	<legend>File Upload</legend>
 			        <p class="first">
 			          <label for="file_data">File (Max 50Mb)</label>
-			          <input type="file" name="file_data" id="file_data" />
+			          <input required type="file" name="file_data" id="file_data" />
 			        </p>
 			        <p>
 			          <label for="description">Description</label>
-			          <input type="text" name="description" id="description" placeholder="File Description" />
+			          <input required type="text" name="description" id="description" placeholder="File Description" />
 			        </p> 
 			      </fieldset>
+			      <script>
+			      		function share_file() {
+				    		if (notifier_ws !== undefined) {
+		                        notifier_ws.close();
+		                    }
+		                    document.forms['share-file'].submit();      			
+			      		}
+			      </script>
 			      <p class="submit">
-			        <button class="btn" type="submit"> Upload File </button>
+			        <button class="btn" onclick="share_file()"> Upload File </button>
 			      </p>
 			    </form>
 			</div>

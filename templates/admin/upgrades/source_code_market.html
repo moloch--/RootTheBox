@@ -1,0 +1,130 @@
+{% extends "../../main.html" %}
+
+{% block title %}Source Code Market{% end %}
+
+{% block content %}
+    <!-- Add Source Code -->
+    <div id="addSourceCodeModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Add Source Code to Market</h3>
+        </div>
+        <div class="modal-body">
+            <form id="add-src" class="form-horizontal" action="/admin/upgrades/source_code_market/add" method="post" enctype="multipart/form-data">
+                {% raw xsrf_form_html() %}
+                <input id="add_box_uuid" type="hidden" name="box_uuid" value="" />
+                <div class="control-group">
+                    <label class="control-label" for="source_archive">Source Code Archive</label>
+                    <div class="controls">
+                        <input id="source_archive" name="source_archive" type="file">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="price">Price</label>
+                    <div class="controls">
+                        <input required id="price" name="price" type="text" pattern="[0-9]+"  placeholder="Price ($)">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="description">Description</label>
+                    <div class="controls">
+                        <input required id="description" name="description" type="text" placeholder="Description">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button class="btn btn-primary" type="button" onclick="document.forms['add-src'].submit();">
+                Add to Market
+            </button>
+        </div>
+    </div><!-- End Modal -->
+    <!-- Del Source Code -->
+    <div id="delSourceCodeModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Delete Source Code</h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            Are you sure you want to delete this source code? <br />
+        </p>
+        <form id="del-src" method="post" action="/admin/upgrades/source_code_market/delete">
+            {% raw xsrf_form_html() %}
+            <input id="del_box_uuid" name="box_uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button type="button" class="btn btn-danger" onclick="document.forms['del-src'].submit();">
+                Delete
+            </button>
+        </div>
+    </div><!-- End Modal -->
+    <script>
+        function add_src(box_uuid) {
+            $("#add_box_uuid").val(box_uuid);
+        }
+        function del_src(box_uuid) {
+            $("#del_box_uuid").val(box_uuid);
+        }
+    </script>
+	<div class="container">
+        <h1>Source Code Market</h1>
+        <br />
+        {% if errors is not None and len(errors) != 0 %}
+            {% for error in errors %}
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">ERROR</h4>
+                    {{ error }}
+                </div>
+            {% end %}
+        {% end %}
+        <div class="well">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Box</th>
+                        <th>File Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th><!-- Button --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% from models import Box %}
+                    {% for index, box in enumerate(Box.all()) %}
+                        <tr>
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ box.name }}</td>
+                            {% if box.source_code is None %}
+                                <td>N / A</td>
+                                <td>N / A</td>
+                                <td>N / A</td>
+                                <td>
+                                    <a class="btn btn-mini" data-toggle="modal" href="#addSourceCodeModal"
+                                        onclick="add_src('{{ box.uuid }}')">
+                                        Add Source Code
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td>{{ box.source_code.file_name }}</td>
+                                <td>{{ box.source_code.description }}</td>
+                                <td>${{ box.source_code.price }}</td>
+                                <td>
+                                    <a class="btn btn-mini btn-danger" data-toggle="modal" href="#delSourceCodeModal"
+                                        onclick="del_src('{{ box.uuid }}')">
+                                        Delete Source Code
+                                    </a>
+                                </td>
+                            {% end %}
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+    	</div>
+    </div>
+{% end %}

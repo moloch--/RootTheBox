@@ -7,7 +7,7 @@
   <div class="container">
   	<h1>Settings</h1>
   	<br />
-    {% if errors != None and len(errors) != 0 %}
+    {% if errors is not None and len(errors) != 0 %}
       {% for error in errors %}
         <div class="alert alert-error">
           <a class="close" data-dismiss="alert" href="#">×</a>
@@ -16,7 +16,7 @@
         </div>
       {% end %}
     {% end %}
-    {% if success != None and len(success) != 0 %}
+    {% if success is not None and len(success) != 0 %}
       {% for message in success %}
         <div class="alert alert-success">
           <a class="close" data-dismiss="alert" href="#">×</a>

@@ -82,7 +82,7 @@ class DisplayPasteHandler(BaseHandler):
             paste_uuid = self.get_argument("paste_uuid")
             user = self.get_current_user()
             paste = PasteBin.by_uuid(paste_uuid)
-            if paste == None or paste.team_id != user.team.id:
+            if paste is None or paste.team_id != user.team.id:
                 self.render("pastebin/display.html", errors=["Paste does not exist."], paste=None)
             else:
                 self.render("pastebin/display.html", errors=None, paste=paste)
@@ -103,7 +103,7 @@ class DeletePasteHandler(BaseHandler):
             paste_uuid = self.get_argument("paste_uuid")
             paste = PasteBin.by_uuid(paste_uuid)
             user = self.get_current_user()
-            if paste != None and paste.team_id == user.team.id:
+            if paste is not None and paste.team_id == user.team.id:
                 dbsession.delete(paste)
                 dbsession.flush()
         self.redirect("/user/share/pastebin")

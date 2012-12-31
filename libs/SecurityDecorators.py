@@ -97,7 +97,7 @@ def debug(method):
 
 
 def has_item(name):
-    ''' Checks user's permissions '''
+    ''' Checks user's team owns an unlock/item '''
 
     def func(method):
 

@@ -31,62 +31,54 @@ metadata = BaseObject.metadata
 
 config = ConfigManager.Instance()
 db_connection = 'mysql://%s:%s@%s/%s' % (
-    config.db_user, config.db_password, config.db_server, config.db_name)
+    config.db_user, config.db_password, config.db_server, config.db_name
+)
 
-# set the connection string here
+# Setup the database session
 engine = create_engine(db_connection)
 setattr(engine, 'echo', config.log_sql)
 Session = sessionmaker(bind=engine, autocommit=True)
 dbsession = Session(autoflush=True)
 
 team_to_box = Table('team_to_box', BaseObject.metadata,
-                        Column('team_id',
-                            Integer, ForeignKey('team.id'), nullable=False),
-                        Column('box_id',
-                            Integer, ForeignKey('box.id'), nullable=False)
-                    )
+    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+    Column('box_id', Integer, ForeignKey('box.id'), nullable=False)
+)
 
 team_to_item = Table('team_to_item', BaseObject.metadata,
-                        Column('team_id',
-                            Integer, ForeignKey('team.id'), nullable=False),
-                        Column('item_id',
-                            Integer, ForeignKey('market_item.id'), nullable=False)
-                    )
+    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+    Column('item_id', Integer, ForeignKey('market_item.id'), nullable=False)
+)
+
+team_to_source_code = Table('team_to_souce_code', BaseObject.metadata,
+    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+    Column('souce_code_id', Integer, ForeignKey('source_code.id'), nullable=False)
+)
 
 team_to_flag = Table('team_to_flag', BaseObject.metadata,
-                        Column('team_id',
-                            Integer, ForeignKey('team.id'), nullable=False),
-                        Column('flag_id',
-                            Integer, ForeignKey('flag.id'), nullable=False)
-                    )
+    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+    Column('flag_id', Integer, ForeignKey('flag.id'), nullable=False)
+)
 
 team_to_game_level = Table('team_to_game_level', BaseObject.metadata,
-                            Column('team_id',
-                                Integer, ForeignKey('team.id'), nullable=False),
-                            Column('game_level_id',
-                                Integer, ForeignKey('game_level.id'), nullable=False)
-                        )
+    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+    Column('game_level_id', Integer, ForeignKey('game_level.id'), nullable=False)
+)
 
 snapshot_to_snapshot_team = Table('snapshot_to_snapshot_team', BaseObject.metadata,
-                            Column('snapshot_id',
-                                Integer, ForeignKey('snapshot.id'), nullable=False),
-                            Column('snapshot_team_id',
-                                Integer, ForeignKey('snapshot_team.id'), nullable=False)
-                        )
+    Column('snapshot_id', Integer, ForeignKey('snapshot.id'), nullable=False),
+    Column('snapshot_team_id', Integer, ForeignKey('snapshot_team.id'), nullable=False)
+)
 
 snapshot_team_to_flag = Table('snapshot_team_to_flag', BaseObject.metadata,
-                            Column('snapshot_team_id',
-                                Integer, ForeignKey('snapshot_team.id'), nullable=False),
-                            Column('flag_id',
-                                Integer, ForeignKey('flag.id'), nullable=False)
-                        )
+    Column('snapshot_team_id', Integer, ForeignKey('snapshot_team.id'), nullable=False),
+    Column('flag_id', Integer, ForeignKey('flag.id'), nullable=False)
+)
 
 snapshot_team_to_game_level = Table('snapshot_team_to_game_level', BaseObject.metadata,
-                            Column('snapshot_team_id',
-                                Integer, ForeignKey('snapshot_team.id'), nullable=False),
-                            Column('gam_level_id',
-                                Integer, ForeignKey('game_level.id'), nullable=False)
-                        )
+    Column('snapshot_team_id', Integer, ForeignKey('snapshot_team.id'), nullable=False),
+    Column('gam_level_id', Integer, ForeignKey('game_level.id'), nullable=False)
+)
 
 # import models
 from models.Box import Box
@@ -106,9 +98,10 @@ from models.MarketItem import MarketItem
 from models.IpAddress import IpAddress
 from models.Snapshot import Snapshot
 from models.SnapshotTeam import SnapshotTeam
+from models.SourceCode import SourceCode
 
 # calling this will create the tables at the database
-create_tables = lambda: (setattr(engine, 'echo', True), metadata.create_all(engine))
+create_tables = lambda: (setattr(engine, 'echo', config.log_sql), metadata.create_all(engine))
 
 # Bootstrap the database with some shit
 def boot_strap():

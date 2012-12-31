@@ -26,9 +26,12 @@ This file contains all of the adminstrative functions.
 '''
 
 
+import os
+
+from base64 import b64encode
 from libs.Form import Form
 from libs.SecurityDecorators import *
-from models import dbsession, Team, Box, Flag, \
+from models import dbsession, Team, Box, Flag, SourceCode, \
     Corporation, RegistrationToken, GameLevel, IpAddress
 from handlers.BaseHandlers import BaseHandler
 
@@ -152,6 +155,8 @@ class AdminCreateHandler(BaseHandler):
                 name=unicode(self.get_argument('team_name')),
                 motto=unicode(self.get_argument('motto')),
             )
+            level_0 = GameLevel.all()[0]
+            team.game_levels.append(level_0)
             dbsession.add(team)
             dbsession.flush()
             self.redirect('/admin/view/user_objects')
@@ -453,21 +458,25 @@ class AdminEditHandler(BaseHandler):
                 errors = []
                 if team.name != self.get_argument('name'):
                     logging.info("Updated team name %s -> %s" %
-                        (team.name, self.get_argument('name'),))
+                        (team.name, self.get_argument('name'),)
+                    )
                     team.name = unicode(self.get_argument('name'))
                 if team.motto != self.get_argument('motto'):
                     logging.info("Updated %s's motto %s -> %s" %
-                        (team.name, team.motto, self.get_argument('motto'),))
+                        (team.name, team.motto, self.get_argument('motto'),)
+                    )
                     team.motto = unicode(self.get_argument('motto'))
                 try:
                     lport = int(self.get_argument('listen_port'))
                     if lport != team.listen_port:
                         logging.info("Updated %s's listen port %d -> %d" %
-                            (team.name, team.listen_port, lport,))
+                            (team.name, team.listen_port, lport,)
+                        )
                         team.listen_port = lport
                 except ValueError:
                     errors.append("Invalid listen port %s " %
-                        self.get_argument('listen_port'))
+                        self.get_argument('listen_port')
+                    )
                 dbsession.add(team)
                 dbsession.flush()
                 self.redirect("/admin/view/user_objects")
@@ -649,7 +658,7 @@ class AdminEditHandler(BaseHandler):
 
 
 class AdminDeleteHandler(BaseHandler):
-    ''' Manages registration tokens '''
+    ''' Delete flags/ips from the database '''
 
     @authorized('admin')
     @restrict_ip_address
@@ -673,7 +682,7 @@ class AdminDeleteHandler(BaseHandler):
             dbsession.flush()
             self.redirect("/admin/view/game_objects")
         else:
-            logging.info("IP address (%s) does not exist in database" % self.get_argument('ip', '__NULL__'))
+            logging.info("IP address (%s) does not exist in database" % self.get_argument('ip', ''))
             self.render("admin/view/game_objects.html", errors=["IP does not exist in database"])
 
     def del_flag(self):
@@ -685,7 +694,7 @@ class AdminDeleteHandler(BaseHandler):
             dbsession.flush()
             self.redirect('/admin/view/game_objects')
         else:
-            logging.info("Flag (%s) does not exist in the database" % self.get_argument('uuid', '__NULL__'))
+            logging.info("Flag (%s) does not exist in the database" % self.get_argument('uuid', ''))
             self.render("admin/view/game_objects.html", errors=["Flag does not exist in database"])
 
 
@@ -708,7 +717,7 @@ class AdminRegTokenHandler(BaseHandler):
     @restrict_ip_address
     def post(self, *args, **kwargs):
         ''' Used to delete regtokens '''
-        token_value = self.get_argument('token_value', '__NULL__')
+        token_value = self.get_argument('token_value', '')
         reg_token = RegistrationToken.by_value(token_value)
         if reg_token is not None:
             dbsession.delete(reg_token)
@@ -727,3 +736,89 @@ class AdminRegTokenHandler(BaseHandler):
     def view(self):
         ''' View all reg tokens '''
         self.render('admin/view/token.html', errors=None)
+
+
+class AdminSourceCodeMarketHandler(BaseHandler):
+    ''' Add source code files to the source code market '''
+
+    @authorized('admin')
+    @restrict_ip_address
+    def get(self, *args, **kwargs):
+        self.render('admin/upgrades/source_code_market.html', errors=None)
+
+    @authorized('admin')
+    @restrict_ip_address
+    def post(self, *args, **kwargs):
+        uri = {
+            '/add': self.add_source_code,
+            '/delete': self.delete_source_code,
+        }
+        if 1 == len(args) and args[0] in uri:
+            uri[args[0]]()
+        else:
+            self.render("public/404.html")
+
+    def add_source_code(self):
+        form = Form(
+            box_uuid="Please select a box",
+            price="Please input a price for the source code",
+            description="Please enter a description",
+        )
+        if form.validate(self.request.arguments):
+            box = Box.by_uuid(self.get_argument('box_uuid'))
+            if box is not None:
+                if not 'source_archive' in self.request.files and 0 < len(self.request.files['source_archive']):
+                    self.render('admin/upgrades/source_code_market.html', 
+                        errors=["No file data"]
+                    )
+                else:
+                    try:
+                        price = int(self.get_argument('price'))
+                        self.create_source_code(box, price)
+                        self.render('admin/upgrades/source_code_market.html', errors=None)
+                    except ValueError:
+                        self.render('admin/upgrades/source_code_market.html',
+                            errors=["Price must be an integer"]
+                        )
+            else:
+                self.render('admin/upgrades/source_code_market.html',
+                    errors=["The selected box does not exist"]
+                )
+        else:
+            self.render('admin/upgrades/source_code_market.html', errors=form.errors)
+
+    def create_source_code(self, box, price):
+        ''' Save file data and create object in database '''
+        description = unicode(self.get_argument('description'))
+        file_name = unicode(self.request.files['source_archive'][0]['filename'])
+        source_code = SourceCode(
+            file_name=file_name,
+            box_id=box.id,
+            price=price,
+            description=description,
+        )
+        dbsession.add(source_code)
+        dbsession.flush()
+        file_data = self.request.files['source_archive'][0]['body']
+        root = self.application.settings['source_code_market_dir']
+        save_file = open(str(root + '/' + source_code.uuid), 'w')
+        save_file.write(b64encode(file_data))
+        save_file.close()
+        dbsession.add(source_code)
+        dbsession.flush()
+
+    def delete_source_code(self):
+        uuid = self.get_argument('box_uuid', '')
+        box = Box.by_uuid(uuid)
+        if box is not None and box.source_code is not None:
+            source_code_uuid = box.source_code.uuid
+            dbsession.delete(box.source_code)
+            dbsession.flush()
+            root = self.application.settings['source_code_market_dir']
+            source_code_path = root + '/' + source_code_uuid
+            if os.path.exists(source_code_path):
+                os.unlink(source_code_path)
+            errors = None
+        else:
+            errors = ["Box does not exist, or contains no source code"]
+        self.render('admin/upgrades/source_code_market.html', errors=errors)

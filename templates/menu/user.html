@@ -1,85 +1,125 @@
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="/">
-            Root the Box
-          </a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li><a href="/user">Home</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  Game
-                <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a href="/user/missions">Missions</a></li>
-                  <li><a href="/user/market">Black Market</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  Team
-                <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a href="/user/share/files">File Sharing</a></li>
-                  <li><a href="/user/share/pastebin">PasteBin</a></li>
-                </ul>
-              </li>
-              {% if len(user.team.items) != 0 %}
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Unlocks
-                    <b class="caret"></b>
-                  </a>
-                  <ul class="dropdown-menu">
-                    {% if user.has_item("Source Code Market") %}
-                        <li><a href="/source_code_market">Source Code Market</a></li>
-                    {% end %}
-                    {% if user.has_item("Password Security") %}
-                        <li><a href="/password_security">Password Security</a></li>
-                    {% end %}
-                    {% if user.has_item("Federal Reserve") %}
-                        <li><a href="/federal_reserve">Federal Reserve</a></li>
-                    {% end %}
-                    {% if user.has_item("SWAT") %}
-                        <li><a href="/swat">S.W.A.T.</a></li>
-                    {% end %}
-                  </ul>
-                </li>
-              {% end %}
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  Scoreboard
-                  <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a href="/scoreboard">Summary</a></li>
-                  <li><a href="/scoreboard/history/flags">History</a></li>
-                </ul>
-              </li>
-              <li><a href="/about">About</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-          <!-- Right Side -->
-          <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="icon-user"></i>
-              {{ user.handle }}
-              <span class="caret"></span>
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </a>
-            <ul class="dropdown-menu">
-              <li><a href="/user/settings"><i class="icon-pencil"></i>&nbsp;Settings&nbsp;</a></li>
-              <li class="divider"></li>
-              <li><a href="/logout"><i class="icon-ban-circle"></i>&nbsp;Logout&nbsp;</a></li>
-            </ul>
-          </div>
+            <a class="brand" href="/">
+                Root the Box
+            </a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="/user">
+                            Home
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Game
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/user/missions">
+                                    Missions
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/user/market">
+                                    Black Market
+                                </a>
+                            </li>
+                        </ul>
+                  </li>
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          Team
+                          <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu">
+                          <li>
+                              <a href="/user/share/files">
+                                  File Sharing
+                              </a>
+                          </li>
+                          <li>
+                              <a href="/user/share/pastebin">
+                                  PasteBin
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+                  {% if len(user.team.items) != 0 %}
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                              Unlocks
+                              <b class="caret"></b>
+                          </a>
+                          <ul class="dropdown-menu">
+                              {% if user.has_item("Source Code Market") %}
+                                  <li><a href="/source_code_market">Source Code Market</a></li>
+                              {% end %}
+                              {% if user.has_item("Password Security") %}
+                                  <li><a href="/password_security">Password Security</a></li>
+                              {% end %}
+                              {% if user.has_item("Federal Reserve") %}
+                                  <li><a href="/federal_reserve">Federal Reserve</a></li>
+                              {% end %}
+                              {% if user.has_item("SWAT") %}
+                                  <li><a href="/swat">S.W.A.T.</a></li>
+                              {% end %}
+                          </ul>
+                      </li>
+                  {% end %}
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          Scoreboard
+                          <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu">
+                          <li>
+                              <a href="/scoreboard">
+                                  Summary
+                              </a>
+                          </li>
+                          <li>
+                              <a href="/scoreboard/history/flags">
+                                  History
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="/about">About</a>
+                  </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+            <!-- Right Side -->
+            <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="icon-user"></i>
+                    {{ user.handle }}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="/user/settings">
+                            <i class="icon-pencil"></i>
+                            &nbsp;Settings&nbsp;
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="/logout">
+                            <i class="icon-ban-circle"></i>
+                            &nbsp;Logout&nbsp;
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
     </div>
+</div>

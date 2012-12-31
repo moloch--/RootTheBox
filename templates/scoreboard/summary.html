@@ -57,12 +57,14 @@
     </div>
     <!-- Scripts -->
     <script>
+        var flag_chart;
+        var money_chart;
+        var game_data;
         function team_details(uuid) {
             $.getJSON('/scoreboard/ajax/team?uuid='+uuid, function(data) {
                 console.log(data);
             });
         }
-        var flag_chart;
         $(function () {
             $(document).ready(function() {
                 /* Options for both graphs*/
@@ -121,7 +123,6 @@
             });
         });
         /* Money Chart */
-        var money_chart;
         $(function () {
             $(document).ready(function() {
                 money_chart = new Highcharts.Chart({

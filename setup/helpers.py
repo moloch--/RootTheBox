@@ -113,7 +113,7 @@ def __mkipv6__(box, address):
 
 def create_box(name, corporation, difficulty, game_level,
                 ipv4_addresses=[], ipv6_addresses=[]):
-    print(INFO + "Creat box: " + bold + name + W)
+    print(INFO + "Create box: " + bold + name + W)
     box = Box(
         name=unicode(name),
         corporation_id=corporation.id,
