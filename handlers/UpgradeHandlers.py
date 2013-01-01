@@ -32,6 +32,7 @@ from models import dbsession, User, WallOfSheep, Team, Box, SourceCode
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated, has_item, debug
 from mimetypes import guess_type
+from base64 import b64decode
 
 
 class PasswordSecurityHandler(BaseHandler):
@@ -157,8 +158,8 @@ class FederalReserveAjaxHandler(BaseHandler):
     @debug
     def transfer(self):
         user = self.get_current_user()
-        source = Team.by_name(self.get_argument('source', '__NONE__'))
-        destination = Team.by_name(self.get_argument('destination', '__NONE__'))
+        source = Team.by_name(self.get_argument('source', ''))
+        destination = Team.by_name(self.get_argument('destination', ''))
         try:
             amount = int(self.get_argument('amount', 0))
         except ValueError:
@@ -269,21 +270,24 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
     @authenticated
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
-        uuid = self.get_argument('uuid', '')
+        uuid = self.get_argument('uuid', '', strip=True)
         box = Box.by_uuid(uuid)
         if box is not None and box.source_code is not None:
             user = self.get_current_user()
             if box.source_code in user.team.purchased_source_code:
                 root = self.application.settings['source_code_market_dir']
                 src_file = open(str(root + '/' + box.source_code.uuid), 'r')
-                src_data = src_file.read()
+                src_data = b64decode(src_file.read())
                 src_file.close()
-                self.set_header('Content-Type', guess_type(box.source_code.file_name))
+                content_type = guess_type(box.source_code.file_name)[0]
+                if content_type is None: content_type = 'unknown/data'
+                self.set_header('Content-Type', content_type)
                 self.set_header('Content-Length', len(src_data))
-                self.set_header('Content-Disposition', 'attachment; filename=%s' %
-                    box.source_code.file_name
+                self.set_header('Content-Disposition', 
+                    'attachment; filename=%s' % box.source_code.file_name
                 )
-                self.write(b64decode(src_data))
+                self.write(src_data)
+                self.finish()
             else:
                 self.render('public/404.html')
         else:

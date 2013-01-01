@@ -14,10 +14,10 @@
                 {% raw xsrf_form_html() %}
                 <input id="buy_box_uuid" type="hidden" name="box_uuid" value="" />
             </form>
-            <p>
+            <p id="buy_dialog">
             	Are you sure you want to buy this code?
-                <br />
         	</p>
+            <br />
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -27,8 +27,10 @@
         </div>
     </div><!-- End Modal -->
     <script>
-        function buy_src(box_uuid) {
+        function buy_src(box_uuid, price) {
             $("#buy_box_uuid").val(box_uuid);
+            msg = "Are you sure you want to buy this code for $" + price.toString() + "?";
+            $("#buy_dialog").html(msg);
         }
     </script>
 	<div class="container">
@@ -63,19 +65,23 @@
                             <td>{{ box.name }}</td>
                             <td>{{ box.game_level.number }}</td>
                             <td>${{ box.source_code.price }}</td>
-                            <td>{{ box.source_code.file_name }}</td>
+                            {% if len(box.source_code.file_name) < 25 %}
+                                <td>{{ box.source_code.file_name }}</td>
+                            {% else %}
+                                <td>{{ box.source_code.file_name[:25] + "..." }}</td>
+                            {% end %}
                             <td>{{ box.source_code.checksum }}</td>
                             {% if box.source_code in user.team.purchased_source_code %}
                                 <td>
                                     <a class="btn btn-mini btn-success" data-toggle="modal"
-                                        onclick="download_src('{{ box.uuid }}')">
+                                       onclick="window.open('/source_code_market/download?uuid={{ box.uuid }}', '_newtab');">
                                         Download Souce Code
                                     </a>
                                 </td>
                                 {% else %}
                                 <td>
                                     <a class="btn btn-mini" data-toggle="modal" href="#buySourceCodeModal"
-                                        onclick="buy_src('{{ box.uuid }}')">
+                                        onclick="buy_src('{{ box.uuid }}', {{ box.source_code.price }})">
                                         Buy Source Code
                                     </a>
                                 </td>

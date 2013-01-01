@@ -81,7 +81,8 @@ class Team(BaseObject):
     @classmethod
     def filter_string(cls, string, extra_chars=''):
         char_white_list = ascii_letters + digits + extra_chars
-        return filter(lambda char: char in char_white_list, string)
+        clean = filter(lambda char: char in char_white_list, string)
+        return clean if 0 < len(clean) else 'foobar'
 
     @property
     def levels(self):

@@ -72,9 +72,9 @@ class User(BaseObject):
     psk = Column(Unicode(64), default=lambda: unicode(urandom(32).encode('hex')))
     salt = Column(String(32), default=lambda: urandom(16).encode('hex'))
     algorithms = {
-        'md5': (md5, 1,), 
-        'sha1': (sha1, 2,), 
-        'sha256': (sha256, 3,),
+        'md5': (md5, 1, 'md5',), 
+        'sha1': (sha1, 2, 'sha1',), 
+        'sha256': (sha256, 3, 'sha256',),
     }
 
     @classmethod
