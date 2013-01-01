@@ -42,7 +42,8 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
             self.conn = pylibmc.Client(
-                [self.config.memcached_server], binary=True)
+                [self.config.memcached_server], binary=True
+            )
             self.conn.behaviors['no_block'] = 1  # async I/O
             self.session = self._create_session(session_id)
             self.session.refresh()
@@ -66,7 +67,7 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
     @debug
     def open(self):
         ''' When we receive a new websocket connect '''
-        if self.session is not None:
+        if self.session is not None and 'team_id' in self.session:
             logging.debug("[Web Socket] Opened new websocket with user id: %s"
                 % str(self.session['user_id'])
             )
@@ -87,8 +88,8 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         ''' Troll the haxors '''
-        self.write_message("ERROR 1146 (42S02): Table 'rtb.%s' doesn't exist."
-            % message
+        self.write_message(
+            "ERROR 1146 (42S02): Table 'rtb.%s' doesn't exist." % message
         )
 
     @debug
@@ -97,7 +98,7 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
         try:
             self.manager.remove_connection(self)
         except KeyError:
-            logging.warn("[Web Socket] Manager has no ref to self.")
+            logging.warn("[Web Socket] Manager has no ref to self ???")
 
 
 class AllNotificationsHandler(BaseHandler):
