@@ -93,6 +93,7 @@ app = Application([
                   (r'/federal_reserve', FederalReserveHandler),
                   (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
                   (r'/source_code_market', SourceCodeMarketHandler),
+                  (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
 
                   # Mission handlers
                   (r'/user/missions', MissionsHandler),

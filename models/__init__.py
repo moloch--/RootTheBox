@@ -50,9 +50,9 @@ team_to_item = Table('team_to_item', BaseObject.metadata,
     Column('item_id', Integer, ForeignKey('market_item.id'), nullable=False)
 )
 
-team_to_source_code = Table('team_to_souce_code', BaseObject.metadata,
+team_to_source_code = Table('team_to_source_code', BaseObject.metadata,
     Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('souce_code_id', Integer, ForeignKey('source_code.id'), nullable=False)
+    Column('source_code_id', Integer, ForeignKey('source_code.id'), nullable=False)
 )
 
 team_to_flag = Table('team_to_flag', BaseObject.metadata,

@@ -28,9 +28,10 @@ be purchased from the "Black Market" (see markethandlers.py)
 import logging
 
 from BaseHandlers import BaseHandler
-from models import dbsession, User, WallOfSheep, Team, Box
+from models import dbsession, User, WallOfSheep, Team, Box, SourceCode
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated, has_item, debug
+from mimetypes import guess_type
 
 
 class PasswordSecurityHandler(BaseHandler):
@@ -197,8 +198,8 @@ class FederalReserveAjaxHandler(BaseHandler):
 
     def theft(self, victim, destination, amount):
         ''' Successfully cracked a password '''
-        victim.team.money -= amount
-        value = int(amount * 0.85)
+        victim.team.money -= abs(amount)
+        value = int(abs(amount) * 0.85)
         password = self.get_argument('password', '')
         destination.money += value
         dbsession.add(destination)
@@ -230,30 +231,63 @@ class SourceCodeMarketHandler(BaseHandler):
         if form.validate(self.request.arguments):
             box = Box.by_uuid(self.get_argument('box_uuid', ''))
             if box is not None and box.source_code is not None:
-                pass
+                user = self.get_current_user()
+                if box.source_code.price <= user.team.money:
+                    self.purchase_code(box)
+                    self.redirect("/source_code_market")
+                else:
+                    self.render_page(["You cannot afford to purchase this code"])
             else:
                 self.render_page(["Box does not exist"])
         else:
             self.render_page(form.errors)
 
+    def purchase_code(self, box):
+        ''' Modify the database to reflect purchase '''
+        team = self.get_current_user().team
+        source_code = SourceCode.by_box_id(box.id)
+        team.money -= abs(source_code.price)
+        team.purchased_source_code.append(source_code)
+        logging.info("%s purchased '%s' from the source code market." % 
+            (team.name, source_code.file_name,)
+        )
+        dbsession.add(team)
+        dbsession.flush()
+
     def render_page(self, errors=None):
         ''' Addes extra params to render() '''
+        user = self.get_current_user()
         boxes = filter(lambda box: box.source_code is not None, Box.all())
-        self.render('upgrades/source_code_market.html', boxes=boxes, errors=errors)
+        self.render('upgrades/source_code_market.html', 
+            user=user, boxes=boxes, errors=errors
+        )
 
-class AjaxSourceCodeMarketHandler(BaseHandler):
+
+class SourceCodeMarketDownloadHandler(BaseHandler):
+    ''' Allows users to download files they have purchased '''
 
     @authenticated
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
-        uuid = self.get_argument('box_uuid', '')
+        uuid = self.get_argument('uuid', '')
         box = Box.by_uuid(uuid)
         if box is not None and box.source_code is not None:
-            source_code = box.source_code.to_dict()
-            self.write(source_code)
+            user = self.get_current_user()
+            if box.source_code in user.team.purchased_source_code:
+                root = self.application.settings['source_code_market_dir']
+                src_file = open(str(root + '/' + box.source_code.uuid), 'r')
+                src_data = src_file.read()
+                src_file.close()
+                self.set_header('Content-Type', guess_type(box.source_code.file_name))
+                self.set_header('Content-Length', len(src_data))
+                self.set_header('Content-Disposition', 'attachment; filename=%s' %
+                    box.source_code.file_name
+                )
+                self.write(b64decode(src_data))
+            else:
+                self.render('public/404.html')
         else:
-            self.write({'Error': 'Box does not exist'})
-        self.finish()
+            self.render('public/404.html')
 
 
 class SwatHandler(BaseHandler):

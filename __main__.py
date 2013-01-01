@@ -58,12 +58,12 @@ def setup():
     ''' Imports a setup file '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     if 3 == len(argv) and path.exists(argv[2]) and path.isfile(argv[2]):
-        print(INFO + "%s : Import setup file '%s' ..." % (current_time(), argv[2]))
+        print(INFO + "%s : Import setup file '%s' ..." % (current_time(), argv[2],))
         __import__(argv[2])
     elif 3 == len(argv):
         print(WARN + "File not found: %s" % argv[2])
     else:
-        print(INFO + "%s : Running default setup file 'setup/game.py' ..." % (current_time(),))
+        print(INFO + "%s : Running default setup file 'setup/game.py' ..." % current_time())
         from setup import game  # Runs the setup script
         print(INFO + "Setup file completed.")
 

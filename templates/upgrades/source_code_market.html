@@ -10,12 +10,13 @@
             <h3>Buy Source Code</h3>
         </div>
         <div class="modal-body">
-            <form id="buy-src" class="form-horizontal" action="/upgrades/source_code_market" method="post">
+            <form id="buy-src" class="form-horizontal" action="/source_code_market" method="post">
                 {% raw xsrf_form_html() %}
                 <input id="buy_box_uuid" type="hidden" name="box_uuid" value="" />
             </form>
             <p>
             	Are you sure you want to buy this code?
+                <br />
         	</p>
         </div>
         <div class="modal-footer">
@@ -43,7 +44,6 @@
             {% end %}
         {% end %}
         <div class="well">
-        	<h3>Source Code for Sale</h3>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -51,6 +51,8 @@
                         <th>Box</th>
                         <th>Level</th>
                         <th>Price</th>
+                        <th>File Name</th>
+                        <th>MD5 Checksum</th>
                         <th><!-- Button --></th>
                     </tr>
                 </thead>
@@ -61,20 +63,22 @@
                             <td>{{ box.name }}</td>
                             <td>{{ box.game_level.number }}</td>
                             <td>${{ box.source_code.price }}</td>
+                            <td>{{ box.source_code.file_name }}</td>
+                            <td>{{ box.source_code.checksum }}</td>
                             {% if box.source_code in user.team.purchased_source_code %}
-                            <td>
-                                <a class="btn btn-mini" data-toggle="modal"
-                                    onclick="download_src('{{ box.uuid }}')">
-                                    Download
-                                </a>
-                            </td>
-                            {% else %}
-                            <td>
-                                <a class="btn btn-mini" data-toggle="modal" href="#buySourceCodeModal"
-                                    onclick="buy_src('{{ box.uuid }}')">
-                                    Buy Source
-                                </a>
-                            </td>
+                                <td>
+                                    <a class="btn btn-mini btn-success" data-toggle="modal"
+                                        onclick="download_src('{{ box.uuid }}')">
+                                        Download Souce Code
+                                    </a>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <a class="btn btn-mini" data-toggle="modal" href="#buySourceCodeModal"
+                                        onclick="buy_src('{{ box.uuid }}')">
+                                        Buy Source Code
+                                    </a>
+                                </td>
                             {% end %}
                     	</tr>
                     {% end %}

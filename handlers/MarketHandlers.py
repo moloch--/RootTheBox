@@ -67,7 +67,7 @@ class MarketViewHandler(BaseHandler):
 
     def purchase_item(self, team, item):
         ''' Conducts the actual purchase of an item '''
-        team.money -= item.price
+        team.money -= abs(item.price)
         team.items.append(item)
         dbsession.add(team)
         dbsession.flush()

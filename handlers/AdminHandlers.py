@@ -29,6 +29,7 @@ This file contains all of the adminstrative functions.
 import os
 
 from base64 import b64encode
+from hashlib import md5
 from libs.Form import Form
 from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, SourceCode, \
@@ -802,10 +803,16 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         file_data = self.request.files['source_archive'][0]['body']
         root = self.application.settings['source_code_market_dir']
         save_file = open(str(root + '/' + source_code.uuid), 'w')
+        source_code.checksum = self.get_checksum(file_data)
         save_file.write(b64encode(file_data))
         save_file.close()
         dbsession.add(source_code)
         dbsession.flush()
+
+    def get_checksum(self, data):
+        checksum = md5()
+        checksum.update(data)
+        return checksum.hexdigest()
 
     def delete_source_code(self):
         uuid = self.get_argument('box_uuid', '')

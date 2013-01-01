@@ -23,7 +23,7 @@ Created on Mar 12, 2012
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
-from sqlalchemy.types import Unicode, Integer
+from sqlalchemy.types import Unicode, Integer, String
 from models.BaseGameObject import BaseObject
 from models import dbsession
 from string import ascii_letters, digits
@@ -44,6 +44,7 @@ class SourceCode(BaseObject):
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     price = Column(Integer, nullable=False)
     description = Column(Unicode(1024), nullable=False)
+    checksum = Column(String(32))
 
     @classmethod
     def all(cls):
@@ -75,3 +76,6 @@ class SourceCode(BaseObject):
             'price': self.price,
             'description': self.description,
         }
+
+    def __str__(self):
+        return self.file_name.encode('ascii', 'ignore')
