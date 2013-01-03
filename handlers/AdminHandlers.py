@@ -81,8 +81,7 @@ class AdminCreateHandler(BaseHandler):
         if form.validate(self.request.arguments):
             corp_name = self.get_argument('corporation_name')
             if Corporation.by_name(corp_name) is not None:
-                self.render(
-                    "admin/create/corporation.html",
+                self.render("admin/create/corporation.html",
                     errors=["Name already exists"]
                 )
             else:
@@ -407,33 +406,38 @@ class AdminEditHandler(BaseHandler):
                 if flag.name != self.get_argument('name'):
                     if Flag.by_name(unicode(self.get_argument('name'))) is None:
                         logging.info("Updated flag name %s -> %s" %
-                            (flag.name, self.get_argument('name'),))
+                            (flag.name, self.get_argument('name'),)
+                        )
                         flag.name = unicode(self.get_argument('name'))
                     else:
                         errors.append("Flag name already exists")
                 if flag.token != self.get_argument('token'):
                     if Flag.by_token(unicode(self.get_argument('token'))) is None:
                         logging.info("Updated %s's token %s -> %s" %
-                            (flag.name, flag.token, self.get_argument('token'),))
+                            (flag.name, flag.token, self.get_argument('token'),)
+                        )
                         flag.token = unicode(self.get_argument('token'))
                     else:
                         errors.append("Token is not unique")
                 if flag.description != self.get_argument('description'):
                     logging.info("Updated %s's description %s -> %s" %
-                        (flag.name, flag.description, self.get_argument('description'),))
+                        (flag.name, flag.description, self.get_argument('description'),)
+                    )
                     flag.description = unicode(self.get_argument('description'))
                 try:
                     reward_value = int(self.get_argument('value'))
                     if reward_value != flag.value:
                         logging.info("Updated %s's value %d -> %d" %
-                            (flag.name, flag.value, reward_value,))
+                            (flag.name, flag.value, reward_value,)
+                        )
                         flag.value = reward_value
                 except ValueError:
                     errors.append("Invalid reward amount")
                 box = Box.by_uuid(self.get_argument('box_uuid'))
                 if box is not None and box.id != flag.box_id:
                     logging.info("Updated %s's box %d -> %d" %
-                        (flag.name, flag.box_id, box.id))
+                        (flag.name, flag.box_id, box.id)
+                    )
                     flag.box_id = box.id
                 elif box is None:
                     errors.append("Box does not exist")
@@ -676,7 +680,7 @@ class AdminDeleteHandler(BaseHandler):
 
     def del_ip(self):
         ''' Delete an ip address object '''
-        ip = IpAddress.by_address(self.get_argument('ip', '__NULL__'))
+        ip = IpAddress.by_address(self.get_argument('ip', ''))
         if ip is not None:
             logging.info("Deleted IP address: '%s'" % str(ip))
             dbsession.delete(ip)
@@ -688,7 +692,7 @@ class AdminDeleteHandler(BaseHandler):
 
     def del_flag(self):
         ''' Delete a flag object from the database '''
-        flag = Flag.by_uuid(self.get_argument('uuid', '__NULL__'))
+        flag = Flag.by_uuid(self.get_argument('uuid', ''))
         if flag is not None:
             logging.info("Deleted flag: %s " % flag.name)
             dbsession.delete(flag)
@@ -774,7 +778,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
                     )
                 else:
                     try:
-                        price = int(self.get_argument('price'))
+                        price = int(self.get_argument('price', 'NaN'))
                         self.create_source_code(box, price)
                         self.render('admin/upgrades/source_code_market.html', errors=None)
                     except ValueError:

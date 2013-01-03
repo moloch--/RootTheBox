@@ -82,8 +82,8 @@ class NotifySocketHandler(tornado.websocket.WebSocketHandler):
                 Notification.delivered(notify.user_id, notify.event_uuid)
         else:
             logging.debug("[Web Socket] Opened public notification socket.")
-            self.team_id = 'public_team'
-            self.user_id = 'public_user'
+            self.team_id = '$public_team'
+            self.user_id = '$public_user'
         self.manager.add_connection(self)
 
     def on_message(self, message):

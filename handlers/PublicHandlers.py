@@ -143,7 +143,7 @@ class UserRegistrationHandler(BaseHandler):
                     errors=['Password must be 1-%d characters'
                                 % config.max_password_length]
                 )
-            elif Team.by_uuid(self.get_argument('team')) is None:
+            elif Team.by_uuid(self.get_argument('team', '')) is None:
                 self.render('public/registration.html',
                     errors=["Please select a team to join"]
                 )
@@ -160,7 +160,7 @@ class UserRegistrationHandler(BaseHandler):
     @debug
     def create_user(self, account, handle, passwd, rtok):
         ''' Add user to the database '''
-        team = Team.by_uuid(self.get_argument('team'))
+        team = Team.by_uuid(self.get_argument('team', ''))
         user = User(
             account=unicode(account),
             handle=unicode(handle),

@@ -191,7 +191,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             xfer = self.theft(victim_user, destination, amount)
             self.write({
                 "success":
-                "Confirmed transfer to '%s' for $%d (after 15%s commission)" % (destination.name, xfer, '%')
+                "Confirmed transfer to '%s' for $%d (after 15%s commission)" % (destination.name, xfer, '%',)
             })
         else:
             self.write({"error": "Incorrect password for account, try again"})

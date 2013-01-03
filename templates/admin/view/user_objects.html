@@ -16,19 +16,19 @@
                 <div class="control-group">
                     <label class="control-label" for="team_name">Team Name</label>
                     <div class="controls">
-                        <input id="team_name" name="name" type="text" placeholder="Team Name">
+                        <input required id="team_name" name="name" type="text" placeholder="Team Name">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="team_motto">Team Motto</label>
                     <div class="controls">
-                        <input id="team_motto" name="motto" type="text" placeholder="Team Motto">
+                        <input required id="team_motto" name="motto" type="text" placeholder="Team Motto">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="team_listen_port">Botnet Listen Port</label>
                     <div class="controls">
-                        <input id="team_listen_port" name="listen_port" type="text" placeholder="Botnet Listen Port">
+                        <input required id="team_listen_port" name="listen_port" type="text" pattern="[0-9]+" placeholder="Botnet Listen Port">
                     </div>
                 </div>
             </form>

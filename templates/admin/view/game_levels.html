@@ -16,13 +16,13 @@
                 <div class="control-group">
                     <label class="control-label" for="game_level_number">Current Level</label>
                     <div class="controls">
-                        <input id="game_level_number" name="number" placeholder="Level Number" type="text" />
+                        <input required id="game_level_number" name="number" pattern="[0-9]+" placeholder="Level Number" type="text" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="game_level_buyout">Buyout</label>
                     <div class="controls">
-                        <input id="game_level_buyout" name="buyout" placeholder="$ Buyout" type="text" />
+                        <input required id="game_level_buyout" name="buyout" pattern="[0-9]+" placeholder="Buyout ($)" type="text" />
                     </div>
                 </div>
             </form>
