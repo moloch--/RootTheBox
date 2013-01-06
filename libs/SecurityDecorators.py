@@ -32,8 +32,14 @@ def authenticated(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         if self.session is not None:
-            return method(self, *args, **kwargs)
-        self.redirect(self.application.settings['login_url'])
+            if not self.get_current_user().locked:
+                return method(self, *args, **kwargs)
+            else:
+                self.session.delete()
+                self.clear_all_cookies()
+                self.redirect('/403')
+        else:
+            self.redirect(self.application.settings['login_url'])
     return wrapper
 
 

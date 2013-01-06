@@ -295,6 +295,7 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
 
 
 class SwatHandler(BaseHandler):
+    ''' Allows users to bribe admins '''
 
     @authenticated
     @has_item("SWAT")
@@ -305,10 +306,27 @@ class SwatHandler(BaseHandler):
     @has_item("SWAT")
     def post(self, *args, **kwargs):
         form = Form(
-            handle="Please select a target to SWAT",
-            bribe="Please enter a bribe",
+            uuid="Please select a target to SWAT",
         )
         if form.validate(self.request.arguments):
-            pass
+            target = User.by_uuid(self.get_argument('uuid', strip=True))
+            if target is not None:
+                user = self.get_current_user()
+                try:
+                    #bribe = abs(int(self.get_argument('bribe', 'Nan')))
+                    if bribe < user.team.money:
+                        pass
+                    else:
+                        self.render('upgrades/swat.html',
+                            errors=["You cannot afford a bribe this large"]
+                        )
+                except ValueError:
+                    self.render('upgrades/swat.html', 
+                        errors=["Invalid bribe amount, must be a number"]
+                    )
+            else:
+                self.render('upgrades/swat.html', 
+                    errors=["Target user does not exist"]
+                )
         else:
             self.render('upgrades/swat.html', errors=form.errors)

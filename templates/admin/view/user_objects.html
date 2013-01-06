@@ -100,9 +100,29 @@
             $("#" + obj + "_uuid").val(uuid);
             $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
                 $.each(data, function(key, value) {
-                    console.log("#" + obj + "_" + key + " -> " + value);
+                    // console.log("#" + obj + "_" + key + " -> " + value);
                     $("#" + obj + "_" + key).val(value);
                 });
+            });
+        }
+        function toggle_lock(uuid) {
+            $.getJSON('/admin/lock?uuid=' + uuid, function(response) {
+                if ('success' in response) {
+                    if ('locked' == response['success']) {
+                        $("#lock_button_" + uuid).removeClass('btn-danger');
+                        $("#lock_button_" + uuid).addClass('btn-success');
+                        $("#lock_button_" + uuid).text("Unlock Account");
+                    } else if ('unlocked' == response['success']) {
+                        $("#lock_button_" + uuid).removeClass('btn-success');
+                        $("#lock_button_" + uuid).addClass('btn-danger');
+                        $("#lock_button_" + uuid).text("Lock Account");
+                    }
+                    // alert('Successfully ' + response['success'].toString() + ' account');
+                } else if ('error' in response) {
+                    alert('Error: ' + response['error'].toString());
+                } else {
+                    alert('Bad response from server');
+                }
             });
         }
     </script>
@@ -138,6 +158,7 @@
                                 <th>Handle</th>
                                 <th>Hash Algorithm</th>
                                 <th>Password Hash</th>
+                                <th><!-- Lock Button --></th>
                                 <th><!-- Edit Button --></th>
                             </tr>
                         </thead>
@@ -148,6 +169,21 @@
                                     <td>{{ user.handle }}</td>
                                     <td>{{ user.algorithm }}</td>
                                     <td>{{ user.password }}</td>
+                                    <td>
+                                        {% if user.locked %}
+                                            <a id="{{ 'lock_button_' + user.uuid }}" 
+                                            class="btn btn-mini btn-success" 
+                                            onclick="toggle_lock('{{ user.uuid }}')">
+                                                Unlock Account
+                                            </a>
+                                        {% else %}
+                                            <a id="{{ 'lock_button_' + user.uuid }}"
+                                            class="btn btn-mini btn-danger" 
+                                            onclick="toggle_lock('{{ user.uuid }}')">
+                                                Lock Account
+                                            </a>
+                                        {% end %}
+                                    </td>
                                     <td>
                                         <a class="btn btn-mini" data-toggle="modal" href="#editUserModal" 
                                             onclick="get_details('user', '{{ user.uuid }}')">

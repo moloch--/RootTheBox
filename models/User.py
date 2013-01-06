@@ -32,11 +32,17 @@ from uuid import uuid4
 from hashlib import md5, sha1, sha256
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
-from sqlalchemy.types import Unicode, Integer, String
+from sqlalchemy.types import Unicode, Integer, String, Boolean
 from models import dbsession, Team, Permission
 from models.MarketItem import MarketItem
 from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits, printable
+
+
+### Constants
+ADMIN_PERMISSION = 'admin'
+ADMIN_HASH_ALGORITHM = 'scrypt'
+DEFAULT_HASH_ALGORITHM = u'md5'
 
 
 class User(BaseObject):
@@ -54,22 +60,20 @@ class User(BaseObject):
         lambda self, handle: setattr(
             self, '_handle', self.__class__.filter_string(handle, "_-"))
     ))
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    _locked = Column(Boolean, default=False, nullable=False)
     team_id = Column(Integer, ForeignKey('team.id'))
-    permissions = relationship("Permission", backref=backref(
-        "User", lazy="select"), cascade="all, delete-orphan")
-    notifications = relationship("Notification", backref=backref(
-        "User", lazy="select"), cascade="all, delete-orphan")
-    avatar = Column(Unicode(64), default=unicode("default_avatar.jpeg"))
+    permissions = relationship("Permission", backref=backref("User", lazy="select"), cascade="all, delete-orphan")
+    notifications = relationship("Notification", backref=backref("User", lazy="select"), cascade="all, delete-orphan")
+    avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
     _password = Column('password', Unicode(128))
     password = synonym('_password', descriptor=property(
         lambda self: self._password,
         lambda self, password: setattr(
             self, '_password', self.__class__._hash_password(self.algorithm, password, self.salt))
     ))
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
-    algorithm = Column(Unicode(8), default=u"md5", nullable=False)
+    algorithm = Column(Unicode(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
     theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
-    psk = Column(Unicode(64), default=lambda: unicode(urandom(32).encode('hex')))
     salt = Column(String(32), default=lambda: urandom(16).encode('hex'))
     algorithms = {
         'md5': (md5, 1, 'md5',), 
@@ -85,7 +89,7 @@ class User(BaseObject):
     @classmethod
     def all_users(cls):
         ''' Return all non-admin user objects '''
-        return filter(lambda user: user.has_permission('admin') is False, cls.all())
+        return filter(lambda user: user.has_permission(ADMIN_PERMISSION) is False, cls.all())
 
     @classmethod
     def by_id(cls, identifier):
@@ -126,8 +130,8 @@ class User(BaseObject):
         '''
         password = filter(lambda char: char in printable[:-5], password)
         password = password.encode('ascii') # Scrypt doesn't like unicode
-        if algorithm_name == 'scrypt':
-            return cls.__scrypt__(password, salt)
+        if algorithm_name == ADMIN_HASH_ALGORITHM:
+            return cls.__scrypt__(password, salt)  # Returns unicode
         elif algorithm_name in cls.algorithms:
             algo = cls.algorithms[algorithm_name][0]()
             algo.update(password)
@@ -162,6 +166,24 @@ class User(BaseObject):
     def team(self):
         ''' Return a the user's team object '''
         return dbsession.query(Team).filter_by(id=self.team_id).first()
+
+    @property
+    def locked(self):
+        ''' 
+        Determines if an admin has locked an account, accounts with
+        administrative permissions cannot be locked.
+        '''
+        if self.has_permission(ADMIN_PERMISSION):
+            return False  # Admin accounts cannot be locked
+        else:
+            return self._locked
+
+    @locked.setter
+    def locked(self, value):
+        ''' Setter method for _lock '''
+        assert isinstance(value, bool)
+        if not self.has_permission(ADMIN_PERMISSION):
+            self._locked = value
 
     def has_item(self, item_name):
         ''' Check to see if a team has purchased an item '''
@@ -212,7 +234,7 @@ class User(BaseObject):
         ''' Return algorithm tuple based on string or int '''
         if isinstance(index, basestring) and index in self.algorithms:
             return self.algorithms[index]
-        elif isinstance(index, int):
+        elif isinstance(index, int):  # Find by numeric index
             for key in self.algorithms.keys():
                 if index == self.algorithms[key][1]:
                     return self.algorithms[key]

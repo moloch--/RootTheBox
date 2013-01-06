@@ -39,7 +39,7 @@ logging.basicConfig(
 
 @Singleton
 class ConfigManager(object):
-    '''  Central class which handles any user-controlled settings '''
+    ''' Central class which handles any user-controlled settings '''
 
     def __init__(self, cfg_file='rootthebox.cfg'):
         self.conf = os.path.abspath(cfg_file)
@@ -56,6 +56,7 @@ class ConfigManager(object):
         self.__security__()
         self.__database__()
         self.__recaptcha__()
+        self.__upgrades__()
 
     def __server__(self):
         ''' Load network configurations '''
@@ -95,15 +96,21 @@ class ConfigManager(object):
         self.max_password_length = self.config.getint(
             "Security", 'max_password_length'
         )
+
+    def __upgrades__(self):
         self.password_upgrade = self.config.getint(
-            "Security", 'password_upgrade'
+            "Upgrades", 'password_upgrade'
+        )
+        self.bribe_base_price = self.config.getint(
+            "Upgrades", 'bribe_base_price'
         )
 
     def __recaptcha__(self):
         ''' Loads recaptcha settings '''
         self.recaptcha_enable = self.config.getboolean("Recaptcha", 'enable')
         self.recaptcha_private_key = self.config.get(
-            "Recaptcha", 'private_key')
+            "Recaptcha", 'private_key'
+        )
 
     def __database__(self):
         ''' Loads database connection information '''

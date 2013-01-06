@@ -62,8 +62,13 @@ class LoginHandler(BaseHandler):
             user = User.by_account(self.get_argument('account'))
             password_attempt = self.get_argument('password')
             if user is not None and user.validate_password(password_attempt):
-                self.successful_login(user)
-                self.redirect('/user')
+                if not user.locked:
+                    self.successful_login(user)
+                    self.redirect('/user')
+                else:
+                    self.render('public/login.html', 
+                        errors=["Your account has been locked"]
+                    )
             else:
                 self.failed_login()
         else:

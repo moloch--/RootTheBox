@@ -35,12 +35,13 @@ from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, SourceCode, \
     Corporation, RegistrationToken, GameLevel, IpAddress
 from handlers.BaseHandlers import BaseHandler
+from models.User import ADMIN_PERMISSION
 
 
 class AdminCreateHandler(BaseHandler):
     ''' Handler used to create game objects '''
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def get(self, *args, **kwargs):
         ''' Renders Corp/Box/Flag create pages '''
@@ -56,7 +57,7 @@ class AdminCreateHandler(BaseHandler):
         else:
             self.render("public/404.html")
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def post(self, *args, **kwargs):
         ''' Calls a function based on URL '''
@@ -244,7 +245,7 @@ class AdminCreateHandler(BaseHandler):
 class AdminViewHandler(BaseHandler):
     ''' View game objects '''
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def get(self, *args, **kwargs):
         ''' Calls a view function based on URI '''
@@ -273,7 +274,7 @@ class AdminViewHandler(BaseHandler):
 class AdminAjaxObjectDataHandler(BaseHandler):
     ''' Handles AJAX data for admin handlers '''
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def get(self, *args, **kwargs):
         game_objects = {
@@ -300,7 +301,7 @@ class AdminAjaxObjectDataHandler(BaseHandler):
 class AdminEditHandler(BaseHandler):
     ''' Edit game objects '''
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def post(self, *args, **kwargs):
         ''' Calls an edit function based on URL '''
@@ -703,10 +704,34 @@ class AdminDeleteHandler(BaseHandler):
             self.render("admin/view/game_objects.html", errors=["Flag does not exist in database"])
 
 
+class AdminLockHandler(BaseHandler):
+    ''' Used to manually lock/unlocked accounts '''
+
+    @authorized(ADMIN_PERMISSION)
+    @restrict_ip_address
+    def get(self, *args, **kwargs):
+        ''' Toggle account lock '''
+        uuid = self.get_argument('uuid', '')
+        user = User.by_uuid(uuid)
+        if user is not None:
+            if user.locked:
+                user.locked = False
+                dbsession.add(user)
+                self.write({'success': 'unlocked'})
+            else:
+                user.locked = True
+                dbsession.add(user)
+                self.write({'success': 'locked'})
+        else:
+            self.write({'error': 'User does not exist'})
+        dbsession.flush()
+        self.finish()
+
+
 class AdminRegTokenHandler(BaseHandler):
     ''' Manages registration tokens '''
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def get(self, *args, **kwargs):
         uri = {
@@ -718,7 +743,7 @@ class AdminRegTokenHandler(BaseHandler):
         else:
             self.render("public/404.html")
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def post(self, *args, **kwargs):
         ''' Used to delete regtokens '''
@@ -746,12 +771,12 @@ class AdminRegTokenHandler(BaseHandler):
 class AdminSourceCodeMarketHandler(BaseHandler):
     ''' Add source code files to the source code market '''
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def get(self, *args, **kwargs):
         self.render('admin/upgrades/source_code_market.html', errors=None)
 
-    @authorized('admin')
+    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def post(self, *args, **kwargs):
         uri = {
@@ -794,7 +819,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
 
     def create_source_code(self, box, price):
         ''' Save file data and create object in database '''
-        description = unicode(self.get_argument('description'))
+        description = unicode(self.get_argument('description', ''))
         file_name = unicode(self.request.files['source_archive'][0]['filename'])
         source_code = SourceCode(
             file_name=file_name,
@@ -833,3 +858,25 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         else:
             errors = ["Box does not exist, or contains no source code"]
         self.render('admin/upgrades/source_code_market.html', errors=errors)
+
+
+class AdminSwatHandler(BaseHandler):
+    ''' Manage SWAT requests '''
+
+    @authorized(ADMIN_PERMISSION)
+    @restrict_ip_address
+    def get(self, *args, **kwargs):
+        self.render_page()
+
+
+    @authorized(ADMIN_PERMISSION)
+    @restrict_ip_address
+    def post(self, *args, **kwargs):
+        pass
+
+    def render_page(self):
+        all_users = User.all_users()
+        self.render('admin/upgrades/swat.html',
+            users=all_users,
+            errors=None,
+        )

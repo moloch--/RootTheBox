@@ -111,6 +111,7 @@ app = Application([
                   (r'/admin/delete/(.*)', AdminDeleteHandler),
                   (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
                   (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
+                  (r'/admin/lock', AdminLockHandler),
 
                   # Notificaiton handlers
                   (r'/notifications/all', AllNotificationsHandler),
