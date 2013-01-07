@@ -33,7 +33,7 @@ from hashlib import md5
 from libs.Form import Form
 from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, SourceCode, \
-    Corporation, RegistrationToken, GameLevel, IpAddress
+    Corporation, RegistrationToken, GameLevel, IpAddress, Swat
 from handlers.BaseHandlers import BaseHandler
 from models.User import ADMIN_PERMISSION
 
@@ -688,7 +688,7 @@ class AdminDeleteHandler(BaseHandler):
             dbsession.flush()
             self.redirect("/admin/view/game_objects")
         else:
-            logging.info("IP address (%s) does not exist in database" % self.get_argument('ip', ''))
+            logging.info("IP address (%r) does not exist in database" % self.get_argument('ip', ''))
             self.render("admin/view/game_objects.html", errors=["IP does not exist in database"])
 
     def del_flag(self):
@@ -700,7 +700,7 @@ class AdminDeleteHandler(BaseHandler):
             dbsession.flush()
             self.redirect('/admin/view/game_objects')
         else:
-            logging.info("Flag (%s) does not exist in the database" % self.get_argument('uuid', ''))
+            logging.info("Flag (%r) does not exist in the database" % self.get_argument('uuid', ''))
             self.render("admin/view/game_objects.html", errors=["Flag does not exist in database"])
 
 
@@ -734,6 +734,7 @@ class AdminRegTokenHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def get(self, *args, **kwargs):
+        ''' Call method based on URI '''
         uri = {
             'create': self.create,
             'view': self.view,
@@ -868,15 +869,52 @@ class AdminSwatHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render_page()
 
-
     @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
     def post(self, *args, **kwargs):
-        pass
+        ''' Accept/Complete bribes '''
+        uri = {
+            '/accept': self.accept_bribe,
+            '/complete': self.complete_bribe,
+        }
+        if len(args) == 1 and args[0] in uri:
+            uri[args[0]]()
+        else:
+            self.render('public/404.html')
 
-    def render_page(self):
-        all_users = User.all_users()
+    def render_page(self, errors=None):
+        ''' Render page with extra arguments '''
+        if errors is not None and not isinstance(errors, list):
+            errors = [str(errors),]
         self.render('admin/upgrades/swat.html',
-            users=all_users,
-            errors=None,
+            pending_bribes=Swat.all_pending(),
+            in_progress_bribes=Swat.all_in_progress(),
+            completed_bribes=Swat.all_completed(),
+            errors=errors,
         )
+
+    def accept_bribe(self):
+        ''' Accept bribe, and lock user's account '''
+        swat = Swat.by_uuid(self.get_argument('uuid', ''))
+        if swat is not None and not swat.completed:
+            swat.accepted = True
+            swat.target.locked = True
+            dbsession.add(swat)
+            dbsession.add(swat.target)
+            dbsession.flush()
+            self.render_page()
+        else:
+            self.render_page('Requested Swat object does not exist')
+
+    def complete_bribe(self):
+        ''' Complete bribe and unlock user's account '''
+        swat = Swat.by_uuid(self.get_argument('uuid', ''))
+        if swat is not None and not swat.completed:
+            swat.completed = True
+            swat.target.locked = False
+            dbsession.add(swat)
+            dbsession.add(swat.target)
+            dbsession.flush()
+            self.render_page()
+        else:
+            self.render_page('Requested Swat object does not exist')

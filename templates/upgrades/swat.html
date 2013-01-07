@@ -1,0 +1,91 @@
+{% extends "../main.html" %}
+
+{% block title %}S.W.A.T.{% end %}
+
+{% block content %}
+    <!-- Swat Player Modal -->
+    <div id="swatPlayerModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>SWAT Bribe</h3>
+        </div>
+        <div class="modal-body">
+            <form id="swat-player" class="form-horizontal" action="/swat" method="post">
+                {% raw xsrf_form_html() %}
+                <input id="target_uuid" type="hidden" name="uuid" value="" />
+            </form>
+            <p id="target_dialog">
+            </p>
+            <br />
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="bribe_button" class="btn btn-primary" type="button" onclick="document.forms['swat-player'].submit();">
+                Submit Bribe
+            </button>
+        </div>
+    </div><!-- End Modal -->
+    <script>
+        function swat_player(target_uuid, price) {
+            $("#target_uuid").val(target_uuid);
+            msg = "Bribe police to SWAT player for $" + price + "?";
+            $("#target_dialog").text(msg);
+            $("#bribe_button").text("Bribe $" + price);
+        }
+    </script>
+    <div class="container">
+        <h1>S.W.A.T.</h1>
+        <br />
+        {% if errors is not None and len(errors) != 0 %}
+            {% for error in errors %}
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">ERROR</h4>
+                    {{ error }}
+                </div>
+            {% end %}
+        {% end %}
+        <div class="well">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Team</th>
+                        <th>Handle</th>
+                        <th>Bribe Amount</th>
+                        <th><!-- Button --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% from models import Swat %}
+                    {% for index, target in enumerate(targets) %}
+                        {% if Swat.is_pending(target) %}
+                            <tr class="warning">
+                        {% elif Swat.is_in_progress(target) %}
+                            <tr class="error">
+                        {% else %}
+                            <tr>
+                        {% end %}
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ target.team.name }}</td>
+                            <td>{{ target.handle }}</td>
+                            <td>${{ Swat.get_price(target) }}</td>
+                            {% if Swat.is_pending(target) %}
+                                <td>Bribe Pending</td>
+                            {% elif Swat.is_in_progress(target) %}
+                                <td>Accepted / In Jail</td>
+                            {% else %}
+                                <td>
+                                    <a class="btn btn-mini" data-toggle="modal" href="#swatPlayerModal"
+                                       onclick="swat_player('{{ target.uuid }}', {{ Swat.get_price(target) }});">
+                                        Submit Bribe
+                                    </a>
+                                </td>
+                            {% end %}
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% end %}

@@ -41,6 +41,8 @@ class EventManager(object):
         self.history_connections = []
         self.scoreboard = Scoreboard()
 
+    # [ Connection Methods ] -----------------------------------------------
+
     @debug
     def add_connection(self, wsocket):
         ''' Add a connection '''
@@ -81,10 +83,14 @@ class EventManager(object):
         else:
             return 0
 
+    @debug
+    def deauth(self, user):
+        pass  # Remove all socket objects for user
+
     # [ Push Updates ] -----------------------------------------------------
 
     @debug
-    def refresh_scorboard(self):
+    def refresh_scoreboard(self):
         ''' Push to everyone '''
         update = self.scoreboard.now()
         for wsocket in self.scoreboard_connections:
@@ -104,7 +110,7 @@ class EventManager(object):
             for user_id in self.notify_connections[team_id].keys():
                 for wsocket in self.notify_connections[team_id][user_id]:
                     wsocket.write_message(json)
-                    if wsocket.user_id != 'public_user':
+                    if wsocket.user_id != '$public_user':
                         Notification.delivered(user_id, event_uuid)
 
     @debug
@@ -131,33 +137,38 @@ class EventManager(object):
     @debug
     def flag_capture(self, user, flag):
         ''' Callback for when a flag is captured '''
-        self.refresh_scorboard()
-        evt_id = Notifier.broadcast_success(
-            "Flag Capture", "%s has captured '%s'." % (
-                user.team.name, flag.name,
-        ))
+        self.refresh_scoreboard()
+        evt_id = Notifier.broadcast_success("Flag Capture", 
+            "%s has captured '%s'." % (user.team.name, flag.name,)
+        )
         self.push_broadcast_notification(evt_id)
 
     @debug
     def unlocked_level(self, user, level):
         ''' Callback for when a team unlocks a new level '''
-        self.refresh_scorboard()
-        message = "%s unlocked level #%d" % (user.team.name, level.number)
+        self.refresh_scoreboard()
+        message = "%s unlocked level #%d." % (user.team.name, level.number,)
         evt_id = Notifier.broadcast_success("Level Unlocked", message)
         self.push_broadcast_notification(evt_id)
 
     @debug
     def purchased_item(self, user, item):
         ''' Callback when a team purchases an item '''
-        self.refresh_scorboard()
+        self.refresh_scoreboard()
         message = "%s purchased %s from the black market." % (
-            user.handle, item.name
+            user.handle, item.name,
         )
         evt_id = Notifier.team_success(user.team, "Upgrade Purchased", message)
         self.push_broadcast_notification(evt_id)
-        message2 = "%s unlocked %s." % (user.team.name, item.name)
-        evt_id2 = Notifier.broadcast_warning("Competitor Upgrade", message2)
+        message2 = "%s unlocked %s." % (user.team.name, item.name,)
+        evt_id2 = Notifier.broadcast_warning("Team Upgrade", message2)
         self.push_broadcast_notification(evt_id2)
+
+    @debug
+    def swat_player(self, user, target):
+        message("%s called the SWAT team on %s." % (user.handle, target.handle,))
+        evt_id = Notifier.broadcast_warning("Player Arrested!", message)
+        self.push_broadcast_notification(evt_id)
 
     # [ Team Events ] ------------------------------------------------------
 

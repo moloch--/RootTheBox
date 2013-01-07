@@ -101,7 +101,7 @@ class LoginHandler(BaseHandler):
         )
 
 
-class UserRegistrationHandler(BaseHandler):
+class RegistrationHandler(BaseHandler):
     ''' Registration Code '''
 
     @debug
@@ -158,7 +158,7 @@ class UserRegistrationHandler(BaseHandler):
                 )
             else:
                 self.create_user(account, handle, passwd, rtok)
-                self.redirect('/login')
+                self.render('public/successful_reg.html', account=account)
         else:
             self.render('public/registration.html', errors=form.errors)
 
@@ -185,6 +185,7 @@ class UserRegistrationHandler(BaseHandler):
 
 class AboutHandler(BaseHandler):
 
+    @debug
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render('public/about.html')
@@ -192,6 +193,7 @@ class AboutHandler(BaseHandler):
 
 class LogoutHandler(BaseHandler):
 
+    @debug
     def get(self, *args, **kwargs):
         ''' Clears cookies and session data '''
         if self.session is not None:

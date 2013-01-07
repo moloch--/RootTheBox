@@ -31,7 +31,6 @@
                 function get_longest(line, diplay_buffer) {
                     tmp = [];
                     for (var index = 0; index < display_buffer.length; index++) {
-                        // console.log("[" + line + "]" + "[" + index + "]: " + display_buffer[index][line]);
                         tmp.push(display_buffer[index][line]);
                     }
                     longest = tmp.reduce(function (a, b) {

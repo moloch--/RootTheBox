@@ -3,7 +3,7 @@
 {% block title %}Source Code Market{% end %}
 
 {% block content %}
-   <!-- Buy Source Code -->
+    <!-- Buy Source Code -->
     <div id="buySourceCodeModal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
@@ -29,8 +29,8 @@
     <script>
         function buy_src(box_uuid, price) {
             $("#buy_box_uuid").val(box_uuid);
-            msg = "Are you sure you want to buy this code for $" + price.toString() + "?";
-            $("#buy_dialog").html(msg);
+            msg = "Are you sure you want to buy this code for $" + price + "?";
+            $("#buy_dialog").text(msg);
         }
     </script>
 	<div class="container">
@@ -92,5 +92,4 @@
             </table>
     	</div>
     </div>
-
 {% end %}

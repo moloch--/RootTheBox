@@ -28,7 +28,9 @@ be purchased from the "Black Market" (see markethandlers.py)
 import logging
 
 from BaseHandlers import BaseHandler
-from models import dbsession, User, WallOfSheep, Team, Box, SourceCode
+from models import dbsession, User, WallOfSheep, Team, Box, \
+    SourceCode, Swat
+from models.User import ADMIN_PERMISSION
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated, has_item, debug
 from mimetypes import guess_type
@@ -178,7 +180,8 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({"error": "You cannot steal from your own team"})
         elif not 0 < amount <= source.money:
             self.write({
-                "error": "Invalid transfer amount; must be greater than 0 and less than $%d" % source.money
+                "error": 
+                "Invalid transfer amount; must be greater than 0 and less than $%d" % source.money
             })
         elif destination == source:
             self.write({
@@ -270,13 +273,14 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
     @authenticated
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
-        uuid = self.get_argument('uuid', '', strip=True)
+        ''' Send file to user if their team owns it '''
+        uuid = self.get_argument('uuid', '')
         box = Box.by_uuid(uuid)
         if box is not None and box.source_code is not None:
             user = self.get_current_user()
             if box.source_code in user.team.purchased_source_code:
                 root = self.application.settings['source_code_market_dir']
-                src_file = open(str(root + '/' + box.source_code.uuid), 'r')
+                src_file = open(root + '/' + box.source_code.uuid, 'r')
                 src_data = b64decode(src_file.read())
                 src_file.close()
                 content_type = guess_type(box.source_code.file_name)[0]
@@ -300,33 +304,50 @@ class SwatHandler(BaseHandler):
     @authenticated
     @has_item("SWAT")
     def get(self, *args, **kwargs):
-        self.render('upgrades/swat.html', errors=None)
+        ''' Render SWAT page '''
+        self.render_page()
 
     @authenticated
     @has_item("SWAT")
     def post(self, *args, **kwargs):
-        form = Form(
-            uuid="Please select a target to SWAT",
-        )
-        if form.validate(self.request.arguments):
-            target = User.by_uuid(self.get_argument('uuid', strip=True))
-            if target is not None:
+        ''' Validate user arguments for SWAT request '''
+        target = User.by_uuid(self.get_argument('uuid', ''))
+        if target is not None and not target.has_permission(ADMIN_PERMISSION):
+            if not Swat.is_pending(target) and not Swat.is_in_progress(target):
                 user = self.get_current_user()
-                try:
-                    #bribe = abs(int(self.get_argument('bribe', 'Nan')))
-                    if bribe < user.team.money:
-                        pass
+                if not target in user.team.members:
+                    if Swat.get_price(target) <= user.team.money:
+                        self.create_swat(user, target)
+                        self.redirect('/swat')
                     else:
-                        self.render('upgrades/swat.html',
-                            errors=["You cannot afford a bribe this large"]
-                        )
-                except ValueError:
-                    self.render('upgrades/swat.html', 
-                        errors=["Invalid bribe amount, must be a number"]
-                    )
+                        self.render_page("You cannot afford this bribe")
+                else:
+                    self.render_page("You cannot SWAT your own team")               
             else:
-                self.render('upgrades/swat.html', 
-                    errors=["Target user does not exist"]
-                )
+                self.render_page("A bribe is already exists for this player")
         else:
-            self.render('upgrades/swat.html', errors=form.errors)
+            self.render_page("Target user does not exist")
+
+    def create_swat(self, user, target):
+        ''' Create Swat request object in database '''
+        price = Swat.get_price(target)
+        user.team.money -= abs(price)
+        swat = Swat(
+            user_id=user.id,
+            target_id=target.id,
+            paid=price,
+        )
+        dbsession.add(swat)
+        dbsession.add(user.team)
+        dbsession.flush()
+
+    def render_page(self, errors=None):
+        ''' Render page with extra arguments '''
+        if not isinstance(errors, list):
+            errors = [str(errors),]
+        user = self.get_current_user()
+        targets = filter(lambda target: target not in user.team.members, User.all_users())
+        self.render('upgrades/swat.html',
+            targets=targets,
+            errors=None,
+        )

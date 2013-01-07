@@ -70,4 +70,4 @@ class FileUpload(BaseObject):
         return filter(lambda char: char in char_white_list, string)
 
     def __repr__(self):
-        return u'<File - name: %s, type: %s>' % (self.file_name, self.content)
+        return u'<FileUpload - name: %s, size: %s>' % (self.file_name, self.byte_size)

@@ -119,8 +119,8 @@ class User(BaseObject):
     @classmethod
     def _hash_password(cls, algorithm_name, password, salt):
         '''
-        Hashes the password using Md5/Sha1/Sha256/Scrypt; scrypt
-        should only used for the admin accounts.
+        Hashes the password using Md5/Sha1/Sha256/Scrypt; scrypt should 
+        only used for the admin accounts.
 
         @param algorithm_name: The hashing algorithm to be used
         @param password: Preimage to be hashed, non-ascii chars are ignored
@@ -129,9 +129,9 @@ class User(BaseObject):
         @rtype: unicode
         '''
         password = filter(lambda char: char in printable[:-5], password)
-        password = password.encode('ascii') # Scrypt doesn't like unicode
+        password = password.encode('ascii')  # Scrypt doesn't like unicode
         if algorithm_name == ADMIN_HASH_ALGORITHM:
-            return cls.__scrypt__(password, salt)  # Returns unicode
+            return unicode(cls.__scrypt__(password, salt))
         elif algorithm_name in cls.algorithms:
             algo = cls.algorithms[algorithm_name][0]()
             algo.update(password)
@@ -146,11 +146,10 @@ class User(BaseObject):
 
         @param password: The preimage to be hashed
         @param salt: The auto-generated hash
-        @return: Unicode hexadecimal string of the hash digest
-        @rtype: unicode
+        @return: Hexadecimal string of the hash digest
         '''
         scrypt_hash = scrypt.hash(password, salt)
-        return unicode(scrypt_hash.encode('hex'))
+        return scrypt_hash.encode('hex')
 
     @property
     def permissions(self):
@@ -235,7 +234,7 @@ class User(BaseObject):
         if isinstance(index, basestring) and index in self.algorithms:
             return self.algorithms[index]
         elif isinstance(index, int):  # Find by numeric index
-            for key in self.algorithms.keys():
+            for key in self.algorithms:
                 if index == self.algorithms[key][1]:
                     return self.algorithms[key]
         return None

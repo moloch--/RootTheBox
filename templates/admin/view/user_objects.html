@@ -100,7 +100,6 @@
             $("#" + obj + "_uuid").val(uuid);
             $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
                 $.each(data, function(key, value) {
-                    // console.log("#" + obj + "_" + key + " -> " + value);
                     $("#" + obj + "_" + key).val(value);
                 });
             });
@@ -117,7 +116,6 @@
                         $("#lock_button_" + uuid).addClass('btn-danger');
                         $("#lock_button_" + uuid).text("Lock Account");
                     }
-                    // alert('Successfully ' + response['success'].toString() + ' account');
                 } else if ('error' in response) {
                     alert('Error: ' + response['error'].toString());
                 } else {

@@ -63,47 +63,46 @@ else:
     from tornado.web import StaticFileHandler  # lint:ok
 
 app = Application([
-                  # Static Handlers - Serves static CSS, JavaScript and
-                  # image files
+                  # Static Handlers - StaticFileHandler.py
                   (r'/static/(.*)',
                       StaticFileHandler, {'path': 'static'}),
                   (r'/avatars/(.*)',
                       StaticFileHandler, {'path': 'files/avatars'}),
 
-                  # Reporter Handlers - Communication with reporters
+                  # Bot Handlers - BotHandlers.py
                   (r'/botnet/register', BotHandler),
 
-                  # ShareUploadHandlers - Serves file sharing
-                  # related pages
+                  # ShareUploadHandlers - ShareUploadHandlers.py
                   (r'/user/shares/download(.*)', ShareDownloadHandler),
                   (r'/user/share/files', ShareUploadHandler),
 
-                  # PasteBin - text sharing handlers
+                  # PasteBin - PastebinHandlers.py
                   (r'/user/share/pastebin', PasteHandler),
                   (r'/user/share/pastebin/create', CreatePasteHandler),
                   (r'/user/share/pastebin/display', DisplayPasteHandler),
                   (r'/user/share/pastebin/delete', DeletePasteHandler),
 
-                  # Market handlers
+                  # Market handlers - MarketHandlers.py
                   (r'/user/market', MarketViewHandler),
                   (r'/user/market/details', MarketDetailsHandler),
 
-                  # Upgrade handlers
+                  # Upgrade handlers - UpgradeHandlers.py
                   (r'/password_security', PasswordSecurityHandler),
                   (r'/federal_reserve', FederalReserveHandler),
                   (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
                   (r'/source_code_market', SourceCodeMarketHandler),
                   (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
+                  (r'/swat', SwatHandler),
 
-                  # Mission handlers
+                  # Mission handlers - MissionHandlers.py
                   (r'/user/missions', MissionsHandler),
                   (r'/user/missions/(.*)', MissionsHandler),
 
-                  # User handlers
+                  # User handlers - UserHandlers.py
                   (r'/user', HomeHandler),
                   (r'/user/settings(.*)', SettingsHandler),
 
-                  # Admin Handlers - Administration pages
+                  # Admin Handlers - AdminHandlers.py
                   (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
                   (r'/admin/create/(.*)', AdminCreateHandler),
                   (r'/admin/edit/(.*)', AdminEditHandler),
@@ -111,14 +110,14 @@ app = Application([
                   (r'/admin/delete/(.*)', AdminDeleteHandler),
                   (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
                   (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
+                  (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
                   (r'/admin/lock', AdminLockHandler),
 
-                  # Notificaiton handlers
+                  # Notificaiton handlers - NotificationHandlers.py
                   (r'/notifications/all', AllNotificationsHandler),
                   (r'/notifications/wsocket/updates', NotifySocketHandler),
 
-                  # Scoreboard Handlers - Severs scoreboard related
-                  # pages
+                  # Scoreboard Handlers - ScoreboardHandlers.py
                   (r'/scoreboard', ScoreboardHandler),
                   (r'/scoreboard/history/(.*)', ScoreboardHistoryHandler),
                   (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
@@ -127,14 +126,14 @@ app = Application([
                   (r'/scoreboard/wsocket/game_data', GameDataHandler),
                   (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
 
-                  # Public handlers - Serves all public pages
+                  # Public handlers - PublicHandlers.py
                   (r'/login', LoginHandler),
-                  (r'/registration', UserRegistrationHandler),
+                  (r'/registration', RegistrationHandler),
                   (r'/about', AboutHandler),
                   (r'/logout', LogoutHandler),
                   (r'/', HomePageHandler),
 
-                  # Error handlers - Serves error pages
+                  # Error handlers - ErrorHandlers.py
                   (r'/403', UnauthorizedHandler),
                   (r'/(.*).php', NoobHandler),
                   (r'/admin', NoobHandler),
@@ -167,7 +166,7 @@ app = Application([
                       "Recaptcha": Recaptcha,
                   },
 
-                  # Enable XSRF forms; not optional
+                  # Enable XSRF protected forms; not optional
                   xsrf_cookies=True,
 
                   # Recaptcha Settings

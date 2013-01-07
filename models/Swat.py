@@ -20,10 +20,13 @@ Created on Mar 12, 2012
 '''
 
 
+from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, desc
-from sqlalchemy.types import Integer, Boolean
+from sqlalchemy.sql import and_
+from sqlalchemy.types import Integer, Boolean, Unicode
 from models import dbsession, User
 from models.BaseGameObject import BaseObject
+from libs.ConfigManager import ConfigManager
 
 
 class Swat(BaseObject):
@@ -31,6 +34,7 @@ class Swat(BaseObject):
     Holds the bribe history of players that get 'SWAT'd 
     '''
 
+    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     target_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     paid = Column(Integer, nullable=False)
@@ -47,9 +51,36 @@ class Swat(BaseObject):
         return dbsession.query(cls).filter_by(accepted=False).order_by(desc(cls.created)).all()
 
     @classmethod
+    def all_in_progress(cls):
+        return dbsession.query(cls).filter(
+            and_(cls.accepted == True, cls.completed == False)
+        ).order_by(desc(cls.created)).all()
+
+    @classmethod
+    def all_completed(cls):
+        return dbsession.query(cls).filter_by(completed=True).order_by(desc(cls.created)).all()
+
+    @classmethod
+    def pending_by_target_id(cls, uid):
+        return dbsession.query(cls).filter(
+            and_(cls.accepted == False, cls.target_id == uid)
+        ).all()
+
+    @classmethod
+    def in_progress_by_target_id(cls, uid):
+        return dbsession.query(cls).filter(
+            and_(cls.accepted == True, cls.completed == False)
+        ).filter_by(target_id=uid).all()
+
+    @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
         return dbsession.query(cls).filter_by(id=ident).first()
+
+    @classmethod
+    def by_uuid(cls, uuid):
+        ''' Returns a the object with given uuid'''
+        return dbsession.query(cls).filter_by(uuid=uuid).first()
 
     @classmethod
     def by_user_id(cls, uid):
@@ -60,6 +91,13 @@ class Swat(BaseObject):
     def by_target_id(cls, uid):
         ''' Return all objects based on target id '''
         return dbsession.query(cls).filter_by(target_id=uid).all()
+
+    @classmethod
+    def count_completed_by_target_id(cls, uid):
+        ''' Return the number of completed bribes in database '''
+        return dbsession.query(cls).filter(
+            and_(cls.completed == True, cls.target_id == uid)
+        ).count()
 
     @classmethod
     def ordered(cls):
@@ -77,30 +115,32 @@ class Swat(BaseObject):
         return dbsession.query(cls).filter_by(target_id=uid).order_by(desc(cls.created)).all()
 
     @classmethod
-    def get_price(cls, tid):
+    def get_price(cls, user):
         ''' Calculate price of next bribe based on history '''
         config = ConfigManager.Instance()
         base_price = config.bribe_base_price
-        return base_price + (len(cls.by_target_id(tid)) * base_price)
+        return base_price + (cls.count_completed_by_target_id(user.id) * base_price)
 
-    def get_user_team(self):
-        ''' Return user's team '''
-        return User.by_id(self.user_id).team
+    @classmethod
+    def is_pending(cls, user):
+        ''' Return bool based on if there are any pending bribes in database '''
+        return 0 < len(cls.pending_by_target_id(user.id))
 
-    def get_target_team(self):
-        ''' Return target's team '''
-        return User.by_id(self.target_id).team
+    @classmethod
+    def is_in_progress(cls, user):
+        ''' Returns bool based on if a user had a bribe in progress '''
+        return 0 < len(cls.in_progress_by_target_id(user.id))
 
-    def __state__(self):
-        ''' Determine printable state '''
-        if not self.accepted:
-            return 'Pending'
-        elif self.accepted and not self.completed:
-            return 'Accepted/In Progress'
-        elif self.accepted and self.completed:
-            return 'Completed'
-        else:
-            raise ValueError("Cannot determine state")
+    @property
+    def user(self):
+        return User.by_id(self.user_id)
 
-    def __str__(self):
-        return self.__state__()
+    @property
+    def target(self):
+        return User.by_id(self.target_id)
+
+    def is_declined(self):
+        return True if not self.accepted and self.completed else False
+
+    def __repr__(self):
+        return '<SWAT user_id: %d, target_id: %d' % (self.user_id, self.target_id,)

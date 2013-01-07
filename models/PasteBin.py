@@ -30,8 +30,8 @@ from models.BaseGameObject import BaseObject
 class PasteBin(BaseObject):
     ''' PasteBin definition '''
 
-    name = Column(Unicode(64), nullable=False)
-    contents = Column(Unicode(2048), nullable=False)
+    name = Column(Unicode(32), nullable=False)
+    contents = Column(Unicode(8192), nullable=False)
     uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
 
@@ -59,4 +59,4 @@ class PasteBin(BaseObject):
         return self.name
 
     def __repr__(self):
-        return ('<Post - name:%s, user_id:%d>' % (self.name, self.user_id))
+        return ('<PasteBin - name:%s, user_id:%d>' % (self.name, self.user_id))
