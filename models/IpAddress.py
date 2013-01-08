@@ -25,7 +25,7 @@ import re
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
-from sqlalchemy.types import Integer, Unicode
+from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession
 from models.BaseGameObject import BaseObject
 
@@ -34,7 +34,7 @@ class IpAddress(BaseObject):
     ''' IP Address definition '''
 
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     _v4 = Column(Unicode(16), unique=True)
     v4 = synonym('_v4', descriptor=property(
         lambda self: self._v4,

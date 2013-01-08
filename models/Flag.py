@@ -25,7 +25,7 @@ import hashlib
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, Integer, Boolean
+from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession, Box
 from models.BaseGameObject import BaseObject
 
@@ -34,7 +34,7 @@ class Flag(BaseObject):
     ''' Flag definition '''
 
     name = Column(Unicode(255), nullable=False)
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     token = Column(Unicode(255), nullable=False)
     description = Column(Unicode(255), nullable=False)
     value = Column(Integer, nullable=False)

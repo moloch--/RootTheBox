@@ -78,6 +78,7 @@
         {% from models import Swat %}
         <div class="well">
             <h3>Pending Bribes</h3>
+            <hr>
             {% if len(pending_bribes) != 0 %}
                 <table class="table table-striped">
                     <thead>
@@ -126,6 +127,7 @@
         <br />
         <div class="well">
             <h3>Bribes in Progress</h3>
+            <hr>
             {% if len(in_progress_bribes) != 0 %}
                 <table class="table table-striped">
                     <thead>
@@ -165,6 +167,7 @@
         <br />
         <div class="well">
             <h3>Completed Bribes</h3>
+            <hr>
             {% if len(completed_bribes) != 0 %}
                 <table class="table table-striped">
                     <thead>

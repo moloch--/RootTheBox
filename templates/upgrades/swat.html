@@ -46,6 +46,8 @@
             {% end %}
         {% end %}
         <div class="well">
+        	<h3>Submit Bribes</h3>
+        	<hr>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -59,9 +61,9 @@
                 <tbody>
                     {% from models import Swat %}
                     {% for index, target in enumerate(targets) %}
-                        {% if Swat.is_pending(target) %}
+                        {% if Swat.user_is_pending(target) %}
                             <tr class="warning">
-                        {% elif Swat.is_in_progress(target) %}
+                        {% elif Swat.user_is_in_progress(target) %}
                             <tr class="error">
                         {% else %}
                             <tr>
@@ -70,9 +72,9 @@
                             <td>{{ target.team.name }}</td>
                             <td>{{ target.handle }}</td>
                             <td>${{ Swat.get_price(target) }}</td>
-                            {% if Swat.is_pending(target) %}
+                            {% if Swat.user_is_pending(target) %}
                                 <td>Bribe Pending</td>
-                            {% elif Swat.is_in_progress(target) %}
+                            {% elif Swat.user_is_in_progress(target) %}
                                 <td>Accepted / In Jail</td>
                             {% else %}
                                 <td>
@@ -86,6 +88,57 @@
                     {% end %}
                 </tbody>
             </table>
+        </div>
+        <br />
+        <div class="well">
+            <h3>Bribe History</h3>
+            <hr>
+            {% if len(user_bribes) != 0 %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Created</th>
+                            <th>Target</th>
+                            <th>Bribe Amount</th>
+                            <th>Outcome</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, swat in enumerate(user_bribes) %}
+                            {% if swat.is_pending() %}
+                                <tr class="warning">
+                            {% elif swat.is_in_progress() %}
+                                <tr class="info">
+                            {% elif swat.is_declined() %}
+                                <tr class="error">
+                            {% elif swat.is_successful() %}
+                                <tr class="success">
+                            {% end %}
+                                <td>{{ index + 1}}</td>
+                                <td>{{ swat.created }}</td>
+                                <td>{{ swat.target.handle }}</td>
+                                <td>${{ swat.paid }}</td>
+                                <td>
+                                    {% if swat.is_pending() %}
+                                        Pending
+                                    {% elif swat.is_in_progress() %}
+                                        In Progress
+                                    {% elif swat.is_declined() %}
+                                        Declined
+                                    {% elif swat.is_successful() %}
+                                        Successful
+                                    {% end %}
+                                </td>                         
+                            </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            {% else %}
+                <br />
+                You have not submitted any bribes yet.
+                <br />
+            {% end %}
         </div>
     </div>
 {% end %}

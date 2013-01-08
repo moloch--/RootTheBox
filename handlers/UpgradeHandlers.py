@@ -313,7 +313,7 @@ class SwatHandler(BaseHandler):
         ''' Validate user arguments for SWAT request '''
         target = User.by_uuid(self.get_argument('uuid', ''))
         if target is not None and not target.has_permission(ADMIN_PERMISSION):
-            if not Swat.is_pending(target) and not Swat.is_in_progress(target):
+            if not Swat.user_is_pending(target) and not Swat.user_is_in_progress(target):
                 user = self.get_current_user()
                 if not target in user.team.members:
                     if Swat.get_price(target) <= user.team.money:
@@ -349,5 +349,6 @@ class SwatHandler(BaseHandler):
         targets = filter(lambda target: target not in user.team.members, User.all_users())
         self.render('upgrades/swat.html',
             targets=targets,
+            user_bribes=Swat.ordered_by_user_id(user.id),
             errors=None,
         )

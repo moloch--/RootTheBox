@@ -22,7 +22,7 @@ Created on Mar 12, 2012
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, asc
-from sqlalchemy.types import Unicode, Integer
+from sqlalchemy.types import Unicode, Integer, String
 from sqlalchemy.orm import relationship, backref
 from models import dbsession
 from models.BaseGameObject import BaseObject
@@ -31,7 +31,7 @@ from models.BaseGameObject import BaseObject
 class GameLevel(BaseObject):
     ''' Game Level definition '''
 
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     number = Column(Integer, unique=True, nullable=False)
     next_level_id = Column(Integer, ForeignKey('game_level.id'))
     buyout = Column(Integer, nullable=False)

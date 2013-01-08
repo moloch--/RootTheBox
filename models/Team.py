@@ -24,7 +24,7 @@ from uuid import uuid4
 from random import randint
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref, synonym
-from sqlalchemy.types import Integer, Unicode
+from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession, team_to_box, team_to_item, \
     team_to_flag, team_to_game_level, team_to_source_code
 from models.BaseGameObject import BaseObject
@@ -46,7 +46,7 @@ class Team(BaseObject):
     files = relationship("FileUpload", backref=backref("Team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("Team", lazy="select"))
     money = Column(Integer, default=100, nullable=False)
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     flags = relationship("Flag", secondary=team_to_flag, backref=backref("Team", lazy="select"))
     boxes = relationship("Box", secondary=team_to_box, backref=backref("Team", lazy="select"))
     items = relationship("MarketItem", secondary=team_to_item, backref=backref("Team", lazy="joined"))

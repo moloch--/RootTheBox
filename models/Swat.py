@@ -23,7 +23,7 @@ Created on Mar 12, 2012
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
-from sqlalchemy.types import Integer, Boolean, Unicode
+from sqlalchemy.types import Integer, Boolean, String
 from models import dbsession, User
 from models.BaseGameObject import BaseObject
 from libs.ConfigManager import ConfigManager
@@ -34,7 +34,7 @@ class Swat(BaseObject):
     Holds the bribe history of players that get 'SWAT'd 
     '''
 
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     target_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     paid = Column(Integer, nullable=False)
@@ -48,7 +48,9 @@ class Swat(BaseObject):
 
     @classmethod
     def all_pending(cls):
-        return dbsession.query(cls).filter_by(accepted=False).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).filter(
+            and_(cls.accepted == False, cls.completed == False)
+        ).order_by(desc(cls.created)).all()
 
     @classmethod
     def all_in_progress(cls):
@@ -62,7 +64,7 @@ class Swat(BaseObject):
 
     @classmethod
     def pending_by_target_id(cls, uid):
-        return dbsession.query(cls).filter(
+        return dbsession.query(cls).filter_by(completed=False).filter(
             and_(cls.accepted == False, cls.target_id == uid)
         ).all()
 
@@ -105,14 +107,18 @@ class Swat(BaseObject):
         return dbsession.query(cls).order_by(desc(cls.created)).all()
 
     @classmethod
-    def ordered_user_id(cls, uid):
+    def ordered_by_user_id(cls, uid):
         ''' Return all bribes for user id in chronological order '''
-        return dbsession.query(cls).filter_by(user_id=uid).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).filter_by(user_id=uid).order_by(
+            desc(cls.created)
+        ).all()
 
     @classmethod
-    def ordered_target_id(cls, uid):
+    def ordered_by_target_id(cls, uid):
         ''' Return all bribes for target id in chronological order '''
-        return dbsession.query(cls).filter_by(target_id=uid).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).filter_by(target_id=uid).order_by(
+            desc(cls.created)
+        ).all()
 
     @classmethod
     def get_price(cls, user):
@@ -122,12 +128,12 @@ class Swat(BaseObject):
         return base_price + (cls.count_completed_by_target_id(user.id) * base_price)
 
     @classmethod
-    def is_pending(cls, user):
+    def user_is_pending(cls, user):
         ''' Return bool based on if there are any pending bribes in database '''
         return 0 < len(cls.pending_by_target_id(user.id))
 
     @classmethod
-    def is_in_progress(cls, user):
+    def user_is_in_progress(cls, user):
         ''' Returns bool based on if a user had a bribe in progress '''
         return 0 < len(cls.in_progress_by_target_id(user.id))
 
@@ -139,8 +145,17 @@ class Swat(BaseObject):
     def target(self):
         return User.by_id(self.target_id)
 
+    def is_pending(self):
+        return True if not self.accepted and not self.completed else False
+
+    def is_in_progress(self):
+        return True if self.accepted and not self.completed else False
+
     def is_declined(self):
         return True if not self.accepted and self.completed else False
+
+    def is_successful(self):
+        return True if self.accepted and self.completed else False
 
     def __repr__(self):
         return '<SWAT user_id: %d, target_id: %d' % (self.user_id, self.target_id,)

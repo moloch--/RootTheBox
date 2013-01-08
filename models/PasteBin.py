@@ -22,7 +22,7 @@ Created on Mar 12, 2012
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, desc
-from sqlalchemy.types import Unicode, Integer
+from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.BaseGameObject import BaseObject
 
@@ -32,7 +32,7 @@ class PasteBin(BaseObject):
 
     name = Column(Unicode(32), nullable=False)
     contents = Column(Unicode(8192), nullable=False)
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
 
     @classmethod

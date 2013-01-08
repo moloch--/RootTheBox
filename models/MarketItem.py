@@ -24,7 +24,7 @@ import json
 
 from uuid import uuid4
 from sqlalchemy import Column
-from sqlalchemy.types import Unicode, Integer
+from sqlalchemy.types import Unicode, Integer, String
 from models.BaseGameObject import BaseObject
 from models import dbsession
 
@@ -32,7 +32,7 @@ from models import dbsession
 class MarketItem(BaseObject):
     ''' Item definition '''
 
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     name = Column(Unicode(64), nullable=False)
     price = Column(Integer, nullable=False)
     image = Column(Unicode(255))

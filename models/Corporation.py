@@ -22,7 +22,7 @@ Created on Mar 12, 2012
 
 from uuid import uuid4
 from sqlalchemy import Column
-from sqlalchemy.types import Unicode, Integer
+from sqlalchemy.types import Unicode, Integer, String
 from sqlalchemy.orm import relationship, backref
 from models import dbsession
 from models.BaseGameObject import BaseObject
@@ -32,7 +32,7 @@ class Corporation(BaseObject):
     ''' Corporation definition '''
 
     name = Column(Unicode(64), unique=True, nullable=False)
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     description = Column(Unicode(1024), nullable=False)
     boxes = relationship("Box", backref=backref(
         "Corporation", lazy="joined"), cascade="all, delete-orphan")

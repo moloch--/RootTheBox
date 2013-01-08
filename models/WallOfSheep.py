@@ -21,13 +21,14 @@ Created on Mar 21, 2012
 
 
 from sqlalchemy import Column, ForeignKey, desc
-from sqlalchemy.types import Integer, Unicode
+from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession, User
 from models.BaseGameObject import BaseObject
 
 
 class WallOfSheep(BaseObject):
 
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     preimage = Column(Unicode(16), nullable=False)
     value = Column(Integer, nullable=False)
     victim_id = Column(Integer, ForeignKey('user.id'), nullable=False)

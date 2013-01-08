@@ -24,7 +24,7 @@ from uuid import uuid4
 from string import ascii_letters, digits
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
-from sqlalchemy.types import Unicode, Integer, Boolean
+from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models.BaseGameObject import BaseObject
 from models import dbsession
 
@@ -46,7 +46,7 @@ class Theme(BaseObject):
         lambda self, cssfile: setattr(self, '_cssfile',
                                         self.__class__._filter_string(cssfile, "."))
     ))
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
 
     @classmethod
     def all(cls):

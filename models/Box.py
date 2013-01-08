@@ -23,7 +23,7 @@ Created on Mar 11, 2012
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, or_
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import Integer, Unicode
+from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession, team_to_box
 from models.IpAddress import IpAddress
 from models.GameLevel import GameLevel
@@ -35,7 +35,7 @@ from models.SourceCode import SourceCode
 class Box(BaseObject):
     ''' Box definition '''
 
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(64), unique=True, nullable=False)
     ip_addresses = relationship("IpAddress", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")

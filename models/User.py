@@ -60,7 +60,7 @@ class User(BaseObject):
         lambda self, handle: setattr(
             self, '_handle', self.__class__.filter_string(handle, "_-"))
     ))
-    uuid = Column(Unicode(36), unique=True, nullable=False, default=lambda: unicode(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     _locked = Column(Boolean, default=False, nullable=False)
     team_id = Column(Integer, ForeignKey('team.id'))
     permissions = relationship("Permission", backref=backref("User", lazy="select"), cascade="all, delete-orphan")
