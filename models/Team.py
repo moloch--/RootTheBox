@@ -90,9 +90,11 @@ class Team(BaseObject):
         return sorted(self.game_levels)
 
     def level_flags(self, lvl):
+        ''' Given a level number return all flags captured for that level '''
         return filter(lambda flag: flag.game_level.number == lvl, self.flags)
 
     def to_dict(self):
+        ''' Use for JSON related tasks; return public data only '''
         return {
             'name': self.name,
             'motto': self.motto,

@@ -27,6 +27,10 @@ from models.BaseGameObject import BaseObject
 
 
 class WallOfSheep(BaseObject):
+    ''' 
+    Stores a record of cracked passwords, and publically displays 
+    them for all to see.
+    '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     preimage = Column(Unicode(16), nullable=False)
@@ -34,20 +38,24 @@ class WallOfSheep(BaseObject):
     victim_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     cracker_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
-    @property
-    def user(self):
-        ''' Returns display name of user'''
-        return User.by_id(self.victim_id)
-
-    @property
-    def cracker(self):
-        ''' Returns display name of cracker '''
-        return User.by_id(self.cracker_id)
-
     @classmethod
     def all(cls):
         ''' Returns all team objects '''
-        return dbsession.query(cls).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def all_created(cls):
+        ''' Returns all team objects '''
+        return dbsession.query(cls).order_by(
+            desc(cls.created)
+        ).all()
+
+    @classmethod
+    def all_value(cls):
+        ''' Returns all team objects '''
+        return dbsession.query(cls).order_by(
+            desc(cls.value)
+        ).all()
 
     @classmethod
     def by_id(cls, ident):
@@ -64,7 +72,24 @@ class WallOfSheep(BaseObject):
         ''' Returns all entries for cracker_id '''
         return dbsession.query(cls).filter_by(cracker_id=cracker_id).all()
 
+    @property
+    def victim(self):
+        ''' Returns display name of user '''
+        return User.by_id(self.victim_id)
+
+    @property
+    def cracker(self):
+        ''' Returns display name of cracker '''
+        return User.by_id(self.cracker_id)
+
+    def __cmp__(self, other):
+        ''' Used for sorting '''
+        return len(self) - len(other)
+
     def __repr__(self):
         return u'<WallOfSheep - preimage: %s, victim_id: %d>' % (
-            self.preimage, self.victim_id
+            self.preimage, self.victim_id,
         )
+
+    def __len__(self):
+        return len(self.preimage)

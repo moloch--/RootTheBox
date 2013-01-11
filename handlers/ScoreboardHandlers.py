@@ -40,10 +40,8 @@ from libs.EventManager import EventManager
 from models import Team
 
 
-class GameDataHandler(WebSocketHandler):
-    '''
-    Get Score data via websocket
-    '''
+class ScoreboardDataSocketHandler(WebSocketHandler):
+    ''' Get Score data via websocket '''
 
     def initialize(self):
         ''' Setup sessions '''
@@ -57,7 +55,7 @@ class GameDataHandler(WebSocketHandler):
 
     @debug
     def on_message(self, message):
-        ''' Send current state '''
+        ''' NOP '''
         pass
 
     @debug
@@ -113,52 +111,6 @@ class ScoreboardAjaxHandler(BaseHandler):
         else:
             self.write({'error': 'Team does not exist'})
         self.finish()
-
-
-class ScoreboardMoneyHandler(BaseHandler):
-    '''
-    Renders money-spec pages
-    '''
-
-    def get(self, *args, **kargs):
-        ''' Render pie chart '''
-        uri = {
-            'pie_chart': self.pie_chart,
-            'bar_chart': self.bar_chart,
-        }
-        if 1 == len(args) and args[0] in uri:
-            uri[args[0]]()
-        else:
-            self.render('public/404.html')
-
-    def pie_chart(self):
-        self.render('scoreboard/money/pie_chart.html')
-
-    def bar_chart(self):
-        self.render('scoreboard/money/bar_chart.html')
-
-
-class ScoreboardFlagHandler(BaseHandler):
-    '''
-    Renders flag-spec pages
-    '''
-
-    def get(self, *args, **kargs):
-        ''' Render pie chart '''
-        uri = {
-            'pie_chart': self.pie_chart,
-            'bar_chart': self.bar_chart,
-        }
-        if 1 == len(args) and args[0] in uri:
-            uri[args[0]]()
-        else:
-            self.render('public/404.html')
-
-    def pie_chart(self):
-        self.render('scoreboard/flags/pie_chart.html')
-
-    def bar_chart(self):
-        self.render('scoreboard/flags/bar_chart.html')
 
 
 class ScoreboardHistoryHandler(BaseHandler):
@@ -226,3 +178,17 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
         ''' Send history in JSON '''
         length = abs(length) + 1
         return json.dumps({'history': self.game_history[(-1 * length):]})
+
+
+class ScoreboardWallOfSheepHandler(BaseHandler):
+
+    def get(self, *args, **kwargs):
+        ''' Optionally order by; defaults to date created '''
+        order = self.get_argument('order_by', '').lower()
+        if order == 'prize':
+            sheep = WallOfSheep.all_value()
+        elif order == 'length':
+            sheep = sorted(WallOfSheep.all())
+        else:
+            sheep = WallOfSheep.all_created()
+        self.render('scoreboard/wall_of_sheep.html', flock=sheep)

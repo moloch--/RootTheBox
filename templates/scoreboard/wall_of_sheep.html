@@ -1,0 +1,41 @@
+{% extends "../main.html" %}
+
+{% block title %}Wall of Sheep{% end %}
+
+{% block content %}
+    {% include ../notifier.html %}
+    {% from models import WallOfSheep %}
+
+    <div class="container">
+        <h1>Wall of Sheep</h1>
+        <br />
+        <div class="well">
+            {% if len(flock) != 0 %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Handle</th>
+                            <th>Plaintext</th>
+                            <th>Amount Stolen</th>
+                            <th>Cracked by</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, sheep in enumerate(flock) %}
+                            <tr>
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ sheep.victim.handle }}</td>
+                                <td>{{ sheep.preimage }}</td>
+                                <td>${{ sheep.value }}</td>
+                                <td>{{ sheep.cracker.handle }}</td>
+                            </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            {% else %}
+                No Sheep yet; check back later.
+            {% end %}
+        </div>
+    </div>
+{% end %}

@@ -299,7 +299,7 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
 
 
 class SwatHandler(BaseHandler):
-    ''' Allows users to bribe admins '''
+    ''' Allows users to bribe "police" to SWAT other players '''
 
     @authenticated
     @has_item("SWAT")
@@ -331,7 +331,8 @@ class SwatHandler(BaseHandler):
     def create_swat(self, user, target):
         ''' Create Swat request object in database '''
         price = Swat.get_price(target)
-        user.team.money -= abs(price)
+        assert 0 < price
+        user.team.money -= price
         swat = Swat(
             user_id=user.id,
             target_id=target.id,
@@ -343,7 +344,7 @@ class SwatHandler(BaseHandler):
 
     def render_page(self, errors=None):
         ''' Render page with extra arguments '''
-        if not isinstance(errors, list):
+        if errors is not None and not isinstance(errors, list):
             errors = [str(errors),]
         user = self.get_current_user()
         targets = filter(lambda target: target not in user.team.members, User.all_users())

@@ -123,8 +123,9 @@ app = Application([
                   (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
                   (r'/scoreboard/money/(.*)', ScoreboardMoneyHandler),
                   (r'/scoreboard/flags/(.*)', ScoreboardFlagHandler),
-                  (r'/scoreboard/wsocket/game_data', GameDataHandler),
+                  (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
                   (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
+                  (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
 
                   # Public handlers - PublicHandlers.py
                   (r'/login', LoginHandler),

@@ -333,11 +333,13 @@ class AdminEditHandler(BaseHandler):
             if corp is not None:
                 if self.get_argument('name') != corp.name:
                     logging.info("Updated corporation name %s -> %s" %
-                        (corp.name, self.get_argument('name'),))
+                        (corp.name, self.get_argument('name'),)
+                    )
                     corp.name = unicode(self.get_argument('name'))
                 if self.get_argument('description') != corp.description:
                     logging.info("Updated corporation description %s -> %s" %
-                        (corp.description, self.get_argument('description'),))
+                        (corp.description, self.get_argument('description'),)
+                    )
                     corp.description = unicode(self.get_argument('description'))
                 dbsession.add(corp)
                 dbsession.flush()
@@ -363,7 +365,8 @@ class AdminEditHandler(BaseHandler):
                 if self.get_argument('name') != box.name:
                     if Box.by_name(self.get_argument('name')) is None:
                         logging.info("Updated box name %s -> %s" %
-                            (box.name, self.get_argument('name'),))
+                            (box.name, self.get_argument('name'),)
+                        )
                         box.name = unicode(self.get_argument('name'))
                     else:
                         errors.append("Box name already exists")
@@ -376,11 +379,13 @@ class AdminEditHandler(BaseHandler):
                     errors.append("Corporation does not exist")
                 if self.get_argument('description') != box.description:
                     logging.info("Updated %s's description %s -> %s" %
-                        (box.name, box.description, self.get_argument('description'),))
+                        (box.name, box.description, self.get_argument('description'),)
+                    )
                     box.description = unicode(self.get_argument('description'))
                 if self.get_argument('difficulty') != box.difficulty:
                     logging.info("Updated %s's difficulty %s -> %s" %
-                        (box.name, box.difficulty, self.get_argument('difficulty'),))
+                        (box.name, box.difficulty, self.get_argument('difficulty'),)
+                    )
                     box.difficulty = unicode(self.get_argument('difficulty'))
                 dbsession.add(box)
                 dbsession.flush()
@@ -527,7 +532,8 @@ class AdminEditHandler(BaseHandler):
                     if user.algorithm != self.get_argument('hash_algorithm'):
                         if 0 < len(self.get_argument('password', '')):
                             logging.info("Updated %s's hashing algorithm %s -> %s" %
-                                (user.handle, user.algorithm, self.get_argument('hash_algorithm')))
+                                (user.handle, user.algorithm, self.get_argument('hash_algorithm'),)
+                            )
                             user.algorithm = self.get_argument('hash_algorithm')
                         else:
                             errors.append("You must provide a password when updating the hashing algorithm")
@@ -555,7 +561,10 @@ class AdminEditHandler(BaseHandler):
 
     def edit_ipv4(self):
         ''' Add ipv4 addresses to a box (sorta edits the box object) '''
-        form = Form(box_uuid="Select a box", ipv4="Please provide a list of IPv4 addresses")
+        form = Form(
+            box_uuid="Select a box", 
+            ipv4="Please provide a list of IPv4 addresses"
+        )
         if form.validate(self.request.arguments):
             errors = []
             box = Box.by_uuid(self.get_argument('box_uuid'))
@@ -568,8 +577,8 @@ class AdminEditHandler(BaseHandler):
                             addr = IpAddress(box_id=box.id, v4=ip)
                             dbsession.add(addr)
                         else:
-                            errors.append("%s has already been assigned to %s."
-                                % (ip, box.name,)
+                            errors.append("%s has already been assigned to %s." % 
+                                (ip, box.name,)
                             )
                     except ValueError:
                         errors.append("'%s' is not a valid IPv4 address" % str(ip[:15]))
@@ -804,7 +813,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
                     )
                 else:
                     try:
-                        price = int(self.get_argument('price', 'NaN'))
+                        price = abs(int(self.get_argument('price', 'NaN')))
                         self.create_source_code(box, price)
                         self.render('admin/upgrades/source_code_market.html', errors=None)
                     except ValueError:
@@ -840,11 +849,13 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         dbsession.flush()
 
     def get_checksum(self, data):
+        ''' Calculate checksum of file data '''
         checksum = md5()
         checksum.update(data)
         return checksum.hexdigest()
 
     def delete_source_code(self):
+        ''' Delete source code file '''
         uuid = self.get_argument('box_uuid', '')
         box = Box.by_uuid(uuid)
         if box is not None and box.source_code is not None:
@@ -853,6 +864,9 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             dbsession.flush()
             root = self.application.settings['source_code_market_dir']
             source_code_path = root + '/' + source_code_uuid
+            logging.info("Delete souce code market file: %s (box: %s)" % 
+                (source_code_path, box.name,)
+            )
             if os.path.exists(source_code_path):
                 os.unlink(source_code_path)
             errors = None
@@ -897,6 +911,7 @@ class AdminSwatHandler(BaseHandler):
         ''' Accept bribe, and lock user's account '''
         swat = Swat.by_uuid(self.get_argument('uuid', ''))
         if swat is not None and not swat.completed:
+            logging.info("Accepted SWAT with uuid: %s", swat.uuid)
             swat.accepted = True
             swat.target.locked = True
             dbsession.add(swat)
@@ -904,12 +919,16 @@ class AdminSwatHandler(BaseHandler):
             dbsession.flush()
             self.render_page()
         else:
-            self.render_page('Requested Swat object does not exist')
+            logging.warn("Invalid request to accept bribe with uuid: %r" % 
+                (self.get_argument('uuid', ''),)
+            )
+            self.render_page('Requested SWAT object does not exist')
 
     def complete_bribe(self):
         ''' Complete bribe and unlock user's account '''
         swat = Swat.by_uuid(self.get_argument('uuid', ''))
         if swat is not None and not swat.completed:
+            logging.info("Completed SWAT with uuid: %s", swat.uuid)
             swat.completed = True
             swat.target.locked = False
             dbsession.add(swat)
@@ -917,4 +936,7 @@ class AdminSwatHandler(BaseHandler):
             dbsession.flush()
             self.render_page()
         else:
-            self.render_page('Requested Swat object does not exist')
+            logging.warn("Invalid request to complete bribe with uuid: %r" % 
+                (self.get_argument('uuid', ''),)
+            )
+            self.render_page('Requested SWAT object does not exist')
