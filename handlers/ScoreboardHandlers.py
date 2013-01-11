@@ -37,7 +37,7 @@ from libs.Sessions import MemcachedSession
 from libs.ConfigManager import ConfigManager
 from libs.Scoreboard import Scoreboard
 from libs.EventManager import EventManager
-from models import Team
+from models import Team, WallOfSheep
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):
@@ -155,16 +155,8 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 
     @debug
     def on_message(self, message):
-        ''' Send current state '''
-        try:
-            count = int(message)
-            if len(self.game_history) < count:
-                count = len(self.game_history)
-            self.write_message({'history': self.get_history(count)})
-        except ValueError:
-            self.write_message({'error': 'Not a number'})
-        except:
-            self.write_message({'error': "Something didn't work ..."})
+        ''' Ignore messages '''
+        pass
 
     @debug
     def on_close(self):
@@ -183,7 +175,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 class ScoreboardWallOfSheepHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        ''' Optionally order by; defaults to date created '''
+        ''' Optionally order by argument; defaults to date/time '''
         order = self.get_argument('order_by', '').lower()
         if order == 'prize':
             sheep = WallOfSheep.all_value()
@@ -191,4 +183,8 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
             sheep = sorted(WallOfSheep.all())
         else:
             sheep = WallOfSheep.all_created()
-        self.render('scoreboard/wall_of_sheep.html', flock=sheep)
+        leaderboard = WallOfSheep.leaderboard()
+        self.render('scoreboard/wall_of_sheep.html', 
+            leaderboard=leaderboard, 
+            flock=sheep,
+        )

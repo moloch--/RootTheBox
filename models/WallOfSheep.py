@@ -32,7 +32,6 @@ class WallOfSheep(BaseObject):
     them for all to see.
     '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     preimage = Column(Unicode(16), nullable=False)
     value = Column(Integer, nullable=False)
     victim_id = Column(Integer, ForeignKey('user.id'), nullable=False)
@@ -72,6 +71,29 @@ class WallOfSheep(BaseObject):
         ''' Returns all entries for cracker_id '''
         return dbsession.query(cls).filter_by(cracker_id=cracker_id).all()
 
+    @classmethod
+    def count_cracked_by(cls, user_id):
+        return dbsession.query(cls).filter_by(cracker_id=user_id).count()
+
+    @classmethod
+    def leaderboard(cls, order_by='passwords'):
+        ''' 
+        Creates an ordered list of tuples, for each user and the 
+        number of password they've cracked
+        '''
+        orders = {'passwords': 1, 'cash': 2}
+        leaders = []
+        for user in User.all_users():
+            if 0 < cls.count_cracked_by(user.id):
+                leaders.append((
+                    user, 
+                    cls.count_cracked_by(user.id), 
+                    sum(cls.by_cracker_id(user.id)),
+                ))
+        if order_by not in orders: order_by = 'passwords'
+        leaders.sort(key=lambda stats: stats[orders[order_by]], reverse=True)
+        return leaders
+
     @property
     def victim(self):
         ''' Returns display name of user '''
@@ -93,3 +115,9 @@ class WallOfSheep(BaseObject):
 
     def __len__(self):
         return len(self.preimage)
+
+    def __radd__(self, other):
+        return self.value + other
+
+    def __add__(self, other):
+        return self.value + other.value

@@ -121,8 +121,6 @@ app = Application([
                   (r'/scoreboard', ScoreboardHandler),
                   (r'/scoreboard/history/(.*)', ScoreboardHistoryHandler),
                   (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
-                  (r'/scoreboard/money/(.*)', ScoreboardMoneyHandler),
-                  (r'/scoreboard/flags/(.*)', ScoreboardFlagHandler),
                   (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
                   (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
                   (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
