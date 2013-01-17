@@ -63,7 +63,8 @@ class UnauthorizedHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the 403 page '''
-        self.render("public/403.html")
+        locked = bool(self.get_argument('locked', '').lower() == 'true')
+        self.render("public/403.html", locked=locked)
 
 
 class NoobHandler(BaseHandler):

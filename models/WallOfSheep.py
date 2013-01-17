@@ -43,14 +43,14 @@ class WallOfSheep(BaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
-    def all_created(cls):
+    def all_order_created(cls):
         ''' Returns all team objects '''
         return dbsession.query(cls).order_by(
             desc(cls.created)
         ).all()
 
     @classmethod
-    def all_value(cls):
+    def all_order_value(cls):
         ''' Returns all team objects '''
         return dbsession.query(cls).order_by(
             desc(cls.value)

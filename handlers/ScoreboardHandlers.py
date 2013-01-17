@@ -178,11 +178,11 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
         ''' Optionally order by argument; defaults to date/time '''
         order = self.get_argument('order_by', '').lower()
         if order == 'prize':
-            sheep = WallOfSheep.all_value()
+            sheep = WallOfSheep.all_order_value()
         elif order == 'length':
             sheep = sorted(WallOfSheep.all())
         else:
-            sheep = WallOfSheep.all_created()
+            sheep = WallOfSheep.all_order_created()
         leaderboard = WallOfSheep.leaderboard()
         self.render('scoreboard/wall_of_sheep.html', 
             leaderboard=leaderboard, 

@@ -60,14 +60,13 @@ class MarketItem(BaseObject):
 
     def to_dict(self):
         ''' Returns object data as json object '''
-        msg = {
+        return {
             'name': self.name,
             'price': self.price,
             'image': self.image,
             'description': self.description,
             'uuid': self.uuid,
         }
-        return msg
 
     def __eq__(self, other):
         ''' Equivalency '''

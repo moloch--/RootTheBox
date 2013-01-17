@@ -91,8 +91,8 @@ class Box(BaseObject):
         return filter(lambda ip: ip is not None, ips)
 
     @property
-    def corporation_name(self):
-        return str(Corporation.by_id(self.corporation_id))
+    def corporation(self):
+        return Corporation.by_id(self.corporation_id)
 
     @property
     def ipv6(self):

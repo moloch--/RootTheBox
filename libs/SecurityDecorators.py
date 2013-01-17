@@ -37,7 +37,7 @@ def authenticated(method):
             else:
                 self.session.delete()
                 self.clear_all_cookies()
-                self.redirect('/403')
+                self.redirect('/403?locked=true')
         else:
             self.redirect(self.application.settings['login_url'])
     return wrapper
@@ -51,9 +51,9 @@ def restrict_ip_address(method):
         if self.request.remote_ip in self.application.settings['admin_ips']:
             return method(self, *args, **kwargs)
         else:
-            logging.warn("Attempted unauthorized access from %s to %s" %
-                (self.request.remote_ip, self.request.uri,)
-            )
+            logging.warn("Attempted unauthorized access from %s to %s" % (
+                self.request.remote_ip, self.request.uri,
+            ))
             self.redirect(self.application.settings['forbidden_url'])
     return wrapper
 
@@ -69,9 +69,9 @@ def authorized(permission):
                 user = User.by_handle(self.session['handle'])
                 if user is not None and user.has_permission(permission):
                     return method(self, *args, **kwargs)
-            logging.warn("Attempted unauthorized access from %s to %s" %
-                (self.request.remote_ip, self.request.uri,)
-            )
+            logging.warn("Attempted unauthorized access from %s to %s" % (
+                self.request.remote_ip, self.request.uri,
+            ))
             self.redirect(self.application.settings['forbidden_url'])
         return wrapper
     return func
@@ -88,16 +88,18 @@ def async(method):
 
 
 def debug(method):
-    ''' Logs a method call '''
+    ''' Logs a method call/return '''
 
     @functools.wraps(method)
     def wrapper(*args, **kwargs):
         class_name = args[0].__class__.__name__
-        logging.debug("Call to -> %s.%s()" % (class_name, method.__name__,))
+        logging.debug("Call to -> %s.%s()" % (
+            class_name, method.__name__,
+        ))
         value = method(*args, **kwargs)
-        logging.debug(
-            "Return from <- %s.%s()" % (class_name, method.__name__,)
-        )
+        logging.debug("Return from <- %s.%s()" % (
+            class_name, method.__name__,
+        ))
         return value
     return wrapper
 

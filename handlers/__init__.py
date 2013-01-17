@@ -223,4 +223,4 @@ def start_server():
             print(INFO + 'Flushing cache ...'),
             FileCache.flush()
             print('OK')
-        _exit(1)
+        _exit(0)

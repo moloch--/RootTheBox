@@ -55,9 +55,9 @@ class GameHistory(object):
             for index in range(start_index, max_index + 1):
                 snapshot = Snapshot.by_id(index)
                 if not snapshot.key in self.cache:
-                    logging.info(
-                        "Cached snapshot (%d of %d)" % (snapshot.id, max_index)
-                    )
+                    logging.info("Cached snapshot (%d of %d)" % (
+                        snapshot.id, max_index
+                    ))
                     self.cache.set(snapshot.key, snapshot.to_dict())
             logging.info("History load complete.")
         except KeyboardInterrupt:
@@ -70,6 +70,7 @@ class GameHistory(object):
         self.event_manager.push_history(snapshot.to_dict())
 
     def get_flag_history_by_name(self, name, start, stop=None):
+        ''' Retrieves flag capture history for a team '''
         snapshots = self[start:] if stop is None else self[start:stop]
         series = []
         for snapshot in snapshots:
@@ -79,6 +80,7 @@ class GameHistory(object):
         return series
 
     def get_money_history_by_name(self, name, start, stop=None):
+        ''' Retrieves money history for a team '''
         snapshots = self[start:] if stop is None else self[start:stop]
         series = []
         for snapshot in snapshots:

@@ -77,16 +77,16 @@ class Flag(BaseObject):
         return self.box.game_level
 
     def to_dict(self):
-        ''' Returns editable data as a dictionary '''
+        ''' Returns public data as a dict '''
         box = Box.by_id(self.box_id)
-        return dict(
-            name=self.name,
-            uuid=self.uuid,
-            token=self.token,
-            description=self.description,
-            value=self.value,
-            box=box.uuid,
-        )
+        return {
+            'name': self.name,
+            'uuid': self.uuid,
+            'token': self.token,
+            'description': self.description,
+            'value': self.value,
+            'box': box.uuid,
+        }
 
     def __hsh__(self, data):
         ''' Token is MD5 of data '''
@@ -120,5 +120,6 @@ class Flag(BaseObject):
         return not self.__eq__(other)
 
     def __repr__(self):
-        return "<Flag - name:%s, is_file:%s, is_hash:%s, is_regex:%s>" % \
-            (self.name, str(self.is_file), str(self.is_hash), str(self.is_regex),)
+        return "<Flag - name:%s, is_file:%s, is_hash:%s, is_regex:%s>" % (
+            self.name, str(self.is_file), str(self.is_hash), str(self.is_regex),
+        )

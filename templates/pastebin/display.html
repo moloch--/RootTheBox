@@ -18,7 +18,7 @@
 				</div>
 			{% end %}
 		{% end %}
-		{% if paste != None %}
+		{% if paste is not None %}
 			<h3>{{ paste.name }} - {{ paste.created.strftime("%I:%M%p") }}</h3>
 <pre>
 {{ paste.contents }}

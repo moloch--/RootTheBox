@@ -4,7 +4,11 @@
 
 {% block content %}
   	<div class="container">
-		<h1>403 - Forbidden</h1>
+  		{% if locked %}
+  			<h1>403 - Account Locked!</h1>
+  		{% else %}
+			<h1>403 - Forbidden</h1>
+		{% end %}
 		<br />
 		<p>
 			<embed type="application/x-shockwave-flash"

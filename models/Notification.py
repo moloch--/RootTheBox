@@ -58,12 +58,16 @@ class Notification(BaseObject):
     @classmethod
     def by_user_id(cls, user_id):
         ''' Return notifications for a single user '''
-        return dbsession.query(cls).filter_by(user_id=user_id).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).filter_by(user_id=user_id).order_by(
+            desc(cls.created)
+        ).all()
 
     @classmethod
     def new_messages(cls, user_id):
         ''' Return all notification which have not been viewed '''
-        return dbsession.query(cls).filter(and_(cls.user_id == user_id, cls.viewed == False)).all()
+        return dbsession.query(cls).filter(
+            and_(cls.user_id == user_id, cls.viewed == False)
+        ).all()
 
     @classmethod
     def by_event_uuid(cls, uuid):
@@ -72,17 +76,22 @@ class Notification(BaseObject):
 
     @classmethod
     def delivered(cls, user_id, uuid):
-        notify = dbsession.query(cls).filter(and_(cls.event_uuid == uuid, cls.user_id == user_id)).first()
+        notify = dbsession.query(cls).filter(
+            and_(cls.event_uuid == uuid, cls.user_id == user_id)
+        ).first()
         notify.viewed = True
         dbsession.add(notify)
         dbsession.flush()
 
-    def to_json(self):
-        ''' Creates a JSON version of the notification '''
-        notification = {
+    def to_dict(self):
+        ''' Return public data as dict '''
+        return {
             'category': self.category,
             'title': self.title,
             'message': self.message,
             'icon_url': self.icon_url,
         }
-        return json.dumps(notification)
+
+    def to_json(self):
+        ''' Creates a JSON version of the notification '''
+        return json.dumps(self.to_dict())

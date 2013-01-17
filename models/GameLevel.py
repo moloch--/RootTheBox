@@ -40,7 +40,9 @@ class GameLevel(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).order_by(asc(cls.number)).all()
+        return dbsession.query(cls).order_by(
+            asc(cls.number)
+        ).all()
 
     @classmethod
     def by_id(cls, ident):
@@ -74,11 +76,12 @@ class GameLevel(BaseObject):
             return None
 
     def to_dict(self):
-        return dict(
-            uuid=self.uuid,
-            number=self.number,
-            buyout=self.buyout,
-        )
+        ''' Return public data as dict '''
+        return {
+            'uuid': self.uuid,
+            'number': self.number,
+            'buyout': self.buyout,
+        }
 
     def __str__(self):
         return str(self.number)

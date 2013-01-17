@@ -131,7 +131,7 @@
     				{% if level in team.game_levels %}
     					{% for box in level.boxes %}
     						<hr>
-    						<h3>{{ box.corporation_name }} - {{ box.name }}</h3>
+    						<h3>{{ box.corporation.name }} - {{ box.name }}</h3>
     						<table class="table table-hover">
     							<thead>
     								<tr>

@@ -61,7 +61,7 @@ class SettingsHandler(BaseHandler):
             '/password': self.post_password,
             '/theme': self.post_theme,
         }
-        if len(args) == 1 and args[0] in post_functions.keys():
+        if len(args) == 1 and args[0] in post_functions:
             post_functions[args[0]]()
         else:
             self.render_page()
@@ -69,8 +69,7 @@ class SettingsHandler(BaseHandler):
     def render_page(self, errors=None, success=None):
         ''' Small wrap for self.render to cut down on lenghty params '''
         current_theme = Theme.by_cssfile(self.session["theme"])
-        self.render(
-            "user/settings.html",
+        self.render("user/settings.html",
             errors=errors,
             success=success,
             current_theme=current_theme
@@ -163,8 +162,9 @@ class SettingsHandler(BaseHandler):
                     dbsession.flush()
                     self.render_page(success=["Successfully updated password"])
                 else:
-                    message = "Password must be less than %d chars" \
-                        % self.config.max_password_length
+                    message = "Password must be less than %d chars" % (
+                        self.config.max_password_length,
+                    )
                     self.render_page(errors=[message])
             else:
                 self.render_page(errors=["New password's didn't match"])
@@ -187,6 +187,8 @@ class SettingsHandler(BaseHandler):
             if response is not None and response.is_valid:
                 return True
             else:
+                user = self.get_current_user()
+                logging.warning("%s failed a captcha test." % user.handle)
                 return False
         else:
             return True
