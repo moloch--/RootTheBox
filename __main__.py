@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 '''
     Copyright 2012 Root the Box
 
@@ -16,16 +16,16 @@
 '''
 
 
-from os import path
-from sys import argv
+from optparse import OptionParser
 from datetime import datetime
 from libs.ConsoleColors import *
 
 
+__version__ = 'Root the Box - v0.3.0'
 current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 
-def serve():
+def serve(options, *args, **kwargs):
     ''' Starts the application '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from handlers import start_server
@@ -33,7 +33,7 @@ def serve():
     start_server()
 
 
-def create():
+def create(options, *args, **kwargs):
     ''' Creates/bootstraps the database '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from models import create_tables, boot_strap
@@ -43,7 +43,7 @@ def create():
     boot_strap()
 
 
-def recovery():
+def recovery(options, *args, **kwargs):
     ''' Starts the recovery console '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from setup.recovery import RecoveryConsole
@@ -54,50 +54,41 @@ def recovery():
     except KeyboardInterrupt:
         print(INFO + "Have a nice day!")
 
-def setup():
+def setup(options, *args, **kwargs):
     ''' Imports a setup file '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
-    if 3 == len(argv) and path.exists(argv[2]) and path.isfile(argv[2]):
-        print(INFO + "%s : Import setup file '%s' ..." % (current_time(), argv[2],))
-        __import__(argv[2])
-    elif 3 == len(argv):
-        print(WARN + "File not found: %s" % argv[2])
-    else:
-        print(INFO + "%s : Running default setup file 'setup/game.py' ..." % current_time())
-        from setup import game  # Runs the setup script
-        print(INFO + "Setup file completed.")
-
-def help():
-    ''' Displays a helpful message '''
-    print('\n\t\t' + bold + R + "*** " + underline +
-          'Root the Box: A Game of Hackers' + W + bold + R + " ***" + W)
-    print('\t' + bold + 'python . help' + W +
-          '             - Display this helpful message')
-    print('\t' + bold + 'python . serve' + W +
-          '            - Starts the web server')
-    print('\t' + bold + 'python . create' + W +
-          '           - Creates the database tables only')
-    print('\t' + bold + 'python . create bootstrap' + W +
-          ' - Creates the database tables and inits them with data')
-    print('\t' + bold + 'python . recovery' + W +
-          '         - Starts the recovery console')
-    print('\t' + bold + 'python . setup <file>' + W +
-          '     - Runs a game setup script from "setup/game.py" or <file>')
+    print(INFO + "%s : Running default setup file 'setup/game.py' ..." % current_time())
+    from setup import game  # Runs the setup script
+    print(INFO + "Setup file completed.")
 
 ### Main
 if __name__ == '__main__':
-    options = {
-        'help': help,
-        'serve': serve,
-        'start': serve,
-        'create': create,
-        'recovery': recovery,
-        'setup': setup,
-    }
-    if len(argv) == 1:
-        help()
-    else:
-        if argv[1] in options.keys():
-            options[argv[1]]()
-        else:
-            print(WARN + 'PEBKAC (%s): Command not found, see "python . help"' % argv[1])
+    parser = OptionParser(
+        usage="python " + bold + "RootTheBox/" + W + " <options>",
+        version=__version__,
+    )
+    parser.add_option(
+        "-c", "--create-tables",
+        action="callback",
+        callback=create,
+        help="create database tables"
+    )
+    parser.add_option(
+        "-s", "--start", "--serve",
+        action="callback",
+        callback=serve,
+        help="start the server"
+    )
+    parser.add_option(
+        "-g", "--game",
+        action="callback",
+        callback=setup,
+        help="run game setup script"
+    )
+    parser.add_option(
+        "-r", "--recovery",
+        action="callback",
+        callback=recovery,
+        help="start the recovery console"
+    )
+    (options, args) = parser.parse_args()

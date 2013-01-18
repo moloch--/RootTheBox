@@ -42,8 +42,11 @@ class ConfigManager(object):
     ''' Central class which handles any user-controlled settings '''
 
     def __init__(self, cfg_file='rootthebox.cfg'):
-        self.conf = os.path.abspath(cfg_file)
-        if not (os.path.exists(self.conf) and os.path.isfile(self.conf)):
+        if os.path.exists(cfg_file) and os.path.isfile(cfg_file):
+            self.conf = os.path.abspath(cfg_file)
+        elif os.path.exists('RootTheBox/' + cfg_file):
+            self.conf = os.path.abspath('RootTheBox/' + cfg_file)
+        else:
             logging.critical(
                 "No configuration file found at: %s." % self.conf
             )

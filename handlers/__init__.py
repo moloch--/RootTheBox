@@ -55,6 +55,7 @@ from handlers.ScoreboardHandlers import *
 from handlers.ShareUploadHandlers import *
 from handlers.NotificationHandlers import *
 
+
 ### Setup and URLs ###
 config = ConfigManager.Instance()
 if config.cache_files:
@@ -193,7 +194,7 @@ app = Application([
 
 
 # Main entry point
-def start_server():
+def start_server(domain=None, port=None):
     ''' Main entry point for the application '''
     sockets = netutil.bind_sockets(config.listen_port)
     server = HTTPServer(app)
