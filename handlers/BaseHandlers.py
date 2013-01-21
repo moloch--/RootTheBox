@@ -97,6 +97,11 @@ class BaseHandler(RequestHandler):
             return old_session
         return new_session
 
+    def set_default_headers(self):
+        ''' Set clickjacking/etc headers '''
+        self.add_header("X-Frame-Options", "SAMEORIGIN")
+        self.add_header("X-XSS-Protection", "1; mode=block")
+
     def get(self, *args, **kwargs):
         ''' Placeholder, incase child class does not impl this method '''
         self.render("public/404.html")
