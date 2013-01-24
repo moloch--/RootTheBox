@@ -194,7 +194,7 @@ app = Application([
 
 
 # Main entry point
-def start_server(domain=None, port=None):
+def start_server():
     ''' Main entry point for the application '''
     sockets = netutil.bind_sockets(config.listen_port)
     server = HTTPServer(app)

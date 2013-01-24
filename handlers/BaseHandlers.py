@@ -19,7 +19,7 @@ Created on Mar 15, 2012
    limitations under the License.
 ----------------------------------------------------------------------------
 
-This file contains the base handler, all other handlers (aside from 
+This file contains the base handler, all other handlers (aside from
 web socket handlers) should inherit from this base class.
 
 '''
@@ -58,20 +58,22 @@ class BaseHandler(RequestHandler):
             try:
                 return User.by_handle(self.session['handle'])
             except KeyError:
-                logging.exception("Malformed session.")
-                repr(self.session)
+                logging.exception(
+                    "Malformed session: %r" % self.session
+                )
             except:
-                logging.exception("Unknown error in: get_current_user()")
+                logging.exception("Failed call to get_current_user()")
         return None
 
     def start_session(self):
         ''' Starts a new session '''
         self.conn = pylibmc.Client(
-                [self.config.memcached_server], binary=True)
+            [self.config.memcached_server],
+            binary=True,
+        )
         self.conn.behaviors['no_block'] = 1  # async I/O
         self.session = self._create_session()
-        self.set_secure_cookie(
-            'session_id',
+        self.set_secure_cookie('session_id',
             self.session.session_id,
             expires_days=1,
             expires=self.session.expires,
@@ -81,7 +83,7 @@ class BaseHandler(RequestHandler):
 
     def _create_session(self, session_id=None):
         ''' Creates a new session '''
-        kw = {
+        kwargs = {
             'duration': self.config.session_age,
             'ip_address': self.request.remote_ip,
             'regeneration_interval': self.config.session_regeneration_interval,
@@ -90,7 +92,7 @@ class BaseHandler(RequestHandler):
         old_session = None
         old_session = MemcachedSession.load(session_id, self.conn)
         if old_session is None or old_session._is_expired():
-            new_session = MemcachedSession(self.conn, **kw)
+            new_session = MemcachedSession(self.conn, **kwargs)
         if old_session is not None:
             if old_session._should_regenerate():
                 old_session.refresh(new_session_id=True)
@@ -98,7 +100,8 @@ class BaseHandler(RequestHandler):
         return new_session
 
     def set_default_headers(self):
-        ''' Set clickjacking/etc headers '''
+        ''' Set clickjacking/xss headers '''
+        self.set_header("Server", "'; DROP TABLE servertypes; --")
         self.add_header("X-Frame-Options", "SAMEORIGIN")
         self.add_header("X-XSS-Protection", "1; mode=block")
 
@@ -112,7 +115,9 @@ class BaseHandler(RequestHandler):
 
     def put(self, *args, **kwargs):
         ''' Log odd behavior, this should never get legitimately called '''
-        logging.warn("%s attempted to use PUT method" % self.request.remote_ip)
+        logging.warn(
+            "%s attempted to use PUT method" % self.request.remote_ip
+        )
         self.render("public/404.html")
 
     def delete(self, *args, **kwargs):

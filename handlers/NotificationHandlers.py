@@ -22,7 +22,7 @@ Created on Mar 15, 2012
 
 import pylibmc
 import logging
-import tornado.websocket
+from tornado.websocket import WebSocketHandler
 
 from libs.SecurityDecorators import debug, authenticated
 from libs.Sessions import MemcachedSession
@@ -32,7 +32,7 @@ from handlers.BaseHandlers import BaseHandler
 from models import Notification
 
 
-class NotifySocketHandler(tornado.websocket.WebSocketHandler):
+class NotifySocketHandler(WebSocketHandler):
     ''' Handles websocket connections '''
 
     def initialize(self):

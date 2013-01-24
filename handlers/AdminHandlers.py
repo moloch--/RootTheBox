@@ -107,17 +107,27 @@ class AdminCreateHandler(BaseHandler):
         )
         if form.validate(self.request.arguments):
             try:
+                game_level = int(self.get_argument('game_level'))
+                corp_uuid = self.get_argument('corporation_uuid')
                 if Box.by_name(self.get_argument('box_name')) is not None:
-                    self.render("admin/create/box.html", errors=["Box name already exists"])
-                elif Corporation.by_uuid(self.get_argument('corporation_uuid')) is None:
-                    self.render("admin/create/box.html", errors=["Corporation does not exist"])
-                elif GameLevel.by_number(int(self.get_argument('game_level'))) is None:
-                    self.render("admin/create/box.html", errors=["Game level does not exist"])
+                    self.render("admin/create/box.html",
+                        errors=["Box name already exists"]
+                    )
+                elif Corporation.by_uuid(corp_uuid) is None:
+                    self.render("admin/create/box.html",
+                        errors=["Corporation does not exist"]
+                    )
+                elif GameLevel.by_number(game_level) is None:
+                    self.render("admin/create/box.html",
+                        errors=["Game level does not exist"]
+                    )
                 else:
                     self.__mkbox__()
                     self.redirect('/admin/view/game_objects')
             except ValueError:
-                self.render('admin/view/create.html', errors=["Invalid level number"])
+                self.render('admin/view/create.html',
+                    errors=["Invalid level number"]
+                )
         else:
             self.render("admin/create/box.html", errors=form.errors)
 
@@ -134,17 +144,25 @@ class AdminCreateHandler(BaseHandler):
         if form.validate(self.request.arguments):
             try:
                 if Flag.by_name(self.get_argument('flag_name')) is not None:
-                    self.render('admin/create/flag.html', errors=["Name already exists"])
+                    self.render('admin/create/flag.html',
+                        errors=["Name already exists"]
+                    )
                 elif Flag.by_token(self.get_argument('token')) is not None:
-                    self.render('admin/create/flag.html', errors=["Token value is not unique"])
+                    self.render('admin/create/flag.html',
+                        errors=["Token value is not unique"]
+                    )
                 elif Box.by_uuid(self.get_argument('box_uuid')) is None:
-                    self.render('admin/create/flag.html', errors=["Box does not exist"])
+                    self.render('admin/create/flag.html',
+                        errors=["Box does not exist"]
+                    )
                 else:
                     reward = int(self.get_argument('reward', 'NaN'))
                     self.__mkflag__(reward)
                     self.redirect('/admin/view/game_objects')
             except ValueError:
-                self.render('admin/create/flag.html', errors=["Invalid reward value"])
+                self.render('admin/create/flag.html',
+                    errors=["Invalid reward value"]
+                )
         else:
             self.render("admin/create/flag.html", errors=form.errors)
 
@@ -175,16 +193,24 @@ class AdminCreateHandler(BaseHandler):
                 game_level = int(self.get_argument('level_number'))
                 buyout = int(self.get_argument('buyout'))
                 if game_level <= 0:
-                    self.render('admin/create/game_level.html', errors=["Level number must be greater than 0"])
+                    self.render('admin/create/game_level.html',
+                        errors=["Level number must be greater than 0"]
+                    )
                 elif GameLevel.by_number(game_level) is not None:
-                    self.render('admin/create/game_level.html', errors=["Game level number must be unique"])
+                    self.render('admin/create/game_level.html',
+                        errors=["Game level number must be unique"]
+                    )
                 elif buyout < 0:
-                    self.render('admin/create/game_level.html', errors=["Buyout value must be greater than or equal to 0"])
+                    self.render('admin/create/game_level.html',
+                        errors=["Invalid buyout value"]
+                    )
                 else:
                     self.__mklevel__(game_level, buyout)
                     self.redirect('/admin/view/game_levels')
             except ValueError:
-                self.render('admin/create/game_level.html', errors=["Invalid level number"])
+                self.render('admin/create/game_level.html',
+                    errors=["Invalid level number"]
+                )
         else:
             self.render('admin/create/game_level.html', errors=form.errors)
 
@@ -345,7 +371,9 @@ class AdminEditHandler(BaseHandler):
                 dbsession.flush()
                 self.redirect('/admin/view/game_objects')
             else:
-                self.render("admin/view/game_objects.html", errors=["Corporation does not exist"])
+                self.render("admin/view/game_objects.html",
+                    errors=["Corporation does not exist"]
+                )
         else:
             self.render("admin/view/game_objects.html", errors=form.errors)
 
@@ -391,7 +419,9 @@ class AdminEditHandler(BaseHandler):
                 dbsession.flush()
                 self.render("admin/view/game_objects.html", errors=errors)
             else:
-                self.render("admin/view/game_objects.html", errors=["Box does not exist"])
+                self.render("admin/view/game_objects.html",
+                    errors=["Box does not exist"]
+                )
         else:
             self.render("admin/view/game_objects.html", errors=form.errors)
 
@@ -451,7 +481,9 @@ class AdminEditHandler(BaseHandler):
                 dbsession.flush()
                 self.render("admin/view/game_objects.html", errors=errors)
             else:
-                self.render("admin/view/game_objects.html", errors=["Flag does not exist"])
+                self.render("admin/view/game_objects.html",
+                    errors=["Flag does not exist"]
+                )
         else:
             self.render("admin/view/game_objects.html", errors=form.errors)
 
@@ -528,7 +560,7 @@ class AdminEditHandler(BaseHandler):
                     else:
                         errors.append("Handle is already in use")
                 # Update hashing algoritm
-                if self.get_argument('hash_algorithm') in user.algorithms.keys():
+                if self.get_argument('hash_algorithm') in user.algorithms:
                     if user.algorithm != self.get_argument('hash_algorithm'):
                         if 0 < len(self.get_argument('password', '')):
                             logging.info("Updated %s's hashing algorithm %s -> %s" %
@@ -562,7 +594,7 @@ class AdminEditHandler(BaseHandler):
     def edit_ipv4(self):
         ''' Add ipv4 addresses to a box (sorta edits the box object) '''
         form = Form(
-            box_uuid="Select a box", 
+            box_uuid="Select a box",
             ipv4="Please provide a list of IPv4 addresses"
         )
         if form.validate(self.request.arguments):
@@ -577,11 +609,13 @@ class AdminEditHandler(BaseHandler):
                             addr = IpAddress(box_id=box.id, v4=ip)
                             dbsession.add(addr)
                         else:
-                            errors.append("%s has already been assigned to %s." % 
+                            errors.append("%s has already been assigned to %s." %
                                 (ip, box.name,)
                             )
                     except ValueError:
-                        errors.append("'%s' is not a valid IPv4 address" % str(ip[:15]))
+                        errors.append(
+                            "'%s' is not a valid IPv4 address" % str(ip[:15])
+                        )
                 dbsession.flush()
             else:
                 errors.append("Box does not exist")
@@ -605,9 +639,13 @@ class AdminEditHandler(BaseHandler):
                             addr = IpAddress(box_id=box.id, v6=ip)
                             dbsession.add(addr)
                         else:
-                            errors.append("%s has already been assigned to %s." % (ip, box.name,))
+                            errors.append(
+                                "%s has already been assigned to %s." % (ip, box.name,)
+                            )
                     except ValueError:
-                        errors.append("'%s' is not a valid IPv6 address" % str(ip[:39]))
+                        errors.append(
+                            "'%s' is not a valid IPv6 address" % str(ip[:39])
+                        )
                 dbsession.flush()
             else:
                 errors.append("Box does not exist")
@@ -617,7 +655,11 @@ class AdminEditHandler(BaseHandler):
 
     def edit_game_level(self):
         ''' Update game level objects '''
-        form = Form(uuid="Select an object", number="Enter a level number", buyout="Enter a buyout value")
+        form = Form(
+            uuid="Select an object",
+            number="Enter a level number",
+            buyout="Enter a buyout value",
+        )
         if form.validate(self.request.arguments):
             errors = []
             level = GameLevel.by_uuid(self.get_argument('uuid'))
@@ -647,7 +689,9 @@ class AdminEditHandler(BaseHandler):
                     dbsession.add(level)
                     dbsession.flush()
             except ValueError:
-                errors.append("That was not a number ... maybe you should go back to school")
+                errors.append(
+                    "That was not a number ... maybe you should go back to school"
+                )
             self.render("admin/view/game_levels.html", errors=errors)
         else:
             self.render("admin/view/game_levels.html", errors=form.errors)
@@ -697,8 +741,12 @@ class AdminDeleteHandler(BaseHandler):
             dbsession.flush()
             self.redirect("/admin/view/game_objects")
         else:
-            logging.info("IP address (%r) does not exist in database" % self.get_argument('ip', ''))
-            self.render("admin/view/game_objects.html", errors=["IP does not exist in database"])
+            logging.info("IP address (%r) does not exist in database" %
+                self.get_argument('ip', '')
+            )
+            self.render("admin/view/game_objects.html",
+                errors=["IP does not exist in database"]
+            )
 
     def del_flag(self):
         ''' Delete a flag object from the database '''
@@ -709,8 +757,12 @@ class AdminDeleteHandler(BaseHandler):
             dbsession.flush()
             self.redirect('/admin/view/game_objects')
         else:
-            logging.info("Flag (%r) does not exist in the database" % self.get_argument('uuid', ''))
-            self.render("admin/view/game_objects.html", errors=["Flag does not exist in database"])
+            logging.info("Flag (%r) does not exist in the database" %
+                self.get_argument('uuid', '')
+            )
+            self.render("admin/view/game_objects.html",
+                errors=["Flag does not exist in database"]
+            )
 
 
 class AdminLockHandler(BaseHandler):
@@ -764,7 +816,9 @@ class AdminRegTokenHandler(BaseHandler):
             dbsession.flush()
             self.redirect('/admin/regtoken/view')
         else:
-            self.render('admin/view/token.html', errors=["Token does not exist"])
+            self.render('admin/view/token.html',
+                errors=["Token does not exist"]
+            )
 
     def create(self):
         ''' Adds a registration token to the db and displays the value '''
@@ -808,14 +862,16 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             box = Box.by_uuid(self.get_argument('box_uuid'))
             if box is not None:
                 if not 'source_archive' in self.request.files and 0 < len(self.request.files['source_archive']):
-                    self.render('admin/upgrades/source_code_market.html', 
+                    self.render('admin/upgrades/source_code_market.html',
                         errors=["No file data"]
                     )
                 else:
                     try:
                         price = abs(int(self.get_argument('price', 'NaN')))
                         self.create_source_code(box, price)
-                        self.render('admin/upgrades/source_code_market.html', errors=None)
+                        self.render('admin/upgrades/source_code_market.html',
+                            errors=None
+                        )
                     except ValueError:
                         self.render('admin/upgrades/source_code_market.html',
                             errors=["Price must be an integer"]
@@ -825,12 +881,16 @@ class AdminSourceCodeMarketHandler(BaseHandler):
                     errors=["The selected box does not exist"]
                 )
         else:
-            self.render('admin/upgrades/source_code_market.html', errors=form.errors)
+            self.render('admin/upgrades/source_code_market.html',
+                errors=form.errors
+            )
 
     def create_source_code(self, box, price):
         ''' Save file data and create object in database '''
         description = unicode(self.get_argument('description', ''))
-        file_name = unicode(self.request.files['source_archive'][0]['filename'])
+        file_name = unicode(
+            self.request.files['source_archive'][0]['filename']
+        )
         source_code = SourceCode(
             file_name=file_name,
             box_id=box.id,
@@ -864,7 +924,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             dbsession.flush()
             root = self.application.settings['source_code_market_dir']
             source_code_path = root + '/' + source_code_uuid
-            logging.info("Delete souce code market file: %s (box: %s)" % 
+            logging.info("Delete souce code market file: %s (box: %s)" %
                 (source_code_path, box.name,)
             )
             if os.path.exists(source_code_path):
@@ -899,7 +959,7 @@ class AdminSwatHandler(BaseHandler):
     def render_page(self, errors=None):
         ''' Render page with extra arguments '''
         if errors is not None and not isinstance(errors, list):
-            errors = [str(errors),]
+            errors = [str(errors), ]
         self.render('admin/upgrades/swat.html',
             pending_bribes=Swat.all_pending(),
             in_progress_bribes=Swat.all_in_progress(),
@@ -919,7 +979,7 @@ class AdminSwatHandler(BaseHandler):
             dbsession.flush()
             self.render_page()
         else:
-            logging.warn("Invalid request to accept bribe with uuid: %r" % 
+            logging.warn("Invalid request to accept bribe with uuid: %r" %
                 (self.get_argument('uuid', ''),)
             )
             self.render_page('Requested SWAT object does not exist')
@@ -936,7 +996,7 @@ class AdminSwatHandler(BaseHandler):
             dbsession.flush()
             self.render_page()
         else:
-            logging.warn("Invalid request to complete bribe with uuid: %r" % 
+            logging.warn("Invalid request to complete bribe with uuid: %r" %
                 (self.get_argument('uuid', ''),)
             )
             self.render_page('Requested SWAT object does not exist')

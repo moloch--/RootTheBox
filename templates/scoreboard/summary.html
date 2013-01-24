@@ -172,7 +172,6 @@
         
         /* Update code */
         $(document).ready(function() {
-            $('#loadingModal').show();
             var ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:" + 
                 "{{ handler.application.settings['port'] }}/scoreboard/wsocket/game_data"
             );

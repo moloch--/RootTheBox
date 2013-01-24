@@ -26,16 +26,12 @@ This file contains handlers related to the scoreboard.
 
 import json
 import logging
-import pylibmc
 
 
 from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import debug
 from libs.GameHistory import GameHistory
-from libs.Sessions import MemcachedSession
-from libs.ConfigManager import ConfigManager
-from libs.Scoreboard import Scoreboard
 from libs.EventManager import EventManager
 from models import Team, WallOfSheep
 
@@ -103,7 +99,8 @@ class ScoreboardAjaxHandler(BaseHandler):
             for lvl in team.levels:
                 lvl_details = {
                     'number': lvl.number,
-                    'captured': [flag.name for flag in team.level_flags(lvl.number)],
+                    'captured':
+                        [flag.name for flag in team.level_flags(lvl.number)],
                     'total': len(lvl.flags),
                 }
                 details['game_levels'].append(lvl_details)
@@ -129,14 +126,18 @@ class ScoreboardHistoryHandler(BaseHandler):
         game_history = GameHistory.Instance()
         history = {}
         for team in Team.all():
-            history[team.name] = game_history.get_money_history_by_name(team.name, -30)
+            history[team.name] = game_history.get_money_history_by_name(
+                team.name, -30
+            )
         self.render('scoreboard/history/money.html', history=history)
 
     def flags(self):
         game_history = GameHistory.Instance()
         history = {}
         for team in Team.all():
-            history[team.name] = game_history.get_flag_history_by_name(team.name, -30)
+            history[team.name] = game_history.get_flag_history_by_name(
+                team.name, -30
+            )
         self.render('scoreboard/history/flags.html', history=history)
 
 
@@ -184,7 +185,7 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
         else:
             sheep = WallOfSheep.all_order_created()
         leaderboard = WallOfSheep.leaderboard()
-        self.render('scoreboard/wall_of_sheep.html', 
-            leaderboard=leaderboard, 
+        self.render('scoreboard/wall_of_sheep.html',
+            leaderboard=leaderboard,
             flock=sheep,
         )
