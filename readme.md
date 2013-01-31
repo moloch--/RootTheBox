@@ -27,9 +27,9 @@ Setup TL;DR
 * Supported platforms: Install script is for Ubuntu/Debian, but the application should work on any Linux or BSD system.  Windows and OSX have not been tested.
 * Run the __depends.sh__ script in /setup to automatically install required packages (Ubuntu/Debian only)
 * Set up the db connection settings in __rootthebox.cfg__ (you will need to create the database/dbuser manually)
+* Root the Box is a package so you can run the directory like so __python /RootTheBox --help__, or run \_\_main\_\_.py as a normal script
 * 'python /RootTheBox --create-tables' to create, and init the database
 * 'python /RootTheBox --start' To start the application
-* 'python /RootTheBox --help' for more options, or see __rootthebox.cfg__
 
 Other
 ----------------
