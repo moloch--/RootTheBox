@@ -102,7 +102,7 @@ class BaseHandler(RequestHandler):
     def set_default_headers(self):
         ''' Set clickjacking/xss headers '''
         self.set_header("Server", "'; DROP TABLE servertypes; --")
-        self.add_header("X-Frame-Options", "SAMEORIGIN")
+        self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
 
     def get(self, *args, **kwargs):

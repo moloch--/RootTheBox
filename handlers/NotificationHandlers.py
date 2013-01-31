@@ -42,7 +42,8 @@ class NotifySocketHandler(WebSocketHandler):
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
             self.conn = pylibmc.Client(
-                [self.config.memcached_server], binary=True
+                [self.config.memcached_server], 
+                binary=True
             )
             self.conn.behaviors['no_block'] = 1  # async I/O
             self.session = self._create_session(session_id)
@@ -50,7 +51,7 @@ class NotifySocketHandler(WebSocketHandler):
 
     def _create_session(self, session_id=None):
         ''' Creates a new session '''
-        kw = {
+        kwargs = {
             'duration': self.config.session_age,
             'ip_address': self.request.remote_ip,
             'regeneration_interval': self.config.session_regeneration_interval,
@@ -59,7 +60,7 @@ class NotifySocketHandler(WebSocketHandler):
         old_session = None
         old_session = MemcachedSession.load(session_id, self.conn)
         if old_session is None or old_session._is_expired():
-            new_session = MemcachedSession(self.conn, **kw)
+            new_session = MemcachedSession(self.conn, **kwargs)
         if old_session is not None:
             return old_session
         return new_session
@@ -68,14 +69,14 @@ class NotifySocketHandler(WebSocketHandler):
     def open(self):
         ''' When we receive a new websocket connect '''
         if self.session is not None and 'team_id' in self.session:
-            logging.debug("[Web Socket] Opened new websocket with user id: %s"
-                % str(self.session['user_id'])
-            )
+            logging.debug("[Web Socket] Opened new websocket with user id: %s" % (
+                self.session['user_id'],
+            ))
             self.team_id = self.session['team_id']
             self.user_id = self.session['user_id']
             notifications = Notification.new_messages(self.session['user_id'])
-            logging.debug("[Web Socket] %d new notification(s) for user id %d"
-                % (len(notifications), self.session['user_id'])
+            logging.debug("[Web Socket] %d new notification(s) for user id %d" % (
+                len(notifications), self.session['user_id']),
             )
             for notify in notifications:
                 self.write_message(notify.to_json())
