@@ -86,6 +86,7 @@ class LoginHandler(BaseHandler):
         self.session['user_id'] = int(user.id)
         self.session['handle'] = ''.join(user.handle)  # Copy string
         self.session['theme'] = ''.join(theme.cssfile)
+        self.session['remote_ip'] = self.request.remote_ip
         if user.has_permission('admin'):
             self.session['menu'] = 'admin'
         else:

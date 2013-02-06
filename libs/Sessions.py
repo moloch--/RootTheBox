@@ -26,7 +26,7 @@ import cPickle as pickle
 
 from os import _exit
 
-SID_SIZE = 32  # Size in bytes
+SID_SIZE = 16  # Size in bytes
 
 
 class BaseSession(collections.MutableMapping):
@@ -103,7 +103,7 @@ class BaseSession(collections.MutableMapping):
         return len(self.data.keys())
 
     def _generate_session_id(cls):
-        return os.urandom(SID_SIZE).encode('hex')  # 256 bits of entropy
+        return os.urandom(SID_SIZE).encode('hex')
 
     def _is_expired(self):
         '''Check if the session has expired.'''

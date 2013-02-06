@@ -41,8 +41,9 @@ from models.User import ADMIN_PERMISSION
 class AdminCreateHandler(BaseHandler):
     ''' Handler used to create game objects '''
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         ''' Renders Corp/Box/Flag create pages '''
         self.game_objects = {
@@ -57,8 +58,9 @@ class AdminCreateHandler(BaseHandler):
         else:
             self.render("public/404.html")
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         ''' Calls a function based on URL '''
         self.game_objects = {
@@ -271,8 +273,9 @@ class AdminCreateHandler(BaseHandler):
 class AdminViewHandler(BaseHandler):
     ''' View game objects '''
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         ''' Calls a view function based on URI '''
         uri = {
@@ -300,8 +303,9 @@ class AdminViewHandler(BaseHandler):
 class AdminAjaxObjectDataHandler(BaseHandler):
     ''' Handles AJAX data for admin handlers '''
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         game_objects = {
             'game_level': GameLevel,
@@ -327,8 +331,9 @@ class AdminAjaxObjectDataHandler(BaseHandler):
 class AdminEditHandler(BaseHandler):
     ''' Edit game objects '''
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         ''' Calls an edit function based on URL '''
         uri = {
@@ -719,8 +724,9 @@ class AdminEditHandler(BaseHandler):
 class AdminDeleteHandler(BaseHandler):
     ''' Delete flags/ips from the database '''
 
-    @authorized('admin')
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         ''' Used to delete database objects '''
         uri = {
@@ -768,8 +774,9 @@ class AdminDeleteHandler(BaseHandler):
 class AdminLockHandler(BaseHandler):
     ''' Used to manually lock/unlocked accounts '''
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         ''' Toggle account lock '''
         uuid = self.get_argument('uuid', '')
@@ -792,8 +799,9 @@ class AdminLockHandler(BaseHandler):
 class AdminRegTokenHandler(BaseHandler):
     ''' Manages registration tokens '''
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         ''' Call method based on URI '''
         uri = {
@@ -805,8 +813,9 @@ class AdminRegTokenHandler(BaseHandler):
         else:
             self.render("public/404.html")
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         ''' Used to delete regtokens '''
         token_value = self.get_argument('token_value', '')
@@ -835,13 +844,15 @@ class AdminRegTokenHandler(BaseHandler):
 class AdminSourceCodeMarketHandler(BaseHandler):
     ''' Add source code files to the source code market '''
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         self.render('admin/upgrades/source_code_market.html', errors=None)
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         uri = {
             '/add': self.add_source_code,
@@ -938,13 +949,15 @@ class AdminSourceCodeMarketHandler(BaseHandler):
 class AdminSwatHandler(BaseHandler):
     ''' Manage SWAT requests '''
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         self.render_page()
 
-    @authorized(ADMIN_PERMISSION)
     @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         ''' Accept/Complete bribes '''
         uri = {

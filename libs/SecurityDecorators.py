@@ -31,13 +31,19 @@ def authenticated(method):
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        if self.session is not None:
-            if not self.get_current_user().locked:
-                return method(self, *args, **kwargs)
+        if self.session is not None and 'remote_ip' in self.session:
+            if self.session['remote_ip'] == self.request.remote_ip:
+                if not self.get_current_user().locked: 
+                    return method(self, *args, **kwargs)
+                else:
+                    self.session.delete()
+                    self.clear_all_cookies()
+                    self.redirect('/403?locked=true')
             else:
-                self.session.delete()
-                self.clear_all_cookies()
-                self.redirect('/403?locked=true')
+                logging.warn("Session hijack attempt from %s?" % (
+                    self.request.remote_ip,
+                ))
+                self.redirect(self.application.settings['login_url'])
         else:
             self.redirect(self.application.settings['login_url'])
     return wrapper
