@@ -98,8 +98,8 @@ class EventManager(object):
     def push_broadcast_notification(self, event_uuid):
         ''' Push to everyone '''
         json = Notification.by_event_uuid(event_uuid).to_json()
-        for team_id in self.notify_connections.keys():
-            for user_id in self.notify_connections[team_id].keys():
+        for team_id in self.notify_connections:
+            for user_id in self.notify_connections[team_id]:
                 for wsocket in self.notify_connections[team_id][user_id]:
                     wsocket.write_message(json)
                     if wsocket.user_id != '$public_user':
@@ -107,17 +107,17 @@ class EventManager(object):
 
     def push_team_notification(self, event_uuid, team_id):
         ''' Push to one team '''
-        json = Notification.by_event_uuid(event_uuid).to_json()
         if team_id in self.notify_connections:
-            for user_id in self.notify_connections[team_id].keys():
+            json = Notification.by_event_uuid(event_uuid).to_json()
+            for user_id in self.notify_connections[team_id]:
                 for wsocket in self.notify_connections[team_id][user_id]:
                     wsocket.write_message(json)
                     Notification.delivered(wsocket.user_id, event_uuid)
 
     def push_user_notification(self, event_uuid, team_id, user_id):
         ''' Push to one user '''
-        json = Notification.by_event_uuid(event_uuid).to_json()
         if team_id in self.notify_connections and user_id in self.notify_connections[team_id]:
+            json = Notification.by_event_uuid(event_uuid).to_json()
             for wsocket in self.notify_connections[team_id][user_id]:
                 wsocket.write_message(json)
                 Notification.delivered(wsocket.user_id, event_uuid)
