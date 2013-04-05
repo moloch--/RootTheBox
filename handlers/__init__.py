@@ -217,6 +217,8 @@ def start_server():
         io_loop.start()
     except KeyboardInterrupt:
         print('\r' + WARN + 'Shutdown Everything!')
+    except:
+      logging.exception("Main i/o loop threw exception")
     finally:
         io_loop.stop()
         if config.debug and \

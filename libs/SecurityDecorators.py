@@ -31,8 +31,8 @@ def authenticated(method):
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        if self.session is not None and 'remote_ip' in self.session:
-            if self.session['remote_ip'] == self.request.remote_ip:
+        if self.session is not None:
+            if self.session.ip_address == self.request.remote_ip:
                 if not self.get_current_user().locked: 
                     return method(self, *args, **kwargs)
                 else:
@@ -90,7 +90,7 @@ def async(method):
     def __async__(*args, **kwargs):
         worker = Thread(target=method, args=args, kwargs=kwargs)
         worker.start()
-    return __async__
+    #return __async__
 
 
 def debug(method):

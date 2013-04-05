@@ -89,7 +89,6 @@ class BaseHandler(RequestHandler):
             'regeneration_interval': self.config.session_regeneration_interval,
         }
         new_session = None
-        old_session = None
         old_session = MemcachedSession.load(session_id, self.conn)
         if old_session is None or old_session._is_expired():
             new_session = MemcachedSession(self.conn, **kwargs)
@@ -140,3 +139,59 @@ class BaseHandler(RequestHandler):
             "%s attempted to use OPTIONS method" % self.request.remote_ip
         )
         self.render("public/404.html")
+
+
+class BaseSocketHandler(WebSocketHandler):
+    ''' Handles websocket connections '''
+
+    def initialize(self):
+        self.session = None
+        self.manager = EventManager.Instance()
+        self.config = ConfigManager.Instance()
+        session_id = self.get_secure_cookie('session_id')
+        if session_id is not None:
+            self.conn = pylibmc.Client(
+                [self.config.memcached_server], 
+                binary=True
+            )
+            self.conn.behaviors['no_block'] = 1  # async I/O
+            self.session = self._create_session(session_id)
+            self.session.refresh()
+
+    def _create_session(self, session_id=None):
+        ''' Creates a new session '''
+        kwargs = {
+            'duration': self.config.session_age,
+            'ip_address': self.request.remote_ip,
+            'regeneration_interval': self.config.session_regeneration_interval,
+        }
+        new_session = None
+        old_session = None
+        old_session = MemcachedSession.load(session_id, self.conn)
+        if old_session is None or old_session._is_expired():
+            new_session = MemcachedSession(self.conn, **kwargs)
+        if old_session is not None:
+            return old_session
+        return new_session
+
+    def get_current_user(self):
+        ''' Get current user object from database '''
+        if self.session is not None:
+            try:
+                return User.by_handle(self.session['handle'])
+            except KeyError:
+                logging.exception(
+                    "Malformed session: %r" % self.session
+                )
+            except:
+                logging.exception("Failed call to get_current_user()")
+        return None
+
+    def open(self):
+        pass
+
+    def on_message(self, message):
+        pass
+
+    def on_close(self):
+        pass

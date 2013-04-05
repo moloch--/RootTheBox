@@ -20,60 +20,22 @@ Created on Mar 15, 2012
 '''
 
 
-import pylibmc
 import logging
-from tornado.websocket import WebSocketHandler
 
-from libs.SecurityDecorators import debug, authenticated
-from libs.Sessions import MemcachedSession
-from libs.ConfigManager import ConfigManager
-from libs.EventManager import EventManager
-from handlers.BaseHandlers import BaseHandler
+from handlers.BaseHandlers import BaseHandler, BaseSocketHandler
 from models import Notification
+from datetime import datetime
 
 
-class NotifySocketHandler(WebSocketHandler):
+class NotifySocketHandler(BaseSocketHandler):
     ''' Handles websocket connections '''
 
-    def initialize(self):
-        self.session = None
-        self.manager = EventManager.Instance()
-        self.config = ConfigManager.Instance()
-        session_id = self.get_secure_cookie('session_id')
-        if session_id is not None:
-            self.conn = pylibmc.Client(
-                [self.config.memcached_server], 
-                binary=True
-            )
-            self.conn.behaviors['no_block'] = 1  # async I/O
-            self.session = self._create_session(session_id)
-            self.session.refresh()
-
-    def _create_session(self, session_id=None):
-        ''' Creates a new session '''
-        kwargs = {
-            'duration': self.config.session_age,
-            'ip_address': self.request.remote_ip,
-            'regeneration_interval': self.config.session_regeneration_interval,
-        }
-        new_session = None
-        old_session = None
-        old_session = MemcachedSession.load(session_id, self.conn)
-        if old_session is None or old_session._is_expired():
-            new_session = MemcachedSession(self.conn, **kwargs)
-        if old_session is not None:
-            return old_session
-        return new_session
-
-    @debug
     def open(self):
         ''' When we receive a new websocket connect '''
         if self.session is not None and 'team_id' in self.session:
             logging.debug("[Web Socket] Opened new websocket with user id: %s" % (
                 self.session['user_id'],
             ))
-            self.team_id = self.session['team_id']
-            self.user_id = self.session['user_id']
             notifications = Notification.new_messages(self.session['user_id'])
             logging.debug("[Web Socket] %d new notification(s) for user id %d" % (
                 len(notifications), self.session['user_id']),
@@ -83,17 +45,29 @@ class NotifySocketHandler(WebSocketHandler):
                 Notification.delivered(notify.user_id, notify.event_uuid)
         else:
             logging.debug("[Web Socket] Opened public notification socket.")
-            self.team_id = '$public_team'
-            self.user_id = '$public_user'
+        self.start_time = datetime.now()
         self.manager.add_connection(self)
 
-    def on_message(self, message):
-        ''' Troll the haxors '''
-        self.write_message(
-            "ERROR 1146 (42S02): Table 'rtb.%s' doesn't exist." % message
-        )
+    @property
+    def team_id(self):
+        return '$public_team' if self.session is None else self.session['team_id']
 
-    @debug
+    @team_id.setter
+    def team_id(self, value):
+        raise ValueError('Cannot set team_id')
+
+    @property
+    def user_id(self):
+        return '$public_user' if self.session is None else self.session['user_id']
+
+    @user_id.setter
+    def user_id(self, value):
+        raise ValueError('Cannot set user_id')
+
+    @property
+    def time_elapsed(self):
+        return datetime.now() - self.start_time
+
     def on_close(self):
         ''' Lost connection to client '''
         try:

@@ -31,10 +31,11 @@ import os
 from base64 import b64encode
 from hashlib import md5
 from libs.Form import Form
+from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, SourceCode, \
     Corporation, RegistrationToken, GameLevel, IpAddress, Swat
-from handlers.BaseHandlers import BaseHandler
+from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from models.User import ADMIN_PERMISSION
 
 
@@ -1013,3 +1014,50 @@ class AdminSwatHandler(BaseHandler):
                 (self.get_argument('uuid', ''),)
             )
             self.render_page('Requested SWAT object does not exist')
+
+
+class AdminNotifcationHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        self.render('admin/notifications.html')
+
+
+class AdminNotificationSocketHandler(BaseWebSocketHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def open(self):
+        self.manager = EventManager.Instance()
+        self.opcodes = {
+            'stats': self.stats,
+            'is_online': self.is_online,
+        }
+
+    def on_message(self, message):
+        try:
+            msg = json.dumps(message)
+            if 'opcode' in msg and msg['opcode'] in opcodes:
+                opcodes[msg['opcode']](msg)
+        except ValueError:
+            self.write_message({'error': 'invalid syntax'})
+
+    def stats(self, msg):
+        statistics = {
+            'users_online': self.manager.users_online,
+        }
+        self.write_message({'stats': statistics})
+
+    def is_online(self, msg):
+        user = User.by_handle(msg['handle'])
+        if user is not None:
+            self.write_message({
+                'is_online': self.manager.is_online(user)
+            })
+        else:
+            self.write_message({
+                'error': 'user does not exist'
+            })

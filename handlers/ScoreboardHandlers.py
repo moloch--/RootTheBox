@@ -27,7 +27,6 @@ This file contains handlers related to the scoreboard.
 import json
 import logging
 
-
 from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import debug
@@ -43,18 +42,14 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         ''' Setup sessions '''
         self.manager = EventManager.Instance()
 
-    @debug
     def open(self):
         ''' When we receive a new websocket connect '''
         self.manager.scoreboard_connections.append(self)
         self.write_message(self.manager.scoreboard.now())
 
-    @debug
     def on_message(self, message):
-        ''' NOP '''
         pass
 
-    @debug
     def on_close(self):
         ''' Lost connection to client '''
         try:
@@ -148,18 +143,14 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
         self.manager = EventManager.Instance()
         self.game_history = GameHistory.Instance()
 
-    @debug
     def open(self):
         ''' When we receive a new websocket connect '''
         self.manager.history_connections.append(self)
         self.write_message(self.get_history())
 
-    @debug
     def on_message(self, message):
-        ''' Ignore messages '''
         pass
 
-    @debug
     def on_close(self):
         ''' Lost connection to client '''
         try:

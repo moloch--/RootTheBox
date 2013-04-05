@@ -16,6 +16,11 @@
                 Notifier.error(notification['message'], notification['title']);
             } else if (notification['category'] == 'custom') {
                 Notifier.notify(notification['message'], notification['title'], '/avatars/' + notification['icon_url']);
+            } else if (notification['category'] == 'goto') {
+                // Muahahahhahahahahahahahhahahahaha
+                window.location = notification['location'];
+            } else if (notification['category'] == 'alert') {
+                alert(notification['message']);
             }
         };
     });

@@ -77,7 +77,7 @@ class LoginHandler(BaseHandler):
     @debug
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''
-        logging.info("Successful login: %r/%r from %s" %
+        logging.info("Successful login: %s/%s from %s" %
             (user.account, user.handle, self.request.remote_ip,))
         self.start_session()
         theme = Theme.by_id(user.theme_id)
@@ -86,7 +86,6 @@ class LoginHandler(BaseHandler):
         self.session['user_id'] = int(user.id)
         self.session['handle'] = ''.join(user.handle)  # Copy string
         self.session['theme'] = ''.join(theme.cssfile)
-        self.session['remote_ip'] = self.request.remote_ip
         if user.has_permission('admin'):
             self.session['menu'] = 'admin'
         else:
@@ -108,8 +107,9 @@ class RegistrationHandler(BaseHandler):
     @debug
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''
-        self.render(
-            "public/registration.html", errors=None)
+        self.render("public/registration.html", 
+            errors=None
+        )
 
     @debug
     def post(self, *args, **kwargs):

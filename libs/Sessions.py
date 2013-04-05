@@ -5,13 +5,6 @@
 
 This module implements sessions for Tornado using Memcached.
 
-USAGE:
-======
-
-Every session object can be handled as a dictionary:
-    self.session[key] = value
-    var = self.session[key]
-
 '''
 
 

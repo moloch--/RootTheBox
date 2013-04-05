@@ -35,15 +35,29 @@ class EventManager(object):
     '''
 
     def __init__(self):
-        self.botnets = {}
         self.notify_connections = {}
         self.scoreboard_connections = []
         self.history_connections = []
         self.scoreboard = Scoreboard()
 
-    # [ Connection Methods ] -----------------------------------------------
+    @property
+    def users_online(self):
+        ''' Number of currently open notify sockets '''
+        sumation = 0
+        for team_id in self.notify_connections:
+            sumation += len(self.notify_connections[team_id])
+        return sumation
 
-    @debug
+    def is_online(self, user):
+        ''' 
+        Returns bool if the given user has an open notify socket
+        '''
+        if user.team.id in self.notify_connections:
+            if user.id in self.notify_connections[user.team.id]:
+                return 0 < len(self.notify_connections[user.team.id][user.id])
+        return False
+
+    # [ Connection Methods ] -----------------------------------------------
     def add_connection(self, wsocket):
         ''' Add a connection '''
         if not wsocket.team_id in self.notify_connections:
@@ -53,56 +67,34 @@ class EventManager(object):
         else:
             self.notify_connections[wsocket.team_id][wsocket.user_id] = [wsocket]
 
-    @debug
     def remove_connection(self, wsocket):
         ''' Remove connection '''
         self.notify_connections[wsocket.team_id][wsocket.user_id].remove(wsocket)
         if len(self.notify_connections[wsocket.team_id][wsocket.user_id]) == 0:
             del self.notify_connections[wsocket.team_id][wsocket.user_id]
 
-    @debug
-    def add_bot(self, bot_socket):
-        ''' Add a bot to a team's botnet '''
-        if not bot_socket.team.id in self.botnets:
-            self.botnets[bot_socket.team.id] = {}
-        if bot_socket.box.id in self.botnets[bot_socket.team.id]:
-            self.botnets[bot_socket.team.id][bot_socket.box.id].close()
-            del self.botnets[bot_socket.team.id][bot_socket.box.id]
-        self.botnets[bot_socket.team.id][bot_socket.box.id] = bot_socket
-
-    @debug
-    def remove_bot(self, bot_socket):
-        ''' Remove ref to bot connection '''
-        del self.botnets[bot_socket.team.id][bot_socket.box.id]
-
-    @debug
-    def bot_count(self, team):
-        ''' Get number of current bots owned by a given team '''
-        if team.id in self.botnets:
-            return len(self.botnets[team.id].keys())
-        else:
-            return 0
-
-    @debug
     def deauth(self, user):
-        pass  # Remove all socket objects for user
+        if user.team.id in self.notify_connections:
+            if user.id in self.notify_connections[user.team.id]:
+                wsocks = self.notify_connections[user.team.id][user.id]:
+                for ws in wsocks:
+                    ws.write_message({
+                        'warn': "You have been deauthenticated"
+                    })
+                    ws.close()
 
     # [ Push Updates ] -----------------------------------------------------
-
-    @debug
     def refresh_scoreboard(self):
         ''' Push to everyone '''
         update = self.scoreboard.now()
         for wsocket in self.scoreboard_connections:
             wsocket.write_message(update)
 
-    @debug
     def push_history(self, snapshot):
         ''' Push latest snapshot to everyone '''
         for wsocket in self.history_connections:
             wsocket.write_message({'update': snapshot})
 
-    @debug
     def push_broadcast_notification(self, event_uuid):
         ''' Push to everyone '''
         json = Notification.by_event_uuid(event_uuid).to_json()
@@ -113,7 +105,6 @@ class EventManager(object):
                     if wsocket.user_id != '$public_user':
                         Notification.delivered(user_id, event_uuid)
 
-    @debug
     def push_team_notification(self, event_uuid, team_id):
         ''' Push to one team '''
         json = Notification.by_event_uuid(event_uuid).to_json()
@@ -123,7 +114,6 @@ class EventManager(object):
                     wsocket.write_message(json)
                     Notification.delivered(wsocket.user_id, event_uuid)
 
-    @debug
     def push_user_notification(self, event_uuid, team_id, user_id):
         ''' Push to one user '''
         json = Notification.by_event_uuid(event_uuid).to_json()
@@ -133,8 +123,6 @@ class EventManager(object):
                 Notification.delivered(wsocket.user_id, event_uuid)
 
     # [ Broadcast Events ] -------------------------------------------------
-
-    @debug
     def flag_capture(self, user, flag):
         ''' Callback for when a flag is captured '''
         self.refresh_scoreboard()
@@ -143,7 +131,6 @@ class EventManager(object):
         )
         self.push_broadcast_notification(evt_id)
 
-    @debug
     def unlocked_level(self, user, level):
         ''' Callback for when a team unlocks a new level '''
         self.refresh_scoreboard()
@@ -151,7 +138,6 @@ class EventManager(object):
         evt_id = Notifier.broadcast_success("Level Unlocked", message)
         self.push_broadcast_notification(evt_id)
 
-    @debug
     def purchased_item(self, user, item):
         ''' Callback when a team purchases an item '''
         self.refresh_scoreboard()
@@ -164,22 +150,18 @@ class EventManager(object):
         evt_id2 = Notifier.broadcast_warning("Team Upgrade", message2)
         self.push_broadcast_notification(evt_id2)
 
-    @debug
     def swat_player(self, user, target):
         message("%s called the SWAT team on %s." % (user.handle, target.handle,))
         evt_id = Notifier.broadcast_warning("Player Arrested!", message)
         self.push_broadcast_notification(evt_id)
 
     # [ Team Events ] ------------------------------------------------------
-
-    @debug
     def joined_team(self, user):
         ''' Callback when a user joins a team'''
         message = "%s has joined your team." % user.handle
         evt_id = Notifier.team_success(user.team, "New Team Member", message)
         self.push_team_notification(evt_id, user.team.id)
 
-    @debug
     def team_file_share(self, user, file_upload):
         ''' Callback when a team file share is created '''
         message = "%s has shared a file called '%s'" % (
@@ -188,28 +170,13 @@ class EventManager(object):
         evt_id = Notifier.team_success(user.team, "File Share", message)
         self.push_team_notification(evt_id, user.team.id)
 
-    @debug
     def paste_bin(self, user, paste):
         ''' Callback when a pastebin is created '''
         message = "%s posted to the team paste-bin" % user.handle
         evt_id = Notifier.team_success(user.team, "Text Share", message)
         self.push_team_notification(evt_id, user.team.id)
 
-    @debug
-    def new_bot(self, bot):
-        message = "New bot connected to botnet from %s " % (bot.box.name,)
-        evt_id = Notifier.team_success(bot.team, "Botnet", message)
-        self.push_team_notification(evt_id)
-
-    @debug
-    def lost_bot(self, bot):
-        message = "Lost communication with bot on %s" % (bot.box.name,)
-        evt_id = Notifier.team_warning(bot.team, "Botnet", message)
-        self.push_team_notification(evt_id)
-
     # [ Misc Events ] ------------------------------------------------------
-
-    @debug
     def cracked_password(self, cracker, victim, password, value):
         user_msg = "Your password '%s' was cracked by %s." % (
             password, cracker.handle,
