@@ -32,7 +32,9 @@ from models import User
 from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
+from libs.EventManager import EventManager
 from tornado.web import RequestHandler
+from tornado.websocket import WebSocketHandler
 
 
 class BaseHandler(RequestHandler):
@@ -141,7 +143,7 @@ class BaseHandler(RequestHandler):
         self.render("public/404.html")
 
 
-class BaseSocketHandler(WebSocketHandler):
+class BaseWebSocketHandler(WebSocketHandler):
     ''' Handles websocket connections '''
 
     def initialize(self):

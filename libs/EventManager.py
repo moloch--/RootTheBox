@@ -76,12 +76,12 @@ class EventManager(object):
     def deauth(self, user):
         if user.team.id in self.notify_connections:
             if user.id in self.notify_connections[user.team.id]:
-                wsocks = self.notify_connections[user.team.id][user.id]:
-                for ws in wsocks:
-                    ws.write_message({
+                wsocks = self.notify_connections[user.team.id][user.id]
+                for wsock in wsocks:
+                    wsock.write_message({
                         'warn': "You have been deauthenticated"
                     })
-                    ws.close()
+                    wsock.close()
 
     # [ Push Updates ] -----------------------------------------------------
     def refresh_scoreboard(self):
@@ -102,6 +102,7 @@ class EventManager(object):
             for user_id in self.notify_connections[team_id]:
                 for wsocket in self.notify_connections[team_id][user_id]:
                     wsocket.write_message(json)
+                    # Only mark delivered for non-public users
                     if wsocket.user_id != '$public_user':
                         Notification.delivered(user_id, event_uuid)
 

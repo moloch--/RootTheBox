@@ -39,11 +39,10 @@ class GameHistory(object):
     def __init__(self):
         self.cache = pylibmc.Client(['127.0.0.1'], binary=True)
         self.epoch = None  # Date/time of first snapshot
-        self.__load__()
+        self._load()
         self.event_manager = EventManager.Instance()
 
-    @async
-    def __load__(self):
+    def _load(self):
         ''' Moves snapshots from db into the cache '''
         logging.info("Loading game history from database ...")
         if Snapshot.by_id(1) is None:

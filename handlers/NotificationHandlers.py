@@ -22,12 +22,13 @@ Created on Mar 15, 2012
 
 import logging
 
-from handlers.BaseHandlers import BaseHandler, BaseSocketHandler
 from models import Notification
 from datetime import datetime
+from libs.SecurityDecorators import *
+from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 
-class NotifySocketHandler(BaseSocketHandler):
+class NotifySocketHandler(BaseWebSocketHandler):
     ''' Handles websocket connections '''
 
     def open(self):
@@ -50,7 +51,10 @@ class NotifySocketHandler(BaseSocketHandler):
 
     @property
     def team_id(self):
-        return '$public_team' if self.session is None else self.session['team_id']
+        if self.session is None or 'team_id' not in self.session:
+            return '$public_team'
+        else:
+            return self.session['team_id']
 
     @team_id.setter
     def team_id(self, value):
