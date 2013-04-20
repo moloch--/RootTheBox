@@ -51,7 +51,7 @@
                                     <option value=""></option>
                                     {% from models import Box %}
                                     {% for box in Box.all() %}
-                                        <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation_name }})</option>
+                                        <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation.name }})</option>
                                     {% end %}
                                 </select>
                             </div>
