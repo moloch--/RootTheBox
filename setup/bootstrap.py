@@ -119,7 +119,7 @@ dbsession.flush()
 user = User(
     account=u'admin',
     handle=u'God',
-    algorithm=u'scrypt',
+    algorithm=u'pbkdf2',
 )
 dbsession.add(user)
 dbsession.flush()

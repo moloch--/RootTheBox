@@ -91,4 +91,4 @@ if __name__ == '__main__':
         callback=recovery,
         help="start the recovery console"
     )
-    (options, args) = parser.parse_args()
+    parser.parse_args()

@@ -25,11 +25,10 @@ indiviudal user, such as handle/account/password/etc
 '''
 
 
-import scrypt
-
 from os import urandom
 from uuid import uuid4
 from hashlib import md5, sha1, sha256
+from pbkdf2 import PBKDF2
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean
@@ -41,8 +40,9 @@ from string import ascii_letters, digits, printable
 
 ### Constants
 ADMIN_PERMISSION = 'admin'
-ADMIN_HASH_ALGORITHM = 'scrypt'
+ADMIN_HASH_ALGORITHM = 'pbkdf2'
 DEFAULT_HASH_ALGORITHM = u'md5'
+ITERATE = 1337
 
 
 class User(BaseObject):
@@ -119,19 +119,19 @@ class User(BaseObject):
     @classmethod
     def _hash_password(cls, algorithm_name, password, salt):
         '''
-        Hashes the password using Md5/Sha1/Sha256/Scrypt; scrypt should 
+        Hashes the password using Md5/Sha1/Sha256/PBKDF2; pbkdf2 should 
         only used for the admin accounts.
 
         @param algorithm_name: The hashing algorithm to be used
         @param password: Preimage to be hashed, non-ascii chars are ignored
-        @param salt: Salt for password, only used with the scrypt algorithm
+        @param salt: Salt for password, only used with the pbkdf2 algorithm
         @return: Unicode hexadecimal string of the hash digest
         @rtype: unicode
         '''
         password = filter(lambda char: char in printable[:-5], password)
-        password = password.encode('ascii')  # Scrypt doesn't like unicode
+        password = password.encode('ascii', 'ignore')
         if algorithm_name == ADMIN_HASH_ALGORITHM:
-            return unicode(cls.__scrypt__(password, salt))
+            return cls.__pbkdf2__(password, salt)
         elif algorithm_name in cls.algorithms:
             algo = cls.algorithms[algorithm_name][0]()
             algo.update(password)
@@ -140,16 +140,16 @@ class User(BaseObject):
             raise ValueError("Algorithm not supported.")
 
     @classmethod
-    def __scrypt__(cls, password, salt):
+    def __pbkdf2__(cls, password, salt):
         '''
-        Uses scrypt to hash the password using a random salt
+        Uses pbkdf2 to hash the password using a random salt
 
         @param password: The preimage to be hashed
         @param salt: The auto-generated hash
         @return: Hexadecimal string of the hash digest
         '''
-        scrypt_hash = scrypt.hash(password, salt)
-        return scrypt_hash.encode('hex')
+        hashed = PBKDF2(password, salt, iterations=ITERATE).read(32).encode('hex')
+        return unicode(hashed)
 
     @property
     def permissions(self):

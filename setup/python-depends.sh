@@ -15,6 +15,6 @@
 #    limitations under the License.
 
 pip install tornado
-pip install scrypt
+pip install pbkdf2
 pip install sqlalchemy
 pip install pylibmc
