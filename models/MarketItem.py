@@ -59,7 +59,7 @@ class MarketItem(BaseObject):
         return dbsession.query(cls).filter_by(name=unicode(name)).first()
 
     def to_dict(self):
-        ''' Returns object data as json object '''
+        ''' Returns object data as dictionary object '''
         return {
             'name': self.name,
             'price': self.price,
