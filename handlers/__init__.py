@@ -221,8 +221,7 @@ def start_server():
       logging.exception("Main i/o loop threw exception")
     finally:
         io_loop.stop()
-        if config.debug and \
-                raw_input(PROMPT + "Flush Memcache? [Y/n]: ").lower() == 'y':
+        if config.debug and raw_input(PROMPT + "Flush Memcache? [Y/n]: ").lower() == 'y':
             print(INFO + 'Flushing cache ...'),
             FileCache.flush()
             print('OK')

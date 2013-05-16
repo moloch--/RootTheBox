@@ -20,7 +20,7 @@
 						<strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
 						<strong>Bank Account:</strong> ${{ user.team.money }} <br />
 						{% from libs.EventManager import EventManager %}
-						<strong>Active Bots:</strong> {{ EventManager.Instance().bot_count(user.team) }} <br />
+						<strong>Active Bots:</strong> FOO PLACE HOLDER <br />
 						<strong>Flags Captured:</strong> {{ len(user.team.flags) }}<br />
 					{% else %}
 						<strong>You are not on a team</strong>

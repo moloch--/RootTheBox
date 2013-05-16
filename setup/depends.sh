@@ -23,7 +23,7 @@ echo "[*] Installing pip/gcc ..."
 apt-get install python-pip python-dev build-essential
 
 echo "[*] Installing packages ..."
-apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha
+apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev
 
 echo "[*] Installing python libs ..."
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

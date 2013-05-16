@@ -37,7 +37,6 @@ from models import dbsession, User, Team, Theme, \
 
 class HomePageHandler(BaseHandler):
 
-    @debug
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render("public/home.html")
@@ -46,12 +45,10 @@ class HomePageHandler(BaseHandler):
 class LoginHandler(BaseHandler):
     ''' Takes care of the login process '''
 
-    @debug
     def get(self, *args, **kwargs):
         ''' Display the login page '''
         self.render('public/login.html', errors=None)
 
-    @debug
     def post(self, *args, **kwargs):
         ''' Checks submitted username and password '''
         form = Form(
@@ -74,7 +71,6 @@ class LoginHandler(BaseHandler):
         else:
             self.render('public/login.html', errors=form.errors)
 
-    @debug
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''
         logging.info("Successful login: %s/%s from %s" %
@@ -92,7 +88,6 @@ class LoginHandler(BaseHandler):
             self.session['menu'] = 'user'
         self.session.save()
 
-    @debug
     def failed_login(self):
         ''' Called if username or password is invalid '''
         logging.info("Failed login attempt from: %s" % self.request.remote_ip)
@@ -104,14 +99,12 @@ class LoginHandler(BaseHandler):
 class RegistrationHandler(BaseHandler):
     ''' Registration Code '''
 
-    @debug
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''
         self.render("public/registration.html", 
             errors=None
         )
 
-    @debug
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
         form = Form(
