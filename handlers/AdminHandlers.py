@@ -141,7 +141,6 @@ class AdminCreateHandler(BaseHandler):
             flag_name="Please enter a name",
             token="Please enter a token value",
             reward="Please enter a reward value",
-            is_file="Please select a file setting",
             description="Please enter a flag description",
         )
         if form.validate(self.request.arguments):
