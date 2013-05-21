@@ -23,55 +23,58 @@ Created on Mar 15, 2012
 import logging
 import tornado.websocket
 
-from libs.SecurityDecorators import debug
-from libs.ConfigManager import ConfigManager
-from libs.EventManager import EventManager
-from models import Box, User
+from uuid import uuid4
+from libs.BotManager import BotManager
+from models import Box, Team
+
+
+BOX_OKAY = 'box ok'
+TEAM_OKAY = 'team ok'
+AUTH_FAIL = 'auth fail'
 
 
 class BotHandler(tornado.websocket.WebSocketHandler):
     ''' Handles websocket connections '''
 
     def initialize(self):
-        self.event_manager = EventManager.Instance()
-        self.config = ConfigManager.Instance()
-        self.team = None
-        self.box = None
+        self.bot_manager = BotManager.Instance()
+        self._team_uuid = None
+        self.box_uuid = None
         self.remote_ip = None
+        self.uuid = uuid4()
 
-    @debug
-    def is_active(self):
-        return bool(self.box is not None and self.team is not None)
-
-    @debug
-    def open(self):
+    def open(self, *args):
         ''' When we receive a new websocket connect '''
         box = Box.by_ip_address(self.request.remote_ip)
         if box is not None:
-            self.box = box
+            self.box_uuid = ''.join(box.uuid)
             self.remote_ip = self.request.remote_ip
-            self.write_message("box ok")
+            self.write_message(BOX_OK)
         else:
+            self.write_message(AUTH_FAIL)
             self.close()
 
-    @debug
     def on_message(self, message):
-        ''' Troll the haxors '''
-        user = User.by_handle(message)
-        if user is not None:
-            self.team = user.team
-            self.write_message("team ok")
-            self.manager.add_bot(self)
-            self.manager.new_bot(self)
-        else:
-            self.write_message("Invalid hacker name.")
+        self.team_uuid = message
+        if self.bot_manager.is_duplicate(self):
             self.close()
 
-    @debug
     def on_close(self):
-        ''' Lost connection to bot '''
-        try:
-            if self.is_active():
-                self.manager.remove_bot(self)
-        except KeyError:
-            logging.warn("[Bot] Manager does not have a refrence to self.")
+        logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
+
+    @property
+    def team_uuid(self):
+        return self._team_uuid
+
+    @team_uuid.setter
+    def team(self, team_uuid):
+        if self._team_uuid is not None:
+            logging.warn("Botnet protocol breach; set team uuid twice")
+            self.close()
+        else:
+            team = Team.by_uuid(team_uuid)
+            if team is None:
+                self.write_message(AUTH_FAIL)
+                self.close()
+            else:
+                self._team_uuid = ''.join(team.uuid)
