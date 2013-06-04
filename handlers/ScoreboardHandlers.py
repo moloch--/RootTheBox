@@ -111,6 +111,7 @@ class ScoreboardHistoryHandler(BaseHandler):
         uri = {
             'money': self.money,
             'flags': self.flags,
+            'bots': self.bots,
         }
         if 1 == len(args) and args[0] in uri:
             uri[args[0]]()
@@ -135,6 +136,14 @@ class ScoreboardHistoryHandler(BaseHandler):
             )
         self.render('scoreboard/history/flags.html', history=history)
 
+    def bots(self):
+        game_history = GameHistory.Instance()
+        history = {}
+        for team in Team.all():
+            history[team.name] = game_history.get_bot_history_by_name(
+                team.name, -30
+            )
+        self.render('scoreboard/history/bots.html', history=history)
 
 class ScoreboardHistorySocketHandler(WebSocketHandler):
 

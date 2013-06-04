@@ -24,6 +24,7 @@ import logging
 
 from models import dbsession, Snapshot, SnapshotTeam, Team
 from sqlalchemy import desc
+from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from libs.Singleton import Singleton
 from libs.SecurityDecorators import async
@@ -88,13 +89,25 @@ class GameHistory(object):
                 series.append((snapshot['timestamp'], money,))
         return series
 
+    def get_bot_history_by_name(self, name, start, stop=None):
+        ''' Retrieves money history for a team '''
+        snapshots = self[start:] if stop is None else self[start:stop]
+        series = []
+        for snapshot in snapshots:
+            if name in snapshot['scoreboard']:
+                bots = snapshot['scoreboard'][name]['bots']
+                series.append((snapshot['timestamp'], bots,))
+        return series
+
     def __now__(self):
         ''' Returns snapshot object it as a dict '''
         snapshot = Snapshot()
+        bot_manager = BotManager.Instance()
         for team in Team.all():
             snapshot_team = SnapshotTeam(
                 team_id=team.id,
                 money=team.money,
+                bots=bot_manager.count_by_team(team)
             )
             snapshot_team.game_levels = team.game_levels
             snapshot_team.flags = team.flags

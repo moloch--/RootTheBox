@@ -46,6 +46,7 @@ class Snapshot(BaseObject):
         data = {}
         for team in self.teams:
             data[str(team.name)] = {
+                'bots': team.bots,
                 'money': team.money,
                 'game_levels': [str(level) for level in team.game_levels],
                 'flags': [str(flag) for flag in team.flags],

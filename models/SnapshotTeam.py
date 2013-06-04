@@ -35,6 +35,7 @@ class SnapshotTeam(BaseObject):
 
     team_id = Column(Integer, ForeignKey("team.id"), nullable=False)
     money = Column(Integer, nullable=False)
+    bots = Column(Integer, nullable=False)
     game_levels = relationship("GameLevel", secondary=snapshot_team_to_game_level, backref=backref("SnapshotTeam", lazy="select"))
     flags = relationship("Flag", secondary=snapshot_team_to_flag, backref=backref("SnapshotTeam", lazy="select"))
 

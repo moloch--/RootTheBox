@@ -41,7 +41,7 @@
 						zoomType: 'x',
 					},
 					title: {
-							text: 'Captured Flags',
+							text: 'Team Botnets',
 							style: {
 	                            color: '#FFFFFF',
 	                            font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -61,7 +61,7 @@
 					},
 					yAxis: {
 						title: {
-							text: 'Flags Captured',
+							text: 'Number of Bots',
 							style: {
 	                            color: '#FFFFFF',
 	                            font: 'bold 14px "Trebuchet MS", Verdana, sans-serif',
@@ -72,7 +72,7 @@
 					tooltip: {
 						enabled: true,
 						formatter: function() {
-							return '<strong>' + this.series.name + '</strong><br />' + this.y + ' flag(s)';
+							return '<strong>' + this.series.name + '</strong><br />' + this.y + ' bot(s)';
 						}
 					},
 					plotOptions: {

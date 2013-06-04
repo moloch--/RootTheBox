@@ -20,6 +20,7 @@
 						<ul class="nav">
 			              <li><a href="/scoreboard/history/flags">Flags</a></li>
 			              <li><a href="/scoreboard/history/money">Money</a></li>
+			              <li><a href="/scoreboard/history/bots">Bots</a></li>
 			            </ul>
 			        </div>
 			    </div>
@@ -83,7 +84,7 @@
 						}
 					},
 					series: [
-						{% for team in history.keys() %}
+						{% for team in history %}
 							{
 								name: "{{ team }}",
 								data: [
