@@ -59,7 +59,7 @@ seatec_fw = create_box("Firewall", seatec, "Hard", level_0, ipv4_addresses=["192
 
 microshaft_web = create_box("Web Server", microshaft, "Medium", level_1, ipv4_addresses=["192.168.3.2"])
 microshaft_dev = create_box("Stage Server", microshaft, "Medium", level_1, ipv4_addresses=["192.168.3.4"])
-microshaft_laptop = create_box("CEO Laptop", microshaft, "Hard", level_2, ipv4_addresses=["192.168.3.25"])
+microshaft_laptop = create_box("CEO Laptop", microshaft, "Hard", level_2, ipv4_addresses=["127.0.0.1"])
 
 # Create Flags
 # create_flag(FLAG_NAME, TOKEN, REWARD_VALUE, BOX_OBJECT, DESCRIPTION, IS_FILE, IS_REGEX, IS_HASH)

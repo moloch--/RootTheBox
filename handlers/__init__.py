@@ -33,7 +33,7 @@ from modules.Recaptcha import Recaptcha
 from modules.CssTheme import CssTheme
 from libs.ConsoleColors import *
 from libs.Memcache import FileCache
-from libs.AuthenticateReporter import scoring_round
+from libs.BotManager import BotManager
 from libs.GameHistory import GameHistory
 from libs.EventManager import EventManager
 from libs.ConfigManager import ConfigManager
@@ -71,7 +71,7 @@ app = Application([
                       StaticFileHandler, {'path': 'files/avatars'}),
 
                   # Bot Handlers - BotHandlers.py
-                  (r'/botnet/register', BotHandler),
+                  (r'/botnet/connect', BotHandler),
 
                   # ShareUploadHandlers - ShareUploadHandlers.py
                   (r'/user/shares/download(.*)', ShareDownloadHandler),
@@ -200,8 +200,9 @@ def start_server():
     server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
+    bot_manager = BotManager.Instance()
     scoring = PeriodicCallback(
-        scoring_round, int(5 * 60 * 1000), io_loop=io_loop
+        bot_manager.scoring, 5 * 60000, io_loop=io_loop
     )
     scoring.start()
     try:
@@ -211,7 +212,7 @@ def start_server():
         sys.stdout.flush()
         game_history = GameHistory.Instance()
         history_callback = PeriodicCallback(
-            game_history.take_snapshot, int(60 * 1000), io_loop=io_loop
+            game_history.take_snapshot, 60000, io_loop=io_loop
         )
         history_callback.start()
         io_loop.start()
