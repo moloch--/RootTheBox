@@ -84,7 +84,7 @@ class BotHandler(tornado.websocket.WebSocketHandler):
                 self.close()
             else:
                 self._team_uuid = team.uuid
-                logging.debug("Team %s owns bot: %s" % (team.name, self.uuid))
+                logging.debug("'%s' owns bot: %s" % (team.name, self.uuid))
                 self.init_success()
 
     def init_success(self):

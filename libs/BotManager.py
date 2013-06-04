@@ -55,6 +55,7 @@ MemoryBaseObject = declarative_base(cls=MemoryDatabaseObject)
 
 class Bot(MemoryBaseObject):
     ''' Bot Class '''
+
     wsock_uuid = Column(Unicode(36), nullable=False)
     team_uuid = Column(Unicode(36), nullable=False)
     box_uuid = Column(Unicode(36), nullable=False)
@@ -84,8 +85,11 @@ class BotManager(object):
         bots = self.botdb.query(Bot).filter_by(team_uuid=unicode(team.uuid)).all()
         return [self.botnet[bot.uuid] for bot in bots]
 
-    def count_team(self, team):
-        return self.botdb.query(Bot).filter_by(team_uuid=unicode(team.uuid)).count()
+    def count_by_team(self, team):
+        return self.count_by_team_uuid(team.uuid)
+
+    def count_by_team_uuid(self, tuuid):
+        return self.botdb.query(Bot).filter_by(team_uuid=unicode(tuuid)).count()
 
     def add_bot(self, bot_wsocket):
         if not self.is_duplicate(bot_wsocket):
