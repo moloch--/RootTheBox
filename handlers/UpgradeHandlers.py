@@ -59,14 +59,15 @@ class PasswordSecurityHandler(BaseHandler):
             user = self.get_current_user()
             passwd = self.get_argument('new_password1')
             old_passwd = self.get_argument('old_password')
+            game_settings = GameSettings.get_active()
             if not user.validate_password(old_passwd):
                 self.render_page(["Invalid password"])
             elif not passwd == self.get_argument('new_password2'):
                 self.render_page(["New passwords do not match"])
-            elif user.team.money < self.config.password_upgrade:
+            elif user.team.money < game_settings.password_upgrade_cost:
                 self.render_page(["You cannot afford to upgrade your hash"])
             elif len(passwd) <= self.config.max_password_length:
-                user.team.money -= self.config.password_upgrade
+                user.team.money -= game_settings.password_upgrade_cost
                 dbsession.add(user.team)
                 dbsession.flush()
                 self.update_password(passwd)
@@ -78,8 +79,9 @@ class PasswordSecurityHandler(BaseHandler):
 
     def render_page(self, errors=None):
         user = self.get_current_user()
+        game_settings = GameSettings.get_active()
         self.render('upgrades/password_security.html',
-            errors=errors, user=user, cost=self.config.password_upgrade,
+            errors=errors, user=user, cost=game_settings.password_upgrade_cost,
         )
 
     def update_password(self, new_password):

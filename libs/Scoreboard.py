@@ -24,7 +24,7 @@ Created on Oct 04, 2012
 import json
 import logging
 
-from models import Team, dbsession
+from models import Team, GameSettings, dbsession
 from libs.BotManager import BotManager
 from libs.ConfigManager import ConfigManager
 
@@ -48,11 +48,11 @@ def score_bots():
     ''' Award money for botnets '''
     logging.info("Scoring botnets, please wait ...")
     bot_manager = BotManager.Instance()
-    config = ConfigManager.Instance()
+    game_settings = GameSettings.get_active()
     for team in Team.all():
         bot_count = bot_manager.count_by_team_uuid(team.uuid)
         if 0 < bot_count:
-            reward = config.bot_reward * bot_count
+            reward = game_settings.bot_reward * bot_count
             logging.debug("%s was awarded $%d for controlling %s bot(s)" % (
                 team.name, reward, bot_count,
             ))

@@ -100,6 +100,7 @@ from models.Snapshot import Snapshot
 from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Swat import Swat
+from models.GameSettings import GameSettings
 
 # calling this will create the tables at the database
 create_tables = lambda: (setattr(engine, 'echo', config.log_sql), metadata.create_all(engine))

@@ -28,7 +28,8 @@ import getpass
 
 from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
-from models import dbsession, User, Permission, Theme, MarketItem, GameLevel
+from models import dbsession, User, Permission, Theme, \
+                    MarketItem, GameLevel, GameSettings
 
 
 # Fills the database with some startup data.
@@ -132,6 +133,12 @@ permission = Permission(
     user_id=user.id
 )
 dbsession.add(permission)
+dbsession.flush()
+
+# Create intital game settings
+game_settings = GameSettings()
+game_settings.is_active = True
+dbsession.add(game_settings)
 dbsession.flush()
 
 # Display Details

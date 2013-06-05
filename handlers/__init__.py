@@ -190,6 +190,7 @@ app = Application([
                   debug=config.debug,
 
                   # Application version
+                  game_name=config.game_name,
                   version='0.3.0'
                   )
 
@@ -202,7 +203,7 @@ def start_server():
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
     scoring = PeriodicCallback(
-        score_bots, 60000, io_loop=io_loop
+        score_bots, config.bot_reward_interval, io_loop=io_loop
     )
     scoring.start()
     try:
@@ -212,6 +213,7 @@ def start_server():
         sys.stdout.flush()
         game_history = GameHistory.Instance()
         history_callback = PeriodicCallback(
+            # This must be set to one minute
             game_history.take_snapshot, 60000, io_loop=io_loop
         )
         history_callback.start()

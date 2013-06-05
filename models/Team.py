@@ -29,7 +29,7 @@ from models import dbsession, team_to_box, team_to_item, \
     team_to_flag, team_to_game_level, team_to_source_code
 from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits
-
+from libs.BotManager import BotManager
 
 class Team(BaseObject):
     ''' Team definition '''
@@ -92,6 +92,11 @@ class Team(BaseObject):
     def level_flags(self, lvl):
         ''' Given a level number return all flags captured for that level '''
         return filter(lambda flag: flag.game_level.number == lvl, self.flags)
+
+    @property
+    def bot_count(self):
+        bot_manager = BotManager.Instance()
+        return bot_manager.count_by_team_uuid(self.uuid)
 
     def to_dict(self):
         ''' Use for JSON related tasks; return public data only '''

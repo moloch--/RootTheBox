@@ -24,9 +24,8 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Integer, Boolean, String
-from models import dbsession, User
+from models import dbsession, User, GameSettings
 from models.BaseGameObject import BaseObject
-from libs.ConfigManager import ConfigManager
 
 
 class Swat(BaseObject):
@@ -123,8 +122,8 @@ class Swat(BaseObject):
     @classmethod
     def get_price(cls, user):
         ''' Calculate price of next bribe based on history '''
-        config = ConfigManager.Instance()
-        base_price = config.bribe_base_price
+        game_settings = GameSettings.get_active()
+        base_price = game_settings.bribe_price
         return base_price + (cls.count_completed_by_target_id(user.id) * base_price)
 
     @classmethod

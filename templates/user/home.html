@@ -19,11 +19,7 @@
 					{% if user.team is not None %}
 						<strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
 						<strong>Bank Account:</strong> ${{ user.team.money }} <br />
-
-						<!-- Replace with wsocket updater -->
-						{% from libs.BotManager import BotManager %}
-						<strong>Active Bots:</strong>{{ BotManager.Instance().count_by_team(user.team) }}<br />
-						
+						<strong>Active Bots:</strong> {{ user.team.bot_count }}<br />		
 						<strong>Flags Captured:</strong> {{ len(user.team.flags) }}<br />
 					{% else %}
 						<strong>You are not on a team</strong>

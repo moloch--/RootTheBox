@@ -55,12 +55,11 @@ class ConfigManager(object):
         self.config = ConfigParser.SafeConfigParser()
         self.config.readfp(open(self.conf, 'r'))
         self.__server__()
+        self.__game__()
         self.__sessions__()
         self.__security__()
         self.__database__()
         self.__recaptcha__()
-        self.__upgrades__()
-        self.__botnets__()
 
     def __server__(self):
         ''' Load network configurations '''
@@ -82,6 +81,12 @@ class ConfigManager(object):
         self.default_theme = self.config.get("Server", "theme")
         self.cache_files = self.config.getboolean("Server", "cache_files")
 
+    def __game__(self):
+        self.game_name = self.config.get("Game", 'game_name')[:16]
+        self.bot_reward_interval = int(60000 * self.config.getint(
+            "Game", 'bot_reward_interval'
+        ))
+
     def __sessions__(self):
         ''' Session settings '''
         self.memcached_server = self.config.get("Sessions", 'memcached')
@@ -101,22 +106,6 @@ class ConfigManager(object):
             "Security", 'max_password_length'
         )
 
-    def __upgrades__(self):
-        self.password_upgrade = self.config.getint(
-            "Upgrades", 'password_upgrade'
-        )
-        self.bribe_base_price = self.config.getint(
-            "Upgrades", 'bribe_base_price'
-        )
-
-    def __botnets__(self):
-        self.bot_reward = self.config.getint(
-            "Botnets", 'reward'
-        )
-        self.bot_sql = self.config.getboolean(
-            "Botnets", 'bot_sql'
-        )
-
     def __recaptcha__(self):
         ''' Loads recaptcha settings '''
         self.recaptcha_enable = self.config.getboolean("Recaptcha", 'enable')
@@ -127,6 +116,7 @@ class ConfigManager(object):
     def __database__(self):
         ''' Loads database connection information '''
         self.log_sql = self.config.getboolean("Database", 'log_sql')
+        self.bot_sql = self.config.getboolean("Database", 'bot_sql')
         self.db_server = self.config.get("Database", 'server', "localhost")
         self.db_name = self.config.get("Database", 'name', "rootthebox")
         user = self.config.get("Database", 'user', "RUNTIME")
