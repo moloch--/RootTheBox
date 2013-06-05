@@ -33,6 +33,7 @@ from modules.Recaptcha import Recaptcha
 from modules.CssTheme import CssTheme
 from libs.ConsoleColors import *
 from libs.Memcache import FileCache
+from libs.Scoreboard import score_bots
 from libs.BotManager import BotManager
 from libs.GameHistory import GameHistory
 from libs.EventManager import EventManager
@@ -200,9 +201,8 @@ def start_server():
     server = HTTPServer(app)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
-    bot_manager = BotManager.Instance()
     scoring = PeriodicCallback(
-        bot_manager.scoring, 5 * 60000, io_loop=io_loop
+        score_bots, 60000, io_loop=io_loop
     )
     scoring.start()
     try:

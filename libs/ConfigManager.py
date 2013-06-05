@@ -60,6 +60,7 @@ class ConfigManager(object):
         self.__database__()
         self.__recaptcha__()
         self.__upgrades__()
+        self.__botnets__()
 
     def __server__(self):
         ''' Load network configurations '''
@@ -106,6 +107,14 @@ class ConfigManager(object):
         )
         self.bribe_base_price = self.config.getint(
             "Upgrades", 'bribe_base_price'
+        )
+
+    def __botnets__(self):
+        self.bot_reward = self.config.getint(
+            "Botnets", 'reward'
+        )
+        self.bot_sql = self.config.getboolean(
+            "Botnets", 'bot_sql'
         )
 
     def __recaptcha__(self):

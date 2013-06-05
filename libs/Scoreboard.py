@@ -22,8 +22,11 @@ Created on Oct 04, 2012
 
 
 import json
+import logging
 
-from models import Team
+from models import Team, dbsession
+from libs.BotManager import BotManager
+from libs.ConfigManager import ConfigManager
 
 
 class Scoreboard(object):
@@ -39,3 +42,20 @@ class Scoreboard(object):
                 'game_levels': [str(lvl) for lvl in team.game_levels],
             }
         return json.dumps(game_state)
+
+
+def score_bots():
+    ''' Award money for botnets '''
+    logging.info("Scoring botnets, please wait ...")
+    bot_manager = BotManager.Instance()
+    config = ConfigManager.Instance()
+    for team in Team.all():
+        bot_count = bot_manager.count_by_team_uuid(team.uuid)
+        if 0 < bot_count:
+            reward = config.bot_reward * bot_count
+            logging.debug("%s was awarded $%d for controlling %s bot(s)" % (
+                team.name, reward, bot_count,
+            ))
+            team.money += reward
+            dbsession.add(team)
+            dbsession.flush()

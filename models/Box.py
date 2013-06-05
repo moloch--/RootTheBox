@@ -71,6 +71,7 @@ class Box(BaseObject):
         Returns a box object based on an ip address, supports both ipv4
         and ipv6
         '''
+        ip_addr = unicode(ip_addr)
         db_ip = dbsession.query(IpAddress).filter(
             or_(IpAddress.v4 == ip_addr, IpAddress.v6 == ip_addr)
         ).first()

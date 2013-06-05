@@ -25,6 +25,7 @@ import logging
 
 from datetime import datetime
 from libs.Singleton import Singleton
+from libs.ConfigManager import ConfigManager
 from sqlalchemy import Column, create_engine
 from sqlalchemy.sql import and_
 from sqlalchemy.orm import sessionmaker
@@ -69,10 +70,10 @@ class BotManager(object):
     '''
 
     def __init__(self):
-        logging.debug("[Botnet] Initializing in-memory database ...")
+        config = ConfigManager.Instance()
         self.botnet = {}  # Holds refs to wsockets
         self.sqlite_engine = create_engine(u'sqlite://')
-        setattr(self.sqlite_engine, 'echo', True)
+        setattr(self.sqlite_engine, 'echo', config.bot_sql)
         Session = sessionmaker(bind=self.sqlite_engine, autocommit=True)
         self.botdb = Session(autoflush=True)
         MemoryBaseObject.metadata.create_all(self.sqlite_engine)
@@ -123,7 +124,4 @@ class BotManager(object):
         return 0 < self.botdb.query(Bot).filter(
             and_(Bot.team_uuid == unicode(bot_wsocket.team_uuid), Bot.box_uuid == unicode(bot_wsocket.box_uuid))
         ).count()
-
-
-    def scoring(self):
-        pass
+        
