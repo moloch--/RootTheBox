@@ -117,11 +117,13 @@ class BotManager(object):
             logging.warn("Failed to remove bot '%s' does not exist in manager" % bot_wsocket.uuid)
 
     def is_duplicate(self, bot_wsocket):
+        ''' Check for duplicate bots '''
         assert(bot_wsocket.team_uuid is not None)
         assert(bot_wsocket.box_uuid is not None)
-        bot_count = self.botdb.query(Bot).filter(
+        return 0 < self.botdb.query(Bot).filter(
             and_(Bot.team_uuid == unicode(bot_wsocket.team_uuid), Bot.box_uuid == unicode(bot_wsocket.box_uuid))
         ).count()
+
 
     def scoring(self):
         pass
