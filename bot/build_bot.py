@@ -31,7 +31,7 @@ import os
 sys.argv.append('py2exe')
 
 setup(
-    options={'py2exe': {'bundle_files': 1, 'compressed': 1, 'optimize': 2}},
-    windows=[{'script': 'Flag.py', 'icon_resources': [(1, 'rtb.ico')]}],
-    zipfile=None,
+    options = {'py2exe': {'bundle_files': 1, 'compressed': 1, 'optimize': 2}},
+    console = [{'script': 'bot.py', 'icon_resources': [(1, 'rtb.ico')]}],
+    zipfile = None,
 )
