@@ -27,6 +27,7 @@ import tornado.websocket
 
 from uuid import uuid4
 from libs.BotManager import BotManager
+from libs.EventManager import EventManager
 from models import Box, Team, User
 from models.User import ADMIN_PERMISSION
 from BaseHandlers import BaseHandler
@@ -38,6 +39,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
 
     def initialize(self):
         self.bot_manager = BotManager.Instance()
+        self.event_manager = EventManager.Instance()
         self.team_name = None
         self.team_uuid = None
         self.box_uuid = None
@@ -84,6 +86,32 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.bot_manager.remove_bot(self)
         logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
 
+    def set_user(self, req):
+        ''' Get user details '''
+        if self.team_uuid is not None:
+            self.write_message({
+                'opcode': 'error',
+                'message': 'User is already set'
+            })
+            self.close()
+        else:
+            user = User.by_handle(req['user'])
+            if user is None or user.has_permission(ADMIN_PERMISSION):
+                logging.debug("Received invalid user '%s' from bot on %s" % (
+                    req['user'], self.remote_ip,
+                ))
+                self.write_message({
+                    'opcode': 'error',
+                    'message': 'Hacker does not exist'
+                })
+                self.close()
+            else:
+                self.write_message({
+                    'opcode': 'status',
+                    'message': 'Found user "%s"' % user.handle,
+                })
+                self.set_team(user.team)
+
     def set_team(self, team):
         ''' Set team based on user '''
         if team is None:
@@ -102,9 +130,10 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
     def init_success(self):
         if self.bot_manager.add_bot(self):
             logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
+            count = self.bot_manager.count_by_team(self.team_name)
             self.write_message({
                 'opcode': 'status',
-                'message': 'Accepted new bot connection'
+                'message': 'Added new bot; total number of bots is now %d' % count
             })
         else:
             logging.debug("Auth failed, duplicate bot on %s" % self.remote_ip)
@@ -113,29 +142,6 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
                 'message': 'Duplicate bot'
             })
             self.close()
-
-    def set_user(self, req):
-        ''' Get user details '''
-        if self.team_uuid is not None:
-            self.write_message({
-                'opcode': 'error',
-                'message': 'User is already set'
-            })
-            self.close()
-        else:
-            user = User.by_handle(req['user'])
-            if user is None or user.has_permission(ADMIN_PERMISSION):
-                self.write_message({
-                    'opcode': 'error',
-                    'message': 'Hacker does not exist'
-                })
-                self.close()
-            else:
-                self.write_message({
-                    'opcode': 'status',
-                    'message': 'Found user "%s"' % user.handle,
-                })
-                self.set_team(user.team)
 
 
 class BotMonitorHandler(BaseHandler):

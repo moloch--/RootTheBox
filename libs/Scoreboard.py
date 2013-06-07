@@ -50,12 +50,17 @@ def score_bots():
     bot_manager = BotManager.Instance()
     game_settings = GameSettings.get_active()
     for team in Team.all():
-        bot_count = bot_manager.count_by_team_uuid(team.uuid)
-        if 0 < bot_count:
-            reward = game_settings.bot_reward * bot_count
+        bots = bot_manager.by_team(team.name)
+        if 0 < len(bots):
+            reward = game_settings.bot_reward * len(bots)
             logging.debug("%s was awarded $%d for controlling %s bot(s)" % (
-                team.name, reward, bot_count,
+                team.name, reward, len(bots),
             ))
             team.money += reward
             dbsession.add(team)
             dbsession.flush()
+            for bot in bots:
+                bot.write_message({
+                    'opcode': 'status',
+                    'message': 'Collected $%d reward' % game_settings.bot_reward
+                })

@@ -41,7 +41,7 @@ import platform
 
 
 from urlparse import urlparse
-
+from datetime import datetime
 
 
 ### Settings
@@ -85,10 +85,10 @@ else:
     bold = ""
 
 # === Macros ===
-INFO = bold + C + "[*] " + W
-WARN = bold + R + "[!] " + W
-PROMPT = bold + P + "[?] " + W
-
+INFO = bold + C + "[*]" + W
+WARN = bold + R + "[!]" + W
+PROMPT = bold + P + "[?]" + W
+current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 """
 websocket python client.
@@ -837,20 +837,17 @@ class WebSocketApp(object):
 #############################################################################################
 ### [ Messages ] ############################################################################
 #############################################################################################
-BOX_OKAY  = 'box ok'
-TEAM_OKAY = 'team ok'
-AUTH_FAIL = 'auth fail'
-AUTH_OKAY = 'auth ok'
-XID       = 'xid:'
-
-
 
 def display_error(ws, response):
-    sys.stderr.write(WARN + "Error: %s\n" % response['message'])
+    sys.stderr.write("%s %s Error  : %s\n" % (
+        WARN, current_time(), response['message']
+    ))
     sys.stderr.flush()
 
 def display_status(ws, response):
-    sys.stdout.write(INFO + "%s\n" % response['message'])
+    sys.stdout.write("%s %s Status : %s \n" % (
+        INFO, current_time(), response['message']
+    ))
     sys.stdout.flush()
 
 def get_user(ws, response):
@@ -858,7 +855,7 @@ def get_user(ws, response):
         'opcode': 'set_user',
         'user': ws.user,
     }))
-    sys.stdout.write(INFO + "Authorizing ...\n")
+    display_status(ws, {'message': "Authorizing, please wait ..."})
     sys.stdout.flush()
 
 opcodes = {
@@ -868,8 +865,7 @@ opcodes = {
 }
 
 def on_open(ws):
-    sys.stdout.write(INFO + "Connecting, please wait ...\n")
-    sys.stdout.flush()
+    display_status(ws, {'message': "Successfully connected to command & control ..."})
 
 def on_message(ws, message):
     ''' Parse message and call a function '''
@@ -882,14 +878,13 @@ def on_message(ws, message):
         else:
             opcodes[response['opcode']](ws, response)
     except ValueError as error:
-        sys.stderr.write(WARN + "Error: %s\n" % error)
-        sys.stderr.flush()
+        display_error(ws, {'error': str(error)})
 
 def on_error(ws, error):
-    sys.stderr.write(WARN + "Error: %s\n" % str(error))
+    display_error(ws, {'error': str(error)})
 
 def on_close(ws):
-    sys.stdout.write(WARN + "Disconnected from command & control\n")
+    display_error(ws, {'error': "Disconnected from command & control"})
 
 def main(domain, port, user, secure=False, verbose=False):
     ''' Main() '''
@@ -897,7 +892,7 @@ def main(domain, port, user, secure=False, verbose=False):
         enableTrace(verbose)
         connection_url = "ws://%s:%s/%s" % (domain, port, __path__)
         if verbose:
-            sys.stdout.write('\r' + INFO + "Connecting to: %s\n" % connection_url)
+            display_status(None, {'message': "Connecting to: %s" % connection_url})
         ws = WebSocketApp(connection_url,
             on_message = on_message,
             on_error = on_error,
@@ -907,10 +902,9 @@ def main(domain, port, user, secure=False, verbose=False):
         ws.on_open = on_open
         ws.run_forever()
     except KeyboardInterrupt:
-        sys.stdout.write('\r' + WARN + "User exit")
         os._exit(0)
     except Exception as error:
-        sys.stderr.write(WARN + "Exception: %s\n" % str(error))
+        display_error(None, {'error': str(error)})
         os._exit(1)
 
 

@@ -85,14 +85,14 @@ class BotManager(object):
 
     def by_box(self, box):
         bots = self.botdb.query(Bot).filter_by(box_uuid=unicode(box.uuid)).all()
-        return [self.botnet[bot.uuid] for bot in bots]
+        return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def by_team(self, team):
-        bots = self.botdb.query(Bot).filter_by(team_uuid=unicode(team.uuid)).all()
-        return [self.botnet[bot.uuid] for bot in bots]
+        bots = self.botdb.query(Bot).filter_by(team_name=unicode(team)).all()
+        return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def count_by_team(self, team):
-        return self.count_by_team_uuid(team.uuid)
+        return len(self.by_team(team))
 
     def count_by_team_uuid(self, tuuid):
         return self.botdb.query(Bot).filter_by(team_uuid=unicode(tuuid)).count()
