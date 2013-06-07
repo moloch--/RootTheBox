@@ -23,11 +23,15 @@ Created on Mar 15, 2012
 import logging
 import tornado.websocket
 
+
 from uuid import uuid4
 from libs.BotManager import BotManager
 from models import Box, Team
+from BaseHandlers import BaseHandler
+from libs.SecurityDecorators import authenticated
 
 
+### Constants
 BOX_OKAY  = 'box ok'
 TEAM_OKAY = 'team ok'
 AUTH_FAIL = 'auth fail'
@@ -35,7 +39,7 @@ AUTH_OKAY = 'auth ok'
 XID       = 'xid:'
 
 
-class BotHandler(tornado.websocket.WebSocketHandler):
+class BotSocketHandler(tornado.websocket.WebSocketHandler):
     ''' Handles websocket connections '''
 
     def initialize(self):
@@ -49,7 +53,8 @@ class BotHandler(tornado.websocket.WebSocketHandler):
         ''' When we receive a new websocket connect '''
         box = Box.by_ip_address(self.request.remote_ip)
         if box is not None:
-            self.box_uuid = ''.join(box.uuid)
+            self.box_uuid = box.uuid
+            self.box_name = box.name
             self.remote_ip = self.request.remote_ip
             self.write_message(BOX_OKAY)
         else:
@@ -84,6 +89,7 @@ class BotHandler(tornado.websocket.WebSocketHandler):
                 self.close()
             else:
                 self._team_uuid = team.uuid
+                self.team_name = team.name
                 logging.debug("'%s' owns bot: %s" % (team.name, self.uuid))
                 self.init_success()
 
@@ -95,3 +101,10 @@ class BotHandler(tornado.websocket.WebSocketHandler):
             logging.debug("Auth fail; duplicate bot")
             self.write_message(AUTH_FAIL)
             self.close()
+
+
+class BotMonitorHandler(BaseHandler):
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        self.render('bots/monitor.html')

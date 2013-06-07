@@ -4,6 +4,7 @@
 Copyright 2012 Root the Box
 Created on Feb 24, 2012
 
+---------
 websocket - WebSocket client library for Python
 
 Copyright (C) 2010 Hiroki Ohtani(liris)
@@ -21,14 +22,7 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
 ---------
-
-Flag program, teams need to execute this on boxes
-in order to gain points.  This code supports both
-Windows and Linux.  A .exe can be generated for
-ease of use on Windows boxes using py2exe and the
-build_flag.py script.
 
 '''
 
@@ -877,7 +871,7 @@ def on_error(ws, error):
 def on_close(ws):
     sys.stdout.write(WARN + "Disconnected from command & control\n")
 
-def main(domain, port, uuid, verbose=False):
+def main(domain, port, uuid, secure=False, verbose=False):
     ''' Main() '''
     try:
         enableTrace(verbose)
@@ -914,6 +908,11 @@ if __name__ == '__main__':
         action='store_true',
         dest='verbose',
     )
+    parser.add_argument('--secure',
+        help='connect using a ssl (default: false)',
+        action='store_true',
+        dest='secure',
+    )
     parser.add_argument('--domain', '-d',
         help='scoring engine ip address, or domain (default: %s)' % __domain__,
         default=__domain__,
@@ -930,4 +929,4 @@ if __name__ == '__main__':
         dest='uuid',
     )
     args = parser.parse_args()
-    main(args.domain, args.port, args.uuid, args.verbose)
+    main(args.domain, args.port, args.uuid, args.secure, args.verbose)

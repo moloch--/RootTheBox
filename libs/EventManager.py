@@ -124,22 +124,22 @@ class EventManager(object):
                 Notification.delivered(wsocket.user_id, event_uuid)
 
     # [ Broadcast Events ] -------------------------------------------------
-    def flag_capture(self, user, flag):
+    def create_flag_capture_event(self, user, flag):
         ''' Callback for when a flag is captured '''
         self.refresh_scoreboard()
         evt_id = Notifier.broadcast_success("Flag Capture", 
             "%s has captured '%s'." % (user.team.name, flag.name,)
         )
-        self.push_broadcast_notification(evt_id)
+        return (push_broadcast_notification, {'event_uuid': evt_id})
 
-    def unlocked_level(self, user, level):
+    def create_unlocked_level_event(self, user, level):
         ''' Callback for when a team unlocks a new level '''
         self.refresh_scoreboard()
         message = "%s unlocked level #%d." % (user.team.name, level.number,)
         evt_id = Notifier.broadcast_success("Level Unlocked", message)
-        self.push_broadcast_notification(evt_id)
+        return (push_broadcast_notification, {'event_uuid': evt_id})
 
-    def purchased_item(self, user, item):
+    def create_purchased_item_event(self, user, item):
         ''' Callback when a team purchases an item '''
         self.refresh_scoreboard()
         message = "%s purchased %s from the black market." % (
@@ -149,45 +149,59 @@ class EventManager(object):
         self.push_broadcast_notification(evt_id)
         message2 = "%s unlocked %s." % (user.team.name, item.name,)
         evt_id2 = Notifier.broadcast_warning("Team Upgrade", message2)
-        self.push_broadcast_notification(evt_id2)
+        return (self.push_broadcast_notification, {'event_uuid': evt_id2})
 
-    def swat_player(self, user, target):
+    def create_swat_player_event(self, user, target):
         message("%s called the SWAT team on %s." % (user.handle, target.handle,))
         evt_id = Notifier.broadcast_warning("Player Arrested!", message)
-        self.push_broadcast_notification(evt_id)
+        return (self.push_broadcast_notification, {'event_uuid': evt_id})
 
     # [ Team Events ] ------------------------------------------------------
-    def joined_team(self, user):
+    def create_joined_team_event(self, user):
         ''' Callback when a user joins a team'''
         message = "%s has joined your team." % user.handle
         evt_id = Notifier.team_success(user.team, "New Team Member", message)
-        self.push_team_notification(evt_id, user.team.id)
+        return (self.push_team_notification, {
+            'event_uuid': evt_id, 
+            'team_id': user.team.id
+        })
 
-    def team_file_share(self, user, file_upload):
+    def create_team_file_share_event(self, user, file_upload):
         ''' Callback when a team file share is created '''
         message = "%s has shared a file called '%s'" % (
             user.handle, file_upload.file_name,
         )
         evt_id = Notifier.team_success(user.team, "File Share", message)
-        self.push_team_notification(evt_id, user.team.id)
+        return (self.push_team_notification, {
+            'event_uuid':evt_id, 
+            'team_id':user.team.id
+        })
 
-    def paste_bin(self, user, paste):
+    def create_paste_bin_event(self, user, paste):
         ''' Callback when a pastebin is created '''
         message = "%s posted to the team paste-bin" % user.handle
         evt_id = Notifier.team_success(user.team, "Text Share", message)
-        self.push_team_notification(evt_id, user.team.id)
+        return (self.push_team_notification, {
+            'event_uuid': evt_id, 
+            'team_id': user.team.id
+        })
 
     # [ Misc Events ] ------------------------------------------------------
-    def cracked_password(self, cracker, victim, password, value):
+    def create_cracked_password_events(self, cracker, victim, password, value):
         user_msg = "Your password '%s' was cracked by %s." % (
             password, cracker.handle,
         )
         evt_id = Notifier.user_warning(victim, "Security Breach", user_msg)
-        self.push_user_notification(evt_id, victim.team.id, victim.id)
+        event1 = (self.push_user_notification, {
+            'event_uuid': evt_id, 
+            'team_id': victim.team.id, 
+            'user_id': victim.id
+        })
         message = "%s hacked %s's bank account and stole $%d" % (
             cracker.handle, victim.team.name, value,
         )
         evt_id = Notifier.broadcast_custom("Password Cracked",
             message, cracker.avatar
         )
-        self.push_broadcast_notification(evt_id)
+        event2 = (self.push_broadcast_notification, {'event_uuid':evt_id})
+        return event1, event2

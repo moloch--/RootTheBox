@@ -54,13 +54,16 @@ class MemoryDatabaseObject(object):
 
 MemoryBaseObject = declarative_base(cls=MemoryDatabaseObject)
 
+
 class Bot(MemoryBaseObject):
     ''' Bot Class '''
 
     wsock_uuid = Column(Unicode(36), nullable=False)
-    team_uuid = Column(Unicode(36), nullable=False)
-    box_uuid = Column(Unicode(36), nullable=False)
-    remote_ip = Column(Unicode(36), nullable=False)
+    team_uuid  = Column(Unicode(36), nullable=False)
+    team_name  = Column(Unicode(64), nullable=False)
+    box_uuid   = Column(Unicode(36), nullable=False)
+    box_name   = Column(Unicode(64), nullable=False)
+    remote_ip  = Column(Unicode(36), nullable=False)
 
 
 @Singleton
@@ -68,6 +71,8 @@ class BotManager(object):
     '''
     Holds refs to botnet web socket objects.
     '''
+
+    observers = []
 
     def __init__(self):
         config = ConfigManager.Instance()
@@ -96,7 +101,9 @@ class BotManager(object):
         if not self.is_duplicate(bot_wsocket):
             bot = Bot(
                 wsock_uuid=unicode(bot_wsocket.uuid),
+                team_name=unicode(bot_wsocket.team_name),
                 team_uuid=unicode(bot_wsocket.team_uuid),
+                box_name=unicode(bot_wsocket.box_name),
                 box_uuid=unicode(bot_wsocket.box_uuid),
                 remote_ip=unicode(bot_wsocket.remote_ip)
             )
@@ -124,4 +131,12 @@ class BotManager(object):
         return 0 < self.botdb.query(Bot).filter(
             and_(Bot.team_uuid == unicode(bot_wsocket.team_uuid), Bot.box_uuid == unicode(bot_wsocket.box_uuid))
         ).count()
-        
+
+    def get_state(self):
+        ''' Return json object of teams and which boxes they have bots on '''
+        state = {}
+        for bot in self.botdb.query(Bot).all():
+            if bot.team_name not in state:
+                state[bot.team_name] = []
+            state[bot.team_name].append(bot.box_name)
+        return json.dumps(state)

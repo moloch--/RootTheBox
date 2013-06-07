@@ -52,26 +52,21 @@ class ShareUploadHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Shit form validation '''
-        form = Form(
-            description="Please enter a description",
-        )
         user = self.get_current_user()
-        if form.validate(self.request.arguments):
-            if 0 == len(self.request.files.keys()):
-                self.render("share_upload/share_files.html",
-                    errors=["No file data."], shares=user.team.files
-                )
-            elif self.FSIZE < len(self.request.files['file_data'][0]['body']):
-                self.render("share_upload/share_files.html",
-                    errors=["File too large."], shares=user.team.files
-                )
-            else:
-                self.create_file(user)
-                self.redirect("/user/share/files")
-        else:
+        if 0 == len(self.request.files.keys()):
             self.render("share_upload/share_files.html",
-                errors=form.errors, shares=user.team.files
+                errors=["No file data."], shares=user.team.files
             )
+        elif self.FSIZE < len(self.request.files['file_data'][0]['body']):
+            self.render("share_upload/share_files.html",
+                errors=["File too large."], shares=user.team.files
+            )
+        else:
+            file_upload = self.create_file(user)
+            event = self.event_manager.create_team_file_share_event(user, file_upload)
+            self.new_events.append(event)
+            self.redirect("/user/share/files")
+
 
     def create_file(self, user):
         ''' Saves uploaded file '''
@@ -101,13 +96,13 @@ class ShareUploadHandler(BaseHandler):
                 file_name=unicode(file_name),
                 content=unicode(str(content[0])),
                 uuid=uuid,
-                description=unicode(self.get_argument('description')),
+                description=unicode(self.get_argument('description', 'No description.')),
                 byte_size=len(self.request.files['file_data'][0]['body']),
                 team_id=user.team.id
             )
             dbsession.add(file_upload)
             dbsession.flush()
-            self.event_manager.team_file_share(user, file_upload)
+            return file_upload
 
 
 class ShareDownloadHandler(BaseHandler):

@@ -57,7 +57,8 @@ class MarketViewHandler(BaseHandler):
                 self.render('market/view.html', user=user, errors=[message])
             else:
                 self.purchase_item(team, item)
-                self.event_manager.purchased_item(user, item)
+                event = self.event_manager.create_purchased_item_event(user, item)
+                self.new_events.append(event)
                 self.redirect('/user/market')
         else:
             self.render('market/view.html',

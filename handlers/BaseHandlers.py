@@ -42,6 +42,7 @@ class BaseHandler(RequestHandler):
 
     def initialize(self):
         self.session = None
+        self.new_events = []
         self.event_manager = self.application.settings['event_manager']
         self.config = ConfigManager.Instance()
         session_id = self.get_secure_cookie('session_id')
@@ -141,6 +142,16 @@ class BaseHandler(RequestHandler):
             "%s attempted to use OPTIONS method" % self.request.remote_ip
         )
         self.render("public/404.html")
+
+    def on_finish(self, *args, **kwargs):
+        if 0 < len(self.new_events):
+            self.__events__()
+
+    def __events__(self):
+        ''' Fire new events '''
+        for event in self.new_events:
+            assert(2 == len(event))
+            event[0](**event[1])
 
 
 class BaseWebSocketHandler(WebSocketHandler):

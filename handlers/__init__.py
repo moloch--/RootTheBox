@@ -72,7 +72,8 @@ app = Application([
                       StaticFileHandler, {'path': 'files/avatars'}),
 
                   # Bot Handlers - BotHandlers.py
-                  (r'/botnet/connect', BotHandler),
+                  (r'/botnet/connect', BotSocketHandler),
+                  (r'/botnet/monitor', BotMonitorHandler),
 
                   # ShareUploadHandlers - ShareUploadHandlers.py
                   (r'/user/shares/download(.*)', ShareDownloadHandler),

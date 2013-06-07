@@ -28,7 +28,6 @@ any authentication) with the exception of error handlers and the scoreboard
 import logging
 
 from libs.Form import Form
-from libs.SecurityDecorators import debug
 from libs.ConfigManager import ConfigManager
 from handlers.BaseHandlers import BaseHandler
 from models import dbsession, User, Team, Theme, \
@@ -156,7 +155,6 @@ class RegistrationHandler(BaseHandler):
         else:
             self.render('public/registration.html', errors=form.errors)
 
-    @debug
     def create_user(self, account, handle, passwd, rtok):
         ''' Add user to the database '''
         team = Team.by_uuid(self.get_argument('team', ''))
@@ -174,12 +172,12 @@ class RegistrationHandler(BaseHandler):
             dbsession.add(token)
         dbsession.add(user)
         dbsession.flush()
-        self.event_manager.joined_team(user)
+        event = self.event_manager.create_joined_team_event(user)
+        self.new_event.append(event)
 
 
 class AboutHandler(BaseHandler):
 
-    @debug
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render('public/about.html')
@@ -187,7 +185,6 @@ class AboutHandler(BaseHandler):
 
 class LogoutHandler(BaseHandler):
 
-    @debug
     def get(self, *args, **kwargs):
         ''' Clears cookies and session data '''
         if self.session is not None:

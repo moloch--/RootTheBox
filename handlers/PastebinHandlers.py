@@ -65,7 +65,8 @@ class CreatePasteHandler(BaseHandler):
             )
             dbsession.add(paste)
             dbsession.flush()
-            self.event_manager.paste_bin(user, paste)
+            event = self.event_manager.create_paste_bin_event(user, paste)
+            self.new_events.append(event)
         self.redirect('/user/share/pastebin')
 
 

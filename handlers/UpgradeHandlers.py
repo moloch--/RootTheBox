@@ -29,7 +29,7 @@ import logging
 
 from BaseHandlers import BaseHandler
 from models import dbsession, User, WallOfSheep, Team, Box, \
-    SourceCode, Swat
+    SourceCode, Swat, GameSettings
 from models.User import ADMIN_PERMISSION
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated, has_item, debug
@@ -193,7 +193,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             logging.info("Transfer request from %s to %s for $%d by %s" % (
                 source.name, destination.name, amount, user.handle
             ))
-            xfer = self.theft(victim_user, destination, amount)
+            xfer = self.theft(victim_user, destination, amount, preimage)
             self.write({
                 "success":
                 "Confirmed transfer to '%s' for $%d (after 15%s commission)" % (destination.name, xfer, '%',)
@@ -202,24 +202,27 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({"error": "Incorrect password for account, try again"})
         self.finish()
 
-    def theft(self, victim, destination, amount):
+    def theft(self, victim, destination, amount, preimage):
         ''' Successfully cracked a password '''
         victim.team.money -= abs(amount)
         value = int(abs(amount) * 0.85)
-        password = self.get_argument('password', '')
         destination.money += value
         dbsession.add(destination)
         dbsession.add(victim.team)
         user = self.get_current_user()
         sheep = WallOfSheep(
-            preimage=unicode(password),
+            preimage=unicode(preimage),
             cracker_id=user.id,
             victim_id=victim.id,
             value=value,
         )
         dbsession.add(sheep)
         dbsession.flush()
-        self.event_manager.cracked_password(user, victim, password, value)
+        event1, event2 = self.event_manager.create_cracked_password_events(
+            user, victim, preimage, value
+        )
+        self.new_events.append(event1)
+        self.new_events.append(event2)
         return value
 
 

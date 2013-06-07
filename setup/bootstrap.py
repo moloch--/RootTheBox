@@ -66,6 +66,7 @@ css_files = [
     (u"Simplex", u'simplex.min.css'),
     (u"Spacelab", u'spacelab.min.css'),
     (u"Superhero", u'superhero.min.css'),
+    (u"Geocities", u'geocities.min.css'),
 ]
 for css in css_files:
     theme = Theme(

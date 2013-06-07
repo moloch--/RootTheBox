@@ -117,7 +117,8 @@ class MissionsHandler(BaseHandler):
                     user.team.game_levels.append(level)
                     user.team.money -= level.buyout
                     dbsession.add(user.team)
-                    self.event_manager.unlocked_level(user, level)
+                    event = self.event_manager.create_unlocked_level_event(user, level)
+                    self.new_events.append(event)
                     self.redirect("/user/missions")
                 else:
                     self.render("missions/view.html",
@@ -175,4 +176,5 @@ class MissionsHandler(BaseHandler):
                 user.team.game_levels.append(next_level)
                 dbsession.add(user.team)
                 dbsession.flush()
-                self.event_manager.unlocked_level(user, level)
+                event = self.event_manager.create_unlocked_level_event(user, level)
+                self.new_events.append(event)
