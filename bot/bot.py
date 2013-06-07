@@ -28,6 +28,7 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
 
 import os
 import sys
+import json
 import uuid
 import array
 import socket
@@ -842,28 +843,47 @@ AUTH_FAIL = 'auth fail'
 AUTH_OKAY = 'auth ok'
 XID       = 'xid:'
 
+
+
+def display_error(ws, response):
+    sys.stderr.write(WARN + "Error: %s\n" % response['message'])
+    sys.stderr.flush()
+
+def display_status(ws, response):
+    sys.stdout.write(INFO + "%s\n" % response['message'])
+    sys.stdout.flush()
+
+def get_user(ws, response):
+    ws.send(json.dumps({
+        'opcode': 'set_user',
+        'user': ws.user,
+    }))
+    sys.stdout.write(INFO + "Authorizing ...\n")
+    sys.stdout.flush()
+
+opcodes = {
+    'error': display_error,
+    'status': display_status,
+    'get_user': get_user,
+}
+
 def on_open(ws):
-    sys.stdout.write(INFO + "Connecting to command & control ...")
+    sys.stdout.write(INFO + "Connecting, please wait ...\n")
     sys.stdout.flush()
 
 def on_message(ws, message):
-    if message == AUTH_OKAY:
-        sys.stdout.write('\r' + INFO + "Successfully connected to command & control\n")
-        sys.stdout.flush()
-    elif message == BOX_OKAY:
-        sys.stdout.write('\r' + INFO + "Sending team uuid, please wait ...")
-        sys.stdout.flush()
-        ws.send(ws.team_uuid)
-    elif message == AUTH_FAIL:
-        sys.stdout.write('\r' + WARN + " Command & control rejected connection\n")
-        sys.stdout.flush()
-        ws.close()   
-    elif message.startswith(XID):
-        message = message[len(XID):]
-        sys.stdout.write(INFO + "Recv xid: %s\n" % str(message))
-        sha = hashlib.sha256()
-        sha.update(message)
-        ws.send(sha.hexdigest())
+    ''' Parse message and call a function '''
+    try:
+        response = json.loads(message)
+        if 'opcode' not in response:
+            raise ValueError('Missing opcode')
+        elif response['opcode'] not in opcodes:
+            raise ValueError('Invalid opcode')
+        else:
+            opcodes[response['opcode']](ws, response)
+    except ValueError as error:
+        sys.stderr.write(WARN + "Error: %s\n" % error)
+        sys.stderr.flush()
 
 def on_error(ws, error):
     sys.stderr.write(WARN + "Error: %s\n" % str(error))
@@ -871,7 +891,7 @@ def on_error(ws, error):
 def on_close(ws):
     sys.stdout.write(WARN + "Disconnected from command & control\n")
 
-def main(domain, port, uuid, secure=False, verbose=False):
+def main(domain, port, user, secure=False, verbose=False):
     ''' Main() '''
     try:
         enableTrace(verbose)
@@ -883,7 +903,7 @@ def main(domain, port, uuid, secure=False, verbose=False):
             on_error = on_error,
             on_close = on_close,
         )
-        ws.team_uuid = uuid
+        ws.user = user
         ws.on_open = on_open
         ws.run_forever()
     except KeyboardInterrupt:
@@ -923,10 +943,10 @@ if __name__ == '__main__':
         default=__port__,
         dest='port',
     )
-    parser.add_argument('--uuid', '-u',
-        help='your team\'s uuid (required)',
+    parser.add_argument('--user', '-u',
+        help='your hacker name (required)',
         required=True,
-        dest='uuid',
+        dest='handle',
     )
     args = parser.parse_args()
-    main(args.domain, args.port, args.uuid, args.secure, args.verbose)
+    main(args.domain, args.port, args.handle, args.secure, args.verbose)

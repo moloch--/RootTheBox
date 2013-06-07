@@ -20,23 +20,17 @@ Created on Mar 15, 2012
 '''
 
 
+import json
 import logging
 import tornado.websocket
 
 
 from uuid import uuid4
 from libs.BotManager import BotManager
-from models import Box, Team
+from models import Box, Team, User
+from models.User import ADMIN_PERMISSION
 from BaseHandlers import BaseHandler
 from libs.SecurityDecorators import authenticated
-
-
-### Constants
-BOX_OKAY  = 'box ok'
-TEAM_OKAY = 'team ok'
-AUTH_FAIL = 'auth fail'
-AUTH_OKAY = 'auth ok'
-XID       = 'xid:'
 
 
 class BotSocketHandler(tornado.websocket.WebSocketHandler):
@@ -44,11 +38,15 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
 
     def initialize(self):
         self.bot_manager = BotManager.Instance()
-        self._team_uuid = None
+        self.team_name = None
+        self.team_uuid = None
         self.box_uuid = None
         self.remote_ip = None
         self.uuid = unicode(uuid4())
-
+        self.opcodes = {
+            'set_user': self.set_user,
+        }
+    
     def open(self, *args):
         ''' When we receive a new websocket connect '''
         box = Box.by_ip_address(self.request.remote_ip)
@@ -56,15 +54,29 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.box_uuid = box.uuid
             self.box_name = box.name
             self.remote_ip = self.request.remote_ip
-            self.write_message(BOX_OKAY)
+            self.write_message({
+                'opcode': 'get_user',
+            })
         else:
             logging.debug("Rejected bot from '%s' (not a box)" % self.request.remote_ip)
-            self.write_message(AUTH_FAIL)
+            self.write_message({
+                'opcode': 'error',
+                'message': 'Invalid IP address.'
+            })
             self.close()
 
     def on_message(self, message):
-        logging.debug("Recv team uuid: %s" % message)
-        self.team_uuid = message
+        ''' Parse request '''
+        try:
+            req = json.loads(message)
+            if 'opcode' not in req:
+                raise ValueError('Missing opcode')
+            elif req['opcode'] not in self.opcodes:
+                raise ValueError('Invalid opcode in request: %s' % req['opcode'])
+            else:
+                self.opcodes[req['opcode']](req)
+        except ValueError as error:
+            logging.warn("Invalid json request from bot: %s" % str(error))
 
     def on_close(self):
         ''' Close connection to remote host '''
@@ -72,35 +84,58 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.bot_manager.remove_bot(self)
         logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
 
-    @property
-    def team_uuid(self):
-        return self._team_uuid
-
-    @team_uuid.setter
-    def team_uuid(self, team_uuid):
-        if self._team_uuid is not None:
-            logging.warn("Botnet protocol breach; set team uuid twice")
+    def set_team(self, team):
+        ''' Set team based on user '''
+        if team is None:
+            logging.debug("Auth fail, invalid team uuid")
+            self.write_message({
+                'opcode': 'error',
+                'message': 'Team does not exist'
+            })
             self.close()
         else:
-            team = Team.by_uuid(team_uuid)
-            if team is None:
-                logging.debug("Auth fail, invalid team uuid")
-                self.write_message(AUTH_FAIL)
-                self.close()
-            else:
-                self._team_uuid = team.uuid
-                self.team_name = team.name
-                logging.debug("'%s' owns bot: %s" % (team.name, self.uuid))
-                self.init_success()
+            self.team_uuid = team.uuid
+            self.team_name = team.name
+            logging.debug("'%s' owns bot: %s" % (team.name, self.uuid))
+            self.init_success()
 
     def init_success(self):
         if self.bot_manager.add_bot(self):
             logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
-            self.write_message(AUTH_OKAY)
+            self.write_message({
+                'opcode': 'status',
+                'message': 'Accepted new bot connection'
+            })
         else:
-            logging.debug("Auth fail; duplicate bot")
-            self.write_message(AUTH_FAIL)
+            logging.debug("Auth failed, duplicate bot on %s" % self.remote_ip)
+            self.write_message({
+                'opcode': 'error',
+                'message': 'Duplicate bot'
+            })
             self.close()
+
+    def set_user(self, req):
+        ''' Get user details '''
+        if self.team_uuid is not None:
+            self.write_message({
+                'opcode': 'error',
+                'message': 'User is already set'
+            })
+            self.close()
+        else:
+            user = User.by_handle(req['user'])
+            if user is None or user.has_permission(ADMIN_PERMISSION):
+                self.write_message({
+                    'opcode': 'error',
+                    'message': 'Hacker does not exist'
+                })
+                self.close()
+            else:
+                self.write_message({
+                    'opcode': 'status',
+                    'message': 'Found user "%s"' % user.handle,
+                })
+                self.set_team(user.team)
 
 
 class BotMonitorHandler(BaseHandler):
