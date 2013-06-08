@@ -196,7 +196,8 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
             self.write_message({
                 'opcode': 'auth_success',
             })
-            self.update()
+            boxes = self.bot_manager.get_boxes(self.team_name)
+            self.update(boxes)
         else:
             logging.debug("Monitor socket provided invalid password for user")
             self.write_message({
@@ -205,14 +206,6 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
             })
             self.close()
 
-    def update(self):
+    def update(self, boxes):
         ''' Update state information '''
-        logging.debug("Sending update to %s" % self.team_name)
-        if self.team_name is not None:
-            bots = self.bot_manager.by_team(self.team_name)
-            boxes = []
-            for bot in bots:
-                boxes.append(
-                    (bot.box_name, bot.remote_ip,)
-                )
-            self.write_message({'opcode': 'update', 'boxes': boxes})
+        self.write_message({'opcode': 'update', 'boxes': boxes})

@@ -64,3 +64,5 @@ def score_bots():
                     'opcode': 'status',
                     'message': 'Collected $%d reward' % game_settings.bot_reward
                 })
+            bot_manager.add_rewards(team.name, game_settings.bot_reward)
+            bot_manager.notify_monitors(team.name)

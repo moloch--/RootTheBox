@@ -64,6 +64,7 @@ class Bot(MemoryBaseObject):
     box_uuid   = Column(Unicode(36), nullable=False)
     box_name   = Column(Unicode(64), nullable=False)
     remote_ip  = Column(Unicode(36), nullable=False)
+    total_reward = Column(Integer, default=0, nullable=False)
 
 
 @Singleton
@@ -71,8 +72,6 @@ class BotManager(object):
     '''
     Holds refs to botnet web socket objects.
     '''
-
-    observers = []
 
     def __init__(self):
         config = ConfigManager.Instance()
@@ -150,6 +149,25 @@ class BotManager(object):
     def notify_monitors(self, team_name):
         ''' Update team monitors '''
         if team_name in self.monitors and 0 < len(self.monitors[team_name]):
+            logging.debug("Sending update to %s" % team_name)
+            boxes = self.get_boxes(team_name)
             for monitor in self.monitors[team_name]:
-                monitor.update()
+                monitor.update(boxes)
 
+    def get_boxes(self, team):
+        ''' Get info on boxes for a team '''
+        bots = self.botdb.query(Bot).filter_by(team_name=unicode(team)).all()
+        boxes = []
+        for bot in bots:
+            boxes.append(
+                [bot.remote_ip, bot.box_name, bot.total_reward]
+            )
+        return boxes
+
+    def add_rewards(self, team, reward):
+        ''' Add rewards to bot records '''
+        bots = self.botdb.query(Bot).filter_by(team_name=unicode(team)).all()
+        for bot in bots:
+            bot.total_reward += reward
+            self.botdb.add(bot)
+            self.botdb.flush()

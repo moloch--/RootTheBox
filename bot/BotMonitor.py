@@ -908,13 +908,8 @@ class BotMonitor(object):
 
     def __init__(self, connection_url):
         self.url = connection_url
-        self.bots = []
         self.agent_name = None
         self.password = None
-        self.team_port = None
-        self.team_members = []
-        self.load_file = None
-        self.load_url = None
         self.beep = False
 
     def start(self):
@@ -942,7 +937,8 @@ class BotMonitor(object):
         ''' Loads all required data '''
         self.load_message = " Loading, please wait ... "
         self.loading_bar = curses.newwin(3, len(self.load_message) + 2,
-                                         (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2))
+            (self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2
+        ))
         self.loading_bar.border(0)
         self.loading_bar.addstr(1, 1, self.load_message, curses.A_BOLD)
         self.loading_bar.refresh()
@@ -956,12 +952,13 @@ class BotMonitor(object):
         self.screen.nodelay(1)
         self.__title__()
         self.__grid__()
+        self.__positions__()
         self.screen.refresh()
         select = self.screen.getch()
 
     def __title__(self):
         ''' Create title and footer '''
-        title = " Root the Box: Botnet Command and Control "
+        title = " Root the Box: Botnet Monitor "
         version = "[ v0.1 ]"
         agent = "[ " + self.agent_name + " ]"
         self.screen.addstr(
@@ -984,21 +981,31 @@ class BotMonitor(object):
                           curses.ACS_VLINE, self.max_y - 3)
         self.screen.addstr(2, pos_x + 1, self.name_title)
         pos_x += len(self.name_title)
-        self.flag_title = "   Bot Status   "
-        self.screen.vline(2, pos_x + len(self.flag_title) + 2,
+        self.status_title = "   Bot Status   "
+        self.screen.vline(2, pos_x + len(self.status_title) + 2,
                           curses.ACS_VLINE, self.max_y - 3)
-        self.screen.addstr(2, pos_x + 2, self.flag_title)
-        pos_x += len(self.flag_title)
-        self.ping_title = "  Ping  "
-        self.screen.addstr(2, pos_x + 3, self.ping_title)
-        self.__positions__()
+        self.screen.addstr(2, pos_x + 2, self.status_title)
+        pos_x += len(self.status_title)
+        self.reward_title = "  Reward  "
+        self.screen.addstr(2, pos_x + 3, self.reward_title)
 
     def __positions__(self):
         ''' Sets default x position for each col '''
         self.start_ip_pos = 2
         self.start_name_pos = self.start_ip_pos + len(self.ip_title) + 3
-        self.start_flag_pos = self.start_name_pos + len(self.name_title) + 2
-        self.start_ping_pos = self.start_flag_pos + len(self.flag_title) + 1
+        self.start_status_pos = self.start_name_pos + len(self.name_title) + 2
+        self.start_reward_pos = self.start_status_pos + len(self.status_title) + 1
+
+    def update_grid(self, boxes):
+        ''' Redraw the grid with updated box information '''
+        self.__interface__()
+        start_row = 4
+        for index, box in enumerate(boxes):
+            self.screen.addstr(start_row + index, self.start_ip_pos, box[0])
+            self.screen.addstr(start_row + index, self.start_name_pos, box[1])
+            self.screen.addstr(start_row + index, self.start_status_pos, "Online")
+            self.screen.addstr(start_row + index, self.start_reward_pos, "$%d" % box[2])
+        self.screen.refresh()
 
     def __colors__(self):
         ''' Setup all color pairs '''
@@ -1118,9 +1125,6 @@ class BotMonitor(object):
         ws.password = self.password
         ws.on_open = on_open
         ws.run_forever()
-
-    def update_grid(self, boxes):
-        logging.debug("Update grid called: %s" % str(boxes))
 
 
 ###################
