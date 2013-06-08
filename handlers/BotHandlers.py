@@ -144,8 +144,75 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.close()
 
 
-class BotMonitorHandler(BaseHandler):
+class BotMonitorHandler(tornado.websocket.WebSocketHandler):
+    ''' Handles BotMonitor websocket connections '''
 
-    @authenticated
-    def get(self, *args, **kwargs):
-        self.render('bots/monitor.html')
+    def initialize(self):
+        self.bot_manager = BotManager.Instance()
+        self.team_name = None
+        self.uuid = unicode(uuid4())
+        self.opcodes = {
+            'auth': self.auth,
+        }
+
+    def open(self):
+        logging.debug("Opened new monitor socket to %s" % self.request.remote_ip)
+
+    def on_message(self, message):
+        ''' Parse request '''
+        try:
+            req = json.loads(message)
+            if 'opcode' not in req:
+                raise ValueError('Missing opcode')
+            elif req['opcode'] not in self.opcodes:
+                raise ValueError('Invalid opcode in request: %s' % req['opcode'])
+            else:
+                self.opcodes[req['opcode']](req)
+        except ValueError as error:
+            logging.warn("Invalid json request from bot: %s" % str(error))
+
+    def on_close(self):
+        ''' Close connection to remote host '''
+        self.bot_manager.remove_monitor(self)
+        logging.debug("Closing connection to bot monitor at %s" % self.request.remote_ip)
+
+    def auth(self, req):
+        ''' Authenticate user '''
+        try:
+            user = User.by_account(req['account'])
+        except:
+            user = None
+        if user is None or user.has_permission(ADMIN_PERMISSION):
+            logging.debug("Monitor socket user does not exist, or is admin.")
+            self.write_message({
+                'opcode': 'auth_failure',
+                'message': 'Authentication failure',
+            })
+            self.close()
+        elif user.validate_password(req.get('password', '')):
+            logging.debug("Monitor socket successfully authenticated as %s" % user.account)
+            self.team_name = ''.join(user.team.name)
+            self.bot_manager.add_monitor(self)
+            self.write_message({
+                'opcode': 'auth_success',
+            })
+            self.update()
+        else:
+            logging.debug("Monitor socket provided invalid password for user")
+            self.write_message({
+                'opcode': 'auth_failure',
+                'message': 'Authentication failure',
+            })
+            self.close()
+
+    def update(self):
+        ''' Update state information '''
+        logging.debug("Sending update to %s" % self.team_name)
+        if self.team_name is not None:
+            bots = self.bot_manager.by_team(self.team_name)
+            boxes = []
+            for bot in bots:
+                boxes.append(
+                    (bot.box_name, bot.remote_ip,)
+                )
+            self.write_message({'opcode': 'update', 'boxes': boxes})

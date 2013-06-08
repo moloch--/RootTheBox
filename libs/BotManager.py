@@ -77,6 +77,7 @@ class BotManager(object):
     def __init__(self):
         config = ConfigManager.Instance()
         self.botnet = {}  # Holds refs to wsockets
+        self.monitors = {}
         self.sqlite_engine = create_engine(u'sqlite://')
         setattr(self.sqlite_engine, 'echo', config.bot_sql)
         Session = sessionmaker(bind=self.sqlite_engine, autocommit=True)
@@ -110,6 +111,7 @@ class BotManager(object):
             self.botdb.add(bot)
             self.botdb.flush()
             self.botnet[bot_wsocket.uuid] = bot_wsocket
+            self.notify_monitors(bot.team_name)
             return True
         else:
             return False
@@ -118,9 +120,11 @@ class BotManager(object):
         bot = self.botdb.query(Bot).filter_by(wsock_uuid=unicode(bot_wsocket.uuid)).first()
         if bot is not None:
             logging.debug("Removing bot '%s' at %s" % (bot.team_uuid, bot.remote_ip))
+            team = bot.team_name
             self.botnet.pop(bot_wsocket.uuid, None)
             self.botdb.delete(bot)
             self.botdb.flush()
+            self.notify_monitors(team)
         else:
             logging.warn("Failed to remove bot '%s' does not exist in manager" % bot_wsocket.uuid)
 
@@ -132,11 +136,20 @@ class BotManager(object):
             and_(Bot.team_uuid == unicode(bot_wsocket.team_uuid), Bot.box_uuid == unicode(bot_wsocket.box_uuid))
         ).count()
 
-    def get_state(self):
-        ''' Return json object of teams and which boxes they have bots on '''
-        state = {}
-        for bot in self.botdb.query(Bot).all():
-            if bot.team_name not in state:
-                state[bot.team_name] = []
-            state[bot.team_name].append(bot.box_name)
-        return json.dumps(state)
+    def add_monitor(self, monitor_wsocket):
+        ''' Add new monitor socket '''
+        if monitor_wsocket.team_name not in self.monitors:
+            self.monitors[monitor_wsocket.team_name] = []
+        self.monitors[monitor_wsocket.team_name].append(monitor_wsocket)
+
+    def remove_monitor(self, monitor_wsocket):
+        ''' Remove a monitor socket '''
+        if monitor_wsocket.team_name in self.monitors and monitor_wsocket in self.monitors[monitor_wsocket.team_name]:
+            self.monitors[monitor_wsocket.team_name].remove(monitor_wsocket)
+
+    def notify_monitors(self, team_name):
+        ''' Update team monitors '''
+        if team_name in self.monitors and 0 < len(self.monitors[team_name]):
+            for monitor in self.monitors[team_name]:
+                monitor.update()
+
