@@ -173,7 +173,7 @@ class RegistrationHandler(BaseHandler):
         dbsession.add(user)
         dbsession.flush()
         event = self.event_manager.create_joined_team_event(user)
-        self.new_event.append(event)
+        self.new_events.append(event)
 
 
 class AboutHandler(BaseHandler):
