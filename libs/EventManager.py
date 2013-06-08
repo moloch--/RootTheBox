@@ -130,14 +130,14 @@ class EventManager(object):
         evt_id = Notifier.broadcast_success("Flag Capture", 
             "%s has captured '%s'." % (user.team.name, flag.name,)
         )
-        return (push_broadcast_notification, {'event_uuid': evt_id})
+        return (self.push_broadcast_notification, {'event_uuid': evt_id})
 
     def create_unlocked_level_event(self, user, level):
         ''' Callback for when a team unlocks a new level '''
         self.refresh_scoreboard()
         message = "%s unlocked level #%d." % (user.team.name, level.number,)
         evt_id = Notifier.broadcast_success("Level Unlocked", message)
-        return (push_broadcast_notification, {'event_uuid': evt_id})
+        return (self.push_broadcast_notification, {'event_uuid': evt_id})
 
     def create_purchased_item_event(self, user, item):
         ''' Callback when a team purchases an item '''

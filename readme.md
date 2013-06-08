@@ -3,12 +3,12 @@
 A Game of Hackers
 -------------------
 Root the Box is a real-time scoring engine for a computer wargames where hackers can practice and learn. 
-The application can be easily modified for any hacker CTF game.  More details at http://rootthebox.com/
+The application can be easily modified for any hacker CTF game.  Check out the [Root the Box website](http://rootthebox.com/)
 
 Features
 -------------------
-* Based on the TornadoWeb framework
 * Distributed under the Apache License, Version 2.0
+* Team based [botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
 * Real-time scoreboard graphs using web sockets
 * Real-time status updates using web sockets
 * Team based file/text sharing
@@ -20,7 +20,7 @@ Features
 
 Setup
 -------------------
-Detailed setup instructions https://github.com/moloch--/RootTheBox/wiki/Installation
+See [detailed setup instructions](https://github.com/moloch--/RootTheBox/wiki/Installation)
 
 Setup TL;DR
 -------------------

@@ -90,7 +90,8 @@ class PasswordSecurityHandler(BaseHandler):
         using the the new algorithm
         '''
         user = self.get_current_user()
-        user.algorithm = user.next_algorithm()
+        next_algorithm = user.next_algorithm()
+        user.algorithm = next_algorithm[2]  # String
         dbsession.add(user)
         dbsession.flush()
         user.password = new_password
