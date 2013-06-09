@@ -86,6 +86,9 @@ class ConfigManager(object):
         self.bot_reward_interval = int(60000 * self.config.getint(
             "Game", 'bot_reward_interval'
         ))
+        self.history_snapshot_interval = int(60000 * self.config.getint(
+            "Game", 'history_snapshot_interval'
+        ))
 
     def __sessions__(self):
         ''' Session settings '''

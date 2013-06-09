@@ -64,149 +64,146 @@ if config.cache_files:
 else:
     from tornado.web import StaticFileHandler  # lint:ok
 
-app = Application([
-                  # Static Handlers - StaticFileHandler.py
-                  (r'/static/(.*)',
-                      StaticFileHandler, {'path': 'static'}),
-                  (r'/avatars/(.*)',
-                      StaticFileHandler, {'path': 'files/avatars'}),
+app = Application(
+    [
+        # Static Handlers - StaticFileHandler.py
+        (r'/static/(.*)', 
+            StaticFileHandler, {'path': 'static/'}),
+        (r'/avatars/(.*)', 
+            StaticFileHandler, {'path': 'files/avatars/'}),
 
-                  # Bot Handlers - BotHandlers.py
-                  (r'/botnet/connect', BotSocketHandler),
-                  (r'/botnet/monitor', BotMonitorHandler),
+        # Bot Handlers - BotHandlers.py
+        (r'/botnet/connect', BotSocketHandler),
+        (r'/botnet/monitor', BotMonitorHandler),
 
-                  # ShareUploadHandlers - ShareUploadHandlers.py
-                  (r'/user/shares/download(.*)', ShareDownloadHandler),
-                  (r'/user/share/files', ShareUploadHandler),
+        # ShareUploadHandlers - ShareUploadHandlers.py
+        (r'/user/shares/download(.*)', ShareDownloadHandler),
+        (r'/user/share/files', ShareUploadHandler),
 
-                  # PasteBin - PastebinHandlers.py
-                  (r'/user/share/pastebin', PasteHandler),
-                  (r'/user/share/pastebin/create', CreatePasteHandler),
-                  (r'/user/share/pastebin/display', DisplayPasteHandler),
-                  (r'/user/share/pastebin/delete', DeletePasteHandler),
+        # PasteBin - PastebinHandlers.py
+        (r'/user/share/pastebin', PasteHandler),
+        (r'/user/share/pastebin/create', CreatePasteHandler),
+        (r'/user/share/pastebin/display', DisplayPasteHandler),
+        (r'/user/share/pastebin/delete', DeletePasteHandler),
 
-                  # Market handlers - MarketHandlers.py
-                  (r'/user/market', MarketViewHandler),
-                  (r'/user/market/details', MarketDetailsHandler),
+        # Market handlers - MarketHandlers.py
+        (r'/user/market', MarketViewHandler),
+        (r'/user/market/details', MarketDetailsHandler),
 
-                  # Upgrade handlers - UpgradeHandlers.py
-                  (r'/password_security', PasswordSecurityHandler),
-                  (r'/federal_reserve', FederalReserveHandler),
-                  (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
-                  (r'/source_code_market', SourceCodeMarketHandler),
-                  (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
-                  (r'/swat', SwatHandler),
+        # Upgrade handlers - UpgradeHandlers.py
+        (r'/password_security', PasswordSecurityHandler),
+        (r'/federal_reserve', FederalReserveHandler),
+        (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
+        (r'/source_code_market', SourceCodeMarketHandler),
+        (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
+        (r'/swat', SwatHandler),
 
-                  # Mission handlers - MissionHandlers.py
-                  (r'/user/missions', MissionsHandler),
-                  (r'/user/missions/(.*)', MissionsHandler),
+        # Mission handlers - MissionHandlers.py
+        (r'/user/missions', MissionsHandler),
+        (r'/user/missions/(.*)', MissionsHandler),
 
-                  # User handlers - UserHandlers.py
-                  (r'/user', HomeHandler),
-                  (r'/user/settings(.*)', SettingsHandler),
+        # User handlers - UserHandlers.py
+        (r'/user', HomeHandler),
+        (r'/user/settings(.*)', SettingsHandler),
 
-                  # Admin Handlers - AdminHandlers.py
-                  (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
-                  (r'/admin/create/(.*)', AdminCreateHandler),
-                  (r'/admin/edit/(.*)', AdminEditHandler),
-                  (r'/admin/view/(.*)', AdminViewHandler),
-                  (r'/admin/delete/(.*)', AdminDeleteHandler),
-                  (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
-                  (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
-                  (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
-                  (r'/admin/lock', AdminLockHandler),
+        # Admin Handlers - AdminHandlers.py
+        (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
+        (r'/admin/create/(.*)', AdminCreateHandler),
+        (r'/admin/edit/(.*)', AdminEditHandler),
+        (r'/admin/view/(.*)', AdminViewHandler),
+        (r'/admin/delete/(.*)', AdminDeleteHandler),
+        (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
+        (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
+        (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
+        (r'/admin/lock', AdminLockHandler),
 
-                  # Notificaiton handlers - NotificationHandlers.py
-                  (r'/notifications/all', AllNotificationsHandler),
-                  (r'/notifications/wsocket/updates', NotifySocketHandler),
+        # Notificaiton handlers - NotificationHandlers.py
+        (r'/notifications/all', AllNotificationsHandler),
+        (r'/notifications/wsocket/updates', NotifySocketHandler),
 
-                  # Scoreboard Handlers - ScoreboardHandlers.py
-                  (r'/scoreboard', ScoreboardHandler),
-                  (r'/scoreboard/history/(.*)', ScoreboardHistoryHandler),
-                  (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
-                  (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
-                  (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
-                  (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
+        # Scoreboard Handlers - ScoreboardHandlers.py
+        (r'/scoreboard', ScoreboardHandler),
+        (r'/scoreboard/history/(.*)', ScoreboardHistoryHandler),
+        (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
+        (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
+        (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
+        (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
 
-                  # Public handlers - PublicHandlers.py
-                  (r'/login', LoginHandler),
-                  (r'/registration', RegistrationHandler),
-                  (r'/about', AboutHandler),
-                  (r'/logout', LogoutHandler),
-                  (r'/', HomePageHandler),
+        # Public handlers - PublicHandlers.py
+        (r'/login', LoginHandler),
+        (r'/registration', RegistrationHandler),
+        (r'/about', AboutHandler),
+        (r'/logout', LogoutHandler),
+        (r'/', HomePageHandler),
 
-                  # Error handlers - ErrorHandlers.py
-                  (r'/403', UnauthorizedHandler),
-                  (r'/(.*).php', NoobHandler),
-                  (r'/admin', NoobHandler),
-                  (r'/(.*)phpmyadmin(.*)', NoobHandler),
-                  (r'/administrator', NoobHandler),
-                  (r'/(.*)', NotFoundHandler)
-                  ],
+        # Error handlers - ErrorHandlers.py
+        (r'/403', UnauthorizedHandler),
+        (r'/(.*).php', NoobHandler),
+        (r'/admin', NoobHandler),
+        (r'/(.*)phpmyadmin(.*)', NoobHandler),
+        (r'/administrator', NoobHandler),
+        (r'/(.*)', NotFoundHandler)
+    ],
 
-                  # Randomly generated secret key
-                  cookie_secret=b64encode(urandom(64)),
+    # Randomly generated secret key
+    cookie_secret=b64encode(urandom(64)),
 
-                  # Ip addresses that access the admin interface
-                  admin_ips=config.admin_ips,
+    # Ip addresses that access the admin interface
+    admin_ips=config.admin_ips,
 
-                  # Template directory
-                  template_path='templates',
+    # Template directory
+    template_path='templates/',
 
-                  # Request that does not pass @authorized will be
-                  # redirected here
-                  forbidden_url='/403',
+    # Request that does not pass @authorized will be
+    # redirected here
+    forbidden_url='/403',
 
-                  # Requests that does not pass @authenticated  will be
-                  # redirected here
-                  login_url='/login',
+    # Requests that does not pass @authenticated  will be
+    # redirected here
+    login_url='/login',
 
-                  # UI Modules
-                  ui_modules={
-                      "Menu": Menu,
-                      "CssTheme": CssTheme,
-                      "Recaptcha": Recaptcha,
-                  },
+    # UI Modules
+    ui_modules={
+        "Menu": Menu,
+        "CssTheme": CssTheme,
+        "Recaptcha": Recaptcha,
+    },
 
-                  # Enable XSRF protected forms; not optional
-                  xsrf_cookies=True,
+    # Enable XSRF protected forms; not optional
+    xsrf_cookies=True,
 
-                  # Recaptcha Settings
-                  recaptcha_enable=config.recaptcha_enable,
-                  recaptcha_private_key=config.recaptcha_private_key,
+    # Recaptcha Settings
+    recaptcha_enable=config.recaptcha_enable,
+    recaptcha_private_key=config.recaptcha_private_key,
 
-                  # WebSocket Host IP Address
-                  domain=config.domain,
-                  port=config.listen_port,
+    # WebSocket Host IP Address
+    domain=config.domain,
+    port=config.listen_port,
 
-                  # Special file directories
-                  avatar_dir=path.abspath('files/avatars/'),
-                  shares_dir=path.abspath('files/shares/'),
-                  source_code_market_dir=path.abspath('files/source_code_market'),
+    # Special file directories
+    avatar_dir=path.abspath('files/avatars/'),
+    shares_dir=path.abspath('files/shares/'),
+    source_code_market_dir=path.abspath('files/source_code_market/'),
 
-                  # Event manager
-                  event_manager=EventManager.Instance(),
+    # Event manager
+    event_manager=EventManager.Instance(),
 
-                  # Debug mode
-                  debug=config.debug,
+    # Debug mode
+    debug=config.debug,
 
-                  # Application version
-                  game_name=config.game_name,
-                  version='0.3.0'
-                  )
+    # Application version
+    game_name=config.game_name,
+    version='0.3.0',
+)
 
 
 # Main entry point
 def start_server():
     ''' Main entry point for the application '''
-    sockets = netutil.bind_sockets(config.listen_port)
     server = HTTPServer(app)
+    sockets = netutil.bind_sockets(config.listen_port)
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
-    scoring = PeriodicCallback(
-        score_bots, config.bot_reward_interval, io_loop=io_loop
-    )
-    scoring.start()
     try:
         sys.stdout.write("\r" + INFO + "The game has begun, good hunting!\n")
         if config.debug:
@@ -214,19 +211,22 @@ def start_server():
         sys.stdout.flush()
         game_history = GameHistory.Instance()
         history_callback = PeriodicCallback(
-            # This must be set to one minute
-            game_history.take_snapshot, 60000, io_loop=io_loop
+            game_history.take_snapshot, config.history_snapshot_interval, io_loop=io_loop
+        )
+        scoring = PeriodicCallback(
+            score_bots, config.bot_reward_interval, io_loop=io_loop
         )
         history_callback.start()
+        scoring.start()
         io_loop.start()
     except KeyboardInterrupt:
-        print('\r' + WARN + 'Shutdown Everything!')
+        sys.stdout.write('\r' + WARN + 'Shutdown Everything!\n')
     except:
       logging.exception("Main i/o loop threw exception")
     finally:
         io_loop.stop()
         if config.debug and raw_input(PROMPT + "Flush Memcache? [Y/n]: ").lower() == 'y':
-            print(INFO + 'Flushing cache ...'),
+            sys.stdout.write(INFO + 'Flushing cache ...'),
             FileCache.flush()
-            print('OK')
+            sys.stdout.write('OK\n')
         _exit(0)

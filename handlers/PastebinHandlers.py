@@ -36,7 +36,7 @@ class PasteHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        ''' Reners the main page for PasteBin '''
+        ''' Renders the main page for PasteBin '''
         self.render('pastebin/view.html', user=self.get_current_user())
 
 
