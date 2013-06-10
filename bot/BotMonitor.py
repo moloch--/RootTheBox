@@ -813,6 +813,8 @@ class WebSocketApp(object):
                 if data is None:
                     break
                 self._run_with_no_err(self.on_message, data)
+        except KeyboardInterrupt:
+            pass  # Just close and exit
         except Exception, e:
             self._run_with_no_err(self.on_error, e)
         finally:
@@ -857,10 +859,13 @@ def update(ws, message):
 
 def auth_failure(ws, message):
     logging.info("Authentication failure")
-    ws.monitor.stop('auth failure')
+    ws.monitor.auth_failure()
 
 def auth_success(ws, message):
     logging.info("Successfully authenticated")
+    thread = threading.Thread(target=ws.monitor.progress)
+    thread.start()
+    ws.monitor.progress_thread = thread
     ws.monitor.__interface__()
 
 OPCODES = {}
@@ -881,6 +886,7 @@ def on_open(ws):
         'password': ws.password
     })
     ws.send(auth_msg)
+    ws.monitor.stop_thread = False
 
 def on_message(ws, message):
     ''' Parse message and call a function '''
@@ -904,6 +910,9 @@ def on_error(ws, error):
 def on_close(ws):
     ''' Websocket closed '''
     logging.debug("[WebSocket] Closing connection.")
+    ws.monitor.stop_thread = True
+    if ws.monitor.progress_thread is not None:
+        ws.monitor.progress_thread.join()
     ws.monitor.stop('Connection lost')
 
 
@@ -917,8 +926,8 @@ class BotMonitor(object):
         self.url = connection_url
         self.agent_name = None
         self.password = None
-        self.beep = False
         self.total_income = 0
+        self.progress_thread = None
 
     def start(self):
         ''' Initializes the screen '''
@@ -937,8 +946,22 @@ class BotMonitor(object):
     def stop(self, message=None):
         ''' Gracefully exits the program '''
         logging.debug("Stopping curses ui: %s" % message)
+        self.__clear__()
         curses.endwin()
         os._exit(0)
+
+    def __connect__(self):
+        ''' Connect and authenticate with scoring engine '''
+        ws = WebSocketApp(self.url,
+            on_message = on_message,
+            on_error = on_error,
+            on_close = on_close,
+        )
+        ws.monitor = self
+        ws.agent_name = self.agent_name
+        ws.password = self.password
+        ws.on_open = on_open
+        ws.run_forever()
 
     def __load__(self):
         ''' Loads all required data '''
@@ -961,33 +984,30 @@ class BotMonitor(object):
         self.__grid__()
         self.__positions__()
         self.screen.refresh()
-        select = self.screen.getch()
 
     def __title__(self):
         ''' Create title and footer '''
         title = " Root the Box: Botnet Monitor "
-        version = "[ v" + __version__ + " ]"
-        agent = "[ " + self.agent_name + " ]"
         self.screen.addstr(
-            0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD)
+            0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD
+        )
+        display_time = "[ %s ]" % current_time()
         self.screen.addstr(
-            self.max_y - 1, (self.max_x - len(version)) - 3, version)
-        self.screen.addstr(self.max_y - 1, 3, agent)
+            self.max_y - 1, (self.max_x - len(display_time)) - 3, display_time
+        )
+        self.screen.addstr(self.max_y - 1, 3, "[---]")
 
     def __grid__(self):
         ''' Draws the grid layout '''
-        pos_x = 3
-        pos_y = 3
+        pos_x, pos_y = 3, 3
         self.screen.hline(2, 1, curses.ACS_HLINE, self.max_x - 2)
         self.screen.hline(4, 1, curses.ACS_HLINE, self.max_x - 2)
-        
         # IP Address
         self.ip_title = "    IP  Address    "
         self.screen.addstr(pos_y, 2, self.ip_title)
         self.screen.vline(
             pos_y, pos_x + len(self.ip_title), curses.ACS_VLINE, self.max_y - 4
         )
-
         # Box Name
         pos_x += len(self.ip_title)
         self.name_title = "          Box  Name          "
@@ -995,7 +1015,6 @@ class BotMonitor(object):
         self.screen.vline(
             pos_y, pos_x + len(self.name_title) + 1, curses.ACS_VLINE, self.max_y - 4
         )
-
         # Bot Income
         pos_x += len(self.name_title)
         self.income_title = "    Bot  Income    "
@@ -1045,6 +1064,7 @@ class BotMonitor(object):
     def __clear__(self):
         ''' Clears the screen '''
         self.screen.clear()
+        self.screen.refresh()
 
     def __credentials__(self):
         ''' Get display name from user '''
@@ -1111,7 +1131,7 @@ class BotMonitor(object):
         self.screen.refresh()
         # (5) Initializing memory address
         memory = " > Initializing memory: "
-        for index in range(0, 2 ** 32, 2 ** 20):
+        for index in xrange(0, 2 ** 32, 2 ** 20):
             time.sleep(0.02)
             self.screen.addstr(5, 2, memory + str("0x%08X" % index))
             self.screen.refresh()
@@ -1128,19 +1148,52 @@ class BotMonitor(object):
             if self.stop_thread:
                 return
 
-    def __connect__(self):
-        ''' Connect and authenticate with scoring engine '''
-        ws = WebSocketApp(self.url,
-            on_message = on_message,
-            on_error = on_error,
-            on_close = on_close,
-        )
-        ws.monitor = self
-        ws.agent_name = self.agent_name
-        ws.password = self.password
-        ws.on_open = on_open
-        ws.run_forever()
+    def progress(self):
+        ''' Progress animation '''
+        logging.info("Starting progress thread ...")
+        index = 0
+        progress_bar = ["=--", "-=-", "--=", "-=-",]
+        while not self.stop_thread:
+            index += 1
+            progress_string = "[%s]" % (
+                progress_bar[index % len(progress_bar)]
+            )
+            self.screen.addstr(self.max_y - 1, 3, progress_string)
+            display_time = "[ %s ]" % current_time()
+            self.screen.addstr(
+                self.max_y - 1, (self.max_x - len(display_time)) - 3, display_time
+            )
+            self.screen.refresh()
+            time.sleep(0.2)
 
+    def auth_failure(self):
+        ''' Display authentication failure message '''
+        logging.info("Displaying auth failure message")
+        self.__clear__()
+        self.screen.refresh()
+        prompt = " *** ACCESS DENIED *** "
+        access_denied = curses.newwin(3, len(prompt) + 2, 
+            (self.max_y / 2) - 1, ((self.max_x - len(prompt)) / 2
+        ))
+        RED = 1
+        curses.init_pair(RED, curses.COLOR_RED, -1)
+        access_denied.addstr(
+            1, 1, prompt, curses.A_BOLD|curses.color_pair(RED)
+        )
+        access_denied.refresh()
+        time.sleep(0.75)
+        for index in range(0, 5):
+            access_denied.addstr(
+                1, 1, " " * len(prompt),
+            )
+            access_denied.refresh()
+            time.sleep(0.25)
+            access_denied.addstr(
+                1, 1, prompt, curses.A_BOLD|curses.color_pair(RED)
+            )
+            access_denied.refresh()
+            time.sleep(0.75)
+        self.stop()
 
 ###################
 # > Main Entry
@@ -1153,7 +1206,12 @@ def main(domain, port, secure):
         url = "wss://%s:%s%s" % (domain, port, __path__)
     logging.info("Connecting to %s" % url)
     bot_monitor = BotMonitor(url)
-    bot_monitor.start()
+    try:
+        bot_monitor.start()
+    except KeyboardInterrupt:
+        bot_monitor.stop_thread = True
+        time.sleep(0.2)
+        os._exit(0)
 
 if __name__ == "__main__":
     import argparse
