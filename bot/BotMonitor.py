@@ -49,6 +49,7 @@ import platform
 import threading
 
 from urlparse import urlparse
+from datetime import datetime
 
 try:
     import curses
@@ -840,6 +841,12 @@ class Bot(object):
         self.state = None
         self.capture_time = None
 
+
+###################
+# > Time to Str
+###################
+current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
+
 ###################
 # > Opcodes
 ###################
@@ -911,13 +918,13 @@ class BotMonitor(object):
         self.agent_name = None
         self.password = None
         self.beep = False
+        self.total_income = 0
 
     def start(self):
         ''' Initializes the screen '''
         self.screen = curses.initscr()
         curses.start_color()
         curses.use_default_colors()
-        self.__colors__()
         curses.noecho()
         curses.cbreak()
         curses.curs_set(0)
@@ -959,7 +966,7 @@ class BotMonitor(object):
     def __title__(self):
         ''' Create title and footer '''
         title = " Root the Box: Botnet Monitor "
-        version = "[ v0.1 ]"
+        version = "[ v" + __version__ + " ]"
         agent = "[ " + self.agent_name + " ]"
         self.screen.addstr(
             0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD)
@@ -970,56 +977,64 @@ class BotMonitor(object):
     def __grid__(self):
         ''' Draws the grid layout '''
         pos_x = 3
-        self.screen.hline(3, 1, curses.ACS_HLINE, self.max_x - 2)
-        self.ip_title = "   IP  Address   "
+        pos_y = 3
+        self.screen.hline(2, 1, curses.ACS_HLINE, self.max_x - 2)
+        self.screen.hline(4, 1, curses.ACS_HLINE, self.max_x - 2)
+        
+        # IP Address
+        self.ip_title = "    IP  Address    "
+        self.screen.addstr(pos_y, 2, self.ip_title)
         self.screen.vline(
-            2, pos_x + len(self.ip_title), curses.ACS_VLINE, self.max_y - 3)
-        self.screen.addstr(2, 2, self.ip_title)
+            pos_y, pos_x + len(self.ip_title), curses.ACS_VLINE, self.max_y - 4
+        )
+
+        # Box Name
         pos_x += len(self.ip_title)
-        self.name_title = "         Box  Name         "
-        self.screen.vline(2, pos_x + len(self.name_title) + 1,
-                          curses.ACS_VLINE, self.max_y - 3)
-        self.screen.addstr(2, pos_x + 1, self.name_title)
+        self.name_title = "          Box  Name          "
+        self.screen.addstr(pos_y, pos_x + 1, self.name_title)
+        self.screen.vline(
+            pos_y, pos_x + len(self.name_title) + 1, curses.ACS_VLINE, self.max_y - 4
+        )
+
+        # Bot Income
         pos_x += len(self.name_title)
-        self.status_title = "   Bot Status   "
-        self.screen.vline(2, pos_x + len(self.status_title) + 2,
-                          curses.ACS_VLINE, self.max_y - 3)
-        self.screen.addstr(2, pos_x + 2, self.status_title)
-        pos_x += len(self.status_title)
-        self.reward_title = "  Reward  "
-        self.screen.addstr(2, pos_x + 3, self.reward_title)
+        self.income_title = "    Bot  Income    "
+        self.screen.addstr(pos_y, pos_x + 2, self.income_title)
 
     def __positions__(self):
         ''' Sets default x position for each col '''
         self.start_ip_pos = 2
         self.start_name_pos = self.start_ip_pos + len(self.ip_title) + 3
-        self.start_status_pos = self.start_name_pos + len(self.name_title) + 2
-        self.start_reward_pos = self.start_status_pos + len(self.status_title) + 1
+        self.start_income_pos = self.start_name_pos + len(self.name_title) + 2
 
     def update_grid(self, boxes):
         ''' Redraw the grid with updated box information '''
         self.__interface__()
-        start_row = 4
+        update_income = sum([box[2] for box in boxes])
+        self.total_income += update_income
+        self.__summary__(len(boxes), current_time())
+        start_row = 5
         for index, box in enumerate(boxes):
-            self.screen.addstr(start_row + index, self.start_ip_pos, box[0])
+            self.screen.addstr(
+                start_row + index, self.start_ip_pos, "%d) %s" % (index + 1, box[0],)
+            )
             self.screen.addstr(start_row + index, self.start_name_pos, box[1])
-            self.screen.addstr(start_row + index, self.start_status_pos, "Online")
-            self.screen.addstr(start_row + index, self.start_reward_pos, "$%d" % box[2])
+            if 0 < float(update_income):
+                percent = (float(box[2]) / float(update_income)) * 100.0
+                income_string = "$%d  (%.02d%s)" % (box[2], percent, "%")
+            else:
+                income_string = "$%d" % (box[2],)
+            self.screen.addstr(start_row + index, self.start_income_pos, income_string)
         self.screen.refresh()
 
-    def __colors__(self):
-        ''' Setup all color pairs '''
-        self.PING = 1
-        curses.init_pair(self.PING, curses.COLOR_WHITE, curses.COLOR_BLUE)
-        self.IS_CAPTURED = 2
-        curses.init_pair(self.IS_CAPTURED, -1, curses.COLOR_GREEN)
-        self.TEAM_CAPTURED = 3
-        curses.init_pair(self.TEAM_CAPTURED, -1, curses.COLOR_CYAN)
-        self.WAS_CAPTURED = 4
-        curses.init_pair(
-            self.WAS_CAPTURED, curses.COLOR_WHITE, curses.COLOR_RED)
-        self.NEVER_CAPTURED = 5
-        curses.init_pair(self.NEVER_CAPTURED, -1, -1)
+    def __summary__(self, bot_count, update_time):
+        ''' Addes total bots and update time '''
+        start_pos = 3
+        pos_y = 1
+        self.screen.addstr(pos_y, start_pos, "- %s -" % update_time, curses.A_BOLD)
+        bot_string = "$%d (%d bots)" % (self.total_income, bot_count)
+        bot_pos = self.max_x - (len(bot_string) + 3)
+        self.screen.addstr(pos_y, bot_pos, bot_string, curses.A_BOLD)
 
     def __redraw__(self):
         ''' Redraw the entire window '''
