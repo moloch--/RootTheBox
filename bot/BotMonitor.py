@@ -72,16 +72,20 @@ __version__ = '0.1'
 __port__    = '8888'
 __domain__  = 'localhost'
 __path__    = '/botnet/monitor'
+__log__     = 'bot_monitor.log'
 
 ###################
 # > Logging
 ###################
+LOG_LEVELS = {
+    'debug': logging.DEBUG,
+    'info': logging.INFO,
+    'critical': logging.CRITICAL,
+    'warn': logging.WARN,
+    'error': logging.ERROR,
+    'fatal': logging.FATAL,
+}
 logger = logging.getLogger()
-hdlr = logging.FileHandler('bot_monitor.log')
-formatter = logging.Formatter('\r[%(levelname)s] %(asctime)s - %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr) 
-logger.setLevel(logging.DEBUG)
 
 ###################
 # > Websockets
@@ -110,8 +114,6 @@ STATUS_MESSAGE_TOO_BIG = 1009
 STATUS_INVALID_EXTENSION = 1010
 STATUS_UNEXPECTED_CONDITION = 1011
 STATUS_TLS_HANDSHAKE_ERROR = 1015
-
-logger = logging.getLogger()
 
 
 class WebSocketException(Exception):
@@ -151,7 +153,10 @@ def setdefaulttimeout(timeout):
     timeout: default socket timeout time. This value is second.
     """
     global default_timeout
-    default_timeout = timeout
+    default_timeout = int(timeout)
+    if default_timeout < 30:
+        default_timeout = 30
+    logging.info("Socket timeout set to: %d" % timeout)
 
 
 def getdefaulttimeout():
@@ -227,7 +232,9 @@ def create_connection(url, timeout=None, **options):
     """
     sockopt = options.get("sockopt", ())
     websock = WebSocket(sockopt=sockopt)
-    websock.settimeout(timeout != None and timeout or default_timeout)
+    actual_timeout = timeout is not None and timeout or default_timeout
+    logging.info("[Socket] Timeout: %d" % actual_timeout)
+    websock.settimeout(actual_timeout)
     websock.connect(url, **options)
     return websock
 
@@ -246,7 +253,7 @@ def _create_sec_websocket_key():
 _HEADERS_TO_CHECK = {
     "upgrade": "websocket",
     "connection": "upgrade",
-    }
+}
 
 
 class _SSLSocketWrapper(object):
@@ -295,7 +302,7 @@ class ABNF(object):
         OPCODE_CLOSE: "close",
         OPCODE_PING: "ping",
         OPCODE_PONG: "pong"
-        }
+    }
 
     # data length threashold.
     LENGTH_7  = 0x7d
@@ -412,6 +419,7 @@ class WebSocket(object):
         Initalize WebSocket object.
         """
         self.connected = False
+        self.monitor = None
         self.io_sock = self.sock = socket.socket()
         for opts in sockopt:
             self.sock.setsockopt(*opts)
@@ -588,6 +596,7 @@ class WebSocket(object):
 
         payload: data payload to send server.
         """
+        logging.degug("Got <- PING")
         self.send(payload, ABNF.OPCODE_PING)
 
     def pong(self, payload):
@@ -596,6 +605,8 @@ class WebSocket(object):
 
         payload: data payload to send server.
         """
+        logging.debug("Sending -> PONG")
+        self.monitor.pong = True
         self.send(payload, ABNF.OPCODE_PONG)
 
     def recv(self):
@@ -806,7 +817,9 @@ class WebSocketApp(object):
             raise WebSocketException("socket is already opened")
         try:
             self.sock = WebSocket(self.get_mask_key, sockopt = sockopt)
+            self.sock.settimeout(getdefaulttimeout())
             self.sock.connect(self.url, header = self.header)
+            self.sock.monitor = self.monitor 
             self._run_with_no_err(self.on_open)
             while self.keep_running:
                 data = self.sock.recv()
@@ -830,19 +843,6 @@ class WebSocketApp(object):
                 if logger.isEnabledFor(logging.DEBUG):
                     logger.error(e)
 
-###################
-# > Simple bot
-###################
-class Bot(object):
-    ''' Simple bot object for storing info '''
-
-    def __init__(self, name, ip_address, port):
-        self.name = name
-        self.ip_address = ip_address
-        self.port = port
-        self.state = None
-        self.capture_time = None
-
 
 ###################
 # > Time to Str
@@ -852,21 +852,36 @@ current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 ###################
 # > Opcodes
 ###################
+def stop_animate_thread(ws):
+    ''' Block until animation thread exits '''
+    logging.info("Waiting for animation thread to exit ...")
+    ws.monitor.stop_thread = True
+    if ws.monitor.animate_thread is not None:
+        ws.monitor.animate_thread.join()
+    logging.info("All threads have joined")
+    ws.monitor.animate_thread = None
+    ws.monitor.stop_thread = False
+
 def update(ws, message):
-    ''' Draw update '''
+    ''' Recv and draw latest update '''
     logging.debug("Got update: %s" % message)
     ws.monitor.update_grid(message['boxes'])
 
 def auth_failure(ws, message):
+    ''' Failed to properly authenticate with scoring engine '''
+    stop_animate_thread(ws)
     logging.info("Authentication failure")
-    ws.monitor.auth_failure()
+    ws.monitor.auth_failure("ACCESS DENIED")
 
 def auth_success(ws, message):
+    ''' Successfully authenticated with scoring engine'''
+    stop_animate_thread(ws)
     logging.info("Successfully authenticated")
     thread = threading.Thread(target=ws.monitor.progress)
     thread.start()
-    ws.monitor.progress_thread = thread
+    ws.monitor.animate_thread = thread
     ws.monitor.__interface__()
+
 
 OPCODES = {}
 OPCODES['update'] = update
@@ -904,15 +919,18 @@ def on_message(ws, message):
 
 def on_error(ws, error):
     ''' Error recv'd on WebSocket '''
-    logging.error("[WebSocket] on_error - %s" % str(error))
-    ws.monitor.stop("Error: %s" % str(error))
+    logging.exception("[WebSocket] on_error - %s" % type(error))
+    stop_animate_thread(ws)
+    if isinstance(error, socket.error):
+        ws.monitor.connection_problems()
+    elif isinstance(error, WebSocketException):
+        ws.monitor.connection_problems()
+    ws.monitor.stop()
 
 def on_close(ws):
     ''' Websocket closed '''
     logging.debug("[WebSocket] Closing connection.")
-    ws.monitor.stop_thread = True
-    if ws.monitor.progress_thread is not None:
-        ws.monitor.progress_thread.join()
+    stop_animate_thread(ws)
     ws.monitor.stop('Connection lost')
 
 
@@ -927,7 +945,8 @@ class BotMonitor(object):
         self.agent_name = None
         self.password = None
         self.total_income = 0
-        self.progress_thread = None
+        self.animate_thread = None
+        self.pong = False
 
     def start(self):
         ''' Initializes the screen '''
@@ -950,6 +969,11 @@ class BotMonitor(object):
         curses.endwin()
         os._exit(0)
 
+    def connection_problems(self):
+        ''' Display connection issue, and exit '''
+        logging.fatal("Connection faliure!")
+        self.auth_failure("CONNECTION FAILURE")
+
     def __connect__(self):
         ''' Connect and authenticate with scoring engine '''
         ws = WebSocketApp(self.url,
@@ -961,7 +985,38 @@ class BotMonitor(object):
         ws.agent_name = self.agent_name
         ws.password = self.password
         ws.on_open = on_open
+        self.animate_thread = threading.Thread(target=self.__connecting__)
+        self.stop_thread = False
+        self.animate_thread.start()
         ws.run_forever()
+
+    def __connecting__(self):
+        ''' Display connecting animation '''
+        self.__clear__()
+        self.screen.refresh()
+        prompt = " Connecting, please wait ..."
+        connecting = curses.newwin(3, len(prompt) + 2, 
+            (self.max_y / 2) - 1, ((self.max_x - len(prompt)) / 2
+        ))
+        CYAN = 2
+        curses.init_pair(CYAN, curses.COLOR_CYAN, -1)
+        connecting.addstr(
+            1, 1, prompt, curses.A_BOLD|curses.color_pair(CYAN)
+        )
+        connecting.refresh()
+        time.sleep(0.25)
+        while not self.stop_thread:
+            connecting.addstr(
+                1, 1, " " * len(prompt),
+            )
+            connecting.refresh()
+            time.sleep(0.15)
+            connecting.addstr(
+                1, 1, prompt, curses.A_BOLD|curses.color_pair(CYAN)
+            )
+            connecting.refresh()
+            time.sleep(0.25)
+        connecting.endwin()
 
     def __load__(self):
         ''' Loads all required data '''
@@ -1024,7 +1079,7 @@ class BotMonitor(object):
         ''' Sets default x position for each col '''
         self.start_ip_pos = 2
         self.start_name_pos = self.start_ip_pos + len(self.ip_title) + 3
-        self.start_income_pos = self.start_name_pos + len(self.name_title) + 2
+        self.start_income_pos = self.start_name_pos + len(self.name_title) + 1
 
     def update_grid(self, boxes):
         ''' Redraw the grid with updated box information '''
@@ -1153,25 +1208,36 @@ class BotMonitor(object):
         logging.info("Starting progress thread ...")
         index = 0
         progress_bar = ["=--", "-=-", "--=", "-=-",]
+        pong_string = "PNG"
+        RED_WHITE = 3
+        curses.init_pair(RED_WHITE, curses.COLOR_WHITE, curses.COLOR_RED)
         while not self.stop_thread:
-            index += 1
-            progress_string = "[%s]" % (
-                progress_bar[index % len(progress_bar)]
-            )
-            self.screen.addstr(self.max_y - 1, 3, progress_string)
-            display_time = "[ %s ]" % current_time()
-            self.screen.addstr(
-                self.max_y - 1, (self.max_x - len(display_time)) - 3, display_time
-            )
+            if self.pong:
+                self.screen.addstr(self.max_y - 1, 3, "[")
+                self.screen.addstr(
+                    self.max_y - 1, 4, pong_string, curses.color_pair(RED_WHITE)
+                )
+                self.screen.addstr(self.max_y - 1, 7, "]")
+                self.pong = False
+            else:
+                index += 1
+                progress_string = "[%s]" % (
+                    progress_bar[index % len(progress_bar)]
+                )
+                self.screen.addstr(self.max_y - 1, 3, progress_string)
+                display_time = "[ %s ]" % current_time()
+                self.screen.addstr(
+                    self.max_y - 1, (self.max_x - len(display_time)) - 3, display_time
+                )
             self.screen.refresh()
             time.sleep(0.2)
 
-    def auth_failure(self):
+    def auth_failure(self, msg):
         ''' Display authentication failure message '''
         logging.info("Displaying auth failure message")
         self.__clear__()
         self.screen.refresh()
-        prompt = " *** ACCESS DENIED *** "
+        prompt = " *** %s *** " % msg
         access_denied = curses.newwin(3, len(prompt) + 2, 
             (self.max_y / 2) - 1, ((self.max_x - len(prompt)) / 2
         ))
@@ -1198,8 +1264,15 @@ class BotMonitor(object):
 ###################
 # > Main Entry
 ###################
-def main(domain, port, secure):
+def main(domain, port, secure, log_file, log_level):
     ''' Creates and starts the monitor '''
+    hdlr = logging.FileHandler(log_file)
+    formatter = logging.Formatter('\r[%(levelname)s] %(asctime)s - %(message)s')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr)
+    lvl = LOG_LEVELS.get(log_level, 'info')
+    logger.setLevel(lvl)
+    enableTrace(True)
     if not secure:
         url = "ws://%s:%s%s" % (domain, port, __path__)
     else:
@@ -1237,5 +1310,17 @@ if __name__ == "__main__":
         default=__port__,
         dest='port',
     )
+    parser.add_argument('--log-file', '-f',
+        help='log to file (default: %s)' % __log__,
+        default=__log__,
+        dest='log_file',
+    )
+    parser.add_argument('--log-level', '-l',
+        help='log to file (default: info)',
+        default='info',
+        dest='log_level',
+    )
     args = parser.parse_args()
-    main(args.domain, args.port, args.secure)
+    main(args.domain, args.port, args.secure, 
+        args.log_file, args.log_level.lower(),
+    )

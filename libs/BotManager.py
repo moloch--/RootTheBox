@@ -23,6 +23,7 @@ Created on Sep 20, 2012
 import re
 import logging
 
+from os import urandom
 from datetime import datetime
 from libs.Singleton import Singleton
 from libs.ConfigManager import ConfigManager
@@ -82,6 +83,10 @@ class BotManager(object):
         Session = sessionmaker(bind=self.sqlite_engine, autocommit=True)
         self.botdb = Session(autoflush=True)
         MemoryBaseObject.metadata.create_all(self.sqlite_engine)
+
+    def all(self):
+        bots = self.botdb.query(Bot).all()
+        return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def by_box(self, box):
         bots = self.botdb.query(Bot).filter_by(box_uuid=unicode(box.uuid)).all()
@@ -171,3 +176,14 @@ class BotManager(object):
             bot.total_reward += reward
             self.botdb.add(bot)
             self.botdb.flush()
+
+
+def ping_bots():
+    ''' Ping all websockets in database '''
+    bot_manager = BotManager.Instance()
+    logging.info("Pinging open botnet websockets")
+    for bot in bot_manager.all():
+        bot.ping(urandom(8).encode('hex'))
+    for muuid in bot_manager.monitors:
+        for monitor in bot_manager.monitors[muuid]:
+            monitor.ping(urandom(8).encode('hex'))

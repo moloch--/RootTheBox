@@ -34,7 +34,7 @@ from modules.CssTheme import CssTheme
 from libs.ConsoleColors import *
 from libs.Memcache import FileCache
 from libs.Scoreboard import score_bots
-from libs.BotManager import BotManager
+from libs.BotManager import BotManager, ping_bots
 from libs.GameHistory import GameHistory
 from libs.EventManager import EventManager
 from libs.ConfigManager import ConfigManager
@@ -213,11 +213,15 @@ def start_server():
         history_callback = PeriodicCallback(
             game_history.take_snapshot, config.history_snapshot_interval, io_loop=io_loop
         )
-        scoring = PeriodicCallback(
+        scoring_callback = PeriodicCallback(
             score_bots, config.bot_reward_interval, io_loop=io_loop
         )
+        bot_ping_callback = PeriodicCallback(
+            ping_bots, 30000, io_loop=io_loop
+        )
+        bot_ping_callback.start()
         history_callback.start()
-        scoring.start()
+        scoring_callback.start()
         io_loop.start()
     except KeyboardInterrupt:
         sys.stdout.write('\r' + WARN + 'Shutdown Everything!\n')

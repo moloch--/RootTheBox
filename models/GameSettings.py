@@ -35,7 +35,7 @@ class GameSettings(BaseObject):
     is_active = Column(Boolean, nullable=False, default=False)
 
     # Botnet settings
-    bot_reward = Column(Integer, nullable=False, default=100)
+    bot_reward = Column(Integer, nullable=False, default=300)
 
     # Black market upgrade settings
     password_upgrade_cost = Column(Integer, nullable=False, default=1500)
