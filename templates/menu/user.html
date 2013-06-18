@@ -118,7 +118,16 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="/logout">
+                        <!-- logout form -->
+                        <form id="logoutform" action="/logout" method="post">
+                            {% raw xsrf_form_html() %}
+                        </form>
+                        <script>
+                            function logout() {
+                                document.getElementById("logoutform").submit();
+                            }
+                        </script>
+                        <a onclick="logout()">
                             <i class="icon-ban-circle"></i>
                             &nbsp;Logout&nbsp;
                         </a>

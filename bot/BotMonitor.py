@@ -839,15 +839,17 @@ class WebSocketApp(object):
         if callback:
             try:
                 callback(self, *args)
-            except Exception, e:
+            except Exception as err:
                 if logger.isEnabledFor(logging.DEBUG):
-                    logger.error(e)
+                    logger.error(err)
 
 
 ###################
 # > Time to Str
 ###################
-current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
+def current_time(): 
+    ''' Return current time as HH:MM:SS '''
+    return time.strftime("%H:%M:%S")
 
 ###################
 # > Opcodes
@@ -951,8 +953,10 @@ class BotMonitor(object):
     def start(self):
         ''' Initializes the screen '''
         self.screen = curses.initscr()
+        self.__clear__()
         curses.start_color()
         curses.use_default_colors()
+        self.__colors__()
         curses.noecho()
         curses.cbreak()
         curses.curs_set(0)
@@ -998,10 +1002,9 @@ class BotMonitor(object):
         connecting = curses.newwin(3, len(prompt) + 2, 
             (self.max_y / 2) - 1, ((self.max_x - len(prompt)) / 2
         ))
-        CYAN = 2
-        curses.init_pair(CYAN, curses.COLOR_CYAN, -1)
+        connecting.clear()
         connecting.addstr(
-            1, 1, prompt, curses.A_BOLD|curses.color_pair(CYAN)
+            1, 1, prompt, curses.A_BOLD|curses.color_pair(self.CYAN)
         )
         connecting.refresh()
         time.sleep(0.25)
@@ -1012,7 +1015,7 @@ class BotMonitor(object):
             connecting.refresh()
             time.sleep(0.15)
             connecting.addstr(
-                1, 1, prompt, curses.A_BOLD|curses.color_pair(CYAN)
+                1, 1, prompt, curses.A_BOLD|curses.color_pair(self.CYAN)
             )
             connecting.refresh()
             time.sleep(0.25)
@@ -1043,9 +1046,17 @@ class BotMonitor(object):
     def __title__(self):
         ''' Create title and footer '''
         title = " Root the Box: Botnet Monitor "
+        start_x = ((self.max_x - len(title)) / 2)
         self.screen.addstr(
-            0, ((self.max_x - len(title)) / 2), title, curses.A_BOLD
+            0, start_x, title, curses.A_BOLD|curses.color_pair(self.BLUE)
         )
+        self.screen.addstr(
+            0, start_x -1, "|", curses.A_BOLD
+        )
+        self.screen.addstr(
+            0, start_x + len(title), "|", curses.A_BOLD
+        )
+        # Bottom bar
         display_time = "[ %s ]" % current_time()
         self.screen.addstr(
             self.max_y - 1, (self.max_x - len(display_time)) - 3, display_time
@@ -1076,7 +1087,7 @@ class BotMonitor(object):
         self.screen.addstr(pos_y, pos_x + 2, self.income_title)
 
     def __positions__(self):
-        ''' Sets default x position for each col '''
+        ''' Calculates starting x position for each column '''
         self.start_ip_pos = 2
         self.start_name_pos = self.start_ip_pos + len(self.ip_title) + 3
         self.start_income_pos = self.start_name_pos + len(self.name_title) + 1
@@ -1110,6 +1121,18 @@ class BotMonitor(object):
         bot_pos = self.max_x - (len(bot_string) + 3)
         self.screen.addstr(pos_y, bot_pos, bot_string, curses.A_BOLD)
 
+    def __colors__(self):
+        ''' Init colors pairs '''
+        self.NO_COLOR = -1
+        self.RED = 1
+        curses.init_pair(self.RED, curses.COLOR_RED, self.NO_COLOR)
+        self.CYAN = 2
+        curses.init_pair(self.CYAN, curses.COLOR_CYAN, self.NO_COLOR)
+        self.WHITE_RED = 3
+        curses.init_pair(self.WHITE_RED, curses.COLOR_WHITE, curses.COLOR_RED)
+        self.BLUE = 4
+        curses.init_pair(self.BLUE, curses.COLOR_BLUE, self.NO_COLOR)
+
     def __redraw__(self):
         ''' Redraw the entire window '''
         self.screen.clear()
@@ -1127,10 +1150,11 @@ class BotMonitor(object):
         thread = threading.Thread(target=self.__matrix__)
         self.loading_bar.clear()
         # Get agent name
-        prompt = "Agent: "
+        prompt = "Account: "
         self.agent_prompt = curses.newwin(3, len(self.load_message) + 2, (
             self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2
         ))
+        self.agent_prompt.clear()
         self.agent_prompt.border(0)
         self.agent_prompt.addstr(1, 1, prompt, curses.A_BOLD)
         curses.echo()
@@ -1204,18 +1228,15 @@ class BotMonitor(object):
                 return
 
     def progress(self):
-        ''' Progress animation '''
-        logging.info("Starting progress thread ...")
+        ''' Progress animation, executed as sperate thread '''
         index = 0
         progress_bar = ["=--", "-=-", "--=", "-=-",]
         pong_string = "PNG"
-        RED_WHITE = 3
-        curses.init_pair(RED_WHITE, curses.COLOR_WHITE, curses.COLOR_RED)
         while not self.stop_thread:
             if self.pong:
                 self.screen.addstr(self.max_y - 1, 3, "[")
                 self.screen.addstr(
-                    self.max_y - 1, 4, pong_string, curses.color_pair(RED_WHITE)
+                    self.max_y - 1, 4, pong_string, curses.color_pair(self.WHITE_RED)
                 )
                 self.screen.addstr(self.max_y - 1, 7, "]")
                 self.pong = False
@@ -1225,10 +1246,10 @@ class BotMonitor(object):
                     progress_bar[index % len(progress_bar)]
                 )
                 self.screen.addstr(self.max_y - 1, 3, progress_string)
-                display_time = "[ %s ]" % current_time()
-                self.screen.addstr(
-                    self.max_y - 1, (self.max_x - len(display_time)) - 3, display_time
-                )
+            display_time = "[ %s ]" % current_time()
+            self.screen.addstr(
+                self.max_y - 1, (self.max_x - len(display_time)) - 3, display_time
+            )
             self.screen.refresh()
             time.sleep(0.2)
 
@@ -1241,10 +1262,8 @@ class BotMonitor(object):
         access_denied = curses.newwin(3, len(prompt) + 2, 
             (self.max_y / 2) - 1, ((self.max_x - len(prompt)) / 2
         ))
-        RED = 1
-        curses.init_pair(RED, curses.COLOR_RED, -1)
         access_denied.addstr(
-            1, 1, prompt, curses.A_BOLD|curses.color_pair(RED)
+            1, 1, prompt, curses.A_BOLD|curses.color_pair(self.RED)
         )
         access_denied.refresh()
         time.sleep(0.75)
@@ -1255,7 +1274,7 @@ class BotMonitor(object):
             access_denied.refresh()
             time.sleep(0.25)
             access_denied.addstr(
-                1, 1, prompt, curses.A_BOLD|curses.color_pair(RED)
+                1, 1, prompt, curses.A_BOLD|curses.color_pair(self.RED)
             )
             access_denied.refresh()
             time.sleep(0.75)
@@ -1322,5 +1341,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(args.domain, args.port, args.secure, 
-        args.log_file, args.log_level.lower(),
+        args.log_file, args.log_level.lower()
     )

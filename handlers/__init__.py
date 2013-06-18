@@ -105,6 +105,7 @@ app = Application(
         # User handlers - UserHandlers.py
         (r'/user', HomeHandler),
         (r'/user/settings(.*)', SettingsHandler),
+        (r'/logout', LogoutHandler),
 
         # Admin Handlers - AdminHandlers.py
         (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
@@ -133,7 +134,6 @@ app = Application(
         (r'/login', LoginHandler),
         (r'/registration', RegistrationHandler),
         (r'/about', AboutHandler),
-        (r'/logout', LogoutHandler),
         (r'/', HomePageHandler),
 
         # Error handlers - ErrorHandlers.py

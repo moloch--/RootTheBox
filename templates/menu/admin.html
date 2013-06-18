@@ -67,7 +67,21 @@
                     <ul class="dropdown-menu">
                         <li><a href="/user/settings">Settings</a></li>
                         <li class="divider"></li>
-                        <li><a href="/logout">Logout</a></li>
+                        <li>
+                            <!-- logout form -->
+                            <form id="logoutform" action="/logout" method="post">
+                                {% raw xsrf_form_html() %}
+                            </form>
+                            <script>
+                                function logout() {
+                                    document.getElementById("logoutform").submit();
+                                }
+                            </script>
+                            <a onclick="logout()" method="post">
+                                <i class="icon-ban-circle"></i>
+                                &nbsp;Logout&nbsp;
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div><!--/.nav-collapse -->

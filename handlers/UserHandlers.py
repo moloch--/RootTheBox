@@ -192,3 +192,21 @@ class SettingsHandler(BaseHandler):
                 return False
         else:
             return True
+
+
+class LogoutHandler(BaseHandler):
+    ''' Log user out of current session '''
+
+    def get(self, *args, **kwargs):
+        ''' Redirect '''
+        if self.session is not None:
+            self.redirect('/user')
+        else:
+            self.redirect('/login')
+
+    def post(self, *args, **kwargs):
+        ''' Clears cookies and session data '''
+        if self.session is not None:
+            self.session.delete()
+        self.clear_all_cookies()
+        self.redirect("/")

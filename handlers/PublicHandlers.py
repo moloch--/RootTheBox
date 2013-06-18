@@ -181,13 +181,3 @@ class AboutHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Renders the about page '''
         self.render('public/about.html')
-
-
-class LogoutHandler(BaseHandler):
-
-    def get(self, *args, **kwargs):
-        ''' Clears cookies and session data '''
-        if self.session is not None:
-            self.session.delete()
-        self.clear_all_cookies()
-        self.redirect("/")
