@@ -777,7 +777,7 @@ class AdminLockHandler(BaseHandler):
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
-    def get(self, *args, **kwargs):
+    def post(self, *args, **kwargs):
         ''' Toggle account lock '''
         uuid = self.get_argument('uuid', '')
         user = User.by_uuid(uuid)
@@ -785,15 +785,11 @@ class AdminLockHandler(BaseHandler):
             if user.locked:
                 user.locked = False
                 dbsession.add(user)
-                self.write({'success': 'unlocked'})
             else:
                 user.locked = True
-                dbsession.add(user)
-                self.write({'success': 'locked'})
-        else:
-            self.write({'error': 'User does not exist'})
-        dbsession.flush()
-        self.finish()
+                dbsession.add(user) 
+            dbsession.flush()
+        self.redirect('/admin/view/user_objects')
 
 
 class AdminRegTokenHandler(BaseHandler):

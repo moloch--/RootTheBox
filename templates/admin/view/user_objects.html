@@ -95,6 +95,10 @@
             <button type="button" class="btn btn-primary" onclick="document.forms['edit-user'].submit();">Save</button>
         </div>
     </div>
+    <form id="lock_form" action="/admin/lock" method="post">
+        {% raw xsrf_form_html() %}
+        <input id="lock_uuid" name="uuid" type="hidden" />
+    </form>
     <script>
         function get_details(obj, uuid) {
             $("#" + obj + "_uuid").val(uuid);
@@ -105,23 +109,8 @@
             });
         }
         function toggle_lock(uuid) {
-            $.getJSON('/admin/lock?uuid=' + uuid, function(response) {
-                if ('success' in response) {
-                    if ('locked' == response['success']) {
-                        $("#lock_button_" + uuid).removeClass('btn-danger');
-                        $("#lock_button_" + uuid).addClass('btn-success');
-                        $("#lock_button_" + uuid).text("Unlock Account");
-                    } else if ('unlocked' == response['success']) {
-                        $("#lock_button_" + uuid).removeClass('btn-success');
-                        $("#lock_button_" + uuid).addClass('btn-danger');
-                        $("#lock_button_" + uuid).text("Lock Account");
-                    }
-                } else if ('error' in response) {
-                    alert('Error: ' + response['error'].toString());
-                } else {
-                    alert('Bad response from server');
-                }
-            });
+            document.getElementById("lock_uuid").value = uuid;
+            document.getElementById("lock_form").submit();
         }
     </script>
     <!-- Start Visable -->
