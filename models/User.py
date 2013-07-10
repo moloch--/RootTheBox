@@ -197,9 +197,6 @@ class User(BaseObject):
     def validate_bank_password(self, attempt):
         ''' Check the bank password against existing credentials '''
         if self._bank_password is not None:
-            logging.debug('Bank password validate %s(%s) =? %s' % (
-                self.algorithm, attempt, self.password
-            ))
             result = self._hash_bank_password(self.algorithm, attempt)
             return self.bank_password == result
         else:
