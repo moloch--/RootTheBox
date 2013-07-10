@@ -57,9 +57,9 @@ class SettingsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
         post_functions = {
-            '/avatar': self.post_avatar,
-            '/password': self.post_password,
-            '/theme': self.post_theme,
+            'avatar': self.post_avatar,
+            'password': self.post_password,
+            'theme': self.post_theme,
         }
         if len(args) == 1 and args[0] in post_functions:
             post_functions[args[0]]()
@@ -114,25 +114,15 @@ class SettingsHandler(BaseHandler):
 
     def post_password(self, *args, **kwargs):
         ''' Called on POST request for password change '''
-        form = Form(
-            old_password="Please enter your old password",
-            new_password="Please enter a new password",
-            new_password_two="Please confirm your new password",
-            recaptcha_challenge_field="Please solve the captcha",
-            recaptcha_response_field="Please solve the captcha",
-        )
-        if form.validate(self.request.arguments):
-            if self.check_recaptcha():
-                self.set_password(
-                    self.get_current_user(),
-                    self.get_argument('old_password'),
-                    self.get_argument('new_password'),
-                    self.get_argument('new_password_two')
-                )
-            else:
-                self.render_page(errors=["Invalid recaptcha"])
+        if self.check_recaptcha():
+            self.set_password(
+                self.get_current_user(),
+                self.get_argument('old_password'),
+                self.get_argument('new_password'),
+                self.get_argument('new_password2')
+            )
         else:
-            self.render_page(errors=form.errors)
+            self.render_page(errors=["Invalid recaptcha"])
 
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
@@ -156,16 +146,13 @@ class SettingsHandler(BaseHandler):
         ''' Sets a users password '''
         if user.validate_password(old_password):
             if new_password == new_password2:
-                if len(new_password) <= self.config.max_password_length:
+                if 16 <= len(new_password) or self.config.debug:
                     user.password = new_password
                     dbsession.add(user)
                     dbsession.flush()
                     self.render_page(success=["Successfully updated password"])
                 else:
-                    message = "Password must be less than %d chars" % (
-                        self.config.max_password_length,
-                    )
-                    self.render_page(errors=[message])
+                    self.render_page(errors=["Password must be at least 16 characters"])
             else:
                 self.render_page(errors=["New password's didn't match"])
         else:
@@ -173,7 +160,8 @@ class SettingsHandler(BaseHandler):
 
     def check_recaptcha(self):
         ''' Checks recaptcha '''
-        if self.config.recaptcha_enable:
+        if self.config.recaptcha_enabled:
+            logging.debug('Checking recaptcha submission')
             response = None
             try:
                 response = captcha.submit(
@@ -184,6 +172,7 @@ class SettingsHandler(BaseHandler):
                 )
             except KeyError:
                 logging.exception("Recaptcha API called failed.")
+                return False  # Fail closed!
             if response is not None and response.is_valid:
                 return True
             else:
@@ -191,6 +180,7 @@ class SettingsHandler(BaseHandler):
                 logging.warning("%s failed a captcha test." % user.handle)
                 return False
         else:
+            logging.debug('Recaptcha has been disabled')
             return True
 
 

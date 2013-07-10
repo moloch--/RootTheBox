@@ -59,16 +59,16 @@ def create_team(name, motto):
     return team
 
 
-def create_user(account, handle, password, team):
-    print(INFO + "Create user: " + bold + account + W)
+def create_user(handle, password, bank_password, team):
+    print(INFO + "Create user: " + bold + handle + W)
     user = User(
-        account=unicode(account),
         handle=unicode(handle),
         team_id=team.id,
     )
     dbsession.add(user)
     dbsession.flush()
     user.password = password
+    user.bank_password = bank_password
     dbsession.add(user)
     dbsession.flush()
     return user

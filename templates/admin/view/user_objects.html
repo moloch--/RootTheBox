@@ -141,7 +141,6 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Account</th>
                                 <th>Handle</th>
                                 <th>Hash Algorithm</th>
                                 <th>Password Hash</th>
@@ -152,7 +151,6 @@
                         <tbody>
                             {% for user in team.members %}
                                 <tr>
-                                    <td>{{ user.account }}</td>
                                     <td>{{ user.handle }}</td>
                                     <td>{{ user.algorithm }}</td>
                                     <td>{{ user.password }}</td>

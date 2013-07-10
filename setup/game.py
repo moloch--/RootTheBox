@@ -35,12 +35,12 @@ team_a = create_team("The A Team", "Pdc Baby")
 team_b = create_team("The B Team", "Always 2nd Best")
 
 # Create users
-# create_user(ACCOUNT_NAME, HACKER_NAME, PASSWORD, TEAM_OBJECT)
-joe = create_user("joe", "moloch", "asdf", team_a)
-john = create_user("john", "hathcox", "password", team_a)
+# create_user(HACKER_NAME, PASSWORD, BANK_PASSWORD, TEAM_OBJECT)
+joe = create_user("moloch", "asdf", '1234', team_a)
+john = create_user("hathcox", "password", '1234', team_a)
 
-steve = create_user("steve", "stormcrow", "qwerty", team_b)
-rick = create_user("rick", "wildicv", "foobar", team_b)
+steve = create_user("stormcrow", "qwerty", '4321', team_b)
+rick = create_user("wildicv", "foobar", '4321', team_b)
 
 # Create game levels
 # create_game_level(LEVEL_NUMBER, BUYOUT)

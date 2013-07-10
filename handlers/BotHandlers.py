@@ -179,7 +179,7 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
     def auth(self, req):
         ''' Authenticate user '''
         try:
-            user = User.by_account(req['account'])
+            user = User.by_handle(req['handle'])
         except:
             user = None
         if user is None or user.has_permission(ADMIN_PERMISSION):
@@ -190,7 +190,7 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
             })
             self.close()
         elif user.validate_password(req.get('password', '')):
-            logging.debug("Monitor socket successfully authenticated as %s" % user.account)
+            logging.debug("Monitor socket successfully authenticated as %s" % user.handle)
             self.team_name = ''.join(user.team.name)
             self.bot_manager.add_monitor(self)
             self.write_message({

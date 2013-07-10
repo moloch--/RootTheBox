@@ -32,6 +32,7 @@ from libs.ConfigManager import ConfigManager
 from handlers.BaseHandlers import BaseHandler
 from models import dbsession, User, Team, Theme, \
     RegistrationToken
+from models.User import ADMIN_PERMISSION
 
 
 class HomePageHandler(BaseHandler):
@@ -55,7 +56,7 @@ class LoginHandler(BaseHandler):
             password="A password is required to login",
         )
         if form.validate(self.request.arguments):
-            user = User.by_account(self.get_argument('account'))
+            user = User.by_handle(self.get_argument('account'))
             password_attempt = self.get_argument('password')
             if user is not None and user.validate_password(password_attempt):
                 if not user.locked:
@@ -72,8 +73,9 @@ class LoginHandler(BaseHandler):
 
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''
-        logging.info("Successful login: %s/%s from %s" %
-            (user.account, user.handle, self.request.remote_ip,))
+        logging.info("Successful login: %s from %s" % (
+            user.handle, self.request.remote_ip,
+        ))
         self.start_session()
         theme = Theme.by_id(user.theme_id)
         if user.team is not None:
@@ -81,7 +83,7 @@ class LoginHandler(BaseHandler):
         self.session['user_id'] = int(user.id)
         self.session['handle'] = ''.join(user.handle)  # Copy string
         self.session['theme'] = ''.join(theme.cssfile)
-        if user.has_permission('admin'):
+        if user.has_permission(ADMIN_PERMISSION):
             self.session['menu'] = 'admin'
         else:
             self.session['menu'] = 'user'
@@ -107,65 +109,54 @@ class RegistrationHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
         form = Form(
-            account="Please enter an account name",
             handle="Please enter a handle",
             team="Please select a team to join",
             pass1="Please enter a password",
             pass2="Please confirm your password",
+            bpass1="Please enter a bank account password",
             token="Please enter a registration token"
         )
         if form.validate(self.request.arguments):
-            config = ConfigManager.Instance()
-            account = self.get_argument('account').lower()
-            handle = self.get_argument('handle').lower()
-            rtok = self.get_argument('token', '__none__').lower()
-            passwd = self.get_argument('pass1')
-            if User.by_account(account) is not None:
-                self.render('public/registration.html',
-                    errors=['Account name already taken']
-                )
-            elif account == handle:
-                self.render('public/registration.html',
-                    errors=['Account name and hacker name must differ']
-                )
+            handle = self.get_argument('handle')
+            rtok = self.get_argument('token', None)
+            passwd = self.get_argument('pass1', '')
+            bank_passwd = self.get_argument('bpass1', '')
+            if not 2 < len(handle) < 16:
+                self.render_error('Hacker name must be 3-15 characters')
             elif User.by_handle(handle) is not None:
-                self.render('public/registration.html',
-                    errors=['Handle already taken']
-                )
+                self.render_error('Handle already taken')
             elif not passwd == self.get_argument('pass2'):
-                self.render('public/registration.html',
-                    errors=['Passwords do not match']
-                )
-            elif not 0 < len(passwd) <= config.max_password_length:
-                self.render('public/registration.html',
-                    errors=['Password must be 1-%d characters'
-                                % config.max_password_length]
+                self.render_error('Passwords do not match')
+            elif len(passwd) < 16 and not self.config.debug:
+                self.render_error('Password must be at least 16 characters')
+            elif not 0 < len(bank_passwd) <= self.config.max_password_length:
+                self.render_error(
+                    'Bank account password must be 1-%d characters' % self.config.max_password_length
                 )
             elif Team.by_uuid(self.get_argument('team', '')) is None:
-                self.render('public/registration.html',
-                    errors=["Please select a team to join"]
-                )
-            elif RegistrationToken.by_value(rtok) is None and not config.debug:
-                self.render('public/registration.html',
-                    errors=["Invalid registration token"]
-                )
+                self.render_error("Please select a team to join")
+            elif RegistrationToken.by_value(rtok) is None and not self.config.debug:
+                self.render_error("Invalid registration token")
             else:
-                self.create_user(account, handle, passwd, rtok)
-                self.render('public/successful_reg.html', account=account)
+                user = self.create_user(handle, passwd, bank_passwd, rtok)
+                self.render('public/successful_reg.html', account=user.handle)
         else:
             self.render('public/registration.html', errors=form.errors)
 
-    def create_user(self, account, handle, passwd, rtok):
+    def render_error(self, error):
+        self.render('public/registration.html', errors=[error])
+
+    def create_user(self, handle, passwd, bank_passwd, rtok):
         ''' Add user to the database '''
         team = Team.by_uuid(self.get_argument('team', ''))
         user = User(
-            account=unicode(account),
             handle=unicode(handle),
             team_id=team.id,
         )
         dbsession.add(user)
         dbsession.flush()
         user.password = passwd
+        user.bank_password = bank_passwd
         token = RegistrationToken.by_value(rtok)
         if token is not None:  # May be None if debug mode is on
             token.used = True
@@ -174,6 +165,7 @@ class RegistrationHandler(BaseHandler):
         dbsession.flush()
         event = self.event_manager.create_joined_team_event(user)
         self.new_events.append(event)
+        return user
 
 
 class AboutHandler(BaseHandler):

@@ -104,7 +104,8 @@ app = Application(
 
         # User handlers - UserHandlers.py
         (r'/user', HomeHandler),
-        (r'/user/settings(.*)', SettingsHandler),
+        (r'/user/settings', SettingsHandler),
+        (r'/user/settings/(.*)', SettingsHandler),
         (r'/logout', LogoutHandler),
 
         # Admin Handlers - AdminHandlers.py
@@ -173,7 +174,7 @@ app = Application(
     xsrf_cookies=True,
 
     # Recaptcha Settings
-    recaptcha_enable=config.recaptcha_enable,
+    recaptcha_enabled=config.recaptcha_enabled,
     recaptcha_private_key=config.recaptcha_private_key,
 
     # WebSocket Host IP Address
@@ -207,18 +208,23 @@ def start_server():
     try:
         sys.stdout.write("\r" + INFO + "The game has begun, good hunting!\n")
         if config.debug:
-            sys.stdout.write(WARN + "WARNING: Debug mode is enabled.\n")
+            sys.stdout.write(WARN + "WARNING: Debug mode is enabled (disable for production)\n")
         sys.stdout.flush()
         game_history = GameHistory.Instance()
         history_callback = PeriodicCallback(
-            game_history.take_snapshot, config.history_snapshot_interval, io_loop=io_loop
+            game_history.take_snapshot, 
+            config.history_snapshot_interval, 
+            io_loop=io_loop
         )
         scoring_callback = PeriodicCallback(
-            score_bots, config.bot_reward_interval, io_loop=io_loop
+            score_bots, 
+            config.bot_reward_interval, 
+            io_loop=io_loop
         )
         bot_ping_callback = PeriodicCallback(
             ping_bots, 30000, io_loop=io_loop
         )
+        # Start ALL THE THINGS!
         bot_ping_callback.start()
         history_callback.start()
         scoring_callback.start()

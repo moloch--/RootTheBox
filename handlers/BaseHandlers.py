@@ -145,9 +145,9 @@ class BaseHandler(RequestHandler):
 
     def on_finish(self, *args, **kwargs):
         if 0 < len(self.new_events):
-            self.__events__()
+            self._fire_events()
 
-    def __events__(self):
+    def _fire_events(self):
         ''' Fire new events '''
         for event in self.new_events:
             assert(2 == len(event))

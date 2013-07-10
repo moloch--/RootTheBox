@@ -539,7 +539,6 @@ class AdminEditHandler(BaseHandler):
         ''' Update user objects in the database '''
         form = Form(
             uuid="User not selected",
-            account="Please enter an account name",
             handle="Please enter a handle name",
             hash_algorithm="Please select a hash algorithm",
             team_uuid="Please select a team",
@@ -548,14 +547,6 @@ class AdminEditHandler(BaseHandler):
             errors = []
             user = User.by_uuid(self.get_argument('uuid'))
             if user is not None:
-                # Update user account name
-                if user.account != self.get_argument('account'):
-                    if User.by_account(self.get_argument('account')) is None:
-                        logging.info("Updated user account %s -> %s" %
-                            (user.account, self.get_argument('account'),))
-                        user.account = unicode(self.get_argument('account'))
-                    else:
-                        errors.append("Account name is already in use")
                 # Update user handle
                 if user.handle != self.get_argument('handle'):
                     if User.by_handle(self.get_argument('handle')) is None:
@@ -782,12 +773,8 @@ class AdminLockHandler(BaseHandler):
         uuid = self.get_argument('uuid', '')
         user = User.by_uuid(uuid)
         if user is not None:
-            if user.locked:
-                user.locked = False
-                dbsession.add(user)
-            else:
-                user.locked = True
-                dbsession.add(user) 
+            user.locked = False if user.locked else True
+            dbsession.add(user) 
             dbsession.flush()
         self.redirect('/admin/view/user_objects')
 

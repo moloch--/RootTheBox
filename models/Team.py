@@ -42,7 +42,6 @@ class Team(BaseObject):
     ))
     motto = Column(Unicode(255))
     members = relationship("User", backref=backref("Team", lazy="joined"), cascade="all, delete-orphan")
-    listen_port = Column(Integer, default=lambda: randint(1024, 65535), unique=True, nullable=False)
     files = relationship("FileUpload", backref=backref("Team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("Team", lazy="select"))
     money = Column(Integer, default=100, nullable=False)

@@ -31,6 +31,7 @@ from libs.ConfigManager import ConfigManager
 from models import dbsession, User, Permission, Theme, \
                     MarketItem, GameLevel, GameSettings
 
+from models.User import ADMIN_PERMISSION
 
 # Fills the database with some startup data.
 config = ConfigManager.Instance()
@@ -118,22 +119,18 @@ dbsession.add(game_level)
 dbsession.flush()
 
 # Admin User Account
-user = User(
-    account=u'admin',
-    handle=u'God',
-    algorithm=u'pbkdf2',
-)
-dbsession.add(user)
+admin_user = User(handle=u'admin')
+dbsession.add(admin_user)
 dbsession.flush()
-user.password = password
-dbsession.add(user)
+admin_user.password = password
+dbsession.add(admin_user)
 dbsession.flush()
 
-permission = Permission(
-    name=u'admin',
-    user_id=user.id
+admin_permission = Permission(
+    name=ADMIN_PERMISSION,
+    user_id=admin_user.id
 )
-dbsession.add(permission)
+dbsession.add(admin_permission)
 dbsession.flush()
 
 # Create intital game settings

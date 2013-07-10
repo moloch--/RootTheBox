@@ -60,7 +60,7 @@ class PasswordSecurityHandler(BaseHandler):
             passwd = self.get_argument('new_password1')
             old_passwd = self.get_argument('old_password')
             game_settings = GameSettings.get_active()
-            if not user.validate_password(old_passwd):
+            if not user.validate_bank_password(old_passwd):
                 self.render_page(["Invalid password"])
             elif not passwd == self.get_argument('new_password2'):
                 self.render_page(["New passwords do not match"])
@@ -94,7 +94,7 @@ class PasswordSecurityHandler(BaseHandler):
         user.algorithm = next_algorithm[2]  # String
         dbsession.add(user)
         dbsession.flush()
-        user.password = new_password
+        user.bank_password = new_password
         dbsession.add(user)
         dbsession.flush()
 
@@ -129,7 +129,6 @@ class FederalReserveAjaxHandler(BaseHandler):
     def post(self, *args, **kwargs):
         self.get(*args, **kwargs)
 
-    @debug
     def ls(self):
         if self.get_argument('data').lower() == 'accounts':
             self.write({'accounts': [team.name for team in Team.all()]})
@@ -139,14 +138,13 @@ class FederalReserveAjaxHandler(BaseHandler):
                 data[user.handle] = {
                     'account': user.team.name,
                     'algorithm': user.algorithm,
-                    'password': user.password,
+                    'password': user.bank_password,
                 }
             self.write({'users': data})
         else:
             self.write({'Error': 'Invalid data type'})
         self.finish()
 
-    @debug
     def info(self):
         team_name = self.get_argument('account')
         team = Team.by_name(team_name)
@@ -160,7 +158,6 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({'error': 'Account does not exist'})
         self.finish()
 
-    @debug
     def transfer(self):
         user = self.get_current_user()
         source = Team.by_name(self.get_argument('source', ''))
@@ -190,11 +187,11 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({
                 "error": "Source and destination are the same account"
             })
-        elif victim_user.validate_password(password):
+        elif victim_user.validate_bank_password(password):
             logging.info("Transfer request from %s to %s for $%d by %s" % (
                 source.name, destination.name, amount, user.handle
             ))
-            xfer = self.theft(victim_user, destination, amount, preimage)
+            xfer = self.theft(victim_user, destination, amount, password)
             self.write({
                 "success":
                 "Confirmed transfer to '%s' for $%d (after 15%s commission)" % (destination.name, xfer, '%',)

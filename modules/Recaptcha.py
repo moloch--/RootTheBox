@@ -28,7 +28,7 @@ class Recaptcha(UIModule):
 
     def render(self, *args, **kwargs):
         config = ConfigManager.Instance()
-        if config.recaptcha_enable:
+        if config.recaptcha_enabled:
             return self.render_string('recaptcha/captcha.html')
         else:
             return self.render_string('recaptcha/disabled.html')

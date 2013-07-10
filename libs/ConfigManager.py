@@ -111,14 +111,14 @@ class ConfigManager(object):
 
     def __recaptcha__(self):
         ''' Loads recaptcha settings '''
-        self.recaptcha_enable = self.config.getboolean("Recaptcha", 'enable')
+        self.recaptcha_enabled = self.config.getboolean("Recaptcha", 'use_recaptcha')
         self.recaptcha_private_key = self.config.get(
             "Recaptcha", 'private_key'
         )
 
     def __database__(self):
         ''' Loads database connection information '''
-        self.log_sql = self.config.getboolean("Database", 'log_sql')
+        self.log_sql = self.config.getboolean("Database", 'orm_sql')
         self.bot_sql = self.config.getboolean("Database", 'bot_sql')
         self.db_server = self.config.get("Database", 'server', "localhost")
         self.db_name = self.config.get("Database", 'name', "rootthebox")

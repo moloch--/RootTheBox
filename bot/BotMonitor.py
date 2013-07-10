@@ -899,7 +899,7 @@ def on_open(ws):
     logging.info("Sending credentials to engine")
     auth_msg = json.dumps({
         'opcode': 'auth', 
-        'account': ws.agent_name, 
+        'handle': ws.agent_name, 
         'password': ws.password
     })
     ws.send(auth_msg)
