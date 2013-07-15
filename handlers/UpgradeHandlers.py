@@ -130,11 +130,23 @@ class FederalReserveAjaxHandler(BaseHandler):
         self.get(*args, **kwargs)
 
     def ls(self):
+        current_user = self.get_current_user()
         if self.get_argument('data').lower() == 'accounts':
-            self.write({'accounts': [team.name for team in Team.all()]})
+            data = {}
+            for team in Team.all():
+                if team == current_user.team:
+                    continue
+                else:
+                    data[team.name] = {
+                        'money': team.money, 
+                        'flags': len(team.flags),
+                        'bots': team.bot_count,
+                    }
+            self.write({'accounts': data})
         elif self.get_argument('data').lower() == 'users':
             data = {}
-            for user in User.all_users():
+            target_users = User.not_team(current_user.team.id)
+            for user in target_users:
                 data[user.handle] = {
                     'account': user.team.name,
                     'algorithm': user.algorithm,

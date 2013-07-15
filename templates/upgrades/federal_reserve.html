@@ -11,7 +11,6 @@
 {% block content %}
     {% if user.has_item("Federal Reserve") %}
         {% include ../notifier.html %}
-
         <div class="container">
             <h1>Federal Reserve Bank</h1>
             <br />
@@ -56,7 +55,7 @@
                     term.echo("[[;#FF0000;#000]\[!\]] " + message.toString());
                 }
                 function print_data(term, display_buffer) {
-                    col_widths = []
+                    col_widths = [];
                     for (var index = 0; index < display_buffer[0].length; index++) {
                         col_widths[index] = get_longest(index, display_buffer);
                     }
@@ -188,15 +187,15 @@
                             $.getJSON('/federal_reserve/json/ls?data=users', function(data) {
                                 if ('users' in data) {
                                     users = data['users'];
-                                    console.log(users);
+                                    // console.log(users);
                                     display_buffer = [];
-                                    display_buffer[0] = ["id", "Name", "Algorithm", "Password"]
+                                    display_buffer[0] = ["id", "Account", "Name", "Password"];
                                     var count = 1;
                                     $.each(users, function(key, val) {
                                         display_buffer[count] = [];
                                         display_buffer[count][0] = count;
-                                        display_buffer[count][1] = key;
-                                        display_buffer[count][2] = val["algorithm"];
+                                        display_buffer[count][1] = val["account"];
+                                        display_buffer[count][2] = key;
                                         display_buffer[count][3] = val["password"];
                                         count += 1;
                                     });
@@ -215,14 +214,20 @@
                             term.pause();
                             $.getJSON('/federal_reserve/json/ls?data=accounts', function(data) {
                                 if ('accounts' in data) {
+                                    accounts = data['accounts'];
+                                    // console.log(accounts);
                                     display_buffer = [];
-                                    display_buffer[0] = ["id", "Account Name"];
-                                    for (var index=0; index < data['accounts'].length; index++) {
-                                        line = []
-                                        line[0] = (index + 1).toString();
-                                        line[1] = data['accounts'][index].toString();
-                                        display_buffer[index + 1] = line;
-                                    }
+                                    display_buffer[0] = ["id", "Account", "Balance", "Flags", "Bots"];
+                                    var count = 1;
+                                    $.each(accounts, function(key, val) {
+                                        display_buffer[count] = [];
+                                        display_buffer[count][0] = count;
+                                        display_buffer[count][1] = key;
+                                        display_buffer[count][2] = "$" + val["money"];
+                                        display_buffer[count][3] = val["flags"];
+                                        display_buffer[count][4] = val["bots"];
+                                        count += 1;
+                                    });
                                     term.echo(" ");
                                     print_data(term, display_buffer);
                                 } else {

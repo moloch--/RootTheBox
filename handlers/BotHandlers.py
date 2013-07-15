@@ -183,7 +183,7 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
         except:
             user = None
         if user is None or user.has_permission(ADMIN_PERMISSION):
-            logging.debug("Monitor socket user does not exist, or is admin.")
+            logging.debug("Monitor socket user does not exist.")
             self.write_message({
                 'opcode': 'auth_failure',
                 'message': 'Authentication failure',
@@ -193,9 +193,7 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
             logging.debug("Monitor socket successfully authenticated as %s" % user.handle)
             self.team_name = ''.join(user.team.name)
             self.bot_manager.add_monitor(self)
-            self.write_message({
-                'opcode': 'auth_success',
-            })
+            self.write_message({'opcode': 'auth_success'})
             boxes = self.bot_manager.get_boxes(self.team_name)
             self.update(boxes)
         else:

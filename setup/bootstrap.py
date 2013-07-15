@@ -120,8 +120,6 @@ dbsession.flush()
 
 # Admin User Account
 admin_user = User(handle=u'admin')
-dbsession.add(admin_user)
-dbsession.flush()
 admin_user.password = password
 dbsession.add(admin_user)
 dbsession.flush()

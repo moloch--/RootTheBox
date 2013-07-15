@@ -101,6 +101,14 @@ class User(BaseObject):
         )
 
     @classmethod
+    def not_team(cls, tid):
+        ''' Return all users not on a given team, exclude admins '''
+        teams = dbsession.query(cls).filter(cls.team_id != tid).all()
+        return filter(
+            lambda user: user.has_permission(ADMIN_PERMISSION) is False, teams
+        )
+
+    @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
         return dbsession.query(cls).filter_by(id=identifier).first()

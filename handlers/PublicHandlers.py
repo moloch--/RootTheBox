@@ -81,6 +81,7 @@ class LoginHandler(BaseHandler):
         if user.team is not None:
             self.session['team_id'] = int(user.team.id)
         self.session['user_id'] = int(user.id)
+        self.session['user_uuid'] = ''.join(user.uuid)  # Copy string
         self.session['handle'] = ''.join(user.handle)  # Copy string
         self.session['theme'] = ''.join(theme.cssfile)
         if user.has_permission(ADMIN_PERMISSION):
@@ -153,8 +154,6 @@ class RegistrationHandler(BaseHandler):
             handle=unicode(handle),
             team_id=team.id,
         )
-        dbsession.add(user)
-        dbsession.flush()
         user.password = passwd
         user.bank_password = bank_passwd
         token = RegistrationToken.by_value(rtok)
