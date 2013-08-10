@@ -23,7 +23,7 @@ from models import dbsession, GameLevel, IpAddress, \
 
 
 def create_game_level(level_number, buyout):
-    print(INFO + "Create game level " + bold + "#" + str(level_number) + W + \
+    print(INFO + "Create Game Level " + bold + "#" + str(level_number) + W + \
         " with a buyout of " + bold + "$" + str(buyout) + W)
     new_level = GameLevel(
         number=level_number,
@@ -47,7 +47,7 @@ def create_game_level(level_number, buyout):
 
 
 def create_team(name, motto):
-    print(INFO + "Create team: " + bold + name + W)
+    print(INFO + "Create Team: " + bold + name + W)
     team = Team(
         name=unicode(name),
         motto=unicode(motto),
@@ -60,7 +60,7 @@ def create_team(name, motto):
 
 
 def create_user(handle, password, bank_password, team):
-    print(INFO + "Create user: " + bold + handle + W)
+    print(INFO + "Create User: " + bold + handle + W)
     user = User(
         handle=unicode(handle),
         team_id=team.id,
@@ -73,7 +73,7 @@ def create_user(handle, password, bank_password, team):
 
 
 def create_corporation(name, description="No description"):
-    print(INFO + "Create corporation: " + bold + name + W)
+    print(INFO + "Create Corporation: " + bold + name + W)
     corp = Corporation(
         name=unicode(name),
         description=unicode(description),
@@ -111,7 +111,7 @@ def __mkipv6__(box, address):
 
 def create_box(name, corporation, difficulty, game_level,
                 ipv4_addresses=[], ipv6_addresses=[]):
-    print(INFO + "Create box: " + bold + name + W)
+    print(INFO + "Create Box: " + bold + name + W)
     box = Box(
         name=unicode(name),
         corporation_id=corporation.id,
@@ -129,7 +129,7 @@ def create_box(name, corporation, difficulty, game_level,
 
 def create_flag(name, token, value, box, description="No description",
                 is_file=False, is_regex=False, is_hash=False):
-    print(INFO + "Create flag: " + bold + name + W)
+    print(INFO + "Create Flag: " + bold + name + W)
     flag = Flag(
         name=unicode(name),
         token=unicode(token),

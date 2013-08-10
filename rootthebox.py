@@ -30,7 +30,7 @@ def serve(options, *args, **kwargs):
     ''' Starts the application '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from handlers import start_server
-    print(INFO + '%s : Starting application ...' % current_time())
+    print(INFO+'%s : Starting application ...' % current_time())
     start_server()
 
 
@@ -38,9 +38,9 @@ def create(options, *args, **kwargs):
     ''' Creates/bootstraps the database '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from models import create_tables, boot_strap
-    print(INFO + '%s : Creating the database ...' % current_time())
+    print(INFO+'%s : Creating the database ...' % current_time())
     create_tables()
-    print(INFO + '%s : Bootstrapping the database ...' % current_time())
+    print(INFO+'%s : Bootstrapping the database ...' % current_time())
     boot_strap()
 
 
@@ -48,7 +48,7 @@ def recovery(options, *args, **kwargs):
     ''' Starts the recovery console '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from setup.recovery import RecoveryConsole
-    print(INFO + '%s : Starting recovery console ...' % current_time())
+    print(INFO+'%s : Starting recovery console ...' % current_time())
     console = RecoveryConsole()
     try:
         console.cmdloop()
@@ -58,9 +58,13 @@ def recovery(options, *args, **kwargs):
 def setup(options, *args, **kwargs):
     ''' Imports a setup file '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
-    print(INFO + "%s : Running default setup file 'setup/game.py' ..." % current_time())
-    from setup import game  # Runs the setup script
-    print(INFO + "Setup file completed.")
+    print(INFO+"%s : Running default setup file 'setup/game.py' ..." % current_time())
+    try:
+        from setup import game
+    except Exception as error:
+        print(WARN+"Setup Error: Game script failed with "+str(error))
+        sys.exit()
+    print(INFO+"Setup file completed successfully.")
 
 ### Main
 if __name__ == '__main__':
