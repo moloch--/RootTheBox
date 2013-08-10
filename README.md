@@ -14,7 +14,7 @@ More details: [Root the Box](http://rootthebox.com/)
 
 Features
 -------------------
-* [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+* Distributed under the Apache License, Version 2.0
 * Team based [botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
 * Real-time scoreboard graphs using web sockets
 * Real-time status updates using web sockets

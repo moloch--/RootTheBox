@@ -24,6 +24,7 @@ import logging
 
 from models import dbsession, Snapshot, SnapshotTeam, Team
 from sqlalchemy import desc
+from libs.ConfigManager import ConfigManager
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from libs.Singleton import Singleton
@@ -38,7 +39,8 @@ class GameHistory(object):
     '''
 
     def __init__(self):
-        self.cache = pylibmc.Client(['127.0.0.1'], binary=True)
+        self.config = ConfigManager.Instance()
+        self.cache = pylibmc.Client([self.config.memcached], binary=True)
         self.epoch = None  # Date/time of first snapshot
         self._load()
         self.event_manager = EventManager.Instance()

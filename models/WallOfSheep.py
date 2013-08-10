@@ -85,8 +85,7 @@ class WallOfSheep(BaseObject):
         leaders = []
         for user in User.all_users():
             if 0 < cls.count_cracked_by(user.id):
-                leaders.append((
-                    user, 
+                leaders.append((user, 
                     cls.count_cracked_by(user.id), 
                     sum(cls.by_cracker_id(user.id)),
                 ))
@@ -109,7 +108,7 @@ class WallOfSheep(BaseObject):
         return len(self) - len(other)
 
     def __repr__(self):
-        return u'<WallOfSheep - preimage: %s, victim_id: %d>' % (
+        return '<WallOfSheep - preimage: %s, victim_id: %d>' % (
             self.preimage, self.victim_id,
         )
 

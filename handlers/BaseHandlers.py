@@ -48,7 +48,7 @@ class BaseHandler(RequestHandler):
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
             self.conn = pylibmc.Client(
-                [self.config.memcached_server],
+                [self.config.memcached],
                 binary=True
             )
             self.conn.behaviors['no_block'] = 1  # async I/O

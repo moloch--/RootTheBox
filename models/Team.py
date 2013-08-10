@@ -41,16 +41,35 @@ class Team(BaseObject):
             self, '_name', self.__class__.filter_string(name, " -_"))
     ))
     motto = Column(Unicode(255))
-    members = relationship("User", backref=backref("Team", lazy="joined"), cascade="all, delete-orphan")
+    
+    members = relationship("User", 
+        backref=backref("Team", lazy="joined"), 
+        cascade="all, delete-orphan")
+    
     files = relationship("FileUpload", backref=backref("Team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("Team", lazy="select"))
     money = Column(Integer, default=100, nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
-    flags = relationship("Flag", secondary=team_to_flag, backref=backref("Team", lazy="select"))
-    boxes = relationship("Box", secondary=team_to_box, backref=backref("Team", lazy="select"))
-    items = relationship("MarketItem", secondary=team_to_item, backref=backref("Team", lazy="joined"))
-    purchased_source_code = relationship("SourceCode", secondary=team_to_source_code, backref=backref("Team", lazy="select"))
-    game_levels = relationship("GameLevel", secondary=team_to_game_level, backref=backref("Team", lazy="select"))
+    
+    flags = relationship("Flag", 
+        secondary=team_to_flag, 
+        backref=backref("Team", lazy="select"))
+    
+    boxes = relationship("Box", 
+        secondary=team_to_box, 
+        backref=backref("Team", lazy="select"))
+    
+    items = relationship("MarketItem", 
+        secondary=team_to_item, 
+        backref=backref("Team", lazy="joined"))
+    
+    purchased_source_code = relationship("SourceCode", 
+        secondary=team_to_source_code, 
+        backref=backref("Team", lazy="select"))
+    
+    game_levels = relationship("GameLevel", 
+        secondary=team_to_game_level, 
+        backref=backref("Team", lazy="select"))
 
     @classmethod
     def all(cls):

@@ -99,7 +99,7 @@ class IpAddress(BaseObject):
         return bool(self.v6 is not None)
 
     def __repr__(self):
-        return u"<IpAddress - v4: %s, v6: %s>" % (str(self.v4), str(self.v6))
+        return "<IpAddress - v4: %s, v6: %s>" % (str(self.v4), str(self.v6))
 
     def __str__(self):
         if self.v6 is not None:

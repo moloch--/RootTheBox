@@ -57,19 +57,21 @@ from handlers.ShareUploadHandlers import *
 from handlers.NotificationHandlers import *
 
 
-### Setup and URLs ###
+### Setup cache
 config = ConfigManager.Instance()
 if config.cache_files:
     from handlers.StaticFileHandler import StaticFileHandler
 else:
     from tornado.web import StaticFileHandler  # lint:ok
 
+
+### Main URL Configuration
 app = Application(
     [
         # Static Handlers - StaticFileHandler.py
-        (r'/static/(.*)', 
+        (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv))', 
             StaticFileHandler, {'path': 'static/'}),
-        (r'/avatars/(.*)', 
+        (r'/avatars/static/(.*\.(png|jpeg|gif|bmp))', 
             StaticFileHandler, {'path': 'files/avatars/'}),
 
         # Bot Handlers - BotHandlers.py
@@ -206,9 +208,10 @@ def start_server():
     server.add_sockets(sockets)
     io_loop = IOLoop.instance()
     try:
-        sys.stdout.write("\r" + INFO + "The game has begun, good hunting!\n")
         if config.debug:
-            sys.stdout.write(WARN + "WARNING: Debug mode is enabled (disable for production)\n")
+            # Print a nice verbose warning
+            sys.stdout.write(WARN+"WARNING: Debug mode is enabled in "+config.filename)
+            sys.stdout.write(bold+"\n\n\t>>> Debug Mode Disables Some Security Measures <<<"+W+"\n\n")
         sys.stdout.flush()
         game_history = GameHistory.Instance()
         history_callback = PeriodicCallback(
@@ -230,13 +233,13 @@ def start_server():
         scoring_callback.start()
         io_loop.start()
     except KeyboardInterrupt:
-        sys.stdout.write('\r' + WARN + 'Shutdown Everything!\n')
+        sys.stdout.write('\r'+WARN+'Shutdown Everything!\n')
     except:
       logging.exception("Main i/o loop threw exception")
     finally:
         io_loop.stop()
-        if config.debug and raw_input(PROMPT + "Flush Memcache? [Y/n]: ").lower() == 'y':
-            sys.stdout.write(INFO + 'Flushing cache ...'),
+        if config.debug and raw_input(PROMPT+"Flush Memcache? [Y/n]: ").lower() == 'y':
+            sys.stdout.write(INFO+'Flushing cache ... '),
             FileCache.flush()
-            sys.stdout.write('OK\n')
+            sys.stdout.write('okay\n')
         _exit(0)

@@ -23,6 +23,7 @@ Created on Mar 12, 2012
 import pylibmc
 import logging
 
+from libs.ConfigManager import ConfigManager
 from base64 import b64encode
 
 
@@ -33,8 +34,9 @@ class FileCache(object):
 
     @classmethod
     def get(cls, file_path):
-        ''' Loads file from disk or memory cache '''
-        mem = pylibmc.Client(['127.0.0.1'], binary=True)
+        ''' Lazy loads file from disk or memory cache '''
+        config = ConfigManager.Instance()
+        mem = pylibmc.Client([config.memcached], binary=True)
         key = b64encode(file_path)
         data = mem.get(key)
         if data is None:
@@ -45,17 +47,19 @@ class FileCache(object):
                 if mem.set(key, data):
                     logging.info("Cached %s in memory." % file_path)
                 else:
-                    logging.error("Failed to properly cache image file.")
+                    logging.error("Failed to properly cache file.")
         return data
 
     @staticmethod
     def delete(file_path):
         ''' Remove file from memory cache '''
-        mem = pylibmc.Client(['127.0.0.1:11211'], binary=True)
+        config = ConfigManager.Instance()
+        mem = pylibmc.Client([config.memcached], binary=True)
         mem.delete(b64encode(file_path))
 
     @staticmethod
     def flush():
         ''' Flush memory cache '''
-        mem = pylibmc.Client(['127.0.0.1:11211'], binary=True)
+        config = ConfigManager.Instance()
+        mem = pylibmc.Client([config.memcached], binary=True)
         mem.flush_all()

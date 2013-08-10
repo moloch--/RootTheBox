@@ -42,6 +42,7 @@ class ConfigManager(object):
     ''' Central class which handles any user-controlled settings '''
 
     def __init__(self, cfg_file='rootthebox.cfg'):
+        self.filename = cfg_file
         if os.path.exists(cfg_file) and os.path.isfile(cfg_file):
             self.conf = os.path.abspath(cfg_file)
         elif os.path.exists('RootTheBox/' + cfg_file):
@@ -56,7 +57,7 @@ class ConfigManager(object):
         self.config.readfp(open(self.conf, 'r'))
         self.__server__()
         self.__game__()
-        self.__sessions__()
+        self.__cache__()
         self.__security__()
         self.__database__()
         self.__recaptcha__()
@@ -90,11 +91,13 @@ class ConfigManager(object):
             "Game", 'history_snapshot_interval'
         ))
 
-    def __sessions__(self):
+    def __cache__(self):
         ''' Session settings '''
-        self.memcached_server = self.config.get("Sessions", 'memcached')
-        self.session_age = self.config.getint("Sessions", 'session_age')
-        self.session_regeneration_interval = self.config.getint("Sessions",
+        self.memcached_host = self.config.get("Cache", 'memcached_host')
+        self.memcached_port = self.config.get("Cache", 'memcached_port')
+        self.memcached = "%s:%s" %(self.memcached_host, self.memcached_port)
+        self.session_age = self.config.getint("Cache", 'session_age')
+        self.session_regeneration_interval = self.config.getint("Cache",
             'session_regeneration_interval'
         )
 

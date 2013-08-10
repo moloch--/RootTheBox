@@ -51,19 +51,19 @@ def score_bots():
     settings = GameSettings.get_active()
     for team in Team.all():
         bots = bot_manager.by_team(team.name)
+        reward = 0
+        for bot in bots:
+            try:
+                reward += settings.bot_reward
+                bot.write_message({
+                    'opcode': 'status',
+                    'message': 'Collected $%d reward' % settings.bot_reward
+                })
+            except:
+                logging.info(
+                    "Bot at %s failed to respond to score ping" % bot.remote_ip
+                )
         if 0 < len(bots):
-            reward = 0
-            for bot in bots:
-                try:
-                    reward += settings.bot_reward
-                    bot.write_message({
-                        'opcode': 'status',
-                        'message': 'Collected $%d reward' % settings.bot_reward
-                    })
-                except:
-                    logging.info(
-                        "Bot at %s failed to respond to score ping" % bot.remote_ip
-                    )
             logging.debug("%s was awarded $%d for controlling %s bot(s)" % (
                 team.name, reward, len(bots),
             ))

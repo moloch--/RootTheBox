@@ -48,7 +48,7 @@ class MissionsHandler(BaseHandler):
             'flag': self.flag,
             'buyout': self.buyout,
         }
-        if len(args) == 1 and args[0] in uri.keys():
+        if len(args) == 1 and args[0] in uri:
             uri[str(args[0])]()
         else:
             self.render("public/404.html")
