@@ -15,6 +15,7 @@
     limitations under the License.
 '''
 
+import sys
 
 from optparse import OptionParser
 from datetime import datetime
@@ -63,32 +64,34 @@ def setup(options, *args, **kwargs):
 
 ### Main
 if __name__ == '__main__':
+    if not 1 < len(sys.argv):
+        sys.argv.append('-h')
     parser = OptionParser(
-        usage="python " + bold + "RootTheBox/" + W + " <options>",
+        usage=bold+"rootthebox.py"+W+" <options>",
         version=__version__,
     )
     parser.add_option(
         "-c", "--create-tables",
         action="callback",
         callback=create,
-        help="create database tables"
+        help="create and initialize database tables (run once)"
     )
     parser.add_option(
-        "-s", "--start", "--serve",
+        "-s", "--start",
         action="callback",
         callback=serve,
         help="start the server"
     )
     parser.add_option(
-        "-g", "--game",
+        "-g", "--game-script",
         action="callback",
         callback=setup,
-        help="run game setup script"
+        help="run a game setup script (setup/game.py)"
     )
     parser.add_option(
         "-r", "--recovery",
         action="callback",
         callback=recovery,
-        help="start the recovery console"
+        help="start the admin recovery console"
     )
     parser.parse_args()

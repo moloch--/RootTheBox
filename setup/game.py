@@ -24,7 +24,6 @@ the details for you.
 '''
 
 from setup.helpers import *
-from libs.ConsoleColors import *
 
 level_0 = GameLevel.all()[0]  # Level 0 is created by the bootstrap
 
