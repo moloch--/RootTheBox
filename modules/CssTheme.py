@@ -27,11 +27,12 @@ from libs.ConfigManager import ConfigManager
 class CssTheme(UIModule):
 
     def render(self, *args, **kwargs):
-        config = ConfigManager.Instance()
-        default_theme = config.default_theme
+        ''' Includes different CSS themes based on user prefs '''
         if self.handler.session is not None:
             return self.render_string("theme/css.html",
                 theme=self.handler.session['theme']
             )
         else:
+            config = ConfigManager.Instance()
+            default_theme = config.default_theme
             return self.render_string("theme/css.html", theme=default_theme)
