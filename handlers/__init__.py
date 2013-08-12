@@ -104,6 +104,7 @@ app = Application(
         (r'/user/missions', MissionsHandler),
         (r'/user/missions/(flag|buyout)', MissionsHandler),
         (r'/user/missions/firstlogin', FirstLoginHandler),
+        (r'/user/missions/boxes', BoxHandler),
 
         # User handlers - UserHandlers.py
         (r'/user', HomeHandler),

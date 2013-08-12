@@ -34,8 +34,9 @@ class Corporation(BaseObject):
     name = Column(Unicode(64), unique=True, nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     description = Column(Unicode(1024), nullable=False)
-    boxes = relationship("Box", backref=backref(
-        "Corporation", lazy="joined"), cascade="all, delete-orphan")
+    boxes = relationship("Box", 
+        backref=backref("Corporation", lazy="joined"), 
+        cascade="all, delete-orphan")
 
     @classmethod
     def all(cls):
@@ -59,11 +60,11 @@ class Corporation(BaseObject):
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
-        return dict(
-            uuid=self.uuid,
-            name=self.name,
-            description=self.description,
-        )
+        return {
+            "uuid": self.uuid,
+            "name": self.name,
+            "description": self.description,
+        }
 
     def __str__(self):
         return self.name

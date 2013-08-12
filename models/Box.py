@@ -42,6 +42,7 @@ class Box(BaseObject):
     description = Column(Unicode(4096))
     difficulty = Column(Unicode(64), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
+    avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
 
     teams = relationship("Team", 
         secondary=team_to_box, 

@@ -4,75 +4,6 @@
 
 {% block content %}
     {% include ../notifier.html %}
-    <!-- Submit text flag -->
-    <div id="submitTextFlagModal" class="modal hide fade" style="display: none; ">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Submit Flag</h3>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal" id="submit-text-flag" method="post" action="/user/missions/flag">
-                {% raw xsrf_form_html() %}
-                <input name="flag_type" type="hidden" value="text" />
-                <input id="flag_uuid_text" name="uuid" value="" type="hidden" />
-                <div class="control-group">
-                    <label class="control-label" for="flag_token">Flag</label>
-                    <div class="controls">
-                        <input autofocus required id="flag_token" name="token" type="text" placeholder="Flag" />
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <script>
-                function submit_text_flag() {
-                    if (notifier_ws !== undefined) {
-                        notifier_ws.close();
-                    }
-                    document.forms['submit-text-flag'].submit();
-                }
-            </script>
-            <button class="btn btn-primary" type="button" onclick="submit_text_flag();">
-            	Submit
-            </button>
-        </div>
-    </div>
-    <!-- Submit file flag -->
-    <div id="submitFileFlagModal" class="modal hide fade" style="display: none; ">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Submit Flag</h3>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal" id="submit-file-flag" method="post" enctype="multipart/form-data" action="/user/missions/flag">
-                {% raw xsrf_form_html() %}
-                <input name="flag_type" type="hidden" value="file" />
-                <input autofocus id="flag_uuid_file" name="uuid" value="" type="hidden" />
-                <div class="control-group">
-                    <label class="control-label" for="flag_file">Flag</label>
-                    <div class="controls">
-                        <input id="flag_file" name="flag" type="file" />
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <script>
-                function submit_file_flag() {
-                    if (notifier_ws !== undefined) {
-                        notifier_ws.close();
-                    }
-                    document.forms['submit-file-flag'].submit();
-                }
-            </script>
-            <button class="btn btn-primary" type="button" 
-            		onclick="submit_file_flag();">
-            	Submit
-            </button>
-        </div>
-    </div>
     <!-- Unlock Level -->
     <div id="unlockLevelModal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
@@ -95,9 +26,6 @@
         </div>
     </div>
     <script>
-    	function set_uuid(obj, uuid) {
-    		$("#flag_uuid_"+obj).val(uuid);
-    	}
     	function set_level_uuid (uuid, value) {
     		$("#level_uuid").val(uuid.toString());
     		$("#description").html("Would you like to unlock this level for $"+value.toString()+"?");
@@ -120,7 +48,7 @@
 		{% for level in GameLevel.all() %}
             {% if len(team.level_flags(level.number)) != len(level.flags) %}
 			    <div class="well">
-    				<h2 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h2>
+    				<h3 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h3>
                     {% if len(team.level_flags(level.number)) != 0 %}
                         <div class="progress">
                             <div class="bar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;">
@@ -129,54 +57,21 @@
                         </div>
                     {% end %}
     				{% if level in team.game_levels %}
-    					{% for box in level.boxes %}
-    						<hr>
-    						<h3>{{ box.corporation.name }} - {{ box.name }}</h3>
-    						<table class="table table-hover">
-    							<thead>
-    								<tr>
-    									<th>#</th>
-    									<th>Name</th>
-    									<th>Description</th>
-    									<th>Reward</th>
-    									<th><!-- Submit --></th>
-    								</tr>
-    							</thead>
-    							<tbody>
-    								{% for flag in box.flags %}
-    									{% if flag in team.flags %}
-    										<tr class="success">
-    									{% else %}
-    										<tr>
-    									{% end %}
-    										<td>{{ box.flags.index(flag) +1 }}</td>
-    										<td>{{ flag.name }}</td>
-    										<td>{{ flag.description }}</td>
-    										<td>${{ flag.value }}</td>
-    										{% if flag in team.flags %}
-    											<td><!-- Button --></td>
-    										{% else %}
-    											{% if flag.is_file %}
-    												<td>
-    													<a class="btn btn-mini" data-toggle="modal" 
-    														href="#submitFileFlagModal" onclick="set_uuid('file', '{{ flag.uuid }}')">
-    	                                                    Submit
-    	                                                </a>
-    												</td>
-    											{% else %}
-    												<td>
-    													<a class="btn btn-mini" data-toggle="modal" 
-    														href="#submitTextFlagModal" onclick="set_uuid('text', '{{ flag.uuid }}')">
-    	                                                    Submit
-    	                                                </a>
-    												</td>
-    											{% end %}
-    										{% end %}
-    									</tr>
-    								{% end %}
-    							</tbody>
-    						</table>
-    					{% end %}
+                        <hr>
+                        <div class="container">
+                            <div class="row">
+    					       {% for box in level.boxes %}
+    						        <div class="span3">
+                                        <center>
+                                            <a href="/user/missions/boxes?uuid={{ box.uuid }}">
+                                                <h5>{{ box.corporation.name }}: {{ box.name }}</h5>
+                                                <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
+                                            </a>
+                                        </center>
+                                    </div>
+                               {% end %}
+                            </div>
+                        </div>
     				{% else %}
     					<a class="btn" data-toggle="modal" href="#unlockLevelModal"
     						onclick="set_level_uuid('{{ level.uuid }}', '{{ level.buyout }}')">

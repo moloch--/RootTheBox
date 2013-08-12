@@ -26,7 +26,7 @@ This file contains the code for displaying flags / recv flag submissions
 
 import logging
 
-from models import dbsession, GameLevel, Flag
+from models import dbsession, GameLevel, Flag, Box
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
@@ -38,6 +38,16 @@ class FirstLoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         self.render('missions/firstlogin.html', user=user)
+
+
+class BoxHandler(BaseHandler):
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        uuid = self.get_argument('uuid', '')
+        box = Box.by_uuid(uuid)
+        user = self.get_current_user()
+        self.render('missions/box.html', box=box, team=user.team)
 
 
 class MissionsHandler(BaseHandler):
@@ -164,7 +174,8 @@ class MissionsHandler(BaseHandler):
             flag.value = int(flag.value * 0.90)
             dbsession.add(flag)
             dbsession.flush()
-            self.event_manager.flag_capture(user, flag)
+            event = self.event_manager.create_flag_capture_event(user, flag)
+            self.new_events.append(event)
             return []
         else:
             return ["Invalid flag submission"]
