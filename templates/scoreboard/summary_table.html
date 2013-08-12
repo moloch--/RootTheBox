@@ -8,9 +8,8 @@
         <td>${{ team.money }}</td>
         <td>{{ team.levels[-1].number }} </td>
         <td>
-            <a class="btn btn-mini" data-toggle="modal" href="#teamDetailsModal"
-                onclick="team_details('{{ team.uuid }}')">
-                Member Details
+            <a class="btn btn-mini" data-toggle="modal" onclick="window.location='/teams#{{ team.uuid }}'">
+                Team Members
             </a>
         </td>
     </tr>

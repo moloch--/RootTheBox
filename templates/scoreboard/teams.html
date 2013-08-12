@@ -1,0 +1,31 @@
+{% extends "../main.html" %}
+
+{% block title %}Settings{% end %}
+
+{% block content %}
+    {% include ../notifier.html %}
+    <div class="container">
+    	<h1>Teams</h1>
+    	<br />
+    	{% from models import Team %}
+    	{% for index, team in enumerate(Team.ranks()) %}
+	    	<div id="{{ team.uuid }}" class="well">
+	    		<h2 style="display:inline;">{{ index }} - {{ team.name }}</h2>
+	    		<h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>
+	    		<hr>
+	    		<div class="container">
+	    			<div class="row">
+		    			{% for index, user in enumerate(team.members) %}
+		    				<div class="span2">
+		    					<center>
+		    						<h5>{{ user.handle }}</h5>
+		    						<img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+		    					</center>
+		    				</div>
+		    			{% end %}
+	    			</div>
+    			</div>
+	    	</div>
+    	{% end %}
+    </div>
+{% end %}

@@ -32,13 +32,13 @@
         <div class="container-fluid animated fadeIn">
             {% block content %} Content Missing {% end %}
             <hr>
-        <footer>
-            <p>
-                <a href="http://rootthebox.com" target="_blank">Root the Box</a> &copy; {{ datetime.date.today().year }} -
-                <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a> -
-                Version {{ handler.application.settings['version'] }}
-            </p>
-        </footer>
+            <footer>
+                <p>
+                    <a href="http://rootthebox.com" target="_blank">Root the Box</a> &copy; {{ datetime.date.today().year }} -
+                    <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a> -
+                    Version {{ handler.application.settings['version'] }}
+                </p>
+            </footer>
         </div><!--/.fluid-container--> 
     </body>
 </html>

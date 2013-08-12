@@ -189,3 +189,8 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
             leaderboard=leaderboard,
             flock=sheep,
         )
+
+class TeamsHandler(BaseHandler):
+
+    def get(self, *args, **kwargs):
+        self.render('scoreboard/teams.html')

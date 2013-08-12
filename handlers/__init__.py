@@ -133,6 +133,7 @@ app = Application(
         (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
         (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
         (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
+        (r'/teams', TeamsHandler),
 
         # Public handlers - PublicHandlers.py
         (r'/login', LoginHandler),

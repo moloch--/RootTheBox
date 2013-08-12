@@ -29,7 +29,7 @@ import imghdr
 import logging
 
 from uuid import uuid4
-from models import dbsession, User, Theme
+from models import dbsession, User, Theme, Team
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
