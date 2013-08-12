@@ -42,7 +42,7 @@ from tornado import netutil
 from tornado.web import Application
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
-from handlers.BotHandlers import *
+from handlers.BotnetHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
 from handlers.ErrorHandlers import *
@@ -71,7 +71,7 @@ app = Application(
         # Static Handlers - StaticFileHandler.py
         (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv))', 
             StaticFileHandler, {'path': 'static/'}),
-        (r'/avatars/static/(.*\.(png|jpeg|gif|bmp))', 
+        (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))', 
             StaticFileHandler, {'path': 'files/avatars/'}),
 
         # Bot Handlers - BotHandlers.py
@@ -102,7 +102,8 @@ app = Application(
 
         # Mission handlers - MissionHandlers.py
         (r'/user/missions', MissionsHandler),
-        (r'/user/missions/(.*)', MissionsHandler),
+        (r'/user/missions/(flag|buyout)', MissionsHandler),
+        (r'/user/missions/firstlogin', FirstLoginHandler),
 
         # User handlers - UserHandlers.py
         (r'/user', HomeHandler),

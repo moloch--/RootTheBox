@@ -33,7 +33,7 @@ from hashlib import md5, sha1, sha256, sha512
 from pbkdf2 import PBKDF2
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
-from sqlalchemy.types import Unicode, Integer, String, Boolean
+from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
 from models import dbsession, Team, Permission
 from models.MarketItem import MarketItem
 from models.BaseGameObject import BaseObject
@@ -80,7 +80,9 @@ class User(BaseObject):
             self, '_bank_password', self.__class__._hash_bank_password(self.algorithm, bank_password))
     ))
     algorithm = Column(Unicode(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
-    theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
+    theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)   
+    last_login = Column(DateTime)
+    logins = Column(Integer, default=0)
     algorithms = {
         'md5': (md5, 1, u'md5',), 
         'sha1': (sha1, 2, u'sha1',), 

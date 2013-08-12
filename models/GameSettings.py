@@ -41,6 +41,8 @@ class GameSettings(BaseObject):
     password_upgrade_cost = Column(Integer, nullable=False, default=1500)
     bribe_cost = Column(Integer, nullable=False, default=1500)
 
+    #first_login_message = Column(Unicode(4096), default=u"Welcome to Root the Box")
+
     @classmethod
     def get_active(cls):
         ''' Return first active settings '''

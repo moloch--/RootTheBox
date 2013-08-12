@@ -32,6 +32,14 @@ from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
 
 
+class FirstLoginHandler(BaseHandler):
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        user = self.get_current_user()
+        self.render('missions/firstlogin.html', user=user)
+
+
 class MissionsHandler(BaseHandler):
     ''' Renders pages related to Missions/Flag submissions '''
 

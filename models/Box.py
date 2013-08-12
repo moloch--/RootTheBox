@@ -30,6 +30,7 @@ from models.GameLevel import GameLevel
 from models.Corporation import Corporation
 from models.BaseGameObject import BaseObject
 from models.SourceCode import SourceCode
+from models.Hint import Hint
 
 
 class Box(BaseObject):
@@ -38,12 +39,21 @@ class Box(BaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(64), unique=True, nullable=False)
-    ip_addresses = relationship("IpAddress", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
-    description = Column(Unicode(2048))
+    description = Column(Unicode(4096))
     difficulty = Column(Unicode(64), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
-    teams = relationship("Team", secondary=team_to_box, backref=backref("Box", lazy="joined"))
-    flags = relationship("Flag", backref=backref("Box", lazy="joined"), cascade="all, delete-orphan")
+
+    teams = relationship("Team", 
+        secondary=team_to_box, 
+        backref=backref("Box", lazy="joined"))
+    
+    flags = relationship("Flag", 
+        backref=backref("Box", lazy="joined"), 
+        cascade="all, delete-orphan")
+
+    ip_addresses = relationship("IpAddress", 
+        backref=backref("Box", lazy="joined"), 
+        cascade="all, delete-orphan")
 
     @classmethod
     def all(cls):
@@ -108,6 +118,16 @@ class Box(BaseObject):
     @property
     def source_code(self):
         return SourceCode.by_box_id(self.id)
+
+    @property
+    def all_hints(self):
+        ''' Returns all hints on this box '''
+        return Hint.by_box_id(self.id)
+
+    @property
+    def team_hints(self, team):
+        ''' Returns all hints owned by the a given team on this box '''
+        return filter(lambda hint: hint in team.puchased_hints, self.all_hints)
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''

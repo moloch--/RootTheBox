@@ -1,5 +1,8 @@
 *.py[co]
 
+# File uploads / etc
+files/shares/*
+
 # Packages
 *.egg
 *.egg-info

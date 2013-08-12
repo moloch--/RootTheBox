@@ -34,12 +34,15 @@ db_connection = 'mysql://%s:%s@%s/%s' % (
     config.db_user, config.db_password, config.db_server, config.db_name
 )
 
-# Setup the database session
+
+### Setup the database session
 engine = create_engine(db_connection)
 setattr(engine, 'echo', config.log_sql)
 Session = sessionmaker(bind=engine, autocommit=True)
 dbsession = Session(autoflush=True)
 
+
+### Secondary tables used for relations
 team_to_box = Table('team_to_box', BaseObject.metadata,
     Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
     Column('box_id', Integer, ForeignKey('box.id'), nullable=False)
@@ -53,6 +56,11 @@ team_to_item = Table('team_to_item', BaseObject.metadata,
 team_to_source_code = Table('team_to_source_code', BaseObject.metadata,
     Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
     Column('source_code_id', Integer, ForeignKey('source_code.id'), nullable=False)
+)
+
+team_to_hint = Table('team_to_hint', BaseObject.metadata,
+    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
+    Column('hint_id', Integer, ForeignKey('hint.id'), nullable=False)
 )
 
 team_to_flag = Table('team_to_flag', BaseObject.metadata,
@@ -101,6 +109,7 @@ from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.GameSettings import GameSettings
+from models.Hint import Hint
 
 # calling this will create the tables at the database
 create_tables = lambda: (setattr(engine, 'echo', config.log_sql), metadata.create_all(engine))

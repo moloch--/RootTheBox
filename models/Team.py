@@ -25,11 +25,13 @@ from random import randint
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode, String
-from models import dbsession, team_to_box, team_to_item, \
-    team_to_flag, team_to_game_level, team_to_source_code
+from models import dbsession, team_to_box, team_to_item,   \
+    team_to_flag, team_to_game_level, team_to_source_code, \
+    team_to_hint
 from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits
 from libs.BotManager import BotManager
+
 
 class Team(BaseObject):
     ''' Team definition '''
@@ -66,7 +68,11 @@ class Team(BaseObject):
     purchased_source_code = relationship("SourceCode", 
         secondary=team_to_source_code, 
         backref=backref("Team", lazy="select"))
-    
+
+    purchased_hints = relationship("Hint", 
+        secondary=team_to_hint, 
+        backref=backref("Team", lazy="select"))
+ 
     game_levels = relationship("GameLevel", 
         secondary=team_to_game_level, 
         backref=backref("Team", lazy="select"))

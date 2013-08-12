@@ -65,6 +65,8 @@ def create_user(handle, password, bank_password, team):
         handle=unicode(handle),
         team_id=team.id,
     )
+    dbsession.add(user)
+    dbsession.flush()
     user.password = password
     user.bank_password = bank_password
     dbsession.add(user)

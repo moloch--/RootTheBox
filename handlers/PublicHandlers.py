@@ -29,11 +29,10 @@ import logging
 
 from libs.Form import Form
 from libs.ConfigManager import ConfigManager
-from handlers.BaseHandlers import BaseHandler
-from models import dbsession, User, Team, Theme, \
-    RegistrationToken
+from models import dbsession, User, Team, Theme, RegistrationToken
 from models.User import ADMIN_PERMISSION
-
+from handlers.BaseHandlers import BaseHandler
+from datetime import datetime
 
 class HomePageHandler(BaseHandler):
 
@@ -61,7 +60,10 @@ class LoginHandler(BaseHandler):
             if user is not None and user.validate_password(password_attempt):
                 if not user.locked:
                     self.successful_login(user)
-                    self.redirect('/user')
+                    if 1 == user.logins:
+                        self.redirect('/user/missions/firstlogin')
+                    else:
+                        self.redirect('/user')
                 else:
                     self.render('public/login.html', 
                         errors=["Your account has been locked"]
@@ -76,14 +78,18 @@ class LoginHandler(BaseHandler):
         logging.info("Successful login: %s from %s" % (
             user.handle, self.request.remote_ip,
         ))
+        user.last_login = datetime.now()
+        user.logins += 1
+        dbsession.add(user)
+        dbsession.flush()
         self.start_session()
         theme = Theme.by_id(user.theme_id)
         if user.team is not None:
             self.session['team_id'] = int(user.team.id)
         self.session['user_id'] = int(user.id)
-        self.session['user_uuid'] = ''.join(user.uuid)  # Copy string
-        self.session['handle'] = ''.join(user.handle)  # Copy string
-        self.session['theme'] = ''.join(theme.cssfile)
+        self.session['user_uuid'] = user.uuid
+        self.session['handle'] = user.handle
+        self.session['theme'] = theme.cssfile
         if user.has_permission(ADMIN_PERMISSION):
             self.session['menu'] = 'admin'
         else:

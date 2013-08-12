@@ -16,6 +16,7 @@
 '''
 
 import sys
+import logging
 
 from optparse import OptionParser
 from datetime import datetime
@@ -62,6 +63,7 @@ def setup(options, *args, **kwargs):
     try:
         from setup import game
     except Exception as error:
+        logging.exception("Game setup script raised an exception!")
         print(WARN+"Setup Error: Game script failed with "+str(error))
         sys.exit()
     print(INFO+"Setup file completed successfully.")
