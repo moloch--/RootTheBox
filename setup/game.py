@@ -28,12 +28,12 @@ from setup.helpers import *
 level_0 = GameLevel.all()[0]  # Level 0 is created by the bootstrap
 
 ################ [ CREATE YOUR GAME OBJECTS HERE ] ################
-# Create teams
+# > Create teams
 # create_team(TEAM_NAME, TEAM_MOTTO)
 team_a = create_team("The A Team", "Pdc Baby")
 team_b = create_team("The B Team", "Always 2nd Best")
 
-# Create users
+# > Create users
 # create_user(HACKER_NAME, PASSWORD, BANK_PASSWORD, TEAM_OBJECT)
 joe = create_user("moloch", "asdf", '1234', team_a)
 john = create_user("hathcox", "password", '1234', team_a)
@@ -41,26 +41,58 @@ john = create_user("hathcox", "password", '1234', team_a)
 steve = create_user("stormcrow", "qwerty", '4321', team_b)
 rick = create_user("wildicv", "foobar", '4321', team_b)
 
-# Create game levels
+# > Create game levels
 # create_game_level(LEVEL_NUMBER, BUYOUT)
 level_1 = create_game_level(1, 5000)
 level_2 = create_game_level(2, 7500)
 
-# Create Corporations
+# > Create Corporations
 # create_corporation(CORP_NAME, CORP_DESCRIPTION)
 seatec = create_corporation("SEATEC Astronomy", "No more secrets")
 microshaft = create_corporation("Micro$haft", "All we want, is your money")
 
-# Crate Boxes
-# create_box(BOX_NAME, CORP_OBJECT, DIFFICUTLY, LEVEL_OBJECT, LIST_OF_IPv4, LIST_OF_IPv6)
-seatec_mail = create_box("Mail Server", seatec, "Easy", level_0, ipv4_addresses=["192.168.2.50"])
-seatec_fw = create_box("Firewall", seatec, "Hard", level_0, ipv4_addresses=["192.168.2.1"])
+# > Crate Boxes
+# create_box(BOX_NAME, CORP_OBJECT, DIFFICUTLY, LEVEL_OBJECT, DESCRIPTION, LIST_OF_IPv4, LIST_OF_IPv6)
+seatec_mail = create_box("Mail Server", 
+    corporation=seatec, 
+    difficulty="Easy", 
+    game_level=level_0, 
+    description="""Your employer requests that you locate several items on this server.
+Intel reports its a UNIX server located somewhere in 192.168.2.20-100
+""",
+    ipv4_addresses=["192.168.2.50"]
+)
+seatec_fw = create_box("Firewall", 
+    corporation=seatec, 
+    difficulty="Hard", 
+    game_level=level_0, 
+    description="",
+    ipv4_addresses=["192.168.2.1"]
+)
 
-microshaft_web = create_box("Web Server", microshaft, "Medium", level_1, ipv4_addresses=["192.168.3.2"])
-microshaft_dev = create_box("Stage Server", microshaft, "Medium", level_1, ipv4_addresses=["192.168.3.4"])
-microshaft_laptop = create_box("CEO Laptop", microshaft, "Hard", level_2, ipv4_addresses=["127.0.0.1"])
+microshaft_web = create_box("Web Server", 
+    corporation=microshaft, 
+    difficulty="Medium", 
+    game_level=level_1, 
+    description="",
+    ipv4_addresses=["192.168.3.2"]
+)
+microshaft_dev = create_box("Stage Server", 
+    corporation=microshaft, 
+    difficulty="Medium", 
+    game_level=level_1, 
+    description="",
+    ipv4_addresses=["192.168.3.4"]
+)
+microshaft_laptop = create_box("CEO Laptop", 
+    corporation=microshaft, 
+    difficulty="Hard", 
+    game_level=level_2, 
+    description="",
+    ipv4_addresses=["127.0.0.1"]
+)
 
-# Create Flags
+# > Create Flags
 # create_flag(FLAG_NAME, TOKEN, REWARD_VALUE, BOX_OBJECT, DESCRIPTION, IS_FILE, IS_REGEX, IS_HASH)
 # IS_FILE: The user should submit a file, the token is the md5 of the file
 # IS_REGEX: The user should submit a string, the token is a regex if the string matches the flag submission is successful

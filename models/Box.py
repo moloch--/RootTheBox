@@ -121,14 +121,9 @@ class Box(BaseObject):
         return SourceCode.by_box_id(self.id)
 
     @property
-    def all_hints(self):
+    def hints(self):
         ''' Returns all hints on this box '''
         return Hint.by_box_id(self.id)
-
-    @property
-    def team_hints(self, team):
-        ''' Returns all hints owned by the a given team on this box '''
-        return filter(lambda hint: hint in team.puchased_hints, self.all_hints)
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''

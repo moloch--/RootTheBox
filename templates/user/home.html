@@ -2,13 +2,6 @@
 
 {% block title %}User Index{% end %}
 
-{% block header %}
-	<script type="text/javascript" src="/static/js/libs/pikachoose/jquery.jcarousel.min.js"></script>
-	<script type="text/javascript" src="/static/js/libs/pikachoose/jquery.pikachoose.js"></script>
-	<link type="text/css" rel="stylesheet" href="/static/css/team_css3.css" />
-	<link type="text/css" rel="stylesheet" href="/static/css/team_styles.css" />
-{% end %}
-
 {% block content %}
 	{% include ../notifier.html %}
 	<div class="row-fluid">
@@ -21,24 +14,6 @@
 						<strong>Bank Account:</strong> ${{ user.team.money }} <br />
 						<strong>Active Bots:</strong> {{ user.team.bot_count }}<br />		
 						<strong>Flags Captured:</strong> {{ len(user.team.flags) }}<br />
-					{% else %}
-						<strong>You are not on a team</strong>
-					{% end %}
-				</div>
-				<div class="span11 offset1 well">
-					{% if user.team is not None %}
-	                    <h3 style="display: inline;">{{ user.team.name }}</h3>
-	                    <h4 style="display: inline;">&nbsp;&nbsp;&nbsp;&quot;{{ user.team.motto }}&quot;</h4>
-						<div class="pikachoose">
-							<ul id="pikame">
-								{% for teammate in user.team.members %}
-									<li>
-										<a href="#"><img src="/avatars/{{ teammate.avatar }}" alt="picture" /></a>
-										<span>{{ teammate.handle }}</span>
-									</li>
-								{% end %}
-							</ul>
-						</div>
 					{% else %}
 						<strong>You are not on a team</strong>
 					{% end %}

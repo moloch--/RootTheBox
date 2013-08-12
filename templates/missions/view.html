@@ -32,7 +32,7 @@
     	}
     </script>
     <!-- Visable -->
-	<div class="container">
+    <div class="container">
 		<h1>Missions</h1>
 		<br />
 	    {% if errors is not None and len(errors) != 0 %}
@@ -59,8 +59,8 @@
     				{% if level in team.game_levels %}
                         <hr>
                         <div class="container">
-                            <div class="row">
-    					       {% for box in level.boxes %}
+                            {% for box in level.boxes[::3] %}
+                                <div class="row">
     						        <div class="span3">
                                         <center>
                                             <a href="/user/missions/boxes?uuid={{ box.uuid }}">
@@ -69,8 +69,31 @@
                                             </a>
                                         </center>
                                     </div>
-                               {% end %}
-                            </div>
+
+                                    {% if level.boxes.index(box) + 1 < len(level.boxes) %}
+                                        <div class="span3 offset1">
+                                            <center>
+                                                <a href="/user/missions/boxes?uuid={{ level.boxes[level.boxes.index(box) + 1].uuid }}">
+                                                    <h5>{{ level.boxes[level.boxes.index(box) + 1].corporation.name }}: {{ level.boxes[level.boxes.index(box) + 1].name }}</h5>
+                                                    <img src="/avatars/{{ level.boxes[level.boxes.index(box) + 1].avatar }}" class="img-polaroid" />
+                                                </a>
+                                            </center>
+                                        </div>
+                                    {% end %}
+                                   
+                                    {% if level.boxes.index(box) + 2 < len(level.boxes) %}
+                                        <div class="span3 offset1">
+                                            <center>
+                                                <a href="/user/missions/boxes?uuid={{ level.boxes[level.boxes.index(box) + 2].uuid }}">
+                                                    <h5>{{ level.boxes[level.boxes.index(box) + 2].corporation.name }}: {{ level.boxes[level.boxes.index(box) + 2].name }}</h5>
+                                                    <img src="/avatars/{{ level.boxes[level.boxes.index(box) + 2].avatar }}" class="img-polaroid" />
+                                                </a>
+                                            </center>
+                                        </div>
+                                    {% end %}                                
+                                </div>
+                                <br />
+                            {% end %}
                         </div>
     				{% else %}
     					<a class="btn" data-toggle="modal" href="#unlockLevelModal"

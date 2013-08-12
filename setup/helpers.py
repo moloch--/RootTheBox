@@ -111,7 +111,7 @@ def __mkipv6__(box, address):
     return ip
 
 
-def create_box(name, corporation, difficulty, game_level,
+def create_box(name, corporation, difficulty, game_level, description,
                 ipv4_addresses=[], ipv6_addresses=[]):
     print(INFO + "Create Box: " + bold + name + W)
     box = Box(
@@ -119,6 +119,7 @@ def create_box(name, corporation, difficulty, game_level,
         corporation_id=corporation.id,
         difficulty=unicode(difficulty),
         game_level_id=game_level.id,
+        description=unicode(description),
     )
     dbsession.add(box)
     dbsession.flush()

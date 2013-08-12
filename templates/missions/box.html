@@ -73,9 +73,41 @@
             </button>
         </div>
     </div>
+    <!-- Purchase Hint Modal -->
+    <div id="purchaseHintModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Purchase Hint</h3>
+        </div>
+        <div class="modal-body">
+            Would like to purchase this hint?
+            <form class="form-horizontal" id="submit-hint" method="post" enctype="multipart/form-data" action="/user/missions/hint">
+                {% raw xsrf_form_html() %}
+                <input id="hint_uuid" name="uuid" value="" type="hidden" />
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <script>
+                function submit_hint() {
+                    if (notifier_ws !== undefined) {
+                        notifier_ws.close();
+                    }
+                    document.forms['submit-hint'].submit();
+                }
+            </script>
+            <button class="btn btn-primary" type="button" 
+                    onclick="submit_hint();">
+                Submit
+            </button>
+        </div>
+    </div>
     <script>
-        function set_uuid(obj, uuid) {
+        function set_flag_uuid(obj, uuid) {
             $("#flag_uuid_"+obj).val(uuid);
+        }
+        function set_hint_uuid(uuid) {
+            $("#hint_uuid").val(uuid);
         }
     </script>
     <!-- Visable -->
@@ -93,6 +125,43 @@
             </div>
         </div>
         <br />
+        {% if len(box.hints) != 0 %}
+            <div class="well">
+                <table class="table table-hover">
+                    <caption><h4> - Flags - </h4></caption>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Price</th>
+                            <th>Hint</th>
+                            <th><!-- Purchase Button --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, hint in enumerate(box.hints) %}
+                            <tr>
+                                <th>{{ index + 1 }}</th>
+                                {% if hint in team.hints %}
+                                    <th><strong>Purchased</strong></th>
+                                    <th>{{ hint.description }}</th>
+                                    <th><!-- Blank --></th>
+                                {% else %}
+                                    <th>${{ hint.price }}</th>
+                                    <th><strong>Not Purchased</strong></th>
+                                    <th>
+                                        <a class="btn btn-mini" data-toggle="modal" 
+                                            href="#purchaseHintModal" onclick="set_hint_uuid('text', '{{ hint.uuid }}')">
+                                            Purchase
+                                        </a>
+                                    </th>
+                                {% end %}
+                            </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            </div>
+            <br />
+        {% end %}
         <div class="well">
             <table class="table table-hover">
                 <caption><h4> - Flags - </h4></caption>
@@ -122,14 +191,14 @@
             					{% if flag.is_file %}
             						<td>
             							<a class="btn btn-mini" data-toggle="modal" 
-            								href="#submitFileFlagModal" onclick="set_uuid('file', '{{ flag.uuid }}')">
+            								href="#submitFileFlagModal" onclick="set_flag_uuid('file', '{{ flag.uuid }}')">
                                             Submit
                                         </a>
             						</td>
             					{% else %}
             						<td>
             							<a class="btn btn-mini" data-toggle="modal" 
-            								href="#submitTextFlagModal" onclick="set_uuid('text', '{{ flag.uuid }}')">
+            								href="#submitTextFlagModal" onclick="set_flag_uuid('text', '{{ flag.uuid }}')">
                                             Submit
                                         </a>
             						</td>
