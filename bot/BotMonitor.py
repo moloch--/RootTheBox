@@ -23,7 +23,7 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ---------
 
-Linux only (well anything with curses really)
+Linux/OSX only (well anything with curses really)
 Small program used by teams to monitor their flags
 For the sake of portability everything is in one file
 
