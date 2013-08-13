@@ -16,7 +16,7 @@
             {% end %}
         {% end %}
         <div class="well">
-            <form class="form-horizontal" action="/admin/create/box" method="post">  
+            <form class="form-horizontal" action="/admin/create/box" method="post" enctype="multipart/form-data">  
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
                     <label class="control-label" for="box_name">Box Name</label>
@@ -58,6 +58,12 @@
                     <label class="control-label" for="difficulty">Difficulty</label>
                     <div class="controls">
                         <input required id="difficulty" name="difficulty" type="text" placeholder="Difficulty">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
+                    <div class="controls">
+                        <input required id="avatar" name="avatar" type="file">
                     </div>
                 </div>
                 <div class="control-group">

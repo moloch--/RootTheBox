@@ -2,6 +2,7 @@
 
 # File uploads / etc
 files/shares/*
+files/avatars/*
 
 # Packages
 *.egg

@@ -87,15 +87,12 @@ class SettingsHandler(BaseHandler):
                 ext = imghdr.what(
                     "", h=self.request.files['avatar'][0]['body']
                 )
-                avatar_path = str(self.application.settings['avatar_dir'] +
-                    '/' + user.avatar)
+                avatar_path = str(self.application.settings['avatar_dir'] + '/' + user.avatar)
                 if ext in ['png', 'jpeg', 'gif', 'bmp']:
                     if os.path.exists(avatar_path):
                         os.unlink(avatar_path)
-                    user.avatar = unicode(user.avatar[:user.avatar.rfind('.')]
-                        + "." + ext)
-                    file_path = str(self.application.settings['avatar_dir'] +
-                        '/' + user.avatar)
+                    user.avatar = unicode(user.avatar[:user.avatar.rfind('.')] + "." + ext)
+                    file_path = str(self.application.settings['avatar_dir'] + '/' + user.avatar)
                     avatar = open(file_path, 'wb')
                     avatar.write(self.request.files['avatar'][0]['body'])
                     avatar.close()

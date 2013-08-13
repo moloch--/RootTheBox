@@ -19,7 +19,7 @@ Created on Mar 13, 2012
     limitations under the License.
 ----------------------------------------------------------------------------
 
-There's a lot of code in here ...
+There's a lot of code in here ... and it's mostly ugly validation code...
 
 This file contains all of the adminstrative functions.
 
@@ -27,7 +27,9 @@ This file contains all of the adminstrative functions.
 
 
 import os
+import imghdr
 
+from uuid import uuid4
 from base64 import b64encode
 from hashlib import md5
 from libs.Form import Form
@@ -158,7 +160,12 @@ class AdminCreateHandler(BaseHandler):
             elif not self.is_token(is_file):
                 self.render(page, errors=["Missing or invalid token."])
             else:
-                self.__mkflag__()
+                box = self.__mkflag__()
+                errors = []
+                if 'avatar' in self.request.files:
+                    errors = self.set_avatar(box)
+                    dbsession.add(box)
+                    dbsession.flush()
                 self.redirect('/admin/view/game_objects')
         else:
             self.render(page, errors=form.errors)
@@ -168,7 +175,7 @@ class AdminCreateHandler(BaseHandler):
         try:
             int(string)
             return True
-        except:
+        except ValueError:
             return False
 
     def is_token(self, is_file):
@@ -256,9 +263,11 @@ class AdminCreateHandler(BaseHandler):
             difficulty=unicode(self.get_argument('difficulty')),
             corporation_id=corp.id,
             game_level_id=level.id,
+            avatar=avatar,
         )
         dbsession.add(box)
         dbsession.flush()
+        return box
 
     def __mklevel__(self, game_level, buyout):
         '''
@@ -267,10 +276,7 @@ class AdminCreateHandler(BaseHandler):
         None.  This function creates a new level and sorts everything based on
         the 'number' attrib
         '''
-        new_level = GameLevel(
-            number=game_level,
-            buyout=buyout,
-        )
+        new_level = GameLevel(number=game_level, buyout=buyout )
         game_levels = GameLevel.all()
         game_levels.append(new_level)
         game_levels = sorted(game_levels)
@@ -305,6 +311,28 @@ class AdminCreateHandler(BaseHandler):
         )
         dbsession.add(flag)
         dbsession.flush()
+
+    def set_avatar(self, box):
+        '''
+        Saves avatar - Reads file header an only allows approved formats
+        '''
+        if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
+            if box.avatar == "default_avatar.jpeg":
+                box.avatar = unicode(uuid4()) + u".jpeg"
+            ext = imghdr.what(
+                "", h=self.request.files['avatar'][0]['body']
+            )
+            avatar_path = str(self.application.settings['avatar_dir'] + '/' + box.avatar)
+            if ext in ['png', 'jpeg', 'gif', 'bmp']:
+                if os.path.exists(avatar_path):
+                    os.unlink(avatar_path)
+                box.avatar = unicode(box.avatar[:box.avatar.rfind('.')] + "." + ext)
+                file_path = str(self.application.settings['avatar_dir'] + '/' + box.avatar)
+                avatar = open(file_path, 'wb')
+                avatar.write(self.request.files['avatar'][0]['body'])
+                avatar.close()
+                dbsession.add(box)
+                dbsession.flush()
 
 
 class AdminViewHandler(BaseHandler):
@@ -461,6 +489,10 @@ class AdminEditHandler(BaseHandler):
                     box.difficulty = unicode(self.get_argument('difficulty'))
                 dbsession.add(box)
                 dbsession.flush()
+                if 'avatar' in self.request.files:
+                    errors += self._set_avatar(box)
+                    dbsession.add(box)
+                    dbsession.flush()
                 self.render("admin/view/game_objects.html", errors=errors)
             else:
                 self.render("admin/view/game_objects.html",
@@ -468,6 +500,33 @@ class AdminEditHandler(BaseHandler):
                 )
         else:
             self.render("admin/view/game_objects.html", errors=form.errors)
+
+    def _set_avatar(self, box):
+        '''
+        Saves avatar - Reads file header an only allows approved formats
+        '''
+        if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
+            if box.avatar == "default_avatar.jpeg":
+                box.avatar = unicode(uuid4()) + u".jpeg"
+            ext = imghdr.what(
+                "", h=self.request.files['avatar'][0]['body']
+            )
+            avatar_path = str(self.application.settings['avatar_dir'] + '/' + box.avatar)
+            if ext in ['png', 'jpeg', 'gif', 'bmp']:
+                if os.path.exists(avatar_path):
+                    os.unlink(avatar_path)
+                box.avatar = unicode(box.avatar[:box.avatar.rfind('.')] + "." + ext)
+                file_path = str(self.application.settings['avatar_dir'] + '/' + box.avatar)
+                avatar = open(file_path, 'wb')
+                avatar.write(self.request.files['avatar'][0]['body'])
+                avatar.close()
+                dbsession.add(box)
+                dbsession.flush()
+                return []
+            else:
+                return ["Invalid image format, avatar must be: .png .jpeg .gif or .bmp"]
+        else:
+            return ["The image is too large"]
 
     def edit_flags(self):
         ''' Super ugly code, yes - Edit existing flags in the database '''
