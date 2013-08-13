@@ -50,7 +50,8 @@ class AdminCreateHandler(BaseHandler):
         self.game_objects = {
             'corporation': 'admin/create/corporation.html',
             'box': 'admin/create/box.html',
-            'flag': 'admin/create/flag.html',
+            'flag/text': 'admin/create/flag-text.html',
+            'flag/file': 'admin/create/flag-file.html',
             'team': 'admin/create/team.html',
             'game_level': 'admin/create/game_level.html'
         }
@@ -139,34 +140,41 @@ class AdminCreateHandler(BaseHandler):
         form = Form(
             box_uuid="Please select a box",
             flag_name="Please enter a name",
-            token="Please enter a token value",
             reward="Please enter a reward value",
             description="Please enter a flag description",
         )
         if form.validate(self.request.arguments):
-            try:
-                if Flag.by_name(self.get_argument('flag_name')) is not None:
-                    self.render('admin/create/flag.html',
-                        errors=["Name already exists"]
-                    )
-                elif Flag.by_token(self.get_argument('token')) is not None:
-                    self.render('admin/create/flag.html',
-                        errors=["Token value is not unique"]
-                    )
-                elif Box.by_uuid(self.get_argument('box_uuid')) is None:
-                    self.render('admin/create/flag.html',
-                        errors=["Box does not exist"]
-                    )
-                else:
-                    reward = int(self.get_argument('reward', 'NaN'))
-                    self.__mkflag__(reward)
-                    self.redirect('/admin/view/game_objects')
-            except ValueError:
-                self.render('admin/create/flag.html',
-                    errors=["Invalid reward value"]
-                )
+            is_file = bool(self.get_argument('is_file', '') == 'true')
+            flag_type = 'file' if is_file else 'text'
+            page = 'admin/create/flag-%s.html' % flag_type    
+            if Flag.by_name(self.get_argument('flag_name', '')) is not None:
+                self.render(page, errors=["Name already exists, and must be unique."])
+            elif not is_numeric(self.get_argument('reward', '')):
+                self.render(page, errors=["Reward is not a valid integer."])
+            elif Box.by_uuid(self.get_argument('box_uuid', '')) is None:
+                self.render(page, errors=["Box does not exist, try again."])
+            elif not self.is_token(is_file):
+                self.render(page, errors=["Missing or invalid token."])
+            else:
+                self.__mkflag__()
+                self.redirect('/admin/view/game_objects')
         else:
-            self.render("admin/create/flag.html", errors=form.errors)
+            self.render(page, errors=form.errors)
+
+    def is_numeric(self, string):
+        ''' Determine if string is a number '''
+        try:
+            int(string)
+            return True
+        except:
+            return False
+
+    def is_token(self, is_file):
+        ''' Check if it's a valid token file/string '''
+        if is_file and 'flag' in self.request.files:
+            return 0 < len(self.request.files['flag'][0]['body'])
+        else:
+            return 0 < len(self.get_argument('token', ''))
 
     def create_team(self):
         ''' Create a new team in the database '''
@@ -255,14 +263,21 @@ class AdminCreateHandler(BaseHandler):
         dbsession.add(game_levels[-1])
         dbsession.flush()
 
-    def __mkflag__(self, reward):
+    def __mkflag__(self):
         ''' Creates a flag in the database '''
+        reward = int(self.get_argument('reward', ''))
         box = Box.by_uuid(self.get_argument('box_uuid'))
+        is_file = bool(self.get_argument('is_file', 'false') == 'true')
+        if is_file:
+            file_data = self.request.files['flag'][0]['body']
+            token = Flag.digest(file_data)
+        else:
+            token = unicode(self.get_argument('token', ''))
         flag = Flag(
             name=unicode(self.get_argument('flag_name')),
-            token=unicode(self.get_argument('token')),
+            token=token,
             description=unicode(self.get_argument('description')),
-            is_file=bool(self.get_argument('is_file', 'false') == 'true'),
+            is_file=is_file,
             box_id=box.id,
             value=reward,
         )

@@ -39,8 +39,6 @@ class Flag(BaseObject):
     description = Column(Unicode(255), nullable=False)
     value = Column(Integer, nullable=False)
     is_file = Column(Boolean, default=False)
-    is_hash = Column(Boolean, default=False)
-    is_regex = Column(Boolean, default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
 
     @classmethod
@@ -54,9 +52,9 @@ class Flag(BaseObject):
         return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
-    def by_name(cls, corp_name):
-        ''' Returns a the object with name of corp_name '''
-        return dbsession.query(cls).filter_by(name=unicode(corp_name)).first()
+    def by_name(cls, fname):
+        ''' Returns a the object with name of fname '''
+        return dbsession.query(cls).filter_by(name=unicode(fname)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
@@ -67,6 +65,13 @@ class Flag(BaseObject):
     def by_token(cls, token):
         ''' Return and object based on a token '''
         return dbsession.query(cls).filter_by(token=unicode(token)).first()
+
+    @classmethod
+    def digest(self, data):
+        ''' Token is MD5 of data '''
+        sha = hashlib.sha1()
+        sha.update(data)
+        return unicode(sha.hexdigest())
 
     @property
     def box(self):
@@ -88,38 +93,16 @@ class Flag(BaseObject):
             'box': box.uuid,
         }
 
-    def __hsh__(self, data):
-        ''' Token is MD5 of data '''
-        md = hashlib.md5()
-        md.update(data)
-        return unicode(md.hexdigest())
-
-    def __regex__(self, other):
-        ''' Token is regex matched against other '''
-        regex = re.compile(self.token)
-        return bool(regex.match(other))
-
     def __str__(self):
         return self.name.encode('ascii', 'ignore')
 
     def __unicode__(self):
         return self.name
 
-    def __eq__(self, other):
-        ''' Compare to self.token '''
-        if not isinstance(other, basestring):
-            return str(self) == str(other)
-        if self.is_hash or self.is_file:
-            return self.token == self.__hsh__(other)
-        elif self.is_regex:
-            return self.__regex__(other)
-        else:
-            return self.token == other
-
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __repr__(self):
-        return "<Flag - name:%s, is_file:%s, is_hash:%s, is_regex:%s>" % (
-            self.name, str(self.is_file), str(self.is_hash), str(self.is_regex),
+        return "<Flag - name:%s, is_file:%s >" % (
+            self.name, str(self.is_file)
         )

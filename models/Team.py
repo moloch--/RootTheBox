@@ -69,7 +69,7 @@ class Team(BaseObject):
         secondary=team_to_source_code, 
         backref=backref("Team", lazy="select"))
 
-    purchased_hints = relationship("Hint", 
+    hints = relationship("Hint", 
         secondary=team_to_hint, 
         backref=backref("Team", lazy="select"))
  

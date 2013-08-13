@@ -1,0 +1,85 @@
+{% extends "../../main.html" %}
+
+{% block title %}Create Flag{% end %}
+
+{% block content %}
+    <div class="container">
+        <h1>Create Flag</h1>
+        <br />
+        {% if errors is not None and len(errors) != 0 %}
+            {% for error in errors %}
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">ERROR</h4>
+                    {{ error }}
+                </div>
+            {% end %}
+        {% end %}
+        <div class="well">
+            <div class="row">
+                <div class="span4">
+                    <form class="form-horizontal" action="/admin/create/flag" method="post">  
+                        {% raw xsrf_form_html() %}
+                        <div class="control-group">
+                            <label class="control-label" for="flag_name">Flag Name</label>
+                            <div class="controls">
+                                <input autofocus required id="flag_name" name="flag_name" type="text" placeholder="Flag Name">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="token">Token File</label>
+                            <div class="controls">
+                                <input id="token" name="token" type="text" placeholder="Token Value">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="description">Description</label>
+                            <div class="controls">
+                                <input required id="description" name="description" type="text" placeholder="Description">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="reward">Reward</label>
+                            <div class="controls">
+                                <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="$ Reward">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="box_uuid">Box</label>
+                            <div class="controls">
+                                <select name="box_uuid">
+                                    <option value=""></option>
+                                    {% from models import Box %}
+                                    {% for box in Box.all() %}
+                                        <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation.name }})</option>
+                                    {% end %}
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" name="is_file" value="true">
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn btn-primary" type="submit">Create Flag</button>
+                            </div>
+                        </div>   
+                    </form>
+                </div>
+                <div class="offset3 span4">
+                    <p>
+                        <blockquote>
+                            <small>
+                                <strong>Tokens:</strong> When a user submits a flag, their submission is compared against the 'Token Value'; if it's a file
+
+                                <br />
+                                <br />
+                                <i>Note:  If the flag is a file the SHA1 of the user's submission will always
+                                be compared to the 'Token Value', reguardless of the chosen 'Match Option'.
+                                </i>
+                            </small>
+                        </blockquote>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end %}

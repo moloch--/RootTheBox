@@ -33,6 +33,7 @@ class Hint(BaseObject):
     Holds the source code for a box which can be purchased from the source code market 
     '''
 
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     price = Column(Integer, nullable=False)
     description = Column(Unicode(1024), nullable=False)

@@ -17,7 +17,15 @@
 				</div>
 			{% end %}
 		{% end %}
-		<form id="create-paste" action="/user/share/pastebin/create" method="post" autocomplete="off">  
+	    <script>
+	    	function submit_paste() { 		
+	    		if (notifier_ws !== undefined) {
+                    notifier_ws.close();
+                }
+                return true;
+	    	}
+	    </script>
+		<form id="create-paste" action="/user/share/pastebin/create" onsubmit="submit_paste()" method="post" autocomplete="off">  
 		    {% raw xsrf_form_html() %}
 		    <fieldset>
 		    <legend>Create New Paste</legend>
@@ -27,20 +35,12 @@
 		        </p>
 		        <p>
 		            <label for="content">Content</label>
-		            <textarea name="content" placeholder="Paste Text Here" style="width:auto;" rows="10" cols="60">
+		            <textarea required name="content" placeholder="Paste Text Here" style="width:auto;" rows="10" cols="60">
 		            </textarea>
 		        </p>
 		    </fieldset>
-		    <script>
-		    	function submit_paste() {
-		    		if (notifier_ws !== undefined) {
-                        notifier_ws.close();
-                    }
-                    document.forms['create-paste'].submit();
-		    	}
-		    </script>
-		    <p class="submit">
-		        <button class="btn btn-primary" onclick="submit_paste()">Create New Paste</button>
+		    <p >
+		        <button class="btn btn-primary">Create New Paste</button>
 		    </p>   
 		</form>
     </div>

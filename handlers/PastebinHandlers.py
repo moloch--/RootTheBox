@@ -52,15 +52,13 @@ class CreatePasteHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Creates a new text share '''
-        form = Form(
-            name="Please enter a name",
-            content="Please provide some content",
-        )
-        if form.validate(self.request.arguments):
+        name = self.get_argument("name", "")
+        content = self.get_argument("content", "")
+        if 0 < len(name) and 0 < len(content):
             user = self.get_current_user()
             paste = PasteBin(
-                name=unicode(self.get_argument("name")),
-                contents=unicode(self.get_argument("content")),
+                name=unicode(name),
+                contents=unicode(content),
                 team_id=user.team.id
             )
             dbsession.add(paste)
@@ -95,16 +93,12 @@ class DeletePasteHandler(BaseHandler):
     ''' Deletes shared texts '''
 
     @authenticated
-    def get(self, *args, **kwargs):
+    def post(self, *args, **kwargs):
         ''' AJAX // Delete a paste object from the database '''
-        form = Form(
-            paste_uuid="Paste does not exist.",
-        )
-        if form.validate(self.request.arguments):
-            paste_uuid = self.get_argument("paste_uuid")
-            paste = PasteBin.by_uuid(paste_uuid)
-            user = self.get_current_user()
-            if paste is not None and paste.team_id == user.team.id:
-                dbsession.delete(paste)
-                dbsession.flush()
+        paste_uuid = self.get_argument("uuid", "")
+        paste = PasteBin.by_uuid(paste_uuid)
+        user = self.get_current_user()
+        if paste is not None and paste.team_id == user.team.id:
+            dbsession.delete(paste)
+            dbsession.flush()
         self.redirect("/user/share/pastebin")

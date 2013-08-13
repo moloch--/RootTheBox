@@ -25,8 +25,9 @@ This file contains the code for displaying flags / recv flag submissions
 
 
 import logging
+import hashlib
 
-from models import dbsession, GameLevel, Flag, Box
+from models import dbsession, Box, Hint, Flag
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
@@ -44,10 +45,115 @@ class BoxHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
+        ''' Renders the box details page '''
         uuid = self.get_argument('uuid', '')
         box = Box.by_uuid(uuid)
+        if box is not None:
+            user = self.get_current_user()
+            self.render('missions/box.html', 
+                box=box, 
+                team=user.team,
+                errors=[],
+            )
+        else:
+            self.render('public/404.html')
+
+
+class FlagSubmissionHandler(BaseHandler):
+
+    @authenticated
+    def post(self, *args, **kwargs):
+        ''' Check validity of flag submissions '''
+        flag = Flag.by_uuid(self.get_argument('uuid', ''))
+        if flag is not None:
+            if flag.is_file:
+                self.validate_file(flag)
+            else:
+                self.validate_text(flag)
+        else:
+            self.render('public/404.html')
+
+    def validate_text(self, flag):
+        ''' Check a text submission '''
+        token = self.get_argument('token', '')
+        if self.capture(flag, token):
+            self.render_page(flag)
+        else:
+            self.render_page(flag, errors=["Invalid flag submission."])
+
+    def validate_file(self, flag):
+        ''' Check a file submission '''
+        if 0 < len(self.request.files['flag'][0]['body']):
+            file_data = self.request.files['flag'][0]['body']
+            digest = Flag.digest(file_data)
+            if self.capture(flag, digest):
+                self.render_page(flag)
+            else:
+                self.render_page(flag, errors=["Invalid flag submission."])
+        else:
+            self.render_page(flag, errors=["Missing flag data."])
+
+
+    def capture(self, flag, user_token):
+        ''' Compares a user provided token to the token in the db '''
         user = self.get_current_user()
-        self.render('missions/box.html', box=box, team=user.team)
+        if flag.token == user_token:
+            user.team.flags.append(flag)
+            user.team.money += flag.value
+            dbsession.add(user.team)
+            flag.value = int(flag.value * 0.90)
+            dbsession.add(flag)
+            dbsession.flush()
+            event = self.event_manager.create_flag_capture_event(user, flag)
+            self.new_events.append(event)
+            return True
+        else:
+            return False
+
+    def render_page(self, flag, errors=[]):
+        ''' Wrapper to .render() to avoid duplicate code '''
+        user = self.get_current_user()
+        box = Box.by_id(flag.box_id)
+        self.render('missions/box.html', 
+            box=box, 
+            team=user.team,
+            errors=errors,
+        )
+
+
+class PurchaseHintHandler(BaseHandler):
+
+    @authenticated
+    def post(self, *args, **kwargs):
+        ''' Purchase a hint '''
+        uuid = self.get_argument('uuid', '')
+        hint = Hint.by_uuid(uuid)
+        box = Box.by_id(hint.box_id)
+        if hint is not None:
+            user = self.get_current_user()
+            if hint.price <= user.team.money:
+                self._purchase_hint(hint, user.team)
+                self.render_page(box)
+            else:
+                self.render_page(box, ["You cannot afford to purchase this hint."])
+        else:
+            self.render_page(box, ["Hint does not exist."])
+
+    def _purchase_hint(self, hint, team):
+        ''' Add hint to team object '''
+        team.money -= hint.price
+        team.hints.append(hint)
+        dbsession.add(team)
+        dbsession.flush()
+
+    def render_page(self, box, errors=[]):
+        ''' Wrapper to .render() to avoid duplicate code '''
+        user = self.get_current_user()
+        self.render('missions/box.html', 
+            box=box, 
+            team=user.team,
+            errors=errors,
+        )
 
 
 class MissionsHandler(BaseHandler):
@@ -62,67 +168,11 @@ class MissionsHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Submit flags/buyout to levels '''
-        uri = {
-            'flag': self.flag,
-            'buyout': self.buyout,
-        }
+        uri = {'buyout': self.buyout}
         if len(args) == 1 and args[0] in uri:
             uri[str(args[0])]()
         else:
             self.render("public/404.html")
-
-    def flag(self):
-        '''
-        Accepts flag submissions, a flag can be either a string or a file,
-        if the flag submission is a file the MD5 hexdigest is used.
-        '''
-        form = Form(flag_type="Missing flag type")
-        user = self.get_current_user()
-        if form.validate(self.request.arguments):
-            flag = Flag.by_uuid(self.get_argument('uuid', ''))
-            if flag is not None:
-                if self.get_argument('flag_type').lower() == 'text':
-                    token = self.get_argument('token', None)
-                    errors = self.__chkflag__(flag, token)
-                    if len(errors) == 0:
-                        self.flag_captured()
-                    else:
-                        self.render("missions/view.html",
-                            team=user.team,
-                            errors=errors
-                        )
-                elif self.get_argument('flag_type').lower() == 'file':
-                    if 0 < len(self.request.files['flag'][0]['body']):
-                        file_data = self.request.files['flag'][0]['body']
-                        errors = self.__chkflag__(flag, file_data)
-                        if len(errors) == 0:
-                            self.flag_captured()
-                        else:
-                            self.render("missions/view.html",
-                                team=user.team,
-                                errors=errors
-                            )
-                    else:
-                        logging.info("No file data in flag submission.")
-                        self.render("missions/view.html",
-                            team=user.team,
-                            errors=["No file data"]
-                        )
-                else:
-                    self.render("missions/view.html",
-                        team=user.team,
-                        errors=["Invalid flag type"]
-                    )
-            else:
-                self.render("missions/view.html",
-                    team=user.team,
-                    errors=["Flag does not exist"]
-                )
-        else:
-            self.render("missions/view.html",
-                team=user.team,
-                errors=form.errors
-            )
 
     def buyout(self):
         ''' Buyout and unlock a level '''
@@ -156,29 +206,6 @@ class MissionsHandler(BaseHandler):
                 errors=form.errors
             )
 
-    def flag_captured(self):
-        ''' 
-        Successfully captured flag, checks for if level has been completed 
-        and redirects user back to the missions page.
-        '''
-        self.__chklevel__()
-        self.redirect("/user/missions")
-
-    def __chkflag__(self, flag, user_token):
-        ''' Compares a user provided token to the token in the db '''
-        user = self.get_current_user()
-        if user_token is not None and flag == user_token:
-            user.team.flags.append(flag)
-            user.team.money += flag.value
-            dbsession.add(user.team)
-            flag.value = int(flag.value * 0.90)
-            dbsession.add(flag)
-            dbsession.flush()
-            event = self.event_manager.create_flag_capture_event(user, flag)
-            self.new_events.append(event)
-            return []
-        else:
-            return ["Invalid flag submission"]
 
     def __chklevel__(self):
         user = self.get_current_user()

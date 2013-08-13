@@ -11,9 +11,8 @@
             <h3>Submit Flag</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="submit-text-flag" method="post" action="/user/missions/flag">
+            <form class="form-horizontal" id="submit-text-flag" method="post" action="/user/missions/capture/text">
                 {% raw xsrf_form_html() %}
-                <input name="flag_type" type="hidden" value="text" />
                 <input id="flag_uuid_text" name="uuid" value="" type="hidden" />
                 <div class="control-group">
                     <label class="control-label" for="flag_token">Flag</label>
@@ -45,11 +44,11 @@
             <h3>Submit Flag</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="submit-file-flag" method="post" enctype="multipart/form-data" action="/user/missions/flag">
+            <form class="form-horizontal" id="submit-file-flag" method="post" enctype="multipart/form-data" action="/user/missions/capture/file">
                 {% raw xsrf_form_html() %}
-                <input name="flag_type" type="hidden" value="file" />
                 <input autofocus id="flag_uuid_file" name="uuid" value="" type="hidden" />
                 <div class="control-group">
+                    <br />
                     <label class="control-label" for="flag_file">Flag</label>
                     <div class="controls">
                         <input id="flag_file" name="flag" type="file" />
@@ -80,8 +79,8 @@
             <h3>Purchase Hint</h3>
         </div>
         <div class="modal-body">
-            Would like to purchase this hint?
-            <form class="form-horizontal" id="submit-hint" method="post" enctype="multipart/form-data" action="/user/missions/hint">
+            <p id="hint-text"></p>
+            <form class="form-horizontal" id="submit-hint" method="post" action="/user/missions/hint">
                 {% raw xsrf_form_html() %}
                 <input id="hint_uuid" name="uuid" value="" type="hidden" />
             </form>
@@ -98,7 +97,7 @@
             </script>
             <button class="btn btn-primary" type="button" 
                     onclick="submit_hint();">
-                Submit
+                Buy
             </button>
         </div>
     </div>
@@ -106,62 +105,38 @@
         function set_flag_uuid(obj, uuid) {
             $("#flag_uuid_"+obj).val(uuid);
         }
-        function set_hint_uuid(uuid) {
+        function purchase_hint(price, uuid) {
             $("#hint_uuid").val(uuid);
+            $("#hint-text").text("Would you like to purchase this hint for $"+price);
         }
     </script>
     <!-- Visable -->
     <div class="container">
         <h1>{{ box.corporation.name }} - {{ box.name }}</h1>
         <br />
+        {% if errors is not None and len(errors) != 0 %}
+            {% for error in errors %}
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">ERROR</h4>
+                    {{ error }}
+                </div>
+            {% end %}
+        {% end %}
         <div class="container">
             <div class="row">
                 <div class="span4">
                     <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                 </div>
                 <div class="span8">
-                    <pre>{{ box.description}}</pre>
+                    <pre>*********************** BEGIN SECURE COMMUNIQUE ***********************
+
+{{ box.description }}
+***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************</pre>
                 </div>
             </div>
         </div>
         <br />
-        {% if len(box.hints) != 0 %}
-            <div class="well">
-                <table class="table table-hover">
-                    <caption><h4> - Flags - </h4></caption>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Price</th>
-                            <th>Hint</th>
-                            <th><!-- Purchase Button --></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for index, hint in enumerate(box.hints) %}
-                            <tr>
-                                <th>{{ index + 1 }}</th>
-                                {% if hint in team.hints %}
-                                    <th><strong>Purchased</strong></th>
-                                    <th>{{ hint.description }}</th>
-                                    <th><!-- Blank --></th>
-                                {% else %}
-                                    <th>${{ hint.price }}</th>
-                                    <th><strong>Not Purchased</strong></th>
-                                    <th>
-                                        <a class="btn btn-mini" data-toggle="modal" 
-                                            href="#purchaseHintModal" onclick="set_hint_uuid('text', '{{ hint.uuid }}')">
-                                            Purchase
-                                        </a>
-                                    </th>
-                                {% end %}
-                            </tr>
-                        {% end %}
-                    </tbody>
-                </table>
-            </div>
-            <br />
-        {% end %}
         <div class="well">
             <table class="table table-hover">
                 <caption><h4> - Flags - </h4></caption>
@@ -209,5 +184,42 @@
             	</tbody>
             </table>
         </div>
+        {% if len(box.hints) != 0 %}
+            <br />
+            <div class="well">
+                <table class="table table-hover">
+                    <caption><h4> - Hints - </h4></caption>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Price</th>
+                            <th><!-- Purchse/View Button --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, hint in enumerate(box.hints) %}
+                            <tr>
+                                <th>{{ index + 1 }}</th>
+                                {% if hint in team.hints %}
+                                    <th>Purchased</th>
+                                    <th>
+                                        {{ hint.description }}                            
+                                    </th>
+                                {% else %}
+                                    <th>${{ hint.price }}</th>
+                                    <th>
+                                        <a class="btn btn-mini" data-toggle="modal" 
+                                            href="#purchaseHintModal" onclick="purchase_hint('{{ hint.price }}','{{ hint.uuid }}')">
+                                            Purchase
+                                        </a>
+                                    </th>
+                                {% end %}
+                            </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            </div>
+            <br />
+        {% end %}
     </div>
 {% end %}

@@ -17,9 +17,12 @@ Created on Oct 10, 2012
     limitations under the License.
 '''
 
+import os
+
+
 from libs.ConsoleColors import *
 from models import dbsession, GameLevel, IpAddress, \
-    Flag, Box, Corporation, User, Team
+    Flag, Box, Corporation, User, Team, Hint
 
 
 def create_game_level(level_number, buyout):
@@ -130,18 +133,36 @@ def create_box(name, corporation, difficulty, game_level, description,
     return box
 
 
-def create_flag(name, token, value, box, description="No description",
-                is_file=False, is_regex=False, is_hash=False):
-    print(INFO + "Create Flag: " + bold + name + W)
+def create_flag(name, token, reward, box, description="No description",
+                is_file=False):
+    if is_file:
+        if not os.path.exists(token):
+            raise ValueError("Path to flag file does not exist: %s" % token)
+        f = open(token, 'r')
+        data = f.read()
+        f.close()
+        _token = Flag.digest(data)
+        print(INFO + "Create Flag: " + bold + name + W + " (%s)" % _token)
+    else:
+        print(INFO + "Create Flag: " + bold + name + W)
+        _token = unicode(token)
     flag = Flag(
         name=unicode(name),
-        token=unicode(token),
+        token=_token,
         is_file=is_file,
-        is_regex=is_regex,
-        is_hash=is_hash,
         description=unicode(description),
-        value=value,
+        value=reward,
         box_id=box.id,
     )
     dbsession.add(flag)
+    dbsession.flush()
+
+def create_hint(box, price, description):
+    print(INFO + "Create Hint: %s has a new hint for $%s" % (box.name, price,))
+    hint = Hint(
+        box_id=box.id,
+        price=int(abs(price)),
+        description=unicode(description)
+    )
+    dbsession.add(hint)
     dbsession.flush()

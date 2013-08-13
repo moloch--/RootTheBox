@@ -93,15 +93,16 @@ microshaft_laptop = create_box("CEO Laptop",
 )
 
 # > Create Flags
-# create_flag(FLAG_NAME, TOKEN, REWARD_VALUE, BOX_OBJECT, DESCRIPTION, IS_FILE, IS_REGEX, IS_HASH)
-# IS_FILE: The user should submit a file, the token is the md5 of the file
-# IS_REGEX: The user should submit a string, the token is a regex if the string matches the flag submission is successful
-# IS_HASH:  The user's submissions should be hashed with md5 before getting compared to the stored token
+# create_flag(FLAG_NAME, TOKEN, REWARD_VALUE, BOX_OBJECT, DESCRIPTION, IS_FILE)
+# IS_FILE: The flag is a file (and TOKEN should be the path to the file)
 create_flag("DB Access", "p@ssw0rd", 1000, seatec_mail, "Get the MySQL root password for the mail server")
 create_flag("Guess this", "toor", 1500, seatec_mail, "Get the root password for the mail server")
-create_flag("Troy", "lulwat", 2500, seatec_fw, "Get the password for the SEATEC firewall administrator")
+create_flag("Troy", "rootthebox.py", 2500, seatec_fw, "Get the source code for rootthebox.py", is_file=True)
 
 create_flag("One Key to Rule Them All", "kfahjl*&y63hja", 5000, microshaft_web, "Obtain Micro$haft's Amazon Cloud Private Key")
-create_flag("DMZ", "d08fd5b639c512f852f6a1696efba49a", 3500, microshaft_dev, "Obtain a .tar ball of Micro$haft's Winblowz source code", is_file=True)
 create_flag("Call me maybe", "867-5309", 1500, microshaft_laptop, "Find the Micro$shaft CEO's home phone number")
+
+# > Create Hints
+# create_hint(BOX, PRICE, DESCRIPTION)
+create_hint(seatec_fw, 1000, "Look for interesting HTTP headers.")
 
