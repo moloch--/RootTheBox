@@ -34,7 +34,7 @@ from libs.Form import Form
 from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, SourceCode, \
-    Corporation, RegistrationToken, GameLevel, IpAddress, Swat
+    Corporation, RegistrationToken, GameLevel, IpAddress, Swat, Hint
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from models.User import ADMIN_PERMISSION
 
@@ -49,11 +49,12 @@ class AdminCreateHandler(BaseHandler):
         ''' Renders Corp/Box/Flag create pages '''
         self.game_objects = {
             'corporation': 'admin/create/corporation.html',
-            'box': 'admin/create/box.html',
-            'flag/text': 'admin/create/flag-text.html',
-            'flag/file': 'admin/create/flag-file.html',
-            'team': 'admin/create/team.html',
-            'game_level': 'admin/create/game_level.html'
+                    'box': 'admin/create/box.html',
+              'flag/text': 'admin/create/flag-text.html',
+              'flag/file': 'admin/create/flag-file.html',
+                   'team': 'admin/create/team.html',
+             'game_level': 'admin/create/game_level.html',
+                   'hint': 'admin/create/hint.html',
         }
         if len(args) == 1 and args[0] in self.game_objects:
             self.render(self.game_objects[args[0]], errors=None)
@@ -71,6 +72,7 @@ class AdminCreateHandler(BaseHandler):
             'flag': self.create_flag,
             'team': self.create_team,
             'game_level': self.create_game_level,
+            'hint': self.create_hint,
         }
         if len(args) == 1 and args[0] in self.game_objects:
             self.game_objects[args[0]]()
@@ -224,6 +226,26 @@ class AdminCreateHandler(BaseHandler):
         else:
             self.render('admin/create/game_level.html', errors=form.errors)
 
+    def create_hint(self):
+        ''' Add hint to database '''
+        box = Box.by_uuid(self.get_argument('box_uuid', ''))
+        price = self.get_argument('price', '')
+        if not self.is_numeric(price):
+            self.render('admin/create/hint.html', errors=["Invalid price."])
+        elif not 0 < len(self.get_argument('description', '')):
+            self.render('admin/create/hint.html', errors=["Missing description."])
+        elif box is None:
+            self.render('admin/create/hint.html', errors=["Box does not exist."])
+        else:
+            hint = Hint(
+                price=int(price),
+                description=unicode(self.get_argument('description')),
+                box_id=box.id
+            )   
+            dbsession.add(hint)
+            dbsession.flush()
+            self.redirect('/admin/view/game_objects')
+
     def __mkbox__(self):
         ''' Creates a box in the database '''
         corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
@@ -329,6 +351,7 @@ class AdminAjaxObjectDataHandler(BaseHandler):
             'user': User,
             'team': Team,
             'box': Box,
+            'hint': Hint,
         }
         obj_name = self.get_argument('obj', '')
         uuid = self.get_argument('uuid', '')
@@ -361,6 +384,7 @@ class AdminEditHandler(BaseHandler):
             'ipv6': self.edit_ipv6,
             'game_level': self.edit_game_level,
             'box_level': self.box_level,
+            'hint': self.edit_hint,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -573,18 +597,23 @@ class AdminEditHandler(BaseHandler):
                 # Update hashing algoritm
                 if self.get_argument('hash_algorithm') in user.algorithms:
                     if user.algorithm != self.get_argument('hash_algorithm'):
-                        if 0 < len(self.get_argument('password', '')):
+                        if 0 < len(self.get_argument('bank_password', '')):
                             logging.info("Updated %s's hashing algorithm %s -> %s" %
                                 (user.handle, user.algorithm, self.get_argument('hash_algorithm'),)
                             )
                             user.algorithm = self.get_argument('hash_algorithm')
+                            dbsession.add(user)
+                            dbsession.flush()
                         else:
-                            errors.append("You must provide a password when updating the hashing algorithm")
+                            errors.append("You must provide a new bank password when updating the hashing algorithm")
                 else:
                     errors.append("Not a valid hash algorithm")
                 # Update password
                 if 0 < len(self.get_argument('password', '')):
                     user.password = self.get_argument('password')
+                # Update password
+                if 0 < len(self.get_argument('bank_password', '')):
+                    user.bank_password = self.get_argument('bank_password')
                 # Update team
                 team = Team.by_uuid(self.get_argument('team_uuid'))
                 if team is not None:
@@ -726,6 +755,23 @@ class AdminEditHandler(BaseHandler):
         else:
             self.render("admin/view/game_levels.html", errors=form.errors)
 
+    def edit_hint(self):
+        ''' Edit a hint object '''
+        hint = Hint.by_uuid(self.get_argument('uuid', ''))
+        if hint is not None:
+            logging.debug("Edit hint object with uuid of %s" % hint.uuid)
+            if hint.price != self.get_argument('price', hint.price):
+                try:
+                    price = int(self.get_argument('price'))
+                    hint.price = price
+                except:
+                    pass  # Ignore error
+            if hint.description != self.get_argument('description', hint.description):
+                hint.description = unicode(self.get_argument('description'))
+            dbsession.add(hint)
+            dbsession.flush()
+        self.redirect('/admin/view/game_objects')
+
 
 class AdminDeleteHandler(BaseHandler):
     ''' Delete flags/ips from the database '''
@@ -738,6 +784,7 @@ class AdminDeleteHandler(BaseHandler):
         uri = {
             'ip': self.del_ip,
             'flag': self.del_flag,
+            'hint': self.del_hint,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -773,7 +820,20 @@ class AdminDeleteHandler(BaseHandler):
                 self.get_argument('uuid', '')
             )
             self.render("admin/view/game_objects.html",
-                errors=["Flag does not exist in database"]
+                errors=["Flag does not exist in database."]
+            )
+
+    def del_hint(self):
+        ''' Delete a hint from the database '''
+        hint = Hint.by_uuid(self.get_argument('uuid', ''))
+        if hint is not None:
+            logging.info("Delete hint: %s" % hint.uuid)
+            dbsession.delete(hint)
+            dbsession.flush()
+            self.redirect('/admin/view/game_objects')
+        else:
+            self.render('admin/view/game_objects.html',
+                errors=["Hint does not exist in dataase."]
             )
 
 

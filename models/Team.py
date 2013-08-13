@@ -127,7 +127,6 @@ class Team(BaseObject):
         return {
             'name': self.name,
             'motto': self.motto,
-            'listen_port': self.listen_port,
         }
 
     def file_by_file_name(self, file_name):

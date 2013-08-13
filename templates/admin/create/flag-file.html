@@ -27,9 +27,9 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="token">Token File</label>
+                            <label class="control-label" for="token">Flag File</label>
                             <div class="controls">
-                                <input id="token" name="token" type="text" placeholder="Token Value">
+                                <input id="token" name="token" type="file">
                             </div>
                         </div>
                         <div class="control-group">
@@ -51,7 +51,9 @@
                                     <option value=""></option>
                                     {% from models import Box %}
                                     {% for box in Box.all() %}
-                                        <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation.name }})</option>
+                                        <option value="{{ box.uuid }}">
+                                            {{ box.name }} ({{ box.corporation.name }})
+                                        </option>
                                     {% end %}
                                 </select>
                             </div>
@@ -68,13 +70,7 @@
                     <p>
                         <blockquote>
                             <small>
-                                <strong>Tokens:</strong> When a user submits a flag, their submission is compared against the 'Token Value'; if it's a file
-
-                                <br />
-                                <br />
-                                <i>Note:  If the flag is a file the SHA1 of the user's submission will always
-                                be compared to the 'Token Value', reguardless of the chosen 'Match Option'.
-                                </i>
+                                <strong>Tokens:</strong> These "flags" are files, users must submit the exact same file to capture the flag.  Only a hash (SHA1) of the file is stored on the server.
                             </small>
                         </blockquote>
                     </p>

@@ -8,7 +8,11 @@
 		<div class="span5">
 			<div class="row">
 				<div class="span11 offset1 well">
-					<h3>Welcome {{ user.handle }}</h3>
+					<h2>Welcome {{ user.handle }}</h2>
+					<center>
+						<img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+					</center>
+					<hr>
 					{% if user.team is not None %}
 						<strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
 						<strong>Bank Account:</strong> ${{ user.team.money }} <br />
@@ -51,9 +55,4 @@
 			{% end %}
 		</div>
 	</div>
-	<script>
-		$(document).ready(function() {
-			$("#pikame").PikaChoose();
-		});
-	</script>
 {% end %}

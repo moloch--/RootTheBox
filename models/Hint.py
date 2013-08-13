@@ -56,3 +56,9 @@ class Hint(BaseObject):
     @classmethod
     def by_box_id(cls, bid):
         return dbsession.query(cls).filter_by(box_id=bid).all()
+
+    def to_dict(self):
+        return {
+            'price': str(self.price),
+            'description': self.description,
+        }

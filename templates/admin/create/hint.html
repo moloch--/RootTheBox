@@ -1,10 +1,10 @@
 {% extends "../../main.html" %}
 
-{% block title %}Create Corporation{% end %}
+{% block title %}Create Hint{% end %}
 
 {% block content %}
     <div class="container">
-        <h1>Create Corporation</h1>
+        <h1>Create Hint</h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
@@ -16,14 +16,14 @@
             {% end %}
         {% end %}
         <div class="well">
-            <form class="form-horizontal" action="/admin/create/corporation" method="post">  
+            <form class="form-horizontal" action="/admin/create/hint" method="post">  
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
-                    <label class="control-label" for="corporation_name">Corporation Name</label>
+                    <label class="control-label" for="price">Price</label>
                     <div class="controls">
-                        <input autofocus required id="corporation_name" name="corporation_name" type="text" placeholder="Corporation Name">
+                        <input required id="price" name="price" type="text" pattern="[0-9]+" placeholder="$ Price">
                     </div>
-                </div>
+                </div>                
                 <div class="control-group">
                     <label class="control-label" for="description">Description</label>
                     <div class="controls">
@@ -31,8 +31,20 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label" for="box_uuid">Box</label>
                     <div class="controls">
-                        <button class="btn btn-primary" type="submit">Create Corporation</button>
+                        <select name="box_uuid">
+                            <option value=""></option>
+                            {% from models import Box %}
+                            {% for box in Box.all() %}
+                                <option value="{{ box.uuid }}">{{ box.name }}</opiton>
+                            {% end %}
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button class="btn btn-primary" type="submit">Create Hint</button>
                     </div>
                 </div> 
             </form>

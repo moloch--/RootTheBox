@@ -141,6 +141,35 @@
             <button type="button" class="btn btn-primary" onclick="document.forms['edit-flag'].submit();">Save</button>
         </div>
     </div>
+    <!-- Edit Hint -->
+    <div id="editHintModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Edit Hint</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" id="edit-hint" method="post" action="/admin/edit/hint">
+                {% raw xsrf_form_html() %}
+                <input id="hint_uuid" name="uuid" value="" type="hidden" />
+                <div class="control-group">
+                    <label class="control-label" for="hint_price">Price</label>
+                    <div class="controls">
+                        <input id="hint_price" name="price" type="text" placeholder="$" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="hint_description">Description</label>
+                    <div class="controls">
+                        <input id="hint_description" name="description" type="text" placeholder="Description" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button class="btn btn-primary" type="button" onclick="document.forms['edit-hint'].submit();">Save</button>
+        </div>
+    </div>
     <!-- Add Ipv4 -->
     <div id="addIpv4Modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
@@ -234,6 +263,28 @@
             </button>
         </div>
     </div>
+    <!-- Del Hint -->
+    <div id="delHintModal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Delete Hint</h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            Are you sure you want to delete this hint? <br />
+        </p>
+        <form id="del-hint" method="post" action="/admin/delete/hint">
+            {% raw xsrf_form_html() %}
+            <input id="delhint" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button type="button" class="btn btn-danger" onclick="document.forms['del-hint'].submit();">
+                Delete
+            </button>
+        </div>
+    </div>
     <script>
         function get_details(obj, uuid) {
             $("#" + obj + "_uuid").val(uuid);
@@ -253,13 +304,24 @@
         function set_delflag(flag_uuid) {
             $("#delflag").val(flag_uuid);
         }
+        function set_delhint(uuid) {
+            $("#delhint").val(uuid);
+        }
     </script>
     <!-- Start Visable -->
     <div class="row-fluid">
         <div class="span2" />
-            <ul class="nav nav-tabs nav-stacked affix">
+            <ul class="nav nav-tabs nav-stacked affix well">
+                <center>
+                    <strong>Corporations</strong>
+                </center>
+                <br />
                 {% for corporation in Corporation.all() %}
-                    <li><a href="#{{ corporation.uuid }}"><i class="icon-chevron-right"></i>{{ corporation.name }}</a></li>
+                    <li>
+                        <a href="#{{ corporation.uuid }}">
+                            <i class="icon-chevron-right"></i>&nbsp;&nbsp;{{ corporation.name }}
+                        </a>
+                    </li>
                 {% end %}
             </ul>
         </div>
@@ -389,9 +451,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for flag in box.flags %}
+                                                {% for index, flag in enumerate(box.flags) %}
                                                     <tr>
-                                                        <td>{{ box.flags.index(flag) + 1 }}</td>
+                                                        <td>{{ index + 1 }}</td>
                                                         <td>{{ flag.name }}</td>
                                                         <td>{{ flag.description }}</td>
                                                         <td>{{ flag.token }}</td>
@@ -417,6 +479,49 @@
                                         <strong>No flags on this box yet, <a href="/admin/create/flag">add some</a></strong>
                                     {% end %}
                                 </div>
+                                <div class="well">
+                                    <h4 style="display:inline;">Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;</h4>
+                                    <a class="btn btn-mini" data-toggle="modal" href="/admin/create/hint">
+                                        Add Hint
+                                    </a>
+                                    <hr>
+                                    {% if len(box.hints) != 0 %}
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Price</th>
+                                                    <th>Description</th>
+                                                    <th><!-- Edit Button --></th>
+                                                    <th><!-- Delete Button --></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for index, hint in enumerate(box.hints) %}
+                                                    <tr>
+                                                        <td>{{ index + 1 }}</td>
+                                                        <td>${{ hint.price }}</td>
+                                                        <td>{{ hint.description }}</td>
+                                                        <td>
+                                                            <a class="btn btn-mini" data-toggle="modal" href="#editHintModal"
+                                                                onclick="get_details('hint', '{{ hint.uuid }}')">
+                                                                Edit Hint
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delHintModal"
+                                                                onclick="set_delhint('{{ hint.uuid }}')">
+                                                                Delete
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <strong>No hints on this box yet, <a href="/admin/create/hint">add some</a></strong>
+                                    {% end %}
+                                </div><!-- End Hints -->
                             </div>
                             <br />
                         {% end %}

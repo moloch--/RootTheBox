@@ -25,12 +25,6 @@
                         <input required id="team_motto" name="motto" type="text" placeholder="Team Motto">
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="team_listen_port">Botnet Listen Port</label>
-                    <div class="controls">
-                        <input required id="team_listen_port" name="listen_port" type="text" pattern="[0-9]+" placeholder="Botnet Listen Port">
-                    </div>
-                </div>
             </form>
         </div>
         <div class="modal-footer">
@@ -49,12 +43,6 @@
                 {% raw xsrf_form_html() %}
                 <input id="user_uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="user_account">Account</label>
-                    <div class="controls">
-                        <input id="user_account" name="account" type="text" placeholder="Account Name">
-                    </div>
-                </div>
-                <div class="control-group">
                     <label class="control-label" for="user_handle">Handle</label>
                     <div class="controls">
                       <input id="user_handle" name="handle" type="text" placeholder="Handle">
@@ -67,13 +55,20 @@
                             <option value="md5">MD5</option>
                             <option value="sha1">SHA1</option>
                             <option value="sha256">SHA-256</option>
+                            <option value="sha512">SHA-512</option>
                         </select>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user_password">Password</label>
+                    <label class="control-label" for="user_password">Account Password</label>
                     <div class="controls">
                         <input id="user_password" name="password" type="password" placeholder="New Password">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="bank_password">Bank Password</label>
+                    <div class="controls">
+                        <input id="bank_password" name="bank_password" type="password" placeholder="New Bank Password">
                     </div>
                 </div>
                 <div class="control-group">
@@ -153,7 +148,11 @@
                                 <tr>
                                     <td>{{ user.handle }}</td>
                                     <td>{{ user.algorithm }}</td>
-                                    <td>{{ user.password }}</td>
+                                    {% if 64 <= len(user.bank_password) %}
+                                        <td>{{ user.bank_password[:75] }}...</td>
+                                    {% else %}
+                                        <td>{{ user.bank_password }}</td>
+                                    {% end %}
                                     <td>
                                         {% if user.locked %}
                                             <a id="{{ 'lock_button_' + user.uuid }}" 

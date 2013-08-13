@@ -29,7 +29,7 @@
                         <div class="control-group">
                             <label class="control-label" for="token">Token Value</label>
                             <div class="controls">
-                                <input id="token" name="token" type="text" placeholder="Token Value">
+                                <input required id="token" name="token" type="text" placeholder="Token Value">
                             </div>
                         </div>
                         <div class="control-group">
@@ -51,15 +51,10 @@
                                     <option value=""></option>
                                     {% from models import Box %}
                                     {% for box in Box.all() %}
-                                        <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation.name }})</option>
+                                        <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation.name }})
+                                        </option>
                                     {% end %}
                                 </select>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="is_file">Flag is a File</label>
-                            <div class="controls">
-                                <input type="checkbox" name="is_file" value="true">
                             </div>
                         </div>
                         <div class="control-group">
@@ -73,17 +68,8 @@
                     <p>
                         <blockquote>
                             <small>
-                                <strong>Tokens:</strong> When a user submits a flag, their submission is compared against the 'Token Value';
-                                tokens can be strings, regular expressions or MD5 hashes.  If the 'Match Option' is set to 
-                                'String' the user must submit the exact same string to capture the flag.  If 'Regex' is 
-                                set the 'Token Value' is treated as a regular expression; the user must submit a string which matches this expression to 
-                                capture the flag.  
-                                If the match option is set to 'MD5 Hash' the digest of the user's submission will be compared with the 'Token Value'.
-                                <br />
-                                <br />
-                                <i>Note:  If the flag is a file the MD5 of the user's submission will always
-                                be compared to the 'Token Value', reguardless of the chosen 'Match Option'.
-                                </i>
+                                <strong>Tokens:</strong> In this case the "flag" is a string.  
+                                The user must submit the exact string to capture the flag.
                             </small>
                         </blockquote>
                     </p>

@@ -47,8 +47,9 @@
 			</form>
 		    <div class="modal-footer">
 		        <a href="#" class="btn" data-dismiss="modal">Close</a>
-		        <button type="button" class="btn btn-primary" 
-		        	onclick="document.forms['buy-form'].submit();">Buy</button>
+		        <button type="button" class="btn btn-primary" onclick="document.forms['buy-form'].submit();">
+		        	Buy
+		        </button>
 		    </div>
 		</div>
 		<!-- Start Visable -->
@@ -63,35 +64,37 @@
 	      		</div>
 	    	{% end %}
 	  	{% end %}
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Price</th>
-					<th><!-- Button --></th>
-				</tr>
-			</thead>
-			<tbody>
-					{% from models import MarketItem %}
-					{% for item in MarketItem.all() %}
-						<tr>
-							<td>{{ item.name }}</td>
-							<td>${{ item.price }}</td>
-							<td>
-							{% if not user.has_item(item.name) %}
-								<button class="btn btn-mini" 
-										data-toggle="modal" 
-										href="#item-details" 
-										onclick="get_details('{{ item.uuid }}')">
-					    			Details
-					    		</button>
-					    	{% else %}
-					    		<strong>Purchased</strong>
-					    	{% end %}
-							</td>
-						</tr>
-					{% end %}
-			</tbody>
-		</table>
+	  	<div class="well">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Price</th>
+						<th><!-- Button --></th>
+					</tr>
+				</thead>
+				<tbody>
+						{% from models import MarketItem %}
+						{% for item in MarketItem.all() %}
+							<tr>
+								<td>{{ item.name }}</td>
+								<td>${{ item.price }}</td>
+								<td>
+								{% if not user.has_item(item.name) %}
+									<button class="btn btn-mini" 
+											data-toggle="modal" 
+											href="#item-details" 
+											onclick="get_details('{{ item.uuid }}')">
+						    			Details
+						    		</button>
+						    	{% else %}
+						    		<strong>Purchased</strong>
+						    	{% end %}
+								</td>
+							</tr>
+						{% end %}
+				</tbody>
+			</table>
+		</div>
 	</div>
 {% end %}
