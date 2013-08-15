@@ -23,13 +23,14 @@
                 var index = 0;
                 var user = document.getElementById('handle').value;
                 intro_frames = [
-                    " Hello [[b;;]"+user+"], I am your new employer, codename [[b;;]stranger]",
+                    " Hello [[b;;]"+user+"], I am your new employer, codename [[b;;]Hal]",
                     " ",
                     "   I hope you're well rested.  We have a lot of work to do, I have several assignments which require your... special skill set.",
                     " ",
-                    "  You may view your current assignments by selecting \"missions\" from the Game menu.  ",
+                    "  You may view your current assignments by selecting \"missions\" from the Game menu.",
+                    "  I've taken the liberty of despositing an initial $1,000 in your team's bank account.",
                     " ",
-                    " Good hunting,\n    -stranger"
+                    " Good hunting,\n    -Hal", // 9000
                 ];
                 term.echo("[[b;;]*************** BEGIN SECURE COMMUNIQUE ****************]\n");
                 function display(term, index) {
@@ -67,7 +68,9 @@
                 loading(term);
             }
             $('#console').terminal({
-                    /* No commands just animation */
+                
+                /* No commands just animation */
+
                 }, {
                     prompt: " > ",
                     name: 'console',

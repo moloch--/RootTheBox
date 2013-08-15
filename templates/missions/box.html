@@ -14,6 +14,7 @@
             <form class="form-horizontal" id="submit-text-flag" method="post" action="/user/missions/capture/text">
                 {% raw xsrf_form_html() %}
                 <input id="flag_uuid_text" name="uuid" value="" type="hidden" />
+                <br />
                 <div class="control-group">
                     <label class="control-label" for="flag_token">Flag</label>
                     <div class="controls">
@@ -79,6 +80,7 @@
             <h3>Purchase Hint</h3>
         </div>
         <div class="modal-body">
+            <br />
             <p id="hint-text"></p>
             <form class="form-horizontal" id="submit-hint" method="post" action="/user/missions/hint">
                 {% raw xsrf_form_html() %}
@@ -95,8 +97,7 @@
                     document.forms['submit-hint'].submit();
                 }
             </script>
-            <button class="btn btn-primary" type="button" 
-                    onclick="submit_hint();">
+            <button class="btn btn-primary" type="button" onclick="submit_hint();">
                 Buy
             </button>
         </div>
@@ -107,7 +108,7 @@
         }
         function purchase_hint(price, uuid) {
             $("#hint_uuid").val(uuid);
-            $("#hint-text").text("Would you like to purchase this hint for $"+price);
+            $("#hint-text").text("Would you like to purchase this hint for $"+price+"?");
         }
     </script>
     <!-- Visable -->
@@ -130,8 +131,8 @@
                 </div>
                 <div class="span8">
                     <pre> *********************** BEGIN SECURE COMMUNIQUE ***********************
-
 {{ box.description }}
+ 
 &nbsp;***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************</pre>
                 </div>
             </div>
