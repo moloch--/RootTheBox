@@ -21,11 +21,11 @@ Created on Mar 12, 2012
 
 
 from uuid import uuid4
+from libs.ConfigManager import ConfigManager
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Integer, Boolean, String
 from models import dbsession, User
-from models.GameSettings import GameSettings
 from models.BaseGameObject import BaseObject
 
 
@@ -123,8 +123,8 @@ class Swat(BaseObject):
     @classmethod
     def get_price(cls, user):
         ''' Calculate price of next bribe based on history '''
-        game_settings = GameSettings.get_active()
-        base_price = game_settings.bribe_cost
+        config = ConfigManager.Instance()
+        base_price = config.bribe_cost
         return base_price + (cls.count_completed_by_target_id(user.id) * base_price)
 
     @classmethod

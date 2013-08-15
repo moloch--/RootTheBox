@@ -24,7 +24,7 @@ Created on Oct 04, 2012
 import json
 import logging
 
-from models import Team, GameSettings, dbsession
+from models import Team, dbsession
 from libs.BotManager import BotManager
 from libs.ConfigManager import ConfigManager
 
@@ -48,16 +48,16 @@ def score_bots():
     ''' Award money for botnets '''
     logging.info("Scoring botnets, please wait ...")
     bot_manager = BotManager.Instance()
-    settings = GameSettings.get_active()
+    config = ConfigManager.Instance()
     for team in Team.all():
         bots = bot_manager.by_team(team.name)
         reward = 0
         for bot in bots:
             try:
-                reward += settings.bot_reward
+                reward += config.bot_reward
                 bot.write_message({
                     'opcode': 'status',
-                    'message': 'Collected $%d reward' % settings.bot_reward
+                    'message': 'Collected $%d reward' % config.bot_reward
                 })
             except:
                 logging.info(
@@ -67,7 +67,7 @@ def score_bots():
             logging.debug("%s was awarded $%d for controlling %s bot(s)" % (
                 team.name, reward, len(bots),
             ))
-            bot_manager.add_rewards(team.name, settings.bot_reward)
+            bot_manager.add_rewards(team.name, config.bot_reward)
             bot_manager.notify_monitors(team.name)
             team.money += reward
             dbsession.add(team)

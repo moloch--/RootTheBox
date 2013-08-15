@@ -103,7 +103,6 @@ from models.Snapshot import Snapshot
 from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Swat import Swat
-from models.GameSettings import GameSettings
 from models.Hint import Hint
 
 # calling this will create the tables at the database

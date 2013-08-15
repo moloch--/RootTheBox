@@ -17,7 +17,6 @@
 -------
 
 fills the database with some startup data.
-usage: python -c 'import setup.auth'
 
 """
 
@@ -29,8 +28,7 @@ import getpass
 from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
 from models import dbsession, User, Permission, Theme, \
-                    MarketItem, GameLevel, GameSettings
-
+    MarketItem, GameLevel
 from models.User import ADMIN_PERMISSION
 
 # Fills the database with some startup data.
@@ -40,17 +38,16 @@ password = ""
 if config.debug:
     password = 'nimda123'
 else:
-    sys.stdout.write(PROMPT + "New Admin ")
+    sys.stdout.write(PROMPT+"New Admin ")
     sys.stdout.flush()
     password1 = getpass.getpass()
-    sys.stdout.write(PROMPT + "Confirm New Admin ")
+    sys.stdout.write(PROMPT+"Confirm New Admin ")
     sys.stdout.flush()
     password2 = getpass.getpass()
     if password1 == password2 and 12 <= len(password1):
         password = password1
     else:
-        print WARN + \
-            'Error: Passwords did not match, or were less than 12 chars'
+        print(WARN+'Error: Passwords did not match, or were less than 12 chars')
         os._exit(1)
 
 # Theme objects
@@ -129,12 +126,6 @@ admin_permission = Permission(
     user_id=admin_user.id
 )
 dbsession.add(admin_permission)
-dbsession.flush()
-
-# Create intital game settings
-game_settings = GameSettings()
-game_settings.is_active = True
-dbsession.add(game_settings)
 dbsession.flush()
 
 # Display Details
