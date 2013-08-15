@@ -1,8 +1,10 @@
 *.py[co]
 
-# File uploads / etc
-files/shares/*
+# File uploads and what not
 files/avatars/*
+files/icons/*
+files/shares/*
+files/source_code_market/*
 
 # Packages
 *.egg
