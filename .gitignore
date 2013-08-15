@@ -19,6 +19,9 @@ sdist
 develop-eggs
 .installed.cfg
 
+# SQLite3 databases
+*.db
+
 # Screen files
 *.0
 

@@ -34,7 +34,7 @@ class Flag(BaseObject):
     ''' Flag definition '''
 
     name = Column(Unicode(255), nullable=False)
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     token = Column(Unicode(255), nullable=False)
     description = Column(Unicode(255), nullable=False)
     value = Column(Integer, nullable=False)

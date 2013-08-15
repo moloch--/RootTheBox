@@ -27,16 +27,11 @@ from sqlalchemy.orm import sessionmaker
 from models.BaseGameObject import BaseObject
 from libs.ConfigManager import ConfigManager
 
-metadata = BaseObject.metadata
 
 config = ConfigManager.Instance()
-db_connection = 'mysql://%s:%s@%s/%s' % (
-    config.db_user, config.db_password, config.db_server, config.db_name
-)
-
 
 ### Setup the database session
-engine = create_engine(db_connection)
+engine = create_engine(config.db_connection)
 setattr(engine, 'echo', config.log_sql)
 Session = sessionmaker(bind=engine, autocommit=True)
 dbsession = Session(autoflush=True)
@@ -112,6 +107,7 @@ from models.GameSettings import GameSettings
 from models.Hint import Hint
 
 # calling this will create the tables at the database
+metadata = BaseObject.metadata
 create_tables = lambda: (setattr(engine, 'echo', config.log_sql), metadata.create_all(engine))
 
 # Bootstrap the database with some shit

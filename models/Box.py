@@ -36,7 +36,7 @@ from models.Hint import Hint
 class Box(BaseObject):
     ''' Box definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(64), unique=True, nullable=False)
     description = Column(Unicode(4096))

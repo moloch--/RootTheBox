@@ -32,7 +32,7 @@ class PasteBin(BaseObject):
 
     name = Column(Unicode(32), nullable=False)
     contents = Column(Unicode(8192), nullable=False)
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
 
     @classmethod

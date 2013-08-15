@@ -22,6 +22,7 @@ Created on June 30, 2012
 
 import os
 import sys
+import urllib
 import getpass
 import logging
 import ConfigParser
@@ -32,9 +33,14 @@ from libs.Singleton import Singleton
 
 # .basicConfig must be called prior to ANY call to logging.XXXX so make sure
 # this module gets imported prior to any logging!
-logging.basicConfig(
-    format='\r[%(levelname)s] %(asctime)s - %(message)s', level=logging.DEBUG
-)
+logging.basicConfig(format='\r[%(levelname)s] %(asctime)s - %(message)s')
+logging_levels = {
+    'debug': logging.DEBUG,
+    'info': logging.INFO,
+    'information': logging.INFO,
+    'warn': logging.WARN,
+    'warning':logging.WARN,
+}
 
 
 @Singleton
@@ -55,6 +61,17 @@ class ConfigManager(object):
         logging.info('Loading config from: %s' % self.conf)
         self.config = ConfigParser.SafeConfigParser()
         self.config.readfp(open(self.conf, 'r'))
+        self.__load__()
+
+    def refresh(self):
+        ''' Refresh config file settings '''
+        self.config.close()
+        self.config = ConfigParser.SafeConfigParser()
+        self.config.readfp(open(self.conf, 'r'))
+        self.__load__()
+
+    def __load__(self):
+        ''' Load settings from file '''
         self.__server__()
         self.__game__()
         self.__cache__()
@@ -65,18 +82,9 @@ class ConfigManager(object):
     def __server__(self):
         ''' Load network configurations '''
         self.listen_port = self.config.getint("Server", 'port')
-        log_level = self.config.get("Server", 'logging')
+        level = self.config.get("Server", 'logging').lower()
         logger = logging.getLogger()
-        if log_level.lower() == 'debug':
-            logger.setLevel(logging.DEBUG)
-        elif log_level.lower() == 'info':
-            logger.setLevel(logging.INFO)
-        elif log_level.lower() == 'warn':
-            logger.setLevel(logging.WARN)
-        else:
-            sys.stdout.write(WARN + "Logging level has not been set.\n")
-            logger.setLevel(logging.NOTSET)
-        sys.stdout.flush()
+        logger.setLevel(logging_levels.get(level, logging.INFO))
         self.debug = self.config.getboolean("Server", 'debug')
         self.domain = self.config.get("Server", 'domain').replace(' ', '')
         self.default_theme = self.config.get("Server", "theme")
@@ -108,30 +116,48 @@ class ConfigManager(object):
         if not '127.0.0.1' in ips:
             ips.append('127.0.0.1')
         self.admin_ips = tuple(ips)
-        self.max_password_length = self.config.getint(
-            "Security", 'max_password_length'
+        self.max_password_length = self.config.getint("Security", 
+            'max_password_length'
         )
 
     def __recaptcha__(self):
         ''' Loads recaptcha settings '''
         self.recaptcha_enabled = self.config.getboolean("Recaptcha", 'use_recaptcha')
-        self.recaptcha_private_key = self.config.get(
-            "Recaptcha", 'private_key'
-        )
+        self.recaptcha_private_key = self.config.get("Recaptcha", 'private_key')
 
     def __database__(self):
         ''' Loads database connection information '''
         self.log_sql = self.config.getboolean("Database", 'orm_sql')
         self.bot_sql = self.config.getboolean("Database", 'bot_sql')
-        self.db_server = self.config.get("Database", 'server', "localhost")
-        self.db_name = self.config.get("Database", 'name', "rootthebox")
+        self.db = self.config.get("Database", 'db').lower()
+        if self.db == 'sqlite':
+            self.__sqlite__()
+        else:
+            self.__mysql__()
+
+    def __sqlite__(self):
+        ''' Configure db_connection for SQLite '''
+        logging.debug("Configured to use SQLite database ...")
+        self.db_connection = 'sqlite:///rootthebox.db'
+
+    def __mysql__(self):
+        ''' Configure db_connection for MySQL '''
+        logging.debug("Configured to use MySQL database ...")
+        server = self.config.get("Database", 'server', "localhost")
+        name = self.config.get("Database", 'name', "rootthebox")
         user = self.config.get("Database", 'user', "RUNTIME")
         if user == 'RUNTIME':
             user = raw_input(PROMPT + "Database User: ")
-        self.db_user = user
         password = self.config.get("Database", 'password', "RUNTIME")
         if password == 'RUNTIME':
             sys.stdout.write(PROMPT + "Database ")
             sys.stdout.flush()
             password = getpass.getpass()
-        self.db_password = password
+        self.db_server = urllib.quote_plus(server)
+        self.db_name = urllib.quote_plus(name)
+        self.db_user = urllib.quote_plus(user)
+        self.db_password = urllib.quote_plus(password)
+        self.db_connection = 'mysql://%s:%s@%s/%s' % (
+            self.db_user, self.db_password, self.db_server, self.db_name
+        )
+

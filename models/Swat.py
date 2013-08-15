@@ -34,7 +34,7 @@ class Swat(BaseObject):
     Holds the bribe history of players that get 'SWAT'd 
     '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     target_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     paid = Column(Integer, nullable=False)

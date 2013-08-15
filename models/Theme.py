@@ -46,7 +46,7 @@ class Theme(BaseObject):
         lambda self, cssfile: setattr(self, '_cssfile',
                                         self.__class__._filter_string(cssfile, "."))
     ))
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
     @classmethod
     def all(cls):

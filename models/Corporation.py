@@ -32,7 +32,7 @@ class Corporation(BaseObject):
     ''' Corporation definition '''
 
     name = Column(Unicode(64), unique=True, nullable=False)
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     description = Column(Unicode(1024), nullable=False)
     boxes = relationship("Box", 
         backref=backref("Corporation", lazy="joined"), 

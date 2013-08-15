@@ -51,7 +51,7 @@ class Team(BaseObject):
     files = relationship("FileUpload", backref=backref("Team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("Team", lazy="select"))
     money = Column(Integer, default=100, nullable=False)
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     
     flags = relationship("Flag", 
         secondary=team_to_flag, 

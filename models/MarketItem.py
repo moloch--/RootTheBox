@@ -32,7 +32,7 @@ from models import dbsession
 class MarketItem(BaseObject):
     ''' Item definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     name = Column(Unicode(64), nullable=False)
     price = Column(Integer, nullable=False)
     image = Column(Unicode(255))

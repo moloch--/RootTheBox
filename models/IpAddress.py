@@ -34,7 +34,7 @@ class IpAddress(BaseObject):
     ''' IP Address definition '''
 
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _v4 = Column(Unicode(16), unique=True)
     v4 = synonym('_v4', descriptor=property(
         lambda self: self._v4,

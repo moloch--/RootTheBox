@@ -41,7 +41,7 @@ class SourceCode(BaseObject):
         lambda self, file_name: setattr(
             self, '_file_name', self.__class__.filter_string(file_name, ".-_"))
     ))
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     price = Column(Integer, nullable=False)
     description = Column(Unicode(1024), nullable=False)
     checksum = Column(String(32))
