@@ -1132,48 +1132,47 @@ class AdminSwatHandler(BaseHandler):
             self.render_page('Requested SWAT object does not exist')
 
 
-class AdminNotifcationHandler(BaseHandler):
+class AdminConfigurationHandler(BaseHandler):
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        self.render('admin/notifications.html')
-
-
-class AdminNotificationSocketHandler(BaseWebSocketHandler):
+        self.render('admin/configuration.html', 
+            warning=None,
+            errors=[], 
+            config=self.config
+        )
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
-    def open(self):
-        self.manager = EventManager.Instance()
-        self.opcodes = {
-            'stats': self.stats,
-            'is_online': self.is_online,
-        }
+    def post(self, *args, **kwargs):
+        ''' Update configuration '''
+        errors = []
+        errors += self.game_name()
+        self.debug()
+        self.config.save()
+        self.render('admin/configuration.html', 
+            warning="Some configuration changes may require application restart to take affect.",
+            errors=errors, 
+            config=self.config
+        )
 
-    def on_message(self, message):
-        try:
-            msg = json.dumps(message)
-            if 'opcode' in msg and msg['opcode'] in opcodes:
-                opcodes[msg['opcode']](msg)
-        except ValueError:
-            self.write_message({'error': 'invalid syntax'})
-
-    def stats(self, msg):
-        statistics = {
-            'users_online': self.manager.users_online,
-        }
-        self.write_message({'stats': statistics})
-
-    def is_online(self, msg):
-        user = User.by_handle(msg['handle'])
-        if user is not None:
-            self.write_message({
-                'is_online': self.manager.is_online(user)
-            })
+    def game_name(self):
+        ''' Update game name config '''
+        errors = []
+        game_name = self.get_argument('game_name', self.config.game_name)
+        if 0 < len(game_name):
+            if game_name != self.config.game_name:
+                self.config.game_name = game_name
         else:
-            self.write_message({
-                'error': 'user does not exist'
-            })
+            errors.append("Game name must be at least 1 character long.")
+        return errors
+
+    def debug(self):
+        ''' Update debug setting '''
+        debug = self.get_argument('debug', str(self.config.debug).lower())
+        if debug != str(self.config.debug).lower():
+            self.config.debug = bool(debug == 'true')
+

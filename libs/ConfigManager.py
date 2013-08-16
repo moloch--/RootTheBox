@@ -59,20 +59,23 @@ class ConfigManager(object):
                 "No configuration file found at: %s." % self.conf
             )
             os._exit(1)
-        self.refresh(close=False)
+        self.refresh()
 
-    def refresh(self, close=True):
+    def refresh(self):
         ''' Refresh config file settings '''
-        if close: self.config.close()
-        self.__clear__()
         logging.info('Loading config from: %s' % self.conf)
         self.config = ConfigParser.SafeConfigParser()
-        self.config.readfp(open(self.conf, 'r'))
+        self.config_fp = open(self.conf, 'r')
+        self.config.readfp(self.config_fp)
         self.__logging__()
 
     def save(self):
         ''' Write current config to file '''
-        pass
+        self.config_fp.close()
+        fp = open(self.conf, 'w')
+        self.config.write(fp)
+        fp.close()
+        self.refresh()
 
     def __logging__(self):
         ''' Load network configurations '''
@@ -80,57 +83,33 @@ class ConfigManager(object):
         logger = logging.getLogger()
         logger.setLevel(logging_levels.get(level, logging.NOTSET))
 
-    def __clear__(self):
-        ''' Set all mutable internal values to None '''
-        self._debug = None
-        self._domain = None
-        self._default_theme = None
-        self._game_name = None
-        self._bot_reward = None
-        self._bot_reward_interval = None
-        self._history_snapshot_interval = None
-        self._memcached = None
-        self._session_age = None
-        self._session_regeneration_interval = None
-        self._max_password_length = None
-        self._password_upgrade_cost = None
-        self._bribe_cost = None
-        self._admin_ips = None
-        self._recaptcha_enabled = None
-        self._recaptcha_private_key = None
-
     @property
     def listen_port(self):
         ''' Web app listen port, only read once '''
-        return  self.config.getint("Server", 'port')
+        return self.config.getint("Server", 'port')
 
     @property
     def debug(self):
         ''' Debug mode '''
-        if self._debug is None:
-            self._debug = self.config.getboolean("Server", 'debug')
-        return self._debug
+        return self.config.getboolean("Server", 'debug')
 
     @debug.setter
     def debug(self, value):
-        self._debug = value
+        assert isinstance(value, bool)
+        self.config.set("Server", 'debug', str(value))
 
     @property
     def domain(self):
         ''' Get domain '''
-        if self._domain is None:
-            self._domain = self.config.get("Server", 'domain').replace(' ', '')
-        return self._domain
+        return self.config.get("Server", 'domain').replace(' ', '')
 
     @property
     def default_theme(self):
-        if self._default_theme is None:
-            self._default_theme = self.config.get("Server", "theme")
-        return self._default_theme
+        return self.config.get("Server", "theme")
 
     @default_theme.setter
     def default_theme(self, value):
-        self._default_theme = value
+        self.config.set("Server", "theme", value)
 
     @property
     def cache_files(self):
@@ -139,145 +118,112 @@ class ConfigManager(object):
 
     @property
     def game_name(self):
-        if self._game_name is None:
-            self._game_name = self.config.get("Game", 'game_name')[:16]
-        return self._game_name
+        return self.config.get("Game", 'game_name')[:16]
 
     @game_name.setter
     def game_name(self, value):
-        self._game_name = value
+        assert isinstance(value, basestring)
+        self.config.set("Game", 'game_name', value[:16])
 
     @property
     def bot_reward(self):
         ''' Reward per bot per interval '''
-        if self._bot_reward is None:
-            self._bot_reward = self.config.getint("Game", 'bot_reward')
-        return self._bot_reward
+        return self.config.getint("Game", 'bot_reward')
 
     @bot_reward.setter
     def bot_reward(self, value):
-        self._bot_reward = value
+        assert isinstance(value, int)
+        self.config.set("Game", 'bot_reward', str(value))
 
     @property
     def bot_reward_interval(self):
         ''' Check bots every so many minutes '''
-        if self._bot_reward_interval is None:
-            conf = self.config.getint("Game", 
-                'bot_reward_interval'
-            )
-            self._bot_reward_interval = 60000 * conf
-        return self._bot_reward_interval
+        conf = self.config.getint("Game", 'bot_reward_interval')
+        return  60000 * conf
 
     @bot_reward_interval.setter
     def bot_reward_interval(self, value):
-        self._bot_reward_interval = value
+        assert isinstance(value, int)
+        self.config.set("Game",
+            'bot_reward_interval', str(value))
     
     @property
     def bribe_cost(self):
         ''' Base amount of a SWAT bribe '''
-        if self._bribe_cost is None:
-            self._bribe_cost = self.config.getint("Game",
-                'bribe_cost'
-            )
-        return self._bribe_cost
+        return self.config.getint("Game", 'bribe_cost')
 
     @bribe_cost.setter
     def bribe_cost(self, value):
-        self._bribe_cost = value
+        assert isinstance(value, int)
+        self.config.set("Game", 'bribe_cost', str(value))
 
     @property
     def history_snapshot_interval(self):
-        if self._history_snapshot_interval is None:
-            conf = self.config.getint("Game", 
-                'history_snapshot_interval'
-            )
-            self._history_snapshot_interval = 60000 * conf
-        return self._history_snapshot_interval
+        conf = self.config.getint("Game", 'history_snapshot_interval')
+        return 60000 * conf
 
     @history_snapshot_interval.setter
     def history_snapshot_interval(self, value):
-        self._history_snapshot_interval = value
+        assert isinstance(value, int)
+        self.set("Game", 'history_snapshot_interval', str(value))
 
     @property
     def memcached(self):
         ''' Memached settings, cannot be changed from webui '''
-        if self._memcached is None:
-            memcached_host = self.config.get("Cache", 'memcached_host')
-            memcached_port = self.config.get("Cache", 'memcached_port')
-            self._memcached = "%s:%s" % (memcached_host, memcached_port)
-        return self._memcached
+        memcached_host = self.config.get("Cache", 'memcached_host')
+        memcached_port = self.config.getint("Cache", 'memcached_port')
+        return "%s:%d" % (memcached_host, memcached_port)
 
     @property
     def session_age(self):
         ''' Max session age in seconds '''
-        if self._session_age is None:
-            self._session_age = self.config.getint("Cache", 'session_age')
-        return self._session_age
+        return self.config.getint("Cache", 'session_age')
     
     @property
     def session_regeneration_interval(self):
-        if self._session_regeneration_interval is None:
-            self._session_regeneration_interval = self.config.getint(
-                "Cache", 'session_regeneration_interval'
-            )
-        return self._session_regeneration_interval
+        return self.config.getint("Cache", 'session_regeneration_interval')
 
     @property
     def admin_ips(self):
         ''' Load security configurations '''
-        if self._admin_ips is None:
-            ips = self.config.get("Security", 'admin_ips')
-            ips = ips.replace(" ", "").split(',')
-            if not '127.0.0.1' in ips:
-                ips.append('127.0.0.1')
-            self._admin_ips = tuple(ips)
-        return self._admin_ips
+        ips = self.config.get("Security", 'admin_ips')
+        ips = ips.replace(" ", "").split(',')
+        ips.append('127.0.0.1')
+        ips.append('::1')
+        return tuple(set(ips))
     
     @property
     def max_password_length(self):
-        if self._max_password_length is None:
-            self._max_password_length = self.config.getint("Security", 
-                'max_password_length'
-            )
-        return self._max_password_length
+        return self.config.getint("Security", 'max_password_length')
 
     @max_password_length.setter
     def max_password_length(self, value):
-        self._max_password_length = value
+        assert isinstance(value, int)
+        self.config.set("Security", 'max_password_length', str(value))
 
     @property
     def password_upgrade_cost(self):
-        if self._password_upgrade_cost is None:
-            self._password_upgrade_cost = self.config.getint("Game", 
-                'password_upgrade_cost'
-            )
-        return self._password_upgrade_cost
+        return self.config.getint("Game", 'password_upgrade_cost')
 
     @password_upgrade_cost.setter
     def password_upgrade_cost(self, value):
-        self._password_upgrade_cost = value
+        assert isinstance(value, int)
+        self.config.getint("Game", 'password_upgrade_cost', str(value))
 
     @property
     def recaptcha_enabled(self):
         ''' Enable/Disable use of recaptcha '''
-        if self._recaptcha_enabled is None:
-            self._recaptcha_enabled = self.config.getboolean("Recaptcha", 
-                'use_recaptcha'
-            )
-        return self._recaptcha_enabled
+        return self.config.getboolean("Recaptcha", 'use_recaptcha')
 
     @recaptcha_enabled.setter
     def recaptcha_enabled(self, value):
-        self._recaptcha_enabled = value
+        assert isinstance(value, bool)
+        self.config.set("Recaptcha", 'use_recaptcha', str(value))
 
     @property   
     def recaptcha_private_key(self):
         ''' Recaptcha API key '''
-        if self._recaptcha_private_key is None:
-            self._recaptcha_private_key = self.config.get("Recaptcha", 
-                'private_key'
-            )
-        return self._recaptcha_private_key
+        return self.config.get("Recaptcha", 'private_key')
     
     @property
     def log_sql(self):

@@ -124,6 +124,7 @@ app = Application(
         (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
         (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
         (r'/admin/lock', AdminLockHandler),
+        (r'/admin/configuration', AdminConfigurationHandler),
 
         # Notificaiton handlers - NotificationHandlers.py
         (r'/notifications/all', AllNotificationsHandler),
