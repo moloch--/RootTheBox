@@ -194,12 +194,12 @@ class ConfigManager(object):
     
     @property
     def max_password_length(self):
-        return self.config.getint("Security", 'max_password_length')
+        return self.config.getint("Game", 'max_password_length')
 
     @max_password_length.setter
     def max_password_length(self, value):
         assert isinstance(value, int)
-        self.config.set("Security", 'max_password_length', str(value))
+        self.config.set("Game", 'max_password_length', str(value))
 
     @property
     def password_upgrade_cost(self):
@@ -217,7 +217,6 @@ class ConfigManager(object):
 
     @recaptcha_enabled.setter
     def recaptcha_enabled(self, value):
-        assert isinstance(value, bool)
         self.config.set("Recaptcha", 'use_recaptcha', str(value))
 
     @property   
