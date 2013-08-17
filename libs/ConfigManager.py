@@ -23,6 +23,7 @@ Created on June 30, 2012
 import os
 import sys
 import urllib
+import socket
 import getpass
 import logging
 import ConfigParser
@@ -100,8 +101,16 @@ class ConfigManager(object):
 
     @property
     def domain(self):
-        ''' Get domain '''
-        return self.config.get("Server", 'domain').replace(' ', '')
+        ''' Automatically resolve domain, or use manual setting '''
+        _domain = self.config.get("Server", 'domain').replace(' ', '')
+        if _domain.lower() == 'auto':
+            _domain = socket.gethostbyname(socket.gethostname())
+            if _domain.startswith('127.'):
+                _domain = socket.gethostbyname(socket.getfqdn())
+            logging.debug("Domain was automatically configured to '%s'" % _domain)
+        if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':
+            print(WARN+"WARNING: Possibly misconfiguration 'domain' is set to 'localhost'")
+        return _domain
 
     @property
     def default_theme(self):
@@ -244,6 +253,22 @@ class ConfigManager(object):
         else:
             return self.__mysql__()
 
+    def __postgresql__(self):
+        ''' 
+        Configure to use postgresql, there is not built-in support for postgresql
+        so may sure we can import the 3rd party python lib 'pypostgresql'
+        '''
+        logging.debug("Configured to use SQLite for a database")
+        try:
+            import pypostgresql
+        except ImportError:
+            print(WARN+"You must install 'pypostgresql' to use a postgresql database.")
+            os._exit(1)
+        db_host, db_name, db_user, db_password = self.__db__()
+        return 'postgresql+pypostgresql://%s:%s@%s/%s' % (
+            db_host, db_name, db_user, db_password,
+        )
+
     def __sqlite__(self):
         ''' SQLite connection string '''
         logging.debug("Configured to use SQLite for a database")
@@ -252,7 +277,13 @@ class ConfigManager(object):
     def __mysql__(self):
         ''' Configure db_connection for MySQL '''
         logging.debug("Configured to use MySQL for a database")
-        server = self.config.get("Database", 'server')
+        db_server, db_name, db_user, db_password = self.__db__()
+        return 'mysql://%s:%s@%s/%s' % (
+            db_user, db_password, db_server, db_name
+        )
+
+    def __db__(self):
+        host = self.config.get("Database", 'host')
         name = self.config.get("Database", 'name')
         user = self.config.get("Database", 'user')
         if user == '' or user == 'RUNTIME':
@@ -262,11 +293,9 @@ class ConfigManager(object):
             sys.stdout.write(PROMPT + "Database password: ")
             sys.stdout.flush()
             password = getpass.getpass()
-        db_server = urllib.quote_plus(server)
+        db_host = urllib.quote_plus(host)
         db_name = urllib.quote_plus(name)
         db_user = urllib.quote_plus(user)
         db_password = urllib.quote_plus(password)
-        return 'mysql://%s:%s@%s/%s' % (
-            db_user, db_password, db_server, db_name
-        )
+        return db_host, db_name, db_user, db_password
 
