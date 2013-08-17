@@ -10,6 +10,10 @@ and sophistication, attempting to collect flags. However in Root the Box, teams 
 a small bot program to target machines. Teams are periodically rewarded with (in-game) money for each bot in their botnet; 
 the larger the botnet the larger the reward.
 
+Money can be used to unlock new levels, buy hints to flags, download a target's source code, or even "SWAT" other players by bribing the (in-game) police.
+
+Player's "bank account passwords" are also publically displayed by the scoring engine, allowing players to crack each other's passwords and steal each other's money.
+
 More details: [Root the Box](http://rootthebox.com/)
 
 Features
@@ -18,9 +22,9 @@ Features
 * Team based [botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
 * Real-time scoreboard graphs using web sockets
 * Real-time status updates using web sockets
-* Team based file/text sharing
+* Built-in team based file/text sharing
 * A wall of sheep displaying cracked passwords
-* Unlocks and upgrades as users caputre flags (configurable)
+* Unlocks and upgrades as users caputre flags
 * Lots of HTML5 & CSS3
 * Saxroll 403 page
 * Other cool stuff

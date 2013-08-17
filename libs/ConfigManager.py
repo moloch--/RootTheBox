@@ -35,12 +35,12 @@ from libs.Singleton import Singleton
 # this module gets imported prior to any logging!
 logging.basicConfig(format='\r[%(levelname)s] %(asctime)s - %(message)s', level=logging.NOTSET)
 logging_levels = {
-    'notset': logging.NOTSET,
-    'debug': logging.DEBUG,
-    'info': logging.INFO,
-    'information': logging.INFO,
-    'warn': logging.WARN,
-    'warning':logging.WARN,
+       'notset': logging.NOTSET,
+        'debug': logging.DEBUG,
+         'info': logging.INFO,
+  'information': logging.INFO,
+         'warn': logging.WARN,
+      'warning': logging.WARN,
 }
 
 
@@ -165,7 +165,7 @@ class ConfigManager(object):
     @history_snapshot_interval.setter
     def history_snapshot_interval(self, value):
         assert isinstance(value, int)
-        self.set("Game", 'history_snapshot_interval', str(value))
+        self.config.set("Game", 'history_snapshot_interval', str(value))
 
     @property
     def memcached(self):
@@ -208,7 +208,7 @@ class ConfigManager(object):
     @password_upgrade_cost.setter
     def password_upgrade_cost(self, value):
         assert isinstance(value, int)
-        self.config.getint("Game", 'password_upgrade_cost', str(value))
+        self.config.set("Game", 'password_upgrade_cost', str(value))
 
     @property
     def recaptcha_enabled(self):
@@ -217,13 +217,14 @@ class ConfigManager(object):
 
     @recaptcha_enabled.setter
     def recaptcha_enabled(self, value):
+        assert isinstance(value, bool)
         self.config.set("Recaptcha", 'use_recaptcha', str(value))
 
     @property   
     def recaptcha_private_key(self):
         ''' Recaptcha API key '''
         return self.config.get("Recaptcha", 'private_key')
-    
+
     @property
     def log_sql(self):
         ''' This value is only read once, no setter '''

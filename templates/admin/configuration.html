@@ -52,13 +52,13 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="bot_reward_interval">Bot Reward Interval</label>
+                    <label class="control-label" for="bot_reward_interval">Bot Reward Interval (minutes)</label>
                     <div class="controls">
                         <input required type="text" name="bot_reward_interval" value="{{ int(config.bot_reward_interval / 60000) }}" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="history_snapshot_interval">History Interval</label>
+                    <label class="control-label" for="history_snapshot_interval">History Interval<br /> (minutes)</label>
                     <div class="controls">
                         <input required type="text" name="history_snapshot_interval" value="{{ int(config.history_snapshot_interval / 60000) }}" />
                     </div>

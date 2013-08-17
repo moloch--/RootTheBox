@@ -924,7 +924,7 @@ class AdminRegTokenHandler(BaseHandler):
         ''' Call method based on URI '''
         uri = {
             'create': self.create,
-            'view': self.view,
+              'view': self.view,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -1172,7 +1172,7 @@ class AdminConfigurationHandler(BaseHandler):
             return False
 
     def filter_string(self, data):
-        char_white_list = ascii_letters + digits
+        char_white_list = ascii_letters + digits + " -_:;"
         return filter(lambda char: char in char_white_list, data)
 
     def game_name(self):
@@ -1235,17 +1235,17 @@ class AdminConfigurationHandler(BaseHandler):
         errors = []
         pw_cost = self.get_argument('password_upgrade_cost', self.config.password_upgrade_cost)
         pw_cost = filter(lambda char: char in digits, pw_cost)
-        if is_numeric_within(pw_cost, 100, 100000):
+        if self.is_numeric_within(pw_cost, 100, 100000):
             if pw_cost != self.config.password_upgrade_cost:
-                self.config.password_upgrade_cost = pw_cost
+                self.config.password_upgrade_cost = int(pw_cost)
         else:
             errors.append("Password upgrade cost must be $100 - $100,000")
         # Update bribe cost
         bribe_cost = self.get_argument('bribe_cost', self.config.bribe_cost)
         bribe_cost = filter(lambda char: char in digits, bribe_cost)
-        if is_numeric_within(bribe_cost, 100, 100000):
+        if self.is_numeric_within(bribe_cost, 100, 100000):
             if bribe_cost != self.config.bribe_cost:
-                self.config.bribe_cost = bribe_cost
+                self.config.bribe_cost = int(bribe_cost)
         else:
             errors.append("Bribe cost must be $100 - $100,000")
         return errors
