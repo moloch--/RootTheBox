@@ -18,15 +18,15 @@ More details: [Root the Box](http://rootthebox.com/)
 
 Features
 -------------------
-* Distributed under the Apache License, Version 2.0
-* Team based [botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
-* Real-time scoreboard graphs using web sockets
-* Real-time status updates using web sockets
+* [Distributed under the Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+* [Team based botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
+* Real-time scoreboard graphs using websockets
+* Real-time status updates using websockets
 * Built-in team based file/text sharing
 * A wall of sheep displaying cracked passwords
 * Unlocks and upgrades as users caputre flags
+* Supports MySQL, SQLite, or Postgresql
 * Lots of HTML5 & CSS3
-* Saxroll 403 page
 * Other cool stuff
 
 Setup
@@ -35,15 +35,14 @@ See [detailed setup instructions](https://github.com/moloch--/RootTheBox/wiki/In
 
 Setup TL;DR
 -------------------
-* Python 2.5.x - 2.7.x
-* Supported platforms: Install script is for Ubuntu/Debian, but the application should work on any Linux or BSD system.  Windows and OSX have not been tested.
+* Python 2.7.x
+* Supported platforms: Install scripts are for Ubuntu/Debian, but the application should work on any Linux, BSD, or OSX system.  Windows has not been tested.
 * Run the __depends.sh__ script in __/setup__ to automatically install required packages (Ubuntu/Debian only)
-* Set up the db connection settings in __rootthebox.cfg__ (you will need to create the database/dbuser manually)
-* Edit settings in __rootthebox.cfg__ make sure to disable debug mode, etc for production
-* __./rootthebox.py --create-tables__ to create, and init the database (only need to do this once)
+* Set up the database connection settings in __rootthebox.cfg__ you will need to create the db/user manually
+* Edit settings in __rootthebox.cfg__ to your liking, you can also manage many of these settings from the admin web ui
+* __./rootthebox.py --create-tables__ to create, and initialize the database (only need to do this once)
 * __./rootthebox.py --start__ To start the application
 * You can also script the game setup, see/edit __setup/game.py__; to execute setup scripts run __./rootthebox.py --game__
-* To access the recovery console run __./rootthebox.py --recovery__
 
 To Do
 ---------------------

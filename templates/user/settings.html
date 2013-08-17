@@ -33,7 +33,7 @@
                     <div class="control-group">
                         <label class="control-label" for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
                         <div class="controls">
-                            <input type="file" name="avatar" id="avatar" />
+                            <input type="file" name="avatar" id="avatar" style="color:white;" />
                         </div>
                     </div>
                     <div class="control-group">
@@ -46,7 +46,8 @@
             <div class="span5 well">
                 <form action="/user/settings/theme" method="post">  
                     {% raw xsrf_form_html() %}
-                    <legend>Change Theme&nbsp;&nbsp;(Current theme: {{ current_theme.name }})</legend>
+                    <h3>Change Theme<h3>
+                    <h4>(Current theme: {{ current_theme.name }})</h4>
                     <div class="control-group">
                         <label class="control-label" for="theme_uuid">Select a Theme</label>
                         <div class="controls">
@@ -71,7 +72,7 @@
             <div class="span12 well">
                 <h3>Change Passwords</h3>
                 <br />
-                <form action="/user/settings/password" method="post" autocomplete="off">  
+                <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">  
                     {% raw xsrf_form_html() %}
                     <div class="container">
                         <div class="row">
@@ -113,10 +114,12 @@
                             </div>
                         </div>
                     </div>
+                    
                     {% module Recaptcha() %}
+
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary btn-large" type="submit"> Change Password </button>
+                            <button class="btn btn-primary btn-large" type="submit"> Update Password </button>
                         </div>
                     </div>
                 </form>

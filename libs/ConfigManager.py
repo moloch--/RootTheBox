@@ -109,7 +109,7 @@ class ConfigManager(object):
                 _domain = socket.gethostbyname(socket.getfqdn())
             logging.debug("Domain was automatically configured to '%s'" % _domain)
         if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':
-            print(WARN+"WARNING: Possibly misconfiguration 'domain' is set to 'localhost'")
+            print(WARN+"WARNING: Possible misconfiguration 'domain' is set to 'localhost'")
         return _domain
 
     @property
