@@ -104,9 +104,14 @@ class ConfigManager(object):
         ''' Automatically resolve domain, or use manual setting '''
         _domain = self.config.get("Server", 'domain').replace(' ', '')
         if _domain.lower() == 'auto':
-            _domain = socket.gethostbyname(socket.gethostname())
-            if _domain.startswith('127.'):
-                _domain = socket.gethostbyname(socket.getfqdn())
+            try:
+                _domain = socket.gethostbyname(socket.gethostname())
+                # On some Linux systems the hostname resolves to 127.0.0.1 
+                # per /etc/hosts, so fallback and try to get the fqdn if we can.
+                if _domain.startswith('127.'):
+                    _domain = socket.gethostbyname(socket.getfqdn())
+            except:
+                _domain = 'localhost'
             logging.debug("Domain was automatically configured to '%s'" % _domain)
         if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':
             print(WARN+"WARNING: Possible misconfiguration 'domain' is set to 'localhost'")
@@ -247,9 +252,11 @@ class ConfigManager(object):
     @property 
     def db_connection(self):
         ''' Db connection string, only read once '''
-        db = self.config.get("Database", 'db').lower()
+        db = self.config.get("Database", 'db').lower().strip()
         if db == 'sqlite':
             return self.__sqlite__()
+        elif db == 'postgresql':
+            return self.__postgresql__()
         else:
             return self.__mysql__()
 
@@ -258,7 +265,7 @@ class ConfigManager(object):
         Configure to use postgresql, there is not built-in support for postgresql
         so may sure we can import the 3rd party python lib 'pypostgresql'
         '''
-        logging.debug("Configured to use SQLite for a database")
+        logging.debug("Configured to use Postgresql for a database")
         try:
             import pypostgresql
         except ImportError:
@@ -266,7 +273,7 @@ class ConfigManager(object):
             os._exit(1)
         db_host, db_name, db_user, db_password = self.__db__()
         return 'postgresql+pypostgresql://%s:%s@%s/%s' % (
-            db_host, db_name, db_user, db_password,
+            db_user, db_password, db_host, db_name,
         )
 
     def __sqlite__(self):
@@ -286,11 +293,11 @@ class ConfigManager(object):
         host = self.config.get("Database", 'host')
         name = self.config.get("Database", 'name')
         user = self.config.get("Database", 'user')
-        if user == '' or user == 'RUNTIME':
-            user = raw_input(PROMPT + "Database User: ")
         password = self.config.get("Database", 'password')
+        if user == '' or user == 'RUNTIME':
+            user = raw_input(PROMPT+"Database User: ")
         if password == '' or password == 'RUNTIME':
-            sys.stdout.write(PROMPT + "Database password: ")
+            sys.stdout.write(PROMPT+"Database password: ")
             sys.stdout.flush()
             password = getpass.getpass()
         db_host = urllib.quote_plus(host)

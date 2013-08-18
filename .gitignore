@@ -37,3 +37,6 @@ pip-log.txt
 
 # PyCharm
 .idea/*
+
+# OSX
+.DS_Store
