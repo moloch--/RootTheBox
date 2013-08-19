@@ -160,6 +160,8 @@ class RegistrationHandler(BaseHandler):
             handle=unicode(handle),
             team_id=team.id,
         )
+        dbsession.add(user)
+        dbsession.flush()
         user.password = passwd
         user.bank_password = bank_passwd
         token = RegistrationToken.by_value(rtok)

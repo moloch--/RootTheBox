@@ -74,25 +74,25 @@
 					</tr>
 				</thead>
 				<tbody>
-						{% from models import MarketItem %}
-						{% for item in MarketItem.all() %}
-							<tr>
-								<td>{{ item.name }}</td>
-								<td>${{ item.price }}</td>
-								<td>
-								{% if not user.has_item(item.name) %}
-									<button class="btn btn-mini" 
-											data-toggle="modal" 
-											href="#item-details" 
-											onclick="get_details('{{ item.uuid }}')">
-						    			Details
-						    		</button>
-						    	{% else %}
-						    		<strong>Purchased</strong>
-						    	{% end %}
-								</td>
-							</tr>
-						{% end %}
+					{% from models import MarketItem %}
+					{% for item in MarketItem.all() %}
+						<tr>
+							<td>{{ item.name }}</td>
+							<td>${{ item.price }}</td>
+							<td>
+							{% if not user.has_item(item.name) %}
+								<button class="btn btn-mini" 
+										data-toggle="modal" 
+										href="#item-details" 
+										onclick="get_details('{{ item.uuid }}')">
+					    			Details
+					    		</button>
+					    	{% else %}
+					    		<strong>Purchased</strong>
+					    	{% end %}
+							</td>
+						</tr>
+					{% end %}
 				</tbody>
 			</table>
 		</div>
