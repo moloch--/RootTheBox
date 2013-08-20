@@ -74,6 +74,7 @@ class EventManager(object):
             del self.notify_connections[wsocket.team_id][wsocket.user_id]
 
     def deauth(self, user):
+        ''' Send a deauth message to the client ws '''
         if user.team.id in self.notify_connections:
             if user.id in self.notify_connections[user.team.id]:
                 wsocks = self.notify_connections[user.team.id][user.id]
@@ -152,7 +153,7 @@ class EventManager(object):
         return (self.push_broadcast_notification, {'event_uuid': evt_id2})
 
     def create_swat_player_event(self, user, target):
-        message("%s called the SWAT team on %s." % (user.handle, target.handle,))
+        message = "%s called the SWAT team on %s." % (user.handle, target.handle,)
         evt_id = Notifier.broadcast_warning("Player Arrested!", message)
         return (self.push_broadcast_notification, {'event_uuid': evt_id})
 
@@ -173,8 +174,8 @@ class EventManager(object):
         )
         evt_id = Notifier.team_success(user.team, "File Share", message)
         return (self.push_team_notification, {
-            'event_uuid':evt_id, 
-            'team_id':user.team.id
+            'event_uuid': evt_id, 
+            'team_id': user.team.id
         })
 
     def create_paste_bin_event(self, user, paste):

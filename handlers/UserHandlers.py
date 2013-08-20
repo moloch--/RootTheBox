@@ -59,6 +59,7 @@ class SettingsHandler(BaseHandler):
         post_functions = {
             'avatar': self.post_avatar,
             'password': self.post_password,
+            'bank_password': self.post_bankpassword,
             'theme': self.post_theme,
         }
         if len(args) == 1 and args[0] in post_functions:
@@ -101,8 +102,7 @@ class SettingsHandler(BaseHandler):
                     self.render_page(success=["Successfully changed avatar"])
                 else:
                     self.render_page(
-                        errors=[str("Invalid image format, avatar must be:"
-                            + ".png .jpeg .gif or .bmp")]
+                        errors=["Invalid image format, avatar must be: .png .jpeg .gif or .bmp"]
                     )
             else:
                 self.render_page(errors=["The image is too large"])
@@ -111,15 +111,29 @@ class SettingsHandler(BaseHandler):
 
     def post_password(self, *args, **kwargs):
         ''' Called on POST request for password change '''
+        self.set_password(
+            self.get_current_user(),
+            self.get_argument('old_password'),
+            self.get_argument('new_password'),
+            self.get_argument('new_password2')
+        )
+
+    def post_bankpassword(self):
+        ''' Update user's bank password '''
         if self.check_recaptcha():
-            self.set_password(
-                self.get_current_user(),
-                self.get_argument('old_password'),
-                self.get_argument('new_password'),
-                self.get_argument('new_password2')
-            )
+            old_bankpw = self.get_argument('old_bpassword')
+            new_bankpw = self.get_argument('new_bpassword')
+            user = self.get_current_user()
+            if user.validate_bank_password(old_bankpw):
+                if len(new_bankpw) < self.config.max_password_length:
+                    user.bank_password = new_bankpw
+                    self.render_page(success=["Updated bank password."])
+                else:
+                    self.render_page(errors=["New password is too long."])
+            else:
+                self.render_page(errors=["Invalid old password."])
         else:
-            self.render_page(errors=["Invalid recaptcha"])
+            self.render_page(errors=["Invalid recaptcha submission."])
 
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
@@ -158,26 +172,21 @@ class SettingsHandler(BaseHandler):
     def check_recaptcha(self):
         ''' Checks recaptcha '''
         if self.config.recaptcha_enabled:
-            logging.debug('Checking recaptcha submission')
+            logging.debug('Checking recaptcha submission ...')
             response = None
             try:
                 response = captcha.submit(
-                    self.get_argument('recaptcha_challenge_field'),
-                    self.get_argument('recaptcha_response_field'),
+                    self.get_argument('recaptcha_challenge_field', ''),
+                    self.get_argument('recaptcha_response_field', ''),
                     self.config.recaptcha_private_key,
                     self.request.remote_ip
                 )
             except KeyError:
                 logging.exception("Recaptcha API called failed.")
                 return False  # Fail closed!
-            if response is not None and response.is_valid:
-                return True
-            else:
-                user = self.get_current_user()
-                logging.warning("%s failed a captcha test." % user.handle)
-                return False
+            return True if response is not None and response.is_valid else False
         else:
-            logging.debug('Recaptcha has been disabled')
+            logging.debug('Recaptcha has been disabled in application config.')
             return True
 
 

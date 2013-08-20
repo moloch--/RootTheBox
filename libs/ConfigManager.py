@@ -106,11 +106,12 @@ class ConfigManager(object):
         if _domain.lower() == 'auto':
             try:
                 _domain = socket.gethostbyname(socket.gethostname())
-                # On some Linux systems the hostname resolves to 127.0.0.1 
+                # On some Linux systems the hostname resolves to ~127.0.0.1 
                 # per /etc/hosts, so fallback and try to get the fqdn if we can.
                 if _domain.startswith('127.'):
                     _domain = socket.gethostbyname(socket.getfqdn())
             except:
+                logging.warn("Failed to automatically resolve domain, please set manually")
                 _domain = 'localhost'
             logging.debug("Domain was automatically configured to '%s'" % _domain)
         if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':

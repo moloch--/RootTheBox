@@ -81,9 +81,7 @@
 							<td>${{ item.price }}</td>
 							<td>
 							{% if not user.has_item(item.name) %}
-								<button class="btn btn-mini" 
-										data-toggle="modal" 
-										href="#item-details" 
+								<button class="btn btn-mini" data-toggle="modal" href="#item-details" 
 										onclick="get_details('{{ item.uuid }}')">
 					    			Details
 					    		</button>
