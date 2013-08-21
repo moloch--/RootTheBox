@@ -45,11 +45,9 @@ from datetime import datetime
 
 
 ### Settings
-__version__ = '0.1'
-#__port__    = '80'
-#__domain__  = 'game.rootthebox.com'
+__version__ = '0.1.1'
+__domain__  = 'game.rootthebox.com'
 __port__    = '8888'
-__domain__  = 'localhost'
 __path__    = 'botnet/connect'
 
 if platform.system().lower() in ['linux', 'darwin']:
@@ -858,10 +856,14 @@ def get_user(ws, response):
     display_status(ws, {'message': "Authorizing, please wait ..."})
     sys.stdout.flush()
 
+def recv_ping(ws, response):
+    display_status(None, {'message': 'Received ping from command & control'})
+
 opcodes = {
     'error': display_error,
     'status': display_status,
     'get_user': get_user,
+    'ping': recv_ping,
 }
 
 def on_open(ws):

@@ -71,4 +71,10 @@ class NoobHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the noob page '''
+        if self.session is not None:
+            user = self.get_current_user()
+            logging.info("[NOOB ALERT] %s made a silly request, please mock him (%s)" % (
+                user.handle, self.request.remote_ip
+            ))
         self.render("public/noob.html")
+

@@ -17,6 +17,10 @@ Created on Sep 20, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+-----------------------------------------------------
+
+Not gonna sugar code it, this shit gets a bit complicated.
+
 '''
 
 
@@ -32,6 +36,7 @@ from sqlalchemy.sql import and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.types import DateTime, Integer, Unicode
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
+from models import dbsession, Box
 
 
 class MemoryDatabaseObject(object):
@@ -59,19 +64,42 @@ MemoryBaseObject = declarative_base(cls=MemoryDatabaseObject)
 class Bot(MemoryBaseObject):
     ''' Bot Class '''
 
+    last_ping  = Column(DateTime, default=datetime.now)
     wsock_uuid = Column(Unicode(36), nullable=False)
     team_uuid  = Column(Unicode(36), nullable=False)
-    team_name  = Column(Unicode(64), nullable=False)
     box_uuid   = Column(Unicode(36), nullable=False)
-    box_name   = Column(Unicode(64), nullable=False)
     remote_ip  = Column(Unicode(36), nullable=False)
     total_reward = Column(Integer, default=0, nullable=False)
 
+    # Used for easy lookups
+    team_name  = Column(Unicode(64), nullable=False)
+    box_name   = Column(Unicode(64), nullable=False)
+
+    @property
+    def box(self):
+        ''' Pull box object from persistant db '''
+        return dbsession.query(Box).by_uuid(self.box_uuid)
+
+    @property
+    def team(self):
+        ''' Pull box object from persistant db '''
+        return dbsession.query(Box).by_uuid(self.box_uuid)
+
+    def to_dict(self):
+        return {
+            'last_ping': str(self.last_ping),
+            'total_reward': self.total_reward,
+            'box_name': self.box_name,
+            'remote_ip': self.remote_ip,
+        }
 
 @Singleton
 class BotManager(object):
     '''
-    Holds refs to botnet web socket objects.
+    This is an observable class.
+    
+    Holds refs to botnet web socket handler objects.
+    Holds refs to botnet monitor handler objects (observers).
     '''
 
     def __init__(self):
@@ -85,8 +113,8 @@ class BotManager(object):
         MemoryBaseObject.metadata.create_all(self.sqlite_engine)
 
     def all(self):
-        bots = self.botdb.query(Bot).all()
-        return [self.botnet[bot.wsock_uuid] for bot in bots]
+        return self.botdb.query(Bot).all()
+        #return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def by_box(self, box):
         bots = self.botdb.query(Bot).filter_by(box_uuid=unicode(box.uuid)).all()
@@ -107,8 +135,8 @@ class BotManager(object):
             bot = Bot(
                 wsock_uuid=unicode(bot_wsocket.uuid),
                 team_name=unicode(bot_wsocket.team_name),
-                team_uuid=unicode(bot_wsocket.team_uuid),
                 box_name=unicode(bot_wsocket.box_name),
+                team_uuid=unicode(bot_wsocket.team_uuid),
                 box_uuid=unicode(bot_wsocket.box_uuid),
                 remote_ip=unicode(bot_wsocket.remote_ip)
             )
@@ -119,6 +147,11 @@ class BotManager(object):
             return True
         else:
             return False
+
+    def save_bot(self, bot):
+        ''' Save changes to a bot and flush '''
+        self.botdb.add(bot)
+        self.botdb.flush()      
 
     def remove_bot(self, bot_wsocket):
         bot = self.botdb.query(Bot).filter_by(wsock_uuid=unicode(bot_wsocket.uuid)).first()
@@ -155,19 +188,14 @@ class BotManager(object):
         ''' Update team monitors '''
         if team_name in self.monitors and 0 < len(self.monitors[team_name]):
             logging.debug("Sending update to %s" % team_name)
-            boxes = self.get_boxes(team_name)
+            bots = self.get_bots(team_name)
             for monitor in self.monitors[team_name]:
-                monitor.update(boxes)
+                monitor.update(bots)
 
-    def get_boxes(self, team):
+    def get_bots(self, team):
         ''' Get info on boxes for a team '''
         bots = self.botdb.query(Bot).filter_by(team_name=unicode(team)).all()
-        boxes = []
-        for bot in bots:
-            boxes.append(
-                [bot.remote_ip, bot.box_name, bot.total_reward]
-            )
-        return boxes
+        return [bot.to_dict() for bot in bots]
 
     def add_rewards(self, team, reward):
         ''' Add rewards to bot records '''
@@ -181,9 +209,14 @@ class BotManager(object):
 def ping_bots():
     ''' Ping all websockets in database '''
     bot_manager = BotManager.Instance()
-    logging.info("Pinging open botnet websockets")
+    logging.debug("Pinging open botnet websockets")
+    
     for bot in bot_manager.all():
-        bot.ping(urandom(8).encode('hex'))
+        wsocket = bot_manager.botnet[bot.wsock_uuid]
+        wsocket.ping()
+        bot.last_ping = datetime.now()
+        bot_manager.save_bot(bot)
+
     for muuid in bot_manager.monitors:
         for monitor in bot_manager.monitors[muuid]:
-            monitor.ping(urandom(8).encode('hex'))
+            monitor.ping()

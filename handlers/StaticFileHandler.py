@@ -140,6 +140,11 @@ class StaticFileHandler(RequestHandler):
         '''For subclass to add extra headers to the response'''
         pass
 
+    def set_default_headers(self):
+        self.set_header("Server", "'; DROP TABLE servertypes; --")
+        self.add_header("X-Frame-Options", "DENY")
+        self.add_header("X-XSS-Protection", "1; mode=block")
+
     def get_cache_time(self, path, modified, mime_type):
         '''
         Override to customize cache control behavior.

@@ -68,22 +68,23 @@ MIN_X = 80
 ###################
 # > Defaults
 ###################
-__version__ = '0.1'
+__version__ = '0.1.1'
 __port__    = '8888'
 __domain__  = 'localhost'
-__path__    = '/botnet/monitor'
+__path__    = '/botnet/climonitor'
 __log__     = 'bot_monitor.log'
 
 ###################
 # > Logging
 ###################
 LOG_LEVELS = {
-    'debug': logging.DEBUG,
-    'info': logging.INFO,
-    'critical': logging.CRITICAL,
-    'warn': logging.WARN,
-    'error': logging.ERROR,
-    'fatal': logging.FATAL,
+    'notset': logging.NOTSET,
+     'debug': logging.DEBUG,
+      'info': logging.INFO,
+  'critical': logging.CRITICAL,
+      'warn': logging.WARN,
+     'error': logging.ERROR,
+     'fatal': logging.FATAL,
 }
 logger = logging.getLogger()
 
@@ -867,7 +868,12 @@ def stop_animate_thread(ws):
 def update(ws, message):
     ''' Recv and draw latest update '''
     logging.debug("Got update: %s" % message)
-    ws.monitor.update_grid(message['boxes'])
+    bots = []
+    for bot in message['bots']:
+        bots.append( 
+            (bot['box_name'], bot['remote_ip'], bot['total_reward'],) 
+        )
+    ws.monitor.update_grid(bots)
 
 def auth_failure(ws, message):
     ''' Failed to properly authenticate with scoring engine '''
@@ -884,11 +890,15 @@ def auth_success(ws, message):
     ws.monitor.animate_thread = thread
     ws.monitor.__interface__()
 
+def ping(ws, message):
+    ws.monitor.pong = True
+
 
 OPCODES = {}
 OPCODES['update'] = update
 OPCODES['auth_success'] =  auth_success
 OPCODES['auth_failure'] = auth_failure
+OPCODES['ping'] = ping
 
 
 ###################
@@ -1116,7 +1126,7 @@ class BotMonitor(object):
         ''' Addes total bots and update time '''
         start_pos = 3
         pos_y = 1
-        self.screen.addstr(pos_y, start_pos, "- %s -" % update_time, curses.A_BOLD)
+        self.screen.addstr(pos_y, start_pos, "- Last Update: %s -" % update_time, curses.A_BOLD)
         bot_string = "$%d (%d bots)" % (self.total_income, bot_count)
         bot_pos = self.max_x - (len(bot_string) + 3)
         self.screen.addstr(pos_y, bot_pos, bot_string, curses.A_BOLD)
@@ -1289,7 +1299,7 @@ def main(domain, port, secure, log_file, log_level):
     formatter = logging.Formatter('\r[%(levelname)s] %(asctime)s - %(message)s')
     hdlr.setFormatter(formatter)
     logger.addHandler(hdlr)
-    lvl = LOG_LEVELS.get(log_level, 'info')
+    lvl = LOG_LEVELS.get(log_level, 'notset')
     logger.setLevel(lvl)
     enableTrace(True)
     if not secure:
@@ -1335,8 +1345,8 @@ if __name__ == "__main__":
         dest='log_file',
     )
     parser.add_argument('--log-level', '-l',
-        help='log to file (default: info)',
-        default='info',
+        help='log to file (default: notset)',
+        default='notset',
         dest='log_level',
     )
     args = parser.parse_args()

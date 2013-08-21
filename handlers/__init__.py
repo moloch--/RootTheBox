@@ -50,7 +50,6 @@ from handlers.PublicHandlers import *
 from handlers.MarketHandlers import *
 from handlers.UpgradeHandlers import *
 from handlers.MissionsHandler import *
-from handlers.ReporterHandlers import *
 from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
 from handlers.ShareUploadHandlers import *
@@ -76,7 +75,10 @@ app = Application(
 
         # Bot Handlers - BotHandlers.py
         (r'/botnet/connect', BotSocketHandler),
-        (r'/botnet/monitor', BotMonitorHandler),
+        (r'/botnet/climonitor', BotCliMonitorSocketHandler),
+        (r'/botnet/webmonitor', BotWebMonitorSocketHandler),
+        (r'/user/bots/download/(windows|linux|monitor)', BotDownloadHandler),
+        (r'/user/bots/webmonitor', BotWebMonitorHandler),
 
         # ShareUploadHandlers - ShareUploadHandlers.py
         (r'/user/shares/download(.*)', ShareDownloadHandler),
@@ -144,6 +146,7 @@ app = Application(
         (r'/registration', RegistrationHandler),
         (r'/about', AboutHandler),
         (r'/', HomePageHandler),
+        (r'/robots(|\.txt)', FakeRobotsHandler),
 
         # Error handlers - ErrorHandlers.py
         (r'/403', UnauthorizedHandler),

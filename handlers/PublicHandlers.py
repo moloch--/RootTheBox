@@ -175,6 +175,19 @@ class RegistrationHandler(BaseHandler):
         return user
 
 
+class FakeRobotsHandler(BaseHandler):
+
+    def get(self, *args, **kwargs):
+        ''' Troll time '''
+        self.set_header('Content-Type', 'text/plain')
+        self.write('# Block access to admin stuff\n\n')
+        self.write('User-agent: *\n\n')
+        self.write('/admin/create/sql_query\n')
+        self.write('/admin/create/flag_capture\n')
+        self.write('/admin/view/db_users.txt\n')
+        self.write('/admin/view/passwords.txt\n')
+        self.finish()
+
 class AboutHandler(BaseHandler):
 
     def get(self, *args, **kwargs):

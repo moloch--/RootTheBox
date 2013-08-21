@@ -2,7 +2,7 @@
 '''
 Created on Mar 15, 2012
 
-@author: haddaway, moloch
+@author: moloch
 
     Copyright 2012 Root the Box
 
@@ -19,7 +19,7 @@ Created on Mar 15, 2012
     limitations under the License.
 '''
 
-
+import os
 import json
 import logging
 import tornado.websocket
@@ -30,12 +30,12 @@ from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from models import Box, Team, User
 from models.User import ADMIN_PERMISSION
-from BaseHandlers import BaseHandler
-from libs.SecurityDecorators import authenticated
+from BaseHandlers import BaseHandler, BaseWebSocketHandler
+from libs.SecurityDecorators import *
 
 
 class BotSocketHandler(tornado.websocket.WebSocketHandler):
-    ''' Handles websocket connections '''
+    ''' Handles websocket connections from bots '''
 
     def initialize(self):
         self.bot_manager = BotManager.Instance()
@@ -65,6 +65,14 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
                 'opcode': 'error',
                 'message': 'Invalid IP address.'
             })
+            self.close()
+
+    def ping(self):
+        ''' Just make sure we can write data to the socket '''
+        try:
+            self.write_message({'opcode': 'ping'})
+        except:
+            logging.exception("Error: while sending ping to bot.")
             self.close()
 
     def on_message(self, message):
@@ -144,8 +152,11 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.close()
 
 
-class BotMonitorHandler(tornado.websocket.WebSocketHandler):
-    ''' Handles BotMonitor websocket connections '''
+class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
+    ''' 
+    Handles the CLI BotMonitor websocket connections, has custom auth.
+    TODO: Trash this and use the web api handler, w/ normal session cookie
+    '''
 
     def initialize(self):
         self.bot_manager = BotManager.Instance()
@@ -176,6 +187,7 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
         self.bot_manager.remove_monitor(self)
         logging.debug("Closing connection to bot monitor at %s" % self.request.remote_ip)
 
+    
     def auth(self, req):
         ''' Authenticate user '''
         try:
@@ -194,8 +206,8 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
             self.team_name = ''.join(user.team.name)
             self.bot_manager.add_monitor(self)
             self.write_message({'opcode': 'auth_success'})
-            boxes = self.bot_manager.get_boxes(self.team_name)
-            self.update(boxes)
+            bots = self.bot_manager.get_bots(self.team_name)
+            self.update(bots)
         else:
             logging.debug("Monitor socket provided invalid password for user")
             self.write_message({
@@ -204,6 +216,121 @@ class BotMonitorHandler(tornado.websocket.WebSocketHandler):
             })
             self.close()
 
+    def update(self, bots):
+        ''' Called by the observable class '''
+        self.write_message({'opcode': 'update', 'bots': bots})
+
+    def ping(self):
+        self.write_message({'opcode': 'ping'})
+
+
+class BotWebMonitorHandler(BaseHandler):
+    ''' Just renders the html page for the web monitor '''
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        self.render('bots/monitor.html')
+    
+
+class BotWebMonitorSocketHandler(BaseWebSocketHandler):
+    ''' 
+    Bot monitor API, requires user to be authenticated with the web app 
+    TODO: Move the cli api to use this one.
+
+    This class implements an observer pattern, and registers itself with 
+    the BotManager class.
+
+    It must have:
+        cls.uuid
+        cls.team_name
+        cls.ping
+
+    '''
+
+    def open(self):
+        ''' Only open sockets from authenticated clients '''
+        if self.session is not None and 'team_id' in self.session:
+            user = self.get_current_user()
+            logging.debug("[Web Socket] Opened web monitor socket with %s" % user.handle)
+            self.uuid = unicode(uuid4())
+            self.bot_manager = BotManager.Instance()
+            self.team_name = ''.join(user.team.name)
+            self.bot_manager.add_monitor(self)
+            bots = self.bot_manager.get_bots(self.team_name)
+            self.update(bots)
+        else:
+            logging.debug("[Web Socket] Denied web monitor socket to %s" % self.request.remote_ip)
+            self.bot_manager = None
+            self.close()
+
+    def on_message(self, message):
+        user = self.get_current_user()
+        logging.debug("%s is send us websocket messages." % user.handle)
+
     def update(self, boxes):
-        ''' Update state information '''
-        self.write_message({'opcode': 'update', 'boxes': boxes})
+        ''' Called by observable class '''
+        self.write_message({'opcode': 'update', 'bots': boxes})
+
+    def ping(self):
+        ''' Send an update as a ping '''
+        bots = self.bot_manager.get_bots(self.team_name)
+        self.update(bots)
+
+    def on_close(self):
+        ''' Close connection to remote host '''
+        if self.bot_manager is not None:
+            self.bot_manager.remove_monitor(self)
+
+
+class BotDownloadHandler(BaseHandler):
+    ''' Distributes bot binaries / scripts '''
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        download_options = {
+            'windows': self.windows,
+            'linux': self.generic,
+            'monitor': self.monitor,
+        }
+        if len(args) == 1 and args[0] in download_options:
+            download_options[args[0]]()
+        self.finish()
+
+    def windows(self):
+        ''' Download Windows PE file '''
+        self.set_header("Content-Type", "application/exe")
+        self.set_header("Content-disposition", "attachment; filename=rtb_bot.exe")
+        if os.path.exists('bot/dist/bot.exe'):
+            f = open('bot/dist/bot.exe')
+            data = f.read()
+            self.set_header('Content-Length', len(data))
+            self.write(data)
+            f.close()
+        else:
+            logging.error("Missing Windows bot file, please run build script: bot/build_bot.py")
+            self.generic()
+
+    def generic(self):
+        ''' Send them the generic python script '''
+        self.set_header("Content-Type", "text/x-python"); 
+        self.set_header("Content-disposition", "attachment; filename=rtb_bot.py")
+        if os.path.exists('bot/bot.py'):
+            f = open('bot/bot.py')
+            data = f.read()
+            self.set_header('Content-Length', len(data))
+            self.write(data)
+            f.close()
+
+    def monitor(self):
+        ''' Send curses ui bot monitor '''
+        self.set_header("Content-Type", "text/x-python"); 
+        self.set_header("Content-disposition", "attachment; filename=botnet_monitor.py")
+        if os.path.exists('bot/BotMonitor.py'):
+            f = open('bot/BotMonitor.py')
+            data = f.read()
+            self.set_header('Content-Length', len(data))
+            self.write(data)
+            f.close()
+
+
+

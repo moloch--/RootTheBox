@@ -1,8 +1,7 @@
 <script>
     var notifier_ws;
     $(document).ready(function() {
-        notifier_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:" +
-            "{{ handler.application.settings['port'] }}/notifications/wsocket/updates"
+        notifier_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:{{ handler.application.settings['port'] }}/notifications/wsocket/updates"
         );
         notifier_ws.onmessage = function (evt) {
             notification = jQuery.parseJSON(evt.data);
