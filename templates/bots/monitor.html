@@ -41,6 +41,7 @@
 					            		"<td>"+escapeHtml(bots[index]['box_name'])+"</td>"+
 					            		"<td>"+escapeHtml(bots[index]['remote_ip'])+"</td>"+
 					            		"<td>$"+escapeHtml(bots[index]['total_reward'])+"</td>"+
+					            		"<td>"+escapeHtml(bots[index]['last_ping'])+"</td>"+
 					            		"<tr>");
 					            }
 					        } else {
@@ -66,9 +67,10 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>IP Address</th>
 						<th>Box Name</th>
+						<th>IP Address</th>
 						<th>Income</th>
+						<th>Last Ping</th>
 					</tr>
 				</thead>
 				<tbody id="box-table">
