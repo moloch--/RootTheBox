@@ -92,7 +92,8 @@ microshaft = create_corporation(
 
 # > Crate Boxes
 # create_box(BOX_NAME, CORP_OBJECT, DIFFICUTLY, LEVEL_OBJECT, DESCRIPTION, LIST_OF_IPv4, LIST_OF_IPv6)
-seatec_mail = create_box("Mail Server", 
+seatec_mail = create_box(
+    name="Mail Server", 
     corporation=seatec, 
     difficulty="Easy", 
     game_level=level_0, 
@@ -100,28 +101,32 @@ seatec_mail = create_box("Mail Server",
             "Intel reports its a UNIX server located somewhere in 192.168.2.20-100",
     ipv4_addresses=["192.168.2.50"]
 )
-seatec_fw = create_box("Firewall", 
+seatec_fw = create_box(
+    name="Firewall", 
     corporation=seatec, 
     difficulty="Hard", 
     game_level=level_0, 
     description="",
     ipv4_addresses=["192.168.2.1"]
 )
-microshaft_web = create_box("Web Server", 
+microshaft_web = create_box(
+    name="Web Server", 
     corporation=microshaft, 
     difficulty="Medium", 
     game_level=level_1, 
     description="",
     ipv4_addresses=["192.168.3.2"]
 )
-microshaft_dev = create_box("Stage Server", 
+microshaft_dev = create_box(
+    name="Stage Server", 
     corporation=microshaft, 
     difficulty="Medium", 
     game_level=level_1, 
     description="",
     ipv4_addresses=["192.168.3.4"]
 )
-microshaft_laptop = create_box("CEO Laptop", 
+microshaft_laptop = create_box(
+    name="CEO Laptop", 
     corporation=microshaft, 
     difficulty="Hard", 
     game_level=level_2, 
@@ -131,7 +136,7 @@ microshaft_laptop = create_box("CEO Laptop",
 
 # > Create Flags
 # create_flag(FLAG_NAME, TOKEN, REWARD_VALUE, BOX_OBJECT, DESCRIPTION, IS_FILE)
-# IS_FILE: The flag is a file (and TOKEN should be the path to the file)
+# IS_FILE: The flag is a file (and TOKEN should be the local path to the file)
 create_flag(
     name="DB Access", 
     token="p@ssw0rd", 
