@@ -56,19 +56,28 @@ class ConfigManager(object):
         elif os.path.exists('RootTheBox/' + cfg_file):
             self.conf = os.path.abspath('RootTheBox/' + cfg_file)
         else:
-            logging.critical(
-                "No configuration file found at: %s." % self.conf
-            )
+            sys.stderr.write(WARN+"No configuration file found at: %s." % self.conf)
             os._exit(1)
         self.refresh()
+        self.__logging__()
+
+    def __logging__(self):
+        ''' Load network configurations '''
+        level = self.config.get("Logging", 'level').lower()
+        logger = logging.getLogger()
+        logger.setLevel(logging_levels.get(level, logging.NOTSET))
+        if self.config.getboolean("Logging", 'save_logs'):
+            file_log = logging.FileHandler('%s' % self.config.get("Logging", 'logfile'))
+            logger.addHandler(file_log)
+            file_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
+            file_log.setFormatter(file_format)
+            file_log.setLevel(logging_levels.get(level, logging.NOTSET))
 
     def refresh(self):
         ''' Refresh config file settings '''
-        logging.info('Loading config from: %s' % self.conf)
         self.config = ConfigParser.SafeConfigParser()
         self.config_fp = open(self.conf, 'r')
         self.config.readfp(self.config_fp)
-        self.__logging__()
 
     def save(self):
         ''' Write current config to file '''
@@ -77,12 +86,6 @@ class ConfigManager(object):
         self.config.write(fp)
         fp.close()
         self.refresh()
-
-    def __logging__(self):
-        ''' Load network configurations '''
-        level = self.config.get("Server", 'logging').lower()
-        logger = logging.getLogger()
-        logger.setLevel(logging_levels.get(level, logging.NOTSET))
 
     @property
     def listen_port(self):
@@ -267,7 +270,8 @@ class ConfigManager(object):
         ''' SSL Certificate file path '''
         cert = os.path.abspath(self.config.get("Ssl", 'certificate_file'))
         if not os.path.exists(cert):
-            logging.warn("Possible SSL misconfiguration, cert file '%s' not found." % cert)
+            logging.fatal("SSL misconfiguration, certificate file '%s' not found." % cert)
+            os._exit(1)
         return cert
 
     @property
@@ -275,7 +279,8 @@ class ConfigManager(object):
         ''' SSL Key file path '''
         key = os.path.abspath(self.config.get("Ssl", 'key_file'))
         if not os.path.exists(key):
-            logging.warn("Possible SSL misconfiguration, key file '%s' not found." % key)
+            logging.fatal("SSL misconfiguration, key file '%s' not found." % key)
+            os._exit(1)
         return key
 
     @property 
@@ -284,6 +289,8 @@ class ConfigManager(object):
         db = self.config.get("Database", 'db').lower().strip()
         if db == 'sqlite':
             return self.__sqlite__()
+        elif db == 'sqlite-in-memory':
+            return self.__sqlite__(in_memory=True)
         elif db == 'postgresql':
             return self.__postgresql__()
         else:
@@ -305,10 +312,13 @@ class ConfigManager(object):
             db_user, db_password, db_host, db_name,
         )
 
-    def __sqlite__(self):
-        ''' SQLite connection string '''
+    def __sqlite__(self, in_memory=False):
+        ''' SQLite connection string, always save db file to cwd, or in-memory '''
         logging.debug("Configured to use SQLite for a database")
-        return 'sqlite:///rootthebox.db'
+        db_name = os.path.basename(self.config.get("Database", 'name'))
+        if 0 == len(db_name):
+            db_name = 'rtb'
+        return ('sqlite:///%s.db' % db_name) if db_name != ':memory:' else 'sqlite://'
 
     def __mysql__(self):
         ''' Configure db_connection for MySQL '''

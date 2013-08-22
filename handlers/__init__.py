@@ -217,8 +217,8 @@ def start_server():
     
     if config.debug:
         sys.stdout.write(WARN+"WARNING: Debug mode is enabled in "+config.filename)
-        sys.stdout.write(bold+"\n\n\t>>> Debug Mode Disables Some Security Measures <<<"+W+"\n\n")
         sys.stdout.flush()
+        logging.warn("Debug mode is enabled; some security measures will be ignored")
     
     # Setup server object
     if config.enable_ssl:
