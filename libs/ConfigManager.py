@@ -115,7 +115,7 @@ class ConfigManager(object):
                 _domain = 'localhost'
             logging.debug("Domain was automatically configured to '%s'" % _domain)
         if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':
-            print(WARN+"WARNING: Possible misconfiguration 'domain' is set to 'localhost'")
+            logging.warn("Possible misconfiguration 'domain' is set to 'localhost'")
         return _domain
 
     @property
@@ -124,7 +124,7 @@ class ConfigManager(object):
 
     @default_theme.setter
     def default_theme(self, value):
-        self.config.set("Server", "theme", value)
+        self.config.set("Server", "theme", str(value))
 
     @property
     def cache_files(self):
@@ -143,7 +143,7 @@ class ConfigManager(object):
     @property
     def bot_reward(self):
         ''' Reward per bot per interval '''
-        return self.config.getint("Game", 'bot_reward')
+        return abs(self.config.getint("Game", 'bot_reward'))
 
     @bot_reward.setter
     def bot_reward(self, value):
@@ -159,13 +159,12 @@ class ConfigManager(object):
     @bot_reward_interval.setter
     def bot_reward_interval(self, value):
         assert isinstance(value, int)
-        self.config.set("Game",
-            'bot_reward_interval', str(value))
+        self.config.set("Game", 'bot_reward_interval', str(value))
     
     @property
     def bribe_cost(self):
         ''' Base amount of a SWAT bribe '''
-        return self.config.getint("Game", 'bribe_cost')
+        return abs(self.config.getint("Game", 'bribe_cost'))
 
     @bribe_cost.setter
     def bribe_cost(self, value):
@@ -192,24 +191,32 @@ class ConfigManager(object):
     @property
     def session_age(self):
         ''' Max session age in seconds '''
-        return self.config.getint("Cache", 'session_age')
+        return abs(self.config.getint("Cache", 'session_age'))
     
     @property
     def session_regeneration_interval(self):
-        return self.config.getint("Cache", 'session_regeneration_interval')
+        return abs(self.config.getint("Cache", 'session_regeneration_interval'))
 
     @property
     def admin_ips(self):
-        ''' Load security configurations '''
+        ''' Whitelist admin ip address, this may be bypassed if x-headers is enabled '''
         ips = self.config.get("Security", 'admin_ips')
         ips = ips.replace(" ", "").split(',')
         ips.append('127.0.0.1')
         ips.append('::1')
         return tuple(set(ips))
+
+    @property
+    def x_headers(self):
+        ''' Enable/disable HTTP X-Headers '''
+        xheaders = self.config.getboolean("Security", 'x-headers')
+        if xheaders:
+            logging.warn("X-Headers is enabled, this may affect some security restrictions")
+        return xheaders
     
     @property
     def max_password_length(self):
-        return self.config.getint("Game", 'max_password_length')
+        return abs(self.config.getint("Game", 'max_password_length'))
 
     @max_password_length.setter
     def max_password_length(self, value):
@@ -218,7 +225,7 @@ class ConfigManager(object):
 
     @property
     def password_upgrade_cost(self):
-        return self.config.getint("Game", 'password_upgrade_cost')
+        return abs(self.config.getint("Game", 'password_upgrade_cost'))
 
     @password_upgrade_cost.setter
     def password_upgrade_cost(self, value):
@@ -249,6 +256,27 @@ class ConfigManager(object):
     def bot_sql(self):
         ''' This value is only read once, no setter '''
         return self.config.getboolean("Database", 'bot_sql')
+
+    @property
+    def enable_ssl(self):
+        ''' Enable/disabled SSL server '''
+        return self.config.getboolean("Ssl", 'use_ssl')
+
+    @property
+    def certfile(self):
+        ''' SSL Certificate file path '''
+        cert = os.path.abspath(self.config.get("Ssl", 'certificate_file'))
+        if not os.path.exists(cert):
+            logging.warn("Possible SSL misconfiguration, cert file '%s' not found." % cert)
+        return cert
+
+    @property
+    def keyfile(self):
+        ''' SSL Key file path '''
+        key = os.path.abspath(self.config.get("Ssl", 'key_file'))
+        if not os.path.exists(key):
+            logging.warn("Possible SSL misconfiguration, key file '%s' not found." % key)
+        return key
 
     @property 
     def db_connection(self):

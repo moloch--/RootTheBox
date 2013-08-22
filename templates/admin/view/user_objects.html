@@ -136,7 +136,9 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Handle</th>
+                                <th>Last Login</th>
                                 <th>Hash Algorithm</th>
                                 <th>Password Hash</th>
                                 <th><!-- Lock Button --></th>
@@ -144,12 +146,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for user in team.members %}
-                                <tr>
+                            {% for index, user in enumerate(team.members) %}
+                                {% if user.locked %}
+                                    <tr class="error">
+                                {% else %}
+                                    <tr>
+                                {% end %}
+                                    <td>{{ index + 1}}</td>
                                     <td>{{ user.handle }}</td>
+                                    {% if 0 < user.logins %}
+                                        <td>{{ user.last_login }}</td>
+                                    {% else %}
+                                        <td>Never</td>
+                                    {% end %}
                                     <td>{{ user.algorithm }}</td>
-                                    {% if 64 <= len(user.bank_password) %}
-                                        <td>{{ user.bank_password[:75] }}...</td>
+                                    {% if 40 < len(user.bank_password) %}
+                                        <td><a onclick="alert('{{ user.bank_password }}');">{{ user.bank_password[:40] }}...</a></td>
                                     {% else %}
                                         <td>{{ user.bank_password }}</td>
                                     {% end %}

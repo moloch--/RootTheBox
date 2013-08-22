@@ -46,7 +46,10 @@ class LoginHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Display the login page '''
-        self.render('public/login.html', errors=None)
+        if self.session is not None:
+            self.redirect('/user')
+        else:
+            self.render('public/login.html', errors=None)
 
     def post(self, *args, **kwargs):
         ''' Checks submitted username and password '''
@@ -109,9 +112,12 @@ class RegistrationHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         ''' Renders the registration page '''
-        self.render("public/registration.html", 
-            errors=None
-        )
+        if self.session is not None:
+            self.redirect('/user')
+        else:
+            self.render("public/registration.html", 
+                errors=None
+            )
 
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''

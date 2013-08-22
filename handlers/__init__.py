@@ -153,7 +153,9 @@ app = Application(
         (r'/(.*).php', NoobHandler),
         (r'/admin', NoobHandler),
         (r'/(.*)phpmyadmin(.*)', NoobHandler),
-        (r'/administrator', NoobHandler),
+        (r'/administrator(.*)', NoobHandler),
+
+        # This is our catch-all
         (r'/(.*)', NotFoundHandler)
     ],
 
@@ -212,16 +214,31 @@ app = Application(
 # Main entry point
 def start_server():
     ''' Main entry point for the application '''
-    server = HTTPServer(app)
+    
+    if config.debug:
+        sys.stdout.write(WARN+"WARNING: Debug mode is enabled in "+config.filename)
+        sys.stdout.write(bold+"\n\n\t>>> Debug Mode Disables Some Security Measures <<<"+W+"\n\n")
+        sys.stdout.flush()
+    
+    # Setup server object
+    if config.enable_ssl:
+        server = HTTPServer(app, 
+            ssl_options={
+                "certfile": config.certfile,
+                "keyfile": config.keyfile,
+            }, 
+            xheaders=config.x_headers
+        )
+    else:
+        server = HTTPServer(app, xheaders=config.x_headers)
+
+    # Bind to a socket
     sockets = netutil.bind_sockets(config.listen_port)
     server.add_sockets(sockets)
-    io_loop = IOLoop.instance()
+    
+    # Start the i/o loop, and callbacks
     try:
-        if config.debug:
-            # Print a nice verbose warning
-            sys.stdout.write(WARN+"WARNING: Debug mode is enabled in "+config.filename)
-            sys.stdout.write(bold+"\n\n\t>>> Debug Mode Disables Some Security Measures <<<"+W+"\n\n")
-        sys.stdout.flush()
+        io_loop = IOLoop.instance()
         game_history = GameHistory.Instance()
         history_callback = PeriodicCallback(
             game_history.take_snapshot, 

@@ -38,6 +38,7 @@ import hashlib
 import logging
 import argparse
 import platform
+import traceback
 
 
 from urlparse import urlparse
@@ -836,16 +837,21 @@ class WebSocketApp(object):
 ### [ Messages ] ############################################################################
 #############################################################################################
 
-def display_error(ws, response):
-    sys.stderr.write("%s %s Error  : %s\n" % (
-        WARN, current_time(), response['message']
-    ))
+def display_error(ws, response, verbose=False):
+    msg = response['message'] if 'message' in response else response['error']
+    sys.stderr.write("\n%s %s Error  : %s" % (WARN, current_time(), msg))
+    if (ws is not None and ws.verbose) or verbose:
+        sys.stderr.write('\n')
+        traceback.print_exc(file=sys.stderr)
     sys.stderr.flush()
 
-def display_status(ws, response):
-    sys.stdout.write("%s %s Status : %s \n" % (
+def display_status(ws, response, verbose=False):
+    sys.stdout.write(chr(27) + '[2K' + '\r')
+    sys.stdout.write("%s %s Status : %s " % (
         INFO, current_time(), response['message']
     ))
+    if (ws is not None and ws.verbose) or verbose:
+        sys.stdout.write('\n')
     sys.stdout.flush()
 
 def get_user(ws, response):
@@ -854,10 +860,14 @@ def get_user(ws, response):
         'user': ws.user,
     }))
     display_status(ws, {'message': "Authorizing, please wait ..."})
-    sys.stdout.flush()
 
-def recv_ping(ws, response):
-    display_status(None, {'message': 'Received ping from command & control'})
+def recv_ping(ws, response, verbose=False):
+    ''' Print that we just got a ping from c&c '''
+    sys.stdout.write(chr(27) + '[2K' + '\r')
+    sys.stdout.write(INFO+' %s  Ping  : Received a ping from command & control' % current_time())
+    if (ws is not None and ws.verbose) or verbose:
+        sys.stdout.write('\n')
+    sys.stdout.flush()
 
 opcodes = {
     'error': display_error,
@@ -886,20 +896,20 @@ def on_error(ws, error):
     display_error(ws, {'error': str(error)})
 
 def on_close(ws):
-    display_error(ws, {'error': "Disconnected from command & control"})
+    display_error(ws, {'error': "Disconnected from command & control\n"})
 
 def main(domain, port, user, secure=False, verbose=False):
     ''' Main() '''
     try:
         enableTrace(verbose)
         connection_url = "ws://%s:%s/%s" % (domain, port, __path__)
-        if verbose:
-            display_status(None, {'message': "Connecting to: %s" % connection_url})
+        display_status(None, {'message': "Connecting to: %s" % connection_url}, verbose=verbose)
         ws = WebSocketApp(connection_url,
             on_message = on_message,
             on_error = on_error,
             on_close = on_close,
         )
+        ws.verbose = verbose
         ws.user = user
         ws.on_open = on_open
         ws.run_forever()
