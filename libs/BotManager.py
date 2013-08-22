@@ -114,7 +114,6 @@ class BotManager(object):
 
     def all(self):
         return self.botdb.query(Bot).all()
-        #return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def by_box(self, box):
         bots = self.botdb.query(Bot).filter_by(box_uuid=unicode(box.uuid)).all()

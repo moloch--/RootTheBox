@@ -56,9 +56,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.box_uuid = box.uuid
             self.box_name = box.name
             self.remote_ip = self.request.remote_ip
-            self.write_message({
-                'opcode': 'get_user',
-            })
+            self.write_message({'opcode': 'get_user'})
         else:
             logging.debug("Rejected bot from '%s' (not a box)" % self.request.remote_ip)
             self.write_message({
