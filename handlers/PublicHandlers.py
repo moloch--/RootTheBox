@@ -29,7 +29,7 @@ import logging
 
 from libs.Form import Form
 from libs.ConfigManager import ConfigManager
-from models import dbsession, User, Team, Theme, RegistrationToken
+from models import dbsession, User, Team, Theme, RegistrationToken, GameLevel
 from models.User import ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from datetime import datetime
@@ -123,62 +123,108 @@ class RegistrationHandler(BaseHandler):
         ''' Attempts to create an account, with shitty form validation '''
         form = Form(
             handle="Please enter a handle",
-            team="Please select a team to join",
             pass1="Please enter a password",
             pass2="Please confirm your password",
             bpass1="Please enter a bank account password",
             token="Please enter a registration token"
         )
         if form.validate(self.request.arguments):
-            handle = self.get_argument('handle')
-            rtok = self.get_argument('token', None)
-            passwd = self.get_argument('pass1', '')
-            bank_passwd = self.get_argument('bpass1', '')
-            if not 2 < len(handle) < 16:
-                self.render_error('Hacker name must be 3-15 characters')
-            elif User.by_handle(handle) is not None:
-                self.render_error('Handle already taken')
-            elif not passwd == self.get_argument('pass2'):
-                self.render_error('Passwords do not match')
-            elif len(passwd) < 16 and not self.config.debug:
-                self.render_error('Password must be at least 16 characters')
-            elif not 0 < len(bank_passwd) <= self.config.max_password_length:
-                self.render_error(
-                    'Bank account password must be 1-%d characters' % self.config.max_password_length
-                )
-            elif Team.by_uuid(self.get_argument('team', '')) is None:
-                self.render_error("Please select a team to join")
-            elif RegistrationToken.by_value(rtok) is None and not self.config.debug:
-                self.render_error("Invalid registration token")
-            else:
-                user = self.create_user(handle, passwd, bank_passwd, rtok)
+            errors = []
+            errors += self.validate_user()
+            errors += self.validate_team()
+            if 0 == len(errors):
+                team = self.get_team()
+                user = self.create_user(team)
                 self.render('public/successful_reg.html', account=user.handle)
+            else:
+                self.render('public/registration.html', errors=errors)
         else:
             self.render('public/registration.html', errors=form.errors)
 
-    def render_error(self, error):
-        self.render('public/registration.html', errors=[error])
+    def validate_user(self):
+        ''' Validate user arguments '''
+        errors = []
+        handle = self.get_argument('handle')
+        rtok = self.get_argument('token', '')
+        passwd = self.get_argument('pass1', '')
+        bank_passwd = self.get_argument('bpass1', '')
+        if not 2 < len(handle) < 16:
+            errors.append('Hacker name must be 3-15 characters')
+        elif User.by_handle(handle) is not None:
+            errors.append('Handle already taken')
+        elif not passwd == self.get_argument('pass2'):
+            errors.append('Passwords do not match')
+        elif len(passwd) < 16 and not self.config.debug:
+            errors.append('Password must be at least 16 characters')
+        elif not 0 < len(bank_passwd) <= self.config.max_password_length:
+            errors.append(
+                'Bank account password must be 1-%d characters' % self.config.max_password_length
+            )
+        elif RegistrationToken.by_value(rtok) is None and self.config.restrict_registration:
+            errors.append("Invalid registration token")
+        return errors
 
-    def create_user(self, handle, passwd, bank_passwd, rtok):
+    def validate_team(self):
+        ''' Validate team arguments '''
+        errors = []
+        join_team = self.get_argument('team', '')
+        if Team.by_uuid(join_team) is None:
+            if self.config.public_teams:
+                team_name = self.get_argument('team_name', '')
+                motto = self.get_argument('motto', '')
+                if 2 < len(team_name) < 15:
+                    if Team.by_name(team_name) is not None:
+                        errors.append("A team with that name already exists")
+                else:
+                    errors.append('Team name must be 3 - 15 characters')
+                if not 2 < len(motto):
+                    errors.append('Team motto must be more than 3 characters')  
+                return errors
+            else:
+                return ["You must select a team to join"]
+        else:
+            return []
+
+    def create_user(self, team):
         ''' Add user to the database '''
-        team = Team.by_uuid(self.get_argument('team', ''))
+        handle = self.get_argument('handle')
         user = User(
             handle=unicode(handle),
             team_id=team.id,
         )
         dbsession.add(user)
         dbsession.flush()
-        user.password = passwd
-        user.bank_password = bank_passwd
-        token = RegistrationToken.by_value(rtok)
-        if token is not None:  # May be None if debug mode is on
-            token.used = True
+        user.password = self.get_argument('pass1', '')
+        user.bank_password = self.get_argument('bpass1', '')
+        if self.config.restrict_registration:
+            rtok = self.get_argument('token', '')
+            token = RegistrationToken.by_value(rtok)
             dbsession.add(token)
         dbsession.add(user)
         dbsession.flush()
         event = self.event_manager.create_joined_team_event(user)
         self.new_events.append(event)
         return user
+
+    def get_team(self):
+        ''' Create a team object, or pull the existing one '''
+        if '' == self.get_argument('team', ''):
+            return self.create_team()
+        else:
+            return Team.by_uuid(self.get_argument('team'))
+
+    def create_team(self):
+        ''' Create a new team '''
+        assert self.config.public_teams
+        team = Team(
+            name=unicode(self.get_argument('team_name')),
+            motto=unicode(self.get_argument('motto')),
+        )
+        level_0 = GameLevel.all()[0]
+        team.game_levels.append(level_0)
+        dbsession.add(team)
+        dbsession.flush()
+        return team
 
 
 class FakeRobotsHandler(BaseHandler):

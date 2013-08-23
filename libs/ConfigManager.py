@@ -63,7 +63,7 @@ class ConfigManager(object):
 
     def __logging__(self):
         ''' Load network configurations '''
-        level = self.config.get("Logging", 'level').lower()
+        level = self.config.get("Logging", 'console_level').lower()
         logger = logging.getLogger()
         logger.setLevel(logging_levels.get(level, logging.NOTSET))
         if self.config.getboolean("Logging", 'save_logs'):
@@ -71,7 +71,8 @@ class ConfigManager(object):
             logger.addHandler(file_log)
             file_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
             file_log.setFormatter(file_format)
-            file_log.setLevel(logging_levels.get(level, logging.NOTSET))
+            flevel = self.config.get("Logging", 'file_level').lower()
+            file_log.setLevel(logging_levels.get(flevel, logging.NOTSET))
 
     def refresh(self):
         ''' Refresh config file settings '''
@@ -120,6 +121,14 @@ class ConfigManager(object):
         if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':
             logging.warn("Possible misconfiguration 'domain' is set to 'localhost'")
         return _domain
+
+    @property
+    def public_teams(self):
+        return self.config.getboolean("Game", 'public_teams')
+
+    @property
+    def restrict_registration(self):
+        return self.config.getboolean("Game", 'restrict_registration')
 
     @property
     def default_theme(self):

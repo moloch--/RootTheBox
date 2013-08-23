@@ -32,6 +32,8 @@
                             data-content="Your handle must be 3-15 alpha-numeric characters" />
                     </div>
                 </div>
+                <hr>
+                <h5>Join a Team</h5>
                 <div class="control-group">
                     <label class="control-label" for="team">Select a Team</label>
                     <div class="controls">
@@ -44,6 +46,23 @@
                         </select>
                     </div>
                 </div>
+                {% from libs.ConfigManager import ConfigManager %}
+                {% if ConfigManager.Instance().public_teams %}
+                    <h5>Create a New Team</h5>
+                    <div class="control-group">
+                        <label class="control-label" for="team_name">Team Name</label>
+                        <div class="controls">
+                            <input id="team_name" name="team_name" type="text" placeholder="Team Name">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="motto">Motto</label>
+                        <div class="controls">
+                            <input id="motto" name="motto" type="text" placeholder="Team Motto">
+                        </div>
+                    </div>
+                {% end %}
+                <hr>
                 <div class="control-group">
                     <label class="control-label" for="pass1">Password</label>
                     <div class="controls">
@@ -74,15 +93,17 @@
                             data-content="Your password much contain only ascii chars" />
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="token">Registration Token</label>
-                    <div class="controls">
-                        <input required id="regtoken" name="token" placeholder="Token" type="text"
-                            rel="popover" pattern="^[a-fA-F0-9]{1,6}$"
-                            data-original-title="Registration Token"
-                            data-content="Get your registration token from reception" />
+                {% if ConfigManager.Instance().restrict_registration %}
+                    <div class="control-group">
+                        <label class="control-label" for="token">Registration Token</label>
+                        <div class="controls">
+                            <input required id="regtoken" name="token" placeholder="Token" type="text"
+                                rel="popover" pattern="^[a-fA-F0-9]{1,6}$"
+                                data-original-title="Registration Token"
+                                data-content="Get your registration token from reception" />
+                        </div>
                     </div>
-                </div>
+                {% end %}
                 <div class="control-group">
                     <div class="controls">
                         <button class="btn btn-primary" type="submit">&nbsp;Register Account&nbsp;</button>
