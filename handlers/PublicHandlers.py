@@ -126,7 +126,6 @@ class RegistrationHandler(BaseHandler):
             pass1="Please enter a password",
             pass2="Please confirm your password",
             bpass1="Please enter a bank account password",
-            token="Please enter a registration token"
         )
         if form.validate(self.request.arguments):
             errors = []
