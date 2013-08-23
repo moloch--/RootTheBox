@@ -239,6 +239,7 @@ class FakeRobotsHandler(BaseHandler):
         self.write('/admin/view/passwords.txt\n')
         self.finish()
 
+
 class AboutHandler(BaseHandler):
 
     def get(self, *args, **kwargs):

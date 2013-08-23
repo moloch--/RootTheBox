@@ -2,10 +2,6 @@
 
 {% block title %}Registration{% end %}
 
-{% block header %}
-<script src="/static/js/garlic.min.js" type="text/javascript"></script>
-{% end %}
-
 {% block content %}
     <div class="container">
         <h1>Registration</h1>
@@ -20,8 +16,8 @@
             {% end %}
         {% end %}
         <div class="well">
-            <legend>Welcome to the Scene</legend>
-            <form class="form-horizontal" rel="persist" action="/registration" method="post">  
+            <legend>Welcome to the Scene</legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
+            <form class="form-horizontal" action="/registration" method="post">  
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
                     <label class="control-label" for="handle">Hacker Name</label>
@@ -48,7 +44,7 @@
                 </div>
                 {% from libs.ConfigManager import ConfigManager %}
                 {% if ConfigManager.Instance().public_teams %}
-                    <h5>Create a New Team</h5>
+                    <h5>Start a New Team</h5>
                     <div class="control-group">
                         <label class="control-label" for="team_name">Team Name</label>
                         <div class="controls">
@@ -64,7 +60,7 @@
                 {% end %}
                 <hr>
                 <div class="control-group">
-                    <label class="control-label" for="pass1">Password</label>
+                    <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">
                         <input required id="pass1" name="pass1" placeholder="Password" type="password" 
                             autocomplete="off" data-storage="false"
@@ -74,7 +70,7 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="pass2">Confirm Password</label>
+                    <label class="control-label" for="pass2">Confirm Account Password</label>
                     <div class="controls">
                         <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password" 
                             autocomplete="off" data-storage="false"
@@ -90,7 +86,7 @@
                             autocomplete="off" data-storage="false"
                             rel="popover"
                             data-original-title="Password"
-                            data-content="Your password much contain only ascii chars" />
+                            data-content="Used to secure your in-game bank account, this password can contain only ascii chars" />
                     </div>
                 </div>
                 {% if ConfigManager.Instance().restrict_registration %}
@@ -104,6 +100,7 @@
                         </div>
                     </div>
                 {% end %}
+                <br />
                 <div class="control-group">
                     <div class="controls">
                         <button class="btn btn-primary" type="submit">&nbsp;Register Account&nbsp;</button>
@@ -117,9 +114,12 @@
             $("#handle").popover({placement:'right', trigger:'focus'});
             $("#pass1").popover({placement:'right', trigger:'focus'});
             $("#pass2").popover({placement:'right', trigger:'focus'});
-            $("#bpass2").popover({placement:'right', trigger:'focus'});
-            $("#regtoken").popover({placement:'right', trigger:'focus'});
+            $("#bpass1").popover({placement:'right', trigger:'focus'});
+            
+            {% if ConfigManager.Instance().restrict_registration %}
+                $("#regtoken").popover({placement:'right', trigger:'focus'});
+            {% end %}
+
         });
-        $('[rel=persist]').garlic();
     </script>
 {% end %}
