@@ -35,7 +35,7 @@ See [detailed setup instructions](https://github.com/moloch--/RootTheBox/wiki/In
 
 Setup TL;DR
 -------------------
-* Python 2.7.x
+* Python 2.7.x / Tornado 3.1
 * Supported platforms: Install scripts are for Ubuntu/Debian, but the application should work on any Linux, BSD, or OSX system.  Windows has not been tested.
 * Run the __depends.sh__ script in __/setup__ to automatically install required packages (Ubuntu/Debian only)
 * Set up the database connection settings in __rootthebox.cfg__ you will need to create the db/user manually

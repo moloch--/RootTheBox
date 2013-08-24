@@ -20,14 +20,13 @@ Created on Mar 11, 2012
 '''
 
 
-import re
-
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession
 from models.BaseGameObject import BaseObject
+from tornado import netutil
 
 
 class IpAddress(BaseObject):
@@ -39,13 +38,13 @@ class IpAddress(BaseObject):
     v4 = synonym('_v4', descriptor=property(
         lambda self: self._v4,
         lambda self, v4: setattr(
-            self, '_v4', self.__class__.format_v4(v4))
+            self, '_v4', self.__class__.validate_ip(v4))
     ))
     _v6 = Column(Unicode(40), unique=True)
     v6 = synonym('_v6', descriptor=property(
         lambda self: self._v6,
         lambda self, v6: setattr(
-            self, '_v6', self.__class__.format_v6(v6))
+            self, '_v6', self.__class__.validate_ip(v6))
     ))
 
     @classmethod
@@ -72,25 +71,12 @@ class IpAddress(BaseObject):
         return ip
 
     @classmethod
-    def format_v4(cls, ip_address):
-        ''' Checks the format of the string to confirm its a valid ipv4 address '''
-        regex = re.compile(r"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b")
-        if not regex.match(ip_address):
-            raise ValueError("Invalid Ipv4 Address: '%s'" % str(ip_address))
-        else:
+    def validate_ip(cls, ip_address):
+        ''' Checks the format of the string to confirm its a valid IPv4 or v6 address '''
+        if netutil.is_valid_ip(ip_address):
             return ip_address
-
-    @classmethod
-    def format_v6(cls, ip_address):
-        '''
-        Checks the format of the string to confirm its a valid ipv6 address
-        May the PEP8 gods forgive what I am about to do...
-        '''
-        regex = re.compile(r"/^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/")
-        if not regex.match(ip_address):
-            raise ValueError("Invalid Ipv6 Address: '%s'" % str(ip_address))
         else:
-            return ip_address
+            raise ValueError("Invalid IP Address: '%s'" % str(ip_address))
 
     def is_v4(self):
         return bool(self.v4 is not None)
