@@ -6,7 +6,10 @@
 port = 8888
 
 # Debug mode provides stack traces, etc
-debug = True
+debug = False
+
+# Bootstrap type 'production' / 'developement'
+bootstrap = production
 
 # Set "domain" to your local ip/hostname, this is the address websockets will connect to
 # Set to 'auto' to attempt to resolve your local ip automatically

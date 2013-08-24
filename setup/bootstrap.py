@@ -35,9 +35,11 @@ from models.User import ADMIN_PERMISSION
 config = ConfigManager.Instance()
 password = ""
 
-if config.debug:
+if config.bootstrap == 'developement':
+    admin_handle = u'admin'
     password = 'nimda123'
 else:
+    admin_handle = unicode(raw_input(PROMPT+"Admin username: "))
     sys.stdout.write(PROMPT+"New Admin ")
     sys.stdout.flush()
     password1 = getpass.getpass()
@@ -120,7 +122,7 @@ dbsession.add(game_level)
 dbsession.flush()
 
 # Admin User Account
-admin_user = User(handle=u'admin')
+admin_user = User(handle=admin_handle)
 admin_user.password = password
 dbsession.add(admin_user)
 dbsession.flush()
@@ -133,7 +135,7 @@ dbsession.add(admin_permission)
 dbsession.flush()
 
 # Display Details
-if config.debug:
+if config.bootstrap == 'developement':
     environ = bold + R + "Developement boot strap" + W
     details = ", default admin password is '%s'." % password
 else:

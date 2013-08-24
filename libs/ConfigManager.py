@@ -125,6 +125,10 @@ class ConfigManager(object):
         return _domain
 
     @property
+    def bootstrap(self):
+        return self.config.get("Server", 'bootstrap')
+
+    @property
     def public_teams(self):
         ''' Allow new users to create their own teams '''
         return self.config.getboolean("Game", 'public_teams')
