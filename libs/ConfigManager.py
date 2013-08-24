@@ -53,8 +53,6 @@ class ConfigManager(object):
         self.filename = cfg_file
         if os.path.exists(cfg_file) and os.path.isfile(cfg_file):
             self.conf = os.path.abspath(cfg_file)
-        elif os.path.exists('RootTheBox/' + cfg_file):
-            self.conf = os.path.abspath('RootTheBox/' + cfg_file)
         else:
             sys.stderr.write(WARN+"No configuration file found at: %s." % self.conf)
             os._exit(1)
@@ -83,6 +81,7 @@ class ConfigManager(object):
     def save(self):
         ''' Write current config to file '''
         self.config_fp.close()
+        os.rename(self.conf, '%s-%s.old' % (datetime.now(), self.conf))
         fp = open(self.conf, 'w')
         self.config.write(fp)
         fp.close()
@@ -91,7 +90,11 @@ class ConfigManager(object):
     @property
     def listen_port(self):
         ''' Web app listen port, only read once '''
-        return self.config.getint("Server", 'port')
+        lport = self.config.getint("Server", 'port')
+        if not 0 < lport < 65535:
+            logging.fatal("Listen port not in valid range: %d" % lport)
+            os._exit(1)
+        return lport
 
     @property
     def debug(self):
@@ -106,7 +109,7 @@ class ConfigManager(object):
     @property
     def domain(self):
         ''' Automatically resolve domain, or use manual setting '''
-        _domain = self.config.get("Server", 'domain').replace(' ', '')
+        _domain = self.config.get("Server", 'domain').strip()
         if _domain.lower() == 'auto':
             try:
                 _domain = socket.gethostbyname(socket.gethostname())
@@ -124,19 +127,17 @@ class ConfigManager(object):
 
     @property
     def public_teams(self):
+        ''' Allow new users to create their own teams '''
         return self.config.getboolean("Game", 'public_teams')
 
     @property
     def restrict_registration(self):
+        ''' Enable/disable registration tokens '''
         return self.config.getboolean("Game", 'restrict_registration')
 
     @property
     def default_theme(self):
         return self.config.get("Server", "theme")
-
-    @default_theme.setter
-    def default_theme(self, value):
-        self.config.set("Server", "theme", str(value))
 
     @property
     def cache_files(self):
@@ -223,7 +224,7 @@ class ConfigManager(object):
         ''' Enable/disable HTTP X-Headers '''
         xheaders = self.config.getboolean("Security", 'x-headers')
         if xheaders:
-            logging.warn("X-Headers is enabled, this may affect some security restrictions")
+            logging.warn("X-Headers is enabled, this may affect IP security restrictions")
         return xheaders
     
     @property
@@ -298,8 +299,6 @@ class ConfigManager(object):
         db = self.config.get("Database", 'db').lower().strip()
         if db == 'sqlite':
             return self.__sqlite__()
-        elif db == 'sqlite-in-memory':
-            return self.__sqlite__(in_memory=True)
         elif db == 'postgresql':
             return self.__postgresql__()
         else:
@@ -308,7 +307,7 @@ class ConfigManager(object):
     def __postgresql__(self):
         ''' 
         Configure to use postgresql, there is not built-in support for postgresql
-        so may sure we can import the 3rd party python lib 'pypostgresql'
+        so make sure we can import the 3rd party python lib 'pypostgresql'
         '''
         logging.debug("Configured to use Postgresql for a database")
         try:
@@ -321,7 +320,7 @@ class ConfigManager(object):
             db_user, db_password, db_host, db_name,
         )
 
-    def __sqlite__(self, in_memory=False):
+    def __sqlite__(self):
         ''' SQLite connection string, always save db file to cwd, or in-memory '''
         logging.debug("Configured to use SQLite for a database")
         db_name = os.path.basename(self.config.get("Database", 'name'))
@@ -338,6 +337,7 @@ class ConfigManager(object):
         )
 
     def __db__(self):
+        ''' Pull db creds and return them url encoded '''
         host = self.config.get("Database", 'host')
         name = self.config.get("Database", 'name')
         user = self.config.get("Database", 'user')

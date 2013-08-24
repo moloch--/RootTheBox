@@ -59,9 +59,9 @@ from handlers.NotificationHandlers import *
 ### Setup cache
 config = ConfigManager.Instance()
 if config.cache_files:
-    from handlers.StaticFileHandler import StaticFileHandler
+    from handlers.StaticFileHandler import CachedStaticFileHandler as StaticFileHandler
 else:
-    from tornado.web import StaticFileHandler  # lint:ok
+    from handlers.StaticFileHandler import StaticFileHandler as StaticFileHandler
 
 
 ### Main URL Configuration

@@ -53,16 +53,19 @@
                         </ul>
                     </li>
                     <li><a href="/admin/configuration">Configuration</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            RegTokens
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/admin/regtoken/create">Create</a></li>
-                            <li><a href="/admin/regtoken/view">View &amp; Delete</a></li>
-                        </ul>
-                    </li>
+                    {% from libs.ConfigManager import ConfigManager %}
+                    {% if ConfigManager.Instance().restrict_registration %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                RegTokens
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/admin/regtoken/create">Create</a></li>
+                                <li><a href="/admin/regtoken/view">View &amp; Delete</a></li>
+                            </ul>
+                        </li>
+                    {% end %}
                 </ul>
                 <div class="btn-group pull-right">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

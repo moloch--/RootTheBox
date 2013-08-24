@@ -6,6 +6,8 @@
   	<div class="container">
   		{% if locked %}
   			<h1>403 - Account Locked!</h1>
+  		{% elif xsrf %}
+  			<h1>403 - Invalid CSRF Token</h1>
   		{% else %}
 			<h1>403 - Forbidden</h1>
 		{% end %}

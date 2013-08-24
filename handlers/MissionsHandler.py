@@ -45,14 +45,27 @@ class BoxHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        ''' Renders the box details page '''
+        ''' 
+        Renders the box details page.
+        We have to ensure that the description text is formatted correctly,
+        it gets dumped into a <pre> tag which will honor whitespace this will 
+        split all of the text and insert newlines every 70 chars +2 whitespace 
+        at be beginning of each line, so the indents line up nicely.
+        '''
         uuid = self.get_argument('uuid', '')
         box = Box.by_uuid(uuid)
+        index, step = 0, 70
+        ls = []
+        text = box.description.replace('\n', '')
+        while index < len(text):
+            ls.append("  "+text[index: index + step])
+            index += step
         if box is not None:
             user = self.get_current_user()
             self.render('missions/box.html', 
                 box=box, 
                 team=user.team,
+                description="\n".join(ls),
                 errors=[],
             )
         else:

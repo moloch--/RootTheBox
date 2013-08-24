@@ -36,11 +36,37 @@ import mimetypes
 import threading
 
 from tornado.web import RequestHandler, HTTPError
+from tornado.web import StaticFileHandler as DefaultStaticHandler
 from libs.Memcache import FileCache
 
 
-class StaticFileHandler(RequestHandler):
+class StaticFileHandler(DefaultStaticHandler):
+    ''' 
+    Same as the normal Tornado StaticFileHandler with a 
+    couple overloaded methods.
     '''
+
+    session = None
+
+    def set_default_headers(self):
+        self.set_header("Server", "'; DROP TABLE servertypes; --")
+        self.add_header("X-Frame-Options", "DENY")
+        self.add_header("X-XSS-Protection", "1; mode=block")
+
+    def write_error(self, status_code, **kwargs):
+        ''' Render a generic error page '''
+        logging.error("Static file request from %s resulted in %d status" % (
+            self.request.remote_ip, status_code
+        ))
+        # Reguardless of error, send a 404
+        self.render('public/404.html')
+
+
+class CachedStaticFileHandler(RequestHandler):
+    '''
+
+    Modified Tornado StaticFileHandler to add Memcached support
+
     A simple handler that can serve static content from a directory.
 
     To map a path to this handler for a static data directory /var/www,
@@ -67,6 +93,7 @@ class StaticFileHandler(RequestHandler):
     def initialize(self, path, default_filename=None):
         self.root = os.path.abspath(path) + os.path.sep
         self.default_filename = default_filename
+        self.session = None
 
     @classmethod
     def reset(cls):
@@ -144,6 +171,14 @@ class StaticFileHandler(RequestHandler):
         self.set_header("Server", "'; DROP TABLE servertypes; --")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
+
+    def write_error(self, status_code, **kwargs):
+        ''' Render a generic error page '''
+        logging.error("Static file request from %s resulted in %d status" % (
+            self.request.remote_ip, status_code
+        ))
+        # Reguardless of error, send a 404
+        self.render('public/404.html')
 
     def get_cache_time(self, path, modified, mime_type):
         '''

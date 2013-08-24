@@ -19,14 +19,15 @@ Created on Mar 15, 2012
    limitations under the License.
 ----------------------------------------------------------------------------
 
-This file contains the base handler, all other handlers (aside from
-web socket handlers) should inherit from this base class.
+This file contains the base handlers, all other handlers should inherit 
+from these base classes.
 
 '''
 
 
 import logging
 import pylibmc
+import traceback
 
 from models import User
 from libs.ConfigManager import ConfigManager
@@ -41,6 +42,7 @@ class BaseHandler(RequestHandler):
     ''' User handlers extend this class '''
 
     def initialize(self):
+        ''' Setup sessions, etc '''
         self.session = None
         self.new_events = []
         self.event_manager = self.application.settings['event_manager']
@@ -107,6 +109,24 @@ class BaseHandler(RequestHandler):
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
 
+    def write_error(self, status_code, **kwargs):
+        ''' Write our custom error pages '''
+        if not self.config.debug:
+            trace = "".join(traceback.format_exception(*kwargs["exc_info"]))
+            logging.error("Request from %s resulted in an error code %d:\n%s" % (
+                self.request.remote_ip, status_code, trace
+            ))
+            if status_code in [403]:
+                # This should only get called when the _xsrf check fails,
+                # all other '403' cases we just send a redirect to /403
+                self.render('public/403.html', locked=False, xsrf=True)
+            else:
+                # Never tell the user we got a 500
+                self.render('public/404.html')
+        else:
+            # If debug mode is enabled, just call Tornado's write_error()
+            super(BaseHandler, self).write_error(status_code, **kwargs)
+
     def get(self, *args, **kwargs):
         ''' Placeholder, incase child class does not impl this method '''
         self.render("public/404.html")
@@ -120,35 +140,36 @@ class BaseHandler(RequestHandler):
         logging.warn(
             "%s attempted to use PUT method" % self.request.remote_ip
         )
-        self.render("public/404.html")
+        self.finish()
 
     def delete(self, *args, **kwargs):
         ''' Log odd behavior, this should never get legitimately called '''
         logging.warn(
             "%s attempted to use DELETE method" % self.request.remote_ip
         )
-        self.render("public/404.html")
+        self.finish()
 
     def head(self, *args, **kwargs):
-        ''' Log odd behavior, this should never get legitimately called '''
+        ''' Ignore it '''
         logging.warn(
             "%s attempted to use HEAD method" % self.request.remote_ip
         )
-        self.render("public/404.html")
+        self.finish()
 
     def options(self, *args, **kwargs):
         ''' Log odd behavior, this should never get legitimately called '''
         logging.warn(
             "%s attempted to use OPTIONS method" % self.request.remote_ip
         )
-        self.render("public/404.html")
+        self.finish()
 
     def on_finish(self, *args, **kwargs):
+        ''' Called after a response is sent to the client '''
         if 0 < len(self.new_events):
             self._fire_events()
 
     def _fire_events(self):
-        ''' Fire new events '''
+        ''' Fire any new events '''
         for event in self.new_events:
             assert(2 == len(event))
             event[0](**event[1])
@@ -158,6 +179,7 @@ class BaseWebSocketHandler(WebSocketHandler):
     ''' Handles websocket connections '''
 
     def initialize(self):
+        ''' Setup sessions, etc '''
         self.session = None
         self.manager = EventManager.Instance()
         self.config = ConfigManager.Instance()
