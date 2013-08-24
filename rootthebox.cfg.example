@@ -1,0 +1,119 @@
+###############################################
+#      Root the Box - Configuration File
+###############################################
+[Server]
+# Web server listen port
+port = 8888
+
+# Debug mode provides stack traces, etc
+debug = True
+
+# Set "domain" to your local ip/hostname, this is the address websockets will connect to
+# Set to 'auto' to attempt to resolve your local ip automatically
+domain = localhost 
+
+# Default theme
+theme = cyborg.min.css
+
+# Cache static files in memory
+cache_files = True
+
+[Logging]
+# Sets the log level for the console / terminal
+console_level = info
+
+# Enable/disable file logs
+save_logs = True
+
+# Set logging level for the file output (if save_logs is enabled)
+file_level = notset
+
+# Path to output file for logs (if save_logs is enabled)
+logfile = rtb.log
+
+[Ssl]
+# Enable/disable SSL server
+# You'll need to manually setup an HTTP/302 to HTTPS if you want it
+use_ssl = False
+
+# Certificate file path
+certificate_file = path/to/foo.crt
+
+# Key file path
+key_file = path/to/bar.key
+
+[Cache]
+# Memcached settings
+memcached_host = 127.0.0.1
+memcached_port = 11211
+
+# Session settings (stored in memcached)
+session_age = 1800
+session_regeneration_interval = 1800
+
+[Security]
+# Comma separated list of ips that can access the admin interface
+# For example: admin_ips = 127.0.0.1,192.168.0.25,10.34.0.2
+admin_ips = 127.0.0.1
+
+# If x-headers is set to 'True', the app will honor the real IP address 
+# provided by a load balancer in the X-Real-Ip or X-Forwarded-For header.
+# NOTE: This can affect the IP address security restrictions.
+x-headers = False
+
+# max_password_length is the number of chars a user can have for their "bank password"
+max_password_length = 7
+
+[Recaptcha]
+# Recaptcha private key; get one at http://recaptcha.com
+use_recaptcha = yes
+private_key = 6LcJJ88SAAAAAPPAN72hppldxema3LI7fkw0jaIa
+
+[Database]
+# Supports 'mysql', 'postgresql', or 'sqlite'; defaults to mysql
+db = mysql
+
+# This is the database name we're connecting to
+name = rtb
+
+# These are not used for sqlite
+# Leave blank or set to 'RUNTIME' if you want to prompt for creds when the application starts
+# this keeps sensitive db credentials out of plain-text files, and is recommended for production.
+host = localhost
+user = rtbUser
+password = Ch4ngeMe
+
+# Set orm_sql to 'True' to log sql queries made by the ORM this may
+# contain sensitive information!  Enable only when you need to debug problems
+# Very verbose when True
+orm_sql = False 
+bot_sql = False 
+
+[Game]
+# Most game settings are stored in the database
+# but these are needed before we access the db
+# Game name (appears in web ui)
+game_name = Root the Box
+
+# Allow users to create their own teams
+public_teams = True
+
+# Require a registration token to create an account
+restrict_registration = False
+
+# Reward amount for each bot per interval
+bot_reward = 100
+
+# Award botnets every so many minutes
+bot_reward_interval = 5
+
+# Take game snapshots for history graphs every so many minutes
+history_snapshot_interval = 1
+
+# Max bank password length
+max_password_length = 7
+
+# Upgrade base costs
+password_upgrade_cost = 1500
+bribe_cost = 1500
+
