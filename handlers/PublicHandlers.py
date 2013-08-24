@@ -63,7 +63,7 @@ class LoginHandler(BaseHandler):
             if user is not None and user.validate_password(password_attempt):
                 if not user.locked:
                     self.successful_login(user)
-                    if 1 == user.logins:
+                    if 1 == user.logins and not user.has_permission(ADMIN_PERMISSION):
                         self.redirect('/user/missions/firstlogin')
                     else:
                         self.redirect('/user')

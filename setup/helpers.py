@@ -122,7 +122,7 @@ def create_box(name, corporation, difficulty, game_level, description,
         corporation_id=corporation.id,
         difficulty=unicode(difficulty),
         game_level_id=game_level.id,
-        description=unicode(description),
+        _description=unicode(description),
     )
     dbsession.add(box)
     dbsession.flush()

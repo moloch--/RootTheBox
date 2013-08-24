@@ -36,7 +36,7 @@ from hashlib import md5
 from libs.Form import Form
 from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
-from models import dbsession, Team, Box, Flag, SourceCode, \
+from models import dbsession, Team, Box, Flag, SourceCode, MarketItem, \
     Corporation, RegistrationToken, GameLevel, IpAddress, Swat, Hint
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from models.User import ADMIN_PERMISSION
@@ -260,7 +260,7 @@ class AdminCreateHandler(BaseHandler):
         level = GameLevel.by_number(int(self.get_argument('game_level')))
         box = Box(
             name=unicode(self.get_argument('box_name')),
-            description=unicode(self.get_argument('description')),
+            _description=unicode(self.get_argument('description')),
             difficulty=unicode(self.get_argument('difficulty')),
             corporation_id=corp.id,
             game_level_id=level.id,
@@ -348,11 +348,15 @@ class AdminViewHandler(BaseHandler):
             'game_objects': self.view_game_objects,
             'game_levels': self.view_game_levels,
             'user_objects': self.view_user_objects,
+            'market_objects': self.view_market_objects,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")
+
+    def view_market_objects(self):
+        self.render('admin/view/market_objects.html', errors=None)
 
     def view_game_objects(self):
         ''' Renders the view corporations page '''
@@ -401,6 +405,28 @@ class AdminEditHandler(BaseHandler):
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        uri = {
+            'corporation': 'game_objects',
+            'box': 'game_objects',
+            'flag': 'game_objects',
+            'team': 'game_objects',
+            'user': 'user_objects',
+            'ipv4': 'game_objects',
+            'ipv6': 'game_objects',
+            'game_level': 'game_levels',
+            'box_level': 'game_levels',
+            'hint': 'game_objects',
+            'market_item': 'market_objects',
+        }
+        if len(args) == 1 and args[0] in uri:
+            self.redirect('/admin/view/%s' % uri[args[0]])
+        else:
+            self.render("public/404.html")
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         ''' Calls an edit function based on URL '''
         uri = {
@@ -414,6 +440,7 @@ class AdminEditHandler(BaseHandler):
             'game_level': self.edit_game_level,
             'box_level': self.box_level,
             'hint': self.edit_hint,
+            'market_item': self.edit_market_item,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -482,7 +509,7 @@ class AdminEditHandler(BaseHandler):
                     logging.info("Updated %s's description %s -> %s" %
                         (box.name, box.description, self.get_argument('description'),)
                     )
-                    box.description = unicode(self.get_argument('description'))
+                    box.description = self.get_argument('description', '')
                 if self.get_argument('difficulty') != box.difficulty:
                     logging.info("Updated %s's difficulty %s -> %s" %
                         (box.name, box.difficulty, self.get_argument('difficulty'),)
@@ -831,6 +858,25 @@ class AdminEditHandler(BaseHandler):
             dbsession.add(hint)
             dbsession.flush()
         self.redirect('/admin/view/game_objects')
+
+    def edit_market_item(self):
+        ''' Change a market item's price '''
+        item = MarketItem.by_uuid(self.get_argument('item_uuid', ''))
+        if item is not None:
+            try:
+                new_price = abs(int(self.get_argument('price', '')))
+                item.price = new_price
+                dbsession.add(item)
+                dbsession.flush()
+                self.redirect('/admin/view/market_objects')
+            except ValueError:
+                self.render('admin/view/market_objects.html', 
+                    errors=["Invalid price."]
+                )
+        else:
+            self.render('admin/view/market_objects.html', 
+                errors=["Item does not exist."]
+            )
 
 
 class AdminDeleteHandler(BaseHandler):
@@ -1255,4 +1301,3 @@ class AdminConfigurationHandler(BaseHandler):
         debug = self.get_argument('debug', str(self.config.debug).lower())
         if debug != str(self.config.debug).lower():
             self.config.debug = bool(debug == 'true')
-

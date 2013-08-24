@@ -47,50 +47,56 @@
             {% end %}
         {% end %}
         <div class="well">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Box</th>
-                        <th>Level</th>
-                        <th>Price</th>
-                        <th>File Name</th>
-                        <th>MD5 Checksum</th>
-                        <th><!-- Button --></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for index, box in enumerate(boxes) %}
-                    	<tr>
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ box.name }}</td>
-                            <td>{{ box.game_level.number }}</td>
-                            <td>${{ box.source_code.price }}</td>
-                            {% if len(box.source_code.file_name) < 25 %}
-                                <td>{{ box.source_code.file_name }}</td>
-                            {% else %}
-                                <td>{{ box.source_code.file_name[:25] + "..." }}</td>
-                            {% end %}
-                            <td>{{ box.source_code.checksum }}</td>
-                            {% if box.source_code in user.team.purchased_source_code %}
-                                <td>
-                                    <a class="btn btn-mini btn-success" data-toggle="modal"
-                                       onclick="window.open('/source_code_market/download?uuid={{ box.uuid }}', '_newtab');">
-                                        Download Souce Code
-                                    </a>
-                                </td>
-                            {% else %}
-                                <td>
-                                    <a class="btn btn-mini" data-toggle="modal" href="#buySourceCodeModal"
-                                        onclick="buy_src('{{ box.uuid }}', {{ box.source_code.price }})">
-                                        Buy Source Code
-                                    </a>
-                                </td>
-                            {% end %}
-                    	</tr>
-                    {% end %}
-                </tbody>
-            </table>
+            {% if 0 == len(boxes) %}
+                <br />
+                <h4 style="text-align:center;">No Source Code For Sale at This Time</h4>
+                <br />
+            {% else %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Box</th>
+                            <th>Level</th>
+                            <th>Price</th>
+                            <th>File Name</th>
+                            <th>MD5 Checksum</th>
+                            <th><!-- Button --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, box in enumerate(boxes) %}
+                        	<tr>
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ box.name }}</td>
+                                <td>{{ box.game_level.number }}</td>
+                                <td>${{ box.source_code.price }}</td>
+                                {% if len(box.source_code.file_name) < 25 %}
+                                    <td>{{ box.source_code.file_name }}</td>
+                                {% else %}
+                                    <td>{{ box.source_code.file_name[:25] + "..." }}</td>
+                                {% end %}
+                                <td>{{ box.source_code.checksum }}</td>
+                                {% if box.source_code in user.team.purchased_source_code %}
+                                    <td>
+                                        <a class="btn btn-mini btn-success" data-toggle="modal"
+                                           onclick="window.open('/source_code_market/download?uuid={{ box.uuid }}', '_newtab');">
+                                            Download Souce Code
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <a class="btn btn-mini" data-toggle="modal" href="#buySourceCodeModal"
+                                            onclick="buy_src('{{ box.uuid }}', {{ box.source_code.price }})">
+                                            Buy Source Code
+                                        </a>
+                                    </td>
+                                {% end %}
+                        	</tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            {% end %}
     	</div>
     </div>
 {% end %}

@@ -39,7 +39,7 @@ class Box(BaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(64), unique=True, nullable=False)
-    description = Column(Unicode(4096))
+    _description = Column(Unicode(4096))
     difficulty = Column(Unicode(64), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
     avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
@@ -90,6 +90,30 @@ class Box(BaseObject):
             return dbsession.query(cls).filter_by(id=db_ip.box_id).first()
         else:
             return None
+
+    @property
+    def description(self):
+        '''
+        We have to ensure that the description text is formatted correctly,
+        it gets dumped into a <pre> tag which will honor whitespace this will 
+        split all of the text and insert newlines every 70 chars +2 whitespace 
+        at be beginning of each line, so the indents line up nicely.
+        '''
+        index, step = 0, 70
+        ls = [' ']
+        if 0 < len(self._description):
+            text = self._description.replace('\n', '')
+            while index < len(text):
+                ls.append("  "+text[index: index + step])
+                index += step
+        else:
+            ls.append("  No information on file.")
+        ls.append("\n  Reported Difficulty: %s\n" % self.difficulty)
+        return "\n".join(ls)
+
+    @description.setter
+    def description(self, value):
+        self._description = unicode(value)
 
     @property
     def ips(self):

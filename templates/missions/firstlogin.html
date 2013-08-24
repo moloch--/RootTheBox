@@ -13,8 +13,9 @@
     <div class="container">
         <br />
         <div class="well" >
-            <h3>&gt; Incoming Message</h3>
+            <h3>Incoming Transmission</h3>
             <input id="handle" type="hidden" value="{{ user.handle }}" />
+            <input id="reward" type="hidden" value="{{ reward }}" />
             <div id="console" style="width: auto; height: 500px;">
             </div>
         </div>
@@ -22,15 +23,21 @@
             function text_animation(term) {
                 var index = 0;
                 var user = document.getElementById('handle').value;
+                var reward = document.getElementById('reward').value;
                 intro_frames = [
-                    " Hello [[b;;]"+user+"], I am your new employer, codename [[b;;]Hal]",
+                    " Hello [[b;;]"+user+"],\n",
+                    "   I am your new employer, you may call me [[b;;]Morris].",
                     " ",
-                    "   I hope you're well rested.  We have a lot of work to do, I have several assignments which require your... special skill set.",
+                    "  I hope you're well rested.  We have a lot of work to do.",
+                    "  I have several assignments which require your... special skill set.",
                     " ",
-                    "  You may view your current assignments by selecting \"missions\" from the Game menu.",
-                    "  I've taken the liberty of despositing an initial $1,000 in your team's bank account.",
+                    "  You may view your current assignments by selecting \"Missions\" from the Game menu.",
+                    "  I will also be glad to rent your botnet for $"+reward+" per bot.",
                     " ",
-                    " Good hunting,\n    -Hal", // 9000
+                    "  I've taken the liberty of despositing some seed in your team's bank account,",
+                    "  see that it's put to good use.",
+                    " ",
+                    " Good hunting,\n    -Morris",
                 ];
                 term.echo("[[b;;]*************** BEGIN SECURE COMMUNIQUE ****************]\n");
                 function display(term, index) {

@@ -1,0 +1,78 @@
+{% extends "../../main.html" %}
+
+{% block title %}Market Objects{% end %}
+
+{% block content %}
+	<div class="container">
+		<script>
+			function edit_market_item(uuid, price) {
+				$("#price").val(price);
+				$("#item_uuid").val(uuid);
+			}
+		</script>
+		<!-- Hidden Edit Form -->
+		<div id="item-details" class="modal hide fade" style="display: none; ">
+		    <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">×</button>
+		        <h3>Item Details</h3>
+		    </div>
+		    <div class="modal-body">
+		    	<br />
+		    	<form name="edit-item-form" class="form-horizontal" action="/admin/edit/market_item" method="post">
+		    		{% raw xsrf_form_html() %}
+		    		<input type="hidden" id="item_uuid" name="item_uuid" value="" />
+		    		<div class="control-group">
+	                    <label class="control-label" for="price">Item Price</label>
+	                    <div class="controls">
+	                        <input required pattern="[0-9]+" id="price" name="price" type="text" placeholder="Item Price ($)">
+	                    </div>
+	                </div>
+		    	</form>
+		    </div>
+		    <div class="modal-footer">
+		        <a href="#" class="btn" data-dismiss="modal">Close</a>
+		        <button type="button" class="btn btn-primary" onclick="document.forms['edit-item-form'].submit();">
+		        	Save
+		        </button>
+		    </div>
+		</div>
+		<!-- Start Visable -->
+		<h2>Edit Black Market Items</h2>
+		<br />
+		{% if errors is not None and len(errors) != 0 %}
+	    	{% for error in errors %}
+	      		<div class="alert alert-error">
+	        		<a class="close" data-dismiss="alert" href="#">×</a>
+	        		<h4 class="alert-heading">ERROR</h4>
+	        		{{ error }}
+	      		</div>
+	    	{% end %}
+	  	{% end %}
+	  	<div class="well">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Price</th>
+						<th><!-- Button --></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% from models import MarketItem %}
+					{% for item in MarketItem.all() %}
+						<tr>
+							<td>{{ item.name }}</td>
+							<td>${{ item.price }}</td>
+							<td>
+								<button class="btn btn-mini" data-toggle="modal" href="#item-details" 
+										onclick="edit_market_item('{{ item.uuid }}', {{ item.price }})">
+					    			Edit Item
+					    		</button>
+							</td>
+						</tr>
+					{% end %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% end %}

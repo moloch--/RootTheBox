@@ -35,7 +35,7 @@ class MarketItem(BaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     name = Column(Unicode(64), nullable=False)
     price = Column(Integer, nullable=False)
-    image = Column(Unicode(255))
+    image = Column(Unicode(255), nullable=False)
     description = Column(Unicode(1024))
 
     @classmethod

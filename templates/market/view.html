@@ -11,10 +11,10 @@
 				$.getJSON('/user/market/details?uuid='+uuid, function(data) {
 					$.each(data, function(key, val) {
 					  	if (key !== "image") {
-					    	$("#" + key).html(val);
+					    	$("#" + key).text(val);
 					    } else {
 					    	$("#image").attr("src", function() { 
-							    return val; 
+							    return "/static/images/"+val; 
 							});
 					    }
 				    });
@@ -31,12 +31,12 @@
 		    	<h4 id="name"></h4>
 		    	<hr>
 		    	<div class="row">
-					<div class="span3">
-						<img id="image" src=""></img>
+					<div class="span4">
+						<img id="image" class="img-polaroid" src=""></img>
 					</div>
 					<div class="span2">
-						<p><i class="icon-bookmark"></i> Price: $<span id="price"></span></p>
-						<p><i class="icon-book"></i> Description:</p>
+						<p><i class="icon-bookmark"></i> Price $<span id="price"></span></p>
+						<p><i class="icon-book"></i> Description</p>
 						<blockquote><small id="description"></small></blockquote>
 					</div>
 				</div>
