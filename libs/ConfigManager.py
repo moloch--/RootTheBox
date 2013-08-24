@@ -81,7 +81,6 @@ class ConfigManager(object):
     def save(self):
         ''' Write current config to file '''
         self.config_fp.close()
-        os.rename(self.conf, '%s-%s.old' % (datetime.now(), self.conf))
         fp = open(self.conf, 'w')
         self.config.write(fp)
         fp.close()
