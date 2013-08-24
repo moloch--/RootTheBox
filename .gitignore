@@ -19,6 +19,10 @@ sdist
 develop-eggs
 .installed.cfg
 
+# SSL Stuff
+*.crt
+*.key
+
 # SQLite3 databases
 *.db
 
