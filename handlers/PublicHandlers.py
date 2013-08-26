@@ -176,18 +176,18 @@ class RegistrationHandler(BaseHandler):
                         errors.append("A team with that name already exists")
                 else:
                     errors.append('Team name must be 3 - 15 characters')
-                if not 2 < len(motto):
+                if not 2 < len(motto) < 255:
                     errors.append('Team motto must be more than 3 characters')  
-                return errors
             else:
-                return ["You must select a team to join"]
+                errors.append("You must select a team to join")
         else:
-            if not len(team.members) <= self.config.max_team_members:
+            if not len(team.members) < self.config.max_team_size:
                 errors.append("This team is full, please select another to join.")
-            return errors
+        return errors
 
     def create_user(self, team):
         ''' Add user to the database '''
+        assert len(team.members) < self.config.max_team_size
         handle = self.get_argument('handle')
         user = User(
             handle=unicode(handle),
@@ -216,8 +216,8 @@ class RegistrationHandler(BaseHandler):
         ''' Create a new team '''
         assert self.config.public_teams
         team = Team(
-            name=unicode(self.get_argument('team_name')),
-            motto=unicode(self.get_argument('motto')),
+            name=unicode(self.get_argument('team_name')[:15]),
+            motto=unicode(self.get_argument('motto')[:64]),
         )
         level_0 = GameLevel.all()[0]
         team.game_levels.append(level_0)

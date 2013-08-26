@@ -35,9 +35,12 @@
                     <div class="controls">
                         <select name="team">
                             <option value=""></option>
+                            {% from libs.ConfigManager import ConfigManager %}
                             {% from models import Team %}
                             {% for team in Team.all() %}
-                                <option value="{{ team.uuid }}">{{ team.name }}</option>
+                                {% if len(team.members) < ConfigManager.Instance().max_team_size %}
+                                    <option value="{{ team.uuid }}">{{ team.name }}</option>
+                                {% end %}
                             {% end %}
                         </select>
                     </div>
