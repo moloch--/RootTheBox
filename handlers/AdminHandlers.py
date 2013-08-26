@@ -163,12 +163,9 @@ class AdminCreateHandler(BaseHandler):
             elif not self.is_token(is_file):
                 self.render(page, errors=["Missing or invalid token."])
             else:
-                box = self.__mkflag__()
-                errors = []
-                if 'avatar' in self.request.files:
-                    errors = self.set_avatar(box)
-                    dbsession.add(box)
-                    dbsession.flush()
+                flag = self.__mkflag__()
+                dbsession.add(flag)
+                dbsession.flush()
                 self.redirect('/admin/view/game_objects')
         else:
             self.render(page, errors=form.errors)
