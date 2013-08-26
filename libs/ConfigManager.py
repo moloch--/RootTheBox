@@ -125,6 +125,10 @@ class ConfigManager(object):
         return _domain
 
     @property
+    def max_team_size(self):
+        return self.config.getint("Game", 'max_team_size')
+
+    @property
     def bootstrap(self):
         return self.config.get("Server", 'bootstrap')
 

@@ -404,6 +404,7 @@ class AdminEditHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
+        ''' Just redirect to the corisponding /view page '''
         uri = {
             'corporation': 'game_objects',
             'box': 'game_objects',

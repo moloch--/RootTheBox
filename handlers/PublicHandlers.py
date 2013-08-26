@@ -166,8 +166,8 @@ class RegistrationHandler(BaseHandler):
     def validate_team(self):
         ''' Validate team arguments '''
         errors = []
-        join_team = self.get_argument('team', '')
-        if Team.by_uuid(join_team) is None:
+        team = Team.by_uuid(self.get_argument('team', ''))
+        if team is None:
             if self.config.public_teams:
                 team_name = self.get_argument('team_name', '')
                 motto = self.get_argument('motto', '')
@@ -182,7 +182,9 @@ class RegistrationHandler(BaseHandler):
             else:
                 return ["You must select a team to join"]
         else:
-            return []
+            if not len(team.members) <= self.config.max_team_members:
+                errors.append("This team is full, please select another to join.")
+            return errors
 
     def create_user(self, team):
         ''' Add user to the database '''
