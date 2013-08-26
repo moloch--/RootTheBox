@@ -131,7 +131,9 @@ class AdminCreateHandler(BaseHandler):
                         errors=["Game level does not exist"]
                     )
                 else:
-                    self.__mkbox__()
+                    box = self.__mkbox__()
+                    if 'avatar' in self.request.files:
+                        self.set_avatar(box)
                     self.redirect('/admin/view/game_objects')
             except ValueError:
                 self.render('admin/view/create.html',
@@ -264,7 +266,6 @@ class AdminCreateHandler(BaseHandler):
             difficulty=unicode(self.get_argument('difficulty')),
             corporation_id=corp.id,
             game_level_id=level.id,
-            avatar=avatar,
         )
         dbsession.add(box)
         dbsession.flush()
@@ -315,9 +316,9 @@ class AdminCreateHandler(BaseHandler):
 
     def set_avatar(self, box):
         '''
-        Saves avatar - Reads file header an only allows approved formats
+        Saves avatar - Reads file header and only allows approved formats
         '''
-        if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
+        if 0 < len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
             if box.avatar == "default_avatar.jpeg":
                 box.avatar = unicode(uuid4()) + u".jpeg"
             ext = imghdr.what(

@@ -207,10 +207,8 @@ class RegistrationHandler(BaseHandler):
 
     def get_team(self):
         ''' Create a team object, or pull the existing one '''
-        if '' == self.get_argument('team', ''):
-            return self.create_team()
-        else:
-            return Team.by_uuid(self.get_argument('team'))
+        team = Team.by_uuid(self.get_argument('team', ''))
+        return team if team is not None else self.create_team()
 
     def create_team(self):
         ''' Create a new team '''
