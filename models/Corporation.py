@@ -74,6 +74,7 @@ class Corporation(BaseObject):
         ET.SubElement(corp_elem, "name").text = str(self.name)
         ET.SubElement(corp_elem, "descirption").text = str(self.description)
         boxes_elem = ET.SubElement(corp_elem, "boxes")
+        boxes_elem.set("count", len(self.boxes))
         for box in self.boxes:
             box.to_xml(boxes_elem)
 

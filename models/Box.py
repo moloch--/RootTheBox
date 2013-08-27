@@ -152,17 +152,23 @@ class Box(BaseObject):
         return Hint.by_box_id(self.id)
 
     def to_xml(self, parent):
-        ''' Convert to XML '''
+        ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")
+        box_elem.set("gamelevel", str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = str(self.name)
         ET.SubElement(box_elem, "description").text = str(self._description)
         ET.SubElement(box_elem, "difficulty").text = str(self.difficulty)
         flags_elem = ET.SubElement(box_elem, "flags")
+        flags_elem.set("count", len(self.flags))
         for flag in self.flags:
             flag.to_xml(flags_elem)
         hints_elem = ET.SubElement(box_elem, "hints")
+        hints_elem.set("count", len(self.hints))
         for hint in self.hints:
             hint.to_xml(hints_elem)
+        with open('files/avatars/'+self.avatar) as f:
+            data = f.read()
+            ET.SubElement(box_elem, "avatar").text = data.encode('base64')
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
