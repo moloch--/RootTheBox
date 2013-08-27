@@ -24,8 +24,8 @@ command line arguments it calls various components setup/start/etc.
 import os
 import sys
 import logging
+import argparse
 
-from optparse import OptionParser
 from datetime import datetime
 from libs.ConsoleColors import *
 
@@ -34,7 +34,7 @@ __version__ = 'Root the Box - v0.3.0'
 current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 
-def serve(options, *args, **kwargs):
+def serve():
     ''' Starts the application '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from handlers import start_server
@@ -42,7 +42,7 @@ def serve(options, *args, **kwargs):
     start_server()
 
 
-def create(options, *args, **kwargs):
+def create():
     ''' Creates/bootstraps the database '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from models import create_tables, boot_strap
@@ -52,7 +52,7 @@ def create(options, *args, **kwargs):
     boot_strap()
 
 
-def recovery(options, *args, **kwargs):
+def recovery():
     ''' Starts the recovery console '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from setup.recovery import RecoveryConsole
@@ -63,18 +63,16 @@ def recovery(options, *args, **kwargs):
     except KeyboardInterrupt:
         print(INFO + "Have a nice day!")
 
-def setup_xml(options, *args, **kwargs):
+
+def setup_xml(xml_params):
     ''' Imports XML file(s) '''
-    index = sys.argv.index('-x') if '-x' in sys.argv else sys.argv.index('--xml')
-    if not index + 1 < len(sys.argv):
-        print(WARN+"Missing .xml file/directory parameter")
-        os._exit(1)
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from setup.importers import import_xml
-    import_xml(sys.argv[index + 1])
+    for xml_param in xml_params:
+        import_xml(xml_param)
 
 
-def setup(options, *args, **kwargs):
+def setup_script():
     ''' Imports a setup file '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     print(INFO+"%s : Running default setup file 'setup/game.py' ..." % current_time())
@@ -87,42 +85,56 @@ def setup(options, *args, **kwargs):
     print(INFO+"Setup file completed successfully.")
 
 
+def main(args):
+    ''' Call functions in the correct order based on CLI params '''
+    # Create tables / bootstrap db
+    if args.create_tables:
+        create()
+    # Execute game setup script
+    if args.setup_script:
+        setup_script()
+    # Import any XML files
+    if args.setup_xml is not None:
+        setup_xml(args.setup_xml)
+    # Start recovery console
+    if args.recovery:
+        recovery()
+    # Start server
+    if args.start_server:
+        serve()
+
 ### Main
 if __name__ == '__main__':
-    if not 1 < len(sys.argv):
-        sys.argv.append('-h')
-    parser = OptionParser(
-        usage=bold+"rootthebox.py"+W+" <options>",
+    parser = argparse.ArgumentParser(
+        description='Generate hooks for an objc class header file',
+    )
+    parser.add_argument('-v', '--version',
+        action='version',
         version=__version__,
     )
-    parser.add_option(
-        "-c", "--create-tables",
-        action="callback",
-        callback=create,
-        help="create and initialize database tables (run once)"
+    parser.add_argument("-c", "--create-tables",
+        action='store_true',
+        dest='create_tables',
+        help="create and initialize database tables (run once)",
     )
-    parser.add_option(
-        "-s", "--start",
-        action="callback",
-        callback=serve,
-        help="start the server"
+    parser.add_argument("-s", "--start",
+        action='store_true',
+        dest='start_server',
+        help="start the server",
     )
-    parser.add_option(
-        "-x", "--xml",
-        action="callback",
-        callback=setup_xml,
-        help="import xml file, or directory or file(s)"
+    parser.add_argument("-x", "--xml",
+        dest='setup_xml',
+        nargs='*',
+        help="import xml file, or directory or file(s)",
     )
-    parser.add_option(
-        "-g", "--game-script",
-        action="callback",
-        callback=setup,
-        help="run a game setup script (setup/game.py)"
+    parser.add_argument("-g", "--game-script",
+        action='store_true',
+        dest='setup_script',
+        help="run a game setup script (setup/game.py)",
     )
-    parser.add_option(
+    parser.add_argument(
         "-r", "--recovery",
-        action="callback",
-        callback=recovery,
-        help="start the admin recovery console"
+        action='store_true',
+        help="start the admin recovery console",
     )
-    parser.parse_args()
+    main(parser.parse_args())

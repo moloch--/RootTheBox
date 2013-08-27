@@ -1332,8 +1332,9 @@ class AdminExportHandler(BaseHandler):
         xml_doc = self.create_xml()
         self.set_header('Content-Type', 'text/xml')
         self.set_header(
-            "Content-disposition", "attachment; filename=%s.xml" % self.config.game_name
-        )
+            "Content-disposition", "attachment; filename=%s.xml" % (
+                "".join(self.config.game_name.split()),
+        ))
         self.set_header('Content-Length', len(xml_doc))
         self.write(xml_doc)
         self.finish()

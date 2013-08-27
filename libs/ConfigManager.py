@@ -153,8 +153,7 @@ class ConfigManager(object):
 
     @property
     def game_name(self):
-        _name = self.config.get("Game", 'game_name')[:16]
-        return _name.replace('\n', '')
+        return self.config.get("Game", 'game_name')[:16]
 
     @game_name.setter
     def game_name(self, value):

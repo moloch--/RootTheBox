@@ -122,26 +122,27 @@ def _xml_file_import(filename):
     print(INFO+"Importing %s ... " % filename)
     try:
         tree = ET.parse(filename)
+        xml_root = tree.getroot()
+        levels = get_child_by_tag(xml_root, "gamelevels")
+        create_levels(levels)
+        corporations = get_child_by_tag(xml_root, "corporations")
+        create_corps(corporations)
+        print(INFO+"Imported %s successfully" % filename)
     except Exception as error:
-        print(WARN+"ERROR: " + str(error))
-        os._exit(1)
-    xml_root = tree.getroot()
-    levels = get_child_by_tag(xml_root, "gamelevels")
-    create_levels(levels)
-    corporations = get_child_by_tag(xml_root, "corporations")
-    create_corps(corporations)
+        print(WARN+"ERROR (%s): %s" % (filename, str(error),))
 
 
 def import_xml(target):
     ''' Import XML file(s) '''
     if not os.path.exists(target):
-        print(WARN+"Error: Target does not exist: "+target)
+        print(WARN+"Error: Target does not exist (%s) " % target)
         os._exit(1)
-    elif os.path.isdir(target):
+    target = os.path.abspath(target)
+    if os.path.isdir(target):
+        print(INFO+"%s is a directory ..." % target)
         ls = filter(lambda fname: fname.endswith('.xml'), os.listdir(target))
         print(INFO+"Found %d XML file(s) ..." % len(ls))
         for fxml in ls:
-            _xml_file_import(fxml)
+            _xml_file_import(target+'/'+fxml)
     else:
         _xml_file_import(target)
-    print(INFO+"XML import complete.")
