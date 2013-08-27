@@ -134,11 +134,11 @@ def _xml_file_import(filename):
 
 def import_xml(target):
     ''' Import XML file(s) '''
+    target = os.path.abspath(target)
     if not os.path.exists(target):
         print(WARN+"Error: Target does not exist (%s) " % target)
         os._exit(1)
-    target = os.path.abspath(target)
-    if os.path.isdir(target):
+    elif os.path.isdir(target):
         print(INFO+"%s is a directory ..." % target)
         ls = filter(lambda fname: fname.endswith('.xml'), os.listdir(target))
         print(INFO+"Found %d XML file(s) ..." % len(ls))

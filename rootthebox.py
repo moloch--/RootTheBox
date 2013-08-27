@@ -87,6 +87,12 @@ def setup_script():
 
 def main(args):
     ''' Call functions in the correct order based on CLI params '''
+    # Ensure that RootTheBox/ is the cwd
+    rtb_root = os.path.abspath(__file__)
+    rtb_cwd = os.path.dirname(rtb_root)
+    if rtb_cwd != os.getcwd():
+        print(INFO+"Switching CWD to %s" % rtb_cwd)
+        os.chdir(rtb_cwd)
     # Create tables / bootstrap db
     if args.create_tables:
         create()
