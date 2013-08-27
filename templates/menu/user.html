@@ -104,11 +104,14 @@
                                   History
                               </a>
                           </li>
-                          <li>
-                              <a href="/scoreboard/wall_of_sheep">
-                                  Wall of Sheep
-                              </a>
-                          </li>
+                          {% from libs.ConfigManager import ConfigManager %}
+                          {% if ConfigManager.Instance().use_wall_of_sheep %}
+	                          <li>
+	                              <a href="/scoreboard/wall_of_sheep">
+	                                  Wall of Sheep
+	                              </a>
+	                          </li>
+                          {% end %}
                           {% from libs.ConfigManager import ConfigManager %}
                           {% if ConfigManager.Instance().use_teams %}
 	                          <li>

@@ -331,6 +331,11 @@ class ConfigManager(object):
         ''' Whether the black market should be enabled in this game '''
         self.config.getboolean("Experimental", "use_black_market")
 
+    @property
+    def use_wall_of_sheep(self):
+        ''' Whether the black market should be enabled in this game '''
+        self.config.getboolean("Experimental", "use_wall_of_sheep")
+    
     ##
     #    END WORK IN PROGRESS
     ##

@@ -107,7 +107,7 @@ class SettingsHandler(BaseHandler):
             else:
                 self.render_page(errors=["The image is too large"])
         else:
-            self.render_page(errors=["Please provide and image"])
+            self.render_page(errors=["Please provide an image"])
 
     def post_password(self, *args, **kwargs):
         ''' Called on POST request for password change '''

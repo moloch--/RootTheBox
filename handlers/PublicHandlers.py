@@ -26,8 +26,11 @@ any authentication) with the exception of error handlers and the scoreboard
 
 
 import logging
+import libs.Validation as Validation
+import imghdr
 
 from libs.Form import Form
+from uuid import uuid4
 from libs.ConfigManager import ConfigManager
 from models import dbsession, User, Team, Theme, RegistrationToken, GameLevel
 from models.User import ADMIN_PERMISSION
@@ -134,7 +137,10 @@ class RegistrationHandler(BaseHandler):
             # If teams are not enabled, do not check for team validation
             if self.config.use_teams:
                 errors += self.validate_team()
-            
+            # We do, however, need to check that a user motto and avatar have been correctly supplied
+            else:
+                errors += self.validate_nonteam()
+                
             if 0 == len(errors):
                 team = self.get_team()
                 user = self.create_user(team)
@@ -165,6 +171,16 @@ class RegistrationHandler(BaseHandler):
             )
         elif RegistrationToken.by_value(rtok) is None and self.config.restrict_registration:
             errors.append("Invalid registration token")
+        return errors
+
+    def validate_nonteam(self):
+        ''' Validate arguments for non-team-based play '''
+        errors = []
+        motto = self.get_argument('motto', '')
+        if not 2 < len(motto) < 255:
+            errors.append('Your motto must be more than 3 characters')
+        if 'avatar' in self.request.files:
+            errors.append(Validation.validate_avatar_file(self.request.files['avatar']))
         return errors
 
     def validate_team(self):
@@ -201,6 +217,18 @@ class RegistrationHandler(BaseHandler):
         dbsession.flush()
         user.password = self.get_argument('pass1', '')
         user.bank_password = self.get_argument('bpass1', '')
+        
+        # Upload an avatar and set it for the user if available
+        # This assumes proper input validation and sanitization has occurred
+        if 'avatar' in self.request.files:
+            avatar_file = unicode(str(uuid4() + '.' + imghdr.what("", self.request.files['avatar'][0]['body'])))
+            #TODO find better way to retrieve the extension of the uploaded file
+            avatar_path = unicode(str(self.application.settings['avatar_dir'] + '/' + avatar_file))
+            avatar = open(avatar_path, 'wb')
+            avatar.write(self.request.files['avatar'][0]['body'])
+            avatar.close()
+            user.avatar = avatar_file
+        
         if self.config.restrict_registration:
             rtok = self.get_argument('token', '')
             token = RegistrationToken.by_value(rtok)
@@ -234,7 +262,7 @@ class RegistrationHandler(BaseHandler):
         else:
             team = Team(
                 name=unicode((self.get_argument('handle'))[:15]),
-                motto=unicode(self.get_argument('handle') + " makes it rain."),
+                motto=unicode(self.get_argument('motto')[:64]),
             )
         level_0 = GameLevel.all()[0]
         team.game_levels.append(level_0)

@@ -122,7 +122,6 @@ URLs = [
     (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
     (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
     (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
-    (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
 
     # Public handlers - PublicHandlers.py
     (r'/login', LoginHandler),
@@ -169,6 +168,11 @@ if config.use_black_market:
         (r'/swat', SwatHandler)
         
     ])
+
+# If config is set up to use Wall of Sheep, set up handlers accordingly
+
+if config.use_wall_of_sheep:
+    URLs.append((r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler))
 
 # If teams are being used, set team handler. Otherwise set user handler.
 if config.use_teams:
