@@ -68,7 +68,7 @@ class Flag(BaseObject):
 
     @classmethod
     def digest(self, data):
-        ''' Token is MD5 of data '''
+        ''' Token is SHA1 of data '''
         sha = hashlib.sha1()
         sha.update(data)
         return unicode(sha.hexdigest())
@@ -81,30 +81,29 @@ class Flag(BaseObject):
     def game_level(self):
         return self.box.game_level
 
+    def capture(self, token):
+        if self.is_file:
+            return self.token == token
+        else:
+            pattern = re.compile(self.token)
+            return pattern.match(token) is not None
+
     def to_dict(self):
         ''' Returns public data as a dict '''
         box = Box.by_id(self.box_id)
         return {
             'name': self.name,
             'uuid': self.uuid,
-            'token': self.token,
             'description': self.description,
             'value': self.value,
             'box': box.uuid,
         }
-
-    def __eq__(self, other):
-        regex = re.compile(self.token)
-        return regex.match(str(other)) is not None
 
     def __str__(self):
         return self.name.encode('ascii', 'ignore')
 
     def __unicode__(self):
         return self.name
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
 
     def __repr__(self):
         return "<Flag - name:%s, is_file:%s >" % (
