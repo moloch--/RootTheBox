@@ -1121,11 +1121,22 @@ class AdminSourceCodeMarketHandler(BaseHandler):
 class AdminSwatHandler(BaseHandler):
     ''' Manage SWAT requests '''
 
-#    @restrict_ip_address
-#    @authenticated
-#    @authorized(ADMIN_PERMISSION)
-#    def get(self, *args, **kwargs):
-#        self.render_page()
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        self.render_page()
+
+    def render_page(self, errors=None):
+        ''' Render page with extra arguments '''
+        if errors is not None and not isinstance(errors, list):
+            errors = [str(errors), ]
+        self.render('admin/upgrades/swat.html',
+            pending_bribes=Swat.all_pending(),
+            in_progress_bribes=Swat.all_in_progress(),
+            completed_bribes=Swat.all_completed(),
+            errors=errors,
+        )
 
     @restrict_ip_address
     @authenticated
@@ -1140,17 +1151,6 @@ class AdminSwatHandler(BaseHandler):
             uri[args[0]]()
         else:
             self.render('public/404.html')
-
-    def render_page(self, errors=None):
-        ''' Render page with extra arguments '''
-        if errors is not None and not isinstance(errors, list):
-            errors = [str(errors), ]
-        self.render('admin/upgrades/swat.html',
-            pending_bribes=Swat.all_pending(),
-            in_progress_bribes=Swat.all_in_progress(),
-            completed_bribes=Swat.all_completed(),
-            errors=errors,
-        )
 
     def accept_bribe(self):
         ''' Accept bribe, and lock user's account '''
@@ -1349,7 +1349,7 @@ class AdminExportHandler(BaseHandler):
         root = ET.Element("rootthebox")
         levels_elem = ET.SubElement(root, "gamelevels")
         levels_elem.set("count", str(GameLevel.count()))
-        for level in GameLevel.all():
+        for level in GameLevel.all()[1:]:
             level.to_xml(levels_elem)
         corps_elem = ET.SubElement(root, "corporations")
         corps_elem.set("count", str(Corporation.count()))
