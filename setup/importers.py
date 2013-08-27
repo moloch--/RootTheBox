@@ -140,7 +140,7 @@ def import_xml(target):
         os._exit(1)
     elif os.path.isdir(target):
         print(INFO+"%s is a directory ..." % target)
-        ls = filter(lambda fname: fname.endswith('.xml'), os.listdir(target))
+        ls = filter(lambda fname: fname.lower().endswith('.xml'), os.listdir(target))
         print(INFO+"Found %d XML file(s) ..." % len(ls))
         for fxml in ls:
             _xml_file_import(target+'/'+fxml)

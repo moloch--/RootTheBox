@@ -112,7 +112,7 @@ def main(args):
 ### Main
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Generate hooks for an objc class header file',
+        description='Root the Box: A Game of Hackers',
     )
     parser.add_argument('-v', '--version',
         action='version',
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     parser.add_argument("-x", "--xml",
         dest='setup_xml',
         nargs='*',
-        help="import xml file, or directory or file(s)",
+        help="import xml file(s), or directory of file(s)",
     )
     parser.add_argument("-g", "--game-script",
         action='store_true',
