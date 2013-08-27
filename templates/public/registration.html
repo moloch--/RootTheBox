@@ -28,9 +28,9 @@
                             data-content="Your handle must be 3-15 alpha-numeric characters" />
                     </div>
                 </div>
-                <hr>
                 {% from libs.ConfigManager import ConfigManager %}
                 {% if ConfigManager.Instance().use_teams %}
+                <hr>
                 <h5>Join a Team</h5>
 	                <div class="control-group">
 	                    <label class="control-label" for="team">Select a Team</label>

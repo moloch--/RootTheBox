@@ -27,11 +27,14 @@
                                     Missions
                                 </a>
                             </li>
-                            <li>
-                                <a href="/user/market">
-                                    Black Market
-                                </a>
-                            </li>
+                            {% from libs.ConfigManager import ConfigManager %}
+                			{% if ConfigManager.Instance().use_black_market %}
+	                            <li>
+	                                <a href="/user/market">
+	                                    Black Market
+	                                </a>
+	                            </li>
+                            {% end %}
                             {% from libs.ConfigManager import ConfigManager %}
                 			{% if ConfigManager.Instance().use_bots %}
 	                            <li class="dropdown-submenu">
@@ -106,11 +109,20 @@
                                   Wall of Sheep
                               </a>
                           </li>
-                          <li>
-                              <a href="/teams">
-                                  Teams
-                              </a>
-                          </li>
+                          {% from libs.ConfigManager import ConfigManager %}
+                          {% if ConfigManager.Instance().use_teams %}
+	                          <li>
+	                              <a href="/teams">
+	                                  Teams
+	                              </a>
+	                          </li>
+	                      {% else %}
+	                      	  <li>
+	                              <a href="/users">
+	                                  Hackers
+	                              </a>
+	                          </li>
+	                      {% end %}
                       </ul>
                   </li>
                   <li>

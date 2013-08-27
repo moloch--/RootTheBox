@@ -21,7 +21,20 @@
                         <ul class="dropdown-menu">
                             <li><a href="/scoreboard">Summary</a></li>
                             <li><a href="/scoreboard/history/flags">History</a></li>
-                            <li><a href="/teams">Teams</a></li>
+                            {% from libs.ConfigManager import ConfigManager %}
+	                        {% if ConfigManager.Instance().use_teams %}
+	  	                      <li>
+	                              <a href="/teams">
+	                                  Teams
+	                              </a>
+	                          </li>
+	                        {% else %}
+		                   	  <li>
+		                          <a href="/users">
+		                              Hackers
+		                          </a>
+		                      </li>
+		                    {% end %}
                         </ul>
                     </li>
                     <li><a href="/about">About</a></li>

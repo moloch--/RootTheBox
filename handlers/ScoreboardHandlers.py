@@ -195,3 +195,8 @@ class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         self.render('scoreboard/teams.html')
+
+class UsersHandler(BaseHandler):
+    
+    def get(self, *args, **kwards):
+        self.render('scoreboard/users.html')

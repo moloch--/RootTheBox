@@ -1,0 +1,28 @@
+{% extends "../main.html" %}
+
+{% block title %}Hackers{% end %}
+
+{% block content %}
+    {% include ../notifier.html %}
+    <div class="container">
+    	<h1>Hackers</h1>
+    	<br />
+    	{% from models import Team %}
+    	{% for index, team in enumerate(Team.ranks()) %}
+    		{% if index%2 is 0 %}
+    			<div class='divUserRowContainer' style='height:262px'>
+    		{% end %}
+    		{% set floatdir = "left" if index%2 is 0 else "right" %}
+	    	<div id="{{ team.uuid }}" class="well" style='float:{{ floatdir }}'>
+	    		<h2 style="display:inline;">{{ team.name }}</h2>
+	    		<br />
+	    		<h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>
+	    		{% set user = team.members[0] %}
+	    		<img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+	    	</div>
+	    	{% if index%2 is not 0 %}
+	    		</div>
+	    	{% end %}
+    	{% end %}
+    </div>
+{% end %}

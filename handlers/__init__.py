@@ -123,7 +123,6 @@ URLs = [
     (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
     (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
     (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
-    (r'/teams', TeamsHandler),
 
     # Public handlers - PublicHandlers.py
     (r'/login', LoginHandler),
@@ -171,9 +170,15 @@ if config.use_black_market:
         
     ])
 
+# If teams are being used, set team handler. Otherwise set user handler.
+if config.use_teams:
+    URLs.append((r'/teams', TeamsHandler))
+else:
+    URLs.append((r'/users', UsersHandler))
+
 # Put the catch-all handler in place
 
-URLs.append([(r'/(.*)', NotFoundHandler)])    
+URLs.append((r'/(.*)', NotFoundHandler))    
 
 app = Application(
     # URL handler mappings
