@@ -12,12 +12,14 @@
     		{% if index%2 is 0 %}
     			<div class='row'>
     		{% end %}
-	    	<div id="{{ team.uuid }}" class="span6">
-	    		<h2 style="display:inline;">{{ team.name }}</h2>
-	    		<br />
-	    		<h4 style="display:inline;">"{{ team.motto }}"</h4>
-	    		{% set user = team.members[0] %}
-	    		<img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+	    	<div class="span6">
+	    	    <div id="{{ team.uuid }}">
+	    		    <h2 style="display:inline;">{{ team.name }}</h2>
+	    		    <br />
+	    	    	<h4 style="display:inline;">"{{ team.motto }}"</h4>
+	    	    	{% set user = team.members[0] %}
+	    	    	<img src="/avatars/{{ user.avatar }}" class="img-polaroid" width="300"/>
+	    		</div>
 	    	</div>
 	    	{% if index%2 is not 0 %}
 	    		</div>
