@@ -13,12 +13,12 @@
     			<div class='row'>
     		{% end %}
 	    	<div class="span6">
-	    	    <div id="{{ team.uuid }}">
+	    	    <div id="{{ team.uuid }}" class='well'>
 	    		    <h2 style="display:inline;">{{ team.name }}</h2>
 	    		    <br />
 	    	    	<h4 style="display:inline;">"{{ team.motto }}"</h4>
 	    	    	{% set user = team.members[0] %}
-	    	    	<div class='divImageContainer' style="background-repeat:no-repeat; background-position: center center; background-size: 380px auto; background-image: url('/avatars/{{ user.avatar }}'); height:200px; margin-top:10px" />
+	    	    	<div class='divImageContainer' style="background-repeat:no-repeat; background-position: center center; background-size: 380px auto; background-image: url('/avatars/{{ user.avatar }}'); height:200px; margin-top:10px"></div>
 	    	    	<div class='divStatsContainer'>
 						<strong>Current Level:</strong> {{ team.levels[-1].number }} <br />
 						<strong>Bank Account:</strong> ${{ team.money }} <br />
