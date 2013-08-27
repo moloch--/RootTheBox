@@ -100,7 +100,7 @@ class FlagSubmissionHandler(BaseHandler):
     def capture(self, flag, user_token):
         ''' Compares a user provided token to the token in the db '''
         user = self.get_current_user()
-        if flag.token == user_token:
+        if flag == user_token:
             user.team.flags.append(flag)
             user.team.money += flag.value
             dbsession.add(user.team)

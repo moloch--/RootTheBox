@@ -26,6 +26,7 @@ This file contains all of the adminstrative functions.
 '''
 
 
+import re
 import os
 import imghdr
 
@@ -156,16 +157,14 @@ class AdminCreateHandler(BaseHandler):
             page = 'admin/create/flag-%s.html' % flag_type    
             if Flag.by_name(self.get_argument('flag_name', '')) is not None:
                 self.render(page, errors=["Name already exists, and must be unique."])
-            elif not is_numeric(self.get_argument('reward', '')):
+            elif not self.is_numeric(self.get_argument('reward', '')):
                 self.render(page, errors=["Reward is not a valid integer."])
             elif Box.by_uuid(self.get_argument('box_uuid', '')) is None:
                 self.render(page, errors=["Box does not exist, try again."])
-            elif not self.is_token(is_file):
-                self.render(page, errors=["Missing or invalid token."])
+            elif not self.is_valid_token(is_file):
+                self.render(page, errors=["Invalid token."])
             else:
-                flag = self.__mkflag__()
-                dbsession.add(flag)
-                dbsession.flush()
+                self.__mkflag__()
                 self.redirect('/admin/view/game_objects')
         else:
             self.render(page, errors=form.errors)
@@ -178,12 +177,20 @@ class AdminCreateHandler(BaseHandler):
         except ValueError:
             return False
 
-    def is_token(self, is_file):
+    def is_valid_token(self, is_file):
         ''' Check if it's a valid token file/string '''
         if is_file and 'flag' in self.request.files:
             return 0 < len(self.request.files['flag'][0]['body'])
         else:
-            return 0 < len(self.get_argument('token', ''))
+            token = self.get_argument('token', '')
+            try:
+                regex = re.compile(token)
+                assert regex.match(self.get_argument('test_token', '')) is not None
+                return 0 < len(token)  # Check for blank strings
+            except:
+                logging.exception("Exception raised while testing flag token validity:")
+                return False
+
 
     def create_team(self):
         ''' Create a new team in the database '''

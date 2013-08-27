@@ -27,9 +27,15 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="token">Token Value</label>
+                            <label class="control-label" for="token">Regular Expression</label>
                             <div class="controls">
-                                <input required id="token" name="token" type="text" placeholder="Token Value">
+                                <input required id="token" name="token" type="text" placeholder="Regex Pattern" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="test_token">Test Flag</label>
+                            <div class="controls">
+                                <input required id="test_token" name="test_token" type="text" placeholder="Enter a Matching Flag" autocomplete="off">
                             </div>
                         </div>
                         <div class="control-group">
@@ -68,8 +74,9 @@
                     <p>
                         <blockquote>
                             <small>
-                                <strong>Tokens:</strong> In this case the "flag" is a string.  
-                                The user must submit the exact string to capture the flag.
+                                <strong>Tokens:</strong> In this case the "flag" is a regular expression.  
+                                The user must submit the a string which matches the pattern to capture the flag.
+                                All matches are case-sensitive.  Please be sure to test your regex, and ensure it's not too broad.
                             </small>
                         </blockquote>
                     </p>

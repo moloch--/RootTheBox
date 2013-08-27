@@ -93,6 +93,10 @@ class Flag(BaseObject):
             'box': box.uuid,
         }
 
+    def __eq__(self, other):
+        regex = re.compile(self.token)
+        return regex.match(str(other)) is not None
+
     def __str__(self):
         return self.name.encode('ascii', 'ignore')
 
