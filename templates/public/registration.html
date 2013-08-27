@@ -30,38 +30,41 @@
                 </div>
                 <hr>
                 <h5>Join a Team</h5>
-                <div class="control-group">
-                    <label class="control-label" for="team">Select a Team</label>
-                    <div class="controls">
-                        <select name="team">
-                            <option value=""></option>
-                            {% from libs.ConfigManager import ConfigManager %}
-                            {% from models import Team %}
-                            {% for team in Team.all() %}
-                                {% if len(team.members) < ConfigManager.Instance().max_team_size %}
-                                    <option value="{{ team.uuid }}">{{ team.name }}</option>
-                                {% end %}
-                            {% end %}
-                        </select>
-                    </div>
-                </div>
                 {% from libs.ConfigManager import ConfigManager %}
-                {% if ConfigManager.Instance().public_teams %}
-                    <h5>Start a New Team</h5>
-                    <div class="control-group">
-                        <label class="control-label" for="team_name">Team Name</label>
-                        <div class="controls">
-                            <input id="team_name" name="team_name" type="text" placeholder="Team Name">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="motto">Motto</label>
-                        <div class="controls">
-                            <input id="motto" name="motto" type="text" placeholder="Team Motto">
-                        </div>
-                    </div>
-                {% end %}
-                <hr>
+                {% if ConfigManager.Instance().use_teams %}
+	                <div class="control-group">
+	                    <label class="control-label" for="team">Select a Team</label>
+	                    <div class="controls">
+	                        <select name="team">
+	                            <option value=""></option>
+	                            {% from libs.ConfigManager import ConfigManager %}
+	                            {% from models import Team %}
+	                            {% for team in Team.all() %}
+	                                {% if len(team.members) < ConfigManager.Instance().max_team_size %}
+	                                    <option value="{{ team.uuid }}">{{ team.name }}</option>
+	                                {% end %}
+	                            {% end %}
+	                        </select>
+	                    </div>
+	                </div>
+	                {% from libs.ConfigManager import ConfigManager %}
+	                {% if ConfigManager.Instance().public_teams %}
+	                    <h5>Start a New Team</h5>
+	                    <div class="control-group">
+	                        <label class="control-label" for="team_name">Team Name</label>
+	                        <div class="controls">
+	                            <input id="team_name" name="team_name" type="text" placeholder="Team Name">
+	                        </div>
+	                    </div>
+	                    <div class="control-group">
+	                        <label class="control-label" for="motto">Motto</label>
+	                        <div class="controls">
+	                            <input id="motto" name="motto" type="text" placeholder="Team Motto">
+	                        </div>
+	                    </div>
+	                {% end %}
+	                <hr>
+	            {% end %}
                 <div class="control-group">
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">

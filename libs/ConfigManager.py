@@ -311,6 +311,24 @@ class ConfigManager(object):
             return self.__postgresql__()
         else:
             return self.__mysql__()
+        
+    ##
+    #    WORK IN PROGRESS
+    ##
+    
+    @property
+    def use_teams(self):
+        ''' Whether teams should be enabled in this game '''
+        self.config.getboolean("Experimental", "use_teams")
+
+    @property
+    def use_bots(self):
+        ''' Whether teams should be enabled in this game '''
+        self.config.getboolean("Experimental", "use_bots")
+
+    ##
+    #    END WORK IN PROGRESS
+    ##
 
     def __postgresql__(self):
         ''' 

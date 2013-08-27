@@ -130,7 +130,11 @@ class RegistrationHandler(BaseHandler):
         if form.validate(self.request.arguments):
             errors = []
             errors += self.validate_user()
-            errors += self.validate_team()
+            
+            # If teams are not enabled, do not check for team validation
+            if not self.config.use_teams:
+                errors += self.validate_team()
+            
             if 0 == len(errors):
                 team = self.get_team()
                 user = self.create_user(team)
@@ -209,16 +213,28 @@ class RegistrationHandler(BaseHandler):
 
     def get_team(self):
         ''' Create a team object, or pull the existing one '''
-        team = Team.by_uuid(self.get_argument('team', ''))
+        # Try pulling team from DB if teams are enabled
+        if self.config.use_teams:
+            team = Team.by_uuid(self.get_argument('team', ''))
         return team if team is not None else self.create_team()
 
     def create_team(self):
         ''' Create a new team '''
-        assert self.config.public_teams
-        team = Team(
-            name=unicode(self.get_argument('team_name')[:15]),
-            motto=unicode(self.get_argument('motto')[:64]),
-        )
+        
+        # Create a team based on passed-in arguments if teams are enabled
+        #TODO better handling of new motto for a new team
+        
+        if self.config.use_teams:
+            assert self.config.public_teams
+            team = Team(
+                name=unicode(self.get_argument('team_name')[:15]),
+                motto=unicode(self.get_argument('motto')[:64]),
+            )
+        else:
+            team = Team(
+                name=unicode(("Team" + self.get_argument('handle'))[:15]),
+                motto=unicode(self.get_argument('handle') + " makes it rain."),
+            )
         level_0 = GameLevel.all()[0]
         team.game_levels.append(level_0)
         dbsession.add(team)
