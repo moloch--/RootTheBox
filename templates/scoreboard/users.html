@@ -10,13 +10,12 @@
     	{% from models import Team %}
     	{% for index, team in enumerate(Team.ranks()) %}
     		{% if index%2 is 0 %}
-    			<div class='divUserRowContainer' style='height:262px'>
+    			<div class='row'>
     		{% end %}
-    		{% set floatdir = "left" if index%2 is 0 else "right" %}
-	    	<div id="{{ team.uuid }}" class="well" style='float:{{ floatdir }}'>
+	    	<div id="{{ team.uuid }}" class="span6">
 	    		<h2 style="display:inline;">{{ team.name }}</h2>
 	    		<br />
-	    		<h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>
+	    		<h4 style="display:inline;">"{{ team.motto }}"</h4>
 	    		{% set user = team.members[0] %}
 	    		<img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
 	    	</div>
