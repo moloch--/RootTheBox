@@ -23,6 +23,9 @@ develop-eggs
 *.crt
 *.key
 
+# XML exports
+*.xml
+
 # SQLite3 databases
 *.db
 

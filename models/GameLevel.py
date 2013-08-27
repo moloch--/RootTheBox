@@ -20,6 +20,8 @@ Created on Mar 12, 2012
 '''
 
 
+import xml.etree.cElementTree as ET
+
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, asc
 from sqlalchemy.types import Unicode, Integer, String
@@ -43,6 +45,10 @@ class GameLevel(BaseObject):
         return dbsession.query(cls).order_by(
             asc(cls.number)
         ).all()
+
+    @classmethod
+    def count(cls):
+        return dbsession.query(cls).count()
 
     @classmethod
     def by_id(cls, ident):
@@ -74,6 +80,11 @@ class GameLevel(BaseObject):
             return self.by_id(self.next_level_id)
         else:
             return None
+
+    def to_xml(self, parent):
+        level_elem = ET.SubElement(parent, "gamelevel")
+        ET.SubElement(level_elem, "number").text = str(self.number)
+        ET.SubElement(level_elem, "buyout").text = str(self.buyout)
 
     def to_dict(self):
         ''' Return public data as dict '''

@@ -19,8 +19,8 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
-import xml.etree.cElementTree as ET
 
+import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column
@@ -44,6 +44,10 @@ class Corporation(BaseObject):
     def all(cls):
         ''' Returns a list of all objects in the database '''
         return dbsession.query(cls).all()
+
+    @classmethod
+    def count(cls):
+        return dbsession.query(cls).count()
 
     @classmethod
     def by_id(cls, ident):
@@ -72,9 +76,9 @@ class Corporation(BaseObject):
         ''' Add to XML dom '''
         corp_elem = ET.SubElement(parent, "corporation")
         ET.SubElement(corp_elem, "name").text = str(self.name)
-        ET.SubElement(corp_elem, "descirption").text = str(self.description)
+        ET.SubElement(corp_elem, "description").text = str(self.description)
         boxes_elem = ET.SubElement(corp_elem, "boxes")
-        boxes_elem.set("count", len(self.boxes))
+        boxes_elem.set("count", str(len(self.boxes)))
         for box in self.boxes:
             box.to_xml(boxes_elem)
 

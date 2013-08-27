@@ -17,20 +17,22 @@ Created on Oct 10, 2012
     limitations under the License.
 '''
 
+
 import os
+import imghdr
 
-
+from uuid import uuid4
 from libs.ConsoleColors import *
 from models import dbsession, GameLevel, IpAddress, \
     Flag, Box, Corporation, User, Team, Hint
 
 
-def create_game_level(level_number, buyout):
-    print(INFO + "Create Game Level " + bold + "#" + str(level_number) + W + \
+def create_game_level(number, buyout):
+    print(INFO + "Create Game Level " + bold + "#" + str(number) + W + \
         " with a buyout of " + bold + "$" + str(buyout) + W)
     new_level = GameLevel(
-        number=level_number,
-        buyout=buyout,
+        number=abs(int(number)),
+        buyout=abs(int(buyout)),
     )
     game_levels = GameLevel.all()
     game_levels.append(new_level)
@@ -115,8 +117,10 @@ def __mkipv6__(box, address):
 
 
 def create_box(name, corporation, difficulty, game_level, description,
-                ipv4_addresses=[], ipv6_addresses=[]):
+                ipv4_addresses=[], ipv6_addresses=[], avatar=None):
     print(INFO + "Create Box: " + bold + name + W)
+    if isinstance(game_level, int):
+        game_level = GameLevel.by_number(game_level)
     box = Box(
         name=unicode(name),
         corporation_id=corporation.id,
@@ -126,23 +130,50 @@ def create_box(name, corporation, difficulty, game_level, description,
     )
     dbsession.add(box)
     dbsession.flush()
+    if avatar is not None and os.path.exists(avatar):
+        set_avatar(box, avatar)
     for ip_address in ipv4_addresses:
         __mkipv4__(box, ip_address)
     for ip_address in ipv6_addresses:
         __mkipv6__(box, ip_address)
     return box
 
+def set_avatar(box, favatar):
+    '''
+    Saves avatar - Reads file header and only allows approved formats
+    '''
+    f = open(favatar, 'r')
+    data = f.read()
+    if 0 < len(data) < (1024 * 1024):
+        if box.avatar == "default_avatar.jpeg":
+            box.avatar = unicode(uuid4()) + u".jpeg"
+        ext = imghdr.what("", h=data)
+        avatar_path = 'files/avatars/' + box.avatar
+        if ext in ['png', 'jpeg', 'gif', 'bmp']:
+            if os.path.exists(avatar_path):
+                os.unlink(avatar_path)
+            box.avatar = unicode(box.avatar[:box.avatar.rfind('.')] + "." + ext)
+            file_path = 'files/avatars/'+box.avatar
+            avatar = open(file_path, 'wb')
+            avatar.write(data)
+            avatar.close()
+            dbsession.add(box)
+            dbsession.flush()
+    f.close()
 
-def create_flag(name, token, reward, box, description="No description",
+def create_flag(name, token, value, box, description="No description",
                 is_file=False):
-    if is_file:
-        if not os.path.exists(token):
-            raise ValueError("Path to flag file does not exist: %s" % token)
+    if is_file and os.path.exists(token):
         f = open(token, 'r')
         data = f.read()
         f.close()
         _token = Flag.digest(data)
         print(INFO + "Create Flag: " + bold + name + W + " (%s)" % _token)
+    elif is_file and 40 == len(token):
+        # Just assume it's a SHA1
+        _token = unicode(token)
+    elif is_file:
+        raise ValueError("Flag token file does not exist, and is not a hash.")
     else:
         print(INFO + "Create Flag: " + bold + name + W)
         _token = unicode(token)
@@ -151,11 +182,13 @@ def create_flag(name, token, reward, box, description="No description",
         token=_token,
         is_file=is_file,
         description=unicode(description),
-        value=reward,
+        value=abs(int(value)),
         box_id=box.id,
     )
     dbsession.add(flag)
     dbsession.flush()
+    return flag
+
 
 def create_hint(box, price, description):
     print(INFO + "Create Hint: %s has a new hint for $%s" % (box.name, price,))
@@ -166,3 +199,4 @@ def create_hint(box, price, description):
     )
     dbsession.add(hint)
     dbsession.flush()
+    return hint

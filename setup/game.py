@@ -71,11 +71,11 @@ rick = create_user(
 # > Create game levels
 # create_game_level(LEVEL_NUMBER, BUYOUT)
 level_1 = create_game_level(
-    level_number=1, 
+    number=1, 
     buyout=5000
 )
 level_2 = create_game_level(
-    level_number=2, 
+    number=2, 
     buyout=7500
 )
 
@@ -140,7 +140,7 @@ microshaft_laptop = create_box(
 create_flag(
     name="DB Access", 
     token="p@ssw0rd", 
-    reward=1000, 
+    value=1000, 
     box=seatec_mail, 
     description="Get the MySQL root password for the mail server"
 )
@@ -148,7 +148,7 @@ create_flag(
 create_flag(
     name="Guess this", 
     token="toor", 
-    reward=1500, 
+    value=1500, 
     box=seatec_mail, 
     description="Get the root password for the mail server"
 )
@@ -156,7 +156,7 @@ create_flag(
 create_flag(
     name="Tro.py", 
     token="./rootthebox.py", 
-    reward=2500, 
+    value=2500, 
     box=seatec_fw, 
     description="Get the source code for rootthebox.py", 
     is_file=True
@@ -165,7 +165,7 @@ create_flag(
 create_flag(
     name="One Key to Rule Them All", 
     token="kfahjl*&y63hja", 
-    reward=5000, 
+    value=5000, 
     box=microshaft_web, 
     description="Obtain Micro$haft's Amazon Cloud Private Key"
 )
@@ -173,7 +173,7 @@ create_flag(
 create_flag(
     name="Call me maybe", 
     token="867-5309", 
-    reward=1500, 
+    value=1500, 
     box=microshaft_laptop, 
     description="Find the Micro$shaft CEO's home phone number"
 )

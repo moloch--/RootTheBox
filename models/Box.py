@@ -159,11 +159,11 @@ class Box(BaseObject):
         ET.SubElement(box_elem, "description").text = str(self._description)
         ET.SubElement(box_elem, "difficulty").text = str(self.difficulty)
         flags_elem = ET.SubElement(box_elem, "flags")
-        flags_elem.set("count", len(self.flags))
+        flags_elem.set("count", str(len(self.flags)))
         for flag in self.flags:
             flag.to_xml(flags_elem)
         hints_elem = ET.SubElement(box_elem, "hints")
-        hints_elem.set("count", len(self.hints))
+        hints_elem.set("count", str(len(self.hints)))
         for hint in self.hints:
             hint.to_xml(hints_elem)
         with open('files/avatars/'+self.avatar) as f:

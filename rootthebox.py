@@ -20,6 +20,8 @@ command line arguments it calls various components setup/start/etc.
 
 '''
 
+
+import os
 import sys
 import logging
 
@@ -61,6 +63,17 @@ def recovery(options, *args, **kwargs):
     except KeyboardInterrupt:
         print(INFO + "Have a nice day!")
 
+def setup_xml(options, *args, **kwargs):
+    ''' Imports XML file(s) '''
+    index = sys.argv.index('-x') if '-x' in sys.argv else sys.argv.index('--xml')
+    if not index + 1 < len(sys.argv):
+        print(WARN+"Missing .xml file/directory parameter")
+        os._exit(1)
+    from libs.ConfigManager import ConfigManager  # Sets up logging
+    from setup.importers import import_xml
+    import_xml(sys.argv[index + 1])
+
+
 def setup(options, *args, **kwargs):
     ''' Imports a setup file '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
@@ -72,6 +85,7 @@ def setup(options, *args, **kwargs):
         print(WARN+"Setup Error: Game script failed with "+str(error))
         sys.exit()
     print(INFO+"Setup file completed successfully.")
+
 
 ### Main
 if __name__ == '__main__':
@@ -92,6 +106,12 @@ if __name__ == '__main__':
         action="callback",
         callback=serve,
         help="start the server"
+    )
+    parser.add_option(
+        "-x", "--xml",
+        action="callback",
+        callback=setup_xml,
+        help="import xml file, or directory or file(s)"
     )
     parser.add_option(
         "-g", "--game-script",

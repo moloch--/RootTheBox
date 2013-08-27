@@ -1344,10 +1344,15 @@ class AdminExportHandler(BaseHandler):
 
         For the record, I hate XML with a passion. This is also prbly vulnerable to 
         XML injection, because for whatever reason the Python std lib doesn't encode 
-        anything, but I don't think exploit this would buy you much, so whateves.
+        anything, but I don't think exploiting this would buy you much, so whateves.
         '''
         root = ET.Element("rootthebox")
+        levels_elem = ET.SubElement(root, "gamelevels")
+        levels_elem.set("count", str(GameLevel.count()))
+        for level in GameLevel.all():
+            level.to_xml(levels_elem)
         corps_elem = ET.SubElement(root, "corporations")
+        corps_elem.set("count", str(Corporation.count()))
         for corp in Corporation.all():
             corp.to_xml(corps_elem)
         xml_dom = xml.dom.minidom.parseString(ET.tostring(root))
