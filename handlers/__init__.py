@@ -143,7 +143,7 @@ URLs = [
 # If the game is configured to use bots, associate the handlers necessary
 
 if config.use_bots:
-    URLs.append([
+    URLs.extend([
         # Bot Handlers - BotHandlers.py
         (r'/botnet/connect', BotSocketHandler),
         (r'/botnet/climonitor', BotCliMonitorSocketHandler),
@@ -155,7 +155,7 @@ if config.use_bots:
 # If the game is configured to use the black market, associate the handlers necessary
 
 if config.use_black_market:
-    URLs.append([
+    URLs.extend([
                  
         # Market handlers - MarketHandlers.py
         (r'/user/market', MarketViewHandler),
