@@ -18,7 +18,12 @@
 	    		    <br />
 	    	    	<h4 style="display:inline;">"{{ team.motto }}"</h4>
 	    	    	{% set user = team.members[0] %}
-	    	    	<img src="/avatars/{{ user.avatar }}" class="img-polaroid" width="300"/>
+	    	    	<div class='divImageContainer' style="background-repeat:no-repeat; background-position: center center; background-size: 380px auto; background-image: url('/avatars/{{ user.avatar }}'); height:200px; margin-top:10px" />
+	    	    	<div class='divStatsContainer'>
+						<strong>Current Level:</strong> {{ team.levels[-1].number }} <br />
+						<strong>Bank Account:</strong> ${{ team.money }} <br />
+						<strong>Flags Captured:</strong> {{ len(team.flags) }}<br />
+	    	    	</div>
 	    		</div>
 	    	</div>
 	    	{% if index%2 is not 0 %}
