@@ -137,6 +137,7 @@ class ScoreboardHistoryHandler(BaseHandler):
         self.render('scoreboard/history/flags.html', history=history)
 
     def bots(self):
+        #TODO disable this functionality when bots are not enabled
         game_history = GameHistory.Instance()
         history = {}
         for team in Team.all():

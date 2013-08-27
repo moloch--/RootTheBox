@@ -65,100 +65,119 @@ else:
 
 
 ### Main URL Configuration
-app = Application(
-    [
-        # Static Handlers - StaticFileHandler.py
-        (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv))', 
-            StaticFileHandler, {'path': 'static/'}),
-        (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))', 
-            StaticFileHandler, {'path': 'files/avatars/'}),
 
+# First get base URLs that all game types will require
+
+URLs = [
+    # Static Handlers - StaticFileHandler.py
+    (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv))', 
+        StaticFileHandler, {'path': 'static/'}),
+    (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))', 
+        StaticFileHandler, {'path': 'files/avatars/'}),
+
+    # ShareUploadHandlers - ShareUploadHandlers.py
+    (r'/user/shares/download(.*)', ShareDownloadHandler),
+    (r'/user/share/files', ShareUploadHandler),
+
+    # PasteBin - PastebinHandlers.py
+    (r'/user/share/pastebin', PasteHandler),
+    (r'/user/share/pastebin/create', CreatePasteHandler),
+    (r'/user/share/pastebin/display', DisplayPasteHandler),
+    (r'/user/share/pastebin/delete', DeletePasteHandler),
+
+    # Mission handlers - MissionHandlers.py
+    (r'/user/missions', MissionsHandler),
+    (r'/user/missions/capture/(text|file)',FlagSubmissionHandler),
+    (r'/user/missions/(flag|buyout)', MissionsHandler),
+    (r'/user/missions/firstlogin', FirstLoginHandler),
+    (r'/user/missions/boxes', BoxHandler),
+    (r'/user/missions/hint', PurchaseHintHandler),
+
+    # User handlers - UserHandlers.py
+    (r'/user', HomeHandler),
+    (r'/user/settings', SettingsHandler),
+    (r'/user/settings/(.*)', SettingsHandler),
+    (r'/logout', LogoutHandler),
+
+    # Admin Handlers - AdminHandlers.py
+    (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
+    (r'/admin/create/(.*)', AdminCreateHandler),
+    (r'/admin/edit/(.*)', AdminEditHandler),
+    (r'/admin/view/(.*)', AdminViewHandler),
+    (r'/admin/delete/(.*)', AdminDeleteHandler),
+    (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
+    (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
+    (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
+    (r'/admin/lock', AdminLockHandler),
+    (r'/admin/configuration', AdminConfigurationHandler),
+    (r'/admin/export/(.*)', AdminExportHandler),
+
+    # Notificaiton handlers - NotificationHandlers.py
+    (r'/notifications/all', AllNotificationsHandler),
+    (r'/notifications/wsocket/updates', NotifySocketHandler),
+
+    # Scoreboard Handlers - ScoreboardHandlers.py
+    (r'/scoreboard', ScoreboardHandler),
+    (r'/scoreboard/history/(.*)', ScoreboardHistoryHandler),
+    (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
+    (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
+    (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
+    (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
+    (r'/teams', TeamsHandler),
+
+    # Public handlers - PublicHandlers.py
+    (r'/login', LoginHandler),
+    (r'/registration', RegistrationHandler),
+    (r'/about', AboutHandler),
+    (r'/', HomePageHandler),
+    (r'/robots(|\.txt)', FakeRobotsHandler),
+
+    # Error handlers - ErrorHandlers.py
+    (r'/403', UnauthorizedHandler),
+    (r'/(.*).php', NoobHandler),
+    (r'/admin', NoobHandler),
+    (r'/(.*)phpmyadmin(.*)', NoobHandler),
+    (r'/administrator(.*)', NoobHandler)
+]
+
+# If the game is configured to use bots, associate the handlers necessary
+
+if config.use_bots:
+    URLs.append([
         # Bot Handlers - BotHandlers.py
         (r'/botnet/connect', BotSocketHandler),
         (r'/botnet/climonitor', BotCliMonitorSocketHandler),
         (r'/botnet/webmonitor', BotWebMonitorSocketHandler),
         (r'/user/bots/download/(windows|linux|monitor)', BotDownloadHandler),
-        (r'/user/bots/webmonitor', BotWebMonitorHandler),
+        (r'/user/bots/webmonitor', BotWebMonitorHandler)
+    ])
 
-        # ShareUploadHandlers - ShareUploadHandlers.py
-        (r'/user/shares/download(.*)', ShareDownloadHandler),
-        (r'/user/share/files', ShareUploadHandler),
+# If the game is configured to use the black market, associate the handlers necessary
 
-        # PasteBin - PastebinHandlers.py
-        (r'/user/share/pastebin', PasteHandler),
-        (r'/user/share/pastebin/create', CreatePasteHandler),
-        (r'/user/share/pastebin/display', DisplayPasteHandler),
-        (r'/user/share/pastebin/delete', DeletePasteHandler),
-
+if config.use_black_market:
+    URLs.append([
+                 
         # Market handlers - MarketHandlers.py
         (r'/user/market', MarketViewHandler),
         (r'/user/market/details', MarketDetailsHandler),
-
+    
         # Upgrade handlers - UpgradeHandlers.py
         (r'/password_security', PasswordSecurityHandler),
         (r'/federal_reserve', FederalReserveHandler),
         (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
         (r'/source_code_market', SourceCodeMarketHandler),
         (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
-        (r'/swat', SwatHandler),
+        (r'/swat', SwatHandler)
+        
+    ])
 
-        # Mission handlers - MissionHandlers.py
-        (r'/user/missions', MissionsHandler),
-        (r'/user/missions/capture/(text|file)',FlagSubmissionHandler),
-        (r'/user/missions/(flag|buyout)', MissionsHandler),
-        (r'/user/missions/firstlogin', FirstLoginHandler),
-        (r'/user/missions/boxes', BoxHandler),
-        (r'/user/missions/hint', PurchaseHintHandler),
+# Put the catch-all handler in place
 
-        # User handlers - UserHandlers.py
-        (r'/user', HomeHandler),
-        (r'/user/settings', SettingsHandler),
-        (r'/user/settings/(.*)', SettingsHandler),
-        (r'/logout', LogoutHandler),
+URLs.append([(r'/(.*)', NotFoundHandler)])    
 
-        # Admin Handlers - AdminHandlers.py
-        (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
-        (r'/admin/create/(.*)', AdminCreateHandler),
-        (r'/admin/edit/(.*)', AdminEditHandler),
-        (r'/admin/view/(.*)', AdminViewHandler),
-        (r'/admin/delete/(.*)', AdminDeleteHandler),
-        (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
-        (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
-        (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
-        (r'/admin/lock', AdminLockHandler),
-        (r'/admin/configuration', AdminConfigurationHandler),
-        (r'/admin/export/(.*)', AdminExportHandler),
-
-        # Notificaiton handlers - NotificationHandlers.py
-        (r'/notifications/all', AllNotificationsHandler),
-        (r'/notifications/wsocket/updates', NotifySocketHandler),
-
-        # Scoreboard Handlers - ScoreboardHandlers.py
-        (r'/scoreboard', ScoreboardHandler),
-        (r'/scoreboard/history/(.*)', ScoreboardHistoryHandler),
-        (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
-        (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
-        (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
-        (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
-        (r'/teams', TeamsHandler),
-
-        # Public handlers - PublicHandlers.py
-        (r'/login', LoginHandler),
-        (r'/registration', RegistrationHandler),
-        (r'/about', AboutHandler),
-        (r'/', HomePageHandler),
-        (r'/robots(|\.txt)', FakeRobotsHandler),
-
-        # Error handlers - ErrorHandlers.py
-        (r'/403', UnauthorizedHandler),
-        (r'/(.*).php', NoobHandler),
-        (r'/admin', NoobHandler),
-        (r'/(.*)phpmyadmin(.*)', NoobHandler),
-        (r'/administrator(.*)', NoobHandler),
-
-        # This is our catch-all
-        (r'/(.*)', NotFoundHandler)
-    ],
+app = Application(
+    # URL handler mappings
+    URLs,
 
     # Randomly generated secret key
     cookie_secret=b64encode(urandom(64)),
@@ -246,23 +265,31 @@ def start_server():
             config.history_snapshot_interval, 
             io_loop=io_loop
         )
-        scoring_callback = PeriodicCallback(
-            score_bots, 
-            config.bot_reward_interval, 
-            io_loop=io_loop
-        )
-        bot_ping_callback = PeriodicCallback(
-            ping_bots, 30000, io_loop=io_loop
-        )
+        
+        # If bots are enabled for this game, start up their callbacks
+        #TODO clarify what bots do in the application
+        
+        if config.use_bots:
+            scoring_callback = PeriodicCallback(
+                score_bots, 
+                config.bot_reward_interval, 
+                io_loop=io_loop
+            )
+            bot_ping_callback = PeriodicCallback(
+                ping_bots, 30000, io_loop=io_loop
+            )
+        
         # Start ALL THE THINGS!
-        bot_ping_callback.start()
+        
+        if config.use_bots:
+            bot_ping_callback.start()
+            scoring_callback.start()
         history_callback.start()
-        scoring_callback.start()
         io_loop.start()
     except KeyboardInterrupt:
         sys.stdout.write('\r'+WARN+'Shutdown Everything!\n')
     except:
-      logging.exception("Main i/o loop threw exception")
+        logging.exception("Main i/o loop threw exception")
     finally:
         io_loop.stop()
         if config.debug and raw_input(PROMPT+"Flush Memcache? [Y/n]: ").lower() == 'y':

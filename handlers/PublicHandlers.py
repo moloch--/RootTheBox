@@ -132,7 +132,7 @@ class RegistrationHandler(BaseHandler):
             errors += self.validate_user()
             
             # If teams are not enabled, do not check for team validation
-            if not self.config.use_teams:
+            if self.config.use_teams:
                 errors += self.validate_team()
             
             if 0 == len(errors):
@@ -214,6 +214,7 @@ class RegistrationHandler(BaseHandler):
     def get_team(self):
         ''' Create a team object, or pull the existing one '''
         # Try pulling team from DB if teams are enabled
+        team = None
         if self.config.use_teams:
             team = Team.by_uuid(self.get_argument('team', ''))
         return team if team is not None else self.create_team()
@@ -232,7 +233,7 @@ class RegistrationHandler(BaseHandler):
             )
         else:
             team = Team(
-                name=unicode(("Team" + self.get_argument('handle'))[:15]),
+                name=unicode((self.get_argument('handle'))[:15]),
                 motto=unicode(self.get_argument('handle') + " makes it rain."),
             )
         level_0 = GameLevel.all()[0]
