@@ -19,6 +19,8 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
+import xml.etree.cElementTree as ET
+
 
 from uuid import uuid4
 from sqlalchemy import Column
@@ -65,6 +67,15 @@ class Corporation(BaseObject):
             "name": self.name,
             "description": self.description,
         }
+
+    def to_xml(self, parent):
+        ''' Add to XML dom '''
+        corp_elem = ET.SubElement(parent, "corporation")
+        ET.SubElement(corp_elem, "name").text = str(self.name)
+        ET.SubElement(corp_elem, "descirption").text = str(self.description)
+        boxes_elem = ET.SubElement(corp_elem, "boxes")
+        for box in self.boxes:
+            box.to_xml(boxes_elem)
 
     def __str__(self):
         return self.name

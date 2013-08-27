@@ -127,6 +127,7 @@ app = Application(
         (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
         (r'/admin/lock', AdminLockHandler),
         (r'/admin/configuration', AdminConfigurationHandler),
+        (r'/admin/export/(.*)', AdminExportHandler),
 
         # Notificaiton handlers - NotificationHandlers.py
         (r'/notifications/all', AllNotificationsHandler),

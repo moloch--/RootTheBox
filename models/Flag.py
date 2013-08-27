@@ -22,6 +22,7 @@ Created on Mar 12, 2012
 
 import re
 import hashlib
+import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
@@ -87,6 +88,15 @@ class Flag(BaseObject):
         else:
             pattern = re.compile(self.token)
             return pattern.match(token) is not None
+
+    def to_xml(self, parent):
+        ''' Write attributes to XML doc '''
+        flag_elem = ET.SubElement(parent, "flag")
+        flag_elem.set("isfile", str(self.is_file))
+        ET.SubElement(flag_elem, "name").text = str(self.name)
+        ET.SubElement(flag_elem, "token").text = str(self.token)
+        ET.SubElement(flag_elem, "description").text = str(self.description)
+        ET.SubElement(flag_elem, "value").text = str(self.value)
 
     def to_dict(self):
         ''' Returns public data as a dict '''

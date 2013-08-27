@@ -29,6 +29,8 @@ This file contains all of the adminstrative functions.
 import re
 import os
 import imghdr
+import xml.dom.minidom
+import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from string import ascii_letters, digits, printable
@@ -1119,11 +1121,11 @@ class AdminSourceCodeMarketHandler(BaseHandler):
 class AdminSwatHandler(BaseHandler):
     ''' Manage SWAT requests '''
 
-    @restrict_ip_address
-    @authenticated
-    @authorized(ADMIN_PERMISSION)
-    def get(self, *args, **kwargs):
-        self.render_page()
+#    @restrict_ip_address
+#    @authenticated
+#    @authorized(ADMIN_PERMISSION)
+#    def get(self, *args, **kwargs):
+#        self.render_page()
 
     @restrict_ip_address
     @authenticated
@@ -1307,3 +1309,46 @@ class AdminConfigurationHandler(BaseHandler):
         debug = self.get_argument('debug', str(self.config.debug).lower())
         if debug != str(self.config.debug).lower():
             self.config.debug = bool(debug == 'true')
+
+
+class AdminExportHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        ''' Export to XML '''
+        ''' Accept/Complete bribes '''
+        uri = {
+            'xml': self.export_xml,
+        }
+        if len(args) == 1 and args[0] in uri:
+            uri[args[0]]()
+        else:
+            self.render('public/404.html')
+
+    def export_xml(self):
+        ''' Create and write XML document to page '''
+        xml_doc = self.create_xml()
+        self.set_header('Content-Type', 'text/xml')
+        self.set_header(
+            "Content-disposition", "attachment; filename=%s.xml" % self.config.game_name
+        )
+        self.set_header('Content-Length', len(xml_doc))
+        self.write(xml_doc)
+        self.finish()
+
+    def create_xml(self):
+        ''' 
+        Exports the game objects to an XML doc.
+
+        For the record, I hate XML with a passion. This is also prbly vulnerable to 
+        XML injection, because for whatever reason the Python std lib doesn't encode 
+        anything, but I don't think exploit this would buy you much, so whateves.
+        '''
+        root = ET.Element("rootthebox")
+        corps_elem = ET.SubElement(root, "corporations")
+        for corp in Corporation.all():
+            corp.to_xml(corps_elem)
+        xml_dom = xml.dom.minidom.parseString(ET.tostring(root))
+        return xml_dom.toprettyxml()

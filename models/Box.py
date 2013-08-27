@@ -20,6 +20,8 @@ Created on Mar 11, 2012
 '''
 
 
+import xml.etree.cElementTree as ET
+
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, or_
 from sqlalchemy.orm import relationship, backref
@@ -148,6 +150,19 @@ class Box(BaseObject):
     def hints(self):
         ''' Returns all hints on this box '''
         return Hint.by_box_id(self.id)
+
+    def to_xml(self, parent):
+        ''' Convert to XML '''
+        box_elem = ET.SubElement(parent, "box")
+        ET.SubElement(box_elem, "name").text = str(self.name)
+        ET.SubElement(box_elem, "description").text = str(self._description)
+        ET.SubElement(box_elem, "difficulty").text = str(self.difficulty)
+        flags_elem = ET.SubElement(box_elem, "flags")
+        for flag in self.flags:
+            flag.to_xml(flags_elem)
+        hints_elem = ET.SubElement(box_elem, "hints")
+        for hint in self.hints:
+            hint.to_xml(hints_elem)
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''

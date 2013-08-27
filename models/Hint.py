@@ -19,6 +19,9 @@ Created on Aug 11, 2013
     limitations under the License.
 '''
 
+
+import xml.etree.cElementTree as ET
+
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
@@ -56,6 +59,11 @@ class Hint(BaseObject):
     @classmethod
     def by_box_id(cls, bid):
         return dbsession.query(cls).filter_by(box_id=bid).all()
+
+    def to_xml(self, parent):
+        hint_elem = ET.SubElement(parent, "hint")
+        ET.SubElement(hint_elem, "price").text = str(self.price)
+        ET.SubElement(hint_elem, "description").text = str(self.description)
 
     def to_dict(self):
         return {
