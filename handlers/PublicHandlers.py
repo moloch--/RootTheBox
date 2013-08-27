@@ -180,7 +180,7 @@ class RegistrationHandler(BaseHandler):
         if not 2 < len(motto) < 255:
             errors.append('Your motto must be more than 3 characters')
         if 'avatar' in self.request.files:
-            errors.append(Validation.validate_avatar_file(self.request.files['avatar']))
+            errors += Validation.validate_avatar_file(self.request.files['avatar'])
         return errors
 
     def validate_team(self):
@@ -224,7 +224,7 @@ class RegistrationHandler(BaseHandler):
         logging.info("Now testing if avatar is in self.request.files")
         if 'avatar' in self.request.files:
             logging.info("Avatar IS in self.request.files. Moving on...")
-            avatar_file = unicode(str(uuid4() + '.' + imghdr.what("", self.request.files['avatar'][0]['body'])))
+            avatar_file = unicode(str(uuid4()) + '.' + imghdr.what("", self.request.files['avatar'][0]['body']))
             #TODO find better way to retrieve the extension of the uploaded file
             avatar_path = unicode(str(self.application.settings['avatar_dir'] + '/' + avatar_file))
             avatar = open(avatar_path, 'wb')

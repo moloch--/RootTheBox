@@ -26,7 +26,7 @@ import imghdr
 def validate_avatar_file(requestFileObject):
     errors = []
     ext = imghdr.what("", requestFileObject[0]['body'])
-    if len(requestFileObject[0]['body'] > (1024 * 1024)):
+    if len(requestFileObject[0]['body']) > (1024 * 1024):
         errors.append("The image is too large")
     if ext not in ['png', 'jpeg', 'gif', 'bmp']:
         errors.append("Invalid image format, avatar must be: .png .jpeg .gif or .bmp")

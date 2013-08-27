@@ -17,7 +17,7 @@
         {% end %}
         <div class="well">
             <legend>Welcome to the Scene</legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
-            <form class="form-horizontal" action="/registration" method="post">  
+            <form class="form-horizontal" action="/registration" method="post" enctype="multipart/form-data">  
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
                     <label class="control-label" for="handle">Hacker Name</label>
