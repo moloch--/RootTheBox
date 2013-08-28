@@ -37,6 +37,7 @@ from string import ascii_letters, digits, printable
 from base64 import b64encode
 from hashlib import md5
 from libs.Form import Form
+from libs.LoggingHelpers import ObservableLoggingHandler
 from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
 from models import dbsession, Team, Box, Flag, SourceCode, MarketItem, \
@@ -1317,8 +1318,7 @@ class AdminExportHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        ''' Export to XML '''
-        ''' Accept/Complete bribes '''
+        ''' Export to document formats '''
         uri = {
             'xml': self.export_xml,
         }
@@ -1358,3 +1358,79 @@ class AdminExportHandler(BaseHandler):
             corp.to_xml(corps_elem)
         xml_dom = xml.dom.minidom.parseString(ET.tostring(root))
         return xml_dom.toprettyxml()
+
+
+class AdminImportXmlHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        ''' Import setup files '''
+        self.render('admin/import.html', success=None, errors=None)
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        ''' Import XML file uploaded by the admin '''
+        if 'xml_file' in self.request.files:
+            fxml = self._get_tmp()
+            # Import foo
+            os.unlink(fxml)
+            self.render('admin/import.html', 
+                success="Successfully imported game objects.", 
+                errors=None
+            )
+        else:
+            self.render('admin/import.html',
+                success=None,
+                errors=["No file data."],
+            )
+
+    def _get_tmp(self):
+        ''' Creates a tmp file with the file data '''
+        data = self.request.files['xml_file']
+        tmp_file = NamedTemporaryFile(delete=False)
+        tmp_file.write(data)
+        tmp_file.close()
+        return tmp_file.name
+
+
+class AdminLogViewerHandler(BaseHandler):
+
+    log_levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR']
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        ''' Import setup files '''
+        if self.config.enable_logviewer:
+            requested_level = self.get_argument('loglevel', 'DEBUG')
+            if requested_level in self.log_levels:
+                level = requested_level
+            else:
+                level = 'DEBUG'
+            self.render('admin/logviewer.html', log_level=level)
+        else:
+            self.render('public/404.html')
+
+
+class AdminLogViewerSocketHandler(BaseWebSocketHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def open(self):
+        ''' Add this object as an observer '''
+        self.observerable_log = ObservableLoggingHandler.Instance()
+        self.observerable_log.add_observer(self)
+    
+    def update(self, messages):
+        self.write_message({'messages': messages})
+
+    def on_close(self):
+        ''' Remove the ref to this object '''
+        self.observerable_log.remove_observer(self)
+    

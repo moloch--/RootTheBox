@@ -128,6 +128,9 @@ app = Application(
         (r'/admin/lock', AdminLockHandler),
         (r'/admin/configuration', AdminConfigurationHandler),
         (r'/admin/export/(.*)', AdminExportHandler),
+        (r'/admin/import/xml', AdminImportXmlHandler),
+        (r'/admin/logviewer', AdminLogViewerHandler),
+        (r'/admin/logviewer/wsocket', AdminLogViewerSocketHandler),
 
         # Notificaiton handlers - NotificationHandlers.py
         (r'/notifications/all', AllNotificationsHandler),

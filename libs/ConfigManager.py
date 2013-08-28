@@ -30,6 +30,7 @@ import ConfigParser
 
 from libs.ConsoleColors import *
 from libs.Singleton import Singleton
+from libs.LoggingHelpers import ObservableLoggingHandler
 
 
 # .basicConfig must be called prior to ANY call to logging.XXXX so make sure
@@ -64,13 +65,21 @@ class ConfigManager(object):
         level = self.config.get("Logging", 'console_level').lower()
         logger = logging.getLogger()
         logger.setLevel(logging_levels.get(level, logging.NOTSET))
+        # Configure File Logger
         if self.config.getboolean("Logging", 'save_logs'):
-            file_log = logging.FileHandler('%s' % self.config.get("Logging", 'logfile'))
+            file_log = logging.FileHandler('%s' % self.logfile)
             logger.addHandler(file_log)
             file_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
             file_log.setFormatter(file_format)
             flevel = self.config.get("Logging", 'file_level').lower()
             file_log.setLevel(logging_levels.get(flevel, logging.NOTSET))
+        # Configure WebSocket Logger
+        if self.enable_logviewer:
+            ws_log = ObservableLoggingHandler.Instance()
+            logger.addHandler(ws_log)
+            msg_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
+            ws_log.setFormatter(msg_format)
+            ws_log.setLevel(logging.DEBUG)
 
     def refresh(self):
         ''' Refresh config file settings '''
@@ -94,6 +103,14 @@ class ConfigManager(object):
             logging.fatal("Listen port not in valid range: %d" % lport)
             os._exit(1)
         return lport
+
+    @property
+    def logfile(self):
+        return self.config.get("Logging", 'logfile')
+
+    @property
+    def enable_logviewer(self):
+        return self.config.getboolean("Logging", 'enable_logviewer')
 
     @property
     def debug(self):
