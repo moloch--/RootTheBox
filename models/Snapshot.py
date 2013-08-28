@@ -41,6 +41,20 @@ class Snapshot(BaseObject):
         backref=backref("Snapshot", lazy="select")
     )
 
+    @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()
+
+    @classmethod
+    def by_id(cls, identifier):
+        ''' Returns a the object with id of identifier '''
+        return dbsession.query(cls).filter_by(id=identifier).first()
+
+    @classmethod
+    def to_key(cls, val):
+        return 'snapshot.%d' % val
+
     @property
     def key(self):
         return self.to_key(self.id)
@@ -59,17 +73,3 @@ class Snapshot(BaseObject):
 
     def to_json(self):
         return json.dumps(self.to_dict())
-
-    @classmethod
-    def all(cls):
-        ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
-
-    @classmethod
-    def by_id(cls, identifier):
-        ''' Returns a the object with id of identifier '''
-        return dbsession.query(cls).filter_by(id=identifier).first()
-
-    @classmethod
-    def to_key(cls, val):
-        return 'snapshot.%d' % val

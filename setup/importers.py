@@ -129,8 +129,10 @@ def _xml_file_import(filename):
         corporations = get_child_by_tag(xml_root, "corporations")
         create_corps(corporations)
         logging.info("Imported %s successfully" % filename)
+        return True
     except:
         logging.exception("Exception raised while parsing %s" % filename)
+        return False
 
 
 def import_xml(target):
@@ -142,7 +144,6 @@ def import_xml(target):
         logging.info("%s is a directory ..." % target)
         ls = filter(lambda fname: fname.lower().endswith('.xml'), os.listdir(target))
         logging.info("Found %d XML file(s) ..." % len(ls))
-        for fxml in ls:
-            _xml_file_import(target+'/'+fxml)
+        return [_xml_file_import(target+'/'+fxml) for fxml in ls]
     else:
-        _xml_file_import(target)
+        return _xml_file_import(target)

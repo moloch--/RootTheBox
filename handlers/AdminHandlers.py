@@ -1375,18 +1375,15 @@ class AdminImportXmlHandler(BaseHandler):
             fxml = self._get_tmp()
             errors = []
             success = None
-            try:
-                import_xml(fxml)
+            if import_xml(fxml):
                 success = "Successfully imported XML objects"
-            except Exception as error:
-                logging.exception("Exception raised while importing XML file")
-                errors.append("Failed to properly parse XML file")
-            finally:
-                os.unlink(fxml)
-                self.render('admin/import.html', 
-                    success=success,
-                    errors=errors
-                )
+            else:
+                errors.append("Failed to parse file correctly.")
+            os.unlink(fxml)
+            self.render('admin/import.html', 
+                success=success,
+                errors=errors
+            )
         else:
             self.render('admin/import.html',
                 success=None,

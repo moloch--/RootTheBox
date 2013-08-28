@@ -65,8 +65,8 @@ def create_team(name, motto):
         return Team.by_name(name)
     logging.info("Create Team: %s" % name)
     team = Team(
-        name=unicode(name),
-        motto=unicode(motto),
+        name=unicode(name[:16]),
+        motto=unicode(motto[:32]),
     )
     level_0 = GameLevel.all()[0]
     team.game_levels.append(level_0)
@@ -81,7 +81,7 @@ def create_user(handle, password, bank_password, team):
         return User.by_handle(Handle)
     logging.info("Create User: %s" % handle)
     user = User(
-        handle=unicode(handle),
+        handle=unicode(handle[:16]),
         team_id=team.id,
     )
     dbsession.add(user)
@@ -99,8 +99,8 @@ def create_corporation(name, description="No description"):
         return Corporation.by_name(name)
     logging.info("Create Corporation: %s" % name)
     corp = Corporation(
-        name=unicode(name),
-        description=unicode(description),
+        name=unicode(name[:32]),
+        description=unicode(description[:1024]),
     )
     dbsession.add(corp)
     dbsession.flush()
@@ -142,11 +142,11 @@ def create_box(name, corporation, difficulty, game_level, description,
     if isinstance(game_level, int):
         game_level = GameLevel.by_number(game_level)
     box = Box(
-        name=unicode(name),
+        name=unicode(name[:16]),
         corporation_id=corporation.id,
-        difficulty=unicode(difficulty),
+        difficulty=unicode(difficulty[:16]),
         game_level_id=game_level.id,
-        _description=unicode(description),
+        _description=unicode(description[:1024]),
     )
     dbsession.add(box)
     dbsession.flush()
@@ -201,13 +201,13 @@ def create_flag(name, token, value, box, description="No description", is_file=F
     elif is_file:
         raise ValueError("Flag token file does not exist, and is not a hash.")
     else:
-        _token = unicode(token)
+        _token = unicode(token[:256])
     logging.info("Create Flag: %s" % name)
     flag = Flag(
-        name=unicode(name),
+        name=unicode(name[:32]),
         token=_token,
         is_file=is_file,
-        description=unicode(description),
+        description=unicode(description[:256]),
         value=abs(int(value)),
         box_id=box.id,
     )
@@ -221,7 +221,7 @@ def create_hint(box, price, description):
     hint = Hint(
         box_id=box.id,
         price=abs(int(price)),
-        description=unicode(description)
+        description=unicode(description[:256])
     )
     dbsession.add(hint)
     dbsession.flush()
