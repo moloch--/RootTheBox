@@ -336,6 +336,11 @@ class ConfigManager(object):
         ''' Whether the black market should be enabled in this game '''
         self.config.getboolean("Experimental", "use_wall_of_sheep")
     
+    @property
+    def show_box_corporation_names(self):
+        ''' Whether or not to show corporation names on the missions screen '''
+        self.config.getboolean("Experimental", "show_box_corporation_names")
+    
     ##
     #    END WORK IN PROGRESS
     ##
