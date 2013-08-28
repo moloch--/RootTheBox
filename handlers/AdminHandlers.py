@@ -221,19 +221,11 @@ class AdminCreateHandler(BaseHandler):
         )
         if form.validate(self.request.arguments):
             try:
-                game_level = int(self.get_argument('level_number'))
-                buyout = int(self.get_argument('buyout'))
-                if game_level <= 0:
-                    self.render('admin/create/game_level.html',
-                        errors=["Level number must be greater than 0"]
-                    )
-                elif GameLevel.by_number(game_level) is not None:
+                game_level = abs(int(self.get_argument('level_number')))
+                buyout = abs(int(self.get_argument('buyout')))
+                if GameLevel.by_number(game_level) is not None:
                     self.render('admin/create/game_level.html',
                         errors=["Game level number must be unique"]
-                    )
-                elif buyout < 0:
-                    self.render('admin/create/game_level.html',
-                        errors=["Invalid buyout value"]
                     )
                 else:
                     self.__mklevel__(game_level, buyout)
@@ -287,7 +279,10 @@ class AdminCreateHandler(BaseHandler):
         None.  This function creates a new level and sorts everything based on
         the 'number' attrib
         '''
-        new_level = GameLevel(number=game_level, buyout=buyout )
+        new_level = GameLevel(
+            number=game_level, 
+            buyout=buyout
+        )
         game_levels = GameLevel.all()
         game_levels.append(new_level)
         game_levels = sorted(game_levels)
@@ -1378,12 +1373,20 @@ class AdminImportXmlHandler(BaseHandler):
         ''' Import XML file uploaded by the admin '''
         if 'xml_file' in self.request.files:
             fxml = self._get_tmp()
-            import_xml(fxml)
-            os.unlink(fxml)
-            self.render('admin/import.html', 
-                success="Successfully imported game objects.", 
-                errors=None
-            )
+            errors = []
+            success = None
+            try:
+                import_xml(fxml)
+                success = "Successfully imported XML objects"
+            except Exception as error:
+                logging.exception("Exception raised while importing XML file")
+                errors.append("Failed to properly parse XML file")
+            finally:
+                os.unlink(fxml)
+                self.render('admin/import.html', 
+                    success=success,
+                    errors=errors
+                )
         else:
             self.render('admin/import.html',
                 success=None,

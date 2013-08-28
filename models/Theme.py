@@ -34,19 +34,20 @@ class Theme(BaseObject):
     Holds theme related settings
     '''
 
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _name = Column(Unicode(64), unique=True, nullable=False)
     name = synonym('_name', descriptor=property(
         lambda self: self._name,
         lambda self, name: setattr(self, '_name',
-                                        self.__class__._filter_string(name))
+            self.__class__._filter_string(name))
     ))
+    
     _cssfile = Column(Unicode(64), unique=True, nullable=False)
     cssfile = synonym('_cssfile', descriptor=property(
         lambda self: self._cssfile,
         lambda self, cssfile: setattr(self, '_cssfile',
-                                        self.__class__._filter_string(cssfile, "."))
+            self.__class__._filter_string(cssfile, "."))
     ))
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
     @classmethod
     def all(cls):

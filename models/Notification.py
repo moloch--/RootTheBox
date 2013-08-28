@@ -39,10 +39,10 @@ class Notification(BaseObject):
 
     user_id = Column(Integer, ForeignKey('user.id'))
     event_uuid = Column(Unicode(36), nullable=False)
-    title = Column(Unicode(255), nullable=False)
-    message = Column(Unicode(255), nullable=False)
+    title = Column(Unicode(256), nullable=False)
+    message = Column(Unicode(256), nullable=False)
     viewed = Column(Boolean, default=False)
-    icon_url = Column(Unicode(255), nullable=True)
+    icon_url = Column(Unicode(256), nullable=True)
     category = Column(Unicode(64), nullable=False)
 
     @classmethod

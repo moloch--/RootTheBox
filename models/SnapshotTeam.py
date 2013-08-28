@@ -39,11 +39,13 @@ class SnapshotTeam(BaseObject):
     
     game_levels = relationship("GameLevel", 
         secondary=snapshot_team_to_game_level, 
-        backref=backref("SnapshotTeam", lazy="select"))
+        backref=backref("SnapshotTeam", lazy="select")
+    )
     
     flags = relationship("Flag", 
         secondary=snapshot_team_to_flag, 
-        backref=backref("SnapshotTeam", lazy="select"))
+        backref=backref("SnapshotTeam", lazy="select")
+    )
 
     @property
     def name(self):

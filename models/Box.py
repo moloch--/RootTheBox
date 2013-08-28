@@ -40,23 +40,26 @@ class Box(BaseObject):
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
-    name = Column(Unicode(64), unique=True, nullable=False)
-    _description = Column(Unicode(4096))
-    difficulty = Column(Unicode(64), nullable=False)
+    name = Column(Unicode(16), unique=True, nullable=False)
+    _description = Column(Unicode(1024))
+    difficulty = Column(Unicode(16), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
     avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
 
     teams = relationship("Team", 
         secondary=team_to_box, 
-        backref=backref("Box", lazy="joined"))
+        backref=backref("Box", lazy="joined")
+    )
     
     flags = relationship("Flag", 
         backref=backref("Box", lazy="joined"), 
-        cascade="all, delete-orphan")
+        cascade="all, delete-orphan"
+    )
 
     ip_addresses = relationship("IpAddress", 
         backref=backref("Box", lazy="joined"), 
-        cascade="all, delete-orphan")
+        cascade="all, delete-orphan"
+    )
 
     @classmethod
     def all(cls):
@@ -115,7 +118,7 @@ class Box(BaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value)
+        self._description = unicode(value[:1024])
 
     @property
     def ips(self):

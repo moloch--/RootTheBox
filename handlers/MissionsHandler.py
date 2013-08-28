@@ -100,6 +100,9 @@ class FlagSubmissionHandler(BaseHandler):
         ''' Compares a user provided token to the token in the db '''
         user = self.get_current_user()
         if flag.capture(user_token):
+            logging.info("%s (%s) capture the flag '%s'" % (
+                user.handle, user.team.name, flag.name
+            ))
             user.team.flags.append(flag)
             user.team.money += flag.value
             dbsession.add(user.team)
@@ -134,6 +137,9 @@ class PurchaseHintHandler(BaseHandler):
         if hint is not None:
             user = self.get_current_user()
             if hint.price <= user.team.money:
+                logging.info("%s (%s) purchased a hint for $%d on %s" % (
+                    user.handle, user.team.name, hint.price, box.name
+                ))
                 self._purchase_hint(hint, user.team)
                 self.render_page(box)
             else:
@@ -184,6 +190,9 @@ class MissionsHandler(BaseHandler):
             level = GameLevel.by_uuid(self.get_argument('uuid', ''))
             if level is not None and user is not None:
                 if level.buyout < user.team.money:
+                    logging.info("%s (%s) payed buyout for level #%d" % (
+                        user.handle, user.team.name, level.number
+                    ))
                     user.team.game_levels.append(level)
                     user.team.money -= level.buyout
                     dbsession.add(user.team)

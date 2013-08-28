@@ -36,13 +36,13 @@ from libs.BotManager import BotManager
 class Team(BaseObject):
     ''' Team definition '''
 
-    _name = Column(Unicode(64), unique=True, nullable=False)
+    _name = Column(Unicode(16), unique=True, nullable=False)
     name = synonym('_name', descriptor=property(
         lambda self: self._name,
         lambda self, name: setattr(
             self, '_name', self.__class__.filter_string(name, " -_"))
     ))
-    motto = Column(Unicode(255))
+    motto = Column(Unicode(32))
     
     members = relationship("User", 
         backref=backref("Team", lazy="joined"), 

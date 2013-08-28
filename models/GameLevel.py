@@ -37,7 +37,11 @@ class GameLevel(BaseObject):
     number = Column(Integer, unique=True, nullable=False)
     next_level_id = Column(Integer, ForeignKey('game_level.id'))
     buyout = Column(Integer, nullable=False)
-    boxes = relationship("Box", backref=backref("GameLevel", lazy="joined"), cascade="all, delete-orphan")
+    
+    boxes = relationship("Box", 
+        backref=backref("GameLevel", lazy="joined"), 
+        cascade="all, delete-orphan"
+    )
 
     @classmethod
     def all(cls):

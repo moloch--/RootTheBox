@@ -33,7 +33,7 @@ from models.BaseGameObject import BaseObject
 class Corporation(BaseObject):
     ''' Corporation definition '''
 
-    name = Column(Unicode(64), unique=True, nullable=False)
+    name = Column(Unicode(32), unique=True, nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     description = Column(Unicode(1024), nullable=False)
     boxes = relationship("Box", 
@@ -57,7 +57,7 @@ class Corporation(BaseObject):
     @classmethod
     def by_name(cls, corp_name):
         ''' Returns a the object with name of corp_name '''
-        return dbsession.query(cls).filter_by(name=corp_name).first()
+        return dbsession.query(cls).filter_by(name=unicode(corp_name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):

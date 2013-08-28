@@ -15,6 +15,8 @@ Created on Oct 10, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+------------------------------------------------------------------------------
+
 '''
 
 
@@ -30,8 +32,12 @@ from models import dbsession, GameLevel, IpAddress, \
 
 def create_game_level(number, buyout):
     ''' Creates a GameLevel object '''
-    logging.debug("Create Game Level " + bold + "#" + str(number) + W + \
-        " with a buyout of " + bold + "$" + str(buyout) + W)
+    if GameLevel.by_number(number) is not None:
+        logging.info("Game level #%s already exists, skipping" % number)
+        return GameLevel.by_number(number)
+    logging.info("Create Game Level #%s with a buyout of $%s" % (
+        number, buyout
+    ))
     new_level = GameLevel(
         number=abs(int(number)),
         buyout=abs(int(buyout)),
@@ -54,7 +60,10 @@ def create_game_level(number, buyout):
 
 
 def create_team(name, motto):
-    logging.debug("Create Team: " + bold + name + W)
+    if Team.by_name(name) is not None:
+        logging.info("Team with name '%s' already exists, skipping" % (name))
+        return Team.by_name(name)
+    logging.info("Create Team: %s" % name)
     team = Team(
         name=unicode(name),
         motto=unicode(motto),
@@ -67,7 +76,10 @@ def create_team(name, motto):
 
 
 def create_user(handle, password, bank_password, team):
-    logging.debug("Create User: " + bold + handle + W)
+    if User.by_handle(Handle) is not None:
+        logging.info("User with handle '%s' alreay exists, skipping" % (handle))
+        return User.by_handle(Handle)
+    logging.info("Create User: %s" % handle)
     user = User(
         handle=unicode(handle),
         team_id=team.id,
@@ -82,7 +94,10 @@ def create_user(handle, password, bank_password, team):
 
 
 def create_corporation(name, description="No description"):
-    logging.debug("Create Corporation: " + bold + name + W)
+    if Corporation.by_name(name) is not None:
+        logging.info("Corporation with name '%s' already exists, skipping" % (name))
+        return Corporation.by_name(name)
+    logging.info("Create Corporation: %s" % name)
     corp = Corporation(
         name=unicode(name),
         description=unicode(description),
@@ -106,8 +121,8 @@ def __mkipv4__(box, address):
 
 def __mkipv6__(box, address):
     logging.debug("IPv6 address %s belongs to %s" % (
-            address, str(bold+box.name+W),)
-    )
+        address, box.name,
+    ))
     ip = IpAddress(
         v6=unicode(address),
     )
@@ -119,8 +134,11 @@ def __mkipv6__(box, address):
 
 
 def create_box(name, corporation, difficulty, game_level, description,
-                ipv4_addresses=[], ipv6_addresses=[], avatar=None):
-    logging.debug("Create Box: " + bold + name + W)
+        ipv4_addresses=[], ipv6_addresses=[], avatar=None):
+    if Box.by_name(name) is not None:
+        logging.info("Box with name '%s' already exists, skipping" % (name))
+        return Box.by_name(name)
+    logging.info("Create Box: %s" % name)
     if isinstance(game_level, int):
         game_level = GameLevel.by_number(game_level)
     box = Box(
@@ -139,6 +157,7 @@ def create_box(name, corporation, difficulty, game_level, description,
     for ip_address in ipv6_addresses:
         __mkipv6__(box, ip_address)
     return box
+
 
 def set_avatar(box, favatar):
     '''
@@ -163,21 +182,27 @@ def set_avatar(box, favatar):
             dbsession.flush()
     f.close()
 
+
 def create_flag(name, token, value, box, description="No description", is_file=False):
+    if Flag.by_name(name) is not None:
+        logging.info("Flag with name '%s' already exists, skipping" % (name))
+        return Flag.by_name(name)
+    if Flag.by_token(token) is not None:
+        logging.info("Flag with token '%s' already exists, skipping" % (token))
+        return Flag.by_token(token)
     if is_file and os.path.exists(token):
         f = open(token, 'r')
         data = f.read()
         f.close()
         _token = Flag.digest(data)
-        logging.debug("Create Flag: " + bold + name + W + " (%s)" % _token)
     elif is_file and 40 == len(token):
         # Just assume it's a SHA1
         _token = unicode(token)
     elif is_file:
         raise ValueError("Flag token file does not exist, and is not a hash.")
     else:
-        logging.debug("Create Flag: " + bold + name + W)
         _token = unicode(token)
+    logging.info("Create Flag: %s" % name)
     flag = Flag(
         name=unicode(name),
         token=_token,
@@ -192,10 +217,10 @@ def create_flag(name, token, value, box, description="No description", is_file=F
 
 
 def create_hint(box, price, description):
-    logging.debug("Create Hint: %s has a new hint for $%s" % (box.name, price,))
+    logging.info("Create Hint: %s has a new hint for $%s" % (box.name, price,))
     hint = Hint(
         box_id=box.id,
-        price=int(abs(price)),
+        price=abs(int(price)),
         description=unicode(description)
     )
     dbsession.add(hint)

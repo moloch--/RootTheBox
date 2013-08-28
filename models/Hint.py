@@ -39,7 +39,7 @@ class Hint(BaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     price = Column(Integer, nullable=False)
-    description = Column(Unicode(1024), nullable=False)
+    description = Column(Unicode(128), nullable=False)
 
     @classmethod
     def all(cls):

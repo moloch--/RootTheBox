@@ -34,10 +34,10 @@ from models.BaseGameObject import BaseObject
 class Flag(BaseObject):
     ''' Flag definition '''
 
-    name = Column(Unicode(255), nullable=False)
+    name = Column(Unicode(32), nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    token = Column(Unicode(255), nullable=False)
-    description = Column(Unicode(255), nullable=False)
+    token = Column(Unicode(256), nullable=False)
+    description = Column(Unicode(256), nullable=False)
     value = Column(Integer, nullable=False)
     is_file = Column(Boolean, default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
