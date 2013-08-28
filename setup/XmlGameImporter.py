@@ -22,7 +22,7 @@ Created on Aug 26, 2013
 '''
 
 from os import path, _exit, listdir
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, IntegrityError, ProgrammingError
 import sys
 import xml.etree.cElementTree as ET
 from libs.ConsoleColors import *
@@ -155,6 +155,10 @@ def import_xml_box_file(filepath, input_game_level_id):
         
         # Notify user that import has succeeded
         print_success("Import of file " + filepath + " finished without issue.")
+    except ProgrammingError as e:
+        print "ProgrammingError thrown: " + str(e)
+    except IntegrityError as e:
+        print "IntegrityError thrown: " + str(e)
     except OperationalError as e:
         print "OperationalError thrown: " + str(e)
     except ET.ParseError as e:

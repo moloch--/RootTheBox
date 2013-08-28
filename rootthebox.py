@@ -88,7 +88,7 @@ def setup(options, *args, **kwargs):
 def test(options, *args, **kwargs):
     print "Test has been fired"
     from setup import XmlGameImporter
-    XmlGameImporter.import_xml_box_files_for_game("sample", 0)
+    XmlGameImporter.import_xml_box_files_for_game("sample", 1)
 
 ### Main
 if __name__ == '__main__':
