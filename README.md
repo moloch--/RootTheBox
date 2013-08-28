@@ -26,6 +26,7 @@ Features
 * A wall of sheep displaying cracked passwords
 * Unlocks and upgrades as users caputre flags
 * Supports MySQL, SQLite, or Postgresql
+* Export and share Boxes/Flags (or backup)
 * Lots of HTML5 & CSS3
 * Other cool stuff
 
@@ -42,7 +43,7 @@ Setup TL;DR
 * Edit settings in __rootthebox.cfg__ to your liking, you can also manage many of these settings from the admin web ui
 * __./rootthebox.py --create-tables__ to create, and initialize the database (only need to do this once)
 * __./rootthebox.py --start__ To start the application
-* You can import XML files (automatically setup Boxes/Flags) from the command line using __./rootthebox.py --xml <file>__ 
+* You can import XML files (automatically setup Boxes/Flags) from the command line using __./rootthebox.py --xml game.xml__ 
 
 To Do
 ---------------------
