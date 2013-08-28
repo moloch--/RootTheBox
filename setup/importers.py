@@ -30,7 +30,6 @@ from base64 import b64decode
 from libs.ConsoleColors import *
 from tempfile import NamedTemporaryFile
 
-
 def get_child_by_tag(elem, tag_name):
     ''' Return child elements with a given tag '''
     tags = filter(
@@ -145,3 +144,4 @@ def import_xml(target):
     else:
         _xml_file_import(target)
     print(INFO+"XML import complete.")
+

@@ -73,7 +73,6 @@ def setup_xml(options, *args, **kwargs):
     from setup.importers import import_xml
     import_xml(sys.argv[index + 1])
 
-
 def setup(options, *args, **kwargs):
     ''' Imports a setup file '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
@@ -86,6 +85,10 @@ def setup(options, *args, **kwargs):
         sys.exit()
     print(INFO+"Setup file completed successfully.")
 
+def test(options, *args, **kwargs):
+    print "Test has been fired"
+    from setup import XmlGameImporter
+    XmlGameImporter.import_xml_box_files_for_game("sample", 0)
 
 ### Main
 if __name__ == '__main__':
@@ -124,5 +127,12 @@ if __name__ == '__main__':
         action="callback",
         callback=recovery,
         help="start the admin recovery console"
+    )
+    #TODO remove this before production
+    parser.add_option(
+        "-t", "--test",
+        action="callback",
+        callback=test,
+        help="run testing code in the 'test' function (for debugging and development purposes)"
     )
     parser.parse_args()
