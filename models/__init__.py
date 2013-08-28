@@ -104,6 +104,7 @@ from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.Hint import Hint
+from models.Sponsor import Sponsor
 
 # calling this will create the tables at the database
 metadata = BaseObject.metadata
