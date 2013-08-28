@@ -49,7 +49,10 @@ def create():
     print(INFO+'%s : Creating the database ...' % current_time())
     create_tables()
     print(INFO+'%s : Bootstrapping the database ...' % current_time())
-    boot_strap()
+    try:
+        boot_strap()
+    except:
+        print(WARN+"%s : Database has already been bootstrapped" % current_time())
 
 
 def recovery():

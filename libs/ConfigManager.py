@@ -30,6 +30,7 @@ import ConfigParser
 
 from libs.ConsoleColors import *
 from libs.Singleton import Singleton
+from sqlalchemy import create_engine
 from libs.LoggingHelpers import ObservableLoggingHandler
 
 
@@ -322,11 +323,13 @@ class ConfigManager(object):
         ''' Db connection string, only read once '''
         db = self.config.get("Database", 'db').lower().strip()
         if db == 'sqlite':
-            return self.__sqlite__()
+            db_conn = self.__sqlite__()
         elif db == 'postgresql':
-            return self.__postgresql__()
+            db_conn = self.__postgresql__()
         else:
-            return self.__mysql__()
+            db_conn = self.__mysql__()
+        self._test_db_connection(db_conn)
+        return db_conn
 
     def __postgresql__(self):
         ''' 
@@ -359,6 +362,18 @@ class ConfigManager(object):
         return 'mysql://%s:%s@%s/%s' % (
             db_user, db_password, db_server, db_name
         )
+
+    def _test_db_connection(self, connection_string):
+        ''' Test the connection string to see if we can connect to the database'''
+        engine = create_engine(connection_string)
+        try:
+            connection = engine.connect()
+            connection.close()
+        except:
+            if self.debug:
+                logging.exception("Database connection failed")
+            logging.critical("Failed to connect to database, check settings")
+            os._exit(1)
 
     def __db__(self):
         ''' Pull db creds and return them url encoded '''

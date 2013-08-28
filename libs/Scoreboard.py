@@ -64,7 +64,7 @@ def score_bots():
                     "Bot at %s failed to respond to score ping" % bot.remote_ip
                 )
         if 0 < len(bots):
-            logging.debug("%s was awarded $%d for controlling %s bot(s)" % (
+            logging.info("%s was awarded $%d for controlling %s bot(s)" % (
                 team.name, reward, len(bots),
             ))
             bot_manager.add_rewards(team.name, config.bot_reward)
