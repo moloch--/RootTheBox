@@ -82,6 +82,10 @@ def import_xml_box_file(filepath, input_game_level_id):
             url=unicode(surl)
         )
         
+        # Add the sponsor to the DB
+        dbsession.add(spon)
+        dbsession.flush()
+        
         # Get the corporation information
         #TODO check if corporation already exists
         corpnode = root[1]
@@ -93,6 +97,10 @@ def import_xml_box_file(filepath, input_game_level_id):
             name=unicode(corpname),
             description=unicode(corpdesc)
         )
+            
+        # Add the corporation to the DB
+        dbsession.add(corp)
+        dbsession.flush()
             
         # Get box's name
         boxname = root[2].text
@@ -119,6 +127,10 @@ def import_xml_box_file(filepath, input_game_level_id):
             sponsor_id=spon.id
         )
         
+        # Add the box to the DB
+        dbsession.add(newbox)
+        dbsession.flush()
+        
         # Iterate through flags
         flags = []
         for curflagnode in root[6]:
@@ -136,14 +148,9 @@ def import_xml_box_file(filepath, input_game_level_id):
             )
             flags.append(newflag)
             
-        # Add all database items to dbsession in the correct order
-        dbsession.add(corp)
-        dbsession.add(spon)
-        dbsession.add(newbox)
+        # Add all the flags to the database
         for curflag in flags:
             dbsession.add(curflag)
-            
-        # Flush all of the changes to the database
         dbsession.flush()
         
         # Notify user that import has succeeded
