@@ -42,7 +42,7 @@ Setup TL;DR
 * Edit settings in __rootthebox.cfg__ to your liking, you can also manage many of these settings from the admin web ui
 * __./rootthebox.py --create-tables__ to create, and initialize the database (only need to do this once)
 * __./rootthebox.py --start__ To start the application
-* You can also script the game setup, see/edit __setup/game.py__; to execute setup scripts run __./rootthebox.py --game__
+* You can import XML files (automatically setup Boxes/Flags) from the command line using __./rootthebox.py --xml <file>__ 
 
 To Do
 ---------------------

@@ -105,8 +105,8 @@ def main(args):
     if args.setup_script:
         setup_script()
     # Import any XML files
-    if args.setup_xml is not None:
-        setup_xml(args.setup_xml)
+    if args.xml is not None:
+        setup_xml(args.xml)
     # Start recovery console
     if args.recovery:
         recovery()
@@ -134,7 +134,6 @@ if __name__ == '__main__':
         help="start the server",
     )
     parser.add_argument("-x", "--xml",
-        dest='setup_xml',
         nargs='*',
         help="import xml file(s), or directory of file(s)",
     )
