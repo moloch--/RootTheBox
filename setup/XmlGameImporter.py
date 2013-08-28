@@ -40,13 +40,14 @@ def print_warning_and_exit(warning):
 
 def validate_xml_box_file(filepath):
     #TODO validate entire file
-    return True
+    return []
 
 #TODO don't use hard-coded game directory, allow for configuration elsewhere
 def import_xml_box_files_for_game(game_name, input_game_level_id):
     game_dir = path.abspath('games/' + game_name)
     for curfile in listdir(game_dir):
-        import_xml_box_file(game_dir + '/' + curfile)
+        if curfile.endswith('.xml'):
+            import_xml_box_file(game_dir + '/' + curfile, input_game_level_id)
 
 #TODO include IP addresses
 def import_xml_box_file(filepath, input_game_level_id):
@@ -146,7 +147,8 @@ def import_xml_box_file(filepath, input_game_level_id):
         
         # Notify user that import has succeeded
         print_success("Import of file " + filepath + " finished without issue.")
-        
+    except ET.ParseError as e:
+        print "ParseError thrown: " + str(e)
     except:
-        print_warning_and_exit("Unexpected error:" + sys.exc_info()[0])
+        print_warning_and_exit("Unexpected error:" + str(sys.exc_info()[0]))
         pass

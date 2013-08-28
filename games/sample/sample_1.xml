@@ -13,7 +13,7 @@
 	<name>The Box Name</name> <!-- REQUIRED & UNIQUE !-->
 	<difficulty>Easy</difficulty> <!-- REQUIRED !-->
 	<avatar>myavatar.jpg</avatar> <!-- REQUIRED !-->
-	<description>The box's description</description <!-- REQUIRED !-->
+	<description>The box's description</description> <!-- REQUIRED !-->
 	<flags> <!-- REQUIRED !-->
 		<flag> <!-- REQUIRED !-->
 			<name>Flag Name</name> <!-- REQUIRED & UNIQUE FOR BOX !-->
