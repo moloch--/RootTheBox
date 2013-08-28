@@ -22,6 +22,7 @@ Created on Aug 26, 2013
 '''
 
 from os import path, _exit, listdir
+from sqlalchemy.exc import OperationalError
 import sys
 import xml.etree.cElementTree as ET
 from libs.ConsoleColors import *
@@ -147,6 +148,8 @@ def import_xml_box_file(filepath, input_game_level_id):
         
         # Notify user that import has succeeded
         print_success("Import of file " + filepath + " finished without issue.")
+    except OperationalError as e:
+        print "OperationalError thrown: " + str(e)
     except ET.ParseError as e:
         print "ParseError thrown: " + str(e)
     except:
