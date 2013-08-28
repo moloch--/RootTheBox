@@ -75,10 +75,10 @@ def import_xml_box_file(filepath, input_game_level_id):
         # Create the sponsor object and add it to the dbobject list
         #TODO check if sponsor already exists
         spon = Sponsor(
-            name=sname,
-            logo=slogo,
-            description=sdesc,
-            url=surl
+            name=unicode(sname),
+            logo=unicode(slogo),
+            description=unicode(sdesc),
+            url=unicode(surl)
         )
         
         # Get the corporation information
@@ -89,8 +89,8 @@ def import_xml_box_file(filepath, input_game_level_id):
         
         # Create the corporation object and add it to the dbobject list
         corp = Corporation(
-            name=corpname,
-            description=corpdesc
+            name=unicode(corpname),
+            description=unicode(corpdesc)
         )
             
         # Get box's name
@@ -114,7 +114,7 @@ def import_xml_box_file(filepath, input_game_level_id):
             difficulty=unicode(boxdiff),
             game_level_id=input_game_level_id,
             _description=unicode(boxdesc),
-            avatar=boxavatar,
+            avatar=unicode(boxavatar),
             sponsor_id=spon.id
         )
         
