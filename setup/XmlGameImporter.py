@@ -22,7 +22,8 @@ Created on Aug 26, 2013
 '''
 
 from uuid import uuid4
-from os import path, _exit, listdir, rename
+from shutil import copyfile
+from os import path, _exit, listdir
 from sqlalchemy.exc import OperationalError, IntegrityError, ProgrammingError
 import sys
 import xml.etree.cElementTree as ET
@@ -131,13 +132,16 @@ def validate_xml_box_file(filepath):
 def move_image_file_and_get_name(filepath):
     #TODO move this to a configuration file
     targetdir = path.abspath('files/avatars/')
-    ext = unicode(path.splitext(filepath))
+    p, ext = path.splitext(filepath)
     uuid = unicode(uuid4())
     
+    #print "Old filepath is " + filepath
+    #print "New filepath is " + targetdir + '/' + uuid + ext
+
     try:
-        rename(filepath, targetdir + '/' + uuid + ext)
-    except OSError as e:
-        print_warning_and_exit("OSError thrown while moving image file: " + str(e))
+        copyfile(filepath, targetdir + '/' + uuid + ext)
+    except IOError as e:
+        print_warning_and_exit("IOError thrown while moving image file: " + str(e))
     
     return uuid + ext    
     
@@ -169,7 +173,7 @@ def import_xml_box_file(filepath, input_game_level_id):
         sname = sponsornode.find('name').text
         
         # Check to see if this sponsor already exists
-        exists = Sponsor.by_name(sname)
+        exists = Sponsor.by_name(unicode(sname))
         
         # If sponsor already exists then move on to processing other parts of the file
         if exists is not None:
@@ -201,7 +205,7 @@ def import_xml_box_file(filepath, input_game_level_id):
         corpname = corpnode.find('name').text
         
         # Check to see if the corporation already exists
-        exists = Corporation.by_name(corpname)
+        exists = Corporation.by_name(unicode(corpname))
         
         # If corporation already exist then move on to processing other parts of the file
         if exists is not None:
