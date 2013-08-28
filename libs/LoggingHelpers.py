@@ -28,18 +28,24 @@ from collections import deque
 
 @Singleton
 class ObservableLoggingHandler(logging.StreamHandler):
-    ''' The actual logging handler '''
+    '''
+    An observable logging class, just shuffles logging messages
+    from the main logger to the observers.  A small history is 
+    stored in volatile memory. 
+    '''
 
-    max_history_size = 50
+    max_history_size = 100
     _observers = []
     _history = deque()
 
     def add_observer(self, observer):
+        ''' Add new observer and send them any history '''
         if observer not in self._observers:
             self._observers.append(observer)
             observer.update(list(self._history))
 
     def remove_observer(self, observer):
+        ''' Remove ref to an observer '''
         if observer in self._observers:
             self._observers.remove(observer)
 
@@ -50,12 +56,6 @@ class ObservableLoggingHandler(logging.StreamHandler):
         msg = self.format(record)
         for observer in self._observers:
             observer.update([msg])
-        self.add_history(msg)
-
-    def add_history(self, msg):
-        ''' 
-        Append to history, without exceeding the max number of items
-        '''
         if self.max_history_size < len(self._history):
             self._history.popleft()
         self._history.append(msg)

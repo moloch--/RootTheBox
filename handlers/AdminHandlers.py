@@ -33,6 +33,7 @@ import xml.dom.minidom
 import xml.etree.cElementTree as ET
 
 from uuid import uuid4
+from tempfile import NamedTemporaryFile
 from string import ascii_letters, digits, printable
 from base64 import b64encode
 from hashlib import md5
@@ -44,6 +45,7 @@ from models import dbsession, Team, Box, Flag, SourceCode, MarketItem, \
     Corporation, RegistrationToken, GameLevel, IpAddress, Swat, Hint
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from models.User import ADMIN_PERMISSION
+from setup.importers import import_xml
 
 
 class AdminCreateHandler(BaseHandler):
@@ -1376,7 +1378,7 @@ class AdminImportXmlHandler(BaseHandler):
         ''' Import XML file uploaded by the admin '''
         if 'xml_file' in self.request.files:
             fxml = self._get_tmp()
-            # Import foo
+            import_xml(fxml)
             os.unlink(fxml)
             self.render('admin/import.html', 
                 success="Successfully imported game objects.", 
@@ -1390,7 +1392,7 @@ class AdminImportXmlHandler(BaseHandler):
 
     def _get_tmp(self):
         ''' Creates a tmp file with the file data '''
-        data = self.request.files['xml_file']
+        data = self.request.files['xml_file'][0]['body']
         tmp_file = NamedTemporaryFile(delete=False)
         tmp_file.write(data)
         tmp_file.close()
@@ -1424,13 +1426,19 @@ class AdminLogViewerSocketHandler(BaseWebSocketHandler):
     @authorized(ADMIN_PERMISSION)
     def open(self):
         ''' Add this object as an observer '''
-        self.observerable_log = ObservableLoggingHandler.Instance()
-        self.observerable_log.add_observer(self)
+        if self.config.enable_logviewer:
+            self.observerable_log = ObservableLoggingHandler.Instance()
+            self.observerable_log.add_observer(self)
+        else:
+            self.observerable_log = None
+            self.close()
     
     def update(self, messages):
+        ''' Write logging messages to wsocket '''
         self.write_message({'messages': messages})
 
     def on_close(self):
         ''' Remove the ref to this object '''
-        self.observerable_log.remove_observer(self)
+        if self.observerable_log is not None:
+            self.observerable_log.remove_observer(self)
     

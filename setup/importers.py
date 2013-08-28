@@ -23,6 +23,7 @@ It reads an XML file(s) and calls the API based on the it's contents.
 '''
 
 import os
+import logging
 import setup.helpers as helpers
 import xml.etree.cElementTree as ET
 
@@ -46,7 +47,7 @@ def get_child_text(elem, tag_name):
 
 def create_levels(levels):
     ''' Create GameLevel objects based on XML data '''
-    print(INFO+"Found %s game level(s)" % levels.get('count'))
+    logging.info("Found %s game level(s)" % levels.get('count'))
     for level_elem in levels.getchildren():
         if get_child_text(level_elem, 'number') != '0':
             helpers.create_game_level(
@@ -57,7 +58,7 @@ def create_levels(levels):
 
 def create_flags(parent, box):
     ''' Create flag objects for a box '''
-    print(INFO+"Found %s flag(s)" % parent.get('count'))
+    logging.info("Found %s flag(s)" % parent.get('count'))
     for flag_elem in parent.getchildren():
         helpers.create_flag(
             name=get_child_text(flag_elem, 'name'),
@@ -71,7 +72,7 @@ def create_flags(parent, box):
 
 def create_hints(parent, box):
     ''' Create flag objects for a box '''
-    print(INFO+"Found %s hint(s)" % parent.get('count'))
+    logging.info("Found %s hint(s)" % parent.get('count'))
     for hint_elem in parent.getchildren():
         helpers.create_hint(
             box=box,
@@ -91,7 +92,7 @@ def _tmp_avatar(box_elem):
 
 def create_boxes(parent, corporation):
     ''' Create boxes for a corporation '''
-    print(INFO+"Found %s boxes" % parent.get('count'))
+    logging.info("Found %s boxes" % parent.get('count'))
     for box_elem in parent.getchildren():
         favatar = _tmp_avatar(box_elem)
         box = helpers.create_box(
@@ -108,7 +109,7 @@ def create_boxes(parent, corporation):
 
 def create_corps(corps):
     ''' Create Corporation objects based on XML data '''
-    print(INFO+"Found %s corporation(s)" % corps.get('count'))
+    logging.info("Found %s corporation(s)" % corps.get('count'))
     for corp_elem in corps:
         corporation = helpers.create_corporation(
             name=get_child_text(corp_elem, 'name'),
@@ -119,7 +120,7 @@ def create_corps(corps):
 
 def _xml_file_import(filename):
     ''' Parse and import a single XML file '''
-    print(INFO+"Importing %s ... " % filename)
+    logging.info("Importing %s ... " % filename)
     try:
         tree = ET.parse(filename)
         xml_root = tree.getroot()
@@ -127,21 +128,20 @@ def _xml_file_import(filename):
         create_levels(levels)
         corporations = get_child_by_tag(xml_root, "corporations")
         create_corps(corporations)
-        print(INFO+"Imported %s successfully" % filename)
-    except Exception as error:
-        print(WARN+"ERROR (%s): %s" % (filename, str(error),))
+        logging.info("Imported %s successfully" % filename)
+    except:
+        logging.exception("Exception raised while parsing %s" % filename)
 
 
 def import_xml(target):
     ''' Import XML file(s) '''
     target = os.path.abspath(target)
     if not os.path.exists(target):
-        print(WARN+"Error: Target does not exist (%s) " % target)
-        os._exit(1)
+        logging.error("Error: Target does not exist (%s) " % target)
     elif os.path.isdir(target):
-        print(INFO+"%s is a directory ..." % target)
+        logging.info("%s is a directory ..." % target)
         ls = filter(lambda fname: fname.lower().endswith('.xml'), os.listdir(target))
-        print(INFO+"Found %d XML file(s) ..." % len(ls))
+        logging.info("Found %d XML file(s) ..." % len(ls))
         for fxml in ls:
             _xml_file_import(target+'/'+fxml)
     else:

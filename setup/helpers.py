@@ -20,6 +20,7 @@ Created on Oct 10, 2012
 
 import os
 import imghdr
+import logging
 
 from uuid import uuid4
 from libs.ConsoleColors import *
@@ -28,7 +29,8 @@ from models import dbsession, GameLevel, IpAddress, \
 
 
 def create_game_level(number, buyout):
-    print(INFO + "Create Game Level " + bold + "#" + str(number) + W + \
+    ''' Creates a GameLevel object '''
+    logging.debug("Create Game Level " + bold + "#" + str(number) + W + \
         " with a buyout of " + bold + "$" + str(buyout) + W)
     new_level = GameLevel(
         number=abs(int(number)),
@@ -36,7 +38,7 @@ def create_game_level(number, buyout):
     )
     game_levels = GameLevel.all()
     game_levels.append(new_level)
-    print(INFO + "Updating game level linked list ...")
+    logging.debug("Updating game level linked list ...")
     game_levels = sorted(game_levels)
     index = 0
     for level in game_levels[:-1]:
@@ -52,7 +54,7 @@ def create_game_level(number, buyout):
 
 
 def create_team(name, motto):
-    print(INFO + "Create Team: " + bold + name + W)
+    logging.debug("Create Team: " + bold + name + W)
     team = Team(
         name=unicode(name),
         motto=unicode(motto),
@@ -65,7 +67,7 @@ def create_team(name, motto):
 
 
 def create_user(handle, password, bank_password, team):
-    print(INFO + "Create User: " + bold + handle + W)
+    logging.debug("Create User: " + bold + handle + W)
     user = User(
         handle=unicode(handle),
         team_id=team.id,
@@ -80,7 +82,7 @@ def create_user(handle, password, bank_password, team):
 
 
 def create_corporation(name, description="No description"):
-    print(INFO + "Create Corporation: " + bold + name + W)
+    logging.debug("Create Corporation: " + bold + name + W)
     corp = Corporation(
         name=unicode(name),
         description=unicode(description),
@@ -91,7 +93,7 @@ def create_corporation(name, description="No description"):
 
 
 def __mkipv4__(box, address):
-    print(INFO + "IPv4 address '%s' now belongs to %s" % (address, box.name,))
+    logging.debug("IPv4 address '%s' now belongs to %s" % (address, box.name,))
     ip = IpAddress(
         v4=unicode(address),
     )
@@ -103,7 +105,7 @@ def __mkipv4__(box, address):
 
 
 def __mkipv6__(box, address):
-    print(INFO + "IPv6 address %s belongs to %s" % (
+    logging.debug("IPv6 address %s belongs to %s" % (
             address, str(bold+box.name+W),)
     )
     ip = IpAddress(
@@ -118,7 +120,7 @@ def __mkipv6__(box, address):
 
 def create_box(name, corporation, difficulty, game_level, description,
                 ipv4_addresses=[], ipv6_addresses=[], avatar=None):
-    print(INFO + "Create Box: " + bold + name + W)
+    logging.debug("Create Box: " + bold + name + W)
     if isinstance(game_level, int):
         game_level = GameLevel.by_number(game_level)
     box = Box(
@@ -161,21 +163,20 @@ def set_avatar(box, favatar):
             dbsession.flush()
     f.close()
 
-def create_flag(name, token, value, box, description="No description",
-                is_file=False):
+def create_flag(name, token, value, box, description="No description", is_file=False):
     if is_file and os.path.exists(token):
         f = open(token, 'r')
         data = f.read()
         f.close()
         _token = Flag.digest(data)
-        print(INFO + "Create Flag: " + bold + name + W + " (%s)" % _token)
+        logging.debug("Create Flag: " + bold + name + W + " (%s)" % _token)
     elif is_file and 40 == len(token):
         # Just assume it's a SHA1
         _token = unicode(token)
     elif is_file:
         raise ValueError("Flag token file does not exist, and is not a hash.")
     else:
-        print(INFO + "Create Flag: " + bold + name + W)
+        logging.debug("Create Flag: " + bold + name + W)
         _token = unicode(token)
     flag = Flag(
         name=unicode(name),
@@ -191,7 +192,7 @@ def create_flag(name, token, value, box, description="No description",
 
 
 def create_hint(box, price, description):
-    print(INFO + "Create Hint: %s has a new hint for $%s" % (box.name, price,))
+    logging.debug("Create Hint: %s has a new hint for $%s" % (box.name, price,))
     hint = Hint(
         box_id=box.id,
         price=int(abs(price)),

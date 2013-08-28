@@ -69,7 +69,9 @@ def setup_xml(xml_params):
     from libs.ConfigManager import ConfigManager  # Sets up logging
     from setup.importers import import_xml
     for xml_param in xml_params:
+        print(INFO+"Importing %s ..." % xml_param)
         import_xml(xml_param)
+    print(INFO+"%s : XML import completed." % current_time())
 
 
 def setup_script():
@@ -78,11 +80,11 @@ def setup_script():
     print(INFO+"%s : Running default setup file 'setup/game.py' ..." % current_time())
     try:
         from setup import game
+        print(INFO+"%s : Setup file completed successfully." % current_time())
     except Exception as error:
         logging.exception("Game setup script raised an exception!")
         print(WARN+"Setup Error: Game script failed with "+str(error))
         sys.exit()
-    print(INFO+"Setup file completed successfully.")
 
 
 def main(args):
