@@ -59,7 +59,7 @@ def validate_xml_box_file(filepath):
         #TODO make sure box has a unique name
         
         # Root node must be of type 'box' and have exactly 7 children
-        if not root.tag is 'box':
+        if root.tag != 'box':
             errors.append("Root node must be of type 'box'.")
         if len(root) is not 7:
             errors.append("The root node must have precisely seven children.")
@@ -111,7 +111,7 @@ def validate_xml_box_file(filepath):
         for ind, curflag in enumerate(flags):
             
             # Make sure the node is of the proper type
-            if curflag.tag is not 'flag':
+            if curflag.tag != 'flag':
                 errors.append("The " + str(ind) + " child of the flags node was not of the proper type ('flag').")
                 
             # Flags are expected to have precisely 4 children
