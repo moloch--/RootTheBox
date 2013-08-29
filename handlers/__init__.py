@@ -125,6 +125,7 @@ urls = [
     (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
     (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
     (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
+    (r'/teams', TeamsHandler),
 
     # Public handlers - PublicHandlers.py
     (r'/login', LoginHandler),
