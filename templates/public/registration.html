@@ -3,6 +3,8 @@
 {% block title %}Registration{% end %}
 
 {% block content %}
+    {% from libs.ConfigManager import ConfigManager %}
+    {% from models import Team %}
     <div class="container">
         <h1>Registration</h1>
         <br />
@@ -28,8 +30,7 @@
                             data-content="Your handle must be 3-15 alpha-numeric characters" />
                     </div>
                 </div>
-                {% from libs.ConfigManager import ConfigManager %}
-                {% if ConfigManager.Instance().use_teams %}
+
                 <hr>
                 <h5>Join a Team</h5>
 	                <div class="control-group">
@@ -37,8 +38,6 @@
 	                    <div class="controls">
 	                        <select name="team">
 	                            <option value=""></option>
-	                            {% from libs.ConfigManager import ConfigManager %}
-	                            {% from models import Team %}
 	                            {% for team in Team.all() %}
 	                                {% if len(team.members) < ConfigManager.Instance().max_team_size %}
 	                                    <option value="{{ team.uuid }}">{{ team.name }}</option>
@@ -47,7 +46,7 @@
 	                        </select>
 	                    </div>
 	                </div>
-	                {% from libs.ConfigManager import ConfigManager %}
+	                
 	                {% if ConfigManager.Instance().public_teams %}
 	                    <h5>Start a New Team</h5>
 	                    <div class="control-group">
@@ -64,20 +63,6 @@
 	                    </div>
 	                {% end %}
 	                <hr>
-	            {% else %}
-	            	<div class="control-group">
-	            		<label class="control-label" for="avatar">Avatar - h250 x w500 (Max 1Mb)</label>
-                        <div class="controls">
-                            <input type="file" name="avatar" id="avatar" style="color:white;" />
-                        </div>
-	            	</div>
-	            	<div class="control-group">
-	            		<label class="control-label" for="motto">Motto</label>
-                        <div class="controls">
-                            <input id="motto" name="motto" type="text" placeholder="User Motto">
-                        </div>
-	            	</div>
-	            {% end %}
                 <div class="control-group">
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">

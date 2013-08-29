@@ -151,12 +151,12 @@ class ConfigManager(object):
     @property
     def use_bots(self):
         ''' Whether bots should be enabled in this game '''
-        return self.config.getboolean("Experimental", "use_bots")
+        return self.config.getboolean("Game", "use_bots")
 
     @property
     def use_black_market(self):
         ''' Whether the black market should be enabled in this game '''
-        return self.config.getboolean("Experimental", "use_black_market")
+        return self.config.getboolean("Game", "use_black_market")
 
     @property
     def max_team_size(self):
