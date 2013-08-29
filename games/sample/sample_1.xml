@@ -28,4 +28,21 @@
 			<value>1000</value> <!-- REQUIRED !-->
 		</flag>
 	</flags>
+	<resources>
+		<resource>
+			<url>http://www.someurl.com</url>
+			<tag>This is the URL tag</tag>
+			<description>This is the resource description</description>
+		</resource>
+		<resource>
+			<url>http://www.someurl.com</url>
+			<tag>This is the URL tag</tag>
+			<description>This is the resource description</description>
+		</resource>
+		<resource>
+			<url>http://www.someurl.com</url>
+			<tag>This is the URL tag</tag>
+			<description>This is the resource description</description>
+		</resource>
+	</resources>
 </box>

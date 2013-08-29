@@ -26,10 +26,10 @@ from shutil import copyfile
 from os import path, _exit, listdir
 from sqlalchemy.exc import OperationalError, IntegrityError, ProgrammingError
 import sys
-import xml.etree.cElementTree as ET
+import defusedxml.cElementTree as ET
 from libs.ConsoleColors import *
 from models import dbsession, Sponsor, Corporation,\
-    Flag, Box
+    Flag, Box, BoxResource
 
 def print_info(information):
     print(INFO+"Info: " + information)
@@ -152,8 +152,158 @@ def import_xml_box_files_for_game(game_name, input_game_level_id):
         if curfile.endswith('.xml'):
             import_xml_box_file(game_dir + '/' + curfile, input_game_level_id)
 
-#TODO include IP addresses
+#TODO implement IP address
 def import_xml_box_file(filepath, input_game_level_id):
+    
+    print_info("Starting import of file " + filepath)
+    
+    #TODO refactor validation to reflect new XML format
+    #errors = validate_xml_box_file(filepath)
+    errors = []
+    if len(errors) > 0:
+        for ind, error in enumerate(errors):
+            print WARN+"Error " + str(ind) + ": " + error
+        print_warning_and_exit("XML file was not valid.")
+    
+    try:
+        tree = ET.parse(filepath)
+        boxnode = tree.getroot()
+        filedir = path.dirname(filepath)
+        
+        # Check to see if box already exists
+        bname = boxnode.find('name').text
+        if len(Box.by_name(unicode(bname))) is not 0:
+            print_info("Box with name '" + bname + "' already exists. Continuing to next file...")
+            return
+        
+        # If box does not already exist, then check for corporation existing
+        corpnode = boxnode.find('corporation')
+        corpname = corpnode.find('name').text
+        corp = Corporation.by_name(unicode(corpname))
+        if corp is not None:
+            print_info("Corporation with name '" + corpname + "' already exists. Using the pre-existing corporation.")
+        else:
+            # If corporation does not exist, then we must create it
+            print_info("Corporation does not exist. Creating now.")
+            corpdesc = corpnode.find('description').text
+            corp = Corporation(
+                name=unicode(corpname),
+                description=unicode(corpdesc)
+            )
+            dbsession.add(corp)
+            dbsession.flush()
+            print_info("Corporation with name '" + corpname + "' successfully created.")
+            
+        # Check if the box is sponsored
+        sponsornode = boxnode.find('sponsor')
+        spon = None
+        if sponsornode is None:
+            print_info("The box does not appear to have a sponsor.")
+        else:
+            # The box is sponsored.
+            print_info("The box has a sponsor")
+            sname = sponsornode.find('name').text
+            
+            # Check to see if the sponsor already exists in the DB
+            spon = Sponsor.by_name(unicode(sname))
+            if spon is not None:
+                print_info("The sponsor with name '" + sname + "' already exists in the DB. Using the pre-existing sponsor.")
+            else:
+                print_info("The sponsor does not yet exist.")
+                sdesc = sponsornode.find('description').text
+                surl = sponsornode.find('url').text
+                slogo = sponsornode.find('logo').text
+                
+                # Move the sponsor's logo
+                slogomoved = move_image_file_and_get_name(filedir + '/' + slogo) 
+                
+                spon = Sponsor(
+                    name=unicode(sname),
+                    logo=unicode(slogomoved),
+                    description=unicode(sdesc),
+                    url=unicode(surl)
+                )
+                
+                dbsession.add(spon)
+                dbsession.flush()
+                print_info("Sponsor with name '" + sname + "' successfully created.")
+        
+        # Now that we have the corporation and potentially the sponsor, create the box
+        bdiff = boxnode.find('difficulty').text
+        bavatar = boxnode.find('avatar').text
+        bdesc = boxnode.find('description').text
+        
+        # Move the box's avatar
+        bavatarmoved = move_image_file_and_get_name(filedir + '/' + bavatar)
+            
+        box = Box(
+            name=unicode(bname),
+            corporation_id=corp.id,
+            difficulty=unicode(bdiff),
+            game_level_id=input_game_level_id,
+            _description=unicode(bdesc),
+            avatar=unicode(bavatarmoved),
+            sponsor_id=spon.id
+        )
+        
+        dbsession.add(box)
+        dbsession.flush()
+        
+        print_info("Box with name '" + bname + "' successfully created.")
+        
+        # Now find and create the flags from the file
+        print_info("Now processing flags for box.")
+        flagsnode = boxnode.find('flags')
+        for curflagnode in flagsnode:
+            curflagname = curflagnode.find('name').text
+            curflagtoken = curflagnode.find('token').text
+            curflagdesc = curflagnode.find('description').text
+            curflagvalue = curflagnode.find('value').text
+            newflag = Flag(
+                name=unicode(curflagname),
+                token=unicode(curflagtoken),
+                is_file=False, #TODO implement file upload stuff
+                description=unicode(curflagdesc),
+                value=abs(int(curflagvalue)),
+                box_id=box.id
+            )
+            dbsession.add(newflag)
+            dbsession.flush()
+            print_info("Flag with name '" + curflagname + "' successfully created.")
+            
+        # Now check to see if there are any box resources for this box
+        resourcesnode = boxnode.find('resources')
+        if resourcesnode is not None:
+            print_info("Box appears to have related resources.")
+            for resourcenode in resourcesnode:
+                rurl = resourcenode.find('url').text
+                rtag = resourcenode.find('tag').text
+                rdesc = resourcenode.find('description').text
+                res = BoxResource(
+                    url=unicode(rurl),
+                    tag=unicode(rtag),
+                    description=unicode(rdesc),
+                    box_id=box.id
+                )
+                dbsession.add(res)
+                dbsession.flush()
+                print_info("BoxResource with tag of '" + rtag + "' successfully created.")
+        
+        # And we're done!
+        print_info("Box with name '" + bname + "' successfully created!")
+        
+    except ProgrammingError as e:
+        print "ProgrammingError thrown: " + str(e)
+    except IntegrityError as e:
+        print "IntegrityError thrown: " + str(e)
+    except OperationalError as e:
+        print "OperationalError thrown: " + str(e)
+    except ET.ParseError as e:
+        print "ParseError thrown: " + str(e)
+    except:
+        print_warning_and_exit("Unexpected error:" + str(sys.exc_info()[0]))
+
+def import_xml_box_file_old(filepath, input_game_level_id):
     
     print_info("Starting import of file " + filepath)
     
@@ -287,4 +437,3 @@ def import_xml_box_file(filepath, input_game_level_id):
         print "ParseError thrown: " + str(e)
     except:
         print_warning_and_exit("Unexpected error:" + str(sys.exc_info()[0]))
-        pass

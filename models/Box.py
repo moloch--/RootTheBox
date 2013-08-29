@@ -67,6 +67,8 @@ class Box(BaseObject):
         backref=backref("Box", lazy="joined"), 
         cascade="all, delete-orphan"
     )
+    
+    box_resources = relationship("BoxResource", backref="box")
 
     @classmethod
     def all(cls):
