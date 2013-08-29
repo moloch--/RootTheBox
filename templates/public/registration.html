@@ -17,7 +17,7 @@
         {% end %}
         <div class="well">
             <legend>Welcome to the Scene</legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
-            <form class="form-horizontal" action="/registration" method="post">  
+            <form class="form-horizontal" action="/registration" method="post" enctype="multipart/form-data">  
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
                     <label class="control-label" for="handle">Hacker Name</label>
@@ -28,40 +28,56 @@
                             data-content="Your handle must be 3-15 alpha-numeric characters" />
                     </div>
                 </div>
+                {% from libs.ConfigManager import ConfigManager %}
+                {% if ConfigManager.Instance().use_teams %}
                 <hr>
                 <h5>Join a Team</h5>
-                <div class="control-group">
-                    <label class="control-label" for="team">Select a Team</label>
-                    <div class="controls">
-                        <select name="team">
-                            <option value=""></option>
-                            {% from libs.ConfigManager import ConfigManager %}
-                            {% from models import Team %}
-                            {% for team in Team.all() %}
-                                {% if len(team.members) < ConfigManager.Instance().max_team_size %}
-                                    <option value="{{ team.uuid }}">{{ team.name }}</option>
-                                {% end %}
-                            {% end %}
-                        </select>
-                    </div>
-                </div>
-                {% from libs.ConfigManager import ConfigManager %}
-                {% if ConfigManager.Instance().public_teams %}
-                    <h5>Start a New Team</h5>
-                    <div class="control-group">
-                        <label class="control-label" for="team_name">Team Name</label>
+	                <div class="control-group">
+	                    <label class="control-label" for="team">Select a Team</label>
+	                    <div class="controls">
+	                        <select name="team">
+	                            <option value=""></option>
+	                            {% from libs.ConfigManager import ConfigManager %}
+	                            {% from models import Team %}
+	                            {% for team in Team.all() %}
+	                                {% if len(team.members) < ConfigManager.Instance().max_team_size %}
+	                                    <option value="{{ team.uuid }}">{{ team.name }}</option>
+	                                {% end %}
+	                            {% end %}
+	                        </select>
+	                    </div>
+	                </div>
+	                {% from libs.ConfigManager import ConfigManager %}
+	                {% if ConfigManager.Instance().public_teams %}
+	                    <h5>Start a New Team</h5>
+	                    <div class="control-group">
+	                        <label class="control-label" for="team_name">Team Name</label>
+	                        <div class="controls">
+	                            <input id="team_name" name="team_name" type="text" placeholder="Team Name">
+	                        </div>
+	                    </div>
+	                    <div class="control-group">
+	                        <label class="control-label" for="motto">Motto</label>
+	                        <div class="controls">
+	                            <input id="motto" name="motto" type="text" placeholder="Team Motto">
+	                        </div>
+	                    </div>
+	                {% end %}
+	                <hr>
+	            {% else %}
+	            	<div class="control-group">
+	            		<label class="control-label" for="avatar">Avatar - h250 x w500 (Max 1Mb)</label>
                         <div class="controls">
-                            <input id="team_name" name="team_name" type="text" placeholder="Team Name">
+                            <input type="file" name="avatar" id="avatar" style="color:white;" />
                         </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="motto">Motto</label>
+	            	</div>
+	            	<div class="control-group">
+	            		<label class="control-label" for="motto">Motto</label>
                         <div class="controls">
-                            <input id="motto" name="motto" type="text" placeholder="Team Motto">
+                            <input id="motto" name="motto" type="text" placeholder="User Motto">
                         </div>
-                    </div>
-                {% end %}
-                <hr>
+	            	</div>
+	            {% end %}
                 <div class="control-group">
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">

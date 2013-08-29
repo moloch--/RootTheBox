@@ -89,6 +89,10 @@ def setup_script():
         print(WARN+"Setup Error: Game script failed with "+str(error))
         sys.exit()
 
+def test(options, *args, **kwargs):
+    print "Test has been fired"
+    from setup import XmlGameImporter
+    XmlGameImporter.import_xml_box_files_for_game("sample", 1)
 
 def main(args):
     ''' Call functions in the correct order based on CLI params '''
@@ -146,5 +150,12 @@ if __name__ == '__main__':
         "-r", "--recovery",
         action='store_true',
         help="start the admin recovery console",
+    )
+    #TODO remove this before production
+    parser.add_option(
+        "-t", "--test",
+        action="callback",
+        callback=test,
+        help="run testing code in the 'test' function (for debugging and development purposes)"
     )
     main(parser.parse_args())

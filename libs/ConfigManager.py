@@ -330,6 +330,31 @@ class ConfigManager(object):
             db_conn = self.__mysql__()
         self._test_db_connection(db_conn)
         return db_conn
+    
+    @property
+    def use_teams(self):
+        ''' Whether teams should be enabled in this game '''
+        return self.config.getboolean("Experimental", "use_teams")
+
+    @property
+    def use_bots(self):
+        ''' Whether bots should be enabled in this game '''
+        return self.config.getboolean("Experimental", "use_bots")
+
+    @property
+    def use_black_market(self):
+        ''' Whether the black market should be enabled in this game '''
+        return self.config.getboolean("Experimental", "use_black_market")
+
+    @property
+    def use_wall_of_sheep(self):
+        ''' Whether the black market should be enabled in this game '''
+        return self.config.getboolean("Experimental", "use_wall_of_sheep")
+    
+    @property
+    def show_box_corporation_names(self):
+        ''' Whether or not to show corporation names on the missions screen '''
+        return self.config.getboolean("Experimental", "show_box_corporation_names")
 
     def __postgresql__(self):
         ''' 

@@ -16,7 +16,10 @@
 					{% if user.team is not None %}
 						<strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
 						<strong>Bank Account:</strong> ${{ user.team.money }} <br />
-						<strong>Active Bots:</strong> {{ user.team.bot_count }}<br />		
+						{% from libs.ConfigManager import ConfigManager %}
+                		{% if ConfigManager.Instance().use_bots %}
+							<strong>Active Bots:</strong> {{ user.team.bot_count }}<br />
+						{% end %}		
 						<strong>Flags Captured:</strong> {{ len(user.team.flags) }}<br />
 					{% else %}
 						<strong>You are not on a team</strong>

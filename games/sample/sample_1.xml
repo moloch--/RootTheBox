@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<box>
+	<sponsor> <!-- REQUIRED !-->
+		<name>Sponsoring Company</name> <!-- REQUIRED !-->
+		<description>The sponsoring company is a great company</description> <!-- REQUIRED !-->
+		<url>http://www.google.com</url>
+		<logo>my_logo.jpg</logo> <!-- REQUIRED !-->
+	</sponsor>
+	<corporation>
+		<name>Test corporation</name> <!-- REQUIRED !-->
+		<description>Description of test corporation</description> <!-- REQUIRED !-->
+	</corporation>
+	<name>The Box Name</name> <!-- REQUIRED & UNIQUE !-->
+	<difficulty>Easy</difficulty> <!-- REQUIRED !-->
+	<avatar>myavatar.jpg</avatar> <!-- REQUIRED !-->
+	<description>The box's description</description> <!-- REQUIRED !-->
+	<flags> <!-- REQUIRED !-->
+		<flag> <!-- REQUIRED !-->
+			<name>Flag Name</name> <!-- REQUIRED & UNIQUE FOR BOX !-->
+			<token>myfirsttoken</token> <!-- REQUIRED !-->
+			<description>Flag description</description> <!-- REQUIRED !-->
+			<value>1000</value> <!-- REQUIRED !-->
+		</flag>
+		<flag>
+			<name>Flag Name 2</name> <!-- REQUIRED & UNIQUE FOR BOX !-->
+			<token>myfirsttoken</token> <!-- REQUIRED !-->
+			<description>Flag description</description> <!-- REQUIRED !-->
+			<value>1000</value> <!-- REQUIRED !-->
+		</flag>
+	</flags>
+</box>

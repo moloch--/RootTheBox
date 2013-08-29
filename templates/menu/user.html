@@ -27,19 +27,25 @@
                                     Missions
                                 </a>
                             </li>
-                            <li>
-                                <a href="/user/market">
-                                    Black Market
-                                </a>
-                            </li>
-                            <li class="dropdown-submenu">
-                                <a tabindex="-1" href="/user/bots/webmonitor">Botnet</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="/user/bots/webmonitor">Command &amp; Control</a></li>
-                                    <li><a href="/user/bots/download/windows" target="_blank">Download Windows Bot</a></li>
-                                    <li><a href="/user/bots/download/linux" target="_blank">Download Linux / BSD Bot</a></li>
-                                </ul>
-                            </li>
+                            {% from libs.ConfigManager import ConfigManager %}
+                			{% if ConfigManager.Instance().use_black_market %}
+	                            <li>
+	                                <a href="/user/market">
+	                                    Black Market
+	                                </a>
+	                            </li>
+                            {% end %}
+                            {% from libs.ConfigManager import ConfigManager %}
+                			{% if ConfigManager.Instance().use_bots %}
+	                            <li class="dropdown-submenu">
+	                                <a tabindex="-1" href="/user/bots/webmonitor">Botnet</a>
+	                                <ul class="dropdown-menu">
+	                                    <li><a href="/user/bots/webmonitor">Command &amp; Control</a></li>
+	                                    <li><a href="/user/bots/download/windows" target="_blank">Download Windows Bot</a></li>
+	                                    <li><a href="/user/bots/download/linux" target="_blank">Download Linux / BSD Bot</a></li>
+	                                </ul>
+	                            </li>
+	                        {% end %}
                         </ul>
                   </li>
                   <li class="dropdown">
@@ -98,16 +104,28 @@
                                   History
                               </a>
                           </li>
-                          <li>
-                              <a href="/scoreboard/wall_of_sheep">
-                                  Wall of Sheep
-                              </a>
-                          </li>
-                          <li>
-                              <a href="/teams">
-                                  Teams
-                              </a>
-                          </li>
+                          {% from libs.ConfigManager import ConfigManager %}
+                          {% if ConfigManager.Instance().use_wall_of_sheep %}
+	                          <li>
+	                              <a href="/scoreboard/wall_of_sheep">
+	                                  Wall of Sheep
+	                              </a>
+	                          </li>
+                          {% end %}
+                          {% from libs.ConfigManager import ConfigManager %}
+                          {% if ConfigManager.Instance().use_teams %}
+	                          <li>
+	                              <a href="/teams">
+	                                  Teams
+	                              </a>
+	                          </li>
+	                      {% else %}
+	                      	  <li>
+	                              <a href="/users">
+	                                  Hackers
+	                              </a>
+	                          </li>
+	                      {% end %}
                       </ul>
                   </li>
                   <li>
