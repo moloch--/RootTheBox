@@ -191,13 +191,10 @@ def create_flag(name, token, value, box, description="No description", is_file=F
         logging.info("Flag with token '%s' already exists, skipping" % (token))
         return Flag.by_token(token)
     if is_file and os.path.exists(token):
-        f = open(token, 'r')
-        data = f.read()
-        f.close()
-        _token = Flag.digest(data)
+        with open(token) as favatar:
+            _token = Flag.digest(favatar.read())
     elif is_file and 40 == len(token):
-        # Just assume it's a SHA1
-        _token = unicode(token)
+        _token = unicode(token)  # Just assume it's a SHA1
     elif is_file:
         raise ValueError("Flag token file does not exist, and is not a hash.")
     else:

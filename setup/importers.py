@@ -144,6 +144,7 @@ def import_xml(target):
         logging.info("%s is a directory ..." % target)
         ls = filter(lambda fname: fname.lower().endswith('.xml'), os.listdir(target))
         logging.info("Found %d XML file(s) ..." % len(ls))
-        return [_xml_file_import(target+'/'+fxml) for fxml in ls]
+        results = [_xml_file_import(target+'/'+fxml) for fxml in ls]
+        return False not in results
     else:
         return _xml_file_import(target)
