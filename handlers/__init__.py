@@ -156,7 +156,7 @@ if config.use_bots:
 # If the game is configured to use the black market, associate the handlers necessary
 if config.use_black_market:
     urls += [
-        # This is controlled by the BlackMarket setting  
+        # This is only relevent if the black market is enabled  
         (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
 
         # Market handlers - MarketHandlers.py
@@ -205,10 +205,6 @@ app = Application(
 
     # Enable XSRF protected forms; not optional
     xsrf_cookies=True,
-
-    # Recaptcha Settings
-    recaptcha_enabled=config.recaptcha_enabled,
-    recaptcha_private_key=config.recaptcha_private_key,
 
     # WebSocket Host IP Address
     domain=config.domain,

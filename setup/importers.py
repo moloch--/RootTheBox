@@ -83,18 +83,24 @@ def create_hints(parent, box):
 
 def _tmp_avatar(box_elem):
     ''' Decodes avatar data and writes to a tmp file '''
-    data = b64decode(get_child_text(box_elem, 'avatar'))
-    tmp_file = NamedTemporaryFile(delete=False)
-    tmp_file.write(data)
-    tmp_file.close()
-    return tmp_file.name
+    b64avatar = get_child_text(box_elem, 'avatar')
+    if 0 < len(b64avatar):
+        tmp_file = NamedTemporaryFile(delete=False)
+        tmp_file.write(b64decode(b64avatar))
+        tmp_file.close()
+        return tmp_file.name
+    else:
+        return None
 
 
 def create_boxes(parent, corporation):
     ''' Create boxes for a corporation '''
     logging.info("Found %s boxes" % parent.get('count'))
     for box_elem in parent.getchildren():
-        favatar = _tmp_avatar(box_elem)
+        if get_child_by_tag('avatar') is not None:
+            favatar = _tmp_avatar(box_elem)
+        else:
+            favatar = None
         box = helpers.create_box(
             name=get_child_text(box_elem, 'name'),
             corporation=corporation,
