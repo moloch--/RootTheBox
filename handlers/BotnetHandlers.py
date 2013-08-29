@@ -26,6 +26,7 @@ import tornado.websocket
 
 
 from uuid import uuid4
+from hashlib import sha1
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from models import Box, Team, User
@@ -35,7 +36,33 @@ from libs.SecurityDecorators import *
 
 
 class BotSocketHandler(tornado.websocket.WebSocketHandler):
-    ''' Handles websocket connections from bots '''
+    ''' 
+
+    *** Rough bot protocol layout ***
+    =================================
+    1) Bot connects to server
+        a) If IP config.whitelist_box_ips is enabled, check
+           the datbase for boxes with matching IPs
+
+    2) Servers responds with "Interrogation" message
+        a) This message includes a random string 'xid'
+
+    3) Bot responds with a "InterrogationResponse", includes
+        a) The value of SHA1(xid + box garbage)
+        b) Asserted user handle (reward goes to user.team)
+        c) Asserted box name
+
+    4) Server looks up asserted box and user in database, ensures
+        they do exist, and the user is not an admin.  
+    
+    5) Server then computes it's own SHA1(xid + box garbage)
+        a) Check if the server's value matches the bot's
+
+    6) Check for duplicate bots (one bot per box per team)
+
+    7) Add new bot to botnet
+
+    '''
 
     def initialize(self):
         self.bot_manager = BotManager.Instance()
@@ -44,26 +71,62 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         self.team_uuid = None
         self.box_uuid = None
         self.remote_ip = None
+        self.xid = os.urandom(16).encode('hex')
         self.uuid = unicode(uuid4())
         self.opcodes = {
-            'set_user': self.set_user,
+            'interrogation_response': self.interrogation_response,
         }
     
     def open(self, *args):
-        ''' When we receive a new websocket connect '''
+        ''' Steps 1 and 2; called when a new bot connects '''
         box = Box.by_ip_address(self.request.remote_ip)
-        if box is not None:
-            self.box_uuid = box.uuid
-            self.box_name = box.name
-            self.remote_ip = self.request.remote_ip
-            self.write_message({'opcode': 'get_user'})
-        else:
+        self.remote_ip = self.request.remote_ip
+        if box is None and self.config.whitelist_box_ips:
             logging.debug("Rejected bot from '%s' (not a box)" % self.request.remote_ip)
             self.write_message({
                 'opcode': 'error',
                 'message': 'Invalid IP address.'
             })
             self.close()
+        else:
+            self.write_message({'opcode': 'interrogate', 'xid': self.xid})
+
+    def interrogation_response(self, msg):
+        ''' Steps 3 and 4; validate repsonses '''
+        response_xid = msg['rxid']
+        user = User.by_handle(msg['handle'])
+        box = Box.by_name(msg['box_name'])
+        if self.config.whitelist_box_ips and self.remote_ip not in box.ips:
+            self.send_error("Invalid remote IP for this box")
+        elif user is None or user.has_permission(ADMIN_PERMISSION):
+            self.send_error("User does not exist")
+        elif box is None:
+            self.send_error("Box does not exist")
+        elif not self.is_valid_xid(box, response_xid):
+            self.send_error("Invalid xid response")
+        else:
+            self.team_name = user.team.name
+            self.team_uuid = user.team.uuid
+            self.box_uuid = box.uuid
+            self.add_to_botnet()
+
+    def add_to_botnet(self):
+        ''' Step 6 and 7; Add current web socket to botnet '''
+        if self.bot_manager.add_bot(self):
+            logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
+            count = self.bot_manager.count_by_team(self.team_name)
+            self.write_message({
+                'opcode': 'status',
+                'message': 'Added new bot; total number of bots is now %d' % count
+            })
+        else:
+            logging.debug("Duplicate bot on %s" % self.remote_ip)
+            self.send_error("Duplicate bot")
+
+    def is_valid_xid(box, response_xid):
+        sha = sha1()
+        sha.update(self.xid + box.garbage)
+        return response_xid == sha.hexdigest()
 
     def ping(self):
         ''' Just make sure we can write data to the socket '''
@@ -73,8 +136,16 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             logging.exception("Error: while sending ping to bot.")
             self.close()
 
+    def send_error(self, msg):
+        ''' Send the errors, and close socket '''
+        self.write_message({
+            'opcode': 'error',
+            'message': msg,
+        })
+        self.close()
+
     def on_message(self, message):
-        ''' Parse request '''
+        ''' Routes the request to the correct function based on opcode '''
         try:
             req = json.loads(message)
             if 'opcode' not in req:
@@ -85,6 +156,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
                 self.opcodes[req['opcode']](req)
         except ValueError as error:
             logging.warn("Invalid json request from bot: %s" % str(error))
+            self.close()
 
     def on_close(self):
         ''' Close connection to remote host '''
@@ -92,62 +164,6 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.bot_manager.remove_bot(self)
         logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
 
-    def set_user(self, req):
-        ''' Get user details '''
-        if self.team_uuid is not None:
-            self.write_message({
-                'opcode': 'error',
-                'message': 'User is already set'
-            })
-            self.close()
-        else:
-            user = User.by_handle(req['user'])
-            if user is None or user.has_permission(ADMIN_PERMISSION):
-                logging.debug("Received invalid user '%s' from bot on %s" % (
-                    req['user'], self.remote_ip,
-                ))
-                self.write_message({
-                    'opcode': 'error',
-                    'message': 'Hacker does not exist'
-                })
-                self.close()
-            else:
-                self.write_message({
-                    'opcode': 'status',
-                    'message': 'Found user "%s"' % user.handle,
-                })
-                self.set_team(user.team)
-
-    def set_team(self, team):
-        ''' Set team based on user '''
-        if team is None:
-            logging.debug("Auth fail, invalid team uuid")
-            self.write_message({
-                'opcode': 'error',
-                'message': 'Team does not exist'
-            })
-            self.close()
-        else:
-            self.team_uuid = team.uuid
-            self.team_name = team.name
-            logging.debug("'%s' owns bot: %s" % (team.name, self.uuid))
-            self.init_success()
-
-    def init_success(self):
-        if self.bot_manager.add_bot(self):
-            logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
-            count = self.bot_manager.count_by_team(self.team_name)
-            self.write_message({
-                'opcode': 'status',
-                'message': 'Added new bot; total number of bots is now %d' % count
-            })
-        else:
-            logging.debug("Auth failed, duplicate bot on %s" % self.remote_ip)
-            self.write_message({
-                'opcode': 'error',
-                'message': 'Duplicate bot'
-            })
-            self.close()
 
 
 class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):

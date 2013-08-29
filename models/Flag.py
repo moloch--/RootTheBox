@@ -107,6 +107,7 @@ class Flag(BaseObject):
             'description': self.description,
             'value': self.value,
             'box': box.uuid,
+            'token': self.token,
         }
 
     def __str__(self):

@@ -296,7 +296,7 @@
             $("#" + obj + "_uuid").val(uuid);
             $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
                 $.each(data, function(key, value) {
-                    console.log("#" + obj + "_" + key + " -> " + value);
+                    // console.log("#" + obj + "_" + key + " -> " + value);
                     $("#" + obj + "_" + key).val(value);
                 });
             });
@@ -332,7 +332,7 @@
             </ul>
         </div>
         <div class="span10">
-            <h1>Game Objects</h1>
+            <h1>&nbsp;&nbsp;Game Objects</h1>
             <br />
             {% if errors != None and len(errors) != 0 %}
                 {% for error in errors %}
@@ -359,6 +359,9 @@
                                     <a class="btn btn-small" data-toggle="modal" href="#editBoxModal"
                                         onclick="get_details('box', '{{ box.uuid }}')">
                                         Edit Box
+                                    </a>
+                                    <a style="float:right;" class="btn" data-toggle="modal" href="/admin/garbage?uuid={{ box.uuid }}" target="_blank">
+                                        {{ box.name }} Garbage File
                                     </a>
                                 <br />
                                 <br />

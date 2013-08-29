@@ -29,7 +29,7 @@ This file contains all of the adminstrative functions.
 import re
 import os
 import imghdr
-import xml.dom.minidom
+import defusedxml.minidom
 import xml.etree.cElementTree as ET
 
 from uuid import uuid4
@@ -124,6 +124,7 @@ class AdminCreateHandler(BaseHandler):
             try:
                 game_level = int(self.get_argument('game_level'))
                 corp_uuid = self.get_argument('corporation_uuid')
+                garbage = self.get_argument('garbage', '')
                 if Box.by_name(self.get_argument('box_name')) is not None:
                     self.render("admin/create/box.html",
                         errors=["Box name already exists"]
@@ -1309,6 +1310,25 @@ class AdminConfigurationHandler(BaseHandler):
             self.config.debug = bool(debug == 'true')
 
 
+class AdminGarbageCfgHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        ''' Download a Box's garbage file '''
+        box = Box.by_uuid(self.get_argument('uuid', ''))
+        if box is not None:
+            data = box.get_garbage_cfg()
+            self.set_header('Content-Type', 'text/plain')
+            self.set_header(
+                "Content-disposition", "attachment; filename=%s.garbage" % (
+                    "".join(box.name),
+            ))
+            self.set_header('Content-Length', len(data))
+            self.write(data)
+
+
 class AdminExportHandler(BaseHandler):
 
     @restrict_ip_address
@@ -1339,10 +1359,7 @@ class AdminExportHandler(BaseHandler):
     def create_xml(self):
         ''' 
         Exports the game objects to an XML doc.
-
-        For the record, I hate XML with a passion. This is also prbly vulnerable to 
-        XML injection, because for whatever reason the Python std lib doesn't encode 
-        anything, but I don't think exploiting this would buy you much, so whateves.
+        For the record, I hate XML with a passion.
         '''
         root = ET.Element("rootthebox")
         levels_elem = ET.SubElement(root, "gamelevels")
@@ -1353,7 +1370,7 @@ class AdminExportHandler(BaseHandler):
         corps_elem.set("count", str(Corporation.count()))
         for corp in Corporation.all():
             corp.to_xml(corps_elem)
-        xml_dom = xml.dom.minidom.parseString(ET.tostring(root))
+        xml_dom = defusedxml.minidom.parseString(ET.tostring(root))
         return xml_dom.toprettyxml()
 
 
@@ -1370,7 +1387,9 @@ class AdminImportXmlHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        ''' Import XML file uploaded by the admin '''
+        ''' 
+        Import XML file uploaded by the admin.
+        '''
         if 'xml_file' in self.request.files:
             fxml = self._get_tmp()
             errors = []

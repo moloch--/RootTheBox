@@ -22,6 +22,7 @@ Created on Mar 11, 2012
 
 import xml.etree.cElementTree as ET
 
+from os import urandom
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, or_
 from sqlalchemy.orm import relationship, backref
@@ -41,6 +42,11 @@ class Box(BaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(16), unique=True, nullable=False)
+    garbage = Column(String(32), 
+        unique=True, 
+        nullable=False, 
+        default=lambda: urandom(16).encode('hex')
+    )
     _description = Column(Unicode(1024))
     difficulty = Column(Unicode(16), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
@@ -80,6 +86,10 @@ class Box(BaseObject):
     def by_name(cls, name):
         ''' Return the box object whose name is "name" '''
         return dbsession.query(cls).filter_by(name=unicode(name)).first()
+
+    @classmethod
+    def by_garbage(cls, garbage):
+        return dbsession.query(cls).filter_by(name=garbage).first()   
 
     @classmethod
     def by_ip_address(cls, ip_addr):
@@ -154,6 +164,11 @@ class Box(BaseObject):
         ''' Returns all hints on this box '''
         return Hint.by_box_id(self.id)
 
+    def get_garbage_cfg(self):
+        return "[Bot]\nname = %s\ngarbage = %s\n" % (
+            self.name.encode('hex'), self.garbage
+        )
+
     def to_xml(self, parent):
         ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")
@@ -161,6 +176,7 @@ class Box(BaseObject):
         ET.SubElement(box_elem, "name").text = str(self.name)
         ET.SubElement(box_elem, "description").text = str(self._description)
         ET.SubElement(box_elem, "difficulty").text = str(self.difficulty)
+        ET.SubElement(box_elem, "garbage").text = str(self.garbage)
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", str(len(self.flags)))
         for flag in self.flags:
@@ -169,8 +185,8 @@ class Box(BaseObject):
         hints_elem.set("count", str(len(self.hints)))
         for hint in self.hints:
             hint.to_xml(hints_elem)
-        with open('files/avatars/'+self.avatar) as f:
-            data = f.read()
+        with open('files/avatars/'+self.avatar) as favatar:
+            data = favatar.read()
             ET.SubElement(box_elem, "avatar").text = data.encode('base64')
 
     def to_dict(self):
@@ -181,7 +197,7 @@ class Box(BaseObject):
             'name': self.name,
             'uuid': self.uuid,
             'corporation': corp.uuid,
-            'description': self.description,
+            'description': self._description,
             'difficulty': self.difficulty,
             'game_level': game_level.uuid,
         }

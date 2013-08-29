@@ -39,16 +39,17 @@ import logging
 import argparse
 import platform
 import traceback
-
+import ConfigParser
 
 from urlparse import urlparse
 from datetime import datetime
+from hashlib import sha1
 
 
 ### Settings
-__version__ = '0.1.1'
+__version__ = '0.1.0'
 __domain__  = 'game.rootthebox.com'
-__port__    = '8888'
+__port__    = '80'
 __path__    = 'botnet/connect'
 
 if platform.system().lower() in ['linux', 'darwin']:
@@ -854,12 +855,19 @@ def display_status(ws, response, verbose=False):
         sys.stdout.write('\n')
     sys.stdout.flush()
 
-def get_user(ws, response):
-    ws.send(json.dumps({
-        'opcode': 'set_user',
-        'user': ws.user,
-    }))
+def get_rxid(garbage, xid):
+    sha = sha1()
+    sha.update(xid + garbage)
+    return sha.hexdigest()
+
+def send_interrogation_response(ws, response):
     display_status(ws, {'message': "Authorizing, please wait ..."})
+    ws.send({
+        'opcode': 'interrogation_response',
+        'rxid': get_rxid(ws.garbage, response['xid']),
+        'box_name': ws.box_name,
+        'handle': ws.user
+    })
 
 def recv_ping(ws, response, verbose=False):
     ''' Print that we just got a ping from c&c '''
@@ -872,7 +880,7 @@ def recv_ping(ws, response, verbose=False):
 opcodes = {
     'error': display_error,
     'status': display_status,
-    'get_user': get_user,
+    'interrogate': send_interrogation_response,
     'ping': recv_ping,
 }
 
@@ -898,8 +906,23 @@ def on_error(ws, error):
 def on_close(ws):
     display_error(ws, {'error': "Disconnected from command & control\n"})
 
-def main(domain, port, user, secure=False, verbose=False):
+def get_default_garbage():
+    return '/root/garbage' if platform.system().lower() in ['linux', 'darwin'] else 'C:\\garbage'
+
+def main(domain, port, user, garbage_path, secure, verbose):
     ''' Main() '''
+    garbage_cfg = ConfigParser.SafeConfigParser()
+    if garbage_path is None:
+        garbage_path = get_default_garbage()
+    if not os.path.exists(garbage_path):
+        print(WARN+" Garbage file not found %s" % garbage_path)
+        os._exit(1)
+    fp = open(garbage_path, 'r')
+    try:
+        garbage_cfg.readfp(fp)
+    except:
+        print(WARN+" Garbage file is not properly formatted")
+        os._exit(2)
     try:
         enableTrace(verbose)
         connection_url = "ws://%s:%s/%s" % (domain, port, __path__)
@@ -910,6 +933,8 @@ def main(domain, port, user, secure=False, verbose=False):
             on_close = on_close,
         )
         ws.verbose = verbose
+        ws.garbage = garbage_cfg.get("Bot", 'garbage')
+        ws.box_name = garbage_cfg.get("Bot", 'name').decode('hex')
         ws.user = user
         ws.on_open = on_open
         ws.run_forever()
@@ -929,15 +954,19 @@ if __name__ == '__main__':
         action='version',
         version='%(prog)s v'+__version__
     )
-    parser.add_argument('--verbose',
+    parser.add_argument('--verbose', '-v',
         help='display verbose output (default: false)',
         action='store_true',
         dest='verbose',
     )
-    parser.add_argument('--secure',
-        help='connect using a ssl (default: false)',
+    parser.add_argument('--secure', '-s',
+        help='connect using a secure socket (default: false)',
         action='store_true',
         dest='secure',
+    )
+    parser.add_argument('--garbage', '-g',
+        help='path to garbage file (defult: /root/garbage or C:\\garbage)',
+        dest='garbage',
     )
     parser.add_argument('--domain', '-d',
         help='scoring engine ip address, or domain (default: %s)' % __domain__,
@@ -950,9 +979,9 @@ if __name__ == '__main__':
         dest='port',
     )
     parser.add_argument('--user', '-u',
-        help='your hacker name (required)',
+        help='your handle (scoring engine account name)',
         required=True,
         dest='handle',
     )
     args = parser.parse_args()
-    main(args.domain, args.port, args.handle, args.secure, args.verbose)
+    main(args.domain, args.port, args.handle, args.garbage, args.secure, args.verbose)

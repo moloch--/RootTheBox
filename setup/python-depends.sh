@@ -18,3 +18,4 @@ pip install tornado
 pip install pbkdf2
 pip install sqlalchemy
 pip install pylibmc
+pip install defusedxml

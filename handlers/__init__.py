@@ -131,6 +131,7 @@ app = Application(
         (r'/admin/import/xml', AdminImportXmlHandler),
         (r'/admin/logviewer', AdminLogViewerHandler),
         (r'/admin/logviewer/wsocket', AdminLogViewerSocketHandler),
+        (r'/admin/garbage', AdminGarbageCfgHandler),
 
         # Notificaiton handlers - NotificationHandlers.py
         (r'/notifications/all', AllNotificationsHandler),

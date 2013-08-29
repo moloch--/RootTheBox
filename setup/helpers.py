@@ -76,9 +76,9 @@ def create_team(name, motto):
 
 
 def create_user(handle, password, bank_password, team):
-    if User.by_handle(Handle) is not None:
+    if User.by_handle(handle) is not None:
         logging.info("User with handle '%s' alreay exists, skipping" % (handle))
-        return User.by_handle(Handle)
+        return User.by_handle(handle)
     logging.info("Create User: %s" % handle)
     user = User(
         handle=unicode(handle[:16]),
@@ -157,7 +157,7 @@ def create_box(name, corporation, difficulty, game_level, description,
     for ip_address in ipv6_addresses:
         __mkipv6__(box, ip_address)
     return box
-
+    
 
 def set_avatar(box, favatar):
     '''

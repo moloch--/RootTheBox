@@ -25,7 +25,7 @@ It reads an XML file(s) and calls the API based on the it's contents.
 import os
 import logging
 import setup.helpers as helpers
-import xml.etree.cElementTree as ET
+import defusedxml.cElementTree as ET
 
 from base64 import b64decode
 from libs.ConsoleColors import *
@@ -103,6 +103,7 @@ def create_boxes(parent, corporation):
             description=get_child_text(box_elem, 'description'),
             avatar=favatar,
         )
+        box.garbage = get_child_text(box_elem, 'garbage')[:32]
         os.unlink(favatar)
         create_flags(get_child_by_tag(box_elem, 'flags'), box)
 
