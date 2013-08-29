@@ -67,8 +67,7 @@ else:
 ### Main URL Configuration
 
 # First get base URLs that all game types will require
-
-URLs = [
+urls = [
     # Static Handlers - StaticFileHandler.py
     (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv))', 
         StaticFileHandler, {'path': 'static/'}),
@@ -126,6 +125,7 @@ URLs = [
     (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
     (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
     (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
+    (r'/teams', TeamsHandler),
 
     # Public handlers - PublicHandlers.py
     (r'/login', LoginHandler),
@@ -143,22 +143,22 @@ URLs = [
 ]
 
 # If the game is configured to use bots, associate the handlers necessary
-
 if config.use_bots:
-    URLs.extend([
+    urls += [
         # Bot Handlers - BotHandlers.py
         (r'/botnet/connect', BotSocketHandler),
         (r'/botnet/climonitor', BotCliMonitorSocketHandler),
         (r'/botnet/webmonitor', BotWebMonitorSocketHandler),
         (r'/user/bots/download/(windows|linux|monitor)', BotDownloadHandler),
         (r'/user/bots/webmonitor', BotWebMonitorHandler)
-    ])
+    ]
 
 # If the game is configured to use the black market, associate the handlers necessary
-
 if config.use_black_market:
-    URLs.extend([
-                 
+    urls += [
+        # This is controlled by the BlackMarket setting  
+        (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
+
         # Market handlers - MarketHandlers.py
         (r'/user/market', MarketViewHandler),
         (r'/user/market/details', MarketDetailsHandler),
@@ -169,28 +169,15 @@ if config.use_black_market:
         (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
         (r'/source_code_market', SourceCodeMarketHandler),
         (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
-        (r'/swat', SwatHandler)
-        
-    ])
+        (r'/swat', SwatHandler),   
+    ]
 
-# If config is set up to use Wall of Sheep, set up handlers accordingly
-
-if config.use_wall_of_sheep:
-    URLs.append((r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler))
-
-# If teams are being used, set team handler. Otherwise set user handler.
-if config.use_teams:
-    URLs.append((r'/teams', TeamsHandler))
-else:
-    URLs.append((r'/users', UsersHandler))
-
-# Put the catch-all handler in place
-
-URLs.append((r'/(.*)', NotFoundHandler))    
+# This one has to be last
+urls.append((r'/(.*)', NotFoundHandler))    
 
 app = Application(
     # URL handler mappings
-    URLs,
+    urls,
 
     # Randomly generated secret key
     cookie_secret=b64encode(urandom(64)),
@@ -278,10 +265,6 @@ def start_server():
             config.history_snapshot_interval, 
             io_loop=io_loop
         )
-        
-        # If bots are enabled for this game, start up their callbacks
-        #TODO clarify what bots do in the application
-        
         if config.use_bots:
             scoring_callback = PeriodicCallback(
                 score_bots, 
@@ -291,10 +274,6 @@ def start_server():
             bot_ping_callback = PeriodicCallback(
                 ping_bots, 30000, io_loop=io_loop
             )
-        
-        # Start ALL THE THINGS!
-        
-        if config.use_bots:
             bot_ping_callback.start()
             scoring_callback.start()
         history_callback.start()

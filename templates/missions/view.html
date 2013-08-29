@@ -64,12 +64,7 @@
     						        <div class="span3">
                                         <center>
                                             <a href="/user/missions/boxes?uuid={{ box.uuid }}">
-                                            	<h5>
-                                            	{% from libs.ConfigManager import ConfigManager %}
-                                            	{% if ConfigManager.Instance().show_box_corporation_names %}
-                                                	{{ box.corporation.name }}: 
-                                                {% end %}
-                                                {{ box.name }}</h5>
+                                            	<h5> {{ box.corporation.name }}: {{ box.name }}</h5>
                                                 <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                                             </a>
                                         </center>
