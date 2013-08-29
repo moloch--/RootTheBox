@@ -319,27 +319,27 @@ class ConfigManager(object):
     @property
     def use_teams(self):
         ''' Whether teams should be enabled in this game '''
-        self.config.getboolean("Experimental", "use_teams")
+        return self.config.getboolean("Experimental", "use_teams")
 
     @property
     def use_bots(self):
         ''' Whether bots should be enabled in this game '''
-        self.config.getboolean("Experimental", "use_bots")
+        return self.config.getboolean("Experimental", "use_bots")
 
     @property
     def use_black_market(self):
         ''' Whether the black market should be enabled in this game '''
-        self.config.getboolean("Experimental", "use_black_market")
+        return self.config.getboolean("Experimental", "use_black_market")
 
     @property
     def use_wall_of_sheep(self):
         ''' Whether the black market should be enabled in this game '''
-        self.config.getboolean("Experimental", "use_wall_of_sheep")
+        return self.config.getboolean("Experimental", "use_wall_of_sheep")
     
     @property
     def show_box_corporation_names(self):
         ''' Whether or not to show corporation names on the missions screen '''
-        self.config.getboolean("Experimental", "show_box_corporation_names")
+        return self.config.getboolean("Experimental", "show_box_corporation_names")
     
     ##
     #    END WORK IN PROGRESS
