@@ -89,7 +89,7 @@ def setup_script():
         print(WARN+"Setup Error: Game script failed with "+str(error))
         sys.exit()
 
-def test(options, *args, **kwargs):
+def test():
     print "Test has been fired"
     from setup import XmlGameImporter
     XmlGameImporter.import_xml_box_files_for_game("sample", 1)
@@ -117,6 +117,9 @@ def main(args):
     # Start server
     if args.start_server:
         serve()
+    # Run test functionality
+    if args.run_test:
+        test()
 
 ### Main
 if __name__ == '__main__':
@@ -152,10 +155,10 @@ if __name__ == '__main__':
         help="start the admin recovery console",
     )
     #TODO remove this before production
-    parser.add_option(
+    parser.add_argument(
         "-t", "--test",
-        action="callback",
-        callback=test,
+        action="store_true",
+        dest='run_test',
         help="run testing code in the 'test' function (for debugging and development purposes)"
     )
     main(parser.parse_args())
