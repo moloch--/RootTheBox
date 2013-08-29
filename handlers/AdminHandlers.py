@@ -59,6 +59,7 @@ class AdminCreateHandler(BaseHandler):
         self.game_objects = {
             'corporation': 'admin/create/corporation.html',
                     'box': 'admin/create/box.html',
+                   'flag': 'admin/create/flag.html',
               'flag/text': 'admin/create/flag-text.html',
               'flag/file': 'admin/create/flag-file.html',
                    'team': 'admin/create/team.html',
