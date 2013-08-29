@@ -66,21 +66,27 @@ class ConfigManager(object):
         level = self.config.get("Logging", 'console_level').lower()
         logger = logging.getLogger()
         logger.setLevel(logging_levels.get(level, logging.NOTSET))
-        # Configure File Logger
         if self.config.getboolean("Logging", 'save_logs'):
-            file_log = logging.FileHandler('%s' % self.logfile)
-            logger.addHandler(file_log)
-            file_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
-            file_log.setFormatter(file_format)
-            flevel = self.config.get("Logging", 'file_level').lower()
-            file_log.setLevel(logging_levels.get(flevel, logging.NOTSET))
-        # Configure WebSocket Logger
+            self._file_logger(logger)
         if self.enable_logviewer:
-            ws_log = ObservableLoggingHandler.Instance()
-            logger.addHandler(ws_log)
-            msg_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
-            ws_log.setFormatter(msg_format)
-            ws_log.setLevel(logging.DEBUG)
+            self._websocket_logger(logger)
+
+    def _file_logger(self, logger):
+        ''' Configure File Logger '''
+        file_log = logging.FileHandler('%s' % self.logfile)
+        logger.addHandler(file_log)
+        file_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
+        file_log.setFormatter(file_format)
+        flevel = self.config.get("Logging", 'file_level').lower()
+        file_log.setLevel(logging_levels.get(flevel, logging.NOTSET))
+
+    def _websocket_logger(self, logger):
+        ''' Configure WebSocket Logger '''      
+        ws_log = ObservableLoggingHandler.Instance()
+        logger.addHandler(ws_log)
+        msg_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
+        ws_log.setFormatter(msg_format)
+        ws_log.setLevel(logging.DEBUG)
 
     def refresh(self):
         ''' Refresh config file settings '''
@@ -141,6 +147,16 @@ class ConfigManager(object):
         if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':
             logging.warn("Possible misconfiguration 'domain' is set to 'localhost'")
         return _domain
+
+    @property
+    def use_bots(self):
+        ''' Whether bots should be enabled in this game '''
+        return self.config.getboolean("Experimental", "use_bots")
+
+    @property
+    def use_black_market(self):
+        ''' Whether the black market should be enabled in this game '''
+        return self.config.getboolean("Experimental", "use_black_market")
 
     @property
     def max_team_size(self):
@@ -330,31 +346,6 @@ class ConfigManager(object):
             db_conn = self.__mysql__()
         self._test_db_connection(db_conn)
         return db_conn
-    
-    @property
-    def use_teams(self):
-        ''' Whether teams should be enabled in this game '''
-        return self.config.getboolean("Experimental", "use_teams")
-
-    @property
-    def use_bots(self):
-        ''' Whether bots should be enabled in this game '''
-        return self.config.getboolean("Experimental", "use_bots")
-
-    @property
-    def use_black_market(self):
-        ''' Whether the black market should be enabled in this game '''
-        return self.config.getboolean("Experimental", "use_black_market")
-
-    @property
-    def use_wall_of_sheep(self):
-        ''' Whether the black market should be enabled in this game '''
-        return self.config.getboolean("Experimental", "use_wall_of_sheep")
-    
-    @property
-    def show_box_corporation_names(self):
-        ''' Whether or not to show corporation names on the missions screen '''
-        return self.config.getboolean("Experimental", "show_box_corporation_names")
 
     def __postgresql__(self):
         ''' 
