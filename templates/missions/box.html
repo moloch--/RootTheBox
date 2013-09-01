@@ -141,48 +141,48 @@
         <div class="well">
             <table class="table table-hover">
                 <caption><h4> - Flags - </h4></caption>
-            	<thead>
-            		<tr>
-            			<th>#</th>
-            			<th>Name</th>
-            			<th>Description</th>
-            			<th>Reward</th>
-            			<th><!-- Submit --></th>
-            		</tr>
-            	</thead>
-            	<tbody>
-            		{% for flag in box.flags %}
-            			{% if flag in team.flags %}
-            				<tr class="success">
-            			{% else %}
-            				<tr>
-            			{% end %}
-            				<td>{{ box.flags.index(flag) +1 }}</td>
-            				<td>{{ flag.name }}</td>
-            				<td>{{ flag.description }}</td>
-            				<td>${{ flag.value }}</td>
-            				{% if flag in team.flags %}
-            					<td><!-- Button --></td>
-            				{% else %}
-            					{% if flag.is_file %}
-            						<td>
-            							<a class="btn btn-mini" data-toggle="modal" 
-            								href="#submitFileFlagModal" onclick="set_flag_uuid('file', '{{ flag.uuid }}')">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Reward</th>
+                        <th><!-- Submit --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for flag in box.flags %}
+                        {% if flag in team.flags %}
+                            <tr class="success">
+                        {% else %}
+                            <tr>
+                        {% end %}
+                            <td>{{ box.flags.index(flag) +1 }}</td>
+                            <td>{{ flag.name }}</td>
+                            <td>{{ flag.description }}</td>
+                            <td>${{ flag.value }}</td>
+                            {% if flag in team.flags %}
+                                <td><!-- Button --></td>
+                            {% else %}
+                                {% if flag.is_file %}
+                                    <td>
+                                        <a class="btn btn-mini" data-toggle="modal" 
+                                            href="#submitFileFlagModal" onclick="set_flag_uuid('file', '{{ flag.uuid }}')">
                                             Submit
                                         </a>
-            						</td>
-            					{% else %}
-            						<td>
-            							<a class="btn btn-mini" data-toggle="modal" 
-            								href="#submitTextFlagModal" onclick="set_flag_uuid('text', '{{ flag.uuid }}')">
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <a class="btn btn-mini" data-toggle="modal" 
+                                            href="#submitTextFlagModal" onclick="set_flag_uuid('text', '{{ flag.uuid }}')">
                                             Submit
                                         </a>
-            						</td>
-            					{% end %}
-            				{% end %}
-            			</tr>
-            		{% end %}
-            	</tbody>
+                                    </td>
+                                {% end %}
+                            {% end %}
+                        </tr>
+                    {% end %}
+                </tbody>
             </table>
         </div>
         {% if len(box.hints) != 0 %}

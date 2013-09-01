@@ -80,13 +80,13 @@
         }
     </script>
     <div class="container">
-    	<h1>Game Levels</h1>
+        <h1>Game Levels</h1>
         <br />
         {% from models import GameLevel %}
         {% for level in GameLevel.all() %}
-        	<div class="well">
-        		<h2 style="display:inline;">Level #{{ level.number }}&nbsp;</h2>
-        		<h3 style="display:inline;">(Buyout ${{ level.buyout }})&nbsp;&nbsp;&nbsp;</h3>
+            <div class="well">
+                <h2 style="display:inline;">Level #{{ level.number }}&nbsp;</h2>
+                <h3 style="display:inline;">(Buyout ${{ level.buyout }})&nbsp;&nbsp;&nbsp;</h3>
                 <a class="btn" data-toggle="modal" href="#editLevelModal" 
                     onclick="get_details('game_level', '{{ level.uuid }}')">
                     Edit Level
@@ -94,7 +94,7 @@
                 <br />
                 <br />
                 {% if len(level.boxes) != 0 %}
-            		<table class="table table-striped">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -104,25 +104,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                        	{% for box in level.boxes %}
-                        		<tr>
-                        			<td>{{ level.boxes.index(box) + 1 }}</td>
-                        			<td>{{ box.name }}</td>
-                        			<td>{{ len(box.flags) }}</td>
+                            {% for box in level.boxes %}
+                                <tr>
+                                    <td>{{ level.boxes.index(box) + 1 }}</td>
+                                    <td>{{ box.name }}</td>
+                                    <td>{{ len(box.flags) }}</td>
                                     <td>
                                           <a class="btn btn-mini" data-toggle="modal" href="#switchLevelModal"
                                                 onclick="switch_level('{{ level.uuid }}', '{{ box.uuid }}')">
                                             Switch Level
                                           </a>
                                     </td>
-                        		</tr>
-                        	{% end %}
+                                </tr>
+                            {% end %}
                         </tbody>
                     </table>
                 {% else %}
                     <strong>No boxes on this level yet, <a href="/admin/create/box">add some</a></strong>
                 {% end %}
-        	</div>
+            </div>
         {% end %}
     </div>
 {% end %}

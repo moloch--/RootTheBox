@@ -1,47 +1,47 @@
 <div class="navbar navbar-inverse">
-	<div class="navbar-inner">
-		<a class="brand">PasteBin</a>
-		<ul class="nav">
-			<li><a onclick="create()" href="#">Create</a></li>
-		</ul>
-	</div>
+    <div class="navbar-inner">
+        <a class="brand">PasteBin</a>
+        <ul class="nav">
+            <li><a onclick="create()" href="#">Create</a></li>
+        </ul>
+    </div>
 </div>
 <div class="row-fluid">
     <div class="span12 well animated fadeIn">
-		{% if errors is not None and len(errors) != 0 %}
-			{% for error in errors %}
-				<div class="alert alert-error">
-					<a class="close" data-dismiss="alert" href="#">×</a>
-					<h4 class="alert-heading">ERROR</h4>
-					{{ error }}
-				</div>
-			{% end %}
-		{% end %}
-	    <script>
-	    	function submit_paste() { 		
-	    		if (notifier_ws !== undefined) {
+        {% if errors is not None and len(errors) != 0 %}
+            {% for error in errors %}
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">ERROR</h4>
+                    {{ error }}
+                </div>
+            {% end %}
+        {% end %}
+        <script>
+            function submit_paste() {         
+                if (notifier_ws !== undefined) {
                     notifier_ws.close();
                 }
                 return true;
-	    	}
-	    </script>
-		<form id="create-paste" action="/user/share/pastebin/create" onsubmit="submit_paste()" method="post" autocomplete="off">  
-		    {% raw xsrf_form_html() %}
-		    <fieldset>
-		    <legend>Create New Paste</legend>
-		    	<p>
-		        	<label for="name">Name</label>
-		            <input autofocus required name="name" id="name" placeholder="Paste Name" type="text" />
-		        </p>
-		        <p>
-		            <label for="content">Content</label>
-		            <textarea required name="content" placeholder="Paste Text Here" style="width:auto;" rows="10" cols="60">
-		            </textarea>
-		        </p>
-		    </fieldset>
-		    <p >
-		        <button class="btn btn-primary">Create New Paste</button>
-		    </p>   
-		</form>
+            }
+        </script>
+        <form id="create-paste" action="/user/share/pastebin/create" onsubmit="submit_paste()" method="post" autocomplete="off">  
+            {% raw xsrf_form_html() %}
+            <fieldset>
+            <legend>Create New Paste</legend>
+                <p>
+                    <label for="name">Name</label>
+                    <input autofocus required name="name" id="name" placeholder="Paste Name" type="text" />
+                </p>
+                <p>
+                    <label for="content">Content</label>
+                    <textarea required name="content" placeholder="Paste Text Here" style="width:auto;" rows="10" cols="60">
+                    </textarea>
+                </p>
+            </fieldset>
+            <p >
+                <button class="btn btn-primary">Create New Paste</button>
+            </p>   
+        </form>
     </div>
 </div><!--/row-->

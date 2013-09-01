@@ -1,19 +1,19 @@
 <div class="navbar navbar-inverse">
-	<div class="navbar-inner">
-		<a class="brand">PasteBin</a>
-		<ul class="nav">
-			<li><a onclick="create()" href="#">Create</a></li>
-			<li><a onclick="delete_paste('{{ paste.uuid }}')">Delete</a></li>
-		</ul>
-	</div>
+    <div class="navbar-inner">
+        <a class="brand">PasteBin</a>
+        <ul class="nav">
+            <li><a onclick="create()" href="#">Create</a></li>
+            <li><a onclick="delete_paste('{{ paste.uuid }}')">Delete</a></li>
+        </ul>
+    </div>
 </div>
 <div class="row-fluid">
     <div class="span12 well animated fadeIn">
-		{% if paste is not None %}
-			<h3>{{ paste.name }} - {{ paste.created.strftime("%I:%M%p") }}</h3>
+        {% if paste is not None %}
+            <h3>{{ paste.name }} - {{ paste.created.strftime("%I:%M%p") }}</h3>
 <pre>
 {{ paste.contents }}
 </pre>
-		{% end %}
+        {% end %}
     </div>
 </div><!--/row-->

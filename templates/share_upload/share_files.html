@@ -3,80 +3,80 @@
 {% block title %}Shared Files{% end %}
 
 {% block content %}
-	{% include ../notifier.html %}
-	<div class="container">
-		<h1>File Sharing</h1>
-		<br />
-		{% if errors != None and len(errors) != 0 %}
-	      {% for error in errors %}
-		      <div class="alert alert-error">
-		        <a class="close" data-dismiss="alert" href="#">×</a>
-		        <h4 class="alert-heading">ERROR</h4>
-		        {{ error }}
-		      </div>
-		  {% end %}
-		{% end %}
-		<div class="row">
-			<div class="span4 well">
-				<form id="share-file" action="/user/share/files" method="post" enctype="multipart/form-data">  
-			      {% raw xsrf_form_html() %}
-			      <fieldset>
-			      	<legend>File Upload</legend>
-			        <p class="first">
-			          <label for="file_data">File (Max 50Mb)</label>
-			          <input required type="file" name="file_data" id="file_data" style="color:white;" />
-			        </p>
-			        <p>
-			          <label for="description">Description</label>
-			          <input type="text" name="description" id="description" placeholder="File Description" />
-			        </p> 
-			      </fieldset>
-			      <script>
-			      		function share_file() {
-				    		if (notifier_ws !== undefined) {
-		                        notifier_ws.close();
-		                    }
-		                    document.forms['share-file'].submit();      			
-			      		}
-			      </script>
-			      <p class="submit">
-			        <button class="btn" onclick="share_file()"> Upload File </button>
-			      </p>
-			    </form>
-			</div>
-			<div class="span6 well">
-				<h3>Shared Files</h3>
-				<div id="accordion">
-					{% if len(shares) == 0 %}
-						<strong>There are currently no shared files.</strong>
-					{% else %}
-						<div class="accordion" id="accordion2">
-							{% for share in shares %}
-								  <div class="accordion-group">
-								    <div class="accordion-heading">
-								      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse_{{ share.uuid }}">
-								        <strong>{{ share.file_name }}</strong>&nbsp;&nbsp;&nbsp;{{ share.content }}
-								      </a>
-								    </div>
-								    <div id="collapse_{{ share.uuid }}" class="accordion-body collapse">
-								      <div class="accordion-inner">
-								      	<strong>Created: </strong> {{ share.created }}</strong> <br />
-								      	<strong>File Size: </strong> {{ share.byte_size }} bytes <br />
-								      	<p>
-											<strong>Description:</strong> {{ share.description }}
-								    	</p>
-								    	<br />
-								        <button class="btn" onclick="window.open('/user/shares/download?uuid={{ share.uuid }}', '_newtab');" >
-											Download {{ share.file_name }}
-										</button>
-								      </div>
-								    </div>
-								  </div>
-							{% end %}
-						</div>
-					{% end %}
-				</div>
-			</div>
-		</div>
-	</div>
+    {% include ../notifier.html %}
+    <div class="container">
+        <h1>File Sharing</h1>
+        <br />
+        {% if errors != None and len(errors) != 0 %}
+          {% for error in errors %}
+              <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading">ERROR</h4>
+                {{ error }}
+              </div>
+          {% end %}
+        {% end %}
+        <div class="row">
+            <div class="span4 well">
+                <form id="share-file" action="/user/share/files" method="post" enctype="multipart/form-data">  
+                  {% raw xsrf_form_html() %}
+                  <fieldset>
+                      <legend>File Upload</legend>
+                    <p class="first">
+                      <label for="file_data">File (Max 50Mb)</label>
+                      <input required type="file" name="file_data" id="file_data" style="color:white;" />
+                    </p>
+                    <p>
+                      <label for="description">Description</label>
+                      <input type="text" name="description" id="description" placeholder="File Description" />
+                    </p> 
+                  </fieldset>
+                  <script>
+                          function share_file() {
+                            if (notifier_ws !== undefined) {
+                                notifier_ws.close();
+                            }
+                            document.forms['share-file'].submit();                  
+                          }
+                  </script>
+                  <p class="submit">
+                    <button class="btn" onclick="share_file()"> Upload File </button>
+                  </p>
+                </form>
+            </div>
+            <div class="span6 well">
+                <h3>Shared Files</h3>
+                <div id="accordion">
+                    {% if len(shares) == 0 %}
+                        <strong>There are currently no shared files.</strong>
+                    {% else %}
+                        <div class="accordion" id="accordion2">
+                            {% for share in shares %}
+                                  <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse_{{ share.uuid }}">
+                                        <strong>{{ share.file_name }}</strong>&nbsp;&nbsp;&nbsp;{{ share.content }}
+                                      </a>
+                                    </div>
+                                    <div id="collapse_{{ share.uuid }}" class="accordion-body collapse">
+                                      <div class="accordion-inner">
+                                          <strong>Created: </strong> {{ share.created }}</strong> <br />
+                                          <strong>File Size: </strong> {{ share.byte_size }} bytes <br />
+                                          <p>
+                                            <strong>Description:</strong> {{ share.description }}
+                                        </p>
+                                        <br />
+                                        <button class="btn" onclick="window.open('/user/shares/download?uuid={{ share.uuid }}', '_newtab');" >
+                                            Download {{ share.file_name }}
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                            {% end %}
+                        </div>
+                    {% end %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% end %}

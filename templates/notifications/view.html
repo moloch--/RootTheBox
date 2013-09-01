@@ -3,34 +3,34 @@
 {% block title %}All Notifications{% end %}
 
 {% block content %}
-	<div class="container">
-		<h2>All Notifications</h2>
-		<br />
-		<div class="well">
-		{% from models import Notification %}
-		{% for notify in Notification.by_user_id(user.id) %}
-			<div class="well">
-				{% if notify.icon_url is not None %}
-					<img style="width:36px; height:36px; display:inline-block;" src="/avatars/{{ notify.icon_url }}" />
-				{% elif notify.category == "success" %}
-					<img style="width:36px; height:36px; display:inline-block;" src="/static/images/success.png" />
-				{% elif notify.category == "info" %}
-					<img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
-					src="/static/images/info.png" />
-				{% elif notify.category == "warning" %}
-					<img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
-					src="/static/images/warning.png" />
-				{% elif notify.category == "error" %}
-					<img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
-					src="/static/images/error.png" />
-				{% end %}
-				<p style="display:inline;">
-					<strong>{{ notify.title }}</strong> {{ notify.created.strftime("%I:%M%p") }}
-					<br />
-					{{ notify.message }}
-				</p>
-			</div>
-		{% end %}
-		</div>
-	</div>
+    <div class="container">
+        <h2>All Notifications</h2>
+        <br />
+        <div class="well">
+        {% from models import Notification %}
+        {% for notify in Notification.by_user_id(user.id) %}
+            <div class="well">
+                {% if notify.icon_url is not None %}
+                    <img style="width:36px; height:36px; display:inline-block;" src="/avatars/{{ notify.icon_url }}" />
+                {% elif notify.category == "success" %}
+                    <img style="width:36px; height:36px; display:inline-block;" src="/static/images/success.png" />
+                {% elif notify.category == "info" %}
+                    <img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
+                    src="/static/images/info.png" />
+                {% elif notify.category == "warning" %}
+                    <img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
+                    src="/static/images/warning.png" />
+                {% elif notify.category == "error" %}
+                    <img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
+                    src="/static/images/error.png" />
+                {% end %}
+                <p style="display:inline;">
+                    <strong>{{ notify.title }}</strong> {{ notify.created.strftime("%I:%M%p") }}
+                    <br />
+                    {{ notify.message }}
+                </p>
+            </div>
+        {% end %}
+        </div>
+    </div>
 {% end %}

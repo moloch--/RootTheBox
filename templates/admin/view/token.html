@@ -3,54 +3,54 @@
 {% block title %}Create RegToken{% end %}
 
 {% block content %}
-	<div class="container">
-		<h1>Registration Tokens</h1>
-		<br />
-		<script>
-			function del_token(token_value) {
-				$('input[name=token_value]').val(token_value);
-				document.token_form.submit();
-			}	
-		</script>
-		<form name="token_form" action="/admin/regtoken/view" method="post">
-			{% raw xsrf_form_html() %}
-			<input name="token_value" type="hidden" value="blank" />
-		</form>
-		{% if errors != None and len(errors) != 0 %}
-		    {% for error in errors %}
-		    	<div class="alert alert-error">
-		        	<a class="close" data-dismiss="alert" href="#">×</a>
-		          	<h4 class="alert-heading">ERROR</h4>
-		          		{{ error }}
-		        </div>
-		    {% end %}
-		{% end %}
-		<div class="well">
-			<table class="table table-hover">
-				<thead>
-	                <tr>
-	                	<th>#</th>
-	                	<th>Token</th>
-	                	<th>Used</th>
-	                	<th><!-- Delete --></th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	            	{% from models.RegistrationToken import RegistrationToken %}
-	            	{% for token in RegistrationToken.all() %}
-		                <tr>
-		                  <td>{{ token.id }}</td>
-		                  <td>{{ token.value }}</td>
-		                  <td>{{ token.used }}</td>
-		                  <td>
-		                  	<button class="btn btn-danger btn-mini" type="button" onclick="del_token('{{ token.value }}')">
-		                  		Delete
-		                  	</button>
-		                  </td>
-		                </tr>
-		            {% end %}
-	            </tbody>
-			</table>
-		</div>
-	</div>
+    <div class="container">
+        <h1>Registration Tokens</h1>
+        <br />
+        <script>
+            function del_token(token_value) {
+                $('input[name=token_value]').val(token_value);
+                document.token_form.submit();
+            }    
+        </script>
+        <form name="token_form" action="/admin/regtoken/view" method="post">
+            {% raw xsrf_form_html() %}
+            <input name="token_value" type="hidden" value="blank" />
+        </form>
+        {% if errors != None and len(errors) != 0 %}
+            {% for error in errors %}
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                      <h4 class="alert-heading">ERROR</h4>
+                          {{ error }}
+                </div>
+            {% end %}
+        {% end %}
+        <div class="well">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Token</th>
+                        <th>Used</th>
+                        <th><!-- Delete --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% from models.RegistrationToken import RegistrationToken %}
+                    {% for token in RegistrationToken.all() %}
+                        <tr>
+                          <td>{{ token.id }}</td>
+                          <td>{{ token.value }}</td>
+                          <td>{{ token.used }}</td>
+                          <td>
+                              <button class="btn btn-danger btn-mini" type="button" onclick="del_token('{{ token.value }}')">
+                                  Delete
+                              </button>
+                          </td>
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% end %}

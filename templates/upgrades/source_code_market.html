@@ -16,8 +16,8 @@
                 <input id="buy_box_uuid" type="hidden" name="box_uuid" value="" />
             </form>
             <p id="buy_dialog">
-            	Are you sure you want to buy this code?
-        	</p>
+                Are you sure you want to buy this code?
+            </p>
             <br />
         </div>
         <div class="modal-footer">
@@ -34,7 +34,7 @@
             $("#buy_dialog").text(msg);
         }
     </script>
-	<div class="container">
+    <div class="container">
         <h1>Source Code Market</h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
@@ -66,7 +66,7 @@
                     </thead>
                     <tbody>
                         {% for index, box in enumerate(boxes) %}
-                        	<tr>
+                            <tr>
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ box.name }}</td>
                                 <td>{{ box.game_level.number }}</td>
@@ -92,11 +92,11 @@
                                         </a>
                                     </td>
                                 {% end %}
-                        	</tr>
+                            </tr>
                         {% end %}
                     </tbody>
                 </table>
             {% end %}
-    	</div>
+        </div>
     </div>
 {% end %}

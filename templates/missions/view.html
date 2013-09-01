@@ -21,34 +21,34 @@
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <button class="btn btn-primary" type="button" onclick="document.forms['unlock-level'].submit();">
-            	Unlock
+                Unlock
             </button>
         </div>
     </div>
     <script>
-    	function set_level_uuid (uuid, value) {
-    		$("#level_uuid").val(uuid.toString());
-    		$("#description").html("Would you like to unlock this level for $"+value.toString()+"?");
-    	}
+        function set_level_uuid (uuid, value) {
+            $("#level_uuid").val(uuid.toString());
+            $("#description").html("Would you like to unlock this level for $"+value.toString()+"?");
+        }
     </script>
     <!-- Visable -->
     <div class="container">
-		<h1>Missions</h1>
-		<br />
-	    {% if errors is not None and len(errors) != 0 %}
-	     	{% for error in errors %}
-	        	<div class="alert alert-error">
-	          		<a class="close" data-dismiss="alert" href="#">×</a>
-	          		<h4 class="alert-heading">ERROR</h4>
-	          		{{ error }}
-	        	</div>
-	      	{% end %}
-	    {% end %}
-		{% from models.GameLevel import GameLevel %}
-		{% for level in GameLevel.all() %}
+        <h1>Missions</h1>
+        <br />
+        {% if errors is not None and len(errors) != 0 %}
+             {% for error in errors %}
+                <div class="alert alert-error">
+                      <a class="close" data-dismiss="alert" href="#">×</a>
+                      <h4 class="alert-heading">ERROR</h4>
+                      {{ error }}
+                </div>
+              {% end %}
+        {% end %}
+        {% from models.GameLevel import GameLevel %}
+        {% for level in GameLevel.all() %}
             {% if len(team.level_flags(level.number)) != len(level.flags) %}
-			    <div class="well">
-    				<h3 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h3>
+                <div class="well">
+                    <h3 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h3>
                     {% if len(team.level_flags(level.number)) != 0 %}
                         <div class="progress">
                             <div class="bar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;">
@@ -56,15 +56,15 @@
                             </div>
                         </div>
                     {% end %}
-    				{% if level in team.game_levels %}
+                    {% if level in team.game_levels %}
                         <hr>
                         <div class="container">
                             {% for box in level.boxes[::3] %}
                                 <div class="row">
-    						        <div class="span3">
+                                    <div class="span3">
                                         <center>
                                             <a href="/user/missions/boxes?uuid={{ box.uuid }}">
-                                            	<h5> {{ box.corporation.name }}: {{ box.name }}</h5>
+                                                <h5> {{ box.corporation.name }}: {{ box.name }}</h5>
                                                 <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                                             </a>
                                         </center>
@@ -95,21 +95,21 @@
                                 <br />
                             {% end %}
                         </div>
-    				{% else %}
-    					<a class="btn" data-toggle="modal" href="#unlockLevelModal"
-    						onclick="set_level_uuid('{{ level.uuid }}', '{{ level.buyout }}')">
-    	                    Unlock
-    	                </a>
-    					<hr>
-    					<br />
-    					<strong>
-    						You do not have access to this level yet.
-    					</strong>
-    					<br />
-    					<br />
-    				{% end %}
-    			</div>
+                    {% else %}
+                        <a class="btn" data-toggle="modal" href="#unlockLevelModal"
+                            onclick="set_level_uuid('{{ level.uuid }}', '{{ level.buyout }}')">
+                            Unlock
+                        </a>
+                        <hr>
+                        <br />
+                        <strong>
+                            You do not have access to this level yet.
+                        </strong>
+                        <br />
+                        <br />
+                    {% end %}
+                </div>
             {% end %}
-		{% end %}
-	</div>
+        {% end %}
+    </div>
 {% end %}

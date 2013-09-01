@@ -5,84 +5,84 @@
 {% block content %}
     {% include ../notifier.html %}
     <!-- Visable -->
-	<div class="container">
-		<h1>Botnet Command &amp; Control</h1>
-		<br />
-		<script>
-			var entityMap = {
-			    "&": "&amp;",
-			    "<": "&lt;",
-			    ">": "&gt;",
-			    '"': '&quot;',
-			    "'": '&#39;',
-			    "/": '&#x2F;'
-			};
-			function escapeHtml(string) {
-			    return String(string).replace(/[&<>"'\/]/g, function (s) {
-			        return entityMap[s];
-			    });
-			}
-		    var monitor_ws;
-		    $(document).ready(function() {
-		    	$('#table-footer').text('WebSocket Connecting ...');
-		        monitor_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:{{ handler.application.settings['port'] }}/botnet/webmonitor"
-		        );
-		        monitor_ws.onerror = function (evt) {
-		        	alert("ERROR: " + evt.data.toString());
-		        };
-		        monitor_ws.onmessage = function (evt) {
-		            msg = jQuery.parseJSON(evt.data);
-		            if ('opcode' in msg) {
-		            	if (msg['opcode'] == 'update' && 'bots' in msg) {
-				            bots = msg['bots'];
-				            $('#box-table').text('');
-				            $('#table-footer').text('');
-				            if (0 < bots.length) {
-					            for (var index = 0; index < bots.length; index++) {
-					            	$('#box-table').append(
-					            		"<tr>" +
-						            		"<td> " + (index + 1).toString() + "</td>" +
-						            		"<td> " + escapeHtml(bots[index]['box_name']) + "</td>" +
-						            		"<td> " + escapeHtml(bots[index]['remote_ip']) + "</td>" +
-						            		"<td>$" + escapeHtml(bots[index]['total_reward']) + "</td>" +
-						            		"<td> " + escapeHtml(bots[index]['last_ping']) + "</td>" +
-					            		"<tr>"
-					            	);
-					            }
-					        } else {
-					        	$('#table-footer').text('No bots yet, get hacking!');
-					        }
-				        } else {
-				        	alert("Error: Update contains no bots.");
-				        }
-			        } else {
-			        	alert("Error: Malformed message from server.");
-			        }
-		        };
-		    });
-		</script>
-		<div class="alert alert-warning">
+    <div class="container">
+        <h1>Botnet Command &amp; Control</h1>
+        <br />
+        <script>
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': '&quot;',
+                "'": '&#39;',
+                "/": '&#x2F;'
+            };
+            function escapeHtml(string) {
+                return String(string).replace(/[&<>"'\/]/g, function (s) {
+                    return entityMap[s];
+                });
+            }
+            var monitor_ws;
+            $(document).ready(function() {
+                $('#table-footer').text('WebSocket Connecting ...');
+                monitor_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:{{ handler.application.settings['port'] }}/botnet/webmonitor"
+                );
+                monitor_ws.onerror = function (evt) {
+                    alert("ERROR: " + evt.data.toString());
+                };
+                monitor_ws.onmessage = function (evt) {
+                    msg = jQuery.parseJSON(evt.data);
+                    if ('opcode' in msg) {
+                        if (msg['opcode'] == 'update' && 'bots' in msg) {
+                            bots = msg['bots'];
+                            $('#box-table').text('');
+                            $('#table-footer').text('');
+                            if (0 < bots.length) {
+                                for (var index = 0; index < bots.length; index++) {
+                                    $('#box-table').append(
+                                        "<tr>" +
+                                            "<td> " + (index + 1).toString() + "</td>" +
+                                            "<td> " + escapeHtml(bots[index]['box_name']) + "</td>" +
+                                            "<td> " + escapeHtml(bots[index]['remote_ip']) + "</td>" +
+                                            "<td>$" + escapeHtml(bots[index]['total_reward']) + "</td>" +
+                                            "<td> " + escapeHtml(bots[index]['last_ping']) + "</td>" +
+                                        "<tr>"
+                                    );
+                                }
+                            } else {
+                                $('#table-footer').text('No bots yet, get hacking!');
+                            }
+                        } else {
+                            alert("Error: Update contains no bots.");
+                        }
+                    } else {
+                        alert("Error: Malformed message from server.");
+                    }
+                };
+            });
+        </script>
+        <div class="alert alert-warning">
             <a class="close" data-dismiss="alert" href="#">×</a>
             <h4 class="alert-heading">Are You Elite?</h4>
             <a href="/user/bots/download/monitor" target="_blank">
             Download the command line botnet monitor</a> (Linux / BSD only)
         </div>
-		<div class="well">
-			<table id="monitor-table" class="table table-bordered">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Box Name</th>
-						<th>IP Address</th>
-						<th>Income</th>
-						<th>Last Ping</th>
-					</tr>
-				</thead>
-				<tbody id="box-table">
-					<!-- Web Socket Data Goes Here -->
-				</tbody>
-			</table>
-			<p id="table-footer" style="text-align:center;"></p>
-		</div>
-	</div>
+        <div class="well">
+            <table id="monitor-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Box Name</th>
+                        <th>IP Address</th>
+                        <th>Income</th>
+                        <th>Last Ping</th>
+                    </tr>
+                </thead>
+                <tbody id="box-table">
+                    <!-- Web Socket Data Goes Here -->
+                </tbody>
+            </table>
+            <p id="table-footer" style="text-align:center;"></p>
+        </div>
+    </div>
 {% end %}

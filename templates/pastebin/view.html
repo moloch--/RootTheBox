@@ -3,55 +3,55 @@
 {% block title %}PasteBin{% end %}
 
 {% block content %}
-	{% include ../notifier.html %}
-	<form id="delete-paste" method="post" action="/user/share/pastebin/delete" >
-		{% raw xsrf_form_html() %}
-		<input id="uuid" name="uuid" type="hidden" value="" />
-	</form>
-	<script>
-		function get_paste(uuid) {
-			$.get('/user/share/pastebin/display?paste_uuid='+uuid, function(data) {
-				$('#display-paste').html(data);
-			});
-		}
-		
-		function create() {
-			$.get('/user/share/pastebin/create', function(data) {
-				$('#display-paste').html(data);
-			});
-		}
-		
-		function delete_paste(uuid) {
-			$('#uuid').val(uuid);
-			document.forms['delete-paste'].submit();
-		}
-	</script>
-	<div class="row-fluid">
-	<div class="row-fluid">
+    {% include ../notifier.html %}
+    <form id="delete-paste" method="post" action="/user/share/pastebin/delete" >
+        {% raw xsrf_form_html() %}
+        <input id="uuid" name="uuid" type="hidden" value="" />
+    </form>
+    <script>
+        function get_paste(uuid) {
+            $.get('/user/share/pastebin/display?paste_uuid='+uuid, function(data) {
+                $('#display-paste').html(data);
+            });
+        }
+        
+        function create() {
+            $.get('/user/share/pastebin/create', function(data) {
+                $('#display-paste').html(data);
+            });
+        }
+        
+        function delete_paste(uuid) {
+            $('#uuid').val(uuid);
+            document.forms['delete-paste'].submit();
+        }
+    </script>
+    <div class="row-fluid">
+    <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-            	<li class="nav-header">Team Shares</li>
-            	{% from models import PasteBin %}
-            	{% if len(PasteBin.by_team_id(user.team.id)) != 0 %}
-	            	{% for paste in PasteBin.by_team_id(user.team.id) %}
-	            		<li><a onclick="get_paste('{{ paste.uuid }}')" href="#">{{ paste.name }}</a></li>
-	            	{% end %}
-	            {% else %}
-	            	<li><a href="#">EMPTY</a></li>
-	            {% end %}
+                <li class="nav-header">Team Shares</li>
+                {% from models import PasteBin %}
+                {% if len(PasteBin.by_team_id(user.team.id)) != 0 %}
+                    {% for paste in PasteBin.by_team_id(user.team.id) %}
+                        <li><a onclick="get_paste('{{ paste.uuid }}')" href="#">{{ paste.name }}</a></li>
+                    {% end %}
+                {% else %}
+                    <li><a href="#">EMPTY</a></li>
+                {% end %}
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
         <div id="display-paste" class="span9">
-			<div class="navbar navbar-inverse">
-				<div class="navbar-inner">
-					<a class="brand">PasteBin</a>
-					<ul class="nav">
-						<li><a onclick="create()" href="#">Create</a></li>
-					</ul>
-				</div>
-			</div>
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner">
+                    <a class="brand">PasteBin</a>
+                    <ul class="nav">
+                        <li><a onclick="create()" href="#">Create</a></li>
+                    </ul>
+                </div>
+            </div>
         </div><!--/span-->
     </div>
 {% end %}
