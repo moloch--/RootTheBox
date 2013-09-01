@@ -49,11 +49,6 @@ class BaseHandler(RequestHandler):
         self.config = ConfigManager.Instance()
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
-            self.conn = pylibmc.Client(
-                [self.config.memcached],
-                binary=True
-            )
-            self.conn.behaviors['no_block'] = 1  # async I/O
             self.session = self._create_session(session_id)
             self.session.refresh()
 
@@ -63,20 +58,13 @@ class BaseHandler(RequestHandler):
             try:
                 return User.by_uuid(self.session['user_uuid'])
             except KeyError:
-                logging.exception(
-                    "Malformed session: %r" % self.session
-                )
+                logging.exception("Malformed session: %r" % self.session)
             except:
                 logging.exception("Failed call to get_current_user()")
         return None
 
     def start_session(self):
         ''' Starts a new session '''
-        self.conn = pylibmc.Client(
-            [self.config.memcached],
-            binary=True,
-        )
-        self.conn.behaviors['no_block'] = 1  # async I/O
         self.session = self._create_session()
         self.set_secure_cookie('session_id',
             self.session.session_id,
@@ -86,17 +74,26 @@ class BaseHandler(RequestHandler):
             HttpOnly=True,
         )
 
+    def _connect_memcached(self):
+        ''' Connects to Memcached instance '''
+        self.memd_conn = pylibmc.Client(
+            [self.config.memcached],
+            binary=True,
+        )
+        self.memd_conn.behaviors['no_block'] = 1  # async I/O
+
     def _create_session(self, session_id=None):
         ''' Creates a new session '''
+        self._connect_memcached()
         kwargs = {
             'duration': self.config.session_age,
             'ip_address': self.request.remote_ip,
             'regeneration_interval': self.config.session_regeneration_interval,
         }
         new_session = None
-        old_session = MemcachedSession.load(session_id, self.conn)
+        old_session = MemcachedSession.load(session_id, self.memd_conn)
         if old_session is None or old_session._is_expired():
-            new_session = MemcachedSession(self.conn, **kwargs)
+            new_session = MemcachedSession(self.memd_conn, **kwargs)
         if old_session is not None:
             if old_session._should_regenerate():
                 old_session.refresh(new_session_id=True)
@@ -105,7 +102,7 @@ class BaseHandler(RequestHandler):
 
     def set_default_headers(self):
         ''' Set clickjacking/xss headers '''
-        self.set_header("Server", "'; DROP TABLE servertypes; --")
+        self.set_header("Server", "Foobar")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
 

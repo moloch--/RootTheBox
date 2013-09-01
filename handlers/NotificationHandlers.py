@@ -31,6 +31,7 @@ from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 class NotifySocketHandler(BaseWebSocketHandler):
     ''' Handles websocket connections '''
 
+    @restrict_origin
     def open(self):
         ''' When we receive a new websocket connect '''
         if self.session is not None and 'team_id' in self.session:

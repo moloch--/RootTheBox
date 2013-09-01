@@ -237,7 +237,7 @@ def start_server():
         logging.warn("Debug mode is enabled; some security measures will be ignored")
     
     # Setup server object
-    if config.enable_ssl:
+    if config.use_ssl:
         server = HTTPServer(app, 
             ssl_options={
                 "certfile": config.certfile,

@@ -1442,15 +1442,16 @@ class AdminLogViewerHandler(BaseHandler):
 class AdminLogViewerSocketHandler(BaseWebSocketHandler):
 
     @restrict_ip_address
+    @restrict_origin
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def open(self):
         ''' Add this object as an observer '''
+        self.observerable_log = None
         if self.config.enable_logviewer:
             self.observerable_log = ObservableLoggingHandler.Instance()
             self.observerable_log.add_observer(self)
         else:
-            self.observerable_log = None
             self.close()
     
     def update(self, messages):

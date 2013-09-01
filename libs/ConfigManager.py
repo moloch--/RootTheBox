@@ -149,6 +149,11 @@ class ConfigManager(object):
         return _domain
 
     @property
+    def origin(self):
+        http = 'https://' if self.use_ssl else 'http://'
+        return "%s%s:%d" % (http, self.domain, self.listen_port)
+
+    @property
     def use_bots(self):
         ''' Whether bots should be enabled in this game '''
         return self.config.getboolean("Game", "use_bots")
@@ -312,7 +317,7 @@ class ConfigManager(object):
         return self.config.getboolean("Database", 'bot_sql')
 
     @property
-    def enable_ssl(self):
+    def use_ssl(self):
         ''' Enable/disabled SSL server '''
         return self.config.getboolean("Ssl", 'use_ssl')
 
