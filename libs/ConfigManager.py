@@ -66,7 +66,7 @@ class ConfigManager(object):
         level = self.config.get("Logging", 'console_level').lower()
         logger = logging.getLogger()
         logger.setLevel(logging_levels.get(level, logging.NOTSET))
-        if self.config.getboolean("Logging", 'save_logs'):
+        if self.config.getboolean("Logging", 'file_logs'):
             self._file_logger(logger)
         if self.enable_logviewer:
             self._websocket_logger(logger)

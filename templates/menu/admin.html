@@ -17,15 +17,21 @@
                         <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/admin/create/team">New Team</a></li>
-                            <li><a href="/admin/create/game_level">New Game Level</a></li>
-                            <li><a href="/admin/create/corporation">New Corporation</a></li>
-                            <li><a href="/admin/create/box">New Box</a></li>
+                            <li><a href="/admin/create/team">New Team</a>
+                            </li>
+                            <li><a href="/admin/create/game_level">New Game Level</a>
+                            </li>
+                            <li><a href="/admin/create/corporation">New Corporation</a>
+                            </li>
+                            <li><a href="/admin/create/box">New Box</a>
+                            </li>
                             <li class="dropdown-submenu">
                                 <a tabindex="-1" href="#">New Flag</a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/admin/create/flag/text">Text Flag</a></li>
-                                    <li><a href="/admin/create/flag/file">File Flag</a></li>
+                                    <li><a href="/admin/create/flag/text">Text Flag</a>
+                                    </li>
+                                    <li><a href="/admin/create/flag/file">File Flag</a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -36,10 +42,14 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/admin/view/user_objects">Users</a></li>
-                            <li><a href="/admin/view/game_objects">Flags / Boxes / Corp.</a></li>
-                            <li><a href="/admin/view/game_levels">Game Levels</a></li>
-                            <li><a href="/admin/view/market_objects">Black Market Items</a></li>
+                            <li><a href="/admin/view/user_objects">Users</a>
+                            </li>
+                            <li><a href="/admin/view/game_objects">Flags / Boxes / Corp.</a>
+                            </li>
+                            <li><a href="/admin/view/game_levels">Game Levels</a>
+                            </li>
+                            <li><a href="/admin/view/market_objects">Black Market Items</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -48,8 +58,10 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/admin/upgrades/source_code_market">Source Code Market</a></li>
-                            <li><a href="/admin/upgrades/swat">SWAT</a></li>
+                            <li><a href="/admin/upgrades/source_code_market">Source Code Market</a>
+                            </li>
+                            <li><a href="/admin/upgrades/swat">SWAT</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -58,36 +70,41 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/admin/export/xml" target="_blank">Export to XML</a></li>
-                            <li><a href="/admin/import/xml">Import XML</a></li>
+                            <li><a href="/admin/export/xml" target="_blank">Export to XML</a>
+                            </li>
+                            <li><a href="/admin/import/xml">Import XML</a>
+                            </li>
                         </ul>
                     </li>
-                    <li><a href="/admin/configuration">Configuration</a></li>
-                    {% from libs.ConfigManager import ConfigManager %}
-                    {% if ConfigManager.Instance().enable_logviewer %}
-                        <li><a href="/admin/logviewer">Log Viewer</a></li>
-                    {% end %}
-                    {% if ConfigManager.Instance().restrict_registration %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <li><a href="/admin/configuration">Configuration</a>
+                    </li>
+                    {% from libs.ConfigManager import ConfigManager %} {% if ConfigManager.Instance().enable_logviewer %}
+                    <li><a href="/admin/logviewer">Log Viewer</a>
+                    </li>
+                    {% end %} {% if ConfigManager.Instance().restrict_registration %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 RegTokens
                                 <b class="caret"></b>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/admin/regtoken/create">Create</a></li>
-                                <li><a href="/admin/regtoken/view">View &amp; Delete</a></li>
-                            </ul>
-                        </li>
+                        <ul class="dropdown-menu">
+                            <li><a href="/admin/regtoken/create">Create</a>
+                            </li>
+                            <li><a href="/admin/regtoken/view">View &amp; Delete</a>
+                            </li>
+                        </ul>
+                    </li>
                     {% end %}
                 </ul>
                 <div class="btn-group pull-right">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="icon-user"></i>
-                            {{ handle }}
+                        {{ handle }}
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="/user/settings">Settings</a></li>
+                        <li><a href="/user/settings">Settings</a>
+                        </li>
                         <li class="divider"></li>
                         <li>
                             <!-- logout form -->
@@ -95,9 +112,9 @@
                                 {% raw xsrf_form_html() %}
                             </form>
                             <script>
-                                function logout() {
-                                    document.getElementById("logoutform").submit();
-                                }
+                            function logout() {
+                                document.getElementById("logoutform").submit();
+                            }
                             </script>
                             <a onclick="logout()" method="post">
                                 <i class="icon-ban-circle"></i>
@@ -106,7 +123,8 @@
                         </li>
                     </ul>
                 </div>
-            </div><!--/.nav-collapse -->
+            </div>
+            <!--/.nav-collapse -->
         </div>
     </div>
 </div>

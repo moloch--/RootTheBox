@@ -1,92 +1,93 @@
-{% extends "../main.html" %}
+{% extends "../main.html" %} 
 
-{% block title %}Configuration{% end %}
+{% block title %}Configuration{% end %} {
 
-{% block content %}
-    <div class="container">
-        <h1>Configuration</h1>
-        <br />
-        {% if errors is not None and len(errors) != 0 %}
-            {% for error in errors %}
-                <div class="alert alert-error">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    <h4 class="alert-heading">ERROR</h4>
-                    {{ error }}
-                </div>
-            {% end %}
-        {% end %}
-        {% if warning is not None %}
-            <div class="alert alert-warning">
-                <a class="close" data-dismiss="alert" href="#">×</a>
-                <h4 class="alert-heading">WARNING</h4>
-                {{ warning }}
-            </div>
-        {% end %}
-        <div class="well">
-            <form class="form-horizontal" action="/admin/configuration" method="post">
-                {% raw xsrf_form_html() %}
-                <div class="control-group">
-                    <label class="control-label" for="game_name">Game Name</label>
-                    <div class="controls">
-                        <input required type="text" name="game_name" value="{{ config.game_name }}" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="debug">Debug Mode</label>
-                    <div class="controls">
-                        <select name="debug">
-                            {% if config.debug %}
-                                <option value="true">Enabled</option>
-                                <option value="false">Disabled</option>
-                            {% else %}
-                                <option value="false">Disabled</option>
-                                <option value="true">Enabled</option>
-                            {% end %}
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="bot_reward">Bot Reward</label>
-                    <div class="controls">
-                        <input required type="text" name="bot_reward" value="{{ config.bot_reward }}" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="bot_reward_interval">Bot Reward Interval (minutes)</label>
-                    <div class="controls">
-                        <input required type="text" name="bot_reward_interval" value="{{ int(config.bot_reward_interval / 60000) }}" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="history_snapshot_interval">History Interval<br /> (minutes)</label>
-                    <div class="controls">
-                        <input required type="text" name="history_snapshot_interval" value="{{ int(config.history_snapshot_interval / 60000) }}" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="max_password_length">Max Bank Password Length</label>
-                    <div class="controls">
-                        <input required type="text" name="max_password_length" value="{{ config.max_password_length }}" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="password_upgrade_cost">Password Upgrade Cost</label>
-                    <div class="controls">
-                        <input required type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="bribe_cost">Bribe Base Cost</label>
-                    <div class="controls">
-                        <input required type="text" name="bribe_cost" value="{{ config.bribe_cost }}" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit">Save to Disk</button>
-                    </div>
-                </div> 
-            </form>
+% block content %}
+<div class="container">
+    <h1>Configuration</h1>
+    <br />
+    {% if errors is not None and len(errors) != 0 %} 
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
         </div>
+        {% end %} 
+    {% end %} 
+    {% if warning is not None %}
+    <div class="alert alert-warning">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">WARNING</h4>
+        {{ warning }}
     </div>
+    {% end %}
+    <div class="well">
+        <form class="form-horizontal" action="/admin/configuration" method="post">
+            {% raw xsrf_form_html() %}
+            <div class="control-group">
+                <label class="control-label" for="game_name">Game Name</label>
+                <div class="controls">
+                    <input required type="text" name="game_name" value="{{ config.game_name }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="debug">Debug Mode</label>
+                <div class="controls">
+                    <select name="debug">
+                        {% if config.debug %}
+                        <option value="true">Enabled</option>
+                        <option value="false">Disabled</option>
+                        {% else %}
+                        <option value="false">Disabled</option>
+                        <option value="true">Enabled</option>
+                        {% end %}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="bot_reward">Bot Reward</label>
+                <div class="controls">
+                    <input required type="text" name="bot_reward" value="{{ config.bot_reward }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="bot_reward_interval">Bot Reward Interval (minutes)</label>
+                <div class="controls">
+                    <input required type="text" name="bot_reward_interval" value="{{ int(config.bot_reward_interval / 60000) }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="history_snapshot_interval">History Interval
+                    <br />(minutes)</label>
+                <div class="controls">
+                    <input required type="text" name="history_snapshot_interval" value="{{ int(config.history_snapshot_interval / 60000) }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="max_password_length">Max Bank Password Length</label>
+                <div class="controls">
+                    <input required type="text" name="max_password_length" value="{{ config.max_password_length }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password_upgrade_cost">Password Upgrade Cost</label>
+                <div class="controls">
+                    <input required type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="bribe_cost">Bribe Base Cost</label>
+                <div class="controls">
+                    <input required type="text" name="bribe_cost" value="{{ config.bribe_cost }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-primary" type="submit">Save to Disk</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% end %}

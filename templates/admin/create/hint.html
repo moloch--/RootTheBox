@@ -1,53 +1,52 @@
-{% extends "../../main.html" %}
+{% extends "../../main.html" %} 
 
-{% block title %}Create Hint{% end %}
+{% block title %}Create Hint{% end %} 
 
 {% block content %}
-    <div class="container">
-        <h1>Create Hint</h1>
-        <br />
-        {% if errors is not None and len(errors) != 0 %}
-            {% for error in errors %}
-                <div class="alert alert-error">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    <h4 class="alert-heading">ERROR</h4>
-                    {{ error }}
-                </div>
-            {% end %}
-        {% end %}
-        <div class="well">
-            <form class="form-horizontal" action="/admin/create/hint" method="post">  
-                {% raw xsrf_form_html() %}
-                <div class="control-group">
-                    <label class="control-label" for="price">Price</label>
-                    <div class="controls">
-                        <input required id="price" name="price" type="text" pattern="[0-9]+" placeholder="$ Price">
-                    </div>
-                </div>                
-                <div class="control-group">
-                    <label class="control-label" for="description">Description</label>
-                    <div class="controls">
-                        <input required id="description" name="description" type="text" placeholder="Description">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="box_uuid">Box</label>
-                    <div class="controls">
-                        <select name="box_uuid">
-                            <option value=""></option>
-                            {% from models import Box %}
-                            {% for box in Box.all() %}
-                                <option value="{{ box.uuid }}">{{ box.name }}</opiton>
-                            {% end %}
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit">Create Hint</button>
-                    </div>
-                </div> 
-            </form>
+<div class="container">
+    <h1>Create Hint</h1>
+    <br />
+    {% if errors is not None and len(errors) != 0 %} 
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
         </div>
+        {% end %} 
+    {% end %}
+    <div class="well">
+        <form class="form-horizontal" action="/admin/create/hint" method="post">
+            {% raw xsrf_form_html() %}
+            <div class="control-group">
+                <label class="control-label" for="price">Price</label>
+                <div class="controls">
+                    <input required id="price" name="price" type="text" pattern="[0-9]+" placeholder="$ Price">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="description">Description</label>
+                <div class="controls">
+                    <input required id="description" name="description" type="text" placeholder="Description">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="box_uuid">Box</label>
+                <div class="controls">
+                    <select name="box_uuid">
+                        <option value=""></option>
+                        {% from models import Box %} {% for box in Box.all() %}
+                        <option value="{{ box.uuid }}">{{ box.name }}</opiton>
+                            {% end %}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-primary" type="submit">Create Hint</button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
 {% end %}

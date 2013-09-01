@@ -1,77 +1,75 @@
-{% extends "../../main.html" %}
+{% extends "../../main.html" %} 
 
-{% block title %}Create Box{% end %}
+{% block title %}Create Box{% end %} 
 
 {% block content %}
-    <div class="container">
-        <h1>Create Box</h1>
-        <br />
-        {% if errors is not None and len(errors) != 0 %}
-            {% for error in errors %}
-                <div class="alert alert-error">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    <h4 class="alert-heading">ERROR</h4>
-                    {{ error }}
-                </div>
-            {% end %}
-        {% end %}
-        <div class="well">
-            <form class="form-horizontal" action="/admin/create/box" method="post" enctype="multipart/form-data">  
-                {% raw xsrf_form_html() %}
-                <div class="control-group">
-                    <label class="control-label" for="box_name">Box Name</label>
-                    <div class="controls">
-                        <input autofocus required id="box_name" name="box_name" type="text" placeholder="Box Name">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="game_level">Game Level</label>
-                    <div class="controls">
-                        <select name="game_level">
-                            <option value=""></option>
-                            {% from models import GameLevel %}
-                            {% for level in GameLevel.all() %}
-                                <option value="{{ level.number }}">{{ level.number }}</option>
-                            {% end %}
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="corporation">Corporation</label>
-                    <div class="controls">
-                        <select id="corporation" name="corporation_uuid">
-                            <option value=""></option>
-                            {% from models import Corporation %}
-                            {% for corp in Corporation.all() %}
-                                <option value="{{ corp.uuid }}">{{ corp.name }}</option>
-                            {% end %}
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="description">Description</label>
-                    <div class="controls">
-                        <input required id="description" name="description" type="text" placeholder="Description">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="difficulty">Difficulty</label>
-                    <div class="controls">
-                        <input required id="difficulty" name="difficulty" type="text" placeholder="Difficulty">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
-                    <div class="controls">
-                        <input required id="avatar" name="avatar" type="file" style="color:white;">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit">Create Box</button>
-                    </div>
-                </div> 
-            </form>
+<div class="container">
+    <h1>Create Box</h1>
+    <br />
+    {% if errors is not None and len(errors) != 0 %} 
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
         </div>
+        {% end %} 
+    {% end %}
+    <div class="well">
+        <form class="form-horizontal" action="/admin/create/box" method="post" enctype="multipart/form-data">
+            {% raw xsrf_form_html() %}
+            <div class="control-group">
+                <label class="control-label" for="box_name">Box Name</label>
+                <div class="controls">
+                    <input autofocus required id="box_name" name="box_name" type="text" placeholder="Box Name">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="game_level">Game Level</label>
+                <div class="controls">
+                    <select name="game_level">
+                        <option value=""></option>
+                        {% from models import GameLevel %} {% for level in GameLevel.all() %}
+                        <option value="{{ level.number }}">{{ level.number }}</option>
+                        {% end %}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="corporation">Corporation</label>
+                <div class="controls">
+                    <select id="corporation" name="corporation_uuid">
+                        <option value=""></option>
+                        {% from models import Corporation %} {% for corp in Corporation.all() %}
+                        <option value="{{ corp.uuid }}">{{ corp.name }}</option>
+                        {% end %}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="description">Description</label>
+                <div class="controls">
+                    <input required id="description" name="description" type="text" placeholder="Description">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="difficulty">Difficulty</label>
+                <div class="controls">
+                    <input required id="difficulty" name="difficulty" type="text" placeholder="Difficulty">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
+                <div class="controls">
+                    <input required id="avatar" name="avatar" type="file" style="color:white;">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-primary" type="submit">Create Box</button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
 {% end %}

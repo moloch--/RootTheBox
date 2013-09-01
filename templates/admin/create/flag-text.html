@@ -1,87 +1,84 @@
-{% extends "../../main.html" %}
+{% extends "../../main.html" %} 
 
-{% block title %}Create Flag{% end %}
+{% block title %}Create Flag{% end %} 
 
 {% block content %}
-    <div class="container">
-        <h1>Create Flag</h1>
-        <br />
-        {% if errors is not None and len(errors) != 0 %}
-            {% for error in errors %}
-                <div class="alert alert-error">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    <h4 class="alert-heading">ERROR</h4>
-                    {{ error }}
-                </div>
-            {% end %}
-        {% end %}
-        <div class="well">
-            <div class="row">
-                <div class="span4">
-                    <form class="form-horizontal" action="/admin/create/flag" method="post">  
-                        {% raw xsrf_form_html() %}
-                        <div class="control-group">
-                            <label class="control-label" for="flag_name">Flag Name</label>
-                            <div class="controls">
-                                <input autofocus required id="flag_name" name="flag_name" type="text" placeholder="Flag Name">
-                            </div>
+<div class="container">
+    <h1>Create Flag</h1>
+    <br />
+    {% if errors is not None and len(errors) != 0 %} 
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
+        </div>
+        {% end %} 
+    {% end %}
+    <div class="well">
+        <div class="row">
+            <div class="span4">
+                <form class="form-horizontal" action="/admin/create/flag" method="post">
+                    {% raw xsrf_form_html() %}
+                    <div class="control-group">
+                        <label class="control-label" for="flag_name">Flag Name</label>
+                        <div class="controls">
+                            <input autofocus required id="flag_name" name="flag_name" type="text" placeholder="Flag Name">
                         </div>
-                        <div class="control-group">
-                            <label class="control-label" for="token">Regular Expression</label>
-                            <div class="controls">
-                                <input required id="token" name="token" type="text" placeholder="Regex Pattern" autocomplete="off">
-                            </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="token">Regular Expression</label>
+                        <div class="controls">
+                            <input required id="token" name="token" type="text" placeholder="Regex Pattern" autocomplete="off">
                         </div>
-                        <div class="control-group">
-                            <label class="control-label" for="test_token">Test Flag</label>
-                            <div class="controls">
-                                <input required id="test_token" name="test_token" type="text" placeholder="Enter a Matching Flag" autocomplete="off">
-                            </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="test_token">Test Flag</label>
+                        <div class="controls">
+                            <input required id="test_token" name="test_token" type="text" placeholder="Enter a Matching Flag" autocomplete="off">
                         </div>
-                        <div class="control-group">
-                            <label class="control-label" for="description">Description</label>
-                            <div class="controls">
-                                <input required id="description" name="description" type="text" placeholder="Description">
-                            </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="description">Description</label>
+                        <div class="controls">
+                            <input required id="description" name="description" type="text" placeholder="Description">
                         </div>
-                        <div class="control-group">
-                            <label class="control-label" for="reward">Reward</label>
-                            <div class="controls">
-                                <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="$ Reward">
-                            </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="reward">Reward</label>
+                        <div class="controls">
+                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="$ Reward">
                         </div>
-                        <div class="control-group">
-                            <label class="control-label" for="box_uuid">Box</label>
-                            <div class="controls">
-                                <select name="box_uuid">
-                                    <option value=""></option>
-                                    {% from models import Box %}
-                                    {% for box in Box.all() %}
-                                        <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation.name }})
-                                        </option>
-                                    {% end %}
-                                </select>
-                            </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="box_uuid">Box</label>
+                        <div class="controls">
+                            <select name="box_uuid">
+                                <option value=""></option>
+                                {% from models import Box %} {% for box in Box.all() %}
+                                <option value="{{ box.uuid }}">{{ box.name }} ({{ box.corporation.name }})
+                                </option>
+                                {% end %}
+                            </select>
                         </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button class="btn btn-primary" type="submit">Create Flag</button>
-                            </div>
-                        </div>   
-                    </form>
-                </div>
-                <div class="offset3 span4">
-                    <p>
-                        <blockquote>
-                            <small>
-                                <strong>Tokens:</strong> In this case the "flag" is a regular expression.  
-                                The user must submit the a string which matches the pattern to capture the flag.
-                                All matches are case-sensitive.  Please be sure to test your regex, and ensure it's not too broad.
-                            </small>
-                        </blockquote>
-                    </p>
-                </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" type="submit">Create Flag</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="offset3 span4">
+                <p>
+                    <blockquote>
+                        <small>
+                            <strong>Tokens:</strong>In this case the "flag" is a regular expression. The user must submit the a string which matches the pattern to capture the flag. All matches are case-sensitive. Please be sure to test your regex, and ensure it's not too broad.
+                        </small>
+                    </blockquote>
+                </p>
             </div>
         </div>
     </div>
+</div>
 {% end %}

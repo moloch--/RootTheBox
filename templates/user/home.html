@@ -1,61 +1,56 @@
-{% extends "../main.html" %}
+{% extends "../main.html" %} 
 
-{% block title %}User Index{% end %}
+{% block title %}User Index{% end %} 
 
-{% block content %}
-	{% include ../notifier.html %}
-	<div class="row-fluid">
-		<div class="span5">
-			<div class="row">
-				<div class="span11 offset1 well">
-					<h2>Welcome {{ user.handle }}</h2>
-					<center>
-						<img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
-					</center>
-					<hr>
-					{% if user.team is not None %}
-						<strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
-						<strong>Bank Account:</strong> ${{ user.team.money }} <br />
-						{% from libs.ConfigManager import ConfigManager %}
-                		{% if ConfigManager.Instance().use_bots %}
-							<strong>Active Bots:</strong> {{ user.team.bot_count }}<br />
-						{% end %}		
-						<strong>Flags Captured:</strong> {{ len(user.team.flags) }}<br />
-					{% else %}
-						<strong>You are not on a team</strong>
-					{% end %}
-				</div>
-			</div>
-		</div>
-		<div class="span5 offset1 well">
-			<h2 style="display:inline;">Notifications</h2>
-			<h4 style="display:inline;float:right;"><a href="/notifications/all">See All &raquo;</a></h4>
-			<hr>
-			{% from models import Notification %}
-			{% for notify in Notification.by_user_id(user.id)[-5:] %}
-				<div class="well">
-					{% if notify.icon_url is not None %}
-						<img 
-						src="/avatars/{{ notify.icon_url }}" />
-					{% elif notify.category == "success" %}
-						<img style="width:36px; height:36px; display:inline-block;" src="/static/images/success.png" />
-					{% elif notify.category == "info" %}
-						<img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
-						src="/static/images/info.png" />
-					{% elif notify.category == "warning" %}
-						<img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
-						src="/static/images/warning.png" />
-					{% elif notify.category == "error" %}
-						<img style="width:36; height:36; display:inline-block;verticalAlign:middle;" 
-						src="/static/images/error.png" />
-					{% end %}
-					<p style="display:inline;">
-						<strong>{{ notify.title }}</strong> {{ notify.created.strftime("%I:%M%p") }} <strong>:</strong>
-						<br />
-						{{ notify.message }}
-					</p>
-				</div>
-			{% end %}
-		</div>
-	</div>
+{% block content %} 
+{% include ../notifier.html %}
+<div class="row-fluid">
+    <div class="span5">
+        <div class="row">
+            <div class="span11 offset1 well">
+                <h2>Welcome {{ user.handle }}</h2>
+                <center>
+                    <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+                </center>
+                <hr>{% if user.team is not None %}
+                <strong>Current Level:</strong>{{ user.team.levels[-1].number }}
+                <br />
+                <strong>Bank Account:</strong>${{ user.team.money }}
+                <br />{% from libs.ConfigManager import ConfigManager %} {% if ConfigManager.Instance().use_bots %}
+                <strong>Active Bots:</strong>{{ user.team.bot_count }}
+                <br />{% end %}
+                <strong>Flags Captured:</strong>{{ len(user.team.flags) }}
+                <br />{% else %}
+                <strong>You are not on a team</strong>
+                {% end %}
+            </div>
+        </div>
+    </div>
+    <div class="span5 offset1 well">
+        <h2 style="display:inline;">Notifications</h2>
+        <h4 style="display:inline;float:right;"><a href="/notifications/all">See All &raquo;</a>
+        </h4>
+        <hr>
+        {% from models import Notification %} 
+        {% for notify in Notification.by_user_id(user.id)[-5:] %}
+        <div class="well">
+            {% if notify.icon_url is not None %}
+            <img src="/avatars/{{ notify.icon_url }}" />{% elif notify.category == "success" %}
+            <img style="width:36px; height:36px; display:inline-block;" src="/static/images/success.png" />
+            {% elif notify.category == "info" %}
+            <img style="width:36; height:36; display:inline-block;verticalAlign:middle;" src="/static/images/info.png" />
+            {% elif notify.category == "warning" %}
+            <img style="width:36; height:36; display:inline-block;verticalAlign:middle;" src="/static/images/warning.png" />
+            {% elif notify.category == "error" %}
+            <img style="width:36; height:36; display:inline-block;verticalAlign:middle;" src="/static/images/error.png" />
+            {% end %}
+            <p style="display:inline;">
+                <strong>{{ notify.title }}</strong>{{ notify.created.strftime("%I:%M%p") }}
+                <strong>:</strong>
+                <br />{{ notify.message }}
+            </p>
+        </div>
+        {% end %}
+    </div>
+</div>
 {% end %}

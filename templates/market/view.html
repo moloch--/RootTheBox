@@ -1,98 +1,99 @@
-{% extends "../main.html" %}
+{% extends "../main.html" %} 
 
-{% block title %}Black Market{% end %}
+{% block title %}Black Market{% end %} 
 
-{% block content %}
-	{% include ../notifier.html %}
-	<div class="container">
-		<script>
-			function get_details(uuid) {
-				$("#uuid").val(uuid);
-				$.getJSON('/user/market/details?uuid='+uuid, function(data) {
-					$.each(data, function(key, val) {
-					  	if (key !== "image") {
-					    	$("#" + key).text(val);
-					    } else {
-					    	$("#image").attr("src", function() { 
-							    return "/static/images/"+val; 
-							});
-					    }
-				    });
-				});
-			}
-		</script>
-		<!-- Hidden Download Form -->
-		<div id="item-details" class="modal hide fade" style="display: none; ">
-		    <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal">×</button>
-		        <h3>Details</h3>
-		    </div>
-		    <div class="modal-body">
-		    	<h4 id="name"></h4>
-		    	<hr>
-		    	<div class="row">
-					<div class="span4">
-						<img id="image" class="img-polaroid" src=""></img>
-					</div>
-					<div class="span2">
-						<p><i class="icon-bookmark"></i> Price $<span id="price"></span></p>
-						<p><i class="icon-book"></i> Description</p>
-						<blockquote><small id="description"></small></blockquote>
-					</div>
-				</div>
-		    </div>
-		   	<form id="buy-form" method="post" action="/user/market">
-		   		{% raw xsrf_form_html() %}
-		        <input type="hidden" id="uuid" name="uuid" value="" />
-			</form>
-		    <div class="modal-footer">
-		        <a href="#" class="btn" data-dismiss="modal">Close</a>
-		        <button type="button" class="btn btn-primary" onclick="document.forms['buy-form'].submit();">
-		        	Buy
-		        </button>
-		    </div>
-		</div>
-		<!-- Start Visable -->
-		<h2>Black Market</h2>
-		<br />
-		{% if errors is not None and len(errors) != 0 %}
-	    	{% for error in errors %}
-	      		<div class="alert alert-error">
-	        		<a class="close" data-dismiss="alert" href="#">×</a>
-	        		<h4 class="alert-heading">ERROR</h4>
-	        		{{ error }}
-	      		</div>
-	    	{% end %}
-	  	{% end %}
-	  	<div class="well">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Price</th>
-						<th><!-- Button --></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% from models import MarketItem %}
-					{% for item in MarketItem.all() %}
-						<tr>
-							<td>{{ item.name }}</td>
-							<td>${{ item.price }}</td>
-							<td>
-							{% if not user.has_item(item.name) %}
-								<button class="btn btn-mini" data-toggle="modal" href="#item-details" 
-										onclick="get_details('{{ item.uuid }}')">
-					    			Details
-					    		</button>
-					    	{% else %}
-					    		<strong>Purchased</strong>
-					    	{% end %}
-							</td>
-						</tr>
-					{% end %}
-				</tbody>
-			</table>
-		</div>
-	</div>
+{% block content %} 
+{% include ../notifier.html %}
+<div class="container">
+    <script>
+    function get_details(uuid) {
+        $("#uuid").val(uuid);
+        $.getJSON('/user/market/details?uuid=' + uuid, function(data) {
+            $.each(data, function(key, val) {
+                if (key !== "image") {
+                    $("#" + key).text(val);
+                } else {
+                    $("#image").attr("src", function() {
+                        return "/static/images/" + val;
+                    });
+                }
+            });
+        });
+    }
+    </script>
+    <!-- Hidden Download Form -->
+    <div id="item-details" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Details</h3>
+        </div>
+        <div class="modal-body">
+            <h4 id="name"></h4>
+            <hr>
+            <div class="row">
+                <div class="span4">
+                    <img id="image" class="img-polaroid" src=""></img>
+                </div>
+                <div class="span2">
+                    <p><i class="icon-bookmark"></i> Price $
+                        <span id="price"></span>
+                    </p>
+                    <p><i class="icon-book"></i> Description</p>
+                    <blockquote>
+                        <small id="description"></small>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        <form id="buy-form" method="post" action="/user/market">
+            {% raw xsrf_form_html() %}
+            <input type="hidden" id="uuid" name="uuid" value="" />
+        </form>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button type="button" class="btn btn-primary" onclick="document.forms['buy-form'].submit();">
+                Buy
+            </button>
+        </div>
+    </div>
+    <!-- Start Visable -->
+    <h2>Black Market</h2>
+    <br />{% if errors is not None and len(errors) != 0 %} {% for error in errors %}
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">ERROR</h4>
+        {{ error }}
+    </div>
+    {% end %} {% end %}
+    <div class="well">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>
+                        <!-- Button -->
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% from models import MarketItem %} {% for item in MarketItem.all() %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>
+                        {% if not user.has_item(item.name) %}
+                        <button class="btn btn-mini" data-toggle="modal" href="#item-details" onclick="get_details('{{ item.uuid }}')">
+                            Details
+                        </button>
+                        {% else %}
+                        <strong>Purchased</strong>
+                        {% end %}
+                    </td>
+                </tr>
+                {% end %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% end %}

@@ -1,41 +1,41 @@
-{% extends "../../main.html" %}
+{% extends "../../main.html" %} 
 
-{% block title %}Create Team{% end %}
+{% block title %}Create Team{% end %} 
 
 {% block content %}
-    <div class="container">
-        <h1>Create Team</h1>
-        <br />
-        {% if errors is not None and len(errors) != 0 %}
-            {% for error in errors %}
-                <div class="alert alert-error">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    <h4 class="alert-heading">ERROR</h4>
-                    {{ error }}
-                </div>
-            {% end %}
-        {% end %}
-        <div class="well">
-            <form class="form-horizontal" action="/admin/create/team" method="post">  
-                {% raw xsrf_form_html() %}
-                <div class="control-group">
-                    <label class="control-label" for="team_name">Team Name</label>
-                    <div class="controls">
-                        <input autofocus required id="team_name" name="team_name" type="text" placeholder="Team Name">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="motto">Motto</label>
-                    <div class="controls">
-                        <input required id="motto" name="motto" type="text" placeholder="Team Motto">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit">Create Team</button>
-                    </div>
-                </div>   
-            </form>
+<div class="container">
+    <h1>Create Team</h1>
+    <br />
+    {% if errors is not None and len(errors) != 0 %} 
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
         </div>
+        {% end %} 
+    {% end %}
+    <div class="well">
+        <form class="form-horizontal" action="/admin/create/team" method="post">
+            {% raw xsrf_form_html() %}
+            <div class="control-group">
+                <label class="control-label" for="team_name">Team Name</label>
+                <div class="controls">
+                    <input autofocus required id="team_name" name="team_name" type="text" placeholder="Team Name">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="motto">Motto</label>
+                <div class="controls">
+                    <input required id="motto" name="motto" type="text" placeholder="Team Motto">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-primary" type="submit">Create Team</button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
 {% end %}
