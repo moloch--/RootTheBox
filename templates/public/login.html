@@ -7,14 +7,14 @@
 {% end %}
 
 {% block content %}
-
+<div class="container">
     <br />
     <form class="form-signin" action="/login" method="post">
         <h2 class="form-signin-heading">Agent Authentication</h2>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
-                <div class="alert alert-dismissable alert-danger">
+                <div class="alert alert-error" style="width:280px;">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
                     <h4 class="alert-heading">Authentication Failure</h4>
                     {{ error }}
@@ -25,12 +25,10 @@
         <input name="account" style="width:330px;" type="text" class="form-control" placeholder="Username" autofocus>
         <input name="password" style="width:330px;" type="password" class="form-control" placeholder="Password" autocomplete="off">
         <br />
-        <button style="width:330px;" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+        <button style="width:330px;" class="btn btn-lg btn-primary btn-block" type="submit">
+            Login
+        </button>
     </form>
     <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
+</div>
 {% end %}
