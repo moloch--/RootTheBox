@@ -1,15 +1,16 @@
 ###############################################
 #      Root the Box - Configuration File
 ###############################################
+
 [Server]
 # Web server listen port
 port = 8888
 
 # Debug mode provides stack traces, etc
-debug = False
+debug = True
 
 # Bootstrap type 'production' / 'developement'
-bootstrap = production
+bootstrap = developement
 
 # Set "domain" to your local ip/hostname, this is the address websockets will connect to
 # Set to 'auto' to attempt to resolve your local ip automatically
@@ -26,13 +27,16 @@ cache_files = True
 console_level = info
 
 # Enable/disable file logs
-save_logs = True
+file_logs = True
 
 # Set logging level for the file output (if save_logs is enabled)
-file_level = notset
+file_level = debug
 
 # Path to output file for logs (if save_logs is enabled)
 logfile = rtb.log
+
+# Allow admins to view logs from web ui
+enable_logviewer = True
 
 [Ssl]
 # Enable/disable SSL server
@@ -103,8 +107,17 @@ game_name = Root the Box
 # Allow users to create their own teams
 public_teams = True
 
+# Limit team size to
+max_team_size = 3
+
 # Require a registration token to create an account
 restrict_registration = False
+
+# Enable/disable use of the black market
+use_black_market = True
+
+# Enable/disable botnet features
+use_bots = True
 
 # Reward amount for each bot per interval
 bot_reward = 100

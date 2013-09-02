@@ -2,41 +2,35 @@
 
 {% block title %}Login{% end %}
 
+{% block header %}
+    <link href="/static/css/login.css" rel="stylesheet">
+{% end %}
+
 {% block content %}
-    <div class="container">
-        <h1>Agent Authentication</h1>
+
+    <br />
+    <form class="form-signin" action="/login" method="post">
+        <h2 class="form-signin-heading">Agent Authentication</h2>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
-                <div class="alert alert-error">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    <h4 class="alert-heading">ERROR</h4>
+                <div class="alert alert-dismissable alert-danger">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">Authentication Failure</h4>
                     {{ error }}
                 </div>
             {% end %}
         {% end %}
-        <div class="well">
-            <form class="form-horizontal" action="/login" method="post" autocomplete="off">  
-                {% raw xsrf_form_html() %}
-                <legend>Login</legend>
-                <div class="control-group">
-                    <label class="control-label" for="account">Account Name</label>
-                    <div class="controls">
-                        <input autofocus required name="account" id="account" placeholder="Account Name" type="text"/>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="passwd">Password</label>
-                    <div class="controls">
-                        <input required name="password" id="passwd" placeholder="Password" type="password" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit">Authenticate</button>
-                    </div>
-                </div>
-          </form>
-        </div>
-    </div>
+        {% raw xsrf_form_html() %}
+        <input name="account" style="width:330px;" type="text" class="form-control" placeholder="Username" autofocus>
+        <input name="password" style="width:330px;" type="password" class="form-control" placeholder="Password" autocomplete="off">
+        <br />
+        <button style="width:330px;" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    </form>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
 {% end %}

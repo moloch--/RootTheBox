@@ -27,7 +27,6 @@ This is the main file the defines what URLs get routed to what handlers
 import sys
 
 from os import urandom, path, _exit
-from base64 import b64encode
 from modules.Menu import Menu
 from modules.Recaptcha import Recaptcha
 from modules.CssTheme import CssTheme
@@ -180,7 +179,7 @@ app = Application(
     urls,
 
     # Randomly generated secret key
-    cookie_secret=b64encode(urandom(64)),
+    cookie_secret=urandom(32).encode('base64'),
 
     # Ip addresses that access the admin interface
     admin_ips=config.admin_ips,
