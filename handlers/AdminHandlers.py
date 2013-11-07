@@ -36,7 +36,7 @@ from uuid import uuid4
 from tempfile import NamedTemporaryFile
 from string import ascii_letters, digits, printable
 from base64 import b64encode
-from hashlib import md5
+from hashlib import sha1
 from libs.Form import Form
 from libs.LoggingHelpers import ObservableLoggingHandler
 from libs.EventManager import EventManager
@@ -45,6 +45,7 @@ from models import dbsession, Team, Box, Flag, SourceCode, MarketItem, \
     Corporation, RegistrationToken, GameLevel, IpAddress, Swat, Hint
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from models.User import ADMIN_PERMISSION
+from models.Flag import FLAG_STATIC, FLAG_REGEX, FLAG_FILE
 from setup.importers import import_xml
 
 
@@ -60,8 +61,9 @@ class AdminCreateHandler(BaseHandler):
             'corporation': 'admin/create/corporation.html',
                     'box': 'admin/create/box.html',
                    'flag': 'admin/create/flag.html',
-              'flag/text': 'admin/create/flag-text.html',
+             'flag/regex': 'admin/create/flag-regex.html',
               'flag/file': 'admin/create/flag-file.html',
+            'flag/static': 'admin/create/flag-static.html',
                    'team': 'admin/create/team.html',
              'game_level': 'admin/create/game_level.html',
                    'hint': 'admin/create/hint.html',
@@ -79,7 +81,9 @@ class AdminCreateHandler(BaseHandler):
         self.game_objects = {
             'corporation': self.create_corporation,
                     'box': self.create_box,
-                   'flag': self.create_flag,
+              'flag/file': self.create_flag_file,
+             'flag/regex': self.create_flag_regex,
+            'flag/static': self.create_flag_static,
                    'team': self.create_team,
              'game_level': self.create_game_level,
                    'hint': self.create_hint,
@@ -150,31 +154,45 @@ class AdminCreateHandler(BaseHandler):
         else:
             self.render("admin/create/box.html", errors=form.errors)
 
-    def create_flag(self):
+    def create_flag_static(self):
         ''' Create a flag '''
-        form = Form(
-            box_uuid="Please select a box",
-            flag_name="Please enter a name",
-            reward="Please enter a reward value",
-            description="Please enter a flag description",
-        )
-        if form.validate(self.request.arguments):
-            is_file = bool(self.get_argument('is_file', '') == 'true')
-            flag_type = 'file' if is_file else 'text'
-            page = 'admin/create/flag-%s.html' % flag_type    
-            if Flag.by_name(self.get_argument('flag_name', '')) is not None:
-                self.render(page, errors=["Name already exists, and must be unique."])
-            elif not self.is_numeric(self.get_argument('reward', '')):
-                self.render(page, errors=["Reward is not a valid integer."])
-            elif Box.by_uuid(self.get_argument('box_uuid', '')) is None:
-                self.render(page, errors=["Box does not exist, try again."])
-            elif not self.is_valid_token(is_file):
-                self.render(page, errors=["Invalid token."])
-            else:
-                self.__mkflag__()
-                self.redirect('/admin/view/game_objects')
+        try:
+            self._mkflag(FLAG_STATIC)
+        except Exception as error:
+            self.render('admin/create/flag-static.html', errors=[str(error)])
+
+    def create_flag_regex(self):
+        ''' Create a flag '''
+        try:
+            self._mkflag(FLAG_REGEX)
+        except Exception as error:
+            self.render('admin/create/flag-static.html', errors=[str(error)])
+
+    def create_flag_file(self):
+        ''' Create a flag '''
+        try:
+            self._mkflag(FLAG_FILE, is_file=True)
+        except Exception as error:
+            self.render('admin/create/flag-static.html', errors=[str(error)])
+
+    def _mkflag(self, flag_type, is_file=False):
+        name = self.get_argument('flag_name', '')
+        if is_file:
+            if not 'flag' in self.request.files:
+                raise ValueError('No file in request')
+            data = self.request.files['flag'][0]['body']
+            token = sha1(data).hexdigest()
         else:
-            self.render(page, errors=form.errors)
+            token = self.get_argument('token', '')
+        description = self.get_argument('description', '')
+        reward = int(self.get_argument('reward', ''))
+        box = Box.by_uuid(self.get_argument('box_uuid', ''))
+        if box is None:
+            raise ValueError('Box does not exist')
+        flag = Flag.create_flag(flag_type, box, name, token, description, reward)
+        dbsession.add(flag)
+        dbsession.flush()
+        self.redirect('/admin/view/game_objects')
 
     def is_numeric(self, string):
         ''' Determine if string is a number '''
@@ -183,21 +201,6 @@ class AdminCreateHandler(BaseHandler):
             return True
         except ValueError:
             return False
-
-    def is_valid_token(self, is_file):
-        ''' Check if it's a valid token file/string '''
-        if is_file and 'flag' in self.request.files:
-            return 0 < len(self.request.files['flag'][0]['body'])
-        else:
-            token = self.get_argument('token', '')
-            try:
-                regex = re.compile(token)
-                assert regex.match(self.get_argument('test_token', '')) is not None
-                return 0 < len(token)  # Check for blank strings
-            except:
-                logging.exception("Exception raised while testing flag token validity:")
-                return False
-
 
     def create_team(self):
         ''' Create a new team in the database '''
@@ -254,7 +257,7 @@ class AdminCreateHandler(BaseHandler):
                 price=int(price),
                 description=unicode(self.get_argument('description')),
                 box_id=box.id
-            )   
+            )
             dbsession.add(hint)
             dbsession.flush()
             self.redirect('/admin/view/game_objects')
@@ -282,7 +285,7 @@ class AdminCreateHandler(BaseHandler):
         the 'number' attrib
         '''
         new_level = GameLevel(
-            number=game_level, 
+            number=game_level,
             buyout=buyout
         )
         game_levels = GameLevel.all()
@@ -297,27 +300,6 @@ class AdminCreateHandler(BaseHandler):
         dbsession.add(game_levels[0])
         game_levels[-1].next_level_id = None
         dbsession.add(game_levels[-1])
-        dbsession.flush()
-
-    def __mkflag__(self):
-        ''' Creates a flag in the database '''
-        reward = int(self.get_argument('reward', ''))
-        box = Box.by_uuid(self.get_argument('box_uuid'))
-        is_file = bool(self.get_argument('is_file', 'false') == 'true')
-        if is_file:
-            file_data = self.request.files['flag'][0]['body']
-            token = Flag.digest(file_data)
-        else:
-            token = unicode(self.get_argument('token', ''))
-        flag = Flag(
-            name=unicode(self.get_argument('flag_name')),
-            token=token,
-            description=unicode(self.get_argument('description')),
-            is_file=is_file,
-            box_id=box.id,
-            value=reward,
-        )
-        dbsession.add(flag)
         dbsession.flush()
 
     def set_avatar(self, box):
@@ -860,7 +842,7 @@ class AdminEditHandler(BaseHandler):
                     price = int(self.get_argument('price'))
                     hint.price = price
                 except:
-                    pass  # Ignore error
+                    logging.exception("Price convertion failed")
             if hint.description != self.get_argument('description', hint.description):
                 hint.description = unicode(self.get_argument('description'))
             dbsession.add(hint)
@@ -1193,9 +1175,9 @@ class AdminConfigurationHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        self.render('admin/configuration.html', 
+        self.render('admin/configuration.html',
             warning=None,
-            errors=[], 
+            errors=[],
             config=self.config
         )
 
@@ -1212,9 +1194,9 @@ class AdminConfigurationHandler(BaseHandler):
         self.password_config()
         self.debug_config()
         self.config.save()
-        self.render('admin/configuration.html', 
+        self.render('admin/configuration.html',
             warning="Some configuration changes may require application restart to take affect.",
-            errors=all_errors, 
+            errors=all_errors,
             config=self.config
         )
 
@@ -1358,7 +1340,7 @@ class AdminExportHandler(BaseHandler):
         self.finish()
 
     def create_xml(self):
-        ''' 
+        '''
         Exports the game objects to an XML doc.
         For the record, I hate XML with a passion.
         '''
@@ -1388,7 +1370,7 @@ class AdminImportXmlHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        ''' 
+        '''
         Import XML file uploaded by the admin.
         '''
         if 'xml_file' in self.request.files:
@@ -1400,7 +1382,7 @@ class AdminImportXmlHandler(BaseHandler):
             else:
                 errors.append("Failed to parse file correctly.")
             os.unlink(fxml)
-            self.render('admin/import.html', 
+            self.render('admin/import.html',
                 success=success,
                 errors=errors
             )
@@ -1453,7 +1435,7 @@ class AdminLogViewerSocketHandler(BaseWebSocketHandler):
             self.observerable_log.add_observer(self)
         else:
             self.close()
-    
+
     def update(self, messages):
         ''' Write logging messages to wsocket '''
         self.write_message({'messages': messages})
@@ -1462,4 +1444,3 @@ class AdminLogViewerSocketHandler(BaseWebSocketHandler):
         ''' Remove the ref to this object '''
         if self.observerable_log is not None:
             self.observerable_log.remove_observer(self)
-    

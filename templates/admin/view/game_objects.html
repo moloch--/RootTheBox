@@ -461,7 +461,7 @@
                                                     <th>Description</th>
                                                     <th>Token</th>
                                                     <th>Value</th>
-                                                    <th>Is File</th>
+                                                    <th>Type</th>
                                                     <th><!-- Edit Button --></th>
                                                     <th><!-- Delete Button --></th>
                                                 </tr>
@@ -474,7 +474,7 @@
                                                         <td>{{ flag.description }}</td>
                                                         <td>{{ flag.token }}</td>
                                                         <td>${{ flag.value }}</td>
-                                                        <td>{{ str(flag.is_file) }}</td>
+                                                        <td>{{ str(flag._type) }}</td>
                                                         <td>
                                                             <a class="btn btn-mini" data-toggle="modal" href="#editFlagModal"
                                                                 onclick="get_details('flag', '{{ flag.uuid }}')">

@@ -81,7 +81,7 @@ class ConfigManager(object):
         file_log.setLevel(logging_levels.get(flevel, logging.NOTSET))
 
     def _websocket_logger(self, logger):
-        ''' Configure WebSocket Logger '''      
+        ''' Configure WebSocket Logger '''
         ws_log = ObservableLoggingHandler.Instance()
         logger.addHandler(ws_log)
         msg_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')

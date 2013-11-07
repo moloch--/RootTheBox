@@ -15,7 +15,7 @@
     limitations under the License.
 ----------------------------------------------------------------------------
 
-This file is the main starting point for the application, based on the 
+This file is the main starting point for the application, based on the
 command line arguments it calls various components setup/start/etc.
 
 '''
@@ -64,7 +64,7 @@ def recovery():
     try:
         console.cmdloop()
     except KeyboardInterrupt:
-        print(INFO + "Have a nice day!")
+        print(INFO+"Have a nice day!")
 
 
 def setup_xml(xml_params):

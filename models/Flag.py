@@ -31,6 +31,12 @@ from models import dbsession, Box
 from models.BaseGameObject import BaseObject
 
 
+### Constants
+FLAG_STATIC = u'static'
+FLAG_REGEX  = u'regex'
+FLAG_FILE   = u'file'
+
+
 class Flag(BaseObject):
     ''' Flag definition '''
 
@@ -39,8 +45,9 @@ class Flag(BaseObject):
     token = Column(Unicode(256), nullable=False)
     description = Column(Unicode(256), nullable=False)
     value = Column(Integer, nullable=False)
-    is_file = Column(Boolean, default=False)
+    _type = Column(Unicode(16), default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+    FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC]
 
     @classmethod
     def all(cls):
@@ -68,6 +75,60 @@ class Flag(BaseObject):
         return dbsession.query(cls).filter_by(token=unicode(token)).first()
 
     @classmethod
+    def by_type(cls, _type):
+        ''' Return and object based on a token '''
+        return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
+
+    @classmethod
+    def create_flag(cls, _type, box, name, raw_token, description, value):
+        ''' Check parameters applicable to all flag types '''
+        creators = {
+            FLAG_STATIC: cls._create_flag_static,
+             FLAG_REGEX: cls._create_flag_regex,
+              FLAG_FILE: cls._create_flag_file,
+        }
+        name = unicode(name)
+        description = unicode(description)
+        if cls.by_name(name) is not None:
+            raise ValueError('Flag name already exists in database')
+        if not isinstance(value, int):
+            raise ValueError('Flag value must be an integer')
+        if not isinstance(description, basestring) or not len(description):
+            raise ValueError('Flag description is not valid')
+        assert box is not None and isinstance(box, Box)
+        new_flag = creators[_type](box, name, raw_token, description, value)
+        new_flag._type = _type
+        return new_flag
+
+    @classmethod
+    def _create_flag_file(cls, box,  name, raw_token, description, value):
+        ''' Check flag file specific parameters '''
+        token = cls.digest(raw_token)
+        if cls.by_token(token) is not None:
+            raise ValueError('Flag token already exists in database')
+        return cls(box_id=box.id, name=name, token=token, description=description, value=value)
+
+    @classmethod
+    def _create_flag_regex(cls, box,  name, raw_token, description, value):
+        ''' Check flag regex specific parameters '''
+        token = unicode(raw_token)
+        try:
+            re.compile(token)
+        except:
+            raise ValueError('Flag token is not a valid regex')
+        if cls.by_token(token) is not None:
+            raise ValueError('Flag token already exists in database')
+        return cls(box_id=box.id, name=name, token=token, description=description, value=value)
+
+    @classmethod
+    def _create_flag_static(cls, box,  name, raw_token, description, value):
+        ''' Check flag static specific parameters '''
+        token = unicode(raw_token)
+        if cls.by_token(raw_token) is not None:
+            raise ValueError('Flag token already exists in database')
+        return cls(box_id=box.id, name=name, token=raw_token, description=description, value=value)
+
+    @classmethod
     def digest(self, data):
         ''' Token is SHA1 of data '''
         sha = hashlib.sha1()
@@ -83,16 +144,20 @@ class Flag(BaseObject):
         return self.box.game_level
 
     def capture(self, token):
-        if self.is_file:
+        if self._type == STATIC_FLAG:
             return self.token == token
-        else:
+        elif self._type == REGEX_FLAG:
             pattern = re.compile(self.token)
             return pattern.match(token) is not None
+        elif self._type == FILE_FLAG:
+            pass
+        else:
+            raise ValueError('Invalid flag type, cannot capture')
 
     def to_xml(self, parent):
         ''' Write attributes to XML doc '''
         flag_elem = ET.SubElement(parent, "flag")
-        flag_elem.set("isfile", str(self.is_file))
+        flag_elem.set("type", str(self._type))
         ET.SubElement(flag_elem, "name").text = str(self.name)
         ET.SubElement(flag_elem, "token").text = str(self.token)
         ET.SubElement(flag_elem, "description").text = str(self.description)
@@ -117,6 +182,6 @@ class Flag(BaseObject):
         return self.name
 
     def __repr__(self):
-        return "<Flag - name:%s, is_file:%s >" % (
-            self.name, str(self.is_file)
+        return "<Flag - name:%s, type:%s >" % (
+            self.name, str(self._type)
         )

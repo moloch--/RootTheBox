@@ -111,8 +111,8 @@ function del_src(box_uuid) {
                     <td>N / A</td>
                     <td>
                         <a class="btn btn-mini" data-toggle="modal" href="#addSourceCodeModal" onclick="add_src('{{ box.uuid }}')">
-                                        Add Source Code
-                                    </a>
+                            Add Source Code
+                        </a>
                     </td>
                     {% else %}
                     <td>{{ box.source_code.file_name }}</td>
@@ -120,8 +120,8 @@ function del_src(box_uuid) {
                     <td>${{ box.source_code.price }}</td>
                     <td>
                         <a class="btn btn-mini btn-danger" data-toggle="modal" href="#delSourceCodeModal" onclick="del_src('{{ box.uuid }}')">
-                                        Delete Source Code
-                                    </a>
+                            Delete Source Code
+                        </a>
                     </td>
                     {% end %}
                 </tr>

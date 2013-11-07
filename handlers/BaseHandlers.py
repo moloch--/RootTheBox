@@ -105,6 +105,8 @@ class BaseHandler(RequestHandler):
         self.set_header("Server", "Foobar")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
+        #self.add_header("X-Content-Security-Policy", "default-src 'self'")
+        #self.add_header("Content-Security-Policy", "default-src 'self'")
 
     def write_error(self, status_code, **kwargs):
         ''' Write our custom error pages '''

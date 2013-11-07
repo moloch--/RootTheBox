@@ -68,9 +68,9 @@ else:
 # First get base URLs that all game types will require
 urls = [
     # Static Handlers - StaticFileHandler.py
-    (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv))', 
+    (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv|eot|svg|ttf|woff|otf))',
         StaticFileHandler, {'path': 'static/'}),
-    (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))', 
+    (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))',
         StaticFileHandler, {'path': 'files/avatars/'}),
 
     # ShareUploadHandlers - ShareUploadHandlers.py

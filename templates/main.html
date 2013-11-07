@@ -1,44 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>{% block title %} handler.application.settings['game_name'] {% end %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Hacker War Game">
-    <meta name="author" content="moloch">
-    <link href="/static/images/favicon.ico" rel="shortcut icon" />
-    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet" />{% module CssTheme() %}
-    <link href="/static/css/animate.css" rel="stylesheet" />
-    <link href="/static/css/notifier.css" rel="stylesheet" />
-    <style type="text/css">
-    body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-    }
-    </style>
-    <!--[if lt IE 9]>
-        <script src="/static/js/libs/html5.js"></script>
-    <![endif]-->
-    <script src="/static/js/jquery.js" type="text/javascript"></script>
-    <script src="/static/js/notifier.js" type="text/javascript"></script>
-    <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
-    {% block header %}{% end %}
-</head>
-
-<body>
-    {% module Menu() %}
-    <div class="container-fluid animated fadeIn">
-        {% block content %} Content Missing {% end %}
-        <hr>
-        <footer>
-            <p>
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %} handler.application.settings['game_name'] {% end %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Hacker War Game">
+        <meta name="author" content="moloch">
+        <link href="/static/images/favicon.ico" rel="shortcut icon" />
+        <link href="/static/css/bootstrap-responsive.css" rel="stylesheet" />{% module CssTheme() %}
+        <link href="/static/css/font-awesome.min.css" rel="stylesheet" />
+        <link href="/static/css/animate.css" rel="stylesheet" />
+        <link href="/static/css/notifier.css" rel="stylesheet" />
+        <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        </style>
+        <!--[if lt IE 9]>
+            <script src="/static/js/libs/html5.js"></script>
+        <![endif]-->
+        <script src="/static/js/jquery.js" type="text/javascript"></script>
+        <script src="/static/js/notifier.js" type="text/javascript"></script>
+        <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
+        {% block header %}{% end %}
+    </head>
+    <body>
+        {% module Menu() %}
+        <div class="container-fluid animated fadeIn">
+            {% block content %} Content Missing {% end %}
+            <hr>
+            <footer>
                 <a href="http://rootthebox.com" target="_blank">Root the Box</a> &copy; {{ datetime.date.today().year }} -
                 <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a> - Version {{ handler.application.settings['version'] }}
-            </p>
-        </footer>
-    </div>
-    <!--/.fluid-container-->
-</body>
-
+            </footer>
+        </div><!--/.fluid-container-->
+    </body>
 </html>

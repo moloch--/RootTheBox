@@ -41,8 +41,8 @@ from libs.Memcache import FileCache
 
 
 class StaticFileHandler(DefaultStaticHandler):
-    ''' 
-    Same as the normal Tornado StaticFileHandler with a 
+    '''
+    Same as the normal Tornado StaticFileHandler with a
     couple overloaded methods.
     '''
 
