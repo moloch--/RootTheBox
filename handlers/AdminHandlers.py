@@ -166,22 +166,23 @@ class AdminCreateHandler(BaseHandler):
         try:
             self._mkflag(FLAG_REGEX)
         except Exception as error:
-            self.render('admin/create/flag-static.html', errors=[str(error)])
+            self.render('admin/create/flag-regex.html', errors=[str(error)])
 
     def create_flag_file(self):
         ''' Create a flag '''
         try:
             self._mkflag(FLAG_FILE, is_file=True)
         except Exception as error:
-            self.render('admin/create/flag-static.html', errors=[str(error)])
+            self.render('admin/create/flag-file.html', errors=[str(error)])
 
     def _mkflag(self, flag_type, is_file=False):
         name = self.get_argument('flag_name', '')
         if is_file:
             if not 'flag' in self.request.files:
+                print self.request.files
                 raise ValueError('No file in request')
             data = self.request.files['flag'][0]['body']
-            token = sha1(data).hexdigest()
+            token = Flag.digest(data)
         else:
             token = self.get_argument('token', '')
         description = self.get_argument('description', '')

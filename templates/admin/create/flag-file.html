@@ -18,7 +18,7 @@
     <div class="well">
         <div class="row">
             <div class="span4">
-                <form class="form-horizontal" action="/admin/create/flag/file" method="post">
+                <form class="form-horizontal" action="/admin/create/flag/file" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
                     <div class="control-group">
                         <label class="control-label" for="flag_name">Flag Name</label>
@@ -29,7 +29,7 @@
                     <div class="control-group">
                         <label class="control-label" for="token">Flag File</label>
                         <div class="controls">
-                            <input id="token" name="token" type="file">
+                            <input id="token" name="flag" type="file">
                         </div>
                     </div>
                     <div class="control-group">
