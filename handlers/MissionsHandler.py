@@ -27,7 +27,7 @@ This file contains the code for displaying flags / recv flag submissions
 import logging
 import hashlib
 
-from models import dbsession, Box, Hint, Flag
+from models import dbsession, Box, Hint, Flag, GameLevel
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
@@ -209,7 +209,7 @@ class MissionsHandler(BaseHandler):
         user = self.get_current_user()
         level = user.team.game_levels[-1]
         logging.info("%s completed %d of %d flags on level %d." % (
-                user.team.name, len(user.team.level_flags(level.number)), 
+                user.team.name, len(user.team.level_flags(level.number)),
                 len(level.flags), level.number,
             )
         )

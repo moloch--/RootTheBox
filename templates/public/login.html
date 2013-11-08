@@ -10,7 +10,7 @@
 <div class="container">
     <br />
     <form class="form-signin" action="/login" method="post">
-        <h2 class="form-signin-heading">Agent Authentication</h2>
+        <h2 class="form-signin-heading">Login</h2>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
@@ -22,11 +22,11 @@
             {% end %}
         {% end %}
         {% raw xsrf_form_html() %}
-        <input name="account" style="width:330px;" type="text" class="form-control" placeholder="Username" autofocus>
+        <input name="account" style="width:330px;" type="text" class="form-control" placeholder="Hacker Name" autofocus>
         <input name="password" style="width:330px;" type="password" class="form-control" placeholder="Password" autocomplete="off">
         <br />
         <button style="width:330px;" class="btn btn-lg btn-primary btn-block" type="submit">
-            Login
+            Authenticate
         </button>
     </form>
     <br />
