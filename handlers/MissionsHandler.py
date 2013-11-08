@@ -75,9 +75,9 @@ class FlagSubmissionHandler(BaseHandler):
                 submission = self.get_argument('token')
             else:
                 submission = None
-            reward = flag.value
+            old_reward = int(flag.value)
             if self.attempt_capture(flag, submission):
-                self.render('missions/captured.html', flag=flag, reward=reward)
+                self.render('missions/captured.html', flag=flag, reward=old_reward)
             else:
                 self.render_page(flag, errors=["Invalid flag submission"])
         else:
@@ -144,8 +144,8 @@ class PurchaseHintHandler(BaseHandler):
     def render_page(self, box, errors=[]):
         ''' Wrapper to .render() to avoid duplicate code '''
         user = self.get_current_user()
-        self.render('missions/box.html', 
-            box=box, 
+        self.render('missions/box.html',
+            box=box,
             team=user.team,
             errors=errors,
         )
