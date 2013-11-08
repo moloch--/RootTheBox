@@ -36,7 +36,7 @@ from uuid import uuid4
 from tempfile import NamedTemporaryFile
 from string import ascii_letters, digits, printable
 from base64 import b64encode
-from hashlib import sha1
+from hashlib import md5
 from libs.Form import Form
 from libs.LoggingHelpers import ObservableLoggingHandler
 from libs.EventManager import EventManager
