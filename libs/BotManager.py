@@ -53,7 +53,6 @@ class MemoryDatabaseObject(object):
             re.sub(r'([A-Z])',
                    lambda letter: "_" + letter.group(0).lower(), name[1:])
         )
-    
     id = Column(Integer, primary_key=True, unique=True, nullable=False)
     created = Column(DateTime, default=datetime.now)
 
@@ -97,7 +96,7 @@ class Bot(MemoryBaseObject):
 class BotManager(object):
     '''
     This is an observable class.
-    
+
     Holds refs to botnet web socket handler objects.
     Holds refs to botnet monitor handler objects (observers).
     '''
@@ -150,7 +149,7 @@ class BotManager(object):
     def save_bot(self, bot):
         ''' Save changes to a bot and flush '''
         self.botdb.add(bot)
-        self.botdb.flush()      
+        self.botdb.flush()
 
     def remove_bot(self, bot_wsocket):
         bot = self.botdb.query(Bot).filter_by(wsock_uuid=unicode(bot_wsocket.uuid)).first()
@@ -209,7 +208,7 @@ def ping_bots():
     ''' Ping all websockets in database '''
     bot_manager = BotManager.Instance()
     logging.debug("Pinging open botnet websockets")
-    
+
     for bot in bot_manager.all():
         wsocket = bot_manager.botnet[bot.wsock_uuid]
         wsocket.ping()
