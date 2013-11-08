@@ -154,7 +154,8 @@ class Flag(BaseObject):
             pattern = re.compile(self.token)
             return pattern.match(submission) is not None
         elif self._type == FLAG_FILE:
-            self.token == self.digest(submission)
+            print "CMP: %s == %s" % (self.token, self.digest(submission))
+            return self.token == self.digest(submission)
         else:
             raise ValueError('Invalid flag type, cannot capture')
 

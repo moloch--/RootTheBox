@@ -86,10 +86,10 @@ class FlagSubmissionHandler(BaseHandler):
     def attempt_capture(self, flag, submission):
         ''' Compares a user provided token to the token in the db '''
         user = self.get_current_user()
+        logging.info("%s (%s) capture the flag '%s'" % (
+            user.handle, user.team.name, flag.name
+        ))
         if submission is not None and flag.capture(submission):
-            logging.info("%s (%s) capture the flag '%s'" % (
-                user.handle, user.team.name, flag.name
-            ))
             user.team.flags.append(flag)
             user.team.money += flag.value
             dbsession.add(user.team)
@@ -106,8 +106,8 @@ class FlagSubmissionHandler(BaseHandler):
         ''' Wrapper to .render() to avoid duplicate code '''
         user = self.get_current_user()
         box = Box.by_id(flag.box_id)
-        self.render('missions/box.html', 
-            box=box, 
+        self.render('missions/box.html',
+            box=box,
             team=user.team,
             errors=errors,
         )

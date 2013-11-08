@@ -181,8 +181,7 @@ class AdminCreateHandler(BaseHandler):
             if not 'flag' in self.request.files:
                 print self.request.files
                 raise ValueError('No file in request')
-            data = self.request.files['flag'][0]['body']
-            token = Flag.digest(data)
+            token = self.request.files['flag'][0]['body']
         else:
             token = self.get_argument('token', '')
         description = self.get_argument('description', '')
