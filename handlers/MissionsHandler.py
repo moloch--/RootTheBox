@@ -46,15 +46,15 @@ class BoxHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        ''' 
+        '''
         Renders the box details page.
         '''
         uuid = self.get_argument('uuid', '')
         box = Box.by_uuid(uuid)
         if box is not None:
             user = self.get_current_user()
-            self.render('missions/box.html', 
-                box=box, 
+            self.render('missions/box.html',
+                box=box,
                 team=user.team,
                 errors=[],
             )
@@ -69,37 +69,24 @@ class FlagSubmissionHandler(BaseHandler):
         ''' Check validity of flag submissions '''
         flag = Flag.by_uuid(self.get_argument('uuid', ''))
         if flag is not None:
-            if flag.is_file:
-                self.validate_file(flag)
+            if flag.is_file and 'flag' in self.request.files:
+                submission = self.request.files['flag'][0]['body']
+            elif not flag.is_file:
+                submission = self.get_argument('token')
             else:
-                self.validate_text(flag)
+                submission = None
+            reward = flag.value
+            if self.attempt_capture(flag, submission):
+                self.render('missions/captured.html', flag=flag, reward=reward)
+            else:
+                self.render_page(flag, errors=["Invalid flag submission"])
         else:
             self.render('public/404.html')
 
-    def validate_text(self, flag):
-        ''' Check a text submission '''
-        token = self.get_argument('token', '')
-        if self.attempt_capture(flag, token):
-            self.render_page(flag)
-        else:
-            self.render_page(flag, errors=["Invalid flag submission."])
-
-    def validate_file(self, flag):
-        ''' Check a file submission '''
-        if 0 < len(self.request.files['flag'][0]['body']):
-            file_data = self.request.files['flag'][0]['body']
-            digest = Flag.digest(file_data)
-            if self.attempt_capture(flag, digest):
-                self.render_page(flag)
-            else:
-                self.render_page(flag, errors=["Invalid flag submission."])
-        else:
-            self.render_page(flag, errors=["Missing flag data."])
-
-    def attempt_capture(self, flag, user_token):
+    def attempt_capture(self, flag, submission):
         ''' Compares a user provided token to the token in the db '''
         user = self.get_current_user()
-        if flag.capture(user_token):
+        if submission is not None and flag.capture(submission):
             logging.info("%s (%s) capture the flag '%s'" % (
                 user.handle, user.team.name, flag.name
             ))

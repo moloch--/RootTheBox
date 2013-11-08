@@ -46,7 +46,7 @@
         {% end %}
         {% from models.GameLevel import GameLevel %}
         {% for level in GameLevel.all() %}
-            {% if len(team.level_flags(level.number)) != len(level.flags) %}
+
                 <div class="well">
                     <h3 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h3>
                     {% if len(team.level_flags(level.number)) != 0 %}
@@ -109,6 +109,6 @@
                     {% end %}
                 </div>
             {% end %}
-        {% end %}
+
     </div>
 {% end %}

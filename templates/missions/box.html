@@ -52,7 +52,7 @@
                     <br />
                     <label class="control-label" for="flag_file">Flag</label>
                     <div class="controls">
-                        <input id="flag_file" name="flag" type="file" style="color:white;" />
+                        <input id="flag_file" name="flag" type="file" />
                     </div>
                 </div>
             </form>
@@ -151,6 +151,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% from models.Flag import FLAG_FILE %}
                     {% for flag in box.flags %}
                         {% if flag in team.flags %}
                             <tr class="success">
@@ -168,14 +169,14 @@
                                     <td>
                                         <a class="btn btn-mini" data-toggle="modal" 
                                             href="#submitFileFlagModal" onclick="set_flag_uuid('file', '{{ flag.uuid }}')">
-                                            Submit
+                                            <i class="icon-flag"></i> Submit
                                         </a>
                                     </td>
                                 {% else %}
                                     <td>
                                         <a class="btn btn-mini" data-toggle="modal" 
                                             href="#submitTextFlagModal" onclick="set_flag_uuid('text', '{{ flag.uuid }}')">
-                                            Submit
+                                            <i class="icon-flag"></i> Submit
                                         </a>
                                     </td>
                                 {% end %}

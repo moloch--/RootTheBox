@@ -143,14 +143,18 @@ class Flag(BaseObject):
     def game_level(self):
         return self.box.game_level
 
-    def capture(self, token):
-        if self._type == STATIC_FLAG:
-            return self.token == token
-        elif self._type == REGEX_FLAG:
+    @property
+    def is_file(self):
+        return self._type == FLAG_FILE
+
+    def capture(self, submission):
+        if self._type == FLAG_STATIC:
+            return self.token == submission
+        elif self._type == FLAG_REGEX:
             pattern = re.compile(self.token)
-            return pattern.match(token) is not None
-        elif self._type == FILE_FLAG:
-            pass
+            return pattern.match(submission) is not None
+        elif self._type == FLAG_FILE:
+            self.token == self.digest(submission)
         else:
             raise ValueError('Invalid flag type, cannot capture')
 
