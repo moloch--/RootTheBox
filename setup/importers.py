@@ -66,7 +66,7 @@ def create_flags(parent, box):
             value=get_child_text(flag_elem, 'value'),
             box=box,
             description=get_child_text(flag_elem, 'description'),
-            is_file=flag_elem.get('isfile') == 'True',
+            _type=flag_elem.get('type'),
         )
 
 
@@ -97,7 +97,7 @@ def create_boxes(parent, corporation):
     ''' Create boxes for a corporation '''
     logging.info("Found %s boxes" % parent.get('count'))
     for box_elem in parent.getchildren():
-        if get_child_by_tag('avatar') is not None:
+        if get_child_by_tag(box_elem, 'avatar') is not None:
             favatar = _tmp_avatar(box_elem)
         else:
             favatar = None

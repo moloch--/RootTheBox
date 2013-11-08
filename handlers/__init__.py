@@ -155,24 +155,24 @@ if config.use_bots:
 # If the game is configured to use the black market, associate the handlers necessary
 if config.use_black_market:
     urls += [
-        # This is only relevent if the black market is enabled  
+        # This is only relevent if the black market is enabled
         (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
 
         # Market handlers - MarketHandlers.py
         (r'/user/market', MarketViewHandler),
         (r'/user/market/details', MarketDetailsHandler),
-    
+
         # Upgrade handlers - UpgradeHandlers.py
         (r'/password_security', PasswordSecurityHandler),
         (r'/federal_reserve', FederalReserveHandler),
         (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
         (r'/source_code_market', SourceCodeMarketHandler),
         (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
-        (r'/swat', SwatHandler),   
+        (r'/swat', SwatHandler),
     ]
 
 # This one has to be last
-urls.append((r'/(.*)', NotFoundHandler))    
+urls.append((r'/(.*)', NotFoundHandler))
 
 app = Application(
     # URL handler mappings
@@ -229,19 +229,18 @@ app = Application(
 # Main entry point
 def start_server():
     ''' Main entry point for the application '''
-    
     if config.debug:
         sys.stdout.write(WARN+"WARNING: Debug mode is enabled in "+config.filename)
         sys.stdout.flush()
         logging.warn("Debug mode is enabled; some security measures will be ignored")
-    
+
     # Setup server object
     if config.use_ssl:
-        server = HTTPServer(app, 
+        server = HTTPServer(app,
             ssl_options={
                 "certfile": config.certfile,
                 "keyfile": config.keyfile,
-            }, 
+            },
             xheaders=config.x_headers
         )
     else:
@@ -250,20 +249,20 @@ def start_server():
     # Bind to a socket
     sockets = netutil.bind_sockets(config.listen_port)
     server.add_sockets(sockets)
-    
+
     # Start the i/o loop, and callbacks
     try:
         io_loop = IOLoop.instance()
         game_history = GameHistory.Instance()
         history_callback = PeriodicCallback(
-            game_history.take_snapshot, 
-            config.history_snapshot_interval, 
+            game_history.take_snapshot,
+            config.history_snapshot_interval,
             io_loop=io_loop
         )
         if config.use_bots:
             scoring_callback = PeriodicCallback(
-                score_bots, 
-                config.bot_reward_interval, 
+                score_bots,
+                config.bot_reward_interval,
                 io_loop=io_loop
             )
             bot_ping_callback = PeriodicCallback(

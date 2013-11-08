@@ -1,8 +1,8 @@
-{% extends "../main.html" %} 
+{% extends "../main.html" %}
 
-{% block title %}User Index{% end %} 
+{% block title %}User Index{% end %}
 
-{% block content %} 
+{% block content %}
 {% include ../notifier.html %}
 <div class="row-fluid">
     <div class="span5">
@@ -31,11 +31,12 @@
         <h4 style="display:inline;float:right;"><a href="/notifications/all">See All &raquo;</a>
         </h4>
         <hr>
-        {% from models import Notification %} 
+        {% from models import Notification %}
         {% for notify in Notification.by_user_id(user.id)[-5:] %}
         <div class="well">
             {% if notify.icon_url is not None %}
-            <img src="/avatars/{{ notify.icon_url }}" />{% elif notify.category == "success" %}
+            <img src="/avatars/{{ notify.icon_url }}" />
+            {% elif notify.category == "success" %}
             <img style="width:36px; height:36px; display:inline-block;" src="/static/images/success.png" />
             {% elif notify.category == "info" %}
             <img style="width:36; height:36; display:inline-block;verticalAlign:middle;" src="/static/images/info.png" />
@@ -45,8 +46,8 @@
             <img style="width:36; height:36; display:inline-block;verticalAlign:middle;" src="/static/images/error.png" />
             {% end %}
             <p style="display:inline;">
-                <strong>{{ notify.title }}</strong>{{ notify.created.strftime("%I:%M%p") }}
-                <strong>:</strong>
+                <strong>{{ notify.title }}</strong>
+                {{ notify.created.strftime("%I:%M%p") }}
                 <br />{{ notify.message }}
             </p>
         </div>

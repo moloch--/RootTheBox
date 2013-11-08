@@ -24,9 +24,10 @@ This file contains handlers related to the "Black Market" functionality
 '''
 
 
+import logging
+
 from BaseHandlers import BaseHandler
 from models import dbsession, MarketItem, Team
-
 from libs.SecurityDecorators import authenticated
 
 

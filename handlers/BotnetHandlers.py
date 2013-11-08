@@ -36,8 +36,7 @@ from libs.SecurityDecorators import *
 
 
 class BotSocketHandler(tornado.websocket.WebSocketHandler):
-    ''' 
-
+    '''
     *** Rough bot protocol layout ***
     =================================
     1) Bot connects to server
@@ -53,8 +52,8 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         c) Asserted box name
 
     4) Server looks up asserted box and user in database, ensures
-        they do exist, and the user is not an admin.  
-    
+        they do exist, and the user is not an admin.
+
     5) Server then computes it's own SHA1(xid + box garbage)
         a) Check if the server's value matches the bot's
 
@@ -76,7 +75,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         self.opcodes = {
             'interrogation_response': self.interrogation_response,
         }
-    
+
     def open(self, *args):
         ''' Steps 1 and 2; called when a new bot connects '''
         box = Box.by_ip_address(self.request.remote_ip)
@@ -167,7 +166,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
 
 
 class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
-    ''' 
+    '''
     Handles the CLI BotMonitor websocket connections, has custom auth.
     TODO: Trash this and use the web api handler, w/ normal session cookie
     '''
@@ -201,7 +200,6 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
         self.bot_manager.remove_monitor(self)
         logging.debug("Closing connection to bot monitor at %s" % self.request.remote_ip)
 
-    
     def auth(self, req):
         ''' Authenticate user '''
         try:
@@ -244,14 +242,14 @@ class BotWebMonitorHandler(BaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
         self.render('bots/monitor.html')
-    
+
 
 class BotWebMonitorSocketHandler(BaseWebSocketHandler):
-    ''' 
-    Bot monitor API, requires user to be authenticated with the web app 
+    '''
+    Bot monitor API, requires user to be authenticated with the web app
     TODO: Move the cli api to use this one.
 
-    This class implements an observer pattern, and registers itself with 
+    This class implements an observer pattern, and registers itself with
     the BotManager class.
 
     It must have:
@@ -327,7 +325,7 @@ class BotDownloadHandler(BaseHandler):
 
     def generic(self):
         ''' Send them the generic python script '''
-        self.set_header("Content-Type", "text/x-python"); 
+        self.set_header("Content-Type", "text/x-python")
         self.set_header("Content-disposition", "attachment; filename=rtb_bot.py")
         if os.path.exists('bot/bot.py'):
             f = open('bot/bot.py')
@@ -338,7 +336,7 @@ class BotDownloadHandler(BaseHandler):
 
     def monitor(self):
         ''' Send curses ui bot monitor '''
-        self.set_header("Content-Type", "text/x-python"); 
+        self.set_header("Content-Type", "text/x-python")
         self.set_header("Content-disposition", "attachment; filename=botnet_monitor.py")
         if os.path.exists('bot/BotMonitor.py'):
             f = open('bot/BotMonitor.py')

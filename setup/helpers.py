@@ -183,7 +183,7 @@ def set_avatar(box, favatar):
     f.close()
 
 
-def create_flag(name, token, value, box, description="No description", is_file=False):
+def create_flag(name, token, value, box, _type, description="No description", is_file=False):
     if Flag.by_name(name) is not None:
         logging.info("Flag with name '%s' already exists, skipping" % (name))
         return Flag.by_name(name)
@@ -199,11 +199,13 @@ def create_flag(name, token, value, box, description="No description", is_file=F
         raise ValueError("Flag token file does not exist, and is not a hash.")
     else:
         _token = unicode(token[:256])
+    if _type not in Flag.FLAG_TYPES:
+        raise ValueError('Invalid flag type "%s"' % _type)
     logging.info("Create Flag: %s" % name)
     flag = Flag(
         name=unicode(name[:32]),
-        token=_token,
-        is_file=is_file,
+        token=unicode(_token),
+        _type=unicode(_type),
         description=unicode(description[:256]),
         value=abs(int(value)),
         box_id=box.id,
