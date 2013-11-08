@@ -1174,13 +1174,15 @@ class BotMonitor(object):
         # Get password
         curses.noecho()
         prompt = "Password: "
-        self.agent_prompt = curses.newwin(3, len(self.load_message) + 2, (
-            self.max_y / 2) - 1, ((self.max_x - len(self.load_message)) / 2
-        ))
+        self.agent_prompt = curses.newwin(
+            3,  # Heigth
+            len(self.load_message) + 24,  # Width
+            (self.max_y / 2) - 1,  # Start Y
+            ((self.max_x - len(self.load_message)) / 2) - 12  # Start X
+        )
         self.agent_prompt.border(0)
         self.agent_prompt.addstr(1, 1, prompt, curses.A_BOLD)
-        self.password = self.agent_prompt.getstr(
-            1, len(prompt) + 1, len(self.load_message) - len(prompt) - 1)
+        self.password = self.agent_prompt.getstr(1, len(prompt) + 1, 64)
         self.stop_thread = True
         thread.join()  # Wait for "Matrix" threads to stop
 
@@ -1350,6 +1352,6 @@ if __name__ == "__main__":
         dest='log_level',
     )
     args = parser.parse_args()
-    main(args.domain, args.port, args.secure, 
+    main(args.domain, args.port, args.secure,
         args.log_file, args.log_level.lower()
     )
