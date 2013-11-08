@@ -219,7 +219,11 @@ class ConfigManager(object):
     def bot_reward_interval(self, value):
         assert isinstance(value, int)
         self.config.set("Game", 'bot_reward_interval', str(value))
-    
+
+    @property
+    def whitelist_box_ips(self):
+        return self.config.getboolean('Game', 'whitelist_box_ips')
+
     @property
     def bribe_cost(self):
         ''' Base amount of a SWAT bribe '''
@@ -251,7 +255,7 @@ class ConfigManager(object):
     def session_age(self):
         ''' Max session age in seconds '''
         return abs(self.config.getint("Cache", 'session_age'))
-    
+
     @property
     def session_regeneration_interval(self):
         return abs(self.config.getint("Cache", 'session_regeneration_interval'))
@@ -272,7 +276,7 @@ class ConfigManager(object):
         if xheaders:
             logging.warn("X-Headers is enabled, this may affect IP security restrictions")
         return xheaders
-    
+
     @property
     def max_password_length(self):
         return abs(self.config.getint("Game", 'max_password_length'))

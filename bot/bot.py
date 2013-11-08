@@ -862,12 +862,14 @@ def get_rxid(garbage, xid):
 
 def send_interrogation_response(ws, response):
     display_status(ws, {'message': "Authorizing, please wait ..."})
-    ws.send({
+    solved_xid = {
         'opcode': 'interrogation_response',
         'rxid': get_rxid(ws.garbage, response['xid']),
         'box_name': ws.box_name,
         'handle': ws.user
-    })
+    }
+    print 'Sending:', ws, response
+    ws.send(json.dumps(solved_xid))
 
 def recv_ping(ws, response, verbose=False):
     ''' Print that we just got a ping from c&c '''

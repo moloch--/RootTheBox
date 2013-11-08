@@ -27,6 +27,7 @@ import tornado.websocket
 
 from uuid import uuid4
 from hashlib import sha1
+from libs.ConfigManager import ConfigManager
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from models import Box, Team, User
@@ -66,6 +67,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
     def initialize(self):
         self.bot_manager = BotManager.Instance()
         self.event_manager = EventManager.Instance()
+        self.config = ConfigManager.Instance()
         self.team_name = None
         self.team_uuid = None
         self.box_uuid = None
@@ -88,60 +90,8 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             })
             self.close()
         else:
+            logging.debug("Interrogating bot on %s" % self.request.remote_ip)
             self.write_message({'opcode': 'interrogate', 'xid': self.xid})
-
-    def interrogation_response(self, msg):
-        ''' Steps 3 and 4; validate repsonses '''
-        response_xid = msg['rxid']
-        user = User.by_handle(msg['handle'])
-        box = Box.by_name(msg['box_name'])
-        if self.config.whitelist_box_ips and self.remote_ip not in box.ips:
-            self.send_error("Invalid remote IP for this box")
-        elif user is None or user.has_permission(ADMIN_PERMISSION):
-            self.send_error("User does not exist")
-        elif box is None:
-            self.send_error("Box does not exist")
-        elif not self.is_valid_xid(box, response_xid):
-            self.send_error("Invalid xid response")
-        else:
-            self.team_name = user.team.name
-            self.team_uuid = user.team.uuid
-            self.box_uuid = box.uuid
-            self.add_to_botnet()
-
-    def add_to_botnet(self):
-        ''' Step 6 and 7; Add current web socket to botnet '''
-        if self.bot_manager.add_bot(self):
-            logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
-            count = self.bot_manager.count_by_team(self.team_name)
-            self.write_message({
-                'opcode': 'status',
-                'message': 'Added new bot; total number of bots is now %d' % count
-            })
-        else:
-            logging.debug("Duplicate bot on %s" % self.remote_ip)
-            self.send_error("Duplicate bot")
-
-    def is_valid_xid(box, response_xid):
-        sha = sha1()
-        sha.update(self.xid + box.garbage)
-        return response_xid == sha.hexdigest()
-
-    def ping(self):
-        ''' Just make sure we can write data to the socket '''
-        try:
-            self.write_message({'opcode': 'ping'})
-        except:
-            logging.exception("Error: while sending ping to bot.")
-            self.close()
-
-    def send_error(self, msg):
-        ''' Send the errors, and close socket '''
-        self.write_message({
-            'opcode': 'error',
-            'message': msg,
-        })
-        self.close()
 
     def on_message(self, message):
         ''' Routes the request to the correct function based on opcode '''
@@ -162,6 +112,61 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         if self.uuid in self.bot_manager.botnet:
             self.bot_manager.remove_bot(self)
         logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
+
+    def interrogation_response(self, msg):
+        ''' Steps 3 and 4; validate repsonses '''
+        logging.debug("Recieved interrogate response, validating ...")
+        response_xid = msg['rxid']
+        user = User.by_handle(msg['handle'])
+        box = Box.by_name(msg['box_name'])
+        if self.config.whitelist_box_ips and self.remote_ip not in box.ips:
+            self.send_error("Invalid remote IP for this box")
+        elif user is None or user.has_permission(ADMIN_PERMISSION):
+            self.send_error("User does not exist")
+        elif box is None:
+            self.send_error("Box does not exist")
+        elif not self.is_valid_xid(box, response_xid):
+            self.send_error("Invalid xid response")
+        else:
+            self.team_name = user.team.name
+            self.team_uuid = user.team.uuid
+            self.box_uuid = box.uuid
+            self.box_name = box.name
+            self.add_to_botnet()
+
+    def add_to_botnet(self):
+        ''' Step 6 and 7; Add current web socket to botnet '''
+        if self.bot_manager.add_bot(self):
+            logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
+            count = self.bot_manager.count_by_team(self.team_name)
+            self.write_message({
+                'opcode': 'status',
+                'message': 'Added new bot; total number of bots is now %d' % count
+            })
+        else:
+            logging.debug("Duplicate bot on %s" % self.remote_ip)
+            self.send_error("Duplicate bot")
+
+    def is_valid_xid(self, box, response_xid):
+        sha = sha1()
+        sha.update(self.xid + box.garbage)
+        return response_xid == sha.hexdigest()
+
+    def ping(self):
+        ''' Just make sure we can write data to the socket '''
+        try:
+            self.write_message({'opcode': 'ping'})
+        except:
+            logging.exception("Error: while sending ping to bot.")
+            self.close()
+
+    def send_error(self, msg):
+        ''' Send the errors, and close socket '''
+        self.write_message({
+            'opcode': 'error',
+            'message': msg,
+        })
+        self.close()
 
 
 
