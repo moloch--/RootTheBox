@@ -136,10 +136,6 @@ class Flag(BaseObject):
         return unicode(sha.hexdigest())
 
     @property
-    def box(self):
-        return Box.by_id(self.box_id)
-
-    @property
     def game_level(self):
         return self.box.game_level
 

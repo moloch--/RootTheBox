@@ -53,21 +53,21 @@ class Box(BaseObject):
     avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
     sponsor_id = Column(Integer, ForeignKey('sponsor.id'), nullable=True)
 
-    teams = relationship("Team", 
-        secondary=team_to_box, 
-        backref=backref("Box", lazy="joined")
+    teams = relationship("Team",
+        secondary=team_to_box,
+        backref=backref("box", lazy="joined")
     )
-    
-    flags = relationship("Flag", 
-        backref=backref("Box", lazy="joined"), 
+
+    flags = relationship("Flag",
+        backref=backref("box", lazy="joined"),
         cascade="all, delete-orphan"
     )
 
-    ip_addresses = relationship("IpAddress", 
-        backref=backref("Box", lazy="joined"), 
+    ip_addresses = relationship("IpAddress",
+        backref=backref("Box", lazy="joined"),
         cascade="all, delete-orphan"
     )
-    
+
     box_resources = relationship("BoxResource", backref="box")
 
     @classmethod

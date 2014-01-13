@@ -5,7 +5,7 @@
 {% block header %}
     <script src="/static/js/libs/highcharts.js"></script>
     <script src="/static/js/libs/modules/exporting.js"></script>
-{% end %} 
+{% end %}
 
 {% block content %}
     {% include ../../notifier.html %}
@@ -34,7 +34,6 @@
         <script>
             var chart;
             $(document).ready(function() {
-                
                 chart = new Highcharts.Chart({
                     chart: {
                         renderTo: 'game_history',

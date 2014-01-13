@@ -190,7 +190,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({"error": "You cannot steal from your own team"})
         elif not 0 < amount <= source.money:
             self.write({
-                "error": 
+                "error":
                 "Invalid transfer amount; must be greater than 0 and less than $%d" % source.money
             })
         elif destination == source:
@@ -265,7 +265,7 @@ class SourceCodeMarketHandler(BaseHandler):
         source_code = SourceCode.by_box_id(box.id)
         team.money -= abs(source_code.price)
         team.purchased_source_code.append(source_code)
-        logging.info("%s purchased '%s' from the source code market." % 
+        logging.info("%s purchased '%s' from the source code market." %
             (team.name, source_code.file_name,)
         )
         dbsession.add(team)
@@ -275,7 +275,7 @@ class SourceCodeMarketHandler(BaseHandler):
         ''' Addes extra params to render() '''
         user = self.get_current_user()
         boxes = filter(lambda box: box.source_code is not None, Box.all())
-        self.render('upgrades/source_code_market.html', 
+        self.render('upgrades/source_code_market.html',
             user=user, boxes=boxes, errors=errors
         )
 

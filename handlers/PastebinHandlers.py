@@ -52,8 +52,8 @@ class CreatePasteHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Creates a new text share '''
-        name = self.get_argument("name", "")
-        content = self.get_argument("content", "")
+        name = self.get_argument("name", "")[:16]
+        content = self.get_argument("content", "")[:4096]
         if 0 < len(name) and 0 < len(content):
             user = self.get_current_user()
             paste = PasteBin(

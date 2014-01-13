@@ -136,7 +136,7 @@ class PurchaseHintHandler(BaseHandler):
 
     def _purchase_hint(self, hint, team):
         ''' Add hint to team object '''
-        team.money -= hint.price
+        team.money -= abs(hint.price)
         team.hints.append(hint)
         dbsession.add(team)
         dbsession.flush()
@@ -203,7 +203,6 @@ class MissionsHandler(BaseHandler):
                 team=user.team,
                 errors=form.errors
             )
-
 
     def __chklevel__(self):
         user = self.get_current_user()

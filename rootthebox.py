@@ -30,7 +30,7 @@ from datetime import datetime
 from libs.ConsoleColors import *
 
 
-__version__ = 'Root the Box - v0.3.0'
+__version__ = 'Root the Box - v0.3.1'
 current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 

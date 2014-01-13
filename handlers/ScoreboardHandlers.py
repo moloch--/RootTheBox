@@ -146,6 +146,7 @@ class ScoreboardHistoryHandler(BaseHandler):
             )
         self.render('scoreboard/history/bots.html', history=history)
 
+
 class ScoreboardHistorySocketHandler(WebSocketHandler):
 
     def initialize(self):
@@ -191,12 +192,14 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
             flock=sheep,
         )
 
+
 class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         self.render('scoreboard/teams.html')
 
+
 class UsersHandler(BaseHandler):
-    
+
     def get(self, *args, **kwards):
         self.render('scoreboard/users.html')

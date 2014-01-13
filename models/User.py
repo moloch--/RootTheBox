@@ -58,12 +58,12 @@ class User(BaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _locked = Column(Boolean, default=False, nullable=False)
     team_id = Column(Integer, ForeignKey('team.id'))
-    permissions = relationship("Permission", 
-        backref=backref("User", lazy="select"), 
+    permissions = relationship("Permission",
+        backref=backref("User", lazy="select"),
         cascade="all, delete-orphan"
     )
-    notifications = relationship("Notification", 
-        backref=backref("User", lazy="select"), 
+    notifications = relationship("Notification",
+        backref=backref("User", lazy="select"),
         cascade="all, delete-orphan"
     )
     avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
@@ -80,12 +80,12 @@ class User(BaseObject):
             self, '_bank_password', self.__class__._hash_bank_password(self.algorithm, bank_password))
     ))
     algorithm = Column(Unicode(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
-    theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)   
+    theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
     last_login = Column(DateTime)
     logins = Column(Integer, default=0)
     algorithms = {
-        'md5': (md5, 1, u'md5',), 
-        'sha1': (sha1, 2, u'sha1',), 
+        'md5': (md5, 1, u'md5',),
+        'sha1': (sha1, 2, u'sha1',),
         'sha256': (sha256, 3, u'sha256',),
         'sha512': (sha512, 4, u'sha512',),
     }

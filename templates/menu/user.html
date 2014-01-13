@@ -14,7 +14,7 @@
                 <ul class="nav">
                     <li>
                         <a href="/user">
-                            Home
+                            <i class="fa fa-home"></i>
                         </a>
                     </li>
                     <li class="dropdown">
@@ -26,7 +26,8 @@
                             <li><a href="/user/missions">Missions</a>
                             </li>
                             {% if ConfigManager.Instance().use_black_market %}
-                            <li><a href="/user/market">Black Market</a>
+                            <li>
+                                <a href="/user/market">Black Market</a>
                             </li>
                             {% end %} {% if ConfigManager.Instance().use_bots %}
                             <li class="dropdown-submenu">
@@ -69,16 +70,20 @@
                           </a>
                         <ul class="dropdown-menu">
                             {% if user.has_item("Source Code Market") %}
-                            <li><a href="/source_code_market">Source Code Market</a>
+                            <li>
+                                <a href="/source_code_market">Source Code Market</a>
                             </li>
                             {% end %} {% if user.has_item("Password Security") %}
-                            <li><a href="/password_security">Password Security</a>
+                            <li>
+                                <a href="/password_security">Password Security</a>
                             </li>
                             {% end %} {% if user.has_item("Federal Reserve") %}
-                            <li><a href="/federal_reserve">Federal Reserve</a>
+                            <li>
+                                <a href="/federal_reserve">Federal Reserve</a>
                             </li>
                             {% end %} {% if user.has_item("SWAT") %}
-                            <li><a href="/swat">S.W.A.T.</a>
+                            <li>
+                                <a href="/swat">S.W.A.T.</a>
                             </li>
                             {% end %}
                         </ul>
@@ -121,15 +126,15 @@
             <!-- Right Side -->
             <div class="btn-group pull-right">
                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-user"></i>
+                    <i class="fa fa-user"></i>
                     {{ user.handle }}
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                     <li>
                         <a href="/user/settings">
-                            <i class="icon-pencil"></i>
-                            &nbsp;Settings&nbsp;
+                            <i class="fa fa-gears"></i>
+                            Settings
                         </a>
                     </li>
                     <li class="divider"></li>
@@ -140,12 +145,12 @@
                         </form>
                         <script>
                         function logout() {
-                            document.getElementById("logoutform").submit();
+                            $("#logoutform").submit();
                         }
                         </script>
                         <a onclick="logout()">
-                            <i class="icon-ban-circle"></i>
-                            &nbsp;Logout&nbsp;
+                            <i class="fa fa-sign-out"></i>
+                            Logout
                         </a>
                     </li>
                 </ul>

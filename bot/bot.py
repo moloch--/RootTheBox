@@ -301,7 +301,7 @@ class ABNF(object):
         OPCODE_CLOSE: "close",
         OPCODE_PING: "ping",
         OPCODE_PONG: "pong"
-        }
+    }
 
     # data length threashold.
     LENGTH_7  = 0x7d

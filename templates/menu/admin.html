@@ -112,12 +112,16 @@
                 </ul>
                 <div class="btn-group pull-right">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="icon-user"></i>
+                        <i class="fa fa-user"></i>
                         {{ handle }}
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="/user/settings">Settings</a>
+                        <li>
+                            <a href="/user/settings">
+                                <i class="fa fa-gears"></i>
+                                Settings
+                            </a>
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -127,12 +131,12 @@
                             </form>
                             <script>
                             function logout() {
-                                document.getElementById("logoutform").submit();
+                                $("#logoutform").submit();
                             }
                             </script>
                             <a onclick="logout()" method="post">
-                                <i class="icon-ban-circle"></i>
-                                &nbsp;Logout&nbsp;
+                                <i class="fa fa-sign-out"></i>
+                                Logout
                             </a>
                         </li>
                     </ul>
