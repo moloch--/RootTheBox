@@ -30,14 +30,12 @@ from models.BaseGameObject import BaseObject
 
 class Sponsor(BaseObject):
     ''' Sponsor Definition '''
-    
-    id = Column(Integer, primary_key=True)
-    name = Column(Unicode(128), unique=True, nullable=False)
-    logo = Column(Unicode(128), unique=True, nullable=False)
-    description = Column(Unicode(1024), unique=False, nullable=False)
-    url = Column(Unicode(256), unique=False, nullable=True)
+
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    
+    url = Column(Unicode(256), unique=False, nullable=True)
+    name = Column(Unicode(128), unique=True, nullable=False)
+    description = Column(Unicode(1024), unique=False, nullable=False)
+
     #TODO check to see if there are additional attributes that should be supplied to backref
     sponsored_boxes = relationship("Box", backref="sponsor")
 
@@ -45,9 +43,9 @@ class Sponsor(BaseObject):
     def all(cls):
         ''' Returns a list of all sponsor objects in the database '''
         return dbsession.query(cls).all()
-    
+
     @classmethod
-    def by_name(cls, inputname):
+    def by_name(cls, _name):
         ''' Returns a sponsor by the sponsor's name '''
         #TODO constraints around sponsor name for search purposes
-        return dbsession.query(cls).filter_by(name=inputname).first()
+        return dbsession.query(cls).filter_by(name=_name).first()

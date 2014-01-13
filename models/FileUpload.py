@@ -30,17 +30,18 @@ from string import ascii_letters, digits
 
 class FileUpload(BaseObject):
 
+    uuid = Column(Unicode(64), unique=True, nullable=False)
+    team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
+    content = Column(Unicode(255), nullable=False)
+    description = Column(Unicode(1024), nullable=False)
+    byte_size = Column(Integer, nullable=False)
+
     _file_name = Column(Unicode(64), nullable=False)
     file_name = synonym('_file_name', descriptor=property(
         lambda self: self._file_name,
         lambda self, file_name: setattr(
             self, '_file_name', self.__class__.filter_string(file_name, ".-_"))
     ))
-    content = Column(Unicode(255), nullable=False)
-    uuid = Column(Unicode(64), unique=True, nullable=False)
-    description = Column(Unicode(1024), nullable=False)
-    byte_size = Column(Integer, nullable=False)
-    team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
 
     @classmethod
     def all(cls):
@@ -53,9 +54,8 @@ class FileUpload(BaseObject):
         return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
-    def by_uuid(cls, uuid):
-        ''' Return the user object whose uuid is "uuid" '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+    def by_uuid(cls, _uuid):
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_file_name(cls, file_name):

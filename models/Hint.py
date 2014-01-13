@@ -32,8 +32,8 @@ from string import ascii_letters, digits
 
 
 class Hint(BaseObject):
-    ''' 
-    Holds the source code for a box which can be purchased from the source code market 
+    '''
+    Holds the source code for a box which can be purchased from the source code market
     '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))

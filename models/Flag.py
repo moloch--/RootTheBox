@@ -40,8 +40,8 @@ FLAG_FILE   = u'file'
 class Flag(BaseObject):
     ''' Flag definition '''
 
-    name = Column(Unicode(32), nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    name = Column(Unicode(32), nullable=False)
     token = Column(Unicode(256), nullable=False)
     description = Column(Unicode(256), nullable=False)
     value = Column(Integer, nullable=False)
@@ -55,24 +55,24 @@ class Flag(BaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_name(cls, fname):
-        ''' Returns a the object with name of fname '''
-        return dbsession.query(cls).filter_by(name=unicode(fname)).first()
+    def by_name(cls, _name):
+        ''' Returns a the object with name of _name '''
+        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
 
     @classmethod
-    def by_uuid(cls, uuid):
+    def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_token(cls, token):
+    def by_token(cls, _token):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(token=unicode(token)).first()
+        return dbsession.query(cls).filter_by(token=unicode(_token)).first()
 
     @classmethod
     def by_type(cls, _type):
@@ -150,7 +150,6 @@ class Flag(BaseObject):
             pattern = re.compile(self.token)
             return pattern.match(submission) is not None
         elif self._type == FLAG_FILE:
-            print "CMP: %s == %s" % (self.token, self.digest(submission))
             return self.token == self.digest(submission)
         else:
             raise ValueError('Invalid flag type, cannot capture')

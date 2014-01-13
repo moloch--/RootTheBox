@@ -36,9 +36,11 @@ class Corporation(BaseObject):
     name = Column(Unicode(32), unique=True, nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     description = Column(Unicode(1024), nullable=False)
-    boxes = relationship("Box", 
-        backref=backref("Corporation", lazy="joined"), 
-        cascade="all, delete-orphan")
+
+    boxes = relationship("Box",
+        backref=backref("corporation", lazy="joined"),
+        cascade="all, delete-orphan"
+    )
 
     @classmethod
     def all(cls):
@@ -50,14 +52,14 @@ class Corporation(BaseObject):
         return dbsession.query(cls).count()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_name(cls, corp_name):
-        ''' Returns a the object with name of corp_name '''
-        return dbsession.query(cls).filter_by(name=unicode(corp_name)).first()
+    def by_name(cls, _name):
+        ''' Returns a the object with name of _name '''
+        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):

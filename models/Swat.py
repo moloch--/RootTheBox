@@ -30,8 +30,8 @@ from models.BaseGameObject import BaseObject
 
 
 class Swat(BaseObject):
-    ''' 
-    Holds the bribe history of players that get 'SWAT'd 
+    '''
+    Holds the bribe history of players that get 'SWAT'd
     '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))

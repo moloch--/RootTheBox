@@ -30,10 +30,10 @@ from models.BaseGameObject import BaseObject
 class PasteBin(BaseObject):
     ''' PasteBin definition '''
 
-    name = Column(Unicode(16), nullable=False)
-    contents = Column(Unicode(8192), nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
+    name = Column(Unicode(16), nullable=False)
+    contents = Column(Unicode(8192), nullable=False)
 
     @classmethod
     def all(cls):

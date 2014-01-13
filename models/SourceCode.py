@@ -30,12 +30,12 @@ from string import ascii_letters, digits
 
 
 class SourceCode(BaseObject):
-    ''' 
-    Holds the source code for a box which can be purchased from the source code market 
+    '''
+    Holds the source code for a box which can be purchased from the source code market
     '''
 
-    box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     price = Column(Integer, nullable=False)
     description = Column(Unicode(1024), nullable=False)
     checksum = Column(String(32))
@@ -63,8 +63,8 @@ class SourceCode(BaseObject):
         return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
-    def by_box_id(cls, bid):
-        return dbsession.query(cls).filter_by(box_id=bid).first()
+    def by_box_id(cls, _id):
+        return dbsession.query(cls).filter_by(box_id=_id).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):

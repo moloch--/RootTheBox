@@ -28,14 +28,13 @@ from models.BaseGameObject import BaseObject
 
 class BoxResource(BaseObject):
     ''' BoxResource Definition '''
-    
+
     #TODO sanitize these values
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    id = Column(Integer, primary_key=True)
+    box_id = Column(Integer, ForeignKey('box.id'), nullable=True)
     url = Column(Unicode(512), unique=False, nullable=False)
     tag = Column(Unicode(128), unique=False, nullable=False)
     description = Column(Unicode(256), unique=False, nullable=False)
-    box_id = Column(Integer, ForeignKey('box.id'), nullable=True)
 
     @classmethod
     def all(cls):

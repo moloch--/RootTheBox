@@ -28,8 +28,8 @@ from models.BaseGameObject import BaseObject
 class Permission(BaseObject):
     ''' Permission definition '''
 
-    name = Column(Unicode(64), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    name = Column(Unicode(64), nullable=False)
 
     @classmethod
     def all(cls):

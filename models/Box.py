@@ -42,9 +42,9 @@ class Box(BaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(16), unique=True, nullable=False)
-    garbage = Column(String(32), 
-        unique=True, 
-        nullable=False, 
+    garbage = Column(String(32),
+        unique=True,
+        nullable=False,
         default=lambda: urandom(16).encode('hex')
     )
     _description = Column(Unicode(1024))
@@ -91,8 +91,8 @@ class Box(BaseObject):
         return dbsession.query(cls).filter_by(name=unicode(name)).first()
 
     @classmethod
-    def by_garbage(cls, garbage):
-        return dbsession.query(cls).filter_by(name=garbage).first()   
+    def by_garbage(cls, _garbage):
+        return dbsession.query(cls).filter_by(garbage=_garbage).first()
 
     @classmethod
     def by_ip_address(cls, ip_addr):
@@ -113,8 +113,8 @@ class Box(BaseObject):
     def description(self):
         '''
         We have to ensure that the description text is formatted correctly,
-        it gets dumped into a <pre> tag which will honor whitespace this will 
-        split all of the text and insert newlines every 70 chars +2 whitespace 
+        it gets dumped into a <pre> tag which will honor whitespace this will
+        split all of the text and insert newlines every 70 chars +2 whitespace
         at be beginning of each line, so the indents line up nicely.
         '''
         index, step = 0, 70
@@ -145,18 +145,10 @@ class Box(BaseObject):
         return filter(lambda ip: ip is not None, ips)
 
     @property
-    def corporation(self):
-        return Corporation.by_id(self.corporation_id)
-
-    @property
     def ipv6(self):
         ''' Return a list of all ipv6 addresses '''
         ips = [ip.v6 for ip in self.ip_addresses]
         return filter(lambda ip: ip is not None, ips)
-
-    @property
-    def game_level(self):
-        return GameLevel.by_id(self.game_level_id)
 
     @property
     def source_code(self):

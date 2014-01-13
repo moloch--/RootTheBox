@@ -36,46 +36,54 @@ from libs.BotManager import BotManager
 class Team(BaseObject):
     ''' Team definition '''
 
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+
+    motto = Column(Unicode(32))
+    files = relationship("FileUpload", backref=backref("Team", lazy="select"))
+    pastes = relationship("PasteBin", backref=backref("Team", lazy="select"))
+    money = Column(Integer, default=500, nullable=False)
+
     _name = Column(Unicode(16), unique=True, nullable=False)
     name = synonym('_name', descriptor=property(
         lambda self: self._name,
         lambda self, name: setattr(
             self, '_name', self.__class__.filter_string(name, " -_"))
     ))
-    motto = Column(Unicode(32))
 
     members = relationship("User",
         backref=backref("Team", lazy="joined"),
-        cascade="all, delete-orphan")
-
-    files = relationship("FileUpload", backref=backref("Team", lazy="select"))
-    pastes = relationship("PasteBin", backref=backref("Team", lazy="select"))
-    money = Column(Integer, default=500, nullable=False)
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+        cascade="all, delete-orphan"
+    )
 
     flags = relationship("Flag",
         secondary=team_to_flag,
-        backref=backref("Team", lazy="select"))
+        backref=backref("Team", lazy="select")
+    )
 
     boxes = relationship("Box",
         secondary=team_to_box,
-        backref=backref("Team", lazy="select"))
+        backref=backref("Team", lazy="select")
+    )
 
     items = relationship("MarketItem",
         secondary=team_to_item,
-        backref=backref("Team", lazy="joined"))
+        backref=backref("Team", lazy="joined")
+    )
 
     purchased_source_code = relationship("SourceCode",
         secondary=team_to_source_code,
-        backref=backref("Team", lazy="select"))
+        backref=backref("Team", lazy="select")
+    )
 
     hints = relationship("Hint",
         secondary=team_to_hint,
-        backref=backref("Team", lazy="select"))
+        backref=backref("Team", lazy="select")
+    )
 
     game_levels = relationship("GameLevel",
         secondary=team_to_game_level,
-        backref=backref("Team", lazy="select"))
+        backref=backref("Team", lazy="select")
+    )
 
     @classmethod
     def all(cls):

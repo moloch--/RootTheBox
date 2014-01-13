@@ -49,40 +49,46 @@ ITERATE = 0xbad
 class User(BaseObject):
     ''' User definition '''
 
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    team_id = Column(Integer, ForeignKey('team.id'))
+    theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
+    _locked = Column(Boolean, default=False, nullable=False)
+    avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
+    algorithm = Column(Unicode(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
+    last_login = Column(DateTime)
+    logins = Column(Integer, default=0)
+
     _handle = Column(Unicode(16), unique=True, nullable=False)
     handle = synonym('_handle', descriptor=property(
         lambda self: self._handle,
         lambda self, handle: setattr(
             self, '_handle', self.__class__.filter_string(handle.lower(), "_-"))
     ))
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    _locked = Column(Boolean, default=False, nullable=False)
-    team_id = Column(Integer, ForeignKey('team.id'))
+
     permissions = relationship("Permission",
         backref=backref("User", lazy="select"),
         cascade="all, delete-orphan"
     )
+
     notifications = relationship("Notification",
         backref=backref("User", lazy="select"),
         cascade="all, delete-orphan"
     )
-    avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
+
     _password = Column('password', String(64))
     password = synonym('_password', descriptor=property(
         lambda self: self._password,
         lambda self, password: setattr(
                 self, '_password', self.__class__._hash_password(password))
     ))
+
     _bank_password = Column('bank_password', String(128))
     bank_password = synonym('_bank_password', descriptor=property(
         lambda self: self._bank_password,
         lambda self, bank_password: setattr(
             self, '_bank_password', self.__class__._hash_bank_password(self.algorithm, bank_password))
     ))
-    algorithm = Column(Unicode(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
-    theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
-    last_login = Column(DateTime)
-    logins = Column(Integer, default=0)
+
     algorithms = {
         'md5': (md5, 1, u'md5',),
         'sha1': (sha1, 2, u'sha1',),
@@ -168,7 +174,7 @@ class User(BaseObject):
 
     @property
     def locked(self):
-        ''' 
+        '''
         Determines if an admin has locked an account, accounts with
         administrative permissions cannot be locked.
         '''

@@ -27,8 +27,8 @@ from models.BaseGameObject import BaseObject
 
 
 class WallOfSheep(BaseObject):
-    ''' 
-    Stores a record of cracked passwords, and publically displays 
+    '''
+    Stores a record of cracked passwords, and publically displays
     them for all to see.
     '''
 
@@ -77,16 +77,16 @@ class WallOfSheep(BaseObject):
 
     @classmethod
     def leaderboard(cls, order_by='passwords'):
-        ''' 
-        Creates an ordered list of tuples, for each user and the 
+        '''
+        Creates an ordered list of tuples, for each user and the
         number of password they've cracked
         '''
         orders = {'passwords': 1, 'cash': 2}
         leaders = []
         for user in User.all_users():
             if 0 < cls.count_cracked_by(user.id):
-                leaders.append((user, 
-                    cls.count_cracked_by(user.id), 
+                leaders.append((user,
+                    cls.count_cracked_by(user.id),
                     sum(cls.by_cracker_id(user.id)),
                 ))
         if order_by not in orders: order_by = 'passwords'
