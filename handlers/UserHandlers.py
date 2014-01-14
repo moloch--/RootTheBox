@@ -31,11 +31,12 @@ import logging
 import tornado
 
 from uuid import uuid4
-from models import dbsession, User, Theme, Team
-from libs.Form import Form
+from models import DBSession
+from models.User import User
+from models.Theme import Theme
+from models.Team import Team
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
-from recaptcha.client import captcha
 
 
 RECAPTCHA_URL = 'http://www.google.com/recaptcha/api/verify'

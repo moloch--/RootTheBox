@@ -27,8 +27,11 @@ This file contains the code for displaying flags / recv flag submissions
 import logging
 import hashlib
 
-from models import dbsession, Box, Hint, Flag, GameLevel
-from libs.Form import Form
+from models import DBSession
+from models.GameLevel import GameLevel
+from models.Flag import Flag
+from models.Box import Box
+from models.Hint import Hint
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
 

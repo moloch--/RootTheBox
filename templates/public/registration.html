@@ -4,7 +4,7 @@
 
 {% block content %}
     {% from libs.ConfigManager import ConfigManager %}
-    {% from models import Team %}
+    {% from models.Team import Team %}
     <div class="container">
         <h1>Registration</h1>
         <br />
@@ -39,14 +39,14 @@
                             <select name="team">
                                 <option value=""></option>
                                 {% for team in Team.all() %}
-                                    {% if len(team.members) < ConfigManager.Instance().max_team_size %}
+                                    {% if len(team.members) < ConfigManager.instance().max_team_size %}
                                         <option value="{{ team.uuid }}">{{ team.name }}</option>
                                     {% end %}
                                 {% end %}
                             </select>
                         </div>
                     </div>
-                    {% if ConfigManager.Instance().public_teams %}
+                    {% if ConfigManager.instance().public_teams %}
                         <h5>Start a New Team</h5>
                         <div class="control-group">
                             <label class="control-label" for="team_name">Team Name</label>
@@ -92,7 +92,7 @@
                             data-content="Used to secure your (in-game) bank account.  Please do NOT enter your real bank account password." />
                     </div>
                 </div>
-                {% if ConfigManager.Instance().restrict_registration %}
+                {% if ConfigManager.instance().restrict_registration %}
                     <div class="control-group">
                         <label class="control-label" for="token">Registration Token</label>
                         <div class="controls">
@@ -119,7 +119,7 @@
             $("#pass2").popover({placement:'right', trigger:'focus'});
             $("#bpass1").popover({placement:'right', trigger:'focus'});
 
-            {% if ConfigManager.Instance().restrict_registration %}
+            {% if ConfigManager.instance().restrict_registration %}
                 $("#regtoken").popover({placement:'right', trigger:'focus'});
             {% end %}
 

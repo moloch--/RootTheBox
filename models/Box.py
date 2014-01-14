@@ -42,12 +42,12 @@ class Box(DatabaseObject):
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
+    #sponsor_id = Column(Integer, ForeignKey('sponsor.id'), nullable=True)
     name = Column(Unicode(16), unique=True, nullable=False)
     _description = Column(Unicode(1024))
     difficulty = Column(Unicode(16), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
     avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
-    sponsor_id = Column(Integer, ForeignKey('sponsor.id'), nullable=True)
 
     garbage = Column(String(32),
         unique=True,
@@ -70,7 +70,7 @@ class Box(DatabaseObject):
         cascade="all, delete-orphan"
     )
 
-    box_resources = relationship("BoxResource", backref="box")
+    #box_resources = relationship("BoxResource", backref="box")
 
     @classmethod
     def all(cls):

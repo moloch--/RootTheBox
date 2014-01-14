@@ -33,6 +33,6 @@ class CssTheme(UIModule):
                 theme=self.handler.session['theme']
             )
         else:
-            config = ConfigManager.Instance()
+            config = ConfigManager.instance()
             default_theme = config.default_theme
             return self.render_string("theme/css.html", theme=default_theme)

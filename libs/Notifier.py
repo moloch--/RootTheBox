@@ -21,7 +21,9 @@ Created on Sep 20, 2012
 
 
 from uuid import uuid4
-from models import dbsession, Notification, User
+from models import DBSession
+from models.Notification import Notification
+from models.User import User
 
 
 ### Constants ###
@@ -177,8 +179,9 @@ class Notifier(object):
         )
         if icon is not None:
             notification.icon = icon
+        dbsession = DBSession()
         dbsession.add(notification)
-        dbsession.flush()
+        dbsession.commit()
 
     @classmethod
     def __create__(cls, user, title, message, category, event_uuid, icon=None):
@@ -192,5 +195,6 @@ class Notifier(object):
         )
         if icon is not None:
             notification.icon = icon
+        dbsession = DBSession()
         dbsession.add(notification)
-        dbsession.flush()
+        dbsession.commit()

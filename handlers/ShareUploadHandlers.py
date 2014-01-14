@@ -28,7 +28,7 @@ import os
 
 from uuid import uuid4
 from base64 import b64encode, b64decode
-from models import dbsession, FileUpload
+from models.FileUpload import FileUpload
 from mimetypes import guess_type
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated

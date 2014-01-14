@@ -21,7 +21,7 @@
                 <strong>Bank Account:</strong> ${{ user.team.money }}
                 <br />
                 {% from libs.ConfigManager import ConfigManager %}
-                {% if ConfigManager.Instance().use_bots %}
+                {% if ConfigManager.instance().use_bots %}
                 <strong>Active Bots:</strong> {{ user.team.bot_count }}
                 <br />
                 {% end %}

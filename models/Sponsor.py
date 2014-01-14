@@ -28,6 +28,7 @@ from sqlalchemy.types import Integer, Unicode, String
 from models import DBSession
 from models.BaseModels import DatabaseObject
 
+
 class Sponsor(DatabaseObject):
     ''' Sponsor Definition '''
 
@@ -37,7 +38,7 @@ class Sponsor(DatabaseObject):
     description = Column(Unicode(1024), unique=False, nullable=False)
 
     #TODO check to see if there are additional attributes that should be supplied to backref
-    sponsored_boxes = relationship("Box", backref="sponsor")
+    #sponsored_boxes = relationship("Box", backref="sponsor")
 
     @classmethod
     def all(cls):

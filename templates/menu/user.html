@@ -25,11 +25,11 @@
                         <ul class="dropdown-menu">
                             <li><a href="/user/missions">Missions</a>
                             </li>
-                            {% if ConfigManager.Instance().use_black_market %}
+                            {% if ConfigManager.instance().use_black_market %}
                             <li>
                                 <a href="/user/market">Black Market</a>
                             </li>
-                            {% end %} {% if ConfigManager.Instance().use_bots %}
+                            {% end %} {% if ConfigManager.instance().use_bots %}
                             <li class="dropdown-submenu">
                                 <a tabindex="-1" href="/user/bots/webmonitor">Botnet</a>
                                 <ul class="dropdown-menu">

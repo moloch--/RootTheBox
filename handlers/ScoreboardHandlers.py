@@ -40,7 +40,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
     def initialize(self):
         ''' Setup sessions '''
-        self.manager = EventManager.Instance()
+        self.manager = EventManager.instance()
 
     def open(self):
         ''' When we receive a new websocket connect '''
@@ -119,7 +119,7 @@ class ScoreboardHistoryHandler(BaseHandler):
             self.render('public/404.html')
 
     def money(self):
-        game_history = GameHistory.Instance()
+        game_history = GameHistory.instance()
         history = {}
         for team in Team.all():
             history[team.name] = game_history.get_money_history_by_name(
@@ -128,7 +128,7 @@ class ScoreboardHistoryHandler(BaseHandler):
         self.render('scoreboard/history/money.html', history=history)
 
     def flags(self):
-        game_history = GameHistory.Instance()
+        game_history = GameHistory.instance()
         history = {}
         for team in Team.all():
             history[team.name] = game_history.get_flag_history_by_name(
@@ -138,7 +138,7 @@ class ScoreboardHistoryHandler(BaseHandler):
 
     def bots(self):
         #TODO disable this functionality when bots are not enabled
-        game_history = GameHistory.Instance()
+        game_history = GameHistory.instance()
         history = {}
         for team in Team.all():
             history[team.name] = game_history.get_bot_history_by_name(
@@ -151,8 +151,8 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 
     def initialize(self):
         ''' Setup sessions '''
-        self.manager = EventManager.Instance()
-        self.game_history = GameHistory.Instance()
+        self.manager = EventManager.instance()
+        self.game_history = GameHistory.instance()
 
     def open(self):
         ''' When we receive a new websocket connect '''

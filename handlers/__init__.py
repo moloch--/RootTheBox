@@ -56,7 +56,7 @@ from handlers.NotificationHandlers import *
 
 
 ### Setup cache
-config = ConfigManager.Instance()
+config = ConfigManager.instance()
 if config.cache_files:
     from handlers.StaticFileHandler import CachedStaticFileHandler as StaticFileHandler
 else:
@@ -215,7 +215,7 @@ app = Application(
     source_code_market_dir=path.abspath('files/source_code_market/'),
 
     # Event manager
-    event_manager=EventManager.Instance(),
+    event_manager=EventManager.instance(),
 
     # Debug mode
     debug=config.debug,
@@ -253,7 +253,7 @@ def start_server():
     # Start the i/o loop, and callbacks
     try:
         io_loop = IOLoop.instance()
-        game_history = GameHistory.Instance()
+        game_history = GameHistory.instance()
         history_callback = PeriodicCallback(
             game_history.take_snapshot,
             config.history_snapshot_interval,

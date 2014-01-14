@@ -24,7 +24,8 @@ Created on Oct 04, 2012
 import json
 import logging
 
-from models import Team, dbsession
+from models import DBSession
+from models.Team import Team
 from libs.BotManager import BotManager
 from libs.ConfigManager import ConfigManager
 
@@ -47,8 +48,8 @@ class Scoreboard(object):
 def score_bots():
     ''' Award money for botnets '''
     logging.info("Scoring botnets, please wait ...")
-    bot_manager = BotManager.Instance()
-    config = ConfigManager.Instance()
+    bot_manager = BotManager.instance()
+    config = ConfigManager.instance()
     for team in Team.all():
         bots = bot_manager.by_team(team.name)
         reward = 0
@@ -67,8 +68,9 @@ def score_bots():
             logging.info("%s was awarded $%d for controlling %s bot(s)" % (
                 team.name, reward, len(bots),
             ))
+            dbsession = DBSession()
             bot_manager.add_rewards(team.name, config.bot_reward)
             bot_manager.notify_monitors(team.name)
             team.money += reward
             dbsession.add(team)
-            dbsession.flush()
+            dbsession.commit()

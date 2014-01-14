@@ -65,9 +65,9 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
     '''
 
     def initialize(self):
-        self.bot_manager = BotManager.Instance()
-        self.event_manager = EventManager.Instance()
-        self.config = ConfigManager.Instance()
+        self.bot_manager = BotManager.instance()
+        self.event_manager = EventManager.instance()
+        self.config = ConfigManager.instance()
         self.team_name = None
         self.team_uuid = None
         self.box_uuid = None
@@ -177,7 +177,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
     '''
 
     def initialize(self):
-        self.bot_manager = BotManager.Instance()
+        self.bot_manager = BotManager.instance()
         self.team_name = None
         self.uuid = unicode(uuid4())
         self.opcodes = {
@@ -271,7 +271,7 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
             user = self.get_current_user()
             logging.debug("[Web Socket] Opened web monitor socket with %s" % user.handle)
             self.uuid = unicode(uuid4())
-            self.bot_manager = BotManager.Instance()
+            self.bot_manager = BotManager.instance()
             self.team_name = ''.join(user.team.name)
             self.bot_manager.add_monitor(self)
             bots = self.bot_manager.get_bots(self.team_name)

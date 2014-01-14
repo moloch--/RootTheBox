@@ -127,7 +127,7 @@ class Team(DatabaseObject):
 
     @property
     def bot_count(self):
-        bot_manager = BotManager.Instance()
+        bot_manager = BotManager.instance()
         return bot_manager.count_by_team_uuid(self.uuid)
 
     def to_dict(self):

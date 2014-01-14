@@ -22,7 +22,10 @@ Created on Nov 11, 2012
 import pylibmc
 import logging
 
-from models import dbsession, Snapshot, SnapshotTeam, Team
+from models import DBSession
+from models.Team import Team
+from models.Snapshot import Snapshot
+from models.SnapshotTeam import SnapshotTeam
 from sqlalchemy import desc
 from libs.ConfigManager import ConfigManager
 from libs.BotManager import BotManager
@@ -39,11 +42,11 @@ class GameHistory(object):
     '''
 
     def __init__(self):
-        self.config = ConfigManager.Instance()
+        self.config = ConfigManager.instance()
         self.cache = pylibmc.Client([self.config.memcached], binary=True)
         self.epoch = None  # Date/time of first snapshot
         self._load()
-        self.event_manager = EventManager.Instance()
+        self.event_manager = EventManager.instance()
 
     def _load(self):
         ''' Moves snapshots from db into the cache '''
@@ -104,7 +107,8 @@ class GameHistory(object):
     def __now__(self):
         ''' Returns snapshot object it as a dict '''
         snapshot = Snapshot()
-        bot_manager = BotManager.Instance()
+        bot_manager = BotManager.instance()
+        dbsession = DBSession()
         for team in Team.all():
             snapshot_team = SnapshotTeam(
                 team_id=team.id,
@@ -117,7 +121,7 @@ class GameHistory(object):
             dbsession.flush()
             snapshot.teams.append(snapshot_team)
         dbsession.add(snapshot)
-        dbsession.flush()
+        dbsession.commit()
         return snapshot
 
     def __iter__(self):
@@ -129,7 +133,7 @@ class GameHistory(object):
 
     def __len__(self):
         ''' Return length of the game history '''
-        return dbsession.query(Snapshot).order_by(desc(Snapshot.id)).first().id
+        return DBSession().query(Snapshot).order_by(desc(Snapshot.id)).first().id
 
     def __getitem__(self, key):
         ''' Implements slices and indexs '''

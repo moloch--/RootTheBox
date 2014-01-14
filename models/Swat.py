@@ -124,7 +124,7 @@ class Swat(DatabaseObject):
     @classmethod
     def get_price(cls, user):
         ''' Calculate price of next bribe based on history '''
-        config = ConfigManager.Instance()
+        config = ConfigManager.instance()
         base_price = config.bribe_cost
         return base_price + (cls.count_completed_by_target_id(user.id) * base_price)
 

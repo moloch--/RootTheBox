@@ -28,10 +28,13 @@ be purchased from the "Black Market" (see markethandlers.py)
 import logging
 
 from BaseHandlers import BaseHandler
-from models import dbsession, User, WallOfSheep, Team, Box, \
-    SourceCode, Swat
-from models.User import ADMIN_PERMISSION
-from libs.Form import Form
+from models import DBSession
+from models.WallOfSheep import WallOfSheep
+from models.Team import Team
+from models.Box import Box
+from models.SourceCode import SourceCode
+from models.Swat import Swat
+from models.User import User, ADMIN_PERMISSION
 from libs.SecurityDecorators import authenticated, has_item, debug
 from mimetypes import guess_type
 from base64 import b64decode
@@ -67,8 +70,8 @@ class PasswordSecurityHandler(BaseHandler):
                 self.render_page(["You cannot afford to upgrade your hash"])
             elif len(passwd) <= self.config.max_password_length:
                 user.team.money -= self.config.password_upgrade_cost
-                dbsession.add(user.team)
-                dbsession.flush()
+                self.dbsession.add(user.team)
+                self.dbsession.commit()
                 self.update_password(passwd)
                 self.render_page()
             else:
@@ -93,8 +96,8 @@ class PasswordSecurityHandler(BaseHandler):
         dbsession.add(user)
         dbsession.flush()
         user.bank_password = new_password
-        dbsession.add(user)
-        dbsession.flush()
+        self.dbsession.add(user)
+        self.dbsession.commit()
 
 
 class FederalReserveHandler(BaseHandler):
@@ -136,7 +139,7 @@ class FederalReserveAjaxHandler(BaseHandler):
                     continue
                 else:
                     data[team.name] = {
-                        'money': team.money, 
+                        'money': team.money,
                         'flags': len(team.flags),
                         'bots': team.bot_count,
                     }
@@ -215,8 +218,8 @@ class FederalReserveAjaxHandler(BaseHandler):
         victim.team.money -= abs(amount)
         value = int(abs(amount) * 0.85)
         destination.money += value
-        dbsession.add(destination)
-        dbsession.add(victim.team)
+        self.dbsession.add(destination)
+        self.dbsession.add(victim.team)
         user = self.get_current_user()
         sheep = WallOfSheep(
             preimage=unicode(preimage),
@@ -224,8 +227,8 @@ class FederalReserveAjaxHandler(BaseHandler):
             victim_id=victim.id,
             value=value,
         )
-        dbsession.add(sheep)
-        dbsession.flush()
+        self.dbsession.add(sheep)
+        self.dbsession.commit()
         event1, event2 = self.event_manager.create_cracked_password_events(
             user, victim, preimage, value
         )
@@ -268,8 +271,8 @@ class SourceCodeMarketHandler(BaseHandler):
         logging.info("%s purchased '%s' from the source code market." %
             (team.name, source_code.file_name,)
         )
-        dbsession.add(team)
-        dbsession.flush()
+        self.dbsession.add(team)
+        self.dbsession.commit()
 
     def render_page(self, errors=None):
         ''' Addes extra params to render() '''
@@ -300,7 +303,7 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
                 if content_type is None: content_type = 'unknown/data'
                 self.set_header('Content-Type', content_type)
                 self.set_header('Content-Length', len(src_data))
-                self.set_header('Content-Disposition', 
+                self.set_header('Content-Disposition',
                     'attachment; filename=%s' % box.source_code.file_name
                 )
                 self.write(src_data)
@@ -335,7 +338,7 @@ class SwatHandler(BaseHandler):
                     else:
                         self.render_page("You cannot afford this bribe")
                 else:
-                    self.render_page("You cannot SWAT your own team")               
+                    self.render_page("You cannot SWAT your own team")
             else:
                 self.render_page("A bribe is already exists for this player")
         else:

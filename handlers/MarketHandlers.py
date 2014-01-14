@@ -27,7 +27,9 @@ This file contains handlers related to the "Black Market" functionality
 import logging
 
 from BaseHandlers import BaseHandler
-from models import dbsession, MarketItem, Team
+from models import DBSession
+from models.MarketItem import MarketItem
+from models.Team import Team
 from libs.SecurityDecorators import authenticated
 
 
@@ -74,8 +76,8 @@ class MarketViewHandler(BaseHandler):
         ''' Conducts the actual purchase of an item '''
         team.money -= abs(item.price)
         team.items.append(item)
-        dbsession.add(team)
-        dbsession.flush()
+        self.dbsession.add(team)
+        self.dbsession.commit()
 
 
 class MarketDetailsHandler(BaseHandler):

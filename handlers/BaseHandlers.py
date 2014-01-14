@@ -54,7 +54,7 @@ class BaseHandler(RequestHandler):
         self.session = None
         self.new_events = []
         self.event_manager = self.application.settings['event_manager']
-        self.config = ConfigManager.Instance()
+        self.config = ConfigManager.instance()
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
             self.session = self._create_session(session_id)
@@ -190,8 +190,8 @@ class BaseWebSocketHandler(WebSocketHandler):
     def initialize(self):
         ''' Setup sessions, etc '''
         self.session = None
-        self.manager = EventManager.Instance()
-        self.config = ConfigManager.Instance()
+        self.manager = EventManager.instance()
+        self.config = ConfigManager.instance()
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
             self.conn = pylibmc.Client(

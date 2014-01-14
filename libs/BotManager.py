@@ -103,7 +103,7 @@ class BotManager(object):
     '''
 
     def __init__(self):
-        config = ConfigManager.Instance()
+        config = ConfigManager.instance()
         self.botnet = {}  # Holds refs to wsockets
         self.monitors = {}
         self.sqlite_engine = create_engine(u'sqlite://')
@@ -207,7 +207,7 @@ class BotManager(object):
 
 def ping_bots():
     ''' Ping all websockets in database '''
-    bot_manager = BotManager.Instance()
+    bot_manager = BotManager.instance()
     logging.debug("Pinging open botnet websockets")
 
     for bot in bot_manager.all():

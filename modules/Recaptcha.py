@@ -27,7 +27,7 @@ from tornado.web import UIModule
 class Recaptcha(UIModule):
 
     def render(self, *args, **kwargs):
-        config = ConfigManager.Instance()
+        config = ConfigManager.instance()
         if config.recaptcha_enabled:
             return self.render_string('recaptcha/captcha.html')
         else:

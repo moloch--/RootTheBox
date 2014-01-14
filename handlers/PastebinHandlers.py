@@ -26,7 +26,8 @@ This file contains handlers related to the pastebin functionality
 import logging
 
 from handlers.BaseHandlers import BaseHandler
-from models import dbsession, User, PasteBin
+from models.User import User
+from models.PasteBin import PasteBin
 from libs.Form import Form
 from libs.SecurityDecorators import authenticated
 
@@ -61,8 +62,8 @@ class CreatePasteHandler(BaseHandler):
                 contents=unicode(content),
                 team_id=user.team.id
             )
-            dbsession.add(paste)
-            dbsession.flush()
+            self.dbsession.add(paste)
+            self.dbsession.commit()
             event = self.event_manager.create_paste_bin_event(user, paste)
             self.new_events.append(event)
         self.redirect('/user/share/pastebin')
@@ -99,6 +100,6 @@ class DeletePasteHandler(BaseHandler):
         paste = PasteBin.by_uuid(paste_uuid)
         user = self.get_current_user()
         if paste is not None and paste.team_id == user.team.id:
-            dbsession.delete(paste)
-            dbsession.flush()
+            self.dbsession.delete(paste)
+            self.dbsession.commit()
         self.redirect("/user/share/pastebin")

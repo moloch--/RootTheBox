@@ -35,7 +35,7 @@ class FileCache(object):
     @classmethod
     def get(cls, file_path):
         ''' Lazy loads file from disk or memory cache '''
-        config = ConfigManager.Instance()
+        config = ConfigManager.instance()
         mem = pylibmc.Client([config.memcached], binary=True)
         key = b64encode(file_path)
         data = mem.get(key)
@@ -53,13 +53,13 @@ class FileCache(object):
     @staticmethod
     def delete(file_path):
         ''' Remove file from memory cache '''
-        config = ConfigManager.Instance()
+        config = ConfigManager.instance()
         mem = pylibmc.Client([config.memcached], binary=True)
         mem.delete(b64encode(file_path))
 
     @staticmethod
     def flush():
         ''' Flush memory cache '''
-        config = ConfigManager.Instance()
+        config = ConfigManager.instance()
         mem = pylibmc.Client([config.memcached], binary=True)
         mem.flush_all()

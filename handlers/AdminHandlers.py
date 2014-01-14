@@ -41,8 +41,18 @@ from libs.Form import Form
 from libs.LoggingHelpers import ObservableLoggingHandler
 from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
-from models import dbsession, Team, Box, Flag, SourceCode, MarketItem, \
-    Corporation, RegistrationToken, GameLevel, IpAddress, Swat, Hint
+from models import DBSession
+from models.Team import Team
+from models.Box import Box
+from models.Flag import Flag
+from models.SourceCode import SourceCode
+from models.MarketItem import MarketItem
+from models.Corporation import Corporation
+from models.RegistrationToken import RegistrationToken
+from models.GameLevel import GameLevel
+from models.IpAddress import IpAddress
+from models.Swat import Swat
+from models.Hint import Hint
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from models.User import ADMIN_PERMISSION
 from models.Flag import FLAG_STATIC, FLAG_REGEX, FLAG_FILE
@@ -1431,7 +1441,7 @@ class AdminLogViewerSocketHandler(BaseWebSocketHandler):
         ''' Add this object as an observer '''
         self.observerable_log = None
         if self.config.enable_logviewer:
-            self.observerable_log = ObservableLoggingHandler.Instance()
+            self.observerable_log = ObservableLoggingHandler.instance()
             self.observerable_log.add_observer(self)
         else:
             self.close()
