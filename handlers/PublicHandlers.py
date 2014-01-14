@@ -25,14 +25,12 @@ any authentication) with the exception of error handlers and the scoreboard
 '''
 
 
-import logging
-import libs.Validation as Validation
 import imghdr
+import logging
 
-from libs.Form import Form
 from uuid import uuid4
 from libs.ConfigManager import ConfigManager
-from models import dbsession, User, Team, Theme, RegistrationToken, GameLevel
+from models import User, Team, Theme, RegistrationToken, GameLevel
 from models.User import ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from datetime import datetime
@@ -57,28 +55,22 @@ class LoginHandler(BaseHandler):
 
     def post(self, *args, **kwargs):
         ''' Checks submitted username and password '''
-        form = Form(
-            account="Enter an account name",
-            password="A password is required to login",
-        )
-        if form.validate(self.request.arguments):
-            user = User.by_handle(self.get_argument('account'))
-            password_attempt = self.get_argument('password')
-            if user is not None and user.validate_password(password_attempt):
-                if not user.locked:
-                    self.successful_login(user)
-                    if 1 == user.logins and not user.has_permission(ADMIN_PERMISSION):
-                        self.redirect('/user/missions/firstlogin')
-                    else:
-                        self.redirect('/user')
+        user = User.by_handle(self.get_argument('account', ''))
+        password_attempt = self.get_argument('password', '')
+        if user is not None and user.validate_password(password_attempt):
+            if not user.locked:
+                self.successful_login(user)
+                if user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
+                    self.redirect('/user/missions/firstlogin')
                 else:
-                    self.render('public/login.html', 
-                        errors=["Your account has been locked"]
-                    )
+                    self.redirect('/user')
             else:
-                self.failed_login()
+                self.render('public/login.html',
+                    errors=["Your account has been locked"]
+                )
         else:
-            self.render('public/login.html', errors=form.errors)
+            self.failed_login()
+
 
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''
@@ -87,8 +79,8 @@ class LoginHandler(BaseHandler):
         ))
         user.last_login = datetime.now()
         user.logins += 1
-        dbsession.add(user)
-        dbsession.flush()
+        self.dbsession.add(user)
+        self.dbsession.commit()
         self.start_session()
         theme = Theme.by_id(user.theme_id)
         if user.team is not None:
@@ -119,9 +111,7 @@ class RegistrationHandler(BaseHandler):
         if self.session is not None:
             self.redirect('/user')
         else:
-            self.render("public/registration.html", 
-                errors=None
-            )
+            self.render("public/registration.html", errors=None)
 
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
@@ -134,7 +124,7 @@ class RegistrationHandler(BaseHandler):
         if form.validate(self.request.arguments):
             errors = []
             errors += self.validate_user()
-            errors += self.validate_team()             
+            errors += self.validate_team()
             if 0 == len(errors):
                 team = self.get_team()
                 user = self.create_user(team)
@@ -181,7 +171,7 @@ class RegistrationHandler(BaseHandler):
                 else:
                     errors.append('Team name must be 3 - 15 characters')
                 if not 2 < len(motto) < 255:
-                    errors.append('Team motto must be more than 3 characters')  
+                    errors.append('Team motto must be more than 3 characters')
             else:
                 errors.append("You must select a team to join")
         else:
@@ -197,16 +187,16 @@ class RegistrationHandler(BaseHandler):
             handle=unicode(handle),
             team_id=team.id,
         )
-        dbsession.add(user)
-        dbsession.flush()
+        self.dbsession.add(user)
+        self.dbsession.flush()
         user.password = self.get_argument('pass1', '')
-        user.bank_password = self.get_argument('bpass1', '')        
+        user.bank_password = self.get_argument('bpass1', '')
         if self.config.restrict_registration:
             rtok = self.get_argument('token', '')
             token = RegistrationToken.by_value(rtok)
-            dbsession.add(token)
-        dbsession.add(user)
-        dbsession.flush()
+            self.dbsession.add(token)
+        self.dbsession.add(user)
+        self.dbsession.commit()
         event = self.event_manager.create_joined_team_event(user)
         self.new_events.append(event)
         return user
@@ -225,8 +215,8 @@ class RegistrationHandler(BaseHandler):
         )
         level_0 = GameLevel.all()[0]
         team.game_levels.append(level_0)
-        dbsession.add(team)
-        dbsession.flush()
+        self.dbsession.add(team)
+        self.dbsession.flush()
         return team
 
 

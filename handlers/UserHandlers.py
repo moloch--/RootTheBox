@@ -26,7 +26,9 @@ This file contains code for managing user accounts
 
 import os
 import imghdr
+import urllib
 import logging
+import tornado
 
 from uuid import uuid4
 from models import dbsession, User, Theme, Team
@@ -36,9 +38,13 @@ from BaseHandlers import BaseHandler
 from recaptcha.client import captcha
 
 
+RECAPTCHA_URL = 'http://www.google.com/recaptcha/api/verify'
+
+
 class HomeHandler(BaseHandler):
 
     @authenticated
+    @tornado.web.asynchronous
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
         user = self.get_current_user()
@@ -49,11 +55,13 @@ class SettingsHandler(BaseHandler):
     ''' Modify user controlled attributes '''
 
     @authenticated
+    @tornado.web.asynchronous
     def get(self, *args, **kwargs):
         ''' Display the user settings '''
         self.render_page()
 
     @authenticated
+    @tornado.web.asynchronous
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
         post_functions = {
@@ -120,20 +128,13 @@ class SettingsHandler(BaseHandler):
 
     def post_bankpassword(self):
         ''' Update user's bank password '''
-        if self.check_recaptcha():
-            old_bankpw = self.get_argument('old_bpassword')
-            new_bankpw = self.get_argument('new_bpassword')
-            user = self.get_current_user()
-            if user.validate_bank_password(old_bankpw):
-                if len(new_bankpw) < self.config.max_password_length:
-                    user.bank_password = new_bankpw
-                    self.render_page(success=["Updated bank password."])
-                else:
-                    self.render_page(errors=["New password is too long."])
-            else:
-                self.render_page(errors=["Invalid old password."])
+        old_bankpw = self.get_argument('old_bpassword')
+        new_bankpw = self.get_argument('new_bpassword')
+        user = self.get_current_user()
+        if user.validate_bank_password(old_bankpw):
+            self.verify_recaptcha()
         else:
-            self.render_page(errors=["Invalid recaptcha submission."])
+            self.render_page(errors=["Invalid old password."])
 
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
@@ -169,25 +170,34 @@ class SettingsHandler(BaseHandler):
         else:
             self.render_page(errors=["Invalid old password"])
 
-    def check_recaptcha(self):
+    def verify_recaptcha(self):
         ''' Checks recaptcha '''
-        if self.config.recaptcha_enabled:
-            logging.debug('Checking recaptcha submission ...')
-            response = None
-            try:
-                response = captcha.submit(
-                    self.get_argument('recaptcha_challenge_field', ''),
-                    self.get_argument('recaptcha_response_field', ''),
-                    self.config.recaptcha_private_key,
-                    self.request.remote_ip
-                )
-            except KeyError:
-                logging.exception("Recaptcha API called failed.")
-                return False  # Fail closed!
-            return True if response is not None and response.is_valid else False
+        recaptcha_challenge = self.get_argument('recaptcha_challenge_field', '')
+        recaptcha_response = self.get_argument('recaptcha_response_field', '')
+        recaptcha_req_data = {
+            'privatekey': self.config.recaptcha_private_key,
+            'remoteip': self.request.remote_ip,
+            'challenge': recaptcha_challenge,
+            'response': recaptcha_response
+        }
+        try:
+            recaptcha_http = tornado.httpclient.AsyncHTTPClient()
+            recaptcha_req_body = urllib.urlencode(recaptcha_req_data)
+            recaptcha_http.fetch(URL, self.recaptcha_callback, method='POST', body=recaptcha_req_body)
+        except tornado.httpclient.HTTPError:
+            logging.exception('Recaptcha AsyncHTTP request threw an exception')
+            self.recaptcha_callback(None)
+
+    def recaptcha_callback(self, response):
+        '''
+        Validates recaptcha response
+        Recaptcha docs: https://developers.google.com/recaptcha/docs/verify
+        '''
+        if response and response.body.startswith('true'):
+            self.change_password()
+            self.render_page(success=["Updated bank password successfully"])
         else:
-            logging.debug('Recaptcha has been disabled in application config.')
-            return True
+            self.render_page(errors=["Invalid captcha, try again"])
 
 
 class LogoutHandler(BaseHandler):

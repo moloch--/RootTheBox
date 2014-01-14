@@ -66,12 +66,12 @@ class User(BaseObject):
     ))
 
     permissions = relationship("Permission",
-        backref=backref("User", lazy="select"),
+        backref=backref("user", lazy="select"),
         cascade="all, delete-orphan"
     )
 
     notifications = relationship("Notification",
-        backref=backref("User", lazy="select"),
+        backref=backref("user", lazy="select"),
         cascade="all, delete-orphan"
     )
 
@@ -171,6 +171,12 @@ class User(BaseObject):
     def team(self):
         ''' Return a the user's team object '''
         return dbsession.query(Team).filter_by(id=self.team_id).first()
+
+    @team.setter
+    def team(self, new_team):
+        self.team_id = new_team.id
+        dbsession.add(self)
+        dbsession.commit()
 
     @property
     def locked(self):

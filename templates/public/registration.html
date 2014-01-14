@@ -19,12 +19,12 @@
         {% end %}
         <div class="well">
             <legend>Welcome to the Scene</legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
-            <form class="form-horizontal" action="/registration" method="post" enctype="multipart/form-data">  
+            <form class="form-horizontal" action="/registration" method="post" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
                     <label class="control-label" for="handle">Hacker Name</label>
                     <div class="controls">
-                        <input required id="handle" name="handle" placeholder="Hacker Name" type="text" 
+                        <input required id="handle" name="handle" placeholder="Hacker Name" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,15}$"
                             data-original-title="Hacker Name Selection"
                             data-content="Your handle must be 3-15 alpha-numeric characters" />
@@ -46,7 +46,6 @@
                             </select>
                         </div>
                     </div>
-                    
                     {% if ConfigManager.Instance().public_teams %}
                         <h5>Start a New Team</h5>
                         <div class="control-group">
@@ -119,7 +118,7 @@
             $("#pass1").popover({placement:'right', trigger:'focus'});
             $("#pass2").popover({placement:'right', trigger:'focus'});
             $("#bpass1").popover({placement:'right', trigger:'focus'});
-            
+
             {% if ConfigManager.Instance().restrict_registration %}
                 $("#regtoken").popover({placement:'right', trigger:'focus'});
             {% end %}

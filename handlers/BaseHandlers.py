@@ -19,7 +19,7 @@ Created on Mar 15, 2012
    limitations under the License.
 ----------------------------------------------------------------------------
 
-This file contains the base handlers, all other handlers should inherit 
+This file contains the base handlers, all other handlers should inherit
 from these base classes.
 
 '''
@@ -29,7 +29,7 @@ import logging
 import pylibmc
 import traceback
 
-from models import User
+from models import engine, User
 from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
@@ -40,6 +40,13 @@ from tornado.websocket import WebSocketHandler
 
 class BaseHandler(RequestHandler):
     ''' User handlers extend this class '''
+
+    _dbsession = None
+    default_csp = "default-src 'self';" + \
+        "script-src 'self';" + \
+        "style-src 'self';" + \
+        "font-src 'self' 'unsafe-inline';" + \
+        "img-src 'self';"
 
     def initialize(self):
         ''' Setup sessions, etc '''
@@ -68,7 +75,6 @@ class BaseHandler(RequestHandler):
         self.session = self._create_session()
         self.set_secure_cookie('session_id',
             self.session.session_id,
-            expires_days=1,
             expires=self.session.expires,
             path='/',
             HttpOnly=True,
@@ -101,12 +107,12 @@ class BaseHandler(RequestHandler):
         return new_session
 
     def set_default_headers(self):
-        ''' Set clickjacking/xss headers '''
-        self.set_header("Server", "Foobar")
+        ''' Set security HTTP headers '''
+        self.set_header("Server", "'; DROP TABLE server_types;--")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
-        #self.add_header("X-Content-Security-Policy", "default-src 'self'")
-        #self.add_header("Content-Security-Policy", "default-src 'self'")
+        self.add_header("X-Content-Security-Policy", self.default_csp)
+        self.add_header("Content-Security-Policy", self.default_csp)
 
     def write_error(self, status_code, **kwargs):
         ''' Write our custom error pages '''
@@ -125,6 +131,14 @@ class BaseHandler(RequestHandler):
         else:
             # If debug mode is enabled, just call Tornado's write_error()
             super(BaseHandler, self).write_error(status_code, **kwargs)
+
+    @property
+    def dbsession(self):
+        ''' Lazily start a new dbsession '''
+        if _dbsession is None:
+            Session = sessionmaker(bind=engine)
+            self._dbsession = Session(autoflush=True)
+        return self._dbsession
 
     def get(self, *args, **kwargs):
         ''' Placeholder, incase child class does not impl this method '''
@@ -185,7 +199,7 @@ class BaseWebSocketHandler(WebSocketHandler):
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
             self.conn = pylibmc.Client(
-                [self.config.memcached], 
+                [self.config.memcached],
                 binary=True
             )
             self.conn.behaviors['no_block'] = 1  # async I/O

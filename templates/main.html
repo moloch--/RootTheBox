@@ -11,12 +11,7 @@
         <link href="/static/css/font-awesome.min.css" rel="stylesheet" />
         <link href="/static/css/animate.css" rel="stylesheet" />
         <link href="/static/css/notifier.css" rel="stylesheet" />
-        <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
-        </style>
+        <link href="/static/css/main.css" rel="stylesheet" />
         <!--[if lt IE 9]>
             <script src="/static/js/libs/html5.js"></script>
         <![endif]-->
@@ -31,8 +26,10 @@
             {% block content %} Content Missing {% end %}
             <hr>
             <footer>
-                <a href="http://rootthebox.com" target="_blank">Root the Box</a> &copy; {{ datetime.date.today().year }} -
-                <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a> - Version {{ handler.application.settings['version'] }}
+                <a href="http://rootthebox.com" target="_blank">Root the Box</a>
+                &copy; {{ datetime.date.today().year }} -
+                <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a>
+                - Version {{ handler.application.settings['version'] }}
             </footer>
         </div><!--/.fluid-container-->
     </body>
