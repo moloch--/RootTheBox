@@ -22,11 +22,12 @@ Created on Mar 21, 2012
 
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.types import Integer, Unicode, String
-from models import dbsession, User
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.User import User
+from models.BaseModels import DatabaseObject
 
 
-class WallOfSheep(BaseObject):
+class WallOfSheep(DatabaseObject):
     '''
     Stores a record of cracked passwords, and publically displays
     them for all to see.
@@ -40,40 +41,40 @@ class WallOfSheep(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns all team objects '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def all_order_created(cls):
         ''' Returns all team objects '''
-        return dbsession.query(cls).order_by(
+        return DBSession().query(cls).order_by(
             desc(cls.created)
         ).all()
 
     @classmethod
     def all_order_value(cls):
         ''' Returns all team objects '''
-        return dbsession.query(cls).order_by(
+        return DBSession().query(cls).order_by(
             desc(cls.value)
         ).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return DBSession().query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_victim_id(cls, victim_id):
-        ''' Returns all entries for a victim_id '''
-        return dbsession.query(cls).filter_by(victim_id=victim_id).all()
+    def by_victim_id(cls, _id):
+        ''' Returns all entries for a _id '''
+        return DBSession().query(cls).filter_by(victim_id=_id).all()
 
     @classmethod
-    def by_cracker_id(cls, cracker_id):
+    def by_cracker_id(cls, _id):
         ''' Returns all entries for cracker_id '''
-        return dbsession.query(cls).filter_by(cracker_id=cracker_id).all()
+        return DBSession().query(cls).filter_by(cracker_id=_id).all()
 
     @classmethod
-    def count_cracked_by(cls, user_id):
-        return dbsession.query(cls).filter_by(cracker_id=user_id).count()
+    def count_cracked_by(cls, _id):
+        return DBSession().query(cls).filter_by(cracker_id=_id).count()
 
     @classmethod
     def leaderboard(cls, order_by='passwords'):

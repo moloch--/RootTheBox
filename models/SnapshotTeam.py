@@ -23,12 +23,13 @@ Created on Mar 11, 2012
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer
-from models import dbsession, Team, snapshot_team_to_flag, \
-    snapshot_team_to_game_level
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.Team import Team
+from models.Relationships import snapshot_team_to_flag, snapshot_team_to_game_level
+from models.BaseModels import DatabaseObject
 
 
-class SnapshotTeam(BaseObject):
+class SnapshotTeam(DatabaseObject):
     '''
     Used by game history; snapshot of a single team in history
     '''
@@ -39,16 +40,16 @@ class SnapshotTeam(BaseObject):
 
     game_levels = relationship("GameLevel",
         secondary=snapshot_team_to_game_level,
-        backref=backref("SnapshotTeam", lazy="select")
+        backref=backref("snapshot_team", lazy="select")
     )
 
     flags = relationship("Flag",
         secondary=snapshot_team_to_flag,
-        backref=backref("SnapshotTeam", lazy="select")
+        backref=backref("snapshot_team", lazy="select")
     )
 
     @property
     def name(self):
-        return dbsession.query(Team._name).filter_by(
+        return DBSession().query(Team._name).filter_by(
             id=self.team_id
         ).first()[0]

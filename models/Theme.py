@@ -25,11 +25,11 @@ from string import ascii_letters, digits
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer, Boolean, String
-from models.BaseGameObject import BaseObject
-from models import dbsession
+from models import DBSession
+from models.BaseModels import DatabaseObject
 
 
-class Theme(BaseObject):
+class Theme(DatabaseObject):
     '''
     Holds theme related settings
     '''
@@ -53,27 +53,27 @@ class Theme(BaseObject):
     @classmethod
     def all(cls):
         ''' Return all objects '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Return the object whose id is ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Return the object whose id is _id '''
+        return DBSession().query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_uuid(cls, f_uuid):
-        ''' Return the object whose uuid is f_uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(f_uuid)).first()
+    def by_uuid(cls, _uuid):
+        ''' Return the object whose uuid is _uuid '''
+        return DBSession().query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_name(cls, theme_name):
+    def by_name(cls, _name):
+        ''' Return the object whose name is _name '''
+        return DBSession().query(cls).filter_by(name=_name).first()
+
+    @classmethod
+    def by_cssfile(cls, _cssfile):
         ''' Return the object whose name is theme_name '''
-        return dbsession.query(cls).filter_by(name=theme_name).first()
-
-    @classmethod
-    def by_cssfile(cls, file_name):
-        ''' Return the object whose name is theme_name '''
-        return dbsession.query(cls).filter_by(cssfile=file_name).first()
+        return DBSession().query(cls).filter_by(cssfile=_cssfile).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):

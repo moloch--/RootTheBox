@@ -25,10 +25,10 @@ from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String
-from models import dbsession
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.BaseModels import DatabaseObject
 
-class Sponsor(BaseObject):
+class Sponsor(DatabaseObject):
     ''' Sponsor Definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
@@ -42,10 +42,10 @@ class Sponsor(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all sponsor objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def by_name(cls, _name):
         ''' Returns a sponsor by the sponsor's name '''
         #TODO constraints around sponsor name for search purposes
-        return dbsession.query(cls).filter_by(name=_name).first()
+        return DBSession().query(cls).filter_by(name=_name).first()

@@ -25,22 +25,22 @@ from random import randint
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode, String
-from models import dbsession, team_to_box, team_to_item,   \
+from models import DBSession
+from models.BaseModels import DatabaseObject
+from models.Relationships import team_to_box, team_to_item,   \
     team_to_flag, team_to_game_level, team_to_source_code, \
     team_to_hint
-from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits
 from libs.BotManager import BotManager
 
 
-class Team(BaseObject):
+class Team(DatabaseObject):
     ''' Team definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-
     motto = Column(Unicode(32))
-    files = relationship("FileUpload", backref=backref("Team", lazy="select"))
-    pastes = relationship("PasteBin", backref=backref("Team", lazy="select"))
+    files = relationship("FileUpload", backref=backref("team", lazy="select"))
+    pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
     money = Column(Integer, default=500, nullable=False)
 
     _name = Column(Unicode(16), unique=True, nullable=False)
@@ -51,64 +51,64 @@ class Team(BaseObject):
     ))
 
     members = relationship("User",
-        backref=backref("Team", lazy="joined"),
+        backref=backref("team", lazy="joined"),
         cascade="all, delete-orphan"
     )
 
     flags = relationship("Flag",
         secondary=team_to_flag,
-        backref=backref("Team", lazy="select")
+        backref=backref("team", lazy="select")
     )
 
     boxes = relationship("Box",
         secondary=team_to_box,
-        backref=backref("Team", lazy="select")
+        backref=backref("team", lazy="select")
     )
 
     items = relationship("MarketItem",
         secondary=team_to_item,
-        backref=backref("Team", lazy="joined")
+        backref=backref("team", lazy="joined")
     )
 
     purchased_source_code = relationship("SourceCode",
         secondary=team_to_source_code,
-        backref=backref("Team", lazy="select")
+        backref=backref("team", lazy="select")
     )
 
     hints = relationship("Hint",
         secondary=team_to_hint,
-        backref=backref("Team", lazy="select")
+        backref=backref("team", lazy="select")
     )
 
     game_levels = relationship("GameLevel",
         secondary=team_to_game_level,
-        backref=backref("Team", lazy="select")
+        backref=backref("team", lazy="select")
     )
 
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def ranks(cls):
         ''' Returns a list of all objects in the database '''
-        return sorted(dbsession.query(cls).all())
+        return sorted(DBSession().query(cls).all())
 
     @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
-        return dbsession.query(cls).filter_by(id=identifier).first()
+        return DBSession().query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_name(cls, team_name):
         ''' Return the team object based on "team_name" '''
-        return dbsession.query(cls).filter_by(name=unicode(team_name)).first()
+        return DBSession().query(cls).filter_by(name=unicode(team_name)).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):

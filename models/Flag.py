@@ -27,8 +27,9 @@ import xml.etree.cElementTree as ET
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer, Boolean, String
-from models import dbsession, Box
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.Box import Box
+from models.BaseModels import DatabaseObject
 
 
 ### Constants
@@ -37,7 +38,7 @@ FLAG_REGEX  = u'regex'
 FLAG_FILE   = u'file'
 
 
-class Flag(BaseObject):
+class Flag(DatabaseObject):
     ''' Flag definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
@@ -52,32 +53,32 @@ class Flag(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
         ''' Returns a the object with id of _id '''
-        return dbsession.query(cls).filter_by(id=_id).first()
+        return DBSession().query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_name(cls, _name):
         ''' Returns a the object with name of _name '''
-        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
+        return DBSession().query(cls).filter_by(name=unicode(_name)).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return DBSession().query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_token(cls, _token):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(token=unicode(_token)).first()
+        return DBSession().query(cls).filter_by(token=unicode(_token)).first()
 
     @classmethod
     def by_type(cls, _type):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
+        return DBSession().query(cls).filter_by(_type=unicode(_type)).all()
 
     @classmethod
     def create_flag(cls, _type, box, name, raw_token, description, value):

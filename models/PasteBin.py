@@ -23,8 +23,8 @@ Created on Mar 12, 2012
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.types import Unicode, Integer, String
-from models import dbsession
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.BaseModels import DatabaseObject
 
 
 class PasteBin(BaseObject):
@@ -38,22 +38,22 @@ class PasteBin(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+        return DBSession().query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_uuid(cls, paste_uuid):
         ''' Get a paste object by uuid '''
-        return dbsession.query(cls).filter_by(uuid=paste_uuid).first()
+        return DBSession().query(cls).filter_by(uuid=paste_uuid).first()
 
     @classmethod
     def by_team_id(cls, team_id):
         ''' Return all paste objects for a given team '''
-        return dbsession.query(cls).filter_by(team_id=team_id).order_by(desc(cls.created)).all()
+        return DBSession().query(cls).filter_by(team_id=team_id).order_by(desc(cls.created)).all()
 
     def __str__(self):
         return self.name

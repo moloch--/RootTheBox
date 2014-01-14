@@ -24,12 +24,12 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer, String
-from models.BaseGameObject import BaseObject
-from models import dbsession
+from models import DBSession())
+from models.BaseModels import DatabaseObject
 from string import ascii_letters, digits
 
 
-class SourceCode(BaseObject):
+class SourceCode(DatabaseObject):
     '''
     Holds the source code for a box which can be purchased from the source code market
     '''
@@ -50,21 +50,21 @@ class SourceCode(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+        return DBSession().query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Returns a the object with a given uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_box_id(cls, _id):
-        return dbsession.query(cls).filter_by(box_id=_id).first()
+        return DBSession().query(cls).filter_by(box_id=_id).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):

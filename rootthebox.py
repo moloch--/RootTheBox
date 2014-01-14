@@ -45,14 +45,10 @@ def serve():
 def create():
     ''' Creates/bootstraps the database '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
-    from models import create_tables, boot_strap
     print(INFO+'%s : Creating the database ...' % current_time())
-    create_tables()
+    import setup.create_database
     print(INFO+'%s : Bootstrapping the database ...' % current_time())
-    try:
-        boot_strap()
-    except:
-        print(WARN+"%s : Database has already been bootstrapped" % current_time())
+    import setup.bootstrap
 
 
 def recovery():

@@ -82,7 +82,7 @@ class ConfigManager(object):
 
     def _websocket_logger(self, logger):
         ''' Configure WebSocket Logger '''
-        ws_log = ObservableLoggingHandler.Instance()
+        ws_log = ObservableLoggingHandler.instance()
         logger.addHandler(ws_log)
         msg_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
         ws_log.setFormatter(msg_format)
@@ -136,7 +136,7 @@ class ConfigManager(object):
         if _domain.lower() == 'auto':
             try:
                 _domain = socket.gethostbyname(socket.gethostname())
-                # On some Linux systems the hostname resolves to ~127.0.0.1 
+                # On some Linux systems the hostname resolves to ~127.0.0.1
                 # per /etc/hosts, so fallback and try to get the fqdn if we can.
                 if _domain.startswith('127.'):
                     _domain = socket.gethostbyname(socket.getfqdn())
@@ -305,7 +305,7 @@ class ConfigManager(object):
         assert isinstance(value, bool)
         self.config.set("Recaptcha", 'use_recaptcha', str(value))
 
-    @property   
+    @property
     def recaptcha_private_key(self):
         ''' Recaptcha API key '''
         return self.config.get("Recaptcha", 'private_key')
@@ -343,7 +343,7 @@ class ConfigManager(object):
             os._exit(1)
         return key
 
-    @property 
+    @property
     def db_connection(self):
         ''' Db connection string, only read once '''
         db = self.config.get("Database", 'db').lower().strip()
@@ -357,7 +357,7 @@ class ConfigManager(object):
         return db_conn
 
     def __postgresql__(self):
-        ''' 
+        '''
         Configure to use postgresql, there is not built-in support for postgresql
         so make sure we can import the 3rd party python lib 'pypostgresql'
         '''

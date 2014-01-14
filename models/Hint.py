@@ -26,12 +26,12 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer, String
-from models.BaseGameObject import BaseObject
-from models import dbsession
+from models.BaseModels import DatabaseObject
+from models import DBSession
 from string import ascii_letters, digits
 
 
-class Hint(BaseObject):
+class Hint(DatabaseObject):
     '''
     Holds the source code for a box which can be purchased from the source code market
     '''
@@ -44,21 +44,21 @@ class Hint(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return DBSession().query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_uuid(cls, uuid):
+    def by_uuid(cls, _uuid):
         ''' Returns a the object with a given uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return DBSession().query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_box_id(cls, bid):
-        return dbsession.query(cls).filter_by(box_id=bid).all()
+    def by_box_id(cls, _id):
+        return DBSession().query(cls).filter_by(box_id=_id).all()
 
     def to_xml(self, parent):
         hint_elem = ET.SubElement(parent, "hint")

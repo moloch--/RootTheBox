@@ -20,15 +20,15 @@ Created on Mar 15, 2012
 '''
 
 
-from models import dbsession
+from models import DBSession
+from models.BaseModels import DatabaseObject
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer
-from models.BaseGameObject import BaseObject
 from string import ascii_letters, digits
 
 
-class FileUpload(BaseObject):
+class FileUpload(DatabaseObject):
 
     uuid = Column(Unicode(64), unique=True, nullable=False)
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
@@ -46,21 +46,21 @@ class FileUpload(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return DBSession().query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return DBSession().query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_file_name(cls, file_name):
         ''' Return the user object whose file name is "file_name" '''
-        return dbsession.query(cls).filter_by(
+        return DBSession().query(cls).filter_by(
             file_name=unicode(file_name)
         ).first()
 

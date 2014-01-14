@@ -27,31 +27,33 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, or_
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String
-from models import dbsession, team_to_box
+from models import DBSession
+from models.BaseModels import DatabaseObject
+from models.Relationships import team_to_box
 from models.IpAddress import IpAddress
 from models.GameLevel import GameLevel
 from models.Corporation import Corporation
-from models.BaseGameObject import BaseObject
 from models.SourceCode import SourceCode
 from models.Hint import Hint
 
 
-class Box(BaseObject):
+class Box(DatabaseObject):
     ''' Box definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(16), unique=True, nullable=False)
-    garbage = Column(String(32),
-        unique=True,
-        nullable=False,
-        default=lambda: urandom(16).encode('hex')
-    )
     _description = Column(Unicode(1024))
     difficulty = Column(Unicode(16), nullable=False)
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
     avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
     sponsor_id = Column(Integer, ForeignKey('sponsor.id'), nullable=True)
+
+    garbage = Column(String(32),
+        unique=True,
+        nullable=False,
+        default=lambda: urandom(16).encode('hex')
+    )
 
     teams = relationship("Team",
         secondary=team_to_box,
@@ -64,7 +66,7 @@ class Box(BaseObject):
     )
 
     ip_addresses = relationship("IpAddress",
-        backref=backref("Box", lazy="joined"),
+        backref=backref("box", lazy="joined"),
         cascade="all, delete-orphan"
     )
 
@@ -73,26 +75,26 @@ class Box(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
-        return dbsession.query(cls).filter_by(id=identifier).first()
+        return DBSession().query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_name(cls, name):
         ''' Return the box object whose name is "name" '''
-        return dbsession.query(cls).filter_by(name=unicode(name)).first()
+        return DBSession().query(cls).filter_by(name=unicode(name)).first()
 
     @classmethod
     def by_garbage(cls, _garbage):
-        return dbsession.query(cls).filter_by(garbage=_garbage).first()
+        return DBSession().query(cls).filter_by(garbage=_garbage).first()
 
     @classmethod
     def by_ip_address(cls, ip_addr):

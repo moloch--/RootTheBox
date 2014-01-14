@@ -30,11 +30,11 @@ from libs.SecurityDecorators import debug
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, Integer, Boolean
-from models import dbsession
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.BaseModels import DatabaseObject
 
 
-class Notification(BaseObject):
+class Notification(DatabaseObject):
     ''' Notification definition '''
 
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -48,40 +48,41 @@ class Notification(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).filter_by(user_id=None).all()
+        return DBSession().query(cls).filter_by(user_id=None).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+        return DBSession().query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_user_id(cls, user_id):
         ''' Return notifications for a single user '''
-        return dbsession.query(cls).filter_by(user_id=user_id).order_by(
+        return DBSession().query(cls).filter_by(user_id=user_id).order_by(
             desc(cls.created)
         ).all()
 
     @classmethod
     def new_messages(cls, user_id):
         ''' Return all notification which have not been viewed '''
-        return dbsession.query(cls).filter(
+        return DBSession().query(cls).filter(
             and_(cls.user_id == user_id, cls.viewed == False)
         ).all()
 
     @classmethod
     def by_event_uuid(cls, uuid):
         ''' Always returns anonymous notification '''
-        return dbsession.query(cls).filter_by(event_uuid=uuid).filter_by(user_id=None).first()
+        return DBSession().query(cls).filter_by(event_uuid=uuid).filter_by(user_id=None).first()
 
     @classmethod
     def delivered(cls, user_id, uuid):
+        dbsession = DBSession()
         notify = dbsession.query(cls).filter(
             and_(cls.event_uuid == uuid, cls.user_id == user_id)
         ).first()
         notify.viewed = True
         dbsession.add(notify)
-        dbsession.flush()
+        dbsession.commit()
 
     def to_dict(self):
         ''' Return public data as dict '''

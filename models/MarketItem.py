@@ -25,11 +25,11 @@ import json
 from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Integer, String
-from models.BaseGameObject import BaseObject
-from models import dbsession
+from models.BaseModels import DatabaseObject
+from models import DBSession
 
 
-class MarketItem(BaseObject):
+class MarketItem(DatabaseObject):
     ''' Item definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
@@ -41,22 +41,22 @@ class MarketItem(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession.query(cls).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+        return DBSession.query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Returns a the object with a given uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return DBSession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_name(cls, name):
         ''' Returns an object with a given name '''
-        return dbsession.query(cls).filter_by(name=unicode(name)).first()
+        return DBSession.query(cls).filter_by(name=unicode(name)).first()
 
     def to_dict(self):
         ''' Returns object data as dictionary object '''

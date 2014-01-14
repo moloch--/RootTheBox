@@ -23,11 +23,11 @@ Created on Sep 22, 2012
 from os import urandom
 from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Boolean
-from models.BaseGameObject import BaseObject
-from models import dbsession
+from models import DBSession
+from models.BaseModels import DatabaseObject
 
 
-class RegistrationToken(BaseObject):
+class RegistrationToken(DatabaseObject):
     ''' User definition '''
 
     value = Column(Unicode(6), unique=True, nullable=False,
@@ -38,14 +38,14 @@ class RegistrationToken(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+        return DBSession().query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_value(cls, value):
         ''' Returns a the object with value of value '''
-        return dbsession.query(cls).filter_by(value=unicode(value)).first()
+        return DBSession().query(cls).filter_by(value=unicode(value)).first()

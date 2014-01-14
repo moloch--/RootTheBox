@@ -24,32 +24,33 @@ import json
 import datetime
 
 from sqlalchemy.orm import relationship, backref
-from models import dbsession, snapshot_to_snapshot_team
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.Relationships import snapshot_to_snapshot_team
+from models.BaseModels import DatabaseObject
 
 ### Constants ###
 # Ignore time zone for now
 UNIX_EPOCH = datetime.datetime(year=1970, month=1, day=1)
 
 
-class Snapshot(BaseObject):
+class Snapshot(DatabaseObject):
     ''' Snapshot of game data '''
 
     # Has many 'SnapshotTeam' objects
     teams = relationship("SnapshotTeam",
         secondary=snapshot_to_snapshot_team,
-        backref=backref("Snapshot", lazy="select")
+        backref=backref("snapshot", lazy="select")
     )
 
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
-        return dbsession.query(cls).filter_by(id=identifier).first()
+        return DBSession().query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def to_key(cls, val):

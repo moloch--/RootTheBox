@@ -34,9 +34,11 @@ from pbkdf2 import PBKDF2
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
-from models import dbsession, Team, Permission
+from models import DBSession
+from models.Team
+from models.Permission
 from models.MarketItem import MarketItem
-from models.BaseGameObject import BaseObject
+from models.BaseModels import DatabaseObject
 from string import ascii_letters, digits, printable
 
 
@@ -46,7 +48,7 @@ DEFAULT_HASH_ALGORITHM = u'md5'
 ITERATE = 0xbad
 
 
-class User(BaseObject):
+class User(DatabaseObject):
     ''' User definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
@@ -99,7 +101,7 @@ class User(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def all_users(cls):
@@ -111,7 +113,7 @@ class User(BaseObject):
     @classmethod
     def not_team(cls, tid):
         ''' Return all users not on a given team, exclude admins '''
-        teams = dbsession.query(cls).filter(cls.team_id != tid).all()
+        teams = DBSession().query(cls).filter(cls.team_id != tid).all()
         return filter(
             lambda user: user.has_permission(ADMIN_PERMISSION) is False, teams
         )
@@ -119,17 +121,17 @@ class User(BaseObject):
     @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
-        return dbsession.query(cls).filter_by(id=identifier).first()
+        return DBSession().query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_handle(cls, handle):
         ''' Return the user object whose user is "handle" '''
-        return dbsession.query(cls).filter_by(
+        return DBSession().query(cls).filter_by(
             handle=unicode(handle.lower())
         ).first()
 
@@ -160,7 +162,7 @@ class User(BaseObject):
     @property
     def permissions(self):
         ''' Return a set with all permissions granted to the user '''
-        return dbsession.query(Permission).filter_by(user_id=self.id)
+        return DBSession().query(Permission).filter_by(user_id=self.id)
 
     @property
     def permissions_names(self):
@@ -170,10 +172,11 @@ class User(BaseObject):
     @property
     def team(self):
         ''' Return a the user's team object '''
-        return dbsession.query(Team).filter_by(id=self.team_id).first()
+        return DBSession().query(Team).filter_by(id=self.team_id).first()
 
     @team.setter
     def team(self, new_team):
+        dbsession = DBSession()
         self.team_id = new_team.id
         dbsession.add(self)
         dbsession.commit()

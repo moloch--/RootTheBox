@@ -27,10 +27,14 @@ import getpass
 
 from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
-from models import dbsession, User, Permission, Theme, \
-    MarketItem, GameLevel
-from models.User import ADMIN_PERMISSION
+from models import DBSession
+from models.Permission import Permission
+from models.Theme import Theme
+from models.MarketItem import MarketItem
+from models.GameLevel import GameLevel
+from models.User import User, ADMIN_PERMISSION
 
+dbsession = DBSession()
 # Fills the database with some startup data.
 config = ConfigManager.Instance()
 password = ""

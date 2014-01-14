@@ -26,11 +26,11 @@ from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Integer, String
 from sqlalchemy.orm import relationship, backref
-from models import dbsession
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.BaseModels import DatabaseObject
 
 
-class Corporation(BaseObject):
+class Corporation(DatabaseObject):
     ''' Corporation definition '''
 
     name = Column(Unicode(32), unique=True, nullable=False)
@@ -45,26 +45,26 @@ class Corporation(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession().query(cls).all()
 
     @classmethod
     def count(cls):
-        return dbsession.query(cls).count()
+        return DBSession().query(cls).count()
 
     @classmethod
     def by_id(cls, _id):
         ''' Returns a the object with id of _id '''
-        return dbsession.query(cls).filter_by(id=_id).first()
+        return DBSession().query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_name(cls, _name):
         ''' Returns a the object with name of _name '''
-        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
+        return DBSession().query(cls).filter_by(name=unicode(_name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return an object based on uuid '''
-        return dbsession.query(cls).filter_by(uuid=uuid).first()
+        return DBSession().query(cls).filter_by(uuid=uuid).first()
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''

@@ -21,96 +21,14 @@ Created on Sep 12, 2012
 
 
 from sqlalchemy import create_engine
-from sqlalchemy import Column, ForeignKey, Table
-from sqlalchemy.types import Integer
 from sqlalchemy.orm import sessionmaker
-from models.BaseGameObject import BaseObject
 from libs.ConfigManager import ConfigManager
 
 
-config = ConfigManager.Instance()
-
 ### Setup the database session
-engine = create_engine(config.db_connection)
-setattr(engine, 'echo', config.log_sql)
-Session = sessionmaker(bind=engine, autocommit=True)
-dbsession = Session(autoflush=True)
+_config = ConfigManager.instance()
+engine = create_engine(_config.db_connection)
+setattr(engine, 'echo', False)
+_Session = sessionmaker(bind=engine)
+DBSession = lambda: _Session(autoflush=True)
 
-
-### Secondary tables used for relations
-team_to_box = Table('team_to_box', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('box_id', Integer, ForeignKey('box.id'), nullable=False)
-)
-
-team_to_item = Table('team_to_item', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('item_id', Integer, ForeignKey('market_item.id'), nullable=False)
-)
-
-team_to_source_code = Table('team_to_source_code', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('source_code_id', Integer, ForeignKey('source_code.id'), nullable=False)
-)
-
-team_to_hint = Table('team_to_hint', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('hint_id', Integer, ForeignKey('hint.id'), nullable=False)
-)
-
-team_to_flag = Table('team_to_flag', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('flag_id', Integer, ForeignKey('flag.id'), nullable=False)
-)
-
-team_to_game_level = Table('team_to_game_level', BaseObject.metadata,
-    Column('team_id', Integer, ForeignKey('team.id'), nullable=False),
-    Column('game_level_id', Integer, ForeignKey('game_level.id'), nullable=False)
-)
-
-snapshot_to_snapshot_team = Table('snapshot_to_snapshot_team', BaseObject.metadata,
-    Column('snapshot_id', Integer, ForeignKey('snapshot.id'), nullable=False),
-    Column('snapshot_team_id', Integer, ForeignKey('snapshot_team.id'), nullable=False)
-)
-
-snapshot_team_to_flag = Table('snapshot_team_to_flag', BaseObject.metadata,
-    Column('snapshot_team_id', Integer, ForeignKey('snapshot_team.id'), nullable=False),
-    Column('flag_id', Integer, ForeignKey('flag.id'), nullable=False)
-)
-
-snapshot_team_to_game_level = Table('snapshot_team_to_game_level', BaseObject.metadata,
-    Column('snapshot_team_id', Integer, ForeignKey('snapshot_team.id'), nullable=False),
-    Column('gam_level_id', Integer, ForeignKey('game_level.id'), nullable=False)
-)
-
-# import models
-from models.Box import Box
-from models.PasteBin import PasteBin
-from models.Permission import Permission
-from models.Team import Team
-from models.User import User
-from models.FileUpload import FileUpload
-from models.WallOfSheep import WallOfSheep
-from models.Flag import Flag
-from models.Notification import Notification
-from models.Corporation import Corporation
-from models.GameLevel import GameLevel
-from models.Theme import Theme
-from models.RegistrationToken import RegistrationToken
-from models.MarketItem import MarketItem
-from models.IpAddress import IpAddress
-from models.Snapshot import Snapshot
-from models.SnapshotTeam import SnapshotTeam
-from models.SourceCode import SourceCode
-from models.Swat import Swat
-from models.Hint import Hint
-from models.Sponsor import Sponsor
-from models.BoxResource import BoxResource
-
-# calling this will create the tables at the database
-metadata = BaseObject.metadata
-create_tables = lambda: (setattr(engine, 'echo', config.log_sql), metadata.create_all(engine))
-
-# Bootstrap the database with some shit
-def boot_strap():
-    import setup.bootstrap
