@@ -23,10 +23,10 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String
-from models import dbsession
-from models.BaseGameObject import BaseObject
+from models import DBSession
+from models.BaseModels import DatabaseObject
 
-class BoxResource(BaseObject):
+class BoxResource(DatabaseObject):
     ''' BoxResource Definition '''
 
     #TODO sanitize these values
@@ -39,4 +39,4 @@ class BoxResource(BaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all BoxResource objects in the database '''
-        return dbsession.query(cls).all()
+        return DBSession.query(cls).all()

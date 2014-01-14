@@ -36,7 +36,7 @@ from models.User import User, ADMIN_PERMISSION
 
 dbsession = DBSession()
 # Fills the database with some startup data.
-config = ConfigManager.Instance()
+config = ConfigManager.instance()
 password = ""
 
 if config.bootstrap == 'developement':

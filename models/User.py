@@ -35,8 +35,8 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
 from models import DBSession
-from models.Team
-from models.Permission
+from models.Team import Team
+from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
 from string import ascii_letters, digits, printable

@@ -29,7 +29,8 @@ import logging
 import pylibmc
 import traceback
 
-from models import engine, User
+from models import DBSession
+from models.User import User
 from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
@@ -136,8 +137,7 @@ class BaseHandler(RequestHandler):
     def dbsession(self):
         ''' Lazily start a new dbsession '''
         if _dbsession is None:
-            Session = sessionmaker(bind=engine)
-            self._dbsession = Session(autoflush=True)
+            self._dbsession = DBSession()
         return self._dbsession
 
     def get(self, *args, **kwargs):
@@ -153,28 +153,24 @@ class BaseHandler(RequestHandler):
         logging.warn(
             "%s attempted to use PUT method" % self.request.remote_ip
         )
-        self.finish()
 
     def delete(self, *args, **kwargs):
         ''' Log odd behavior, this should never get legitimately called '''
         logging.warn(
             "%s attempted to use DELETE method" % self.request.remote_ip
         )
-        self.finish()
 
     def head(self, *args, **kwargs):
         ''' Ignore it '''
         logging.warn(
             "%s attempted to use HEAD method" % self.request.remote_ip
         )
-        self.finish()
 
     def options(self, *args, **kwargs):
         ''' Log odd behavior, this should never get legitimately called '''
         logging.warn(
             "%s attempted to use OPTIONS method" % self.request.remote_ip
         )
-        self.finish()
 
     def on_finish(self, *args, **kwargs):
         ''' Called after a response is sent to the client '''

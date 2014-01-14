@@ -30,7 +30,7 @@ from models import DBSession
 from models.BaseModels import DatabaseObject
 
 
-class GameLevel(BaseObject):
+class GameLevel(DatabaseObject):
     ''' Game Level definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))

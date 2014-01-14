@@ -27,7 +27,7 @@ from models import DBSession
 from models.BaseModels import DatabaseObject
 
 
-class PasteBin(BaseObject):
+class PasteBin(DatabaseObject):
     ''' PasteBin definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))

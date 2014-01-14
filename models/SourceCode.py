@@ -24,7 +24,7 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer, String
-from models import DBSession())
+from models import DBSession
 from models.BaseModels import DatabaseObject
 from string import ascii_letters, digits
 
