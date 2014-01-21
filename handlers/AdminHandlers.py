@@ -311,7 +311,7 @@ class AdminCreateHandler(BaseHandler):
         game_levels[-1].next_level_id = None
         dbsession.add(game_levels[-1])
         dbsession.flush()
-
+    
     def set_avatar(self, box):
         '''
         Saves avatar - Reads file header and only allows approved formats
@@ -624,10 +624,12 @@ class AdminEditHandler(BaseHandler):
             uuid="No team selected",
             name="Please enter a name",
             motto="Please enter a motto",
-            listen_port="Please enter a listen port",
+	    money="Please enter the monies",
         )
+	logging.info("Something happened: " + str(self.request.arguments),)
         if form.validate(self.request.arguments):
             team = Team.by_uuid(self.get_argument('uuid'))
+	    
             if team is not None:
                 errors = []
                 if team.name != self.get_argument('name'):
@@ -640,17 +642,11 @@ class AdminEditHandler(BaseHandler):
                         (team.name, team.motto, self.get_argument('motto'),)
                     )
                     team.motto = unicode(self.get_argument('motto'))
-                try:
-                    lport = int(self.get_argument('listen_port'))
-                    if lport != team.listen_port:
-                        logging.info("Updated %s's listen port %d -> %d" %
-                            (team.name, team.listen_port, lport,)
-                        )
-                        team.listen_port = lport
-                except ValueError:
-                    errors.append("Invalid listen port %s " %
-                        self.get_argument('listen_port')
+		if team.money != self.get_argument('money'):
+		    logging.info("Updated %s's money %s -> %s" %
+                        (team.name, team.money, self.get_argument('money'),)
                     )
+                    team.money = unicode(self.get_argument('money'))
                 dbsession.add(team)
                 dbsession.flush()
                 self.redirect("/admin/view/user_objects")
@@ -852,7 +848,7 @@ class AdminEditHandler(BaseHandler):
                     price = int(self.get_argument('price'))
                     hint.price = price
                 except:
-                    logging.exception("Price convertion failed")
+                    logging.exception("Price conversion failed")
             if hint.description != self.get_argument('description', hint.description):
                 hint.description = unicode(self.get_argument('description'))
             dbsession.add(hint)
@@ -1202,6 +1198,7 @@ class AdminConfigurationHandler(BaseHandler):
         all_errors += self.history_config()
         all_errors += self.cost_config()
         self.password_config()
+        self.max_team_size()
         self.debug_config()
         self.config.save()
         self.render('admin/configuration.html',
@@ -1232,6 +1229,13 @@ class AdminConfigurationHandler(BaseHandler):
         else:
             errors.append("Game name must be at least 1 character long.")
         return errors
+
+    def max_team_size(self):
+        ''' Update max team size configuration '''
+        team_size = self.get_argument('max_team_size', self.config.max_team_size)
+        new_length = filter(lambda char: char in digits, team_size)
+        if new_length != self.config.max_team_size:
+            self.config.max_team_size = int(new_length)
 
     def bot_config(self):
         ''' Updates bot related configuration '''
