@@ -127,6 +127,7 @@ class Team(BaseObject):
         return {
             'name': self.name,
             'motto': self.motto,
+            'money': self.money,
         }
 
     def file_by_file_name(self, file_name):
