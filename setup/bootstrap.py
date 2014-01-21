@@ -50,10 +50,11 @@ else:
     sys.stdout.write(PROMPT+"Confirm New Admin ")
     sys.stdout.flush()
     password2 = getpass.getpass()
-    if password1 == password2 and 12 <= len(password1):
+    if password1 == password2 and 10 <= len(password1):
         password = password1
     else:
-        print(WARN+'Error: Passwords did not match, or were less than 12 chars')
+        print(WARN+'Error: Passwords did not match, or were less than 10 chars')
+        print password1, password2
         os._exit(1)
 
 # Theme objects

@@ -84,7 +84,8 @@ seatec_walsh = create_box(
     game_level=level_0,
     description="Your employer requests that you locate several items on this system.  " +\
             "Intel reports it to be a Windows system located somewhere in 192.168.x.10-100",
-    ipv4_addresses=["192.168.3.16", "192.168.5.16"],
+    ipv4_addresses=["192.168.3.16"],
+    ipv4_addresses=["192.168.5.16"],
     avatar="cmd_prompt.jpg"
 )
 
@@ -94,7 +95,8 @@ seatec_kluwe = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="This system is also a product of the Microsoft Corporation and found the the 192.168.x.10-100 range.",
-    ipv4_addresses=["192.168.3.15","192.168.5.15"],
+    ipv4_addresses=["192.168.3.15"],
+    ipv4_addresses=["192.168.5.15"],
     avatar="trinity.jpg"
 )
 
@@ -104,7 +106,8 @@ seatec_rudolph = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Evil Worker System",
-    ipv4_addresses=["192.168.3.61","192.168.5.61"],
+    ipv4_addresses=["192.168.3.61"],
+    ipv4_addresses=["192.168.5.61"],
     avatar="bad_chip.jpg"
 )
 
@@ -114,7 +117,8 @@ seatec_wright = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Evil Worker System Two",
-    ipv4_addresses=["192.168.3.57","192.168.5.57"],
+    ipv4_addresses=["192.168.3.57"],
+    ipv4_addresses=["192.168.5.57"],
     avatar="images.jpg"
 )
 
@@ -124,7 +128,8 @@ seatec_peterson = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Evil Worker System Three",
-    ipv4_addresses=["192.168.3.8","192.168.5.8"],
+    ipv4_addresses=["192.168.3.8"],
+    ipv4_addresses=["192.168.5.8"],
     avatar="lovetheinternet.jpg"
 )
 
@@ -134,7 +139,10 @@ seatec_gerhart = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Security Department Worker System",
-    ipv4_addresses=["192.168.3.92","192.168.5.92","192.168.123.1","192.168.125.1"],
+    ipv4_addresses=["192.168.3.92"],
+    ipv4_addresses=["192.168.5.92"],
+    ipv4_addresses=["192.168.123.1"],
+    ipv4_addresses=["192.168.125.1"],
     avatar="backdoor_win.jpg"
 )
 
@@ -144,7 +152,10 @@ seatec_gerhart2 = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Security Department Internal System",
-    ipv4_addresses=["192.168.123.5","192.168.125.5","192.168.223.3","192.168.225.3"],
+    ipv4_addresses=["192.168.123.5"],
+    ipv4_addresses=["192.168.125.5"],
+    ipv4_addresses=["192.168.223.3"],
+    ipv4_addresses=["192.168.225.3"],
     avatar="firewall.jpg"
 )
 
@@ -154,7 +165,8 @@ seatec_gerhart3 = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Security Department Internal System Two",
-    ipv4_addresses=["192.168.223.7","192.168.225.7"],
+    ipv4_addresses=["192.168.223.7"],
+    ipv4_addresses=["192.168.225.7"],
     avatar="download.jpg"
 )
 
@@ -164,7 +176,8 @@ lougle_allen = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="HR Department Workstation",
-    ipv4_addresses=["192.168.3.9","192.168.5.9"],
+    ipv4_addresses=["192.168.3.9"],
+    ipv4_addresses=["192.168.5.9"],
     avatar="download.jpg"
 )
 
@@ -174,7 +187,8 @@ lougle_webb = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="HR Department Workstation Two",
-    ipv4_addresses=["192.168.3.73","192.168.5.73"],
+    ipv4_addresses=["192.168.3.40"],
+    ipv4_addresses=["192.168.5.40"],
     avatar="lougle.jpg"
 )
 
@@ -184,7 +198,8 @@ lougle_carter = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="HR Department Chief Workstation",
-    ipv4_addresses=["192.168.3.40","192.168.5.40"],
+    ipv4_addresses=["192.168.3.40"],
+    ipv4_addresses=["192.168.5.40"],
     avatar="php_code.jpg"
 )
 
@@ -194,7 +209,8 @@ lougle_williams = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Security Department Chief Workstation",
-    ipv4_addresses=["192.168.3.43","192.168.5.43"],
+    ipv4_addresses=["192.168.3.43"],
+    ipv4_addresses=["192.168.5.43"],
     avatar="the-code.jpg"
 )
 
@@ -204,7 +220,8 @@ lougle_kaspersky = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Accounting Department Workstation",
-    ipv4_addresses=["192.168.3.17","192.168.5.17"],
+    ipv4_addresses=["192.168.3.17"],
+    ipv4_addresses=["192.168.5.17"],
     avatar="warning.jpg"
 )
 
@@ -214,7 +231,8 @@ lougle_kalil = create_box(
     difficulty="Easy", 
     game_level=level_0, 
     description="Accounting Department Workstation Two",
-    ipv4_addresses=["192.168.3.129","192.168.5.129"],
+    ipv4_addresses=["192.168.3.129"],
+    ipv4_addresses=["192.168.5.129"],
     avatar="world.jpg"
 )
 
