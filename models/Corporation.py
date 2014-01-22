@@ -36,8 +36,8 @@ class Corporation(BaseObject):
     name = Column(Unicode(32), unique=True, nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     description = Column(Unicode(1024), nullable=False)
-    boxes = relationship("Box", 
-        backref=backref("Corporation", lazy="joined"), 
+    boxes = relationship("Box",
+        backref=backref("Corporation", lazy="joined"),
         cascade="all, delete-orphan")
 
     @classmethod
@@ -75,8 +75,8 @@ class Corporation(BaseObject):
     def to_xml(self, parent):
         ''' Add to XML dom '''
         corp_elem = ET.SubElement(parent, "corporation")
-        ET.SubElement(corp_elem, "name").text = str(self.name)
-        ET.SubElement(corp_elem, "description").text = str(self.description)
+        ET.SubElement(corp_elem, "name").text = unicode(self.name)
+        ET.SubElement(corp_elem, "description").text = unicode(self.description)
         boxes_elem = ET.SubElement(corp_elem, "boxes")
         boxes_elem.set("count", str(len(self.boxes)))
         for box in self.boxes:

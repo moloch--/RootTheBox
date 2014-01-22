@@ -42,9 +42,9 @@ class Box(BaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     name = Column(Unicode(16), unique=True, nullable=False)
-    garbage = Column(String(32), 
-        unique=True, 
-        nullable=False, 
+    garbage = Column(String(32),
+        unique=True,
+        nullable=False,
         default=lambda: urandom(16).encode('hex')
     )
     _description = Column(Unicode(1024))
@@ -53,21 +53,21 @@ class Box(BaseObject):
     avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
     sponsor_id = Column(Integer, ForeignKey('sponsor.id'), nullable=True)
 
-    teams = relationship("Team", 
-        secondary=team_to_box, 
+    teams = relationship("Team",
+        secondary=team_to_box,
         backref=backref("Box", lazy="joined")
     )
-    
-    flags = relationship("Flag", 
-        backref=backref("Box", lazy="joined"), 
+
+    flags = relationship("Flag",
+        backref=backref("Box", lazy="joined"),
         cascade="all, delete-orphan"
     )
 
-    ip_addresses = relationship("IpAddress", 
-        backref=backref("Box", lazy="joined"), 
+    ip_addresses = relationship("IpAddress",
+        backref=backref("Box", lazy="joined"),
         cascade="all, delete-orphan"
     )
-    
+
     box_resources = relationship("BoxResource", backref="box")
 
     @classmethod
@@ -92,7 +92,7 @@ class Box(BaseObject):
 
     @classmethod
     def by_garbage(cls, garbage):
-        return dbsession.query(cls).filter_by(name=garbage).first()   
+        return dbsession.query(cls).filter_by(name=garbage).first()
 
     @classmethod
     def by_ip_address(cls, ip_addr):
@@ -113,8 +113,8 @@ class Box(BaseObject):
     def description(self):
         '''
         We have to ensure that the description text is formatted correctly,
-        it gets dumped into a <pre> tag which will honor whitespace this will 
-        split all of the text and insert newlines every 70 chars +2 whitespace 
+        it gets dumped into a <pre> tag which will honor whitespace this will
+        split all of the text and insert newlines every 70 chars +2 whitespace
         at be beginning of each line, so the indents line up nicely.
         '''
         index, step = 0, 70
@@ -176,9 +176,9 @@ class Box(BaseObject):
         ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", str(self.game_level.number))
-        ET.SubElement(box_elem, "name").text = str(self.name)
-        ET.SubElement(box_elem, "description").text = str(self._description)
-        ET.SubElement(box_elem, "difficulty").text = str(self.difficulty)
+        ET.SubElement(box_elem, "name").text = unicode(self.name)
+        ET.SubElement(box_elem, "description").text = unicode(self._description)
+        ET.SubElement(box_elem, "difficulty").text = unicode(self.difficulty)
         ET.SubElement(box_elem, "garbage").text = str(self.garbage)
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", str(len(self.flags)))

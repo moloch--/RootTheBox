@@ -148,7 +148,7 @@ class AdminCreateHandler(BaseHandler):
                         self.set_avatar(box)
                     self.redirect('/admin/view/game_objects')
             except ValueError:
-                self.render('admin/view/create.html',
+                self.render('admin/create/box.html',
                     errors=["Invalid level number"]
                 )
         else:
@@ -1336,7 +1336,7 @@ class AdminExportHandler(BaseHandler):
                 "".join(self.config.game_name.split()),
         ))
         self.set_header('Content-Length', len(xml_doc))
-        self.write(xml_doc)
+        self.write(xml_doc.encode('utf-8'))
         self.finish()
 
     def create_xml(self):

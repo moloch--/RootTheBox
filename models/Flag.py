@@ -154,7 +154,6 @@ class Flag(BaseObject):
             pattern = re.compile(self.token)
             return pattern.match(submission) is not None
         elif self._type == FLAG_FILE:
-            print "CMP: %s == %s" % (self.token, self.digest(submission))
             return self.token == self.digest(submission)
         else:
             raise ValueError('Invalid flag type, cannot capture')
@@ -162,11 +161,11 @@ class Flag(BaseObject):
     def to_xml(self, parent):
         ''' Write attributes to XML doc '''
         flag_elem = ET.SubElement(parent, "flag")
-        flag_elem.set("type", str(self._type))
-        ET.SubElement(flag_elem, "name").text = str(self.name)
-        ET.SubElement(flag_elem, "token").text = str(self.token)
-        ET.SubElement(flag_elem, "description").text = str(self.description)
-        ET.SubElement(flag_elem, "value").text = str(self.value)
+        flag_elem.set("type", unicode(self._type))
+        ET.SubElement(flag_elem, "name").text = unicode(self.name)
+        ET.SubElement(flag_elem, "token").text = unicode(self.token)
+        ET.SubElement(flag_elem, "description").text = unicode(self.description)
+        ET.SubElement(flag_elem, "value").text = unicode(self.value)
 
     def to_dict(self):
         ''' Returns public data as a dict '''
