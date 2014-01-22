@@ -30,8 +30,11 @@ import logging
 
 from uuid import uuid4
 from libs.ConfigManager import ConfigManager
-from models import User, Team, Theme, RegistrationToken, GameLevel
-from models.User import ADMIN_PERMISSION
+from models.Team import Team
+from models.Theme import Theme
+from models.RegistrationToken import RegistrationToken
+from models.GameLevel import GameLevel
+from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from datetime import datetime
 

@@ -2,11 +2,18 @@
 
 {% block title %}Registration{% end %}
 
+{% block header %}
+    <script src="/static/js/pages/public/registration.js"></script>
+{% end %}
+
 {% block content %}
     {% from libs.ConfigManager import ConfigManager %}
     {% from models.Team import Team %}
     <div class="container">
-        <h1>Registration</h1>
+        <h1>
+            <i class="fa fa-pencil"></i>
+            Registration
+        </h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
@@ -18,11 +25,16 @@
             {% end %}
         {% end %}
         <div class="well">
-            <legend>Welcome to the Scene</legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
+            <legend>
+                Welcome to the Scene
+            </legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
             <form class="form-horizontal" action="/registration" method="post" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
-                    <label class="control-label" for="handle">Hacker Name</label>
+                    <label class="control-label" for="handle">
+                        <i class="fa fa-user"></i>
+                        Handle
+                    </label>
                     <div class="controls">
                         <input required id="handle" name="handle" placeholder="Hacker Name" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,15}$"
@@ -34,7 +46,10 @@
                 <hr>
                 <h5>Join a Team</h5>
                     <div class="control-group">
-                        <label class="control-label" for="team">Select a Team</label>
+                        <label class="control-label" for="team">
+                            <i class="fa fa-users"></i>
+                            Select a Team
+                        </label>
                         <div class="controls">
                             <select name="team">
                                 <option value=""></option>
@@ -65,7 +80,7 @@
                 <div class="control-group">
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">
-                        <input required id="pass1" name="pass1" placeholder="Password" type="password" 
+                        <input required id="pass1" name="pass1" placeholder="Password" type="password"
                             autocomplete="off" data-storage="false"
                             rel="popover"
                             data-original-title="Password"
@@ -75,7 +90,7 @@
                 <div class="control-group">
                     <label class="control-label" for="pass2">Confirm Account Password</label>
                     <div class="controls">
-                        <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password" 
+                        <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password"
                             autocomplete="off" data-storage="false"
                             rel="popover"
                             data-original-title="Confirm Password"
@@ -85,7 +100,7 @@
                 <div class="control-group">
                     <label class="control-label" for="bpass1">Bank Account Password</label>
                     <div class="controls">
-                        <input required id="bpass1" name="bpass1" placeholder="Bank Account Password" type="password" 
+                        <input required id="bpass1" name="bpass1" placeholder="Bank Account Password" type="password"
                             autocomplete="off" data-storage="false"
                             rel="popover"
                             data-original-title="Password"
@@ -106,23 +121,12 @@
                 <br />
                 <div class="control-group">
                     <div class="controls">
-                        <button class="btn btn-primary" type="submit">&nbsp;Register Account&nbsp;</button>
+                        <button class="btn btn-primary" type="submit">
+                            Register Account
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-    <script>
-        $(function() {
-            $("#handle").popover({placement:'right', trigger:'focus'});
-            $("#pass1").popover({placement:'right', trigger:'focus'});
-            $("#pass2").popover({placement:'right', trigger:'focus'});
-            $("#bpass1").popover({placement:'right', trigger:'focus'});
-
-            {% if ConfigManager.instance().restrict_registration %}
-                $("#regtoken").popover({placement:'right', trigger:'focus'});
-            {% end %}
-
-        });
-    </script>
 {% end %}

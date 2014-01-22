@@ -43,10 +43,12 @@ class BaseHandler(RequestHandler):
     ''' User handlers extend this class '''
 
     _dbsession = None
+
+    # JQuery requires an style 'unsafe-inline'
     default_csp = "default-src 'self';" + \
         "script-src 'self';" + \
-        "style-src 'self';" + \
-        "font-src 'self' 'unsafe-inline';" + \
+        "style-src 'self' 'unsafe-inline';" + \
+        "font-src 'self';" + \
         "img-src 'self';"
 
     def initialize(self):

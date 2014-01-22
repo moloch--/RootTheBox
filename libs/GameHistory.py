@@ -47,6 +47,7 @@ class GameHistory(object):
         self.epoch = None  # Date/time of first snapshot
         self._load()
         self.event_manager = EventManager.instance()
+        self.dbsession = DBSession()
 
     def _load(self):
         ''' Moves snapshots from db into the cache '''
@@ -108,7 +109,7 @@ class GameHistory(object):
         ''' Returns snapshot object it as a dict '''
         snapshot = Snapshot()
         bot_manager = BotManager.instance()
-        dbsession = DBSession()
+        #self.dbsession = DBSession()
         for team in Team.all():
             snapshot_team = SnapshotTeam(
                 team_id=team.id,
@@ -117,11 +118,11 @@ class GameHistory(object):
             )
             snapshot_team.game_levels = team.game_levels
             snapshot_team.flags = team.flags
-            dbsession.add(snapshot_team)
-            dbsession.flush()
+            self.dbsession.add(snapshot_team)
+            self.dbsession.flush()
             snapshot.teams.append(snapshot_team)
-        dbsession.add(snapshot)
-        dbsession.commit()
+        self.dbsession.add(snapshot)
+        self.dbsession.commit()
         return snapshot
 
     def __iter__(self):
@@ -133,7 +134,7 @@ class GameHistory(object):
 
     def __len__(self):
         ''' Return length of the game history '''
-        return DBSession().query(Snapshot).order_by(desc(Snapshot.id)).first().id
+        return self.dbsession.query(Snapshot).order_by(desc(Snapshot.id)).first().id
 
     def __getitem__(self, key):
         ''' Implements slices and indexs '''

@@ -45,6 +45,8 @@ class MemoryDatabaseObject(object):
     Base object for in-memory database
     '''
 
+    dbsession = None
+
     @declared_attr
     def __tablename__(self):
         ''' Converts class name from camel case to snake case '''
@@ -78,12 +80,12 @@ class Bot(MemoryBaseObject):
     @property
     def box(self):
         ''' Pull box object from persistant db '''
-        return DBSession().query(Box).by_uuid(self.box_uuid)
+        return self.dbsession.query(Box).by_uuid(self.box_uuid)
 
     @property
     def team(self):
         ''' Pull box object from persistant db '''
-        return DBSession().query(Box).by_uuid(self.box_uuid)
+        return self.dbsession.query(Box).by_uuid(self.box_uuid)
 
     def to_dict(self):
         return {
@@ -111,6 +113,7 @@ class BotManager(object):
         Session = sessionmaker(bind=self.sqlite_engine, autocommit=True)
         self.botdb = Session(autoflush=True)
         MemoryBaseObject.metadata.create_all(self.sqlite_engine)
+        self.dbsession = DBSession()
 
     def all(self):
         return self.botdb.query(Bot).all()
@@ -139,6 +142,7 @@ class BotManager(object):
                 box_uuid=unicode(bot_wsocket.box_uuid),
                 remote_ip=unicode(bot_wsocket.remote_ip)
             )
+            bot.dbsession = self.dbsession
             self.botdb.add(bot)
             self.botdb.flush()
             self.botnet[bot_wsocket.uuid] = bot_wsocket

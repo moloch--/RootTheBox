@@ -1,19 +1,18 @@
 {% extends "../main.html" %}
 
-{% block title %}Login{% end %}
+{% block title %}Authenticate{% end %}
 
 {% block header %}
-    <link href="/static/css/login.css" rel="stylesheet">
+    <link href="/static/css/pages/public/login.css" rel="stylesheet">
 {% end %}
 
 {% block content %}
 <div class="container">
-    <br />
     <form class="form-signin" action="/login" method="post">
         <h2 class="form-signin-heading">
-            Login
+            <i class="fa fa-lock"></i>
+            Authentication Required
         </h2>
-        <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error" >
@@ -24,13 +23,13 @@
             {% end %}
         {% end %}
         {% raw xsrf_form_html() %}
-        <input id="login-account" name="account"  type="text" class="form-control" placeholder="Hacker Name" autofocus />
-        <input id="login-password" name="password" type="password" class="form-control" placeholder="Password" autocomplete="off" />
-        <br />
-        <button class="btn btn-lg btn-primary btn-block" type="submit">
-            Authenticate
+        <input name="account" type="text" class="input-block-level" placeholder="Handle" autofocus>
+        <input name="password" type="password" class="input-block-level" placeholder="Password" autocomplete="off">
+        <button class="btn btn-primary" type="submit">
+            <i class="fa fa-sign-in"></i>
+            Login
         </button>
     </form>
-    <br />
-</div>
+</div> <!-- /container -->
+<br />
 {% end %}

@@ -222,7 +222,7 @@ app = Application(
 
     # Application version
     game_name=config.game_name,
-    version='0.3.0',
+    version='0.3.1',
 )
 
 
@@ -230,8 +230,6 @@ app = Application(
 def start_server():
     ''' Main entry point for the application '''
     if config.debug:
-        sys.stdout.write(WARN+"WARNING: Debug mode is enabled in "+config.filename)
-        sys.stdout.flush()
         logging.warn("Debug mode is enabled; some security measures will be ignored")
 
     # Setup server object
