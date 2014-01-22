@@ -60,17 +60,6 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="box_game_level">Game Level</label>
-                    <div class="controls">
-                        <select id="box_game_level" name="game_level_uuid">
-                            {% from models import GameLevel %}
-                            {% for level in GameLevel.all() %}
-                                <option value="{{ level.uuid }}">{{ level.number }}</option>
-                            {% end %}
-                        </select>
-                    </div>
-                </div>
-                <div class="control-group">
                     <label class="control-label" for="box_description">Description</label>
                     <div class="controls">
                         <input id="box_description" name="description" type="text" placeholder="Description" />
