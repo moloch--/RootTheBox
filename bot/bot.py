@@ -926,18 +926,19 @@ def main(domain, port, user, garbage_path, secure, verbose):
         os._exit(2)
     try:
         enableTrace(verbose)
-        connection_url = "ws://%s:%s/%s" % (domain, port, __path__)
+        scheme = "wss" if secure == True else "ws"
+        connection_url = "%s://%s:%s/%s" % (scheme, domain, port, __path__)
         display_status(None, {'message': "Connecting to: %s" % connection_url}, verbose=verbose)
         ws = WebSocketApp(connection_url,
-            on_message = on_message,
-            on_error = on_error,
-            on_close = on_close,
-        )
+                          on_message=on_message,
+                          on_error=on_error,
+                          on_close=on_close,
+                          on_open=on_open,
+                          )
         ws.verbose = verbose
         ws.garbage = garbage_cfg.get("Bot", 'garbage')
         ws.box_name = garbage_cfg.get("Bot", 'name').decode('hex')
         ws.user = user
-        ws.on_open = on_open
         ws.run_forever()
     except KeyboardInterrupt:
         os._exit(0)
@@ -966,7 +967,7 @@ if __name__ == '__main__':
         dest='secure',
     )
     parser.add_argument('--garbage', '-g',
-        help='path to garbage file (defult: /root/garbage or C:\\garbage)',
+        help='path to garbage file (default: /root/garbage or C:\\garbage)',
         dest='garbage',
     )
     parser.add_argument('--domain', '-d',
@@ -975,7 +976,7 @@ if __name__ == '__main__':
         dest='domain',
     )
     parser.add_argument('--port', '-p',
-        help='netork port to connect to (default: %s)' % __port__,
+        help='network port to connect to (default: %s)' % __port__,
         default=__port__,
         dest='port',
     )

@@ -871,7 +871,7 @@ def update(ws, message):
     bots = []
     for bot in message['bots']:
         bots.append( 
-            (bot['box_name'], bot['remote_ip'], bot['total_reward'],) 
+            (bot['remote_ip'], bot['box_name'], bot['total_reward'],) 
         )
     ws.monitor.update_grid(bots)
 
