@@ -105,64 +105,44 @@ class AdminCreateHandler(BaseHandler):
 
     def create_corporation(self):
         ''' Add a new corporation to the database '''
-        form = Form(
-            corporation_name="Enter a corporation name",
-            description="Please enter a description",
-        )
-        if form.validate(self.request.arguments):
-            corp_name = self.get_argument('corporation_name')
+        try:
+            corp_name = self.get_argument('corporation_name', '')
             if Corporation.by_name(corp_name) is not None:
                 self.render("admin/create/corporation.html",
                     errors=["Name already exists"]
                 )
             else:
-                corporation = Corporation(
-                    name=unicode(corp_name),
-                    description=unicode(self.get_argument('description')),
-                )
+                corporation = Corporation()
+                corporation.name = corp_name
                 dbsession.add(corporation)
-                dbsession.flush()
+                dbsession.commit()
                 self.redirect('/admin/view/game_objects')
-        else:
-            self.render("admin/create/corporation.html", errors=form.errors)
+        except ValueError as error:
+            self.render("admin/create/corporation.html", errors=["%s" % error])
 
     def create_box(self):
         ''' Create a box object '''
-        form = Form(
-            box_name="Enter a box name",
-            description="Enter a description",
-            difficulty="Select a difficulty",
-            corporation_uuid="Please select a corporation",
-            game_level="Please select a game level",
-        )
-        if form.validate(self.request.arguments):
-            try:
-                game_level = int(self.get_argument('game_level'))
-                corp_uuid = self.get_argument('corporation_uuid')
-                garbage = self.get_argument('garbage', '')
-                if Box.by_name(self.get_argument('box_name')) is not None:
-                    self.render("admin/create/box.html",
-                        errors=["Box name already exists"]
-                    )
-                elif Corporation.by_uuid(corp_uuid) is None:
-                    self.render("admin/create/box.html",
-                        errors=["Corporation does not exist"]
-                    )
-                elif GameLevel.by_number(game_level) is None:
-                    self.render("admin/create/box.html",
-                        errors=["Game level does not exist"]
-                    )
-                else:
-                    box = self.__mkbox__()
-                    if 'avatar' in self.request.files:
-                        self.set_avatar(box)
-                    self.redirect('/admin/view/game_objects')
-            except ValueError:
-                self.render('admin/create/box.html',
-                    errors=["Invalid level number"]
+        try:
+            game_level = int(self.get_argument('game_level', '0'))
+            corp_uuid = self.get_argument('corporation_uuid', '')
+            if Box.by_name(self.get_argument('name', '')) is not None:
+                self.render("admin/create/box.html",
+                    errors=["Box name already exists"]
                 )
-        else:
-            self.render("admin/create/box.html", errors=form.errors)
+            elif Corporation.by_uuid(corp_uuid) is None:
+                self.render("admin/create/box.html",
+                    errors=["Corporation does not exist"]
+                )
+            elif GameLevel.by_number(game_level) is None:
+                self.render("admin/create/box.html",
+                    errors=["Game level does not exist"]
+                )
+            else:
+                box = self._make_box()
+                dbsession.commit()
+                self.redirect('/admin/view/game_objects')
+        except ValueError as error:
+            self.render('admin/create/box.html', errors=["%s" % error])
 
     def create_flag_static(self):
         ''' Create a flag '''
@@ -265,26 +245,25 @@ class AdminCreateHandler(BaseHandler):
         else:
             hint = Hint(
                 price=int(price),
-                description=unicode(self.get_argument('description')),
+                description=self.get_argument('description'),
                 box_id=box.id
             )
             dbsession.add(hint)
             dbsession.flush()
             self.redirect('/admin/view/game_objects')
 
-    def __mkbox__(self):
+    def _make_box(self):
         ''' Creates a box in the database '''
         corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
         level = GameLevel.by_number(int(self.get_argument('game_level')))
-        box = Box(
-            name=unicode(self.get_argument('box_name')),
-            _description=unicode(self.get_argument('description')),
-            difficulty=unicode(self.get_argument('difficulty')),
-            corporation_id=corp.id,
-            game_level_id=level.id,
-        )
+        box = Box(corporation_id=corp.id, game_level_id=level.id)
+        box.name = self.get_argument('name', '')
+        box.description = self.get_argument('description', '')
+        box.difficulty = self.get_argument('difficulty', '')
         dbsession.add(box)
         dbsession.flush()
+        if 'avatar' in self.request.files:
+            box.avatar = self.request.files['avatar'][0]['body']
         return box
 
     def __mklevel__(self, game_level, buyout):

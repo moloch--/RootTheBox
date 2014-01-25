@@ -26,6 +26,7 @@ indiviudal user, such as handle/account/password/etc
 
 
 import os
+import imghdr
 import logging
 
 from os import urandom
@@ -211,12 +212,12 @@ class User(DatabaseObject):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp']:
                 config = ConfigManager.instance()
-                if os.path.exists(config.avatar_dir + self._avatar):
+                if self._avatar is not None and os.path.exists(config.avatar_dir + self._avatar):
                     os.unlink(config.avatar_dir + self._avatar)
-                file_path = str(config.avatar_dir + self.uuid + ext)
+                file_path = str(config.avatar_dir + self.uuid + '.' + ext)
                 with open(file_path, 'wb') as fp:
                     fp.write(image_data)
-                self._avatar = self.uuid + ext
+                self._avatar = self.uuid + '.' + ext
             else:
                 raise ValueError("Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
         else:

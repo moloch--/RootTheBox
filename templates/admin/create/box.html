@@ -3,8 +3,13 @@
 {% block title %}Create Box{% end %}
 
 {% block content %}
+{% from models.GameLevel import GameLevel %}
+{% from models.Corporation import Corporation %}
 <div class="container">
-    <h1>Create Box</h1>
+    <h1>
+        <i class="fa fa-desktop"></i>
+        Create Box
+    </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
@@ -16,12 +21,12 @@
         {% end %}
     {% end %}
     <div class="well">
-        <form class="form-horizontal" action="/admin/create/box" method="post" enctype="multipart/form-data">
+        <form class="form-horizontal" action="/admin/create/box" method="post" enctype="multipart/form-data" autocomplete="on">
             {% raw xsrf_form_html() %}
             <div class="control-group">
                 <label class="control-label" for="box_name">Box Name</label>
                 <div class="controls">
-                    <input autofocus required id="box_name" name="box_name" type="text" placeholder="Box Name">
+                    <input autofocus required id="box_name" name="name" type="text" placeholder="Box Name">
                 </div>
             </div>
             <div class="control-group">
@@ -29,7 +34,7 @@
                 <div class="controls">
                     <select name="game_level">
                         <option value=""></option>
-                        {% from models.GameLevel import GameLevel %} {% for level in GameLevel.all() %}
+                        {% for level in GameLevel.all() %}
                         <option value="{{ level.number }}">{{ level.number }}</option>
                         {% end %}
                     </select>
@@ -40,7 +45,7 @@
                 <div class="controls">
                     <select id="corporation" name="corporation_uuid">
                         <option value=""></option>
-                        {% from models.Corporation import Corporation %} {% for corp in Corporation.all() %}
+                        {% for corp in Corporation.all() %}
                         <option value="{{ corp.uuid }}">{{ corp.name }}</option>
                         {% end %}
                     </select>

@@ -39,7 +39,7 @@ class Hint(DatabaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     price = Column(Integer, nullable=False)
-    description = Column(Unicode(256), nullable=False)
+    _description = Column(Unicode(256), nullable=False)
 
     @classmethod
     def all(cls):
@@ -60,10 +60,20 @@ class Hint(DatabaseObject):
     def by_box_id(cls, _id):
         return dbsession.query(cls).filter_by(box_id=_id).all()
 
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        if not 0 < len(value) < 256:
+            raise ValueError("Hint description must be 1 - 256 characters")
+        self._description = unicode(value)
+
     def to_xml(self, parent):
         hint_elem = ET.SubElement(parent, "hint")
         ET.SubElement(hint_elem, "price").text = str(self.price)
-        ET.SubElement(hint_elem, "description").text = unicode(self.description)
+        ET.SubElement(hint_elem, "description").text = self._description
 
     def to_dict(self):
         return {

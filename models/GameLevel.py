@@ -39,16 +39,14 @@ class GameLevel(DatabaseObject):
     buyout = Column(Integer, nullable=False)
 
     boxes = relationship("Box",
-        backref=backref("game_level", lazy="joined"),
-        cascade="all, delete-orphan"
+        backref=backref("game_level", lazy="select"),
+        cascade="all,delete,delete-orphan"
     )
 
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).order_by(
-            asc(cls.number)
-        ).all()
+        return dbsession.query(cls).order_by(asc(cls.number)).all()
 
     @classmethod
     def count(cls):

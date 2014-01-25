@@ -1,16 +1,18 @@
 {% extends "../../main.html" %}
 
-{% block title %}Game Objects{% end %}
+{% block title %}Game Management{% end %}
 
 {% block content %}
+{% from models.Corporation import Corporation %}
+{% from models.Box import Box %}
     <!-- Edit Corporation -->
-    <div id="editCorporationModal" class="modal hide fade" style="display: none; ">
+    <div id="edit-corporation-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Edit Corporation</h3>
+            <h3><i class="fa fa-pencil"></i> Edit Corporation</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="edit-corporation" method="post" action="/admin/edit/corporation">
+            <form id="edit-corporation-form" class="form-horizontal" method="post" action="/admin/edit/corporation">
                 {% raw xsrf_form_html() %}
                 <input id="corporation_uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
@@ -19,27 +21,21 @@
                         <input id="corporation_name" name="name" type="text" placeholder="Corporation Name" />
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="corporation_description">Description</label>
-                    <div class="controls">
-                        <input id="corporation_description" name="description" type="text" placeholder="Description" />
-                    </div>
-                </div>
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button class="btn btn-primary" type="button" onclick="document.forms['edit-corporation'].submit();">Save</button>
+            <button id="edit-corporation-submit" class="btn btn-primary" type="button">Save</button>
         </div>
     </div>
     <!-- Edit Box -->
-    <div id="editBoxModal" class="modal hide fade" style="display: none; ">
+    <div id="edit-box-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Edit Box</h3>
+            <h3><i class="fa fa-pencil"></i> Edit Box</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="edit-box" method="post" action="/admin/edit/box" enctype="multipart/form-data">
+            <form  id="edit-box-form" class="form-horizontal" method="post" action="/admin/edit/box" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <input id="box_uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
@@ -52,7 +48,6 @@
                     <label class="control-label" for="box_corporation">Corporation</label>
                     <div class="controls">
                         <select id="box_corporation" name="corporation_uuid">
-                            {% from models import Corporation %}
                             {% for corporation in Corporation.all() %}
                                 <option value="{{ corporation.uuid }}">{{ corporation.name }}</option>
                             {% end %}
@@ -81,17 +76,17 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary" onclick="document.forms['edit-box'].submit();">Save</button>
+            <button id="edit-box-submit" type="button" class="btn btn-primary">Save</button>
         </div>
     </div>
     <!-- Edit Flag -->
-    <div id="editFlagModal" class="modal hide fade" style="display: none; ">
+    <div id="edit-flag-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Edit Flag</h3>
+            <h3><i class="fa fa-pencil"></i> Edit Flag</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="edit-flag" method="post" action="/admin/edit/flag">
+            <form id="edit-flag-form" class="form-horizontal" method="post" action="/admin/edit/flag">
                 {% raw xsrf_form_html() %}
                 <input id="flag_uuid" name="uuid" type="hidden" />
                 <div class="control-group">
@@ -122,7 +117,6 @@
                     <label class="control-label" for="flag_box_uuid">Box</label>
                     <div class="controls">
                         <select id="flag_box_uuid" name="box_uuid">
-                            {% from models import Box %}
                             {% for box in Box.all() %}
                                 <option value="{{ box.uuid }}">{{ box.name }}</option>
                             {% end %}
@@ -133,17 +127,17 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary" onclick="document.forms['edit-flag'].submit();">Save</button>
+            <button id="edit-flag-submit" type="button" class="btn btn-primary">Save</button>
         </div>
     </div>
     <!-- Edit Hint -->
-    <div id="editHintModal" class="modal hide fade" style="display: none; ">
+    <div id="edit-hint-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Edit Hint</h3>
+            <h3><i class="fa fa-pencil"></i> Edit Hint</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="edit-hint" method="post" action="/admin/edit/hint">
+            <form id="edit-hint-form" class="form-horizontal" method="post" action="/admin/edit/hint">
                 {% raw xsrf_form_html() %}
                 <input id="hint_uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
@@ -162,17 +156,17 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button class="btn btn-primary" type="button" onclick="document.forms['edit-hint'].submit();">Save</button>
+            <button id="edit-hint-submit" class="btn btn-primary" type="button">Save</button>
         </div>
     </div>
     <!-- Add Ipv4 -->
-    <div id="addIpv4Modal" class="modal hide fade" style="display: none; ">
+    <div id="add-ipv4-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Add IPv4 Address</h3>
         </div>
         <div class="modal-body">
-        <form class="form-horizontal" id="add-ipv4" method="post" action="/admin/edit/ipv4">
+        <form id="add-ipv4-form" class="form-horizontal" method="post" action="/admin/edit/ipv4">
             {% raw xsrf_form_html() %}
             <input id="ipv4_uuid" name="box_uuid" type="hidden" />
             <div class="control-group">
@@ -186,17 +180,17 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary" onclick="document.forms['add-ipv4'].submit();">Add</button>
+            <button id="add-ipv4-submit" type="button" class="btn btn-primary">Add</button>
         </div>
     </div>
     <!-- Add Ipv6 -->
-    <div id="addIpv6Modal" class="modal hide fade" style="display: none; ">
+    <div id="add-ipv6-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Add IPv6 Address</h3>
         </div>
         <div class="modal-body">
-        <form class="form-horizontal" id="add-ipv6" method="post" action="/admin/edit/ipv6">
+        <form id="add-ipv6-form" class="form-horizontal" method="post" action="/admin/edit/ipv6">
             {% raw xsrf_form_html() %}
             <input id="ipv6_uuid" name="box_uuid" type="hidden" />
             <div class="control-group">
@@ -211,11 +205,11 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary" onclick="document.forms['add-ipv6'].submit();">Add</button>
+            <button id="add-ipv6-submit" type="button" class="btn btn-primary">Add</button>
         </div>
     </div>
     <!-- Del Ip -->
-    <div id="delIpModal" class="modal hide fade" style="display: none; ">
+    <div id="delete-ip-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Delete IP Address</h3>
@@ -224,20 +218,20 @@
         <p>
             Are you sure you want to delete this IP address? <br />
         </p>
-        <form id="del-ip" method="post" action="/admin/delete/ip">
+        <form id="delete-ip-form" method="post" action="/admin/delete/ip">
             {% raw xsrf_form_html() %}
-            <input id="delip" name="ip" type="hidden" value="" />
+            <input id="delete-ip" name="ip" type="hidden" value="" />
         </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-danger" onclick="document.forms['del-ip'].submit();">
+            <button id="delete-ip-submit" type="button" class="btn btn-danger">
                 Delete
             </button>
         </div>
     </div>
     <!-- Del Flag -->
-    <div id="delFlagModal" class="modal hide fade" style="display: none; ">
+    <div id="delete-flag-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Delete Flag</h3>
@@ -246,20 +240,20 @@
         <p>
             Are you sure you want to delete this flag? <br />
         </p>
-        <form id="del-flag" method="post" action="/admin/delete/flag">
+        <form id="delete-flag-form" method="post" action="/admin/delete/flag">
             {% raw xsrf_form_html() %}
-            <input id="delflag" name="uuid" type="hidden" value="" />
+            <input id="delete-flag" name="uuid" type="hidden" value="" />
         </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-danger" onclick="document.forms['del-flag'].submit();">
+            <button id="delete-flag-submit" type="button" class="btn btn-danger">
                 Delete
             </button>
         </div>
     </div>
     <!-- Del Hint -->
-    <div id="delHintModal" class="modal hide fade" style="display: none; ">
+    <div id="delete-hint-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Delete Hint</h3>
@@ -268,41 +262,18 @@
         <p>
             Are you sure you want to delete this hint? <br />
         </p>
-        <form id="del-hint" method="post" action="/admin/delete/hint">
+        <form id="delete-hint-form" method="post" action="/admin/delete/hint">
             {% raw xsrf_form_html() %}
-            <input id="delhint" name="uuid" type="hidden" value="" />
+            <input id="delete-hint" name="uuid" type="hidden" value="" />
         </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-danger" onclick="document.forms['del-hint'].submit();">
+            <button id="delete-hint-submit" type="button" class="btn btn-danger">
                 Delete
             </button>
         </div>
     </div>
-    <script>
-        function get_details(obj, uuid) {
-            $("#" + obj + "_uuid").val(uuid);
-            $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
-                $.each(data, function(key, value) {
-                    // console.log("#" + obj + "_" + key + " -> " + value);
-                    $("#" + obj + "_" + key).val(value);
-                });
-            });
-        }
-        function set_box_uuid(ipv, box_uuid) {
-            $("#" + ipv + "_uuid").val(box_uuid);
-        }
-        function set_delip(ip) {
-            $("#delip").val(ip);
-        }
-        function set_delflag(flag_uuid) {
-            $("#delflag").val(flag_uuid);
-        }
-        function set_delhint(uuid) {
-            $("#delhint").val(uuid);
-        }
-    </script>
     <!-- Start Visable -->
     <div class="row-fluid">
         <div class="span2" />
@@ -314,14 +285,15 @@
                 {% for corporation in Corporation.all() %}
                     <li>
                         <a href="#{{ corporation.uuid }}">
-                            <i class="icon-chevron-right"></i>&nbsp;&nbsp;{{ corporation.name }}
+                            <i class="icon-chevron-right"></i>
+                            &nbsp;&nbsp;{{ corporation.name }}
                         </a>
                     </li>
                 {% end %}
             </ul>
         </div>
         <div class="span10">
-            <h1>&nbsp;&nbsp;Game Objects</h1>
+            <h1>&nbsp;&nbsp;Game Management</h1>
             <br />
             {% if errors != None and len(errors) != 0 %}
                 {% for error in errors %}
@@ -334,22 +306,37 @@
             {% end %}
             {% for corporation in Corporation.all() %}
                 <div id="{{ corporation.uuid }}" class="well">
-                    <h2 style="display:inline;">{{ corporation.name }}&nbsp;&nbsp;</h2>
-                    <a class="btn btn-small" data-toggle="modal" href="#editCorporationModal" 
-                        onclick="get_details('corporation', '{{ corporation.uuid }}')">
+                    <h2 style="display:inline;">
+                        <i class="fa fa-building-o"></i>
+                        {{ corporation.name }}&nbsp;&nbsp;
+                    </h2>
+                    <a class="btn btn-small" data-toggle="modal" href="#edit-corporation-modal" data-uuid="{{ corporation.uuid }}">
+                        <i class="fa fa-pencil"></i>
                         Edit Corp
+                    </a>
+                    <a class="btn btn-small btn-danger" data-toggle="modal" href="#delete-corporation-modal" data-uuid="{{ corporation.uuid }}">
+                        <i class="fa fa-times-circle-o"></i>
+                        Delete Corp
                     </a>
                     <br />
                     <br />
                     {% if len(corporation.boxes) != 0 %}
                         {% for box in corporation.boxes %}
                             <div class="well">
-                                <h3 style="display:inline;">{{ box.name }}&nbsp;&nbsp;</h3>
-                                    <a class="btn btn-small" data-toggle="modal" href="#editBoxModal"
-                                        onclick="get_details('box', '{{ box.uuid }}')">
+                                <h3 style="display:inline;">
+                                    <i class="fa fa-desktop"></i>
+                                    {{ box.name }}&nbsp;&nbsp;
+                                </h3>
+                                    <a class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}">
+                                        <i class="fa fa-pencil"></i>
                                         Edit Box
                                     </a>
+                                    <a class="btn btn-small btn-danger" data-toggle="modal" href="#delete-box-modal" data-uuid="{{ box.uuid }}">
+                                        <i class="fa fa-times-circle-o"></i>
+                                        Delete Box
+                                    </a>
                                     <a style="float:right;" class="btn" data-toggle="modal" href="/admin/garbage?uuid={{ box.uuid }}" target="_blank">
+                                        <i class="fa fa-trash-o"></i>
                                         {{ box.name }} Garbage File
                                     </a>
                                 <br />
@@ -364,8 +351,7 @@
                                     </div>
                                     <div class="well span4">
                                         <h4 style="display:inline;">IPv4 Addresses&nbsp;&nbsp;</h4>
-                                        <a class="btn btn-small" data-toggle="modal" href="#addIpv4Modal" 
-                                            onclick="set_box_uuid('ipv4', '{{ box.uuid }}')">
+                                        <a class="btn btn-small" data-toggle="modal" href="#add-ipv4-modal" data-uuid="{{ box.uuid }}">
                                             Add IPv4
                                         </a>
                                         <br />
@@ -385,8 +371,7 @@
                                                             <td>{{ box.ipv4.index(ip) + 1}}</td>
                                                             <td>{{ ip }}</td>
                                                             <td>
-                                                                <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delIpModal"
-                                                                    onclick="set_delip('{{ ip }}')">
+                                                                <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-modal" data-uuid="{{ ip.uuid }}">
                                                                     Delete
                                                                 </a>
                                                             </td>
@@ -400,8 +385,7 @@
                                     </div>
                                     <div class="well span4">
                                         <h4 style="display:inline;">IPv6 Addresses&nbsp;&nbsp;</h4>
-                                        <a class="btn btn-small" data-toggle="modal" href="#addIpv6Modal"
-                                            onclick="set_box_uuid('ipv6', '{{ box.uuid }}')">
+                                        <a class="btn btn-small" data-toggle="modal" href="#add-ipv6-modal" data-uuid="{{ box.uuid }}">
                                             Add IPv6
                                         </a>
                                         <br />
@@ -421,8 +405,7 @@
                                                             <td>{{ box.ipv6.index(ip) + 1 }}</td>
                                                             <td>{{ ip }}</td>
                                                             <td>
-                                                                <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delIpModal"
-                                                                    onclick="set_delip('{{ ip }}')">
+                                                                <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-modal" data-uuid="{{ ip.uuid }}">
                                                                     Delete
                                                                 </a>
                                                             </td>
@@ -436,7 +419,10 @@
                                     </div>
                                 </div>
                                 <div class="well">
-                                    <h4 style="display:inline;">Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;</h4>
+                                    <h4 style="display:inline;">
+                                        <i class="fa fa-flag-o"></i>
+                                        Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;
+                                    </h4>
                                     <a class="btn btn-mini" data-toggle="modal" href="/admin/create/flag">
                                         Add Flags
                                     </a>
@@ -465,14 +451,12 @@
                                                         <td>${{ flag.value }}</td>
                                                         <td>{{ str(flag._type) }}</td>
                                                         <td>
-                                                            <a class="btn btn-mini" data-toggle="modal" href="#editFlagModal"
-                                                                onclick="get_details('flag', '{{ flag.uuid }}')">
+                                                            <a class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-uuid="{{ flag.uuid }}">
                                                                 Edit Flag
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delFlagModal"
-                                                                onclick="set_delflag('{{ flag.uuid }}')">
+                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-flag-modal" data-uuid="{{ flag.uuid }}">
                                                                 Delete
                                                             </a>
                                                         </td>
@@ -485,7 +469,10 @@
                                     {% end %}
                                 </div>
                                 <div class="well">
-                                    <h4 style="display:inline;">Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;</h4>
+                                    <h4 style="display:inline;">
+                                        <i class="fa fa-ambulance"></i>
+                                        Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;
+                                    </h4>
                                     <a class="btn btn-mini" data-toggle="modal" href="/admin/create/hint">
                                         Add Hint
                                     </a>
@@ -508,14 +495,12 @@
                                                         <td>${{ hint.price }}</td>
                                                         <td>{{ hint.description }}</td>
                                                         <td>
-                                                            <a class="btn btn-mini" data-toggle="modal" href="#editHintModal"
-                                                                onclick="get_details('hint', '{{ hint.uuid }}')">
+                                                            <a class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}">
                                                                 Edit Hint
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delHintModal"
-                                                                onclick="set_delhint('{{ hint.uuid }}')">
+                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
                                                                 Delete
                                                             </a>
                                                         </td>

@@ -20,6 +20,8 @@ Created on Mar 11, 2012
 '''
 
 
+import os
+import imghdr
 import xml.etree.cElementTree as ET
 
 from os import urandom
@@ -47,7 +49,7 @@ class Box(DatabaseObject):
     _description = Column(Unicode(1024))
     _difficulty = Column(Unicode(16))
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
-    avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
+    _avatar = Column(String(64))
     autoformat = Column(Boolean, default=True)
 
     garbage = Column(String(32),
@@ -82,14 +84,14 @@ class Box(DatabaseObject):
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_uuid(cls, uuid):
+    def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_name(cls, name):
         ''' Return the box object whose name is "name" '''
-        return dbsession.query(cls).filter_by(name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
 
     @classmethod
     def by_garbage(cls, _garbage):
@@ -158,6 +160,30 @@ class Box(DatabaseObject):
         if 16 < len(value):
             raise ValueError("Difficulty must be less than 16 characters")
         self._difficulty = unicode(value)
+
+    @property
+    def avatar(self):
+        if self._avatar is not None:
+            return self._avatar
+        else:
+            return "default_avatar.jpeg"
+
+    @avatar.setter
+    def avatar(self, image_data):
+        if len(image_data) < (1024 * 1024):
+            ext = imghdr.what("", h=image_data)
+            if ext in ['png', 'jpeg', 'gif', 'bmp']:
+                config = ConfigManager.instance()
+                if self._avatar is not None and os.path.exists(config.avatar_dir + self._avatar):
+                    os.unlink(config.avatar_dir + self._avatar)
+                file_path = str(config.avatar_dir + self.uuid + '.' + ext)
+                with open(file_path, 'wb') as fp:
+                    fp.write(image_data)
+                self._avatar = self.uuid + '.' + ext
+            else:
+                raise ValueError("Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
+        else:
+            raise ValueError("The image is too large")
 
     @property
     def ips(self):

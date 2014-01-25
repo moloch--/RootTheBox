@@ -351,7 +351,7 @@ class ConfigManager(object):
 
     @property
     def avatar_dir(self):
-        return os.path.abspath('file/avatars/')
+        return os.path.abspath('files/avatars') + '/'
 
     @property
     def db_connection(self):
