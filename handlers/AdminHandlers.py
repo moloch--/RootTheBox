@@ -169,7 +169,6 @@ class AdminCreateHandler(BaseHandler):
         name = self.get_argument('flag_name', '')
         if is_file:
             if not 'flag' in self.request.files:
-                print self.request.files
                 raise ValueError('No file in request')
             token = self.request.files['flag'][0]['body']
         else:
@@ -184,59 +183,39 @@ class AdminCreateHandler(BaseHandler):
         dbsession.flush()
         self.redirect('/admin/view/game_objects')
 
-    def is_numeric(self, string):
-        ''' Determine if string is a number '''
-        try:
-            int(string)
-            return True
-        except ValueError:
-            return False
-
     def create_team(self):
         ''' Create a new team in the database '''
-        form = Form(team_name="Enter a team name", motto="Enter a team motto")
-        if form.validate(self.request.arguments):
-            team = Team(
-                name=unicode(self.get_argument('team_name')),
-                motto=unicode(self.get_argument('motto')),
-            )
-            level_0 = GameLevel.all()[0]
-            team.game_levels.append(level_0)
-            dbsession.add(team)
-            dbsession.flush()
-            self.redirect('/admin/view/user_objects')
-        else:
-            self.render("admin/create/team.html", errors=form.errors)
+        team = Team()
+        team.name = self.get_argument('team_name', '')
+        team.motto = self.get_argument('motto', '')
+        level_0 = GameLevel.all()[0]
+        team.game_levels.append(level_0)
+        dbsession.add(team)
+        dbsession.commit()
+        self.redirect('/admin/view/user_objects')
 
     def create_game_level(self):
         ''' Creates a game level '''
-        form = Form(
-            level_number="Please enter a level number",
-            buyout="Please enter a buyout value",
-        )
-        if form.validate(self.request.arguments):
-            try:
-                game_level = abs(int(self.get_argument('level_number')))
-                buyout = abs(int(self.get_argument('buyout')))
-                if GameLevel.by_number(game_level) is not None:
-                    self.render('admin/create/game_level.html',
-                        errors=["Game level number must be unique"]
-                    )
-                else:
-                    self.__mklevel__(game_level, buyout)
-                    self.redirect('/admin/view/game_levels')
-            except ValueError:
+        try:
+            game_level = abs(int(self.get_argument('level_number')))
+            buyout = abs(int(self.get_argument('buyout')))
+            if GameLevel.by_number(game_level) is not None:
                 self.render('admin/create/game_level.html',
-                    errors=["Invalid level number"]
+                    errors=["Game level number must be unique"]
                 )
-        else:
-            self.render('admin/create/game_level.html', errors=form.errors)
+            else:
+                self.__mklevel__(game_level, buyout)
+                self.redirect('/admin/view/game_levels')
+        except ValueError:
+            self.render('admin/create/game_level.html',
+                errors=["Invalid level number"]
+            )
 
     def create_hint(self):
         ''' Add hint to database '''
         box = Box.by_uuid(self.get_argument('box_uuid', ''))
         price = self.get_argument('price', '')
-        if not self.is_numeric(price):
+        if not price.isdigit():
             self.render('admin/create/hint.html', errors=["Invalid price."])
         elif not 0 < len(self.get_argument('description', '')):
             self.render('admin/create/hint.html', errors=["Missing description."])
@@ -273,10 +252,7 @@ class AdminCreateHandler(BaseHandler):
         None.  This function creates a new level and sorts everything based on
         the 'number' attrib
         '''
-        new_level = GameLevel(
-            number=game_level,
-            buyout=buyout
-        )
+        new_level = GameLevel(number=game_level, buyout=buyout)
         game_levels = GameLevel.all()
         game_levels.append(new_level)
         game_levels = sorted(game_levels)
@@ -290,28 +266,6 @@ class AdminCreateHandler(BaseHandler):
         game_levels[-1].next_level_id = None
         dbsession.add(game_levels[-1])
         dbsession.flush()
-
-    def set_avatar(self, box):
-        '''
-        Saves avatar - Reads file header and only allows approved formats
-        '''
-        if 0 < len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
-            if box.avatar == "default_avatar.jpeg":
-                box.avatar = unicode(uuid4()) + u".jpeg"
-            ext = imghdr.what(
-                "", h=self.request.files['avatar'][0]['body']
-            )
-            avatar_path = str(self.application.settings['avatar_dir'] + '/' + box.avatar)
-            if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                if os.path.exists(avatar_path):
-                    os.unlink(avatar_path)
-                box.avatar = unicode(box.avatar[:box.avatar.rfind('.')] + "." + ext)
-                file_path = str(self.application.settings['avatar_dir'] + '/' + box.avatar)
-                avatar = open(file_path, 'wb')
-                avatar.write(self.request.files['avatar'][0]['body'])
-                avatar.close()
-                dbsession.add(box)
-                dbsession.flush()
 
 
 class AdminViewHandler(BaseHandler):
@@ -428,398 +382,301 @@ class AdminEditHandler(BaseHandler):
 
     def edit_corporations(self):
         ''' Updates corporation object in the database '''
-        form = Form(
-            uuid="Object not selected",
-            name="Missing corporation name",
-            description="Missing description",
-        )
-        if form.validate(self.request.arguments):
-            corp = Corporation.by_uuid(self.get_argument('uuid'))
-            if corp is not None:
-                if self.get_argument('name') != corp.name:
-                    logging.info("Updated corporation name %s -> %s" %
-                        (corp.name, self.get_argument('name'),)
-                    )
-                    corp.name = unicode(self.get_argument('name'))
-                if self.get_argument('description') != corp.description:
-                    logging.info("Updated corporation description %s -> %s" %
-                        (corp.description, self.get_argument('description'),)
-                    )
-                    corp.description = unicode(self.get_argument('description'))
-                dbsession.add(corp)
-                dbsession.flush()
-                self.redirect('/admin/view/game_objects')
-            else:
-                self.render("admin/view/game_objects.html",
-                    errors=["Corporation does not exist"]
+        corp = Corporation.by_uuid(self.get_argument('uuid', ''))
+        if corp is not None:
+            if self.get_argument('name') != corp.name:
+                logging.info("Updated corporation name %s -> %s" %
+                    (corp.name, self.get_argument('name'),)
                 )
+                corp.name = self.get_argument('name')
+            if self.get_argument('description') != corp.description:
+                logging.info("Updated corporation description %s -> %s" %
+                    (corp.description, self.get_argument('description'),)
+                )
+                corp.description = self.get_argument('description')
+            dbsession.add(corp)
+            dbsession.flush()
+            self.redirect('/admin/view/game_objects')
         else:
-            self.render("admin/view/game_objects.html", errors=form.errors)
+            self.render("admin/view/game_objects.html",
+                errors=["Corporation does not exist"]
+            )
 
     def edit_boxes(self):
         ''' Edit existing boxes in the database '''
-        form = Form(
-            uuid="Object not selected",
-            name="Missing box name",
-            corporation_uuid="Please select a corporation",
-            description="Please enter a description",
-            difficulty="Please enter a difficulty",
-        )
-        if form.validate(self.request.arguments):
-            box = Box.by_uuid(self.get_argument('uuid'))
-            if box is not None:
-                errors = []
-                if self.get_argument('name') != box.name:
-                    if Box.by_name(self.get_argument('name')) is None:
-                        logging.info("Updated box name %s -> %s" %
-                            (box.name, self.get_argument('name'),)
-                        )
-                        box.name = unicode(self.get_argument('name'))
-                    else:
-                        errors.append("Box name already exists")
-                corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
-                if corp is not None and corp.id != box.corporation_id:
-                    logging.info("Updated %s's corporation %s -> %s" %
-                        (box.name, box.corporation_id, corp.id,))
-                    box.corporation_id = corp.id
-                elif corp is None:
-                    errors.append("Corporation does not exist")
-                if self.get_argument('description') != box.description:
-                    logging.info("Updated %s's description %s -> %s" %
-                        (box.name, box.description, self.get_argument('description'),)
+        box = Box.by_uuid(self.get_argument('uuid', ''))
+        if box is not None:
+            errors = []
+            if self.get_argument('name') != box.name:
+                if Box.by_name(self.get_argument('name')) is None:
+                    logging.info("Updated box name %s -> %s" %
+                        (box.name, self.get_argument('name'),)
                     )
-                    box.description = self.get_argument('description', '')
-                if self.get_argument('difficulty') != box.difficulty:
-                    logging.info("Updated %s's difficulty %s -> %s" %
-                        (box.name, box.difficulty, self.get_argument('difficulty'),)
-                    )
-                    box.difficulty = unicode(self.get_argument('difficulty'))
-                dbsession.add(box)
-                dbsession.flush()
-                if 'avatar' in self.request.files:
-                    errors += self._set_avatar(box)
-                    dbsession.add(box)
-                    dbsession.flush()
-                self.render("admin/view/game_objects.html", errors=errors)
-            else:
-                self.render("admin/view/game_objects.html",
-                    errors=["Box does not exist"]
+                    box.name = unicode(self.get_argument('name'))
+                else:
+                    errors.append("Box name already exists")
+            corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
+            if corp is not None and corp.id != box.corporation_id:
+                logging.info("Updated %s's corporation %s -> %s" %
+                    (box.name, box.corporation_id, corp.id,))
+                box.corporation_id = corp.id
+            elif corp is None:
+                errors.append("Corporation does not exist")
+            if self.get_argument('description') != box.description:
+                logging.info("Updated %s's description %s -> %s" %
+                    (box.name, box.description, self.get_argument('description'),)
                 )
-        else:
-            self.render("admin/view/game_objects.html", errors=form.errors)
-
-    def _set_avatar(self, box):
-        '''
-        Saves avatar - Reads file header an only allows approved formats
-        '''
-        if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
-            if box.avatar == "default_avatar.jpeg":
-                box.avatar = unicode(uuid4()) + u".jpeg"
-            ext = imghdr.what(
-                "", h=self.request.files['avatar'][0]['body']
-            )
-            avatar_path = str(self.application.settings['avatar_dir'] + '/' + box.avatar)
-            if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                if os.path.exists(avatar_path):
-                    os.unlink(avatar_path)
-                box.avatar = unicode(box.avatar[:box.avatar.rfind('.')] + "." + ext)
-                file_path = str(self.application.settings['avatar_dir'] + '/' + box.avatar)
-                avatar = open(file_path, 'wb')
-                avatar.write(self.request.files['avatar'][0]['body'])
-                avatar.close()
+                box.description = self.get_argument('description', '')
+            if self.get_argument('difficulty') != box.difficulty:
+                logging.info("Updated %s's difficulty %s -> %s" %
+                    (box.name, box.difficulty, self.get_argument('difficulty'),)
+                )
+                box.difficulty = unicode(self.get_argument('difficulty'))
+            dbsession.add(box)
+            dbsession.flush()
+            if 'avatar' in self.request.files:
+                box.avatar = self.request.files['avatar'][0]['body']
                 dbsession.add(box)
                 dbsession.flush()
-                return []
-            else:
-                return ["Invalid image format, avatar must be: .png .jpeg .gif or .bmp"]
+            self.render("admin/view/game_objects.html", errors=errors)
         else:
-            return ["The image is too large"]
+            self.render("admin/view/game_objects.html",
+                errors=["Box does not exist"]
+            )
 
     def edit_flags(self):
         ''' Super ugly code, yes - Edit existing flags in the database '''
-        form = Form(
-            uuid="Object not selected",
-            name="Please enter a name",
-            token="Please enter a toke value",
-            description="Please provide a description",
-            value="Please enter a reward value",
-            box_uuid="Please select a box",
-        )
-        if form.validate(self.request.arguments):
-            flag = Flag.by_uuid(self.get_argument('uuid'))
-            if flag is not None:
-                errors = []
-                if flag.name != self.get_argument('name'):
-                    if Flag.by_name(unicode(self.get_argument('name'))) is None:
-                        logging.info("Updated flag name %s -> %s" %
-                            (flag.name, self.get_argument('name'),)
-                        )
-                        flag.name = unicode(self.get_argument('name'))
-                    else:
-                        errors.append("Flag name already exists")
-                if flag.token != self.get_argument('token'):
-                    if Flag.by_token(unicode(self.get_argument('token'))) is None:
-                        logging.info("Updated %s's token %s -> %s" %
-                            (flag.name, flag.token, self.get_argument('token'),)
-                        )
-                        flag.token = unicode(self.get_argument('token'))
-                    else:
-                        errors.append("Token is not unique")
-                if flag.description != self.get_argument('description'):
-                    logging.info("Updated %s's description %s -> %s" %
-                        (flag.name, flag.description, self.get_argument('description'),)
+        flag = Flag.by_uuid(self.get_argument('uuid', ''))
+        if flag is not None:
+            errors = []
+            if flag.name != self.get_argument('name'):
+                if Flag.by_name(unicode(self.get_argument('name'))) is None:
+                    logging.info("Updated flag name %s -> %s" %
+                        (flag.name, self.get_argument('name'),)
                     )
-                    flag.description = unicode(self.get_argument('description'))
-                try:
-                    reward_value = int(self.get_argument('value'))
-                    if reward_value != flag.value:
-                        logging.info("Updated %s's value %d -> %d" %
-                            (flag.name, flag.value, reward_value,)
-                        )
-                        flag.value = reward_value
-                except ValueError:
-                    errors.append("Invalid reward amount")
-                box = Box.by_uuid(self.get_argument('box_uuid'))
-                if box is not None and box.id != flag.box_id:
-                    logging.info("Updated %s's box %d -> %d" %
-                        (flag.name, flag.box_id, box.id)
+                    flag.name = unicode(self.get_argument('name'))
+                else:
+                    errors.append("Flag name already exists")
+            if flag.token != self.get_argument('token'):
+                if Flag.by_token(unicode(self.get_argument('token'))) is None:
+                    logging.info("Updated %s's token %s -> %s" %
+                        (flag.name, flag.token, self.get_argument('token'),)
                     )
-                    flag.box_id = box.id
-                elif box is None:
-                    errors.append("Box does not exist")
-                dbsession.add(flag)
-                dbsession.flush()
-                self.render("admin/view/game_objects.html", errors=errors)
-            else:
-                self.render("admin/view/game_objects.html",
-                    errors=["Flag does not exist"]
+                    flag.token = unicode(self.get_argument('token'))
+                else:
+                    errors.append("Token is not unique")
+            if flag.description != self.get_argument('description'):
+                logging.info("Updated %s's description %s -> %s" %
+                    (flag.name, flag.description, self.get_argument('description'),)
                 )
+                flag.description = unicode(self.get_argument('description'))
+            try:
+                reward_value = int(self.get_argument('value'))
+                if reward_value != flag.value:
+                    logging.info("Updated %s's value %d -> %d" %
+                        (flag.name, flag.value, reward_value,)
+                    )
+                    flag.value = reward_value
+            except ValueError:
+                errors.append("Invalid reward amount")
+            box = Box.by_uuid(self.get_argument('box_uuid'))
+            if box is not None and box.id != flag.box_id:
+                logging.info("Updated %s's box %d -> %d" %
+                    (flag.name, flag.box_id, box.id)
+                )
+                flag.box_id = box.id
+            elif box is None:
+                errors.append("Box does not exist")
+            dbsession.add(flag)
+            dbsession.flush()
+            self.render("admin/view/game_objects.html", errors=errors)
         else:
-            self.render("admin/view/game_objects.html", errors=form.errors)
+            self.render("admin/view/game_objects.html",
+                errors=["Flag does not exist"]
+            )
 
     def edit_teams(self):
         ''' Edit existing team objects in the database '''
-        form = Form(
-            uuid="No team selected",
-            name="Please enter a name",
-            motto="Please enter a motto",
-            listen_port="Please enter a listen port",
-        )
-        if form.validate(self.request.arguments):
-            team = Team.by_uuid(self.get_argument('uuid'))
-            if team is not None:
-                errors = []
-                if team.name != self.get_argument('name'):
-                    logging.info("Updated team name %s -> %s" %
-                        (team.name, self.get_argument('name'),)
-                    )
-                    team.name = unicode(self.get_argument('name'))
-                if team.motto != self.get_argument('motto'):
-                    logging.info("Updated %s's motto %s -> %s" %
-                        (team.name, team.motto, self.get_argument('motto'),)
-                    )
-                    team.motto = unicode(self.get_argument('motto'))
-                try:
-                    lport = int(self.get_argument('listen_port'))
-                    if lport != team.listen_port:
-                        logging.info("Updated %s's listen port %d -> %d" %
-                            (team.name, team.listen_port, lport,)
-                        )
-                        team.listen_port = lport
-                except ValueError:
-                    errors.append("Invalid listen port %s " %
-                        self.get_argument('listen_port')
-                    )
-                dbsession.add(team)
-                dbsession.flush()
-                self.redirect("/admin/view/user_objects")
-            else:
-                self.render("admin/view/user_objects.html",
-                    errors=["Team does not exist"]
+        team = Team.by_uuid(self.get_argument('uuid', ''))
+        if team is not None:
+            errors = []
+            if team.name != self.get_argument('name'):
+                logging.info("Updated team name %s -> %s" %
+                    (team.name, self.get_argument('name'),)
                 )
+                team.name = unicode(self.get_argument('name'))
+            if team.motto != self.get_argument('motto'):
+                logging.info("Updated %s's motto %s -> %s" %
+                    (team.name, team.motto, self.get_argument('motto'),)
+                )
+                team.motto = unicode(self.get_argument('motto'))
+            try:
+                lport = int(self.get_argument('listen_port'))
+                if lport != team.listen_port:
+                    logging.info("Updated %s's listen port %d -> %d" %
+                        (team.name, team.listen_port, lport,)
+                    )
+                    team.listen_port = lport
+            except ValueError:
+                errors.append("Invalid listen port %s " %
+                    self.get_argument('listen_port')
+                )
+            dbsession.add(team)
+            dbsession.flush()
+            self.redirect("/admin/view/user_objects")
         else:
-            self.render("admin/view/user_objects.html", errors=form.errors)
+            self.render("admin/view/user_objects.html",
+                errors=["Team does not exist"]
+            )
 
     def edit_users(self):
         ''' Update user objects in the database '''
-        form = Form(
-            uuid="User not selected",
-            handle="Please enter a handle name",
-            hash_algorithm="Please select a hash algorithm",
-            team_uuid="Please select a team",
-        )
-        if form.validate(self.request.arguments):
-            errors = []
-            user = User.by_uuid(self.get_argument('uuid'))
-            if user is not None:
-                # Update user handle
-                if user.handle != self.get_argument('handle'):
-                    if User.by_handle(self.get_argument('handle')) is None:
-                        logging.info("Updated user handle %s -> %s" %
-                            (user.handle, self.get_argument('handle'),))
-                        user.handle = unicode(self.get_argument('handle'))
+        errors = []
+        user = User.by_uuid(self.get_argument('uuid', ''))
+        if user is not None:
+            # Update user handle
+            if user.handle != self.get_argument('handle'):
+                if User.by_handle(self.get_argument('handle')) is None:
+                    logging.info("Updated user handle %s -> %s" %
+                        (user.handle, self.get_argument('handle'),))
+                    user.handle = unicode(self.get_argument('handle'))
+                else:
+                    errors.append("Handle is already in use")
+            # Update hashing algoritm
+            if self.get_argument('hash_algorithm') in user.algorithms:
+                if user.algorithm != self.get_argument('hash_algorithm'):
+                    if 0 < len(self.get_argument('bank_password', '')):
+                        logging.info("Updated %s's hashing algorithm %s -> %s" %
+                            (user.handle, user.algorithm, self.get_argument('hash_algorithm'),)
+                        )
+                        user.algorithm = self.get_argument('hash_algorithm')
+                        dbsession.add(user)
+                        dbsession.flush()
                     else:
-                        errors.append("Handle is already in use")
-                # Update hashing algoritm
-                if self.get_argument('hash_algorithm') in user.algorithms:
-                    if user.algorithm != self.get_argument('hash_algorithm'):
-                        if 0 < len(self.get_argument('bank_password', '')):
-                            logging.info("Updated %s's hashing algorithm %s -> %s" %
-                                (user.handle, user.algorithm, self.get_argument('hash_algorithm'),)
-                            )
-                            user.algorithm = self.get_argument('hash_algorithm')
-                            dbsession.add(user)
-                            dbsession.flush()
-                        else:
-                            errors.append("You must provide a new bank password when updating the hashing algorithm")
-                else:
-                    errors.append("Not a valid hash algorithm")
-                # Update password
-                if 0 < len(self.get_argument('password', '')):
-                    user.password = self.get_argument('password')
-                # Update password
-                if 0 < len(self.get_argument('bank_password', '')):
-                    user.bank_password = self.get_argument('bank_password')
-                # Update team
-                team = Team.by_uuid(self.get_argument('team_uuid'))
-                if team is not None:
-                    if user.team_id != team.id:
-                        logging.info("Updated %s's team %s -> %s" %
-                            (user.handle, user.team_id, team.name))
-                        user.team_id = team.id
-                else:
-                    errors.append("Team does not exist in database")
-                dbsession.add(user)
-                dbsession.flush()
+                        errors.append("You must provide a new bank password when updating the hashing algorithm")
             else:
-                errors.append("User does not exist")
-            self.render("admin/view/user_objects.html", errors=errors)
+                errors.append("Not a valid hash algorithm")
+            # Update password
+            if 0 < len(self.get_argument('password', '')):
+                user.password = self.get_argument('password')
+            # Update password
+            if 0 < len(self.get_argument('bank_password', '')):
+                user.bank_password = self.get_argument('bank_password')
+            # Update team
+            team = Team.by_uuid(self.get_argument('team_uuid'))
+            if team is not None:
+                if user.team_id != team.id:
+                    logging.info("Updated %s's team %s -> %s" %
+                        (user.handle, user.team_id, team.name))
+                    user.team_id = team.id
+            else:
+                errors.append("Team does not exist in database")
+            dbsession.add(user)
+            dbsession.flush()
         else:
-            self.render("admin/view/user_objects.html", errors=form.errors)
+            errors.append("User does not exist")
+        self.render("admin/view/user_objects.html", errors=errors)
 
     def edit_ipv4(self):
         ''' Add ipv4 addresses to a box (sorta edits the box object) '''
-        form = Form(
-            box_uuid="Select a box",
-            ipv4="Please provide a list of IPv4 addresses"
-        )
-        if form.validate(self.request.arguments):
-            errors = []
-            box = Box.by_uuid(self.get_argument('box_uuid'))
-            if box is not None:
-                ips_string = self.get_argument('ipv4').replace('\n', ',')
-                ips = filter(lambda char: char in "1234567890.,", ips_string).split(",")
-                for ip in filter(lambda ip: 0 < len(ip), ips):
-                    try:
-                        if Box.by_ip_address(ip) is None:
-                            addr = IpAddress(box_id=box.id, v4=ip)
-                            dbsession.add(addr)
-                        else:
-                            errors.append("%s has already been assigned to %s." %
-                                (ip, box.name,)
-                            )
-                    except ValueError:
-                        errors.append(
-                            "'%s' is not a valid IPv4 address" % str(ip[:15])
+        errors = []
+        box = Box.by_uuid(self.get_argument('box_uuid'))
+        if box is not None:
+            ips_string = self.get_argument('ipv4').replace('\n', ',')
+            ips = filter(lambda char: char in "1234567890.,", ips_string).split(",")
+            for ip in filter(lambda ip: 0 < len(ip), ips):
+                try:
+                    if Box.by_ip_address(ip) is None:
+                        addr = IpAddress(box_id=box.id, v4=ip)
+                        dbsession.add(addr)
+                    else:
+                        errors.append("%s has already been assigned to %s." %
+                            (ip, box.name,)
                         )
-                dbsession.flush()
-            else:
-                errors.append("Box does not exist")
-            self.render("admin/view/game_objects.html", errors=errors)
+                except ValueError:
+                    errors.append(
+                        "'%s' is not a valid IPv4 address" % str(ip[:15])
+                    )
+            dbsession.flush()
         else:
-            self.render("admin/view/game_objects.html", errors=form.errors)
+            errors.append("Box does not exist")
+        self.render("admin/view/game_objects.html", errors=errors)
 
     def edit_ipv6(self):
         ''' Add ipv6 addresses to a box (sorta edits the box object) '''
-        form = Form(box_uuid="Select a box", ipv6="Please provide a list of IPv6 addresses")
-        if form.validate(self.request.arguments):
-            errors = []
-            box = Box.by_uuid(self.get_argument('box_uuid'))
-            if box is not None:
-                ips_string = self.get_argument('ipv6').replace('\n', ',').lower()
-                ips = filter(lambda char: char in "1234567890abcdef:,", ips_string).split(",")
-                for ip in filter(lambda ip: 0 < len(ip), ips):
-                    try:
-                        box = Box.by_ip_address(ip)
-                        if box is None:
-                            addr = IpAddress(box_id=box.id, v6=ip)
-                            dbsession.add(addr)
-                        else:
-                            errors.append(
-                                "%s has already been assigned to %s." % (ip, box.name,)
-                            )
-                    except ValueError:
+        errors = []
+        box = Box.by_uuid(self.get_argument('box_uuid'))
+        if box is not None:
+            ips_string = self.get_argument('ipv6').replace('\n', ',').lower()
+            ips = filter(lambda char: char in "1234567890abcdef:,", ips_string).split(",")
+            for ip in filter(lambda ip: 0 < len(ip), ips):
+                try:
+                    box = Box.by_ip_address(ip)
+                    if box is None:
+                        addr = IpAddress(box_id=box.id, v6=ip)
+                        dbsession.add(addr)
+                    else:
                         errors.append(
-                            "'%s' is not a valid IPv6 address" % str(ip[:39])
+                            "%s has already been assigned to %s." % (ip, box.name,)
                         )
-                dbsession.flush()
-            else:
-                errors.append("Box does not exist")
-            self.render("admin/view/game_objects.html", errors=errors)
+                except ValueError:
+                    errors.append(
+                        "'%s' is not a valid IPv6 address" % str(ip[:39])
+                    )
+            dbsession.flush()
         else:
-            self.render("admin/view/game_objects.html", errors=form.errors)
+            errors.append("Box does not exist")
+        self.render("admin/view/game_objects.html", errors=errors)
 
     def edit_game_level(self):
         ''' Update game level objects '''
-        form = Form(
-            uuid="Select an object",
-            number="Enter a level number",
-            buyout="Enter a buyout value",
-        )
-        if form.validate(self.request.arguments):
-            errors = []
-            level = GameLevel.by_uuid(self.get_argument('uuid'))
-            try:
-                new_number = int(self.get_argument('number', 'NaN'))
-                new_buyout = int(self.get_argument('buyout', 'NaN'))
-                if level.number != new_number and GameLevel.by_number(new_number) is None:
-                    level.number = new_number
-                    dbsession.add(level)
-                    dbsession.flush()
-                    # Fix the linked-list
-                    game_levels = sorted(GameLevel.all())
-                    index = 0
-                    for game_level in game_levels[:-1]:
-                        game_level.next_level_id = game_levels[index + 1].id
-                        dbsession.add(game_level)
-                        index += 1
-                    game_levels[0].number = 0
-                    dbsession.add(game_levels[0])
-                    game_levels[-1].next_level_id = None
-                    dbsession.add(game_levels[-1])
-                    dbsession.flush()
-                if GameLevel.by_number(new_number) is not None:
-                    errors.append("GameLevel number is not unique")
-                if level.buyout != new_buyout:
-                    level.buyout = new_buyout
-                    dbsession.add(level)
-                    dbsession.flush()
-            except ValueError:
-                errors.append(
-                    "That was not a number ... maybe you should go back to school"
-                )
-            self.render("admin/view/game_levels.html", errors=errors)
-        else:
-            self.render("admin/view/game_levels.html", errors=form.errors)
+        errors = []
+        level = GameLevel.by_uuid(self.get_argument('uuid'))
+        try:
+            new_number = int(self.get_argument('number', ''))
+            new_buyout = int(self.get_argument('buyout', ''))
+            if level.number != new_number and GameLevel.by_number(new_number) is None:
+                level.number = new_number
+                dbsession.add(level)
+                dbsession.flush()
+                # Fix the linked-list
+                game_levels = sorted(GameLevel.all())
+                index = 0
+                for game_level in game_levels[:-1]:
+                    game_level.next_level_id = game_levels[index + 1].id
+                    dbsession.add(game_level)
+                    index += 1
+                game_levels[0].number = 0
+                dbsession.add(game_levels[0])
+                game_levels[-1].next_level_id = None
+                dbsession.add(game_levels[-1])
+                dbsession.flush()
+            if GameLevel.by_number(new_number) is not None:
+                errors.append("GameLevel number is not unique")
+            if level.buyout != new_buyout:
+                level.buyout = new_buyout
+                dbsession.add(level)
+                dbsession.flush()
+        except ValueError:
+            errors.append(
+                "That was not a number ... maybe you should go back to school"
+            )
+        self.render("admin/view/game_levels.html", errors=errors)
 
     def box_level(self):
         ''' Changes a boxs level '''
-        form = Form(box_uuid="No box selected", level_uuid="No level selected")
-        if form.validate(self.request.arguments):
-            errors = []
-            box = Box.by_uuid(self.get_argument('box_uuid'))
-            level = GameLevel.by_uuid(self.get_argument('level_uuid'))
-            if box is not None and level is not None:
-                box.game_level_id = level.id
-                dbsession.add(box)
-                dbsession.flush()
-            elif box is None:
-                errors.append("Box does not exist")
-            elif level is None:
-                errors.append("GameLevel does not exist")
-            self.render("admin/view/game_levels.html", errors=errors)
-        else:
-            self.render("admin/view/game_levels.html", errors=form.errors)
+        errors = []
+        box = Box.by_uuid(self.get_argument('box_uuid'))
+        level = GameLevel.by_uuid(self.get_argument('level_uuid'))
+        if box is not None and level is not None:
+            box.game_level_id = level.id
+            dbsession.add(box)
+            dbsession.flush()
+        elif box is None:
+            errors.append("Box does not exist")
+        elif level is None:
+            errors.append("GameLevel does not exist")
+        self.render("admin/view/game_levels.html", errors=errors)
 
     def edit_hint(self):
         ''' Edit a hint object '''
@@ -849,11 +706,11 @@ class AdminEditHandler(BaseHandler):
                 dbsession.flush()
                 self.redirect('/admin/view/market_objects')
             except ValueError:
-                self.render('admin/view/market_objects.html', 
+                self.render('admin/view/market_objects.html',
                     errors=["Invalid price."]
                 )
         else:
-            self.render('admin/view/market_objects.html', 
+            self.render('admin/view/market_objects.html',
                 errors=["Item does not exist."]
             )
 
@@ -934,8 +791,8 @@ class AdminLockHandler(BaseHandler):
         user = User.by_uuid(uuid)
         if user is not None:
             user.locked = False if user.locked else True
-            dbsession.add(user) 
-            dbsession.flush()
+            dbsession.add(user)
+            dbsession.commit()
         self.redirect('/admin/view/user_objects')
 
 
@@ -1007,36 +864,26 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             self.render("public/404.html")
 
     def add_source_code(self):
-        form = Form(
-            box_uuid="Please select a box",
-            price="Please input a price for the source code",
-            description="Please enter a description",
-        )
-        if form.validate(self.request.arguments):
-            box = Box.by_uuid(self.get_argument('box_uuid'))
-            if box is not None:
-                if not 'source_archive' in self.request.files and 0 < len(self.request.files['source_archive']):
-                    self.render('admin/upgrades/source_code_market.html',
-                        errors=["No file data"]
-                    )
-                else:
-                    try:
-                        price = abs(int(self.get_argument('price', 'NaN')))
-                        self.create_source_code(box, price)
-                        self.render('admin/upgrades/source_code_market.html',
-                            errors=None
-                        )
-                    except ValueError:
-                        self.render('admin/upgrades/source_code_market.html',
-                            errors=["Price must be an integer"]
-                        )
-            else:
+        box = Box.by_uuid(self.get_argument('box_uuid'))
+        if box is not None:
+            if not 'source_archive' in self.request.files and 0 < len(self.request.files['source_archive']):
                 self.render('admin/upgrades/source_code_market.html',
-                    errors=["The selected box does not exist"]
+                    errors=["No file data"]
                 )
+            else:
+                try:
+                    price = abs(int(self.get_argument('price', 'NaN')))
+                    self.create_source_code(box, price)
+                    self.render('admin/upgrades/source_code_market.html',
+                        errors=None
+                    )
+                except ValueError:
+                    self.render('admin/upgrades/source_code_market.html',
+                        errors=["Price must be an integer"]
+                    )
         else:
             self.render('admin/upgrades/source_code_market.html',
-                errors=form.errors
+                errors=["The selected box does not exist"]
             )
 
     def create_source_code(self, box, price):
@@ -1064,9 +911,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
 
     def get_checksum(self, data):
         ''' Calculate checksum of file data '''
-        checksum = md5()
-        checksum.update(data)
-        return checksum.hexdigest()
+        return md5(data).hexdigest()
 
     def delete_source_code(self):
         ''' Delete source code file '''
@@ -1310,6 +1155,7 @@ class AdminExportHandler(BaseHandler):
         ''' Export to document formats '''
         uri = {
             'xml': self.export_xml,
+            'json': self.export_json,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -1344,6 +1190,9 @@ class AdminExportHandler(BaseHandler):
             corp.to_xml(corps_elem)
         xml_dom = defusedxml.minidom.parseString(ET.tostring(root))
         return xml_dom.toprettyxml()
+
+    def export_json(self):
+        pass
 
 
 class AdminImportXmlHandler(BaseHandler):

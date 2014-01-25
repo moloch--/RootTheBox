@@ -3,6 +3,7 @@
 {% block title %}Game Levels{% end %}
 
 {% block content %}
+{% from models.GameLevel import GameLevel %}
     <!-- Edit Level -->
     <div id="editLevelModal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
@@ -48,7 +49,6 @@
                     <label class="control-label" for="user_team_uuid">Current Level</label>
                     <div class="controls">
                         <select id="game_level_uuid" name="level_uuid">
-                            {% from models import GameLevel %}
                             {% for level in GameLevel.all() %}
                                 <option value="{{ level.uuid }}">{{ level.number }}</option>
                             {% end %}
@@ -80,15 +80,17 @@
         }
     </script>
     <div class="container">
-        <h1>Game Levels</h1>
+        <h1>
+            <i class="fa fa-level-up"></i>
+            Game Levels
+        </h1>
         <br />
-        {% from models import GameLevel %}
         {% for level in GameLevel.all() %}
             <div class="well">
                 <h2 style="display:inline;">Level #{{ level.number }}&nbsp;</h2>
                 <h3 style="display:inline;">(Buyout ${{ level.buyout }})&nbsp;&nbsp;&nbsp;</h3>
-                <a class="btn" data-toggle="modal" href="#editLevelModal" 
-                    onclick="get_details('game_level', '{{ level.uuid }}')">
+                <a class="btn" data-toggle="modal" href="#editLevelModal" onclick="get_details('game_level', '{{ level.uuid }}')">
+                    <i class="fa fa-pencil"></i>
                     Edit Level
                 </a>
                 <br />
