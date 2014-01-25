@@ -26,7 +26,7 @@ from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Integer, String
 from models.BaseModels import DatabaseObject
-from models import DBSession
+from models import dbsession
 
 
 class MarketItem(DatabaseObject):
@@ -41,22 +41,22 @@ class MarketItem(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession.query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return DBSession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_uuid(cls, uuid):
+    def by_uuid(cls, _uuid):
         ''' Returns a the object with a given uuid '''
-        return DBSession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_name(cls, name):
+    def by_name(cls, _name):
         ''' Returns an object with a given name '''
-        return DBSession.query(cls).filter_by(name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
 
     def to_dict(self):
         ''' Returns object data as dictionary object '''

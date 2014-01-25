@@ -74,7 +74,6 @@ class LoginHandler(BaseHandler):
         else:
             self.failed_login()
 
-
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''
         logging.info("Successful login: %s from %s" % (

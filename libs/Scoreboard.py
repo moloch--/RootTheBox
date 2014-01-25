@@ -24,7 +24,7 @@ Created on Oct 04, 2012
 import json
 import logging
 
-from models import DBSession
+from models import dbsession
 from models.Team import Team
 from libs.BotManager import BotManager
 from libs.ConfigManager import ConfigManager
@@ -68,9 +68,9 @@ def score_bots():
             logging.info("%s was awarded $%d for controlling %s bot(s)" % (
                 team.name, reward, len(bots),
             ))
-            dbsession = DBSession()
             bot_manager.add_rewards(team.name, config.bot_reward)
             bot_manager.notify_monitors(team.name)
             team.money += reward
             dbsession.add(team)
-            dbsession.commit()
+            dbsession.flush()
+    dbsession.commit()

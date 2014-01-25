@@ -27,7 +27,7 @@ import xml.etree.cElementTree as ET
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer, Boolean, String
-from models import DBSession
+from models import dbsession
 from models.Box import Box
 from models.BaseModels import DatabaseObject
 
@@ -53,32 +53,32 @@ class Flag(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
         ''' Returns a the object with id of _id '''
-        return DBSession().query(cls).filter_by(id=_id).first()
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_name(cls, _name):
         ''' Returns a the object with name of _name '''
-        return DBSession().query(cls).filter_by(name=unicode(_name)).first()
+        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return DBSession().query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_token(cls, _token):
         ''' Return and object based on a token '''
-        return DBSession().query(cls).filter_by(token=unicode(_token)).first()
+        return dbsession.query(cls).filter_by(token=unicode(_token)).first()
 
     @classmethod
     def by_type(cls, _type):
         ''' Return and object based on a token '''
-        return DBSession().query(cls).filter_by(_type=unicode(_type)).all()
+        return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
 
     @classmethod
     def create_flag(cls, _type, box, name, raw_token, description, value):
@@ -158,11 +158,11 @@ class Flag(DatabaseObject):
     def to_xml(self, parent):
         ''' Write attributes to XML doc '''
         flag_elem = ET.SubElement(parent, "flag")
-        flag_elem.set("type", str(self._type))
-        ET.SubElement(flag_elem, "name").text = str(self.name)
-        ET.SubElement(flag_elem, "token").text = str(self.token)
-        ET.SubElement(flag_elem, "description").text = str(self.description)
-        ET.SubElement(flag_elem, "value").text = str(self.value)
+        flag_elem.set("type", unicode(self._type))
+        ET.SubElement(flag_elem, "name").text = unicode(self.name)
+        ET.SubElement(flag_elem, "token").text = unicode(self.token)
+        ET.SubElement(flag_elem, "description").text = unicode(self.description)
+        ET.SubElement(flag_elem, "value").text = unicode(self.value)
 
     def to_dict(self):
         ''' Returns public data as a dict '''

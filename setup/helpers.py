@@ -26,7 +26,7 @@ import logging
 
 from uuid import uuid4
 from libs.ConsoleColors import *
-from models import DBSession
+from models import dbsession
 from models.GameLevel import GameLevel
 from models.IpAddress import IpAddress
 from models.Flag import Flag
@@ -54,7 +54,6 @@ def create_game_level(number, buyout):
     logging.debug("Updating game level linked list ...")
     game_levels = sorted(game_levels)
     index = 0
-    dbsession = DBSession()
     for level in game_levels[:-1]:
         level.next_level_id = game_levels[index + 1].id
         dbsession.add(level)
@@ -78,7 +77,6 @@ def create_team(name, motto):
     )
     level_0 = GameLevel.all()[0]
     team.game_levels.append(level_0)
-    dbsession = DBSession()
     dbsession.add(team)
     dbsession.commit()
     return team
@@ -93,7 +91,6 @@ def create_user(handle, password, bank_password, team):
         handle=unicode(handle[:16]),
         team_id=team.id,
     )
-    dbsession = DBSession()
     dbsession.add(user)
     dbsession.flush()
     user.password = password
@@ -112,7 +109,6 @@ def create_corporation(name, description="No description"):
         name=unicode(name[:32]),
         description=unicode(description[:1024]),
     )
-    dbsession = DBSession()
     dbsession.add(corp)
     dbsession.commit()
     return corp
@@ -124,7 +120,6 @@ def __mkipv4__(box, address):
         v4=unicode(address),
     )
     box.ip_addresses.append(ip)
-    dbsession = DBSession()
     dbsession.add(ip)
     dbsession.add(box)
     dbsession.commit()
@@ -139,7 +134,6 @@ def __mkipv6__(box, address):
         v6=unicode(address),
     )
     box.ip_addresses.append(ip)
-    dbsession = DBSession()
     dbsession.add(ip)
     dbsession.add(box)
     dbsession.commit()
@@ -161,7 +155,6 @@ def create_box(name, corporation, difficulty, game_level, description,
         game_level_id=game_level.id,
         _description=unicode(description[:1024]),
     )
-    dbsession = DBSession()
     dbsession.add(box)
     dbsession.commit()
     if avatar is not None and os.path.exists(avatar):
@@ -191,7 +184,6 @@ def set_avatar(box, favatar):
             avatar = open(file_path, 'wb')
             avatar.write(data)
             avatar.close()
-            dbsession = DBSession()
             dbsession.add(box)
             dbsession.commit()
     f.close()
@@ -224,7 +216,6 @@ def create_flag(name, token, value, box, _type, description="No description", is
         value=abs(int(value)),
         box_id=box.id,
     )
-    dbsession = DBSession()
     dbsession.add(flag)
     dbsession.flush()
     return flag
@@ -237,7 +228,6 @@ def create_hint(box, price, description):
         price=abs(int(price)),
         description=unicode(description[:256])
     )
-    dbsession = DBSession()
     dbsession.add(hint)
     dbsession.flush()
     return hint

@@ -38,7 +38,7 @@
         <h4 style="display:inline;float:right;"><a href="/notifications/all">See All &raquo;</a>
         </h4>
         <hr>
-        {% from models import Notification %}
+        {% from models.Notification import Notification %}
         {% for notify in Notification.by_user_id(user.id)[-5:] %}
         <div class="row">
             <div class="span1 offset1">

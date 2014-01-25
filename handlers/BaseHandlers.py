@@ -29,7 +29,7 @@ import logging
 import pylibmc
 import traceback
 
-from models import DBSession
+from models import dbsession
 from models.User import User
 from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
@@ -42,8 +42,6 @@ from tornado.websocket import WebSocketHandler
 class BaseHandler(RequestHandler):
     ''' User handlers extend this class '''
 
-    _dbsession = None
-
     # JQuery requires an style 'unsafe-inline'
     default_csp = "default-src 'self';" + \
         "script-src 'self';" + \
@@ -54,6 +52,7 @@ class BaseHandler(RequestHandler):
     def initialize(self):
         ''' Setup sessions, etc '''
         self.session = None
+        self._dbsession = dbsession
         self.new_events = []
         self.event_manager = self.application.settings['event_manager']
         self.config = ConfigManager.instance()
@@ -138,8 +137,6 @@ class BaseHandler(RequestHandler):
     @property
     def dbsession(self):
         ''' Lazily start a new dbsession '''
-        if _dbsession is None:
-            self._dbsession = DBSession()
         return self._dbsession
 
     def get(self, *args, **kwargs):

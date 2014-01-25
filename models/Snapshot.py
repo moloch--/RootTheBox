@@ -24,7 +24,7 @@ import json
 import datetime
 
 from sqlalchemy.orm import relationship, backref
-from models import DBSession
+from models import dbsession
 from models.Relationships import snapshot_to_snapshot_team
 from models.BaseModels import DatabaseObject
 
@@ -45,12 +45,12 @@ class Snapshot(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
-        return DBSession().query(cls).filter_by(id=identifier).first()
+        return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def to_key(cls, val):
@@ -71,6 +71,3 @@ class Snapshot(DatabaseObject):
             }
         unix_time = self.created - UNIX_EPOCH
         return {'timestamp': unix_time.total_seconds(), 'scoreboard': data}
-
-    def to_json(self):
-        return json.dumps(self.to_dict())

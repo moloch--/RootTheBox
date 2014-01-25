@@ -20,11 +20,13 @@ Created on Mar 11, 2012
 '''
 
 
+import xml.etree.cElementTree as ET
+
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
-from sqlalchemy.types import Integer, Unicode, String
-from models import DBSession
+from sqlalchemy.types import Integer, String
+from models import dbsession
 from models.BaseModels import DatabaseObject
 from tornado import netutil
 
@@ -34,44 +36,28 @@ class IpAddress(DatabaseObject):
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-
-    _v4 = Column(Unicode(16), unique=True)
-    v4 = synonym('_v4', descriptor=property(
-        lambda self: self._v4,
-        lambda self, v4: setattr(
-            self, '_v4', self.__class__.validate_ip(v4))
-    ))
-
-    _v6 = Column(Unicode(40), unique=True)
-    v6 = synonym('_v6', descriptor=property(
-        lambda self: self._v6,
-        lambda self, v6: setattr(
-            self, '_v6', self.__class__.validate_ip(v6))
-    ))
+    _address = Column(String(40), unique=True)
+    version = Column(Integer, default=4, nullable=False)
 
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, identifier):
-        ''' Returns a the object with id of identifier '''
-        return DBSession().query(cls).filter_by(id=identifier).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_address(cls, addr):
         ''' Return and object based on an address '''
-        dbsession = DBSession()
-        ip = dbsession.query(cls).filter_by(v4=unicode(addr)).first()
-        if ip is None:
-            ip = dbsession.query(cls).filter_by(v6=unicode(addr)).first()
-        return ip
+        return dbsession.query(cls).filter_by(address=addr).first()
 
     @classmethod
     def validate_ip(cls, ip_address):
@@ -81,23 +67,27 @@ class IpAddress(DatabaseObject):
         else:
             raise ValueError("Invalid IP Address: '%s'" % str(ip_address))
 
-    def is_v4(self):
-        return bool(self.v4 is not None)
+    @property
+    def address(self):
+        return self._address
 
-    def is_v6(self):
-        return bool(self.v6 is not None)
+    @address.setter
+    def address(self, value):
+        self._address = value
+
+    def to_xml(self, parent):
+        ip_elem = ET.SubElement(parent, "ip")
+        ip_elem.set("version", str(self.version))
+        ET.SubElement(ip_elem, "address").text = str(self.address)
 
     def __repr__(self):
-        return "<IpAddress - v4: %s, v6: %s>" % (str(self.v4), str(self.v6))
+        return "<IpAddress - %s>" % self.address
 
     def __str__(self):
-        if self.v6 is not None:
-            return self.v6
-        else:
-            return self.v4
+        return self.address
 
     def __eq__(self, other):
-        if self.v6 is not None:
-            return self.v6 == other.v6
-        else:
-            return self.v4 == other.v4
+        return self.address == other.address
+
+    def __ne__(self, other):
+        return not self == other

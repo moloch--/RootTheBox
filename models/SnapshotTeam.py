@@ -23,7 +23,7 @@ Created on Mar 11, 2012
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer
-from models import DBSession
+from models import dbsession
 from models.Team import Team
 from models.Relationships import snapshot_team_to_flag, snapshot_team_to_game_level
 from models.BaseModels import DatabaseObject
@@ -50,6 +50,6 @@ class SnapshotTeam(DatabaseObject):
 
     @property
     def name(self):
-        return DBSession().query(Team._name).filter_by(
+        return dbsession.query(Team._name).filter_by(
             id=self.team_id
         ).first()[0]

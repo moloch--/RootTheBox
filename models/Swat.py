@@ -25,7 +25,7 @@ from libs.ConfigManager import ConfigManager
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Integer, Boolean, String
-from models import DBSession
+from models import dbsession
 from models.User import User
 from models.BaseModels import DatabaseObject
 
@@ -45,79 +45,79 @@ class Swat(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def all_pending(cls):
-        return DBSession().query(cls).filter(
+        return dbsession.query(cls).filter(
             and_(cls.accepted == False, cls.completed == False)
         ).order_by(desc(cls.created)).all()
 
     @classmethod
     def all_in_progress(cls):
-        return DBSession().query(cls).filter(
+        return dbsession.query(cls).filter(
             and_(cls.accepted == True, cls.completed == False)
         ).order_by(desc(cls.created)).all()
 
     @classmethod
     def all_completed(cls):
-        return DBSession().query(cls).filter_by(completed=True).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).filter_by(completed=True).order_by(desc(cls.created)).all()
 
     @classmethod
     def pending_by_target_id(cls, uid):
-        return DBSession().query(cls).filter_by(completed=False).filter(
+        return dbsession.query(cls).filter_by(completed=False).filter(
             and_(cls.accepted == False, cls.target_id == uid)
         ).all()
 
     @classmethod
     def in_progress_by_target_id(cls, uid):
-        return DBSession().query(cls).filter(
+        return dbsession.query(cls).filter(
             and_(cls.accepted == True, cls.completed == False)
         ).filter_by(target_id=uid).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
-        return DBSession().query(cls).filter_by(id=ident).first()
+        return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Returns a the object with given uuid'''
-        return DBSession().query(cls).filter_by(uuid=uuid).first()
+        return dbsession.query(cls).filter_by(uuid=uuid).first()
 
     @classmethod
     def by_user_id(cls, uid):
         ''' Return all objects based on user id '''
-        return DBSession().query(cls).filter_by(user_id=uid).all()
+        return dbsession.query(cls).filter_by(user_id=uid).all()
 
     @classmethod
     def by_target_id(cls, uid):
         ''' Return all objects based on target id '''
-        return DBSession().query(cls).filter_by(target_id=uid).all()
+        return dbsession.query(cls).filter_by(target_id=uid).all()
 
     @classmethod
     def count_completed_by_target_id(cls, uid):
         ''' Return the number of completed bribes in database '''
-        return DBSession().query(cls).filter(
+        return dbsession.query(cls).filter(
             and_(cls.completed == True, cls.target_id == uid)
         ).count()
 
     @classmethod
     def ordered(cls):
         ''' Return all bribes in chronological order '''
-        return DBSession().query(cls).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).order_by(desc(cls.created)).all()
 
     @classmethod
     def ordered_by_user_id(cls, uid):
         ''' Return all bribes for user id in chronological order '''
-        return DBSession().query(cls).filter_by(user_id=uid).order_by(
+        return dbsession.query(cls).filter_by(user_id=uid).order_by(
             desc(cls.created)
         ).all()
 
     @classmethod
     def ordered_by_target_id(cls, uid):
         ''' Return all bribes for target id in chronological order '''
-        return DBSession().query(cls).filter_by(target_id=uid).order_by(
+        return dbsession.query(cls).filter_by(target_id=uid).order_by(
             desc(cls.created)
         ).all()
 

@@ -25,7 +25,7 @@ from string import ascii_letters, digits
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer, Boolean, String
-from models import DBSession
+from models import dbsession
 from models.BaseModels import DatabaseObject
 
 
@@ -53,27 +53,27 @@ class Theme(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Return all objects '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
         ''' Return the object whose id is _id '''
-        return DBSession().query(cls).filter_by(id=_id).first()
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return the object whose uuid is _uuid '''
-        return DBSession().query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_name(cls, _name):
         ''' Return the object whose name is _name '''
-        return DBSession().query(cls).filter_by(name=_name).first()
+        return dbsession.query(cls).filter_by(name=_name).first()
 
     @classmethod
     def by_cssfile(cls, _cssfile):
         ''' Return the object whose name is theme_name '''
-        return DBSession().query(cls).filter_by(cssfile=_cssfile).first()
+        return dbsession.query(cls).filter_by(cssfile=_cssfile).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):

@@ -21,7 +21,7 @@ Created on Sep 20, 2012
 
 
 from uuid import uuid4
-from models import DBSession
+from models import dbsession
 from models.Notification import Notification
 from models.User import User
 
@@ -179,7 +179,6 @@ class Notifier(object):
         )
         if icon is not None:
             notification.icon = icon
-        dbsession = DBSession()
         dbsession.add(notification)
         dbsession.commit()
 
@@ -195,6 +194,5 @@ class Notifier(object):
         )
         if icon is not None:
             notification.icon = icon
-        dbsession = DBSession()
         dbsession.add(notification)
         dbsession.commit()

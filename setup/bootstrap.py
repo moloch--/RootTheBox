@@ -27,14 +27,14 @@ import getpass
 
 from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
-from models import DBSession
+from models import dbsession
 from models.Permission import Permission
 from models.Theme import Theme
 from models.MarketItem import MarketItem
 from models.GameLevel import GameLevel
 from models.User import User, ADMIN_PERMISSION
 
-dbsession = DBSession()
+
 # Fills the database with some startup data.
 config = ConfigManager.instance()
 password = ""
@@ -136,7 +136,7 @@ admin_permission = Permission(
     user_id=admin_user.id
 )
 dbsession.add(admin_permission)
-dbsession.flush()
+dbsession.commit()
 
 # Display Details
 if config.bootstrap == 'developement':

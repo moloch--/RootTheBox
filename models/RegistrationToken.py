@@ -22,30 +22,32 @@ Created on Sep 22, 2012
 
 from os import urandom
 from sqlalchemy import Column
-from sqlalchemy.types import Unicode, Boolean
-from models import DBSession
+from sqlalchemy.types import String, Boolean
+from models import dbsession
 from models.BaseModels import DatabaseObject
+
+
+
+gen_token = lambda: urandom(3).encode('hex')
 
 
 class RegistrationToken(DatabaseObject):
     ''' User definition '''
 
-    value = Column(Unicode(6), unique=True, nullable=False,
-        default=lambda: unicode(urandom(3).encode('hex'))
-    )
+    value = Column(String(6), unique=True, nullable=False, default=gen_token)
     used = Column(Boolean, nullable=False, default=False)
 
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
-        return DBSession().query(cls).filter_by(id=ident).first()
+        return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_value(cls, value):
         ''' Returns a the object with value of value '''
-        return DBSession().query(cls).filter_by(value=unicode(value)).first()
+        return dbsession.query(cls).filter_by(value=unicode(value)).first()

@@ -26,7 +26,7 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, asc
 from sqlalchemy.types import Unicode, Integer, String
 from sqlalchemy.orm import relationship, backref
-from models import DBSession
+from models import dbsession
 from models.BaseModels import DatabaseObject
 
 
@@ -46,28 +46,28 @@ class GameLevel(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession.query(cls).order_by(
+        return dbsession.query(cls).order_by(
             asc(cls.number)
         ).all()
 
     @classmethod
     def count(cls):
-        return DBSession.query(cls).count()
+        return dbsession.query(cls).count()
 
     @classmethod
     def by_id(cls, _id):
         ''' Returns a the object with id of _id '''
-        return DBSession.query(cls).filter_by(id=_id).first()
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a _uuid '''
-        return DBSession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_number(cls, _number):
         ''' Returns a the object with number of number '''
-        return DBSession.query(cls).filter_by(number=_number).first()
+        return dbsession.query(cls).filter_by(number=_number).first()
 
     @property
     def flags(self):

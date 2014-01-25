@@ -28,7 +28,6 @@ be purchased from the "Black Market" (see markethandlers.py)
 import logging
 
 from BaseHandlers import BaseHandler
-from models import DBSession
 from models.WallOfSheep import WallOfSheep
 from models.Team import Team
 from models.Box import Box

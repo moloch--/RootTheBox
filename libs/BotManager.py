@@ -36,7 +36,7 @@ from sqlalchemy.sql import and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.types import DateTime, Integer, Unicode
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
-from models import DBSession
+from models import dbsession
 from models.Box import Box
 
 
@@ -44,8 +44,6 @@ class MemoryDatabaseObject(object):
     '''
     Base object for in-memory database
     '''
-
-    dbsession = None
 
     @declared_attr
     def __tablename__(self):
@@ -80,12 +78,12 @@ class Bot(MemoryBaseObject):
     @property
     def box(self):
         ''' Pull box object from persistant db '''
-        return self.dbsession.query(Box).by_uuid(self.box_uuid)
+        return dbsession.query(Box).by_uuid(self.box_uuid)
 
     @property
     def team(self):
         ''' Pull box object from persistant db '''
-        return self.dbsession.query(Box).by_uuid(self.box_uuid)
+        return dbsession.query(Box).by_uuid(self.box_uuid)
 
     def to_dict(self):
         return {
@@ -113,7 +111,7 @@ class BotManager(object):
         Session = sessionmaker(bind=self.sqlite_engine, autocommit=True)
         self.botdb = Session(autoflush=True)
         MemoryBaseObject.metadata.create_all(self.sqlite_engine)
-        self.dbsession = DBSession()
+        self.dbsession = dbsession
 
     def all(self):
         return self.botdb.query(Bot).all()

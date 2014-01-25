@@ -25,9 +25,9 @@ from random import randint
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref, synonym
 from sqlalchemy.types import Integer, Unicode, String
-from models import DBSession
+from models import dbsession
 from models.BaseModels import DatabaseObject
-from models.Relationships import team_to_box, team_to_item,   \
+from models.Relationships import team_to_box, team_to_item, \
     team_to_flag, team_to_game_level, team_to_source_code, \
     team_to_hint
 from string import ascii_letters, digits
@@ -88,27 +88,27 @@ class Team(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def ranks(cls):
         ''' Returns a list of all objects in the database '''
-        return sorted(DBSession().query(cls).all())
+        return sorted(dbsession.query(cls).all())
 
     @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
-        return DBSession().query(cls).filter_by(id=identifier).first()
+        return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_name(cls, team_name):
         ''' Return the team object based on "team_name" '''
-        return DBSession().query(cls).filter_by(name=unicode(team_name)).first()
+        return dbsession.query(cls).filter_by(name=unicode(team_name)).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):

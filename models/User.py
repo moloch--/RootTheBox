@@ -34,7 +34,7 @@ from pbkdf2 import PBKDF2
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
-from models import DBSession
+from models import dbsession
 from models.Team import Team
 from models.Permission import Permission
 from models.MarketItem import MarketItem
@@ -45,8 +45,14 @@ from string import ascii_letters, digits, printable
 ### Constants
 ADMIN_PERMISSION = u'admin'
 DEFAULT_HASH_ALGORITHM = u'md5'
-ITERATE = 0xbad
+ITERATE = 0xbad  # 2989
 
+# Change this for your production deployments
+# NOTE: Passwords are also individually salted
+STATIC_SALT = """
+    Just a little extra something so you cannot crack the passwords
+    based soley on information stored in the database.
+"""
 
 class User(DatabaseObject):
     ''' User definition '''
@@ -101,7 +107,7 @@ class User(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def all_users(cls):
@@ -113,7 +119,7 @@ class User(DatabaseObject):
     @classmethod
     def not_team(cls, tid):
         ''' Return all users not on a given team, exclude admins '''
-        teams = DBSession().query(cls).filter(cls.team_id != tid).all()
+        teams = dbsession.query(cls).filter(cls.team_id != tid).all()
         return filter(
             lambda user: user.has_permission(ADMIN_PERMISSION) is False, teams
         )
@@ -121,17 +127,17 @@ class User(DatabaseObject):
     @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
-        return DBSession().query(cls).filter_by(id=identifier).first()
+        return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_handle(cls, handle):
         ''' Return the user object whose user is "handle" '''
-        return DBSession().query(cls).filter_by(
+        return dbsession.query(cls).filter_by(
             handle=unicode(handle.lower())
         ).first()
 
@@ -144,10 +150,11 @@ class User(DatabaseObject):
     def _hash_bank_password(cls, algorithm_name, password):
         '''
         Hashes the password using Md5/Sha1/Sha256/Sha512
-        only used for the admin accounts.
+        only used for the admin accounts.  We only allow
+        whitespace/non-ascii.
         '''
-        password = filter(lambda char: char in printable[:-5], password)
-        password = password.encode('ascii', 'ignore')
+        password = filter(lambda char: char in printable[:-6], password)
+        password = password.encode('ascii')
         if algorithm_name in cls.algorithms:
             algo = cls.algorithms[algorithm_name][0]()
             algo.update(password)
@@ -157,29 +164,17 @@ class User(DatabaseObject):
 
     @classmethod
     def _hash_password(cls, password):
-        return PBKDF2.crypt(password, iterations=ITERATE)
+        return PBKDF2.crypt(password + STATIC_SALT, iterations=ITERATE)
 
     @property
     def permissions(self):
         ''' Return a set with all permissions granted to the user '''
-        return DBSession().query(Permission).filter_by(user_id=self.id)
+        return dbsession.query(Permission).filter_by(user_id=self.id)
 
     @property
     def permissions_names(self):
         ''' Return a list with all permissions accounts granted to the user '''
         return [permission.name for permission in self.permissions]
-
-    @property
-    def team(self):
-        ''' Return a the user's team object '''
-        return DBSession().query(Team).filter_by(id=self.team_id).first()
-
-    @team.setter
-    def team(self, new_team):
-        dbsession = DBSession()
-        self.team_id = new_team.id
-        dbsession.add(self)
-        dbsession.commit()
 
     @property
     def locked(self):
@@ -213,9 +208,7 @@ class User(DatabaseObject):
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
         if self._password is not None:
-            return self.password == PBKDF2.crypt(
-                attempt, self.password,
-            )
+            return self.password == PBKDF2.crypt(attempt + STATIC_SALT, self.password)
         else:
             return False
 

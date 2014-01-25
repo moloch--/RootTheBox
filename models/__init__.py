@@ -30,5 +30,6 @@ _config = ConfigManager.instance()
 engine = create_engine(_config.db_connection)
 setattr(engine, 'echo', False)
 _Session = sessionmaker(bind=engine)
-DBSession = lambda: _Session(autoflush=True)
+StartSession = lambda: _Session(autoflush=True)
 
+dbsession = StartSession()

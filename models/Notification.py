@@ -30,7 +30,7 @@ from libs.SecurityDecorators import debug
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, Integer, Boolean
-from models import DBSession
+from models import dbsession
 from models.BaseModels import DatabaseObject
 
 
@@ -48,35 +48,34 @@ class Notification(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).filter_by(user_id=None).all()
+        return dbsession.query(cls).filter_by(user_id=None).all()
 
     @classmethod
     def by_id(cls, ident):
         ''' Returns a the object with id of ident '''
-        return DBSession().query(cls).filter_by(id=ident).first()
+        return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_user_id(cls, user_id):
         ''' Return notifications for a single user '''
-        return DBSession().query(cls).filter_by(user_id=user_id).order_by(
+        return dbsession.query(cls).filter_by(user_id=user_id).order_by(
             desc(cls.created)
         ).all()
 
     @classmethod
     def new_messages(cls, user_id):
         ''' Return all notification which have not been viewed '''
-        return DBSession().query(cls).filter(
+        return dbsession.query(cls).filter(
             and_(cls.user_id == user_id, cls.viewed == False)
         ).all()
 
     @classmethod
     def by_event_uuid(cls, uuid):
         ''' Always returns anonymous notification '''
-        return DBSession().query(cls).filter_by(event_uuid=uuid).filter_by(user_id=None).first()
+        return dbsession.query(cls).filter_by(event_uuid=uuid).filter_by(user_id=None).first()
 
     @classmethod
     def delivered(cls, user_id, uuid):
-        dbsession = DBSession()
         notify = dbsession.query(cls).filter(
             and_(cls.event_uuid == uuid, cls.user_id == user_id)
         ).first()
@@ -93,6 +92,3 @@ class Notification(DatabaseObject):
             'icon_url': self.icon_url,
         }
 
-    def to_json(self):
-        ''' Creates a JSON version of the notification '''
-        return json.dumps(self.to_dict())

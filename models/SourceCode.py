@@ -23,8 +23,8 @@ Created on Mar 12, 2012
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
-from sqlalchemy.types import Unicode, Integer, String
-from models import DBSession
+from sqlalchemy.types import String, Unicode, Integer, String
+from models import dbsession
 from models.BaseModels import DatabaseObject
 from string import ascii_letters, digits
 
@@ -40,7 +40,7 @@ class SourceCode(DatabaseObject):
     description = Column(Unicode(1024), nullable=False)
     checksum = Column(String(32))
 
-    _file_name = Column(Unicode(64), nullable=False)
+    _file_name = Column(String(64), nullable=False)
     file_name = synonym('_file_name', descriptor=property(
         lambda self: self._file_name,
         lambda self, file_name: setattr(
@@ -50,21 +50,21 @@ class SourceCode(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return DBSession().query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_uuid(cls, uuid):
-        ''' Returns a the object with a given uuid '''
-        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
+    def by_uuid(cls, _uuid):
+        ''' Returns a the object with a given _uuid '''
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_box_id(cls, _id):
-        return DBSession().query(cls).filter_by(box_id=_id).first()
+        return dbsession.query(cls).filter_by(box_id=_id).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):
@@ -77,6 +77,3 @@ class SourceCode(DatabaseObject):
             'price': self.price,
             'description': self.description,
         }
-
-    def __str__(self):
-        return self.file_name.encode('ascii', 'ignore')

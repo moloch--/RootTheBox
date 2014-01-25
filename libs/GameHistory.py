@@ -22,7 +22,7 @@ Created on Nov 11, 2012
 import pylibmc
 import logging
 
-from models import DBSession
+from models import dbsession
 from models.Team import Team
 from models.Snapshot import Snapshot
 from models.SnapshotTeam import SnapshotTeam
@@ -43,11 +43,11 @@ class GameHistory(object):
 
     def __init__(self):
         self.config = ConfigManager.instance()
+        self.dbsession = dbsession
         self.cache = pylibmc.Client([self.config.memcached], binary=True)
         self.epoch = None  # Date/time of first snapshot
         self._load()
         self.event_manager = EventManager.instance()
-        self.dbsession = DBSession()
 
     def _load(self):
         ''' Moves snapshots from db into the cache '''

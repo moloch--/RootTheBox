@@ -27,7 +27,7 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, or_
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String
-from models import DBSession
+from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Relationships import team_to_box
 from models.IpAddress import IpAddress
@@ -42,7 +42,6 @@ class Box(DatabaseObject):
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
-    #sponsor_id = Column(Integer, ForeignKey('sponsor.id'), nullable=True)
     name = Column(Unicode(16), unique=True, nullable=False)
     _description = Column(Unicode(1024))
     difficulty = Column(Unicode(16), nullable=False)
@@ -70,31 +69,29 @@ class Box(DatabaseObject):
         cascade="all, delete-orphan"
     )
 
-    #box_resources = relationship("BoxResource", backref="box")
-
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, identifier):
         ''' Returns a the object with id of identifier '''
-        return DBSession().query(cls).filter_by(id=identifier).first()
+        return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def by_uuid(cls, uuid):
         ''' Return and object based on a uuid '''
-        return DBSession().query(cls).filter_by(uuid=unicode(uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
 
     @classmethod
     def by_name(cls, name):
         ''' Return the box object whose name is "name" '''
-        return DBSession().query(cls).filter_by(name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(name=unicode(name)).first()
 
     @classmethod
     def by_garbage(cls, _garbage):
-        return DBSession().query(cls).filter_by(garbage=_garbage).first()
+        return dbsession.query(cls).filter_by(garbage=_garbage).first()
 
     @classmethod
     def by_ip_address(cls, ip_addr):
@@ -170,9 +167,9 @@ class Box(DatabaseObject):
         ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", str(self.game_level.number))
-        ET.SubElement(box_elem, "name").text = str(self.name)
-        ET.SubElement(box_elem, "description").text = str(self._description)
-        ET.SubElement(box_elem, "difficulty").text = str(self.difficulty)
+        ET.SubElement(box_elem, "name").text = unicode(self.name)
+        ET.SubElement(box_elem, "description").text = unicode(self._description)
+        ET.SubElement(box_elem, "difficulty").text = unicode(self.difficulty)
         ET.SubElement(box_elem, "garbage").text = str(self.garbage)
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", str(len(self.flags)))
@@ -182,6 +179,10 @@ class Box(DatabaseObject):
         hints_elem.set("count", str(len(self.hints)))
         for hint in self.hints:
             hint.to_xml(hints_elem)
+        ips_elem = ET.SubElement(box_elem, "hints")
+        ips_elem.set("count", str(len(self.ips)))
+        for ip in self.ips:
+            ip.to_xml(ips_elem)
         with open('files/avatars/'+self.avatar) as favatar:
             data = favatar.read()
             ET.SubElement(box_elem, "avatar").text = data.encode('base64')

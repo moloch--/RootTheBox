@@ -21,10 +21,13 @@ Created on Mar 14, 2012
 
 
 from tornado.web import UIModule
-from models import User
+from models.User import User
 
 
 class Menu(UIModule):
+
+    # TODO: Put everything in the session that we need to construct the menu
+    #       to avoid having to go to the database to render the menu.
 
     def render(self, *args, **kwargs):
         ''' Renders the top menu '''
@@ -33,7 +36,5 @@ class Menu(UIModule):
             if self.handler.session['menu'] == 'user':
                 return self.render_string('menu/user.html', user=user)
             elif self.handler.session['menu'] == 'admin':
-                return self.render_string('menu/admin.html',
-                    handle=user.handle
-                )
+                return self.render_string('menu/admin.html', handle=user.handle)
         return self.render_string('menu/public.html')

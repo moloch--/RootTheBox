@@ -20,7 +20,7 @@ Created on Mar 15, 2012
 '''
 
 
-from models import DBSession
+from models import dbsession
 from models.BaseModels import DatabaseObject
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
@@ -46,21 +46,21 @@ class FileUpload(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return DBSession().query(cls).all()
+        return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
         ''' Returns a the object with id of _id '''
-        return DBSession().query(cls).filter_by(id=_id).first()
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        return DBSession().query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_file_name(cls, file_name):
         ''' Return the user object whose file name is "file_name" '''
-        return DBSession().query(cls).filter_by(
+        return dbsession.query(cls).filter_by(
             file_name=unicode(file_name)
         ).first()
 

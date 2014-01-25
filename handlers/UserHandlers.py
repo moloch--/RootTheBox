@@ -31,7 +31,6 @@ import logging
 import tornado
 
 from uuid import uuid4
-from models import DBSession
 from models.User import User
 from models.Theme import Theme
 from models.Team import Team
@@ -106,8 +105,8 @@ class SettingsHandler(BaseHandler):
                     avatar = open(file_path, 'wb')
                     avatar.write(self.request.files['avatar'][0]['body'])
                     avatar.close()
-                    dbsession.add(user)
-                    dbsession.flush()
+                    self.dbsession.add(user)
+                    self.dbsession.commit()
                     self.render_page(success=["Successfully changed avatar"])
                 else:
                     self.render_page(
@@ -147,8 +146,8 @@ class SettingsHandler(BaseHandler):
                 self.session.save()
                 user = self.get_current_user()
                 user.theme_id = theme.id
-                dbsession.add(user)
-                dbsession.flush()
+                self.dbsession.add(user)
+                self.dbsession.commit()
                 self.render_page()
             else:
                 self.render_page(errors=["Theme does not exist."])
@@ -161,8 +160,8 @@ class SettingsHandler(BaseHandler):
             if new_password == new_password2:
                 if 16 <= len(new_password) or self.config.debug:
                     user.password = new_password
-                    dbsession.add(user)
-                    dbsession.flush()
+                    self.dbsession.add(user)
+                    self.dbsession.commit()
                     self.render_page(success=["Successfully updated password"])
                 else:
                     self.render_page(errors=["Password must be at least 16 characters"])
