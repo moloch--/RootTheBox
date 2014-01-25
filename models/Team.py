@@ -45,7 +45,7 @@ class Team(DatabaseObject):
     money = Column(Integer, default=500, nullable=False)
 
     members = relationship("User",
-        backref=backref("team", lazy="joined"),
+        backref=backref("team", lazy="select"),
         cascade="all, delete-orphan"
     )
 

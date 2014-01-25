@@ -131,14 +131,9 @@ class User(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_handle(cls, _handle):
+    def by_handle(cls, handle):
         ''' Return the user object whose user is "_handle" '''
-        return dbsession.query(cls).filter_by(handle=unicode(_handle)).first()
-
-    @classmethod
-    def filter_string(cls, string, extra_chars=''):
-        char_white_list = ascii_letters + digits + extra_chars
-        return filter(lambda char: char in char_white_list, string)
+        return dbsession.query(cls).filter_by(_handle=unicode(handle)).first()
 
     @classmethod
     def _hash_bank_password(cls, algorithm_name, password):

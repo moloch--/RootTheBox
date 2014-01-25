@@ -13,17 +13,34 @@
                 <ul class="nav">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-plus"></i>
                             Create
                         <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/admin/create/team">New Team</a>
+                            <li>
+                                <a href="/admin/create/team">
+                                    <i class="fa fa-group"></i>
+                                    New Team
+                                </a>
                             </li>
-                            <li><a href="/admin/create/game_level">New Game Level</a>
+                            <li>
+                                <a href="/admin/create/game_level">
+                                    <i class="fa fa-level-up"></i>
+                                    New Game Level
+                                </a>
                             </li>
-                            <li><a href="/admin/create/corporation">New Corporation</a>
+                            <li>
+                                <a href="/admin/create/corporation">
+                                    <i class="fa fa-building-o"></i>
+                                    New Corporation
+                                </a>
                             </li>
-                            <li><a href="/admin/create/box">New Box</a>
+                            <li>
+                                <a href="/admin/create/box">
+                                    <i class="fa fa-desktop"></i>
+                                    New Box
+                                </a>
                             </li>
                             <li class="dropdown-submenu">
                                 <a tabindex="-1" href="#">
@@ -55,6 +72,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-eye"></i>
                             View &amp; Edit
                             <b class="caret"></b>
                         </a>
@@ -71,6 +89,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-dashboard"></i>
                             Manage Upgrades
                             <b class="caret"></b>
                         </a>
@@ -83,6 +102,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-save"></i>
                             Backup/Restore
                             <b class="caret"></b>
                         </a>
@@ -93,10 +113,18 @@
                             </li>
                         </ul>
                     </li>
-                    <li><a href="/admin/configuration">Configuration</a>
+                    <li>
+                        <a href="/admin/configuration">
+                            <i class="fa fa-gear"></i>
+                            Configuration
+                        </a>
                     </li>
                     {% from libs.ConfigManager import ConfigManager %} {% if ConfigManager.instance().enable_logviewer %}
-                    <li><a href="/admin/logviewer">Log Viewer</a>
+                    <li>
+                        <a href="/admin/logviewer">
+                            <i class="fa fa-bug"></i>
+                            Log Viewer
+                        </a>
                     </li>
                     {% end %} {% if ConfigManager.instance().restrict_registration %}
                     <li class="dropdown">

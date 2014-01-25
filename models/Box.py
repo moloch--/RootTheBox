@@ -24,9 +24,10 @@ import xml.etree.cElementTree as ET
 
 from os import urandom
 from uuid import uuid4
+from libs.ConfigManager import ConfigManager
 from sqlalchemy import Column, ForeignKey, or_
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import Integer, Unicode, String
+from sqlalchemy.types import Integer, Unicode, String, Boolean
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Relationships import team_to_box
@@ -42,11 +43,12 @@ class Box(DatabaseObject):
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
-    name = Column(Unicode(16), unique=True, nullable=False)
+    _name = Column(Unicode(16), unique=True, nullable=False)
     _description = Column(Unicode(1024))
-    difficulty = Column(Unicode(16), nullable=False)
+    _difficulty = Column(Unicode(16))
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
     avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
+    autoformat = Column(Boolean, default=True)
 
     garbage = Column(String(32),
         unique=True,
@@ -56,16 +58,16 @@ class Box(DatabaseObject):
 
     teams = relationship("Team",
         secondary=team_to_box,
-        backref=backref("box", lazy="joined")
+        backref=backref("box", lazy="select")
     )
 
     flags = relationship("Flag",
-        backref=backref("box", lazy="joined"),
+        backref=backref("box", lazy="select"),
         cascade="all, delete-orphan"
     )
 
     ip_addresses = relationship("IpAddress",
-        backref=backref("box", lazy="joined"),
+        backref=backref("box", lazy="select"),
         cascade="all, delete-orphan"
     )
 
@@ -75,9 +77,9 @@ class Box(DatabaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, identifier):
-        ''' Returns a the object with id of identifier '''
-        return dbsession.query(cls).filter_by(id=identifier).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, uuid):
@@ -109,6 +111,16 @@ class Box(DatabaseObject):
             return None
 
     @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not 3 < len(value) < 16:
+            raise ValueError("Name must be 3 - 16 characters")
+        self._name = unicode(value)
+
+    @property
     def description(self):
         '''
         We have to ensure that the description text is formatted correctly,
@@ -116,21 +128,36 @@ class Box(DatabaseObject):
         split all of the text and insert newlines every 70 chars +2 whitespace
         at be beginning of each line, so the indents line up nicely.
         '''
-        index, step = 0, 70
-        ls = [' ']
-        if 0 < len(self._description):
-            text = self._description.replace('\n', '')
-            while index < len(text):
-                ls.append("  "+text[index: index + step])
-                index += step
+        if self.autoformat:
+            index, step = 0, 70
+            ls = [' ']
+            if 0 < len(self._description):
+                text = self._description.replace('\n', '')
+                while index < len(text):
+                    ls.append("  " + text[index: index + step])
+                    index += step
+            else:
+                ls.append("  No information on file.")
+            ls.append("\n  Reported Difficulty: %s\n" % self.difficulty)
+            return unicode("\n".join(ls))
         else:
-            ls.append("  No information on file.")
-        ls.append("\n  Reported Difficulty: %s\n" % self.difficulty)
-        return "\n".join(ls)
+            return self._description
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value[:1024])
+        if 1024 < len(value):
+            raise ValueError("Description must be less than 1024 characters")
+        self._description = unicode(value)
+
+    @property
+    def difficulty(self):
+        return self._difficulty if len(self._difficulty) else u"Unknown"
+
+    @difficulty.setter
+    def difficulty(self, value):
+        if 16 < len(value):
+            raise ValueError("Difficulty must be less than 16 characters")
+        self._difficulty = unicode(value)
 
     @property
     def ips(self):
@@ -169,7 +196,7 @@ class Box(DatabaseObject):
         box_elem.set("gamelevel", str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = unicode(self.name)
         ET.SubElement(box_elem, "description").text = unicode(self._description)
-        ET.SubElement(box_elem, "difficulty").text = unicode(self.difficulty)
+        ET.SubElement(box_elem, "difficulty").text = unicode(self._difficulty)
         ET.SubElement(box_elem, "garbage").text = str(self.garbage)
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", str(len(self.flags)))
@@ -183,7 +210,8 @@ class Box(DatabaseObject):
         ips_elem.set("count", str(len(self.ips)))
         for ip in self.ips:
             ip.to_xml(ips_elem)
-        with open('files/avatars/'+self.avatar) as favatar:
+        config = ConfigManager.instance()
+        with open(config.avatar_dir + self.avatar) as favatar:
             data = favatar.read()
             ET.SubElement(box_elem, "avatar").text = data.encode('base64')
 

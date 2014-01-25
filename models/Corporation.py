@@ -33,12 +33,11 @@ from models.BaseModels import DatabaseObject
 class Corporation(DatabaseObject):
     ''' Corporation definition '''
 
-    name = Column(Unicode(32), unique=True, nullable=False)
+    _name = Column(Unicode(32), unique=True, nullable=False)
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    description = Column(Unicode(1024), nullable=False)
 
     boxes = relationship("Box",
-        backref=backref("corporation", lazy="joined"),
+        backref=backref("corporation", lazy="select"),
         cascade="all, delete-orphan"
     )
 
@@ -66,6 +65,16 @@ class Corporation(DatabaseObject):
         ''' Return an object based on uuid '''
         return dbsession.query(cls).filter_by(uuid=uuid).first()
 
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not 3 < len(value) < 32:
+            raise ValueError("Corporation name must be 3 - 32 characters")
+        self._name = unicode(value)
+
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
         return {
@@ -83,6 +92,9 @@ class Corporation(DatabaseObject):
         boxes_elem.set("count", str(len(self.boxes)))
         for box in self.boxes:
             box.to_xml(boxes_elem)
+
+    def __len__(self):
+        return len(self.boxes)
 
     def __str__(self):
         return self.name

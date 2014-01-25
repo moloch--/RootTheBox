@@ -42,9 +42,9 @@ class Flag(DatabaseObject):
     ''' Flag definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    name = Column(Unicode(32), nullable=False)
+    _name = Column(Unicode(32), nullable=False)
     token = Column(Unicode(256), nullable=False)
-    description = Column(Unicode(256), nullable=False)
+    _description = Column(Unicode(256), nullable=False)
     value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
@@ -88,8 +88,6 @@ class Flag(DatabaseObject):
              FLAG_REGEX: cls._create_flag_regex,
               FLAG_FILE: cls._create_flag_file,
         }
-        name = unicode(name)
-        description = unicode(description)
         if cls.by_name(name) is not None:
             raise ValueError('Flag name already exists in database')
         if not isinstance(value, int):
@@ -139,6 +137,24 @@ class Flag(DatabaseObject):
     @property
     def game_level(self):
         return self.box.game_level
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not 3 < len(value) < 16:
+            raise ValueError("Flag name must be 3 - 16 characters")
+        self._name = unicode(value)
+
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        self._description = unicode(value)
 
     @property
     def is_file(self):

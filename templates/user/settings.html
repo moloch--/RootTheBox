@@ -3,7 +3,8 @@
 {% block title %}Settings{% end %}
 
 {% block content %}
-    {% include ../notifier.html %}
+{% from models.Theme import Theme %}
+{% include ../notifier.html %}
     <div class="container">
         <h1>Settings</h1>
         <br />
@@ -27,7 +28,7 @@
         {% end %}
         <div class="row">
             <div class="span5 well">
-                <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">  
+                <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
                     <legend>Change Avatar</legend>
                     <div class="control-group">
@@ -45,7 +46,7 @@
                 </form>
             </div>
             <div class="span5 well">
-                <form action="/user/settings/theme" method="post">  
+                <form action="/user/settings/theme" method="post">
                     {% raw xsrf_form_html() %}
                     <legend>Change Theme</legend>
                     <h4>(Current theme: {{ current_theme.name }})</h4>
@@ -54,7 +55,6 @@
                         <div class="controls">
                             <select name="theme_uuid">
                                 <option value=""></option>
-                                {% from models import Theme %}
                                 {% for theme in Theme.all() %}
                                     <option value="{{ theme.uuid }}">{{ theme.name }}</option>
                                 {% end %}
@@ -70,7 +70,7 @@
             </div>
         </div>
         <div class="span10 well">
-            <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">  
+            <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">
                 {% raw xsrf_form_html() %}
                 <legend>Login Password</legend>
                 <div class="control-group">
@@ -114,7 +114,7 @@
                         <input type="password" name="new_bpassword" id="new_bpassword" placeholder="New Password" />
                     </div>
                 </div>
-                {% module Recaptcha() %}    
+                {% module Recaptcha() %}
                 <div class="control-group">
                     <div class="controls">
                         <button class="btn btn-primary" type="submit"> Update Bank Password </button>
