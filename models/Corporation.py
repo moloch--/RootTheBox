@@ -38,7 +38,7 @@ class Corporation(DatabaseObject):
 
     boxes = relationship("Box",
         backref=backref("corporation", lazy="select"),
-        cascade="all, delete-orphan"
+        cascade="all,delete,delete-orphan"
     )
 
     @classmethod

@@ -135,14 +135,35 @@ class TestBox(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.box.description = "A" * 1030
 
-'''
+
 class TestFlag(unittest.TestCase):
 
     def setUp(self):
         self.box, self.corp = create_box()
-        self.static_flag = Flag.create_flag()
-        self.regex_flag = Flag.create_flag()
-        self.file_flag = Flag.create_flag()
+        self.static_flag = Flag.create_flag(
+            _type=FLAG_STATIC,
+            box=self.box,
+            name="Static Flag",
+            raw_token="statictoken",
+            description="A static test token",
+            value=100,
+        )
+        self.regex_flag = Flag.create_flag(
+            _type=FLAG_REGEX,
+            box=self.box,
+            name="Regex Flag",
+            raw_token="(f|F)oobar",
+            description="A regex test token",
+            value=200,
+        )
+        self.file_flag = Flag.create_flag(
+            _type=FLAG_FILE,
+            box=self.box,
+            name="File Flag",
+            raw_token="fdata",
+            description="A file test token",
+            value=300,
+        )
         dbsession.add(self.static_flag)
         dbsession.add(self.regex_flag)
         dbsession.add(self.file_flag)
@@ -152,6 +173,21 @@ class TestFlag(unittest.TestCase):
         dbsession.delete(self.corp)
         dbsession.commit()
 
+    def test_name(self):
+        with self.assertRaises(ValueError):
+            self.static_flag.name = ""
+        with self.assertRaises(ValueError):
+            self.static_flag.name = "A" * 20
+
     def test_static_capture(self):
-        pass
-'''
+        assert self.static_flag.capture("statictoken")
+        assert not self.static_flag.capture("nottoke")
+
+    def test_regex_capture(self):
+        assert self.regex_flag.capture("foobar")
+        assert self.regex_flag.capture("Foobar")
+        assert not self.regex_flag.capture("asdf")
+
+    def test_file_capture(self):
+        assert self.file_flag.capture("fdata")
+        assert not self.file_flag.capture("other")

@@ -42,8 +42,8 @@ class Flag(DatabaseObject):
     ''' Flag definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    _name = Column(Unicode(32), nullable=False)
-    token = Column(Unicode(256), nullable=False)
+    _name = Column(Unicode(16), nullable=False)
+    _token = Column(Unicode(256), nullable=False)
     _description = Column(Unicode(256), nullable=False)
     value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
@@ -110,19 +110,17 @@ class Flag(DatabaseObject):
     @classmethod
     def _create_flag_regex(cls, box,  name, raw_token, description, value):
         ''' Check flag regex specific parameters '''
-        token = unicode(raw_token)
         try:
-            re.compile(token)
+            re.compile(raw_token)
         except:
             raise ValueError('Flag token is not a valid regex')
-        if cls.by_token(token) is not None:
+        if cls.by_token(raw_token) is not None:
             raise ValueError('Flag token already exists in database')
-        return cls(box_id=box.id, name=name, token=token, description=description, value=value)
+        return cls(box_id=box.id, name=name, token=raw_token, description=description, value=value)
 
     @classmethod
     def _create_flag_static(cls, box,  name, raw_token, description, value):
         ''' Check flag static specific parameters '''
-        token = unicode(raw_token)
         if cls.by_token(raw_token) is not None:
             raise ValueError('Flag token already exists in database')
         return cls(box_id=box.id, name=name, token=raw_token, description=description, value=value)
@@ -130,9 +128,7 @@ class Flag(DatabaseObject):
     @classmethod
     def digest(self, data):
         ''' Token is SHA1 of data '''
-        sha = hashlib.sha1()
-        sha.update(data)
-        return unicode(sha.hexdigest())
+        return hashlib.sha1(data).hexdigest()
 
     @property
     def game_level(self):
@@ -154,7 +150,17 @@ class Flag(DatabaseObject):
 
     @description.setter
     def description(self, value):
+        if 256 < len(value):
+            raise ValueError("Description must be less than 256 characters")
         self._description = unicode(value)
+
+    @property
+    def token(self):
+        return self._token
+
+    @token.setter
+    def token(self, value):
+        self._token = unicode(value)
 
     @property
     def is_file(self):
@@ -191,12 +197,6 @@ class Flag(DatabaseObject):
             'box': box.uuid,
             'token': self.token,
         }
-
-    def __str__(self):
-        return self.name.encode('ascii', 'ignore')
-
-    def __unicode__(self):
-        return self.name
 
     def __repr__(self):
         return "<Flag - name:%s, type:%s >" % (

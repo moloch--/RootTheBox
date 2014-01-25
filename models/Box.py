@@ -63,12 +63,12 @@ class Box(DatabaseObject):
 
     flags = relationship("Flag",
         backref=backref("box", lazy="select"),
-        cascade="all, delete-orphan"
+        cascade="all,delete,delete-orphan"
     )
 
     ip_addresses = relationship("IpAddress",
         backref=backref("box", lazy="select"),
-        cascade="all, delete-orphan"
+        cascade="all,delete,delete-orphan"
     )
 
     @classmethod
