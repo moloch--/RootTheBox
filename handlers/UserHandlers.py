@@ -90,30 +90,7 @@ class SettingsHandler(BaseHandler):
         '''
         user = User.by_id(self.session['user_id'])
         if 'avatar' in self.request.files:
-            if len(self.request.files['avatar'][0]['body']) < (1024 * 1024):
-                if user.avatar == "default_avatar.jpeg":
-                    user.avatar = unicode(uuid4()) + u".jpeg"
-                ext = imghdr.what(
-                    "", h=self.request.files['avatar'][0]['body']
-                )
-                avatar_path = str(self.application.settings['avatar_dir'] + '/' + user.avatar)
-                if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                    if os.path.exists(avatar_path):
-                        os.unlink(avatar_path)
-                    user.avatar = unicode(user.avatar[:user.avatar.rfind('.')] + "." + ext)
-                    file_path = str(self.application.settings['avatar_dir'] + '/' + user.avatar)
-                    avatar = open(file_path, 'wb')
-                    avatar.write(self.request.files['avatar'][0]['body'])
-                    avatar.close()
-                    self.dbsession.add(user)
-                    self.dbsession.commit()
-                    self.render_page(success=["Successfully changed avatar"])
-                else:
-                    self.render_page(
-                        errors=["Invalid image format, avatar must be: .png .jpeg .gif or .bmp"]
-                    )
-            else:
-                self.render_page(errors=["The image is too large"])
+            user.avatar = self.request.files['avatar'][0]['body']
         else:
             self.render_page(errors=["Please provide an image"])
 
@@ -138,21 +115,17 @@ class SettingsHandler(BaseHandler):
 
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
-        form = Form(theme_uuid="Please select a theme",)
-        if form.validate(self.request.arguments):
-            theme = Theme.by_uuid(self.get_argument('theme_uuid'))
-            if theme is not None:
-                self.session['theme'] = ''.join(theme.cssfile)
-                self.session.save()
-                user = self.get_current_user()
-                user.theme_id = theme.id
-                self.dbsession.add(user)
-                self.dbsession.commit()
-                self.render_page()
-            else:
-                self.render_page(errors=["Theme does not exist."])
+        theme = Theme.by_uuid(self.get_argument('theme_uuid', ''))
+        if theme is not None:
+            self.session['theme'] = ''.join(theme.cssfile)
+            self.session.save()
+            user = self.get_current_user()
+            user.theme_id = theme.id
+            self.dbsession.add(user)
+            self.dbsession.commit()
+            self.render_page()
         else:
-            self.render_page(errors=form.errors)
+            self.render_page(errors=["Theme does not exist."])
 
     def set_password(self, user, old_password, new_password, new_password2):
         ''' Sets a users password '''

@@ -130,6 +130,12 @@ class ConfigManager(object):
         self.config.set("Server", 'debug', str(value))
 
     @property
+    def ws_connect(self):
+        ''' Websocket connection URL '''
+        ws = 'wss://' if self.use_ssl else 'ws://'
+        return '%s%s:%s' % (ws, self.domain, self.listen_port)
+
+    @property
     def domain(self):
         ''' Automatically resolve domain, or use manual setting '''
         _domain = self.config.get("Server", 'domain').strip()
@@ -342,6 +348,10 @@ class ConfigManager(object):
             logging.fatal("SSL misconfiguration, key file '%s' not found." % key)
             os._exit(1)
         return key
+
+    @property
+    def avatar_dir(self):
+        return os.path.abspath('file/avatars/')
 
     @property
     def db_connection(self):

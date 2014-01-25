@@ -210,9 +210,12 @@ app = Application(
     port=config.listen_port,
 
     # Special file directories
-    avatar_dir=path.abspath('files/avatars/'),
+    #avatar_dir=path.abspath('files/avatars/'),
     shares_dir=path.abspath('files/shares/'),
     source_code_market_dir=path.abspath('files/source_code_market/'),
+
+    # Notifier WebSocket
+    ws_connect=config.ws_connect,
 
     # Event manager
     event_manager=EventManager.instance(),
@@ -222,7 +225,7 @@ app = Application(
 
     # Application version
     game_name=config.game_name,
-    version='0.3.1',
+    version='0.4.0',
 )
 
 

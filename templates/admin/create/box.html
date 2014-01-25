@@ -1,19 +1,19 @@
-{% extends "../../main.html" %} 
+{% extends "../../main.html" %}
 
-{% block title %}Create Box{% end %} 
+{% block title %}Create Box{% end %}
 
 {% block content %}
 <div class="container">
     <h1>Create Box</h1>
     <br />
-    {% if errors is not None and len(errors) != 0 %} 
+    {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
             <h4 class="alert-heading">ERROR</h4>
             {{ error }}
         </div>
-        {% end %} 
+        {% end %}
     {% end %}
     <div class="well">
         <form class="form-horizontal" action="/admin/create/box" method="post" enctype="multipart/form-data">
@@ -29,7 +29,7 @@
                 <div class="controls">
                     <select name="game_level">
                         <option value=""></option>
-                        {% from models import GameLevel %} {% for level in GameLevel.all() %}
+                        {% from models.GameLevel import GameLevel %} {% for level in GameLevel.all() %}
                         <option value="{{ level.number }}">{{ level.number }}</option>
                         {% end %}
                     </select>
@@ -40,7 +40,7 @@
                 <div class="controls">
                     <select id="corporation" name="corporation_uuid">
                         <option value=""></option>
-                        {% from models import Corporation %} {% for corp in Corporation.all() %}
+                        {% from models.Corporation import Corporation %} {% for corp in Corporation.all() %}
                         <option value="{{ corp.uuid }}">{{ corp.name }}</option>
                         {% end %}
                     </select>

@@ -139,16 +139,10 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <!-- logout form -->
-                        <form id="logoutform" action="/logout" method="post">
+                        <form id="logout-form" action="/logout" method="post">
                             {% raw xsrf_form_html() %}
                         </form>
-                        <script>
-                        function logout() {
-                            $("#logoutform").submit();
-                        }
-                        </script>
-                        <a onclick="logout()">
+                        <a id="logout">
                             <i class="fa fa-sign-out"></i>
                             Logout
                         </a>

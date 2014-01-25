@@ -117,32 +117,26 @@ class RegistrationHandler(BaseHandler):
 
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
-        form = Form(
-            handle="Please enter a handle",
-            pass1="Please enter a password",
-            pass2="Please confirm your password",
-            bpass1="Please enter a bank account password",
-        )
-        if form.validate(self.request.arguments):
-            errors = []
-            errors += self.validate_user()
-            errors += self.validate_team()
-            if 0 == len(errors):
-                team = self.get_team()
-                user = self.create_user(team)
-                self.render('public/successful_reg.html', account=user.handle)
-            else:
-                self.render('public/registration.html', errors=errors)
-        else:
-            self.render('public/registration.html', errors=form.errors)
+        try:
+            if self.config.restrict_registration:
+                rtok = self.get_argument('token', '')
+                token = RegistrationToken.by_value(rtok)
+                if token is not None:
+                    token.used = True
+                    self.dbsession.add(token)
+                else:
+                    raise ValueError("Invalid registration token")
+            team = self.get_team()
+            user = self.create_user(team)
+            self.render('public/successful_reg.html', account=user.handle)
+        except Exception as error:
+            self.render('public/registration.html', errors=errors)
+
 
     def validate_user(self):
         ''' Validate user arguments '''
         errors = []
-        handle = self.get_argument('handle')
-        rtok = self.get_argument('token', '')
-        passwd = self.get_argument('pass1', '')
-        bank_passwd = self.get_argument('bpass1', '')
+
         if not 2 < len(handle) < 16:
             errors.append('Hacker name must be 3-15 characters')
         elif User.by_handle(handle) is not None:
@@ -183,25 +177,27 @@ class RegistrationHandler(BaseHandler):
 
     def create_user(self, team):
         ''' Add user to the database '''
-        assert len(team.members) < self.config.max_team_size
-        handle = self.get_argument('handle')
-        user = User(
-            handle=unicode(handle),
-            team_id=team.id,
-        )
-        self.dbsession.add(user)
-        self.dbsession.flush()
-        user.password = self.get_argument('pass1', '')
-        user.bank_password = self.get_argument('bpass1', '')
-        if self.config.restrict_registration:
+        if len(team.members) < self.config.max_team_size:
+
+            handle = self.get_argument('handle', '')
             rtok = self.get_argument('token', '')
-            token = RegistrationToken.by_value(rtok)
-            self.dbsession.add(token)
-        self.dbsession.add(user)
-        self.dbsession.commit()
-        event = self.event_manager.create_joined_team_event(user)
-        self.new_events.append(event)
-        return user
+            passwd = self.get_argument('pass1', '')
+            bank_passwd = self.get_argument('bpass1', '')
+
+            user = User(team_id=team.id,)
+            self.dbsession.add(user)
+            self.dbsession.flush()
+            user.password = self.get_argument('pass1', '')
+            user.bank_password = self.get_argument('bpass1', '')
+
+                
+            self.dbsession.add(user)
+            self.dbsession.commit()
+            event = self.event_manager.create_joined_team_event(user)
+            self.new_events.append(event)
+            return user
+        else:
+            raise ValueError("Selected team is already full")
 
     def get_team(self):
         ''' Create a team object, or pull the existing one '''
@@ -210,16 +206,18 @@ class RegistrationHandler(BaseHandler):
 
     def create_team(self):
         ''' Create a new team '''
-        assert self.config.public_teams
-        team = Team(
-            name=unicode(self.get_argument('team_name')[:15]),
-            motto=unicode(self.get_argument('motto')[:64]),
-        )
-        level_0 = GameLevel.all()[0]
-        team.game_levels.append(level_0)
-        self.dbsession.add(team)
-        self.dbsession.flush()
-        return team
+        if self.config.public_teams:
+            team = Team(
+                name=self.get_argument('team_name', ''),
+                motto=self.get_argument('motto', ''),
+            )
+            level_0 = GameLevel.all()[0]
+            team.game_levels.append(level_0)
+            self.dbsession.add(team)
+            self.dbsession.flush()
+            return team
+        else:
+            raise ValueError("Public teams are not enabled")
 
 
 class FakeRobotsHandler(BaseHandler):

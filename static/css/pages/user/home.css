@@ -1,0 +1,8 @@
+.notifications-title {
+    display: inline;
+}
+
+.notifications {
+    display: inline;
+    float: right;
+}

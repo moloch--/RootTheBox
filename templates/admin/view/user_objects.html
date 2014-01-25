@@ -2,15 +2,20 @@
 
 {% block title %}User Objects{% end %}
 
+{% block headers %}
+<script src="/static/js/pages/admin/view/user_objects.js"></script>
+{% end %}
+
 {% block content %}
+{% from models.Team import Team %}
     <!-- Edit Team -->
-    <div id="editTeamModal" class="modal hide fade" style="display: none; ">
+    <div id="edit-team-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Edit Team</h3>
         </div>
         <div class="modal-body">
-            <form id="edit-team" class="form-horizontal" method="post" action="/admin/edit/team">
+            <form id="edit-team-form" class="form-horizontal" method="post" action="/admin/edit/team">
                 {% raw xsrf_form_html() %}
                 <input id="team_uuid" name="uuid" type="hidden" />
                 <div class="control-group">
@@ -29,17 +34,17 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary" onclick="document.forms['edit-team'].submit();">Save</button>
+            <button id="edit-team-submit" type="button" class="btn btn-primary">Save</button>
         </div>
     </div>
     <!-- Edit User -->
-    <div id="editUserModal" class="modal hide fade" style="display: none; ">
+    <div id="edit-user-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Edit User</h3>
         </div>
         <div class="modal-body">
-            <form id="edit-user" class="form-horizontal" method="post" action="/admin/edit/user">
+            <form id="edit-user-form" class="form-horizontal" method="post" action="/admin/edit/user">
                 {% raw xsrf_form_html() %}
                 <input id="user_uuid" name="uuid" type="hidden" />
                 <div class="control-group">
@@ -76,7 +81,6 @@
                     <div class="controls">
                         <select id="user_team_uuid" name="team_uuid">
                             <option value=""></option>
-                            {% from models import Team %}
                             {% for team in Team.all() %}
                                 <option value="{{ team.uuid }}">{{ team.name }}</option>
                             {% end %}
@@ -87,31 +91,17 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary" onclick="document.forms['edit-user'].submit();">Save</button>
+            <button id="edit-team-submit" type="button" class="btn btn-primary">Save</button>
         </div>
     </div>
     <form id="lock_form" action="/admin/lock" method="post">
         {% raw xsrf_form_html() %}
         <input id="lock_uuid" name="uuid" type="hidden" />
     </form>
-    <script>
-        function get_details(obj, uuid) {
-            $("#" + obj + "_uuid").val(uuid);
-            $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
-                $.each(data, function(key, value) {
-                    $("#" + obj + "_" + key).val(value);
-                });
-            });
-        }
-        function toggle_lock(uuid) {
-            document.getElementById("lock_uuid").value = uuid;
-            document.getElementById("lock_form").submit();
-        }
-    </script>
     <!-- Start Visable -->
     <div class="row-fluid">
         <div class="span10 offset1">
-            <h1>User Objects</h1>
+            <h1>Users</h1>
             <br />
             {% if errors is not None and len(errors) != 0 %}
                 {% for error in errors %}
@@ -122,13 +112,12 @@
                     </div>
                 {% end %}
             {% end %}
-            {% from models import Team %}
             {% for team in Team.all() %}
                 <div class="well">
-                    <h2 style="display:inline;">{{ team.name }}&nbsp;&nbsp;</h2>
+                    <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
                     <h3 style="display:inline;">&quot;{{ team.motto }}&quot;&nbsp;&nbsp;</h3>
-                    <a class="btn btn-primary" data-toggle="modal" href="#editTeamModal" 
-                        onclick="get_details('team', '{{ team.uuid }}')">
+                    <a id="edit-team-button" class="btn btn-primary" data-toggle="modal" href="#edit-team-modal"
+                        data-team-uuid="{{ team.uuid }}">
                         Edit Team
                     </a>
                     <br />
@@ -161,28 +150,27 @@
                                     {% end %}
                                     <td>{{ user.algorithm }}</td>
                                     {% if 40 < len(user.bank_password) %}
-                                        <td><a onclick="alert('{{ user.bank_password }}');">{{ user.bank_password[:40] }}...</a></td>
+                                        <td>
+                                            <a id="reveal-password-button" data-bank-password="{{ user.bank_password }}">
+                                                {{ user.bank_password[:40] }}...
+                                            </a>
+                                        </td>
                                     {% else %}
                                         <td>{{ user.bank_password }}</td>
                                     {% end %}
                                     <td>
                                         {% if user.locked %}
-                                            <a id="{{ 'lock_button_' + user.uuid }}" 
-                                            class="btn btn-mini btn-success" 
-                                            onclick="toggle_lock('{{ user.uuid }}')">
+                                            <a id="unlock-user-button" class="btn btn-mini btn-success" data-user-uuid="{{ user.uuid }}">
                                                 Unlock Account
                                             </a>
                                         {% else %}
-                                            <a id="{{ 'lock_button_' + user.uuid }}"
-                                            class="btn btn-mini btn-danger" 
-                                            onclick="toggle_lock('{{ user.uuid }}')">
+                                            <a  id="lock-user-button" class="btn btn-mini btn-danger" data-user-uuid="{{ user.uuid }}">
                                                 Lock Account
                                             </a>
                                         {% end %}
                                     </td>
                                     <td>
-                                        <a class="btn btn-mini" data-toggle="modal" href="#editUserModal" 
-                                            onclick="get_details('user', '{{ user.uuid }}')">
+                                        <a id="edit-user-button" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-user-uuid="{{ user.uuid }}">
                                             Edit User
                                         </a>
                                     </td>

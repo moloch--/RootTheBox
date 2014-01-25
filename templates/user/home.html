@@ -1,6 +1,10 @@
 {% extends "../main.html" %}
 
-{% block title %}User Index{% end %}
+{% block title %}Home{% end %}
+
+{% block header %}
+    <link href="/static/css/pages/user/home.css" rel="stylesheet" />
+{% end %}
 
 {% block content %}
 {% include ../notifier.html %}
@@ -14,19 +18,14 @@
                 </center>
                 <hr>
                 {% if user.team is not None %}
-                <strong>Team:</strong> {{ user.team.name }}
-                <br />
-                <strong>Current Level:</strong> {{ user.team.levels[-1].number }}
-                <br />
-                <strong>Bank Account:</strong> ${{ user.team.money }}
-                <br />
+                <strong>Team:</strong> {{ user.team.name }} <br />
+                <strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
+                <strong>Bank Account:</strong> ${{ user.team.money }} <br />
                 {% from libs.ConfigManager import ConfigManager %}
                 {% if ConfigManager.instance().use_bots %}
-                <strong>Active Bots:</strong> {{ user.team.bot_count }}
-                <br />
+                <strong>Active Bots:</strong> {{ user.team.bot_count }} <br />
                 {% end %}
-                <strong>Flags Captured:</strong> {{ len(user.team.flags) }}
-                <br />
+                <strong>Flags Captured:</strong> {{ len(user.team.flags) }} <br />
                 {% else %}
                 <strong>You are not on a team</strong>
                 {% end %}
@@ -34,8 +33,11 @@
         </div>
     </div>
     <div class="span5 offset1 well">
-        <h2 style="display:inline;">Notifications</h2>
-        <h4 style="display:inline;float:right;"><a href="/notifications/all">See All &raquo;</a>
+        <h2 id="notifications-title">Notifications</h2>
+        <h4 id="notifications">
+            <a href="/notifications/all">
+                See All &raquo;
+            </a>
         </h4>
         <hr>
         {% from models.Notification import Notification %}

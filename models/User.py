@@ -25,6 +25,7 @@ indiviudal user, such as handle/account/password/etc
 '''
 
 
+import os
 import logging
 
 from os import urandom
@@ -34,6 +35,7 @@ from pbkdf2 import PBKDF2
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
+from libs.ConfigManager import ConfigManager
 from models import dbsession
 from models.Team import Team
 from models.Permission import Permission
@@ -44,7 +46,7 @@ from string import ascii_letters, digits, printable
 
 ### Constants
 ADMIN_PERMISSION = u'admin'
-DEFAULT_HASH_ALGORITHM = u'md5'
+DEFAULT_HASH_ALGORITHM = 'md5'
 ITERATE = 0xbad  # 2989
 
 # Change this for your production deployments
@@ -60,18 +62,12 @@ class User(DatabaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'))
     theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
+    _avatar = Column(String(64))
     _locked = Column(Boolean, default=False, nullable=False)
-    avatar = Column(Unicode(64), default=u"default_avatar.jpeg")
-    algorithm = Column(Unicode(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
+    algorithm = Column(String(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
     last_login = Column(DateTime)
     logins = Column(Integer, default=0)
-
     _handle = Column(Unicode(16), unique=True, nullable=False)
-    handle = synonym('_handle', descriptor=property(
-        lambda self: self._handle,
-        lambda self, handle: setattr(
-            self, '_handle', self.__class__.filter_string(handle.lower(), "_-"))
-    ))
 
     permissions = relationship("Permission",
         backref=backref("user", lazy="select"),
@@ -98,10 +94,10 @@ class User(DatabaseObject):
     ))
 
     algorithms = {
-        'md5': (md5, 1, u'md5',),
-        'sha1': (sha1, 2, u'sha1',),
-        'sha256': (sha256, 3, u'sha256',),
-        'sha512': (sha512, 4, u'sha512',),
+        'md5': (md5, 1, 'md5',),
+        'sha1': (sha1, 2, 'sha1',),
+        'sha256': (sha256, 3, 'sha256',),
+        'sha512': (sha512, 4, 'sha512',),
     }
 
     @classmethod
@@ -125,21 +121,19 @@ class User(DatabaseObject):
         )
 
     @classmethod
-    def by_id(cls, identifier):
-        ''' Returns a the object with id of identifier '''
-        return dbsession.query(cls).filter_by(id=identifier).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_uuid(cls, uuid):
+    def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_handle(cls, handle):
-        ''' Return the user object whose user is "handle" '''
-        return dbsession.query(cls).filter_by(
-            handle=unicode(handle.lower())
-        ).first()
+    def by_handle(cls, _handle):
+        ''' Return the user object whose user is "_handle" '''
+        return dbsession.query(cls).filter_by(handle=unicode(_handle)).first()
 
     @classmethod
     def filter_string(cls, string, extra_chars=''):
@@ -153,18 +147,32 @@ class User(DatabaseObject):
         only used for the admin accounts.  We only allow
         whitespace/non-ascii.
         '''
+        config = ConfigManager.instance()
         password = filter(lambda char: char in printable[:-6], password)
-        password = password.encode('ascii')
+        if config.max_password_length < len(password):
+            raise ValueError("Bank password is too long")
+        if algorithm_name is None:
+            algorithm_name = DEFAULT_HASH_ALGORITHM
         if algorithm_name in cls.algorithms:
             algo = cls.algorithms[algorithm_name][0]()
             algo.update(password)
             return algo.hexdigest()
         else:
-            raise ValueError("Algorithm not supported.")
+            raise ValueError("Algorithm %s not supported." % algorithm_name)
 
     @classmethod
     def _hash_password(cls, password):
         return PBKDF2.crypt(password + STATIC_SALT, iterations=ITERATE)
+
+    @property
+    def handle(self):
+        return self._handle
+
+    @handle.setter
+    def handle(self, new_handle):
+        if not 3 < len(new_handle) < 16:
+            raise ValueError("Handle must be 3 - 16 characters")
+        self._handle = unicode(new_handle)
 
     @property
     def permissions(self):
@@ -193,6 +201,31 @@ class User(DatabaseObject):
         assert isinstance(value, bool)
         if not self.has_permission(ADMIN_PERMISSION):
             self._locked = value
+
+    @property
+    def avatar(self):
+        config = ConfigManager.instance()
+        if self._avatar is not None:
+            return self._avatar
+        else:
+            return "default_avatar.jpeg"
+
+    @avatar.setter
+    def avatar(self, image_data):
+        if len(image_data) < (1024 * 1024):
+            ext = imghdr.what("", h=image_data)
+            if ext in ['png', 'jpeg', 'gif', 'bmp']:
+                config = ConfigManager.instance()
+                if os.path.exists(config.avatar_dir + self._avatar):
+                    os.unlink(config.avatar_dir + self._avatar)
+                file_path = str(config.avatar_dir + self.uuid + ext)
+                with open(file_path, 'wb') as fp:
+                    fp.write(image_data)
+                self._avatar = self.uuid + ext
+            else:
+                raise ValueError("Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
+        else:
+            raise ValueError("The image is too large")
 
     def has_item(self, item_name):
         ''' Check to see if a team has purchased an item '''

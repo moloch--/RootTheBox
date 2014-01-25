@@ -38,17 +38,11 @@ class Team(DatabaseObject):
     ''' Team definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    motto = Column(Unicode(32))
+    _name = Column(Unicode(16), unique=True, nullable=False)
+    _motto = Column(Unicode(32))
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
     money = Column(Integer, default=500, nullable=False)
-
-    _name = Column(Unicode(16), unique=True, nullable=False)
-    name = synonym('_name', descriptor=property(
-        lambda self: self._name,
-        lambda self, name: setattr(
-            self, '_name', self.__class__.filter_string(name, " -_"))
-    ))
 
     members = relationship("User",
         backref=backref("team", lazy="joined"),
@@ -91,30 +85,44 @@ class Team(DatabaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
+
+    @classmethod
+    def by_uuid(cls, _uuid):
+        ''' Return and object based on a uuid '''
+        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+
+    @classmethod
+    def by_name(cls, _name):
+        ''' Return the team object based on "team_name" '''
+        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
+
+    @classmethod
     def ranks(cls):
         ''' Returns a list of all objects in the database '''
         return sorted(dbsession.query(cls).all())
 
-    @classmethod
-    def by_id(cls, identifier):
-        ''' Returns a the object with id of identifier '''
-        return dbsession.query(cls).filter_by(id=identifier).first()
+    @property
+    def name(self):
+        return self._name
 
-    @classmethod
-    def by_uuid(cls, uuid):
-        ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(uuid)).first()
+    @name.setter
+    def name(self, value):
+        if not 3 < len(value) < 16:
+            raise ValueError("Team name must be 3 - 16 characters")
+        self._name = unicode(value)
 
-    @classmethod
-    def by_name(cls, team_name):
-        ''' Return the team object based on "team_name" '''
-        return dbsession.query(cls).filter_by(name=unicode(team_name)).first()
+    @property
+    def motto(self):
+        return self._motto
 
-    @classmethod
-    def filter_string(cls, string, extra_chars=''):
-        char_white_list = ascii_letters + digits + extra_chars
-        clean = filter(lambda char: char in char_white_list, string)
-        return clean if 0 < len(clean) else 'foobar'
+    @motto.setter
+    def motto(self, value):
+        if 32 < len(value):
+            raise ValueError("Motto must be less than 32 characters")
+        self._motto = unicode(value)
 
     @property
     def levels(self):

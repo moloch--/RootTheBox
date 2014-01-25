@@ -47,7 +47,8 @@ class BaseHandler(RequestHandler):
         "script-src 'self';" + \
         "style-src 'self' 'unsafe-inline';" + \
         "font-src 'self';" + \
-        "img-src 'self';"
+        "img-src 'self';" + \
+        "connect-src 'self' %s" % ConfigManager.instance().ws_connect
 
     def initialize(self):
         ''' Setup sessions, etc '''
