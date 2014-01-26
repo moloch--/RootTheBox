@@ -210,7 +210,6 @@ app = Application(
     port=config.listen_port,
 
     # Special file directories
-    #avatar_dir=path.abspath('files/avatars/'),
     shares_dir=path.abspath('files/shares/'),
     source_code_market_dir=path.abspath('files/source_code_market/'),
 

@@ -1,10 +1,15 @@
-{% extends "../../main.html" %} 
+{% extends "../../main.html" %}
 
-{% block title %}S.W.A.T.{% end %} 
+{% block title %}S.W.A.T.{% end %}
+
+{% block header %}
+<script src="/static/js/pages/admin/upgrades/swat.js"></script>
+{% end %}
 
 {% block content %}
+{% from models.Swat import Swat %}
 <!-- Start Modal -->
-<div id="acceptBribeModal" class="modal hide fade" style="display: none; ">
+<div id="accept-bribe-modal" class="modal hide fade" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3>Accept Bribe?</h3>
@@ -12,22 +17,43 @@
     <div class="modal-body">
         <form id="accept-bribe" class="form-horizontal" action="/admin/upgrades/swat/accept" method="post">
             {% raw xsrf_form_html() %}
-            <input id="accept_uuid" type="hidden" name="uuid" value="" />
+            <input id="accept-bribe-uuid" type="hidden" name="uuid" value="" />
         </form>
-        <p id="accept_dialog">
-            Are you sure you want to accept this bribe?
+        <p>
+            Accept this bribe?
         </p>
         <br />
     </div>
     <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <button class="btn btn-primary" type="button" onclick="document.forms['accept-bribe'].submit();">
+        <button id="accept-bribe-submit" class="btn btn-primary" type="button">
             Confirm
         </button>
     </div>
 </div>
-<!-- End Modal -->
-<div id="completeBribeModal" class="modal hide fade" style="display: none; ">
+<div id="decline-bribe-modal" class="modal hide fade" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Decline Bribe?</h3>
+    </div>
+    <div class="modal-body">
+        <form id="decline-bribe" class="form-horizontal" action="/admin/upgrades/swat/decline" method="post">
+            {% raw xsrf_form_html() %}
+            <input id="decline-bribe-uuid" type="hidden" name="uuid" value="" />
+        </form>
+        <p>
+            Decline this bribe?
+        </p>
+        <br />
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <button id="decline-bribe-submit" class="btn btn-primary" type="button">
+            Confirm
+        </button>
+    </div>
+</div>
+<div id="complete-bribe-modal" class="modal hide fade" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3>Compelte Bribe</h3>
@@ -35,53 +61,41 @@
     <div class="modal-body">
         <form id="complete-bribe" class="form-horizontal" action="/admin/upgrades/swat/complete" method="post">
             {% raw xsrf_form_html() %}
-            <input id="complete_uuid" type="hidden" name="uuid" value="" />
+            <input id="complete-bribe-uuid" type="hidden" name="uuid" value="" />
         </form>
-        <p id="complete_dialog">
+        <p>
+            Complete this bribe?
         </p>
         <br />
     </div>
     <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <button id="complete_button" class="btn btn-primary" type="button" onclick="document.forms['complete-bribe'].submit();">
+        <button id="complete-bribe-button" class="btn btn-primary" type="button">
             Confirm
         </button>
     </div>
 </div>
 <!-- End Modal -->
-<script>
-function accept_bribe(uuid) {
-    $("#accept_uuid").val(uuid);
-}
-
-function complete_bribe(uuid, mode) {
-    $("#complete_uuid").val(uuid);
-    if (mode == 'decline') {
-        $("#complete_button").addClass("btn-danger");
-        $("#complete_dialog").text("Are you sure you want to decline this bribe?");
-    } else {
-        $("#complete_button").removeClass("btn-danger");
-        $("#complete_dialog").text("Are you sure you want to complete this bribe?");
-    }
-}
-</script>
 <!-- Start Visable -->
 <div class="container">
-    <h1>S.W.A.T. Manager</h1>
+    <h1>
+        <i class="fa fa-crosshairs"></i>
+        S.W.A.T.
+    </h1>
     <br />
-    {% if errors is not None and len(errors) != 0 %} 
+    {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
             <h4 class="alert-heading">ERROR</h4>
             {{ error }}
         </div>
-        {% end %} 
-    {% end %} 
-    {% from models import Swat %}
+        {% end %}
+    {% end %}
     <div class="well">
         <h3>Pending Bribes</h3>
-        <hr>{% if len(pending_bribes) != 0 %}
+        <hr>
+        {% if len(pending_bribes) != 0 %}
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -102,28 +116,29 @@ function complete_bribe(uuid, mode) {
             <tbody>
                 {% for index, swat in enumerate(pending_bribes) %}
                 <tr>
-                    <td>{{ index + 1}}</td>
+                    <td>{{ index + 1 }}</td>
                     <td>{{ swat.created }}</td>
                     <td>{{ swat.user.handle }}</td>
                     <td>{{ swat.target.handle }}</td>
                     <td>${{ swat.paid }}</td>
                     <td>{{ Swat.count_completed_by_target_id(swat.target.id) }}</td>
                     <td>
-                        <a class="btn btn-mini btn-success" data-toggle="modal" href="#acceptBribeModal" onclick="accept_bribe('{{ swat.uuid }}');">
-                                        Accept
-                                    </a>
+                        <a id="accept-bribe-button{{ index }}" class="btn btn-mini btn-success" data-toggle="modal" href="#accept-bribe-modal" data-uuid="{{ swat.uuid }}">
+                            Accept
+                        </a>
                     </td>
                     <td>
-                        <a class="btn btn-mini btn-danger" data-toggle="modal" href="#completeBribeModal" onclick="complete_bribe('{{ swat.uuid }}', 'decline');">
-                                        Decline
-                                    </a>
+                        <a id="decline-bribe-button{{ index }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#decline-bribe-modal" data-uuid="{{ swat.uuid }}">
+                            Decline
+                        </a>
                     </td>
                 </tr>
                 {% end %}
             </tbody>
         </table>
         {% else %}
-        <br />No Pending Bribes...
+        <br />
+        No Pending Bribes...
         <br />
         {% end %}
     </div>
@@ -154,9 +169,9 @@ function complete_bribe(uuid, mode) {
                     <td>{{ swat.target.handle }}</td>
                     <td>${{ swat.paid }}</td>
                     <td>
-                        <a class="btn btn-mini" data-toggle="modal" href="#completeBribeModal" onclick="complete_bribe('{{ swat.uuid }}', 'complete');">
-                                        Complete
-                                    </a> 
+                        <a id="complete-bribe-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#complete-bribe-modal" data-uuid="{{ swat.uuid }}">
+                            Complete
+                        </a>
                     </td>
                 </tr>
                 {% end %}
@@ -170,41 +185,45 @@ function complete_bribe(uuid, mode) {
     <br />
     <div class="well">
         <h3>Completed Bribes</h3>
-        <hr>{% if len(completed_bribes) != 0 %}
-        <table class="table table-striped">
-            <thead>
-                <th>#</th>
-                <th>Created</td>
-                    <th>User Handle</th>
-                    <th>Target Handle</th>
-                    <th>Bribe Amount</th>
-                    <th>Outcome</th>
+        <hr>
+        {% if len(completed_bribes) != 0 %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Created</td>
+                        <th>User Handle</th>
+                        <th>Target Handle</th>
+                        <th>Bribe Amount</th>
+                        <th>Outcome</th>
                     </tr>
-            </thead>
-            <tbody>
-                {% for index, swat in enumerate(completed_bribes) %} 
-                    {% if swat.is_declined() %}
-                    <tr class="error">
-                    {% else %}
-                    <tr class="success">
-                    {% end %}
-                        <td>{{ index + 1}}</td>
-                        <td>{{ swat.created }}</td>
-                        <td>{{ swat.user.handle }}</td>
-                        <td>{{ swat.target.handle }}</td>
-                        <td>${{ swat.paid }}</td>
+                </thead>
+                <tbody>
+                    {% for index, swat in enumerate(completed_bribes) %}
                         {% if swat.is_declined() %}
-                        <td>Declined</td>
+                        <tr class="error">
                         {% else %}
-                        <td>Accepted</td>
+                        <tr class="success">
                         {% end %}
-                    </tr>
-                {% end %}
-            </tbody>
-        </table>
+                            <td>{{ index + 1}}</td>
+                            <td>{{ swat.created }}</td>
+                            <td>{{ swat.user.handle }}</td>
+                            <td>{{ swat.target.handle }}</td>
+                            <td>${{ swat.paid }}</td>
+                            {% if swat.is_declined() %}
+                            <td>Declined</td>
+                            {% else %}
+                            <td>Accepted</td>
+                            {% end %}
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
         {% else %}
-        <br />No Completed Bribes...
-        <br />{% end %}
+            <br />
+            No Completed Bribes...
+            <br />
+        {% end %}
     </div>
 </div>
 {% end %}
