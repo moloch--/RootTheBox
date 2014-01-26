@@ -704,6 +704,8 @@ class AdminDeleteHandler(BaseHandler):
                    'hint': self.del_hint,
                     'box': self.del_box,
             'corporation': self.del_corp,
+                   'user': self.del_user,
+                   'team': self.del_team,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -756,6 +758,7 @@ class AdminDeleteHandler(BaseHandler):
             )
 
     def del_corp(self):
+        ''' Delete a corporation '''
         corp = Corporation.by_uuid(self.get_argument('uuid', ''))
         if corp is not None:
             logging.info("Delete corporation: %s" % corp.name)
@@ -768,6 +771,7 @@ class AdminDeleteHandler(BaseHandler):
             )
 
     def del_box(self):
+        ''' Delete  a box '''
         box = Box.by_uuid(self.get_argument('uuid', ''))
         if box is not None:
             logging.info("Delete box: %s" % box.name)
@@ -777,6 +781,19 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render('admin/view/game_objects.html',
                 errors=["Box does not exist in database."]
+            )
+
+    def del_user(self):
+        ''' Delete a user '''
+        user = User.by_uuid(self.get_argument('uuid', ''))
+        if user is not None:
+            logging.info("Delete user: %s" % user.handle)
+            self.dbsession.delete(user)
+            self.dbsession.commit()
+            self.redirect('/admin/view/user_objects')
+        else:
+            self.render('admin/view/user_objects.html',
+                errors=["User does not exist in database."]
             )
 
 
@@ -898,16 +915,16 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             price=price,
             description=description,
         )
-        dbsession.add(source_code)
-        dbsession.flush()
+        self.dbsession.add(source_code)
+        self.dbsession.flush()
         file_data = self.request.files['source_archive'][0]['body']
         root = self.application.settings['source_code_market_dir']
         save_file = open(str(root + '/' + source_code.uuid), 'w')
         source_code.checksum = self.get_checksum(file_data)
         save_file.write(b64encode(file_data))
         save_file.close()
-        dbsession.add(source_code)
-        dbsession.flush()
+        self.dbsession.add(source_code)
+        self.dbsession.commit()
 
     def get_checksum(self, data):
         ''' Calculate checksum of file data '''
@@ -919,8 +936,8 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         box = Box.by_uuid(uuid)
         if box is not None and box.source_code is not None:
             source_code_uuid = box.source_code.uuid
-            dbsession.delete(box.source_code)
-            dbsession.flush()
+            self.dbsession.delete(box.source_code)
+            self.dbsession.commit()
             root = self.application.settings['source_code_market_dir']
             source_code_path = root + '/' + source_code_uuid
             logging.info("Delete souce code market file: %s (box: %s)" %
@@ -975,9 +992,9 @@ class AdminSwatHandler(BaseHandler):
             logging.info("Accepted SWAT with uuid: %s", swat.uuid)
             swat.accepted = True
             swat.target.locked = True
-            dbsession.add(swat)
-            dbsession.add(swat.target)
-            dbsession.flush()
+            self.dbsession.add(swat)
+            self.dbsession.add(swat.target)
+            self.dbsession.commit()
             self.render_page()
         else:
             logging.warn("Invalid request to accept bribe with uuid: %r" %
@@ -992,9 +1009,9 @@ class AdminSwatHandler(BaseHandler):
             logging.info("Completed SWAT with uuid: %s", swat.uuid)
             swat.completed = True
             swat.target.locked = False
-            dbsession.add(swat)
-            dbsession.add(swat.target)
-            dbsession.flush()
+            self.dbsession.add(swat)
+            self.dbsession.add(swat.target)
+            self.dbsession.commit()
             self.render_page()
         else:
             logging.warn("Invalid request to complete bribe with uuid: %r" %

@@ -1,8 +1,8 @@
 {% extends "../../main.html" %}
 
-{% block title %}User Objects{% end %}
+{% block title %}User Management{% end %}
 
-{% block headers %}
+{% block header %}
 <script src="/static/js/pages/admin/view/user_objects.js"></script>
 {% end %}
 
@@ -12,51 +12,60 @@
     <div id="edit-team-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Edit Team</h3>
+            <h3>
+                <i class="fa fa-pencil"></i>
+                Edit Team
+            </h3>
         </div>
         <div class="modal-body">
             <form id="edit-team-form" class="form-horizontal" method="post" action="/admin/edit/team">
                 {% raw xsrf_form_html() %}
-                <input id="team_uuid" name="uuid" type="hidden" />
+                <input id="team-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="team_name">Team Name</label>
+                    <label class="control-label" for="team-name">Team Name</label>
                     <div class="controls">
-                        <input required id="team_name" name="name" type="text" placeholder="Team Name">
+                        <input required id="team-name" name="name" type="text" placeholder="Team Name">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team_motto">Team Motto</label>
+                    <label class="control-label" for="team-motto">Team Motto</label>
                     <div class="controls">
-                        <input required id="team_motto" name="motto" type="text" placeholder="Team Motto">
+                        <input required id="team-motto" name="motto" type="text" placeholder="Team Motto">
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="edit-team-submit" type="button" class="btn btn-primary">Save</button>
+            <button id="edit-team-submit" type="button" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                Save
+            </button>
         </div>
     </div>
     <!-- Edit User -->
     <div id="edit-user-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Edit User</h3>
+            <h3>
+                <i class="fa fa-pencil"></i>
+                Edit User
+            </h3>
         </div>
         <div class="modal-body">
             <form id="edit-user-form" class="form-horizontal" method="post" action="/admin/edit/user">
                 {% raw xsrf_form_html() %}
-                <input id="user_uuid" name="uuid" type="hidden" />
+                <input id="user-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="user_handle">Handle</label>
+                    <label class="control-label" for="user-handle">Handle</label>
                     <div class="controls">
-                      <input id="user_handle" name="handle" type="text" placeholder="Handle">
+                      <input id="user-handle" name="handle" type="text" placeholder="Handle">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user_hash_algorithm">Hash Algorithm</label>
+                    <label class="control-label" for="user-hash-algorithm">Hash Algorithm</label>
                     <div class="controls">
-                        <select id="user_hash_algorithm" name="hash_algorithm">
+                        <select id="user-hash-algorithm" name="hash_algorithm">
                             <option value="md5">MD5</option>
                             <option value="sha1">SHA1</option>
                             <option value="sha256">SHA-256</option>
@@ -65,21 +74,21 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user_password">Account Password</label>
+                    <label class="control-label" for="user-password">Account Password</label>
                     <div class="controls">
-                        <input id="user_password" name="password" type="password" placeholder="New Password">
+                        <input id="user-password" name="password" type="password" placeholder="New Password">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="bank_password">Bank Password</label>
+                    <label class="control-label" for="bank-password">Bank Password</label>
                     <div class="controls">
-                        <input id="bank_password" name="bank_password" type="password" placeholder="New Bank Password">
+                        <input id="bank-password" name="bank_password" type="password" placeholder="New Bank Password">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user_team_uuid">Team</label>
+                    <label class="control-label" for="user-team-uuid">Team</label>
                     <div class="controls">
-                        <select id="user_team_uuid" name="team_uuid">
+                        <select id="user-team-uuid" name="team_uuid">
                             <option value=""></option>
                             {% for team in Team.all() %}
                                 <option value="{{ team.uuid }}">{{ team.name }}</option>
@@ -91,19 +100,45 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="edit-team-submit" type="button" class="btn btn-primary">Save</button>
+            <button id="edit-user-submit" type="button" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                Save
+            </button>
         </div>
     </div>
-    <form id="lock_form" action="/admin/lock" method="post">
+    <div id="delete-user-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3><i class="fa fa-times-circle-o"></i> Delete User</h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            Are you sure you want to delete this user? <br />
+        </p>
+        <form id="delete-user-form" method="post" action="/admin/delete/user">
+            {% raw xsrf_form_html() %}
+            <input id="delete-user-uuid" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="delete-user-submit" type="button" class="btn btn-danger">
+                <i class="fa fa-times-circle-o"></i>
+                Delete
+            </button>
+        </div>
+    </div>
+    <!-- Lock Form -->
+    <form id="lock-user-form" action="/admin/lock" method="post">
         {% raw xsrf_form_html() %}
-        <input id="lock_uuid" name="uuid" type="hidden" />
+        <input id="lock-user-uuid" name="uuid" type="hidden" />
     </form>
     <!-- Start Visable -->
     <div class="row-fluid">
         <div class="span10 offset1">
             <h1>
                 <i class="fa fa-group"></i>
-                Users
+                User Management
             </h1>
             <br />
             {% if errors is not None and len(errors) != 0 %}
@@ -118,16 +153,15 @@
             {% if len(Team.all()) == 0 %}
                 <p class="well"><strong>No Users</strong></p>
             {% end %}
-            {% for team in Team.all() %}
+            {% for team_index, team in enumerate(Team.all()) %}
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
-                    <h3 style="display:inline;">&quot;{{ team.motto }}&quot;&nbsp;&nbsp;</h3>
-                    <a id="edit-team-button" class="btn btn-primary" data-toggle="modal" href="#edit-team-modal"
-                        data-team-uuid="{{ team.uuid }}">
+                    <h4 style="display:inline;">&quot;{{ team.motto }}&quot;&nbsp;&nbsp;</h4>
+                    <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}">
+                        <i class="fa fa-pencil"></i>
                         Edit Team
                     </a>
-                    <br />
-                    <h3>Members of {{ team.name }}</h3>
+                    <hr />
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -138,6 +172,7 @@
                                 <th>Password Hash</th>
                                 <th><!-- Lock Button --></th>
                                 <th><!-- Edit Button --></th>
+                                <th><!-- Delete Button --></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -147,7 +182,7 @@
                                 {% else %}
                                     <tr>
                                 {% end %}
-                                    <td>{{ index + 1}}</td>
+                                    <td>{{ index + 1 }}</td>
                                     <td>{{ user.handle }}</td>
                                     {% if 0 < user.logins %}
                                         <td>{{ user.last_login }}</td>
@@ -157,7 +192,7 @@
                                     <td>{{ user.algorithm }}</td>
                                     {% if 40 < len(user.bank_password) %}
                                         <td>
-                                            <a id="reveal-password-button" data-bank-password="{{ user.bank_password }}">
+                                            <a id="reveal-hash-button-{{ user.uuid }}" data-bank-hash="{{ user.bank_password }}">
                                                 {{ user.bank_password[:40] }}...
                                             </a>
                                         </td>
@@ -166,18 +201,27 @@
                                     {% end %}
                                     <td>
                                         {% if user.locked %}
-                                            <a id="unlock-user-button" class="btn btn-mini btn-success" data-user-uuid="{{ user.uuid }}">
-                                                Unlock Account
+                                            <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
+                                                <i class="fa fa-unlock"></i>
+                                                Unlock
                                             </a>
                                         {% else %}
-                                            <a  id="lock-user-button" class="btn btn-mini btn-danger" data-user-uuid="{{ user.uuid }}">
-                                                Lock Account
+                                            <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-warning" data-uuid="{{ user.uuid }}">
+                                                <i class="fa fa-lock"></i>
+                                                Lock
                                             </a>
                                         {% end %}
                                     </td>
                                     <td>
-                                        <a id="edit-user-button" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-user-uuid="{{ user.uuid }}">
-                                            Edit User
+                                        <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}">
+                                            <i class="fa fa-pencil"></i>
+                                            Edit
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a id="delete-user-button-{{ user.uuid }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-user-modal" data-uuid="{{ user.uuid }}">
+                                            <i class="fa fa-times-circle-o"></i>
+                                            Delete
                                         </a>
                                     </td>
                                 </tr>

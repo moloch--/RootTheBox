@@ -72,12 +72,12 @@ class User(DatabaseObject):
 
     permissions = relationship("Permission",
         backref=backref("user", lazy="select"),
-        cascade="all, delete-orphan"
+        cascade="all,delete,delete-orphan"
     )
 
     notifications = relationship("Notification",
         backref=backref("user", lazy="select"),
-        cascade="all, delete-orphan"
+        cascade="all,delete,delete-orphan"
     )
 
     _password = Column('password', String(64))

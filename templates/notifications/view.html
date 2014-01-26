@@ -3,12 +3,14 @@
 {% block title %}All Notifications{% end %}
 
 {% block content %}
-{% from models import Notification %}
     <div class="container">
-        <h2>All Notifications</h2>
+        <h2>
+            <i class="fa fa-envelope-o"></i>
+            All Notifications
+        </h2>
         <br />
         <div class="well">
-        {% for notify in Notification.by_user_id(user.id) %}
+        {% for notify in user.notifications %}
         <div class="row">
             <div class="span1 offset1">
                 {% if notify.icon_url is not None %}

@@ -2,53 +2,86 @@
 
 {% block title %}Game Levels{% end %}
 
+{% block header %}
+<script src="/static/js/pages/admin/view/game_levels.js"></script>
+{% end %}
+
 {% block content %}
 {% from models.GameLevel import GameLevel %}
     <!-- Edit Level -->
-    <div id="editLevelModal" class="modal hide fade" style="display: none; ">
+    <div id="edit-game-level-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Edit Level</h3>
+            <h3>
+                <i class="fa fa-pencil"></i>
+                Edit Level
+            </h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="edit-level" method="post" action="/admin/edit/game_level">
+            <form class="form-horizontal" id="edit-game-level-form" method="post" action="/admin/edit/game_level">
                 {% raw xsrf_form_html() %}
-                <input id="game_level_uuid" name="uuid" type="hidden" />
+                <input id="game_level-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="game_level_number">Current Level</label>
+                    <label class="control-label" for="game_level-number">Current Level</label>
                     <div class="controls">
-                        <input required id="game_level_number" name="number" pattern="[0-9]+" placeholder="Level Number" type="text" />
+                        <input required id="game_level-number" name="number" pattern="[0-9]+" placeholder="Level Number" type="text" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="game_level_buyout">Buyout</label>
+                    <label class="control-label" for="game_level-buyout">Buyout</label>
                     <div class="controls">
-                        <input required id="game_level_buyout" name="buyout" pattern="[0-9]+" placeholder="Buyout ($)" type="text" />
+                        <input required id="game_level-buyout" name="buyout" pattern="[0-9]+" placeholder="Buyout ($)" type="text" />
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button class="btn btn-primary" type="button" onclick="document.forms['edit-level'].submit();">
+            <button id="edit-game-level-submit" class="btn btn-primary" type="button">
+                <i class="fa fa-save"></i>
                 Save
             </button>
         </div>
     </div>
-    <!-- Switch Level -->
-    <div id="switchLevelModal" class="modal hide fade" style="display: none; ">
+    <div id="delete-game-level-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Switch Level</h3>
+            <h3><i class="fa fa-times-circle-o"></i> Delete Game Level</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="switch-level" method="post" action="/admin/edit/box_level">
+        <p>
+            Are you sure you want to delete this game level? <br />
+        </p>
+        <form id="delete-game-level-form" method="post" action="/admin/delete/game_level">
+            {% raw xsrf_form_html() %}
+            <input id="delete-game-level-uuid" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="delete-game-level-submit" type="button" class="btn btn-danger">
+                <i class="fa fa-times-circle-o"></i>
+                Delete
+            </button>
+        </div>
+    </div>
+    <!-- Switch Level -->
+    <div id="switch-level-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>
+                <i class="fa fa-arrows-v"></i>
+                Switch Level
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="switch-level-form" class="form-horizontal" id="switch-level" method="post" action="/admin/edit/box_level">
                 {% raw xsrf_form_html() %}
-                <input id="box_uuid" name="box_uuid" type="hidden" />
+                <input id="box-uuid" name="box_uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="user_team_uuid">Current Level</label>
+                    <label class="control-label" for="game-level-uuid">Current Level</label>
                     <div class="controls">
-                        <select id="game_level_uuid" name="level_uuid">
+                        <select id="game-level-uuid" name="level_uuid">
                             {% for level in GameLevel.all() %}
                                 <option value="{{ level.uuid }}">{{ level.number }}</option>
                             {% end %}
@@ -59,42 +92,32 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button class="btn btn-primary" type="button" onclick="document.forms['switch-level'].submit();">
+            <button id="switch-level-submit" class="btn btn-primary" type="button">
+                <i class="fa fa-save"></i>
                 Save
             </button>
         </div>
     </div>
-    <script>
-        function switch_level(level_uuid, box_uuid) {
-            $("#game_level_uuid").val(level_uuid);
-            $("#box_uuid").val(box_uuid);
-        }
-        function get_details(obj, uuid) {
-            $("#" + obj + "_uuid").val(uuid);
-            $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
-                $.each(data, function(key, value) {
-                    console.log("#" + obj + "_" + key + " -> " + value);
-                    $("#" + obj + "_" + key).val(value);
-                });
-            });
-        }
-    </script>
     <div class="container">
         <h1>
             <i class="fa fa-level-up"></i>
             Game Levels
         </h1>
         <br />
-        {% for level in GameLevel.all() %}
+        {% for index, level in enumerate(GameLevel.all()) %}
             <div class="well">
-                <h2 style="display:inline;">Level #{{ level.number }}&nbsp;</h2>
-                <h3 style="display:inline;">(Buyout ${{ level.buyout }})&nbsp;&nbsp;&nbsp;</h3>
-                <a class="btn" data-toggle="modal" href="#editLevelModal" onclick="get_details('game_level', '{{ level.uuid }}')">
+                <h2 style="display:inline;">
+                    Level #{{ level.number }} - ${{ level.buyout }}&nbsp;&nbsp;&nbsp;
+                </h2>
+                <a id="edit-game-level-button{{ index }}" class="btn btn-small" data-toggle="modal" href="#edit-game-level-modal" data-uuid="{{ level.uuid }}">
                     <i class="fa fa-pencil"></i>
-                    Edit Level
+                    Edit Game Level
                 </a>
-                <br />
-                <br />
+                <a id="delete-game-level-button{{ index }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-game-level-modal" data-uuid="{{ level.uuid }}">
+                    <i class="fa fa-times-circle-o"></i>
+                    Delete Game Level
+                </a>
+                <hr />
                 {% if len(level.boxes) != 0 %}
                     <table class="table table-striped">
                         <thead>
@@ -106,14 +129,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for box in level.boxes %}
+                            {% for index, box in enumerate(level.boxes) %}
                                 <tr>
-                                    <td>{{ level.boxes.index(box) + 1 }}</td>
+                                    <td>{{ index + 1 }}</td>
                                     <td>{{ box.name }}</td>
                                     <td>{{ len(box.flags) }}</td>
                                     <td>
-                                          <a class="btn btn-mini" data-toggle="modal" href="#switchLevelModal"
-                                                onclick="switch_level('{{ level.uuid }}', '{{ box.uuid }}')">
+                                          <a id="switch-level-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#switch-level-modal" data-level-uuid="{{ level.uuid }}" data-box-uuid="{{ box.uuid }}">
+                                            <i class="fa fa-arrows-v"></i>
                                             Switch Level
                                           </a>
                                     </td>
