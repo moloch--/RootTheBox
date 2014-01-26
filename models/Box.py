@@ -46,6 +46,7 @@ class Box(DatabaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
     _name = Column(Unicode(16), unique=True, nullable=False)
+    _operating_system = Column(Unicode(16))
     _description = Column(Unicode(1024))
     _difficulty = Column(Unicode(16))
     game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
@@ -123,6 +124,14 @@ class Box(DatabaseObject):
         self._name = unicode(value)
 
     @property
+    def operating_system(self):
+        return self._operating_system if self._operating_system else '?'
+
+    @operating_system.setter
+    def operating_system(self, value):
+        self._operating_system = unicode(value)
+
+    @property
     def description(self):
         '''
         We have to ensure that the description text is formatted correctly,
@@ -140,7 +149,8 @@ class Box(DatabaseObject):
                     index += step
             else:
                 ls.append("  No information on file.")
-            ls.append("\n  Reported Difficulty: %s\n" % self.difficulty)
+            ls.append("\n  Operating System: %s\n" % self.operating_system)
+            ls.append("  Reported Difficulty: %s\n" % self.difficulty)
             return unicode("\n".join(ls))
         else:
             return self._description
@@ -220,10 +230,11 @@ class Box(DatabaseObject):
         ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", str(self.game_level.number))
-        ET.SubElement(box_elem, "name").text = unicode(self.name)
-        ET.SubElement(box_elem, "description").text = unicode(self._description)
-        ET.SubElement(box_elem, "difficulty").text = unicode(self._difficulty)
-        ET.SubElement(box_elem, "garbage").text = str(self.garbage)
+        ET.SubElement(box_elem, "name").text = self.name
+        ET.SubElement(box_elem, "description").text = self._operating_system
+        ET.SubElement(box_elem, "description").text = self._description
+        ET.SubElement(box_elem, "difficulty").text = self._difficulty
+        ET.SubElement(box_elem, "garbage").text = self.garbage
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", str(len(self.flags)))
         for flag in self.flags:

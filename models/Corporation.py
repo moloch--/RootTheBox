@@ -80,7 +80,6 @@ class Corporation(DatabaseObject):
         return {
             "uuid": self.uuid,
             "name": self.name,
-            "description": self.description,
         }
 
     def to_xml(self, parent):

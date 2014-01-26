@@ -34,9 +34,9 @@ class GameLevel(DatabaseObject):
     ''' Game Level definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    number = Column(Integer, unique=True, nullable=False)
+    _number = Column(Integer, unique=True, nullable=False)
     next_level_id = Column(Integer, ForeignKey('game_level.id'))
-    buyout = Column(Integer, nullable=False)
+    _buyout = Column(Integer, nullable=False)
 
     boxes = relationship("Box",
         backref=backref("game_level", lazy="select"),
@@ -46,7 +46,7 @@ class GameLevel(DatabaseObject):
     @classmethod
     def all(cls):
         ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).order_by(asc(cls.number)).all()
+        return dbsession.query(cls).order_by(asc(cls._number)).all()
 
     @classmethod
     def count(cls):
@@ -63,9 +63,29 @@ class GameLevel(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_number(cls, _number):
+    def by_number(cls, number):
         ''' Returns a the object with number of number '''
-        return dbsession.query(cls).filter_by(number=_number).first()
+        return dbsession.query(cls).filter_by(_number=int(number)).first()
+
+    @property
+    def number(self):
+        return self._number
+
+    @number.setter
+    def number(self, value):
+        if isinstance(value, basestring) and not value.isdigit():
+            raise ValueError("Game level number must be an Integer")
+        self._number = abs(int(value))
+
+    @property
+    def buyout(self):
+        return self._buyout
+
+    @buyout.setter
+    def buyout(self, value):
+        if isinstance(value, basestring) and not value.isdigit():
+            raise ValueError("Game level number must be an Integer")
+        self._buyout = abs(int(value))
 
     @property
     def flags(self):

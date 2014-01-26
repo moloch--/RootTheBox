@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+'''
+Unit tests for everything in models/
+
+You'll want to run test with a clean database.
+TODO: Create a temporary sqlite db for tests
+'''
+
 
 import unittest
 
@@ -96,6 +104,38 @@ class TestUser(unittest.TestCase):
         assert not self.user.validate_password("Wrong")
         with self.assertRaises(ValueError):
             self.user.bank_password = "A" * 100
+
+
+class TestGameLevel(unittest.TestCase):
+
+    def setUp(self):
+        self.game_level = GameLevel()
+        self.game_level.number = 1
+        self.game_level.buyout = 1000
+        dbsession.add(self.game_level)
+        dbsession.commit()
+
+    def tearDown(self):
+        dbsession.delete(self.game_level)
+        dbsession.commit()
+
+    def test_number(self):
+        assert 0 <= self.game_level.number
+        self.game_level.number = -1
+        assert 0 <= self.game_level.number
+        self.game_level.number = "1"
+        assert self.game_level.number == 1
+        with self.assertRaises(ValueError):
+            self.game_level.number = "A"
+
+    def test_buyout(self):
+        assert 0 <= self.game_level.buyout
+        self.game_level.buyout = -1000
+        assert 0 <= self.game_level.buyout
+        self.game_level.buyout = "1000"
+        assert self.game_level.buyout == 1000
+        with self.assertRaises(ValueError):
+            self.game_level.buyout = "A"
 
 
 class TestCorporation(unittest.TestCase):

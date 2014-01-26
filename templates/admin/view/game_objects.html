@@ -2,6 +2,10 @@
 
 {% block title %}Game Management{% end %}
 
+{% block header %}
+<script src="/static/js/pages/admin/view/game_objects.js"></script>
+{% end %}
+
 {% block content %}
 {% from models.Corporation import Corporation %}
 {% from models.Box import Box %}
@@ -14,18 +18,45 @@
         <div class="modal-body">
             <form id="edit-corporation-form" class="form-horizontal" method="post" action="/admin/edit/corporation">
                 {% raw xsrf_form_html() %}
-                <input id="corporation_uuid" name="uuid" value="" type="hidden" />
+                <input id="edit-corporation-uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
                     <label class="control-label" for="corporation_name">Name</label>
                     <div class="controls">
-                        <input id="corporation_name" name="name" type="text" placeholder="Corporation Name" />
+                        <input id="corporation-name" name="name" type="text" placeholder="Corporation Name" />
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="edit-corporation-submit" class="btn btn-primary" type="button">Save</button>
+            <button id="edit-corporation-submit" class="btn btn-primary" type="button">
+                <i class="fa fa-save"></i>
+                Save
+            </button>
+        </div>
+    </div>
+    <div id="delete-corporation-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3><i class="fa fa-times-circle-o"></i> Delete Corporation</h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            Are you sure you want to delete this corporation? <br />
+            <br />
+            <strong>WARNING:</strong> This will also delete associated IP addresses, boxes, and flags.
+        </p>
+        <form id="delete-corporation-form" method="post" action="/admin/delete/corporation">
+            {% raw xsrf_form_html() %}
+            <input id="delete-corporation-uuid" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="delete-corporation-submit" type="button" class="btn btn-danger">
+                <i class="fa fa-times-circle-o"></i>
+                Delete
+            </button>
         </div>
     </div>
     <!-- Edit Box -->
@@ -35,19 +66,19 @@
             <h3><i class="fa fa-pencil"></i> Edit Box</h3>
         </div>
         <div class="modal-body">
-            <form  id="edit-box-form" class="form-horizontal" method="post" action="/admin/edit/box" enctype="multipart/form-data">
+            <form id="edit-box-form" class="form-horizontal" method="post" action="/admin/edit/box" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
-                <input id="box_uuid" name="uuid" value="" type="hidden" />
+                <input id="box-uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
                     <label class="control-label" for="box_name">Box Name</label>
                     <div class="controls">
-                        <input id="box_name" name="name" type="text" placeholder="Box Name" />
+                        <input id="box-name" name="name" type="text" placeholder="Box Name" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="box_corporation">Corporation</label>
                     <div class="controls">
-                        <select id="box_corporation" name="corporation_uuid">
+                        <select id="box-corporation" name="corporation_uuid">
                             {% for corporation in Corporation.all() %}
                                 <option value="{{ corporation.uuid }}">{{ corporation.name }}</option>
                             {% end %}
@@ -57,26 +88,53 @@
                 <div class="control-group">
                     <label class="control-label" for="box_description">Description</label>
                     <div class="controls">
-                        <textarea id="box_description" name="description" placeholder="Description" ></textarea>
+                        <textarea id="box-description" name="description" placeholder="Description" ></textarea>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="box_difficulty">Difficulty</label>
                     <div class="controls">
-                        <input id="box_difficulty" name="difficulty" type="text" placeholder="Difficutly Rating" />
+                        <input id="box-difficulty" name="difficulty" type="text" placeholder="Difficutly Rating" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="box_avatar">Avatar</label>
                     <div class="controls">
-                        <input id="box_avatar" name="avatar" type="file" style="color:white;" />
+                        <input id="box-avatar" name="avatar" type="file" style="color:white;" />
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="edit-box-submit" type="button" class="btn btn-primary">Save</button>
+            <button id="edit-box-submit" type="button" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                Save
+            </button>
+        </div>
+    </div>
+    <div id="delete-box-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3><i class="fa fa-times-circle-o"></i> Delete Box</h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            Are you sure you want to delete this box? <br />
+            <br />
+            <strong>WARNING:</strong> This will also delete associated IP addresses and flags.
+        </p>
+        <form id="delete-box-form" method="post" action="/admin/delete/box">
+            {% raw xsrf_form_html() %}
+            <input id="delete-box-uuid" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="delete-box-submit" type="button" class="btn btn-danger">
+                <i class="fa fa-times-circle-o"></i>
+                Delete
+            </button>
         </div>
     </div>
     <!-- Edit Flag -->
@@ -88,35 +146,35 @@
         <div class="modal-body">
             <form id="edit-flag-form" class="form-horizontal" method="post" action="/admin/edit/flag">
                 {% raw xsrf_form_html() %}
-                <input id="flag_uuid" name="uuid" type="hidden" />
+                <input id="flag-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="flag_name">Name</label>
+                    <label class="control-label" for="flag-name">Name</label>
                     <div class="controls">
-                        <input id="flag_name" name="name" type="text" placeholder="Flag Name" />
+                        <input id="flag-name" name="name" type="text" placeholder="Flag Name" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="flag_token">Token</label>
+                    <label class="control-label" for="flag-token">Token</label>
                     <div class="controls">
-                        <input id="flag_token" name="token" type="text" placeholder="Token Value" />
+                        <input id="flag-token" name="token" type="text" placeholder="Token Value" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="flag_description">Description</label>
+                    <label class="control-label" for="flag-∂description">Description</label>
                     <div class="controls">
-                        <input id="flag_description" name="description" type="text" placeholder="Description" />
+                        <input id="flag-description" name="description" type="text" placeholder="Description" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="flag_value">Value</label>
+                    <label class="control-label" for="flag-value">Value</label>
                     <div class="controls">
-                        <input id="flag_value" name="value" type="text" placeholder="($) Reward Value" />
+                        <input id="flag-value" name="value" type="text" placeholder="($) Reward Value" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="flag_box_uuid">Box</label>
+                    <label class="control-label" for="flag-box-uuid">Box</label>
                     <div class="controls">
-                        <select id="flag_box_uuid" name="box_uuid">
+                        <select id="flag-box-uuid" name="box_uuid">
                             {% for box in Box.all() %}
                                 <option value="{{ box.uuid }}">{{ box.name }}</option>
                             {% end %}
@@ -127,7 +185,32 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="edit-flag-submit" type="button" class="btn btn-primary">Save</button>
+            <button id="edit-flag-submit" type="button" class="btn btn-primary">
+                <i class="fa fa-save"></i>
+                Save
+            </button>
+        </div>
+    </div>
+    <div id="delete-flag-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3><i class="fa fa-times-circle-o"></i> Delete Flag</h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            Are you sure you want to delete this flag? <br />
+        </p>
+        <form id="delete-flag-form" method="post" action="/admin/delete/flag">
+            {% raw xsrf_form_html() %}
+            <input id="delete-flag" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="delete-flag-submit" type="button" class="btn btn-danger">
+                <i class="fa fa-times-circle-o"></i>
+                Delete
+            </button>
         </div>
     </div>
     <!-- Edit Hint -->
@@ -139,24 +222,49 @@
         <div class="modal-body">
             <form id="edit-hint-form" class="form-horizontal" method="post" action="/admin/edit/hint">
                 {% raw xsrf_form_html() %}
-                <input id="hint_uuid" name="uuid" value="" type="hidden" />
+                <input id="hint-uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="hint_price">Price</label>
+                    <label class="control-label" for="hint-price">Price</label>
                     <div class="controls">
-                        <input id="hint_price" name="price" type="text" placeholder="$" />
+                        <input id="hint-price" name="price" type="text" placeholder="$" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="hint_description">Description</label>
+                    <label class="control-label" for="hint-description">Description</label>
                     <div class="controls">
-                        <input id="hint_description" name="description" type="text" placeholder="Description" />
+                        <input id="hint-description" name="description" type="text" placeholder="Description" />
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="edit-hint-submit" class="btn btn-primary" type="button">Save</button>
+            <button id="edit-hint-submit" class="btn btn-primary" type="button">
+                <i class="fa fa-save"></i>
+                Save
+            </button>
+        </div>
+    </div>
+    <div id="delete-hint-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3><i class="fa fa-times-circle-o"></i> Delete Hint</h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            Are you sure you want to delete this hint? <br />
+        </p>
+        <form id="delete-hint-form" method="post" action="/admin/delete/hint">
+            {% raw xsrf_form_html() %}
+            <input id="delete-hint" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="delete-hint-submit" type="button" class="btn btn-danger">
+                <i class="fa fa-times-circle-o"></i>
+                Delete
+            </button>
         </div>
     </div>
     <!-- Add Ipv4 -->
@@ -230,56 +338,15 @@
             </button>
         </div>
     </div>
-    <!-- Del Flag -->
-    <div id="delete-flag-modal" class="modal hide fade" style="display: none; ">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Delete Flag</h3>
-        </div>
-        <div class="modal-body">
-        <p>
-            Are you sure you want to delete this flag? <br />
-        </p>
-        <form id="delete-flag-form" method="post" action="/admin/delete/flag">
-            {% raw xsrf_form_html() %}
-            <input id="delete-flag" name="uuid" type="hidden" value="" />
-        </form>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="delete-flag-submit" type="button" class="btn btn-danger">
-                Delete
-            </button>
-        </div>
-    </div>
-    <!-- Del Hint -->
-    <div id="delete-hint-modal" class="modal hide fade" style="display: none; ">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Delete Hint</h3>
-        </div>
-        <div class="modal-body">
-        <p>
-            Are you sure you want to delete this hint? <br />
-        </p>
-        <form id="delete-hint-form" method="post" action="/admin/delete/hint">
-            {% raw xsrf_form_html() %}
-            <input id="delete-hint" name="uuid" type="hidden" value="" />
-        </form>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="delete-hint-submit" type="button" class="btn btn-danger">
-                Delete
-            </button>
-        </div>
-    </div>
     <!-- Start Visable -->
     <div class="row-fluid">
         <div class="span2" />
             <ul class="nav nav-tabs nav-stacked affix well">
                 <center>
-                    <strong>Corporations</strong>
+                    <strong>
+                        <i class="fa fa-building-o"></i>
+                        Corporations
+                    </strong>
                 </center>
                 <br />
                 {% for corporation in Corporation.all() %}
@@ -293,7 +360,9 @@
             </ul>
         </div>
         <div class="span10">
-            <h1>&nbsp;&nbsp;Game Management</h1>
+            <h1>
+                <i class="fa fa-gamepad"></i> Game Management
+            </h1>
             <br />
             {% if errors != None and len(errors) != 0 %}
                 {% for error in errors %}
@@ -310,11 +379,11 @@
                         <i class="fa fa-building-o"></i>
                         {{ corporation.name }}&nbsp;&nbsp;
                     </h2>
-                    <a class="btn btn-small" data-toggle="modal" href="#edit-corporation-modal" data-uuid="{{ corporation.uuid }}">
+                    <a id="edit-corporation-button" class="btn btn-small" data-toggle="modal" href="#edit-corporation-modal" data-uuid="{{ corporation.uuid }}">
                         <i class="fa fa-pencil"></i>
                         Edit Corp
                     </a>
-                    <a class="btn btn-small btn-danger" data-toggle="modal" href="#delete-corporation-modal" data-uuid="{{ corporation.uuid }}">
+                    <a id="delete-corporation-button" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-corporation-modal" data-uuid="{{ corporation.uuid }}">
                         <i class="fa fa-times-circle-o"></i>
                         Delete Corp
                     </a>
@@ -327,11 +396,11 @@
                                     <i class="fa fa-desktop"></i>
                                     {{ box.name }}&nbsp;&nbsp;
                                 </h3>
-                                    <a class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}">
+                                    <a id="edit-box-button" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}">
                                         <i class="fa fa-pencil"></i>
                                         Edit Box
                                     </a>
-                                    <a class="btn btn-small btn-danger" data-toggle="modal" href="#delete-box-modal" data-uuid="{{ box.uuid }}">
+                                    <a id="delete-box-button" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-box-modal" data-uuid="{{ box.uuid }}">
                                         <i class="fa fa-times-circle-o"></i>
                                         Delete Box
                                     </a>
@@ -451,12 +520,14 @@
                                                         <td>${{ flag.value }}</td>
                                                         <td>{{ str(flag._type) }}</td>
                                                         <td>
-                                                            <a class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-uuid="{{ flag.uuid }}">
+                                                            <a id="edit-flag-button" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-uuid="{{ flag.uuid }}">
+                                                                <i class="fa fa-pencil"></i>
                                                                 Edit Flag
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-flag-modal" data-uuid="{{ flag.uuid }}">
+                                                            <a id="delete-flag-button" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-flag-modal" data-uuid="{{ flag.uuid }}">
+                                                                <i class="fa fa-times-circle-o"></i>
                                                                 Delete
                                                             </a>
                                                         </td>
@@ -495,12 +566,14 @@
                                                         <td>${{ hint.price }}</td>
                                                         <td>{{ hint.description }}</td>
                                                         <td>
-                                                            <a class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                            <a id="edit-hint-button" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                                <i class="fa fa-pencil"></i>
                                                                 Edit Hint
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <a class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                            <a id="delete-hint-button" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                                <i class="fa fa-times-circle-o"></i>
                                                                 Delete
                                                             </a>
                                                         </td>

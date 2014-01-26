@@ -1,19 +1,22 @@
-{% extends "../../main.html" %} 
+{% extends "../../main.html" %}
 
-{% block title %}Create Game Level{% end %} 
+{% block title %}Create Game Level{% end %}
 
 {% block content %}
 <div class="container">
-    <h1>Create Game Level</h1>
+    <h1>
+        <i class="fa fa-level-up"></i>
+        Create Game Level
+    </h1>
     <br />
-    {% if errors is not None and len(errors) != 0 %} 
+    {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
             <h4 class="alert-heading">ERROR</h4>
             {{ error }}
         </div>
-        {% end %} 
+        {% end %}
     {% end %}
     <div class="well">
         <form class="form-horizontal" action="/admin/create/game_level" method="post">

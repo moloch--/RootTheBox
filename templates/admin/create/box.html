@@ -2,6 +2,10 @@
 
 {% block title %}Create Box{% end %}
 
+{% block header %}
+<script src="/static/js/pages/admin/create/box.js"></script>
+{% end %}
+
 {% block content %}
 {% from models.GameLevel import GameLevel %}
 {% from models.Corporation import Corporation %}
@@ -52,6 +56,34 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="operatingsystem">Operating System</label>
+                <div class="controls">
+                    <input id="operating-system" name="operating_system" type="hidden" value="?" />
+                    <div class="btn-group" data-toggle="buttons-radio">
+                        <button id="os-button" class="btn active" type="button" data-os="?">
+                            <i class="fa fa-question"></i>
+                            Unknown
+                        </button>
+                        <button id="os-button" class="btn" type="button" data-os="linux">
+                            <i class="fa fa-linux"></i>
+                            Linux
+                        </button>
+                        <button id="os-button" class="btn" type="button" data-os="windows">
+                            <i class="fa fa-windows"></i>
+                            Windows
+                        </button>
+                        <button id="os-button" class="btn" type="button" data-os="apple">
+                            <i class="fa fa-apple"></i>
+                            iOS / OSX
+                        </button>
+                        <button id="os-button" class="btn" type="button" data-os="android">
+                            <i class="fa fa-android"></i>
+                            Android
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="description">Description</label>
                 <div class="controls">
                     <textarea required id="description" name="description" placeholder="Description"></textarea>
@@ -66,7 +98,7 @@
             <div class="control-group">
                 <label class="control-label" for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
                 <div class="controls">
-                    <input required id="avatar" name="avatar" type="file" style="color:white;">
+                    <input id="avatar" name="avatar" type="file">
                 </div>
             </div>
             <div class="control-group">

@@ -137,7 +137,6 @@ class BaseHandler(RequestHandler):
 
     @property
     def dbsession(self):
-        ''' Lazily start a new dbsession '''
         return self._dbsession
 
     def get(self, *args, **kwargs):
@@ -174,6 +173,7 @@ class BaseHandler(RequestHandler):
 
     def on_finish(self, *args, **kwargs):
         ''' Called after a response is sent to the client '''
+        self._dbsession.close()
         if 0 < len(self.new_events):
             self._fire_events()
 

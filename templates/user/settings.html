@@ -6,7 +6,10 @@
 {% from models.Theme import Theme %}
 {% include ../notifier.html %}
     <div class="container">
-        <h1>Settings</h1>
+        <h1>
+            <i class="fa fa-gears"></i>
+            Settings
+        </h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
