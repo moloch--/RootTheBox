@@ -51,7 +51,7 @@ from handlers.UpgradeHandlers import *
 from handlers.MissionsHandler import *
 from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
-from handlers.ShareUploadHandlers import *
+from handlers.FileUploadHandlers import *
 from handlers.NotificationHandlers import *
 
 
@@ -73,9 +73,9 @@ urls = [
     (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))',
         StaticFileHandler, {'path': 'files/avatars/'}),
 
-    # ShareUploadHandlers - ShareUploadHandlers.py
-    (r'/user/shares/download(.*)', ShareDownloadHandler),
-    (r'/user/share/files', ShareUploadHandler),
+    # FileUploadHandlers - FileUploadHandlers.py
+    (r'/user/shares/download(.*)', FileDownloadHandler),
+    (r'/user/share/files', FileUploadHandler),
 
     # PasteBin - PastebinHandlers.py
     (r'/user/share/pastebin', PasteHandler),
@@ -210,7 +210,6 @@ app = Application(
     port=config.listen_port,
 
     # Special file directories
-    shares_dir=path.abspath('files/shares/'),
     source_code_market_dir=path.abspath('files/source_code_market/'),
 
     # Notifier WebSocket
@@ -265,15 +264,11 @@ def start_server():
                 config.bot_reward_interval,
                 io_loop=io_loop
             )
-            bot_ping_callback = PeriodicCallback(
-                ping_bots, 30000, io_loop=io_loop
-            )
-            bot_ping_callback.start()
             scoring_callback.start()
         history_callback.start()
         io_loop.start()
     except KeyboardInterrupt:
-        sys.stdout.write('\r'+WARN+'Shutdown Everything!\n')
+        sys.stdout.write('\r' + WARN + 'Shutdown Everything!\n')
     except:
         logging.exception("Main i/o loop threw exception")
     finally:

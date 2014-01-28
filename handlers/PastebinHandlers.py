@@ -53,20 +53,20 @@ class CreatePasteHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Creates a new text share '''
-        name = self.get_argument("name", "")[:16]
-        content = self.get_argument("content", "")[:4096]
+        name = self.get_argument("name", "")
+        content = self.get_argument("content", '')
         if 0 < len(name) and 0 < len(content):
             user = self.get_current_user()
-            paste = PasteBin(
-                name=unicode(name),
-                contents=unicode(content),
-                team_id=user.team.id
-            )
+            paste = PasteBin(team_id=user.team.id)
+            paste.name = name
+            paste.content = content
             self.dbsession.add(paste)
             self.dbsession.commit()
             event = self.event_manager.create_paste_bin_event(user, paste)
             self.new_events.append(event)
-        self.redirect('/user/share/pastebin')
+            self.redirect('/user/share/pastebin')
+        else:
+            self.render('pastebin/create.html', errors=["Missing name or content"])
 
 
 class DisplayPasteHandler(BaseHandler):
@@ -75,19 +75,13 @@ class DisplayPasteHandler(BaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
         ''' AJAX // Retrieves a paste from the database '''
-        form = Form(
-            paste_uuid="Paste does not exist.",
-        )
-        if form.validate(self.request.arguments):
-            paste_uuid = self.get_argument("paste_uuid")
-            user = self.get_current_user()
-            paste = PasteBin.by_uuid(paste_uuid)
-            if paste is None or paste.team_id != user.team.id:
-                self.render("pastebin/display.html", errors=["Paste does not exist."], paste=None)
-            else:
-                self.render("pastebin/display.html", errors=None, paste=paste)
+        paste_uuid = self.get_argument("paste_uuid")
+        user = self.get_current_user()
+        paste = PasteBin.by_uuid(paste_uuid)
+        if paste is None or paste not in user.team.pastes:
+            self.render("pastebin/display.html", errors=["Paste does not exist."], paste=None)
         else:
-            self.render("pastebin/display.html", errors=form.errors, paste=None)
+            self.render("pastebin/display.html", errors=None, paste=paste)
 
 
 class DeletePasteHandler(BaseHandler):
@@ -96,10 +90,9 @@ class DeletePasteHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' AJAX // Delete a paste object from the database '''
-        paste_uuid = self.get_argument("uuid", "")
-        paste = PasteBin.by_uuid(paste_uuid)
+        paste = PasteBin.by_uuid(self.get_argument("uuid", ""))
         user = self.get_current_user()
-        if paste is not None and paste.team_id == user.team.id:
+        if paste is not None and paste in user.team.pastes:
             self.dbsession.delete(paste)
             self.dbsession.commit()
         self.redirect("/user/share/pastebin")

@@ -27,13 +27,16 @@ from models import dbsession
 from models.BaseModels import DatabaseObject
 
 
+MAX_PASTE_SIZE = 4096
+
+
 class PasteBin(DatabaseObject):
     ''' PasteBin definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
-    name = Column(Unicode(16), nullable=False)
-    contents = Column(Unicode(8192), nullable=False)
+    _name = Column(Unicode(32), nullable=False)
+    _contents = Column(Unicode(MAX_PASTE_SIZE), nullable=False)
 
     @classmethod
     def all(cls):
@@ -41,17 +44,30 @@ class PasteBin(DatabaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Get a paste object by uuid '''
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
-    def __str__(self):
-        return self.name
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = unicode(value)
+
+    @property
+    def contents(self):
+        return self._contents
+
+    @contents.setter
+    def contents(self, value):
+        self._contents = unicode(value[:MAX_PASTE_SIZE])
 
     def __repr__(self):
         return ('<PasteBin - name:%s, user_id:%d>' % (self.name, self.user_id))

@@ -20,28 +20,26 @@ Created on Mar 15, 2012
 '''
 
 
+import os
+
+from uuid import uuid4
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym
-from sqlalchemy.types import Unicode, Integer
-from string import ascii_letters, digits
+from sqlalchemy.types import Unicode, String, Integer
+from string import printable
+from mimetypes import guess_type
+from libs.ConfigManager import ConfigManager
 
 
 class FileUpload(DatabaseObject):
 
-    uuid = Column(Unicode(64), unique=True, nullable=False)
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
-    content = Column(Unicode(255), nullable=False)
-    description = Column(Unicode(1024), nullable=False)
     byte_size = Column(Integer, nullable=False)
-
+    _description = Column(Unicode(1024), nullable=False)
     _file_name = Column(Unicode(64), nullable=False)
-    file_name = synonym('_file_name', descriptor=property(
-        lambda self: self._file_name,
-        lambda self, file_name: setattr(
-            self, '_file_name', self.__class__.filter_string(file_name, ".-_"))
-    ))
 
     @classmethod
     def all(cls):
@@ -60,14 +58,43 @@ class FileUpload(DatabaseObject):
     @classmethod
     def by_file_name(cls, file_name):
         ''' Return the user object whose file name is "file_name" '''
-        return dbsession.query(cls).filter_by(
-            file_name=unicode(file_name)
-        ).first()
+        return dbsession.query(cls).filter_by(_file_name=unicode(file_name)).first()
 
-    @classmethod
-    def filter_string(cls, string, extra_chars=''):
-        char_white_list = ascii_letters + digits + extra_chars
-        return filter(lambda char: char in char_white_list, string)
+    @property
+    def file_name(self):
+        return self._file_name
+
+    @file_name.setter
+    def file_name(self, value):
+        self._file_name = os.path.basename(value)
+
+    @property
+    def content_type(self):
+        content = guess_type(self.file_name)
+        return content[0] if content[0] is not None else 'unknown'
+
+    @property
+    def description(self):
+        return self._description if self._description else u'No description'
+
+    @description.setter
+    def description(self, value):
+        self._description = unicode(value)
+
+    @property
+    def data(self):
+        config = ConfigManager.instance()
+        with open(config.file_uploads_dir + self.uuid, 'rb') as fp:
+            return fp.read().decode('base64')
+
+    @data.setter
+    def data(self, value):
+        config = ConfigManager.instance()
+        if self.uuid is None:
+            self.uuid = str(uuid4())
+        self.byte_size = len(value)
+        with open(config.file_uploads_dir + self.uuid, 'wb') as fp:
+            fp.write(value.encode('base64'))
 
     def __repr__(self):
         return u'<FileUpload - name: %s, size: %s>' % (self.file_name, self.byte_size)

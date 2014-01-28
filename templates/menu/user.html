@@ -15,15 +15,20 @@
                     <li>
                         <a href="/user">
                             <i class="fa fa-home"></i>
+                            Home
                         </a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-gamepad"></i>
                             Game
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/user/missions">Missions</a>
+                            <li>
+                                <a href="/user/missions">
+                                    Missions
+                                </a>
                             </li>
                             {% if ConfigManager.instance().use_black_market %}
                             <li>
@@ -46,18 +51,21 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                          Tools
-                          <b class="caret"></b>
+                            <i class="fa fa-wrench"></i>
+                            Tools
+                            <b class="caret"></b>
                       </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/user/share/files">
-                                  Team File Sharing
+                                    <i class="fa fa-files-o"></i>
+                                    Team File Sharing
                               </a>
                             </li>
                             <li>
                                 <a href="/user/share/pastebin">
-                                  Team PasteBin
+                                    <i class="fa fa-clipboard"></i>
+                                    Team PasteBin
                               </a>
                             </li>
                         </ul>
@@ -91,8 +99,9 @@
                     {% end %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                          Scoreboard
-                          <b class="caret"></b>
+                            <i class="fa fa-bar-chart-o"></i>
+                            Scoreboard
+                            <b class="caret"></b>
                       </a>
                         <ul class="dropdown-menu">
                             <li>
@@ -117,9 +126,6 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="/about">About</a>
-                    </li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -135,6 +141,12 @@
                         <a href="/user/settings">
                             <i class="fa fa-gears"></i>
                             Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/about">
+                            <i class="fa fa-info-circle"></i>
+                            &nbsp;About
                         </a>
                     </li>
                     <li class="divider"></li>

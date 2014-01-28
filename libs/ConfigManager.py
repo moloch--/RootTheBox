@@ -59,9 +59,9 @@ class ConfigManager(object):
             sys.stderr.write(WARN+"No configuration file found at: %s." % self.conf)
             os._exit(1)
         self.refresh()
-        self.__logging__()
+        self._logging()
 
-    def __logging__(self):
+    def _logging(self):
         ''' Load network configurations '''
         level = self.config.get("Logging", 'console_level').lower()
         logger = logging.getLogger()
@@ -352,6 +352,10 @@ class ConfigManager(object):
     @property
     def avatar_dir(self):
         return os.path.abspath('files/avatars') + '/'
+
+    @property
+    def file_uploads_dir(self):
+        return os.path.abspath('files/shares/') + '/'
 
     @property
     def db_connection(self):

@@ -57,18 +57,16 @@ function greetings(term) {
     loading(term);
 }
 
-
-
-$('#console').terminal({
-
-    /* No commands just animation */
-
-}, {
-    prompt: " > ",
-    name: 'console',
-    greetings: null,
-    tabcompletion: true,
-    onInit: function(term) {
-        greetings(term);
-    },
+$(document).ready(function() {
+    $('#console').terminal({
+        /* No commands just animation */
+    }, {
+        prompt: " > ",
+        name: 'console',
+        greetings: null,
+        tabcompletion: true,
+        onInit: function(term) {
+            greetings(term);
+        },
+    });
 });
