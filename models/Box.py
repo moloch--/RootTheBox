@@ -117,13 +117,22 @@ class Box(BaseObject):
         split all of the text and insert newlines every 70 chars +2 whitespace
         at be beginning of each line, so the indents line up nicely.
         '''
-        index, step = 0, 70
+        step = 70
         ls = [' ']
         if 0 < len(self._description):
-            text = self._description.replace('\n', '')
-            while index < len(text):
-                ls.append("  "+text[index: index + step])
-                index += step
+            text_lines = self._description.split('\n')
+            
+            # Break description into lines
+            for line in text_lines:
+                while len(line) > 0:
+                    if len(line) <= step:
+                        ls.append(line)
+                        break
+                    # Find last space so we dont cut words in half
+                    last_space_index = line[:step].rfind(' ')
+                    ls.append(line[:last_space_index])
+                    # +1 to remove the space because it will be on the next line
+                    line = line[last_space_index+1:]
         else:
             ls.append("  No information on file.")
         ls.append("\n  Reported Difficulty: %s\n" % self.difficulty)
