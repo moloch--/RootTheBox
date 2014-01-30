@@ -614,7 +614,6 @@ class AdminEditHandler(BaseHandler):
             uuid="No team selected",
             name="Please enter a name",
             motto="Please enter a motto",
-            listen_port="Please enter a listen port",
         )
         if form.validate(self.request.arguments):
             team = Team.by_uuid(self.get_argument('uuid'))
@@ -630,17 +629,6 @@ class AdminEditHandler(BaseHandler):
                         (team.name, team.motto, self.get_argument('motto'),)
                     )
                     team.motto = unicode(self.get_argument('motto'))
-                try:
-                    lport = int(self.get_argument('listen_port'))
-                    if lport != team.listen_port:
-                        logging.info("Updated %s's listen port %d -> %d" %
-                            (team.name, team.listen_port, lport,)
-                        )
-                        team.listen_port = lport
-                except ValueError:
-                    errors.append("Invalid listen port %s " %
-                        self.get_argument('listen_port')
-                    )
                 dbsession.add(team)
                 dbsession.flush()
                 self.redirect("/admin/view/user_objects")
