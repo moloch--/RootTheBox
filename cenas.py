@@ -117,9 +117,15 @@ class Box(BaseObject):
         split all of the text and insert newlines every 70 chars +2 whitespace
         at be beginning of each line, so the indents line up nicely.
         '''
+        # [CHANGED]
+        #index, step = 0, 70
         step = 70
         ls = [' ']
         if 0 < len(self._description):
+            #text = self._description.replace('\n', '')
+            #while index < len(text):
+            #    ls.append("  "+text[index: index + step])
+            #    index += step
             text_lines = self._description.split('\n')
             
             # Break description into lines
