@@ -126,11 +126,11 @@ class Box(BaseObject):
             for line in text_lines:
                 while len(line) > 0:
                     if len(line) <= step:
-                        ls.append(line)
+                        ls.append("  " + line)
                         break
                     # Find last space so we dont cut words in half
                     last_space_index = line[:step].rfind(' ')
-                    ls.append(line[:last_space_index])
+                    ls.append("  " + line[:last_space_index])
                     # +1 to remove the space because it will be on the next line
                     line = line[last_space_index+1:]
         else:
