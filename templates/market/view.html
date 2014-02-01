@@ -11,7 +11,7 @@
 {% from models.MarketItem import MarketItem %}
 <div class="container">
     <!-- Hidden Download Form -->
-    <div id="item-details" class="modal hide fade" style="display: none; ">
+    <div id="buy-market-item-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
@@ -36,13 +36,13 @@
                 </div>
             </div>
         </div>
-        <form id="buy-form" method="post" action="/user/market">
+        <form id="buy-market-item-form" method="post" action="/user/market">
             {% raw xsrf_form_html() %}
-            <input id="buy-uuid" type="hidden" id="uuid" name="uuid" value="" />
+            <input id="buy-market-item-uuid" type="hidden" id="uuid" name="uuid" />
         </form>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="buy-submit" type="button" class="btn btn-primary">
+            <button id="buy-market-item-submit" type="button" class="btn btn-primary">
                 Buy Upgrade
             </button>
         </div>
@@ -82,7 +82,7 @@
                     <td>${{ item.price }}</td>
                     <td>
                         {% if not user.has_item(item.name) %}
-                        <a id="item-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#item-details" date-uuid="{{ item.uuid }}">
+                        <a id="item-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#buy-market-item-modal" data-uuid="{{ item.uuid }}">
                             Details
                         </a>
                         {% else %}

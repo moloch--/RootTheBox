@@ -38,11 +38,14 @@
                             <li class="dropdown-submenu">
                                 <a tabindex="-1" href="/user/bots/webmonitor">Botnet</a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/user/bots/webmonitor">Command &amp; Control</a>
+                                    <li>
+                                        <a href="/user/bots/webmonitor">Command &amp; Control</a>
                                     </li>
-                                    <li><a href="/user/bots/download/windows" target="_blank">Download Windows Bot</a>
+                                    <li>
+                                        <a href="/user/bots/download/windows" target="_blank">Download Windows Bot</a>
                                     </li>
-                                    <li><a href="/user/bots/download/linux" target="_blank">Download Linux / BSD Bot</a>
+                                    <li>
+                                        <a href="/user/bots/download/linux" target="_blank">Download Linux / BSD Bot</a>
                                     </li>
                                 </ul>
                             </li>
@@ -73,25 +76,41 @@
                     {% if len(user.team.items) != 0 %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                              Unlocks
-                              <b class="caret"></b>
-                          </a>
+                            <i class="fa fa-dashboard"></i>
+                            Unlocks
+                            <b class="caret"></b>
+                        </a>
                         <ul class="dropdown-menu">
                             {% if user.has_item("Source Code Market") %}
                             <li>
-                                <a href="/source_code_market">Source Code Market</a>
+                                <a href="/source_code_market">
+                                    <i class="fa fa-code"></i>
+                                    Source Code Market
+                                </a>
                             </li>
-                            {% end %} {% if user.has_item("Password Security") %}
+                            {% end %}
+                            {% if user.has_item("Password Security") %}
                             <li>
-                                <a href="/password_security">Password Security</a>
+                                <a href="/password_security">
+                                    <i class="fa fa-lock"></i>
+                                    Password Security
+                                </a>
                             </li>
-                            {% end %} {% if user.has_item("Federal Reserve") %}
+                            {% end %}
+                            {% if user.has_item("Federal Reserve") %}
                             <li>
-                                <a href="/federal_reserve">Federal Reserve</a>
+                                <a href="/federal_reserve">
+                                    <i class="fa fa-dollar"></i>
+                                    Federal Reserve
+                                </a>
                             </li>
-                            {% end %} {% if user.has_item("SWAT") %}
+                            {% end %}
+                            {% if user.has_item("SWAT") %}
                             <li>
-                                <a href="/swat">S.W.A.T.</a>
+                                <a href="/swat">
+                                    <i class="fa fa-crosshairs"></i>
+                                    S.W.A.T.
+                                </a>
                             </li>
                             {% end %}
                         </ul>
