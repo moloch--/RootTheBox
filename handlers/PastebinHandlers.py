@@ -53,13 +53,13 @@ class CreatePasteHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Creates a new text share '''
-        name = self.get_argument("name", "")
+        name = self.get_argument("name", '')
         content = self.get_argument("content", '')
         if 0 < len(name) and 0 < len(content):
             user = self.get_current_user()
             paste = PasteBin(team_id=user.team.id)
             paste.name = name
-            paste.content = content
+            paste.contents = content
             self.dbsession.add(paste)
             self.dbsession.commit()
             event = self.event_manager.create_paste_bin_event(user, paste)

@@ -2,8 +2,8 @@
     <div class="navbar-inner">
         <a class="brand">PasteBin</a>
         <ul class="nav">
-            <li><a onclick="create()" href="#">Create</a></li>
-            <li><a onclick="delete_paste('{{ paste.uuid }}')">Delete</a></li>
+            <li><a id="create-paste" href="#">Create</a></li>
+            <li><a id="delete-paste" data-uuid="{{ paste.uuid }}">Delete</a></li>
         </ul>
     </div>
 </div>

@@ -17,15 +17,7 @@
                 </div>
             {% end %}
         {% end %}
-        <script>
-            function submit_paste() {         
-                if (notifier_ws !== undefined) {
-                    notifier_ws.close();
-                }
-                return true;
-            }
-        </script>
-        <form id="create-paste" action="/user/share/pastebin/create" onsubmit="submit_paste()" method="post" autocomplete="off">  
+        <form id="create-paste" action="/user/share/pastebin/create" method="post" autocomplete="off">
             {% raw xsrf_form_html() %}
             <fieldset>
             <legend>Create New Paste</legend>
@@ -41,7 +33,7 @@
             </fieldset>
             <p >
                 <button class="btn btn-primary">Create New Paste</button>
-            </p>   
+            </p>
         </form>
     </div>
 </div><!--/row-->
