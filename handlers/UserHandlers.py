@@ -34,6 +34,7 @@ from uuid import uuid4
 from models.User import User
 from models.Theme import Theme
 from models.Team import Team
+from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
 
@@ -54,16 +55,27 @@ class HomeHandler(BaseHandler):
 class SettingsHandler(BaseHandler):
     ''' Modify user controlled attributes '''
 
+    extended_csp = "default-src 'self';" + \
+        "script-src 'self' www.google.com;" + \
+        "style-src 'self' 'unsafe-inline';" + \
+        "font-src 'self';" + \
+        "img-src 'self' www.google.com;" + \
+        "connect-src 'self' %s" % ConfigManager.instance().ws_connect
+
     @authenticated
     @tornado.web.asynchronous
     def get(self, *args, **kwargs):
         ''' Display the user settings '''
+        self.set_header("X-Content-Security-Policy", self.extended_csp)
+        self.set_header("Content-Security-Policy", self.extended_csp)
         self.render_page()
 
     @authenticated
     @tornado.web.asynchronous
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
+        self.set_header("X-Content-Security-Policy", self.extended_csp)
+        self.set_header("Content-Security-Policy", self.extended_csp)
         post_functions = {
             'avatar': self.post_avatar,
             'password': self.post_password,
@@ -75,7 +87,7 @@ class SettingsHandler(BaseHandler):
         else:
             self.render_page()
 
-    def render_page(self, errors=None, success=None):
+    def render_page(self, errors=[], success=[]):
         ''' Small wrap for self.render to cut down on lenghty params '''
         current_theme = Theme.by_cssfile(self.session["theme"])
         self.render("user/settings.html",
@@ -94,25 +106,6 @@ class SettingsHandler(BaseHandler):
         else:
             self.render_page(errors=["Please provide an image"])
 
-    def post_password(self, *args, **kwargs):
-        ''' Called on POST request for password change '''
-        self.set_password(
-            self.get_current_user(),
-            self.get_argument('old_password'),
-            self.get_argument('new_password'),
-            self.get_argument('new_password2')
-        )
-
-    def post_bankpassword(self):
-        ''' Update user's bank password '''
-        old_bankpw = self.get_argument('old_bpassword')
-        new_bankpw = self.get_argument('new_bpassword')
-        user = self.get_current_user()
-        if user.validate_bank_password(old_bankpw):
-            self.verify_recaptcha()
-        else:
-            self.render_page(errors=["Invalid old password."])
-
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
         theme = Theme.by_uuid(self.get_argument('theme_uuid', ''))
@@ -126,6 +119,15 @@ class SettingsHandler(BaseHandler):
             self.render_page()
         else:
             self.render_page(errors=["Theme does not exist."])
+
+    def post_password(self, *args, **kwargs):
+        ''' Called on POST request for password change '''
+        self.set_password(
+            self.get_current_user(),
+            self.get_argument('old_password'),
+            self.get_argument('new_password'),
+            self.get_argument('new_password2')
+        )
 
     def set_password(self, user, old_password, new_password, new_password2):
         ''' Sets a users password '''
@@ -143,6 +145,25 @@ class SettingsHandler(BaseHandler):
         else:
             self.render_page(errors=["Invalid old password"])
 
+    def post_bankpassword(self):
+        ''' Update user's bank password '''
+        old_bankpw = self.get_argument('old_bpassword')
+        user = self.get_current_user()
+        if user.validate_bank_password(old_bankpw):
+            if self.config.recaptcha_enabled:
+                self.verify_recaptcha()
+            else:
+                self.set_bankpassword()
+        else:
+            self.render_page(errors=["Invalid old password."])
+
+    def set_bankpassword(self):
+        user = self.get_current_user()
+        user.bank_password = self.get_argument('new_bpassword')
+        self.dbsession.add(user)
+        self.dbsession.commit()
+        self.render_page(success=['Successfully updated bank password'])
+
     def verify_recaptcha(self):
         ''' Checks recaptcha '''
         recaptcha_challenge = self.get_argument('recaptcha_challenge_field', '')
@@ -156,10 +177,11 @@ class SettingsHandler(BaseHandler):
         try:
             recaptcha_http = tornado.httpclient.AsyncHTTPClient()
             recaptcha_req_body = urllib.urlencode(recaptcha_req_data)
-            recaptcha_http.fetch(URL, self.recaptcha_callback, method='POST', body=recaptcha_req_body)
+            recaptcha_http.fetch(RECAPTCHA_URL, self.recaptcha_callback, method='POST', body=recaptcha_req_body)
         except tornado.httpclient.HTTPError:
             logging.exception('Recaptcha AsyncHTTP request threw an exception')
             self.recaptcha_callback(None)
+            self.render_page(errors=['Error making backend recaptcha request'])
 
     def recaptcha_callback(self, response):
         '''
@@ -167,8 +189,7 @@ class SettingsHandler(BaseHandler):
         Recaptcha docs: https://developers.google.com/recaptcha/docs/verify
         '''
         if response and response.body.startswith('true'):
-            self.change_password()
-            self.render_page(success=["Updated bank password successfully"])
+            self.set_bankpassword()
         else:
             self.render_page(errors=["Invalid captcha, try again"])
 

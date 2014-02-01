@@ -3,8 +3,8 @@
 {% block title %}First Login{% end %}
 
 {% block header %}
-<script src="/static/js/terminal.min.js" type="text/javascript"></script>
-<script src="/static/js/mousewheel-min.js" type="text/javascript"></script>
+<script src="/static/js/libs/terminal.min.js" type="text/javascript"></script>
+<script src="/static/js/libs/mousewheel-min.js" type="text/javascript"></script>
 <script src="/static/js/pages/missions/firstlogin.js"></script>
 <link href="/static/css/terminal.css" rel="stylesheet" />
 {% end %}
@@ -14,7 +14,10 @@
 <div class="container">
     <br />
     <div class="well">
-        <h3>Incoming Transmission</h3>
+        <h3>
+            <i class="fa fa-globe"></i>
+            Incoming Transmission
+        </h3>
         <input id="handle" type="hidden" value="{{ user.handle }}" />
         <input id="reward" type="hidden" value="{{ reward }}" />
         <div id="console" style="width: auto; height: 500px;">

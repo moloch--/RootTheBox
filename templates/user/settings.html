@@ -52,14 +52,15 @@
                 <form action="/user/settings/theme" method="post">
                     {% raw xsrf_form_html() %}
                     <legend>Change Theme</legend>
-                    <h4>(Current theme: {{ current_theme.name }})</h4>
                     <div class="control-group">
                         <label class="control-label" for="theme_uuid">Select a Theme</label>
                         <div class="controls">
                             <select name="theme_uuid">
-                                <option value=""></option>
+                                <option value="{{ current_theme.uuid }}">{{ current_theme.name }}</option>
                                 {% for theme in Theme.all() %}
-                                    <option value="{{ theme.uuid }}">{{ theme.name }}</option>
+                                    {% if current_theme != theme %}
+                                        <option value="{{ theme.uuid }}">{{ theme.name }}</option>
+                                    {% end %}
                                 {% end %}
                             </select>
                         </div>
@@ -75,23 +76,26 @@
         <div class="span10 well">
             <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">
                 {% raw xsrf_form_html() %}
-                <legend>Login Password</legend>
+                <legend>
+                    <i class="fa fa-lock"></i>
+                    Login Password
+                </legend>
                 <div class="control-group">
                     <label class="control-label" for="old_password">Old Password</label>
                     <div class="controls">
-                        <input type="password" name="old_password" id="old_password" placeholder="Old Password" />
+                        <input required type="password" name="old_password" id="old_password" placeholder="Old Password" />
                     </div>
                 </div>
                 <label class="control-label" for="new_password">New Password</label>
                 <div class="control-group">
                     <div class="controls">
-                        <input type="password" name="new_password" id="new_password" placeholder="New Password" />
+                        <input required type="password" name="new_password" id="new_password" placeholder="New Password" />
                     </div>
                 </div>
                 <label class="control-label" for="new_password2">Confirm New Password</label>
                 <div class="control-group">
                     <div class="controls">
-                        <input type="password" name="new_password2" id="new_password2" placeholder="Confirm Password" />
+                        <input required type="password" name="new_password2" id="new_password2" placeholder="Confirm Password" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -102,19 +106,22 @@
             </form>
         </div>
         <div class="span10 well">
-            <form class="form-horizontal" action="/user/settings/bank_password" method="post" autocomplete="off"> 
+            <form class="form-horizontal" action="/user/settings/bank_password" method="post" autocomplete="off">
                 {% raw xsrf_form_html() %}
-                <legend>Bank Password</legend>
+                <legend>
+                    <i class="fa fa-lock"></i>
+                    Bank Password
+                </legend>
                 <div class="control-group">
                     <label class="control-label" for="old_bpassword">Current Bank Password</label>
                     <div class="controls">
-                        <input type="password" name="old_bpassword" id="old_bpassword" placeholder="Old Password" />
+                        <input required type="password" name="old_bpassword" id="old_bpassword" placeholder="Old Password" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="new_bpassword">New Bank Password</label>
                     <div class="controls">
-                        <input type="password" name="new_bpassword" id="new_bpassword" placeholder="New Password" />
+                        <input required type="password" name="new_bpassword" id="new_bpassword" placeholder="New Password" />
                     </div>
                 </div>
                 {% module Recaptcha() %}
