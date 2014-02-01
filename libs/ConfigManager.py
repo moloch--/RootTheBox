@@ -136,7 +136,7 @@ class ConfigManager(object):
         if _domain.lower() == 'auto':
             try:
                 _domain = socket.gethostbyname(socket.gethostname())
-                # On some Linux systems the hostname resolves to ~127.0.0.1 
+                # On some Linux systems the hostname resolves to ~127.0.0.1
                 # per /etc/hosts, so fallback and try to get the fqdn if we can.
                 if _domain.startswith('127.'):
                     _domain = socket.gethostbyname(socket.getfqdn())
@@ -151,6 +151,11 @@ class ConfigManager(object):
     @property
     def origin(self):
         http = 'https://' if self.use_ssl else 'http://'
+        return "%s%s:%d" % (http, self.domain, self.listen_port)
+
+    @property
+    def ws_connect(self):
+        http = 'wss://' if self.use_ssl else 'ws://'
         return "%s%s:%d" % (http, self.domain, self.listen_port)
 
     @property

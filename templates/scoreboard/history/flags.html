@@ -134,7 +134,7 @@
             }
             $(document).ready(function() {
                 console.log("Create ws callback");
-                var history_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:{{ handler.application.settings['port'] }}/scoreboard/wsocket/game_history");
+                var history_ws = new WebSocket("{{ handler.application.settings['ws_connect'] }}/scoreboard/wsocket/game_history");
                 history_ws.onmessage = function (evt) {
                     msg = jQuery.parseJSON(evt.data);
                     if ('error' in msg) {

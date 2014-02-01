@@ -205,8 +205,12 @@ app = Application(
     # Enable XSRF protected forms; not optional
     xsrf_cookies=True,
 
-    # WebSocket Host IP Address
+    # Current domain setting
     domain=config.domain,
+
+    # WebSocket connection URL
+    ws_connect=config.ws_connect,
+
     port=config.listen_port,
 
     # Special file directories
