@@ -73,7 +73,7 @@ class GameLevel(DatabaseObject):
 
     @number.setter
     def number(self, value):
-        if isinstance(value, basestring) and not value.isdigit():
+        if isinstance(value, basestring) and not value.strip().isdigit():
             raise ValueError("Game level number must be an Integer")
         self._number = abs(int(value))
 
@@ -83,7 +83,7 @@ class GameLevel(DatabaseObject):
 
     @buyout.setter
     def buyout(self, value):
-        if isinstance(value, basestring) and not value.isdigit():
+        if isinstance(value, basestring) and not value.strip().isdigit():
             raise ValueError("Game level number must be an Integer")
         self._buyout = abs(int(value))
 
@@ -117,7 +117,7 @@ class GameLevel(DatabaseObject):
         }
 
     def __str__(self):
-        return str(self.number)
+        return "GameLevel #%d" % self.number
 
     def __cmp__(self, other):
         if self.number < other.number:

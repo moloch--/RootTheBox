@@ -125,6 +125,8 @@ class TestGameLevel(unittest.TestCase):
         assert 0 <= self.game_level.number
         self.game_level.number = "1"
         assert self.game_level.number == 1
+        self.game_level.number = " 1 "
+        assert self.game_level.number == 1
         with self.assertRaises(ValueError):
             self.game_level.number = "A"
 

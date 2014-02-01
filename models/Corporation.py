@@ -85,8 +85,7 @@ class Corporation(DatabaseObject):
     def to_xml(self, parent):
         ''' Add to XML dom '''
         corp_elem = ET.SubElement(parent, "corporation")
-        ET.SubElement(corp_elem, "name").text = unicode(self.name)
-        ET.SubElement(corp_elem, "description").text = unicode(self.description)
+        ET.SubElement(corp_elem, "name").text = self.name
         boxes_elem = ET.SubElement(corp_elem, "boxes")
         boxes_elem.set("count", str(len(self.boxes)))
         for box in self.boxes:

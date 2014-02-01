@@ -46,7 +46,8 @@ def create():
     ''' Creates/bootstraps the database '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
     print(INFO+'%s : Creating the database ...' % current_time())
-    import setup.create_database
+    from setup.create_database import create_tables, engine, metadata
+    create_tables(engine, metadata, True)
     print(INFO+'%s : Bootstrapping the database ...' % current_time())
     import setup.bootstrap
 
@@ -66,24 +67,11 @@ def recovery():
 def setup_xml(xml_params):
     ''' Imports XML file(s) '''
     from libs.ConfigManager import ConfigManager  # Sets up logging
-    from setup.importers import import_xml
-    for xml_param in xml_params:
-        print(INFO+"Importing %s ..." % xml_param)
+    from setup.xmlsetup import import_xml
+    for index, xml_param in enumerate(xml_params):
+        print(INFO + "Processing %d of %d .xml file(s) ..." % (index + 1, len(xml_params)))
         import_xml(xml_param)
-    print(INFO+"%s : XML import completed." % current_time())
-
-
-def setup_script():
-    ''' Imports a setup file '''
-    from libs.ConfigManager import ConfigManager  # Sets up logging
-    print(INFO+"%s : Running default setup file 'setup/game.py' ..." % current_time())
-    try:
-        from setup import game
-        print(INFO+"%s : Setup file completed successfully." % current_time())
-    except Exception as error:
-        logging.exception("Game setup script raised an exception!")
-        print(WARN+"Setup Error: Game script failed with "+str(error))
-        sys.exit()
+    print(INFO+"%s : Completed processing of all .xml file(s)" % current_time())
 
 
 def main(args):
@@ -92,14 +80,11 @@ def main(args):
     rtb_root = os.path.abspath(__file__)
     rtb_cwd = os.path.dirname(rtb_root)
     if rtb_cwd != os.getcwd():
-        print(INFO+"Switching CWD to '%s'" % rtb_cwd)
+        print(INFO + "Switching CWD to '%s'" % rtb_cwd)
         os.chdir(rtb_cwd)
     # Create tables / bootstrap db
     if args.create_tables:
         create()
-    # Execute game setup script
-    if args.setup_script:
-        setup_script()
     # Import any XML files
     if args.xml is not None:
         setup_xml(args.xml)
@@ -109,9 +94,6 @@ def main(args):
     # Start server
     if args.start_server:
         serve()
-    # Run test functionality
-    if args.run_test:
-        test()
 
 ### Main
 if __name__ == '__main__':
@@ -134,23 +116,11 @@ if __name__ == '__main__':
     )
     parser.add_argument("-x", "--xml",
         nargs='*',
-        help="import xml file(s), or directory of file(s)",
-    )
-    parser.add_argument("-g", "--game-script",
-        action='store_true',
-        dest='setup_script',
-        help="run a game setup script (setup/game.py)",
+        help="import xml file(s), or directories of xml files",
     )
     parser.add_argument(
         "-r", "--recovery",
         action='store_true',
         help="start the admin recovery console",
-    )
-    #TODO remove this before production
-    parser.add_argument(
-        "-t", "--test",
-        action="store_true",
-        dest='run_test',
-        help="run testing code in the 'test' function (for debugging and development purposes)"
     )
     main(parser.parse_args())

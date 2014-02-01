@@ -1,31 +1,22 @@
-{% extends "../main.html" %} 
+{% extends "../main.html" %}
 
-{% block title %}Black Market{% end %} 
+{% block title %}Black Market{% end %}
 
-{% block content %} 
+{% block header %}
+<script src="/static/js/pages/market/view.js"></script>
+{% end %}
+
+{% block content %}
 {% include ../notifier.html %}
+{% from models.MarketItem import MarketItem %}
 <div class="container">
-    <script>
-    function get_details(uuid) {
-        $("#uuid").val(uuid);
-        $.getJSON('/user/market/details?uuid=' + uuid, function(data) {
-            $.each(data, function(key, val) {
-                if (key !== "image") {
-                    $("#" + key).text(val);
-                } else {
-                    $("#image").attr("src", function() {
-                        return "/static/images/" + val;
-                    });
-                }
-            });
-        });
-    }
-    </script>
     <!-- Hidden Download Form -->
     <div id="item-details" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Details</h3>
+            <h3>
+                Details
+            </h3>
         </div>
         <div class="modal-body">
             <h4 id="name"></h4>
@@ -47,28 +38,35 @@
         </div>
         <form id="buy-form" method="post" action="/user/market">
             {% raw xsrf_form_html() %}
-            <input type="hidden" id="uuid" name="uuid" value="" />
+            <input id="buy-uuid" type="hidden" id="uuid" name="uuid" value="" />
         </form>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-primary" onclick="document.forms['buy-form'].submit();">
+            <button id="buy-submit" type="button" class="btn btn-primary">
                 Buy Upgrade
             </button>
         </div>
     </div>
     <!-- Start Visable -->
-    <h2>Black Market</h2>
-    <br />{% if errors is not None and len(errors) != 0 %} {% for error in errors %}
-    <div class="alert alert-error">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <h4 class="alert-heading">ERROR</h4>
-        {{ error }}
-    </div>
-    {% end %} {% end %}
+    <h2>
+        <i class="fa fa-shopping-cart"></i>
+        Black Market
+    </h2>
+    <br />
+    {% if errors is not None and len(errors) != 0 %}
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
+        </div>
+        {% end %}
+    {% end %}
     <div class="well">
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Name</th>
                     <th>Price</th>
                     <th>
@@ -77,15 +75,16 @@
                 </tr>
             </thead>
             <tbody>
-                {% from models import MarketItem %} {% for item in MarketItem.all() %}
+                {% for index, item in enumerate(MarketItem.all()) %}
                 <tr>
+                    <td>{{ index + 1 }}</td>
                     <td>{{ item.name }}</td>
                     <td>${{ item.price }}</td>
                     <td>
                         {% if not user.has_item(item.name) %}
-                        <button class="btn btn-mini" data-toggle="modal" href="#item-details" onclick="get_details('{{ item.uuid }}')">
+                        <a id="item-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#item-details" date-uuid="{{ item.uuid }}">
                             Details
-                        </button>
+                        </a>
                         {% else %}
                         <strong>Purchased</strong>
                         {% end %}

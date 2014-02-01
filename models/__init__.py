@@ -23,6 +23,7 @@ Created on Sep 12, 2012
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from libs.ConfigManager import ConfigManager
+from contextlib import contextmanager
 
 
 ### Setup the database session
@@ -33,3 +34,16 @@ _Session = sessionmaker(bind=engine)
 StartSession = lambda: _Session(autoflush=True)
 
 dbsession = StartSession()
+
+@contextmanager
+def cxt_dbsession():
+    ''' Provide a transactional scope around a series of operations. '''
+    session = StartSession()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()

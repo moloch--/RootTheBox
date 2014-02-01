@@ -22,7 +22,7 @@ Created on Mar 15, 2012
 
 import logging
 
-from models import Notification
+from models.Notification import Notification
 from datetime import datetime
 from libs.SecurityDecorators import *
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
@@ -43,7 +43,7 @@ class NotifySocketHandler(BaseWebSocketHandler):
                 len(notifications), self.session['user_id']),
             )
             for notify in notifications:
-                self.write_message(notify.to_json())
+                self.write_message(notify.to_dict())
                 Notification.delivered(notify.user_id, notify.event_uuid)
         else:
             logging.debug("[Web Socket] Opened public notification socket.")

@@ -180,6 +180,8 @@ class Box(DatabaseObject):
 
     @avatar.setter
     def avatar(self, image_data):
+        if self.uuid is None:
+            self.uuid = str(uuid4())
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp']:
@@ -231,7 +233,7 @@ class Box(DatabaseObject):
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
-        ET.SubElement(box_elem, "description").text = self._operating_system
+        ET.SubElement(box_elem, "operatingsystem").text = self._operating_system
         ET.SubElement(box_elem, "description").text = self._description
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = self.garbage
@@ -243,7 +245,7 @@ class Box(DatabaseObject):
         hints_elem.set("count", str(len(self.hints)))
         for hint in self.hints:
             hint.to_xml(hints_elem)
-        ips_elem = ET.SubElement(box_elem, "hints")
+        ips_elem = ET.SubElement(box_elem, "ipaddresses")
         ips_elem.set("count", str(len(self.ips)))
         for ip in self.ips:
             ip.to_xml(ips_elem)

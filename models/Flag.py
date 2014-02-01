@@ -76,9 +76,9 @@ class Flag(DatabaseObject):
         return dbsession.query(cls).filter_by(token=unicode(_token)).first()
 
     @classmethod
-    def by_type(cls, _type):
+    def by_type(cls, __type):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
+        return dbsession.query(cls).filter_by(_type=unicode(__type)).all()
 
     @classmethod
     def create_flag(cls, _type, box, name, raw_token, description, value):
@@ -131,10 +131,6 @@ class Flag(DatabaseObject):
         return hashlib.sha1(data).hexdigest()
 
     @property
-    def game_level(self):
-        return self.box.game_level
-
-    @property
     def name(self):
         return self._name
 
@@ -153,6 +149,16 @@ class Flag(DatabaseObject):
         if 256 < len(value):
             raise ValueError("Description must be less than 256 characters")
         self._description = unicode(value)
+
+    @property
+    def type(self):
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        if value not in self.FLAG_TYPES:
+            raise ValueError("Invalid flag type")
+        self._type = unicode(value)
 
     @property
     def token(self):
@@ -180,11 +186,11 @@ class Flag(DatabaseObject):
     def to_xml(self, parent):
         ''' Write attributes to XML doc '''
         flag_elem = ET.SubElement(parent, "flag")
-        flag_elem.set("type", unicode(self._type))
-        ET.SubElement(flag_elem, "name").text = unicode(self.name)
-        ET.SubElement(flag_elem, "token").text = unicode(self.token)
-        ET.SubElement(flag_elem, "description").text = unicode(self.description)
-        ET.SubElement(flag_elem, "value").text = unicode(self.value)
+        flag_elem.set("type", self._type)
+        ET.SubElement(flag_elem, "name").text = self.name
+        ET.SubElement(flag_elem, "token").text = self.token
+        ET.SubElement(flag_elem, "description").text = self.description
+        ET.SubElement(flag_elem, "value").text = str(self.value)
 
     def to_dict(self):
         ''' Returns public data as a dict '''

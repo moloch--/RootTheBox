@@ -55,7 +55,7 @@ from models.Hint import Hint
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from models.User import ADMIN_PERMISSION
 from models.Flag import FLAG_STATIC, FLAG_REGEX, FLAG_FILE
-from setup.importers import import_xml
+from setup.xmlsetup import import_xml
 
 
 class AdminCreateHandler(BaseHandler):
@@ -1237,15 +1237,9 @@ class AdminImportXmlHandler(BaseHandler):
             else:
                 errors.append("Failed to parse file correctly.")
             os.unlink(fxml)
-            self.render('admin/import.html',
-                success=success,
-                errors=errors
-            )
+            self.render('admin/import.html', success=success, errors=errors)
         else:
-            self.render('admin/import.html',
-                success=None,
-                errors=["No file data."],
-            )
+            self.render('admin/import.html', success=None, errors=["No file data."])
 
     def _get_tmp(self):
         ''' Creates a tmp file with the file data '''
