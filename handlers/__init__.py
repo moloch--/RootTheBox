@@ -53,14 +53,10 @@ from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
 from handlers.FileUploadHandlers import *
 from handlers.NotificationHandlers import *
-
+from handlers.StaticFileHandler import StaticFileHandler
 
 ### Setup cache
 config = ConfigManager.instance()
-if config.cache_files:
-    from handlers.StaticFileHandler import CachedStaticFileHandler as StaticFileHandler
-else:
-    from handlers.StaticFileHandler import StaticFileHandler as StaticFileHandler
 
 
 ### Main URL Configuration
@@ -74,6 +70,7 @@ urls = [
         StaticFileHandler, {'path': 'files/avatars/'}),
 
     # FileUploadHandlers - FileUploadHandlers.py
+    (r'/user/shares/delete', FileDeleteHandler),
     (r'/user/shares/download(.*)', FileDownloadHandler),
     (r'/user/share/files', FileUploadHandler),
 

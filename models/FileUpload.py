@@ -96,5 +96,10 @@ class FileUpload(DatabaseObject):
         with open(config.file_uploads_dir + self.uuid, 'wb') as fp:
             fp.write(value.encode('base64'))
 
+    def delete_data(self):
+        config = ConfigManager.instance()
+        if os.path.exists(config.file_uploads_dir + self.uuid):
+            os.unlink(config.file_uploads_dir + self.uuid)
+
     def __repr__(self):
         return u'<FileUpload - name: %s, size: %s>' % (self.file_name, self.byte_size)

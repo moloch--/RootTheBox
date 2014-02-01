@@ -25,6 +25,7 @@ This file conatains handlers related to the file sharing functionality
 
 
 import os
+import logging
 
 from models.FileUpload import FileUpload
 from libs.SecurityDecorators import authenticated
@@ -93,3 +94,21 @@ class FileDownloadHandler(BaseHandler):
             self.write(shared_file.data)
         else:
             self.render("public/404.html")
+
+
+class FileDeleteHandler(BaseHandler):
+    ''' Delete shared files '''
+
+    @authenticated
+    def post(self, *args, **kwargs):
+        user = self.get_current_user()
+        shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
+        print 'got', self.request.arguments
+        if shared_file is not None and shared_file in user.team.files:
+            logging.info("%s deleted a shared file %s" % (user.handle, shared_file.uuid))
+            shared_file.delete_data()
+            self.dbsession.delete(shared_file)
+            self.dbsession.commit()
+            self.redirect('/user/share/files')
+        else:
+            self.redirect("/404")

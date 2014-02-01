@@ -24,7 +24,7 @@ from libs.Notifier import Notifier
 from libs.Singleton import Singleton
 from libs.Scoreboard import Scoreboard
 from libs.SecurityDecorators import debug
-from models import Notification
+from models.Notification import Notification
 
 
 @Singleton
@@ -49,7 +49,7 @@ class EventManager(object):
         return sumation
 
     def is_online(self, user):
-        ''' 
+        '''
         Returns bool if the given user has an open notify socket
         '''
         if user.team.id in self.notify_connections:
@@ -98,7 +98,7 @@ class EventManager(object):
 
     def push_broadcast_notification(self, event_uuid):
         ''' Push to everyone '''
-        json = Notification.by_event_uuid(event_uuid).to_json()
+        json = Notification.by_event_uuid(event_uuid).to_dict()
         for team_id in self.notify_connections:
             for user_id in self.notify_connections[team_id]:
                 for wsocket in self.notify_connections[team_id][user_id]:
@@ -110,7 +110,7 @@ class EventManager(object):
     def push_team_notification(self, event_uuid, team_id):
         ''' Push to one team '''
         if team_id in self.notify_connections:
-            json = Notification.by_event_uuid(event_uuid).to_json()
+            json = Notification.by_event_uuid(event_uuid).to_dict()
             for user_id in self.notify_connections[team_id]:
                 for wsocket in self.notify_connections[team_id][user_id]:
                     wsocket.write_message(json)
@@ -119,7 +119,7 @@ class EventManager(object):
     def push_user_notification(self, event_uuid, team_id, user_id):
         ''' Push to one user '''
         if team_id in self.notify_connections and user_id in self.notify_connections[team_id]:
-            json = Notification.by_event_uuid(event_uuid).to_json()
+            json = Notification.by_event_uuid(event_uuid).to_dict()
             for wsocket in self.notify_connections[team_id][user_id]:
                 wsocket.write_message(json)
                 Notification.delivered(wsocket.user_id, event_uuid)
@@ -128,7 +128,7 @@ class EventManager(object):
     def create_flag_capture_event(self, user, flag):
         ''' Callback for when a flag is captured '''
         self.refresh_scoreboard()
-        evt_id = Notifier.broadcast_success("Flag Capture", 
+        evt_id = Notifier.broadcast_success("Flag Capture",
             "%s has captured '%s'." % (user.team.name, flag.name,)
         )
         return (self.push_broadcast_notification, {'event_uuid': evt_id})
@@ -163,7 +163,7 @@ class EventManager(object):
         message = "%s has joined your team." % user.handle
         evt_id = Notifier.team_success(user.team, "New Team Member", message)
         return (self.push_team_notification, {
-            'event_uuid': evt_id, 
+            'event_uuid': evt_id,
             'team_id': user.team.id
         })
 
@@ -174,7 +174,7 @@ class EventManager(object):
         )
         evt_id = Notifier.team_success(user.team, "File Share", message)
         return (self.push_team_notification, {
-            'event_uuid': evt_id, 
+            'event_uuid': evt_id,
             'team_id': user.team.id
         })
 
@@ -183,7 +183,7 @@ class EventManager(object):
         message = "%s posted to the team paste-bin" % user.handle
         evt_id = Notifier.team_success(user.team, "Text Share", message)
         return (self.push_team_notification, {
-            'event_uuid': evt_id, 
+            'event_uuid': evt_id,
             'team_id': user.team.id
         })
 
@@ -194,8 +194,8 @@ class EventManager(object):
         )
         evt_id = Notifier.user_warning(victim, "Security Breach", user_msg)
         event1 = (self.push_user_notification, {
-            'event_uuid': evt_id, 
-            'team_id': victim.team.id, 
+            'event_uuid': evt_id,
+            'team_id': victim.team.id,
             'user_id': victim.id
         })
         message = "%s hacked %s's bank account and stole $%d" % (
