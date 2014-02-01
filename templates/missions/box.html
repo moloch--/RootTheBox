@@ -2,118 +2,98 @@
 
 {% block title %}Missions{% end %}
 
+{% block header %}
+<script src="/static/js/pages/missions/box.js"></script>
+{% end %}
+
 {% block content %}
     {% include ../notifier.html %}
     <!-- Submit text flag -->
-    <div id="submitTextFlagModal" class="modal hide fade" style="display: none; ">
+    <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Submit Flag</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="submit-text-flag" method="post" action="/user/missions/capture">
+            <form id="capture-text-flag-form" class="form-horizontal" method="post" action="/user/missions/capture">
                 {% raw xsrf_form_html() %}
-                <input id="flag_uuid_text" name="uuid" value="" type="hidden" />
+                <input id="capture-text-flag-uuid" name="uuid" value="" type="hidden" />
                 <br />
                 <div class="control-group">
-                    <label class="control-label" for="flag_token">Flag</label>
+                    <label class="control-label" for="flag-token">Flag</label>
                     <div class="controls">
-                        <input autofocus required id="flag_token" name="token" type="text" placeholder="Flag" />
+                        <input autofocus required id="flag-token" name="token" type="text" placeholder="Flag" />
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <script>
-                function submit_text_flag() {
-                    if (notifier_ws !== undefined) {
-                        notifier_ws.close();
-                    }
-                    document.forms['submit-text-flag'].submit();
-                }
-            </script>
-            <button class="btn btn-primary" type="button" onclick="submit_text_flag();">
+            <button id="capture-text-flag-submit" class="btn btn-primary" type="button">
                 Submit
             </button>
         </div>
     </div>
     <!-- Submit file flag -->
-    <div id="submitFileFlagModal" class="modal hide fade" style="display: none; ">
+    <div id="capture-file-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Submit Flag</h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="submit-file-flag" method="post" enctype="multipart/form-data" action="/user/missions/capture">
+            <form id="capture-file-flag-form" class="form-horizontal" method="post" action="/user/missions/capture" enctype="multipart/form-data" >
                 {% raw xsrf_form_html() %}
-                <input autofocus id="flag_uuid_file" name="uuid" value="" type="hidden" />
+                <input autofocus id="capture-file-flag-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
                     <br />
-                    <label class="control-label" for="flag_file">Flag</label>
+                    <label class="control-label" for="flag-file">Flag</label>
                     <div class="controls">
-                        <input id="flag_file" name="flag" type="file" />
+                        <input id="flag-file" name="flag" type="file" />
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <script>
-                function submit_file_flag() {
-                    if (notifier_ws !== undefined) {
-                        notifier_ws.close();
-                    }
-                    document.forms['submit-file-flag'].submit();
-                }
-            </script>
-            <button class="btn btn-primary" type="button" 
-                    onclick="submit_file_flag();">
+            <button id="capture-file-flag-submit" class="btn btn-primary" type="button">
                 Submit
             </button>
         </div>
     </div>
-    <!-- Purchase Hint Modal -->
-    <div id="purchaseHintModal" class="modal hide fade" style="display: none; ">
+    <div id="purchase-hint-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Purchase Hint</h3>
         </div>
         <div class="modal-body">
             <br />
-            <p id="hint-text"></p>
-            <form class="form-horizontal" id="submit-hint" method="post" action="/user/missions/hint">
+            <p id="purchase-hint-text"></p>
+            <form id="purchase-hint-form" class="form-horizontal" method="post" action="/user/missions/hint">
                 {% raw xsrf_form_html() %}
-                <input id="hint_uuid" name="uuid" value="" type="hidden" />
+                <input id="purchase-hint-uuid" name="uuid" value="" type="hidden" />
             </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <script>
-                function submit_hint() {
-                    if (notifier_ws !== undefined) {
-                        notifier_ws.close();
-                    }
-                    document.forms['submit-hint'].submit();
-                }
-            </script>
-            <button class="btn btn-primary" type="button" onclick="submit_hint();">
+            <button id="purchase-hint-submit" class="btn btn-primary" type="button">
                 Buy
             </button>
         </div>
     </div>
-    <script>
-        function set_flag_uuid(obj, uuid) {
-            $("#flag_uuid_"+obj).val(uuid);
-        }
-        function purchase_hint(price, uuid) {
-            $("#hint_uuid").val(uuid);
-            $("#hint-text").text("Would you like to purchase this hint for $"+price+"?");
-        }
-    </script>
     <!-- Visable -->
     <div class="container">
-        <h1>{{ box.corporation.name }} - {{ box.name }}</h1>
+        <h1>
+            {% if box.operating_system.lower() == 'windows' %}
+                <i class="fa fa-windows"></i>
+            {% elif box.operating_system.lower() == 'linux' %}
+                <i class="fa fa-linux"></i>
+            {% elif box.operating_system.lower() == 'apple' %}
+                <i class="fa fa-apple"></i>
+            {% else %}
+                <i class="fa fa-question"></i>
+            {% end %}
+            {{ box.corporation.name }} - {{ box.name }}
+        </h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
@@ -152,7 +132,7 @@
                 </thead>
                 <tbody>
                     {% from models.Flag import FLAG_FILE %}
-                    {% for flag in box.flags %}
+                    {% for index, flag in enumerate(box.flags) %}
                         {% if flag in team.flags %}
                             <tr class="success">
                         {% else %}
@@ -167,16 +147,16 @@
                             {% else %}
                                 {% if flag.is_file %}
                                     <td>
-                                        <a class="btn btn-mini" data-toggle="modal" 
-                                            href="#submitFileFlagModal" onclick="set_flag_uuid('file', '{{ flag.uuid }}')">
-                                            <i class="icon-flag"></i> Submit
+                                        <a id="capture-file-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-file-flag-modal" data-uuid="{{ flag.uuid }}">
+                                            <i class="fa fa-flag"></i>
+                                            Submit
                                         </a>
                                     </td>
                                 {% else %}
                                     <td>
-                                        <a class="btn btn-mini" data-toggle="modal" 
-                                            href="#submitTextFlagModal" onclick="set_flag_uuid('text', '{{ flag.uuid }}')">
-                                            <i class="icon-flag"></i> Submit
+                                        <a id="capture-text-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-text-flag-modal" data-uuid="{{ flag.uuid }}">
+                                            <i class="fa fa-flag"></i>
+                                            Submit
                                         </a>
                                     </td>
                                 {% end %}
@@ -208,8 +188,7 @@
                                 {% else %}
                                     <td>${{ hint.price }}</td>
                                     <td>
-                                        <a class="btn btn-mini" data-toggle="modal"
-                                            href="#purchaseHintModal" onclick="purchase_hint('{{ hint.price }}','{{ hint.uuid }}')">
+                                        <a id="purchase-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
                                             Purchase
                                         </a>
                                     </td>

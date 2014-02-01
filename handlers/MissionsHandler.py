@@ -77,7 +77,7 @@ class FlagSubmissionHandler(BaseHandler):
                 submission = self.get_argument('token')
             else:
                 submission = None
-            old_reward = int(flag.value)
+            old_reward = flag.value
             if self.attempt_capture(flag, submission):
                 self.render('missions/captured.html', flag=flag, reward=old_reward)
             else:
@@ -94,10 +94,10 @@ class FlagSubmissionHandler(BaseHandler):
         if submission is not None and flag.capture(submission):
             user.team.flags.append(flag)
             user.team.money += flag.value
-            dbsession.add(user.team)
+            self.dbsession.add(user.team)
             flag.value = int(flag.value * 0.90)
-            dbsession.add(flag)
-            dbsession.flush()
+            self.dbsession.add(flag)
+            self.dbsession.commit()
             event = self.event_manager.create_flag_capture_event(user, flag)
             self.new_events.append(event)
             return True
@@ -140,8 +140,8 @@ class PurchaseHintHandler(BaseHandler):
         ''' Add hint to team object '''
         team.money -= abs(hint.price)
         team.hints.append(hint)
-        dbsession.add(team)
-        dbsession.flush()
+        self.dbsession.add(team)
+        self.dbsession.commit()
 
     def render_page(self, box, errors=[]):
         ''' Wrapper to .render() to avoid duplicate code '''
@@ -173,53 +173,27 @@ class MissionsHandler(BaseHandler):
 
     def buyout(self):
         ''' Buyout and unlock a level '''
-        form = Form(uuid="Level parameter missing")
         user = self.get_current_user()
-        if form.validate(self.request.arguments):
-            level = GameLevel.by_uuid(self.get_argument('uuid', ''))
-            if level is not None and user is not None:
-                if level.buyout < user.team.money:
-                    logging.info("%s (%s) payed buyout for level #%d" % (
-                        user.handle, user.team.name, level.number
-                    ))
-                    user.team.game_levels.append(level)
-                    user.team.money -= level.buyout
-                    dbsession.add(user.team)
-                    event = self.event_manager.create_unlocked_level_event(user, level)
-                    self.new_events.append(event)
-                    self.redirect("/user/missions")
-                else:
-                    self.render("missions/view.html",
-                        team=user.team,
-                        errors=[
-                            "You do not have enough money to unlock this level"
-                        ]
-                    )
+        level = GameLevel.by_uuid(self.get_argument('uuid', ''))
+        if level is not None and user is not None:
+            if level.buyout <= user.team.money:
+                logging.info("%s (%s) payed buyout for level #%d" % (
+                    user.handle, user.team.name, level.number
+                ))
+                user.team.game_levels.append(level)
+                user.team.money -= level.buyout
+                self.dbsession.add(user.team)
+                self.dbsession.commit()
+                event = self.event_manager.create_unlocked_level_event(user, level)
+                self.new_events.append(event)
+                self.redirect("/user/missions")
             else:
                 self.render("missions/view.html",
                     team=user.team,
-                    errors=["Level does not exist"]
+                    errors=["You do not have enough money to unlock this level"]
                 )
         else:
             self.render("missions/view.html",
                 team=user.team,
-                errors=form.errors
+                errors=["Level does not exist"]
             )
-
-    def __chklevel__(self):
-        user = self.get_current_user()
-        level = user.team.game_levels[-1]
-        logging.info("%s completed %d of %d flags on level %d." % (
-                user.team.name, len(user.team.level_flags(level.number)),
-                len(level.flags), level.number,
-            )
-        )
-        if len(user.team.level_flags(level.number)) == len(level.flags):
-            logging.info("%s has completed level #%d" % (user.team.name, level.number,))
-            if level.next_level_id is not None:
-                next_level = GameLevel.by_id(level.next_level_id)
-                user.team.game_levels.append(next_level)
-                dbsession.add(user.team)
-                dbsession.flush()
-                event = self.event_manager.create_unlocked_level_event(user, level)
-                self.new_events.append(event)

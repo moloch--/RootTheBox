@@ -90,11 +90,10 @@ class GameLevel(DatabaseObject):
     @property
     def flags(self):
         ''' Return all flags for the level '''
-        flags = []
+        _flags = []
         for box in self.boxes:
-            for flag in box.flags:
-                flags.append(flag)
-        return flags
+            _flags += box.flags
+        return _flags
 
     def next(self):
         ''' Return the next level, or None '''

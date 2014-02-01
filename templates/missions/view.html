@@ -2,35 +2,37 @@
 
 {% block title %}Missions{% end %}
 
+{% block header %}
+<script src="/static/js/pages/missions/view.js"></script>
+{% end %}
+
 {% block content %}
+    {% from models.GameLevel import GameLevel %}
     {% include ../notifier.html %}
     <!-- Unlock Level -->
-    <div id="unlockLevelModal" class="modal hide fade" style="display: none; ">
+    <div id="unlock-game-level-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Unlock Level</h3>
+            <h3>
+                <i class="fa fa-unlock"></i>
+                Unlock Level
+            </h3>
         </div>
         <div class="modal-body">
-            <form class="form-horizontal" id="unlock-level" method="post" action="/user/missions/buyout">
+            <form id="unlock-game-level-form" class="form-horizontal" method="post" action="/user/missions/buyout">
                 {% raw xsrf_form_html() %}
-                <input id="level_uuid" name="uuid" value="" type="hidden" />
+                <input id="unlock-game-level-uuid" name="uuid" value="" type="hidden" />
             </form>
             <p id="description">
             </p>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button class="btn btn-primary" type="button" onclick="document.forms['unlock-level'].submit();">
+            <button id="unlock-game-level-submit" class="btn btn-primary" type="button">
                 Unlock
             </button>
         </div>
     </div>
-    <script>
-        function set_level_uuid (uuid, value) {
-            $("#level_uuid").val(uuid.toString());
-            $("#description").html("Would you like to unlock this level for $"+value.toString()+"?");
-        }
-    </script>
     <!-- Visable -->
     <div class="container">
         <h1>Missions</h1>
@@ -44,9 +46,7 @@
                 </div>
               {% end %}
         {% end %}
-        {% from models.GameLevel import GameLevel %}
-        {% for level in GameLevel.all() %}
-
+        {% for index, level in enumerate(GameLevel.all()) %}
                 <div class="well">
                     <h3 style="display:inline;">Level #{{ level.number }}&nbsp;&nbsp;&nbsp;</h3>
                     {% if len(team.level_flags(level.number)) != 0 %}
@@ -64,28 +64,62 @@
                                     <div class="span3">
                                         <center>
                                             <a href="/user/missions/boxes?uuid={{ box.uuid }}">
-                                                <h5> {{ box.corporation.name }}: {{ box.name }}</h5>
+                                                <h5>
+                                                    {% if box.operating_system.lower() == 'windows' %}
+                                                        <i class="fa fa-windows"></i>
+                                                    {% elif box.operating_system.lower() == 'linux' %}
+                                                        <i class="fa fa-linux"></i>
+                                                    {% elif box.operating_system.lower() == 'apple' %}
+                                                        <i class="fa fa-apple"></i>
+                                                    {% else %}
+                                                        <i class="fa fa-question"></i>
+                                                    {% end %}
+                                                    {{ box.corporation.name }} - {{ box.name }}
+                                                </h5>
                                                 <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                                             </a>
                                         </center>
                                     </div>
-
                                     {% if level.boxes.index(box) + 1 < len(level.boxes) %}
+                                        {% set box1 = level.boxes[level.boxes.index(box) + 1] %}
                                         <div class="span3 offset1">
                                             <center>
-                                                <a href="/user/missions/boxes?uuid={{ level.boxes[level.boxes.index(box) + 1].uuid }}">
-                                                    <h5>{{ level.boxes[level.boxes.index(box) + 1].corporation.name }}: {{ level.boxes[level.boxes.index(box) + 1].name }}</h5>
-                                                    <img src="/avatars/{{ level.boxes[level.boxes.index(box) + 1].avatar }}" class="img-polaroid" />
+                                                <a href="/user/missions/boxes?uuid={{ box1.uuid }}">
+                                                    <h5>
+                                                        {% if box1.operating_system.lower() == 'windows' %}
+                                                            <i class="fa fa-windows"></i>
+                                                        {% elif box1.operating_system.lower() == 'linux' %}
+                                                            <i class="fa fa-linux"></i>
+                                                        {% elif box1.operating_system.lower() == 'apple' %}
+                                                            <i class="fa fa-apple"></i>
+                                                        {% else %}
+                                                            <i class="fa fa-question"></i>
+                                                        {% end %}
+                                                        {{ box1.corporation.name }} - {{ box1.name }}
+                                                    </h5>
+                                                    <img src="/avatars/{{ box1.avatar }}" class="img-polaroid" />
                                                 </a>
                                             </center>
                                         </div>
                                     {% end %}
                                     {% if level.boxes.index(box) + 2 < len(level.boxes) %}
+                                        {% set box2 = level.boxes[level.boxes.index(box) + 2] %}
                                         <div class="span3 offset1">
                                             <center>
-                                                <a href="/user/missions/boxes?uuid={{ level.boxes[level.boxes.index(box) + 2].uuid }}">
-                                                    <h5>{{ level.boxes[level.boxes.index(box) + 2].corporation.name }}: {{ level.boxes[level.boxes.index(box) + 2].name }}</h5>
-                                                    <img src="/avatars/{{ level.boxes[level.boxes.index(box) + 2].avatar }}" class="img-polaroid" />
+                                                <a href="/user/missions/boxes?uuid={{ box2.uuid }}">
+                                                    <h5>
+                                                        {% if box2.operating_system.lower() == 'windows' %}
+                                                            <i class="fa fa-windows"></i>
+                                                        {% elif box2.operating_system.lower() == 'linux' %}
+                                                            <i class="fa fa-linux"></i>
+                                                        {% elif box2.operating_system.lower() == 'apple' %}
+                                                            <i class="fa fa-apple"></i>
+                                                        {% else %}
+                                                            <i class="fa fa-question"></i>
+                                                        {% end %}
+                                                        {{ box2.corporation.name }} - {{ box2.name }}
+                                                    </h5>
+                                                    <img src="/avatars/{{ box2.avatar }}" class="img-polaroid" />
                                                 </a>
                                             </center>
                                         </div>
@@ -95,8 +129,8 @@
                             {% end %}
                         </div>
                     {% else %}
-                        <a class="btn" data-toggle="modal" href="#unlockLevelModal"
-                            onclick="set_level_uuid('{{ level.uuid }}', '{{ level.buyout }}')">
+                        <a id="unlock-game-level-button{{ index }}" class="btn" data-toggle="modal" href="#unlock-game-level-modal" data-uuid="{{ level.uuid }}" data-buyout="{{ level.buyout }}">
+                            <i class="fa fa-unlock"></i>
                             Unlock
                         </a>
                         <hr>

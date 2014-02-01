@@ -131,6 +131,10 @@ class Flag(DatabaseObject):
         return hashlib.sha1(data).hexdigest()
 
     @property
+    def game_level(self):
+        return self.box.game_level
+
+    @property
     def name(self):
         return self._name
 
