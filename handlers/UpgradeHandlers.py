@@ -357,9 +357,9 @@ class SwatHandler(BaseHandler):
             target_id=target.id,
             paid=price,
         )
-        dbsession.add(swat)
-        dbsession.add(user.team)
-        dbsession.flush()
+        self.dbsession.add(swat)
+        self.dbsession.add(user.team)
+        self.dbsession.commit()
 
     def render_page(self, errors=None):
         ''' Render page with extra arguments '''

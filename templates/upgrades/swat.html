@@ -2,40 +2,39 @@
 
 {% block title %}S.W.A.T.{% end %}
 
+{% block header %}
+<script src="/static/js/pages/upgrades/swat.js"></script>
+{% end %}
+
 {% block content %}
-    {% inlcude ../notifier.html %}
+{% include ../notifier.html %}
     <!-- Swat Player Modal -->
-    <div id="swatPlayerModal" class="modal hide fade" style="display: none; ">
+    <div id="swat-player-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>SWAT Bribe</h3>
         </div>
         <div class="modal-body">
-            <form id="swat-player" class="form-horizontal" action="/swat" method="post">
+            <form id="swat-player-form" class="form-horizontal" action="/swat" method="post">
                 {% raw xsrf_form_html() %}
-                <input id="target_uuid" type="hidden" name="uuid" value="" />
+                <input id="swat-player-uuid" type="hidden" name="uuid" value="" />
             </form>
-            <p id="target_dialog">
+            <p id="swat-player-description">
             </p>
             <br />
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button id="bribe_button" class="btn btn-primary" type="button" onclick="document.forms['swat-player'].submit();">
+            <button id="swat-player-submit" class="btn btn-primary" type="button">
                 Submit Bribe
             </button>
         </div>
     </div><!-- End Modal -->
-    <script>
-        function swat_player(target_uuid, price) {
-            $("#target_uuid").val(target_uuid);
-            msg = "Bribe police to SWAT player for $" + price + "?";
-            $("#target_dialog").text(msg);
-            $("#bribe_button").text("Bribe $" + price);
-        }
-    </script>
     <div class="container">
-        <h1>S.W.A.T.</h1>
+        <h1>
+            <i class="fa fa-crosshairs"></i>
+            S.W.A.T.
+        </h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
@@ -60,7 +59,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% from models import Swat %}
+                    {% from models.Swat import Swat %}
                     {% for index, target in enumerate(targets) %}
                         {% if Swat.user_is_pending(target) %}
                             <tr class="warning">
@@ -79,9 +78,8 @@
                                 <td>Accepted / In Jail</td>
                             {% else %}
                                 <td>
-                                    <a class="btn btn-mini" data-toggle="modal" href="#swatPlayerModal"
-                                       onclick="swat_player('{{ target.uuid }}', {{ Swat.get_price(target) }});">
-                                        Submit Bribe
+                                    <a id="swat-player-button{{ index }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#swat-player-modal" data-uuid="{{ target.uuid}}" data-price="{{ Swat.get_price(target) }}">
+                                        Arrest Player
                                     </a>
                                 </td>
                             {% end %}
@@ -130,7 +128,7 @@
                                     {% elif swat.is_successful() %}
                                         Successful
                                     {% end %}
-                                </td>                         
+                                </td>
                             </tr>
                         {% end %}
                     </tbody>

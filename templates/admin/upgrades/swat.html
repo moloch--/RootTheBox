@@ -15,7 +15,7 @@
         <h3>Accept Bribe?</h3>
     </div>
     <div class="modal-body">
-        <form id="accept-bribe" class="form-horizontal" action="/admin/upgrades/swat/accept" method="post">
+        <form id="accept-bribe-form" class="form-horizontal" action="/admin/upgrades/swat/accept" method="post">
             {% raw xsrf_form_html() %}
             <input id="accept-bribe-uuid" type="hidden" name="uuid" value="" />
         </form>
@@ -37,7 +37,7 @@
         <h3>Decline Bribe?</h3>
     </div>
     <div class="modal-body">
-        <form id="decline-bribe" class="form-horizontal" action="/admin/upgrades/swat/decline" method="post">
+        <form id="decline-bribe-form" class="form-horizontal" action="/admin/upgrades/swat/complete" method="post">
             {% raw xsrf_form_html() %}
             <input id="decline-bribe-uuid" type="hidden" name="uuid" value="" />
         </form>
@@ -56,10 +56,10 @@
 <div id="complete-bribe-modal" class="modal hide fade" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3>Compelte Bribe</h3>
+        <h3>Complete Bribe</h3>
     </div>
     <div class="modal-body">
-        <form id="complete-bribe" class="form-horizontal" action="/admin/upgrades/swat/complete" method="post">
+        <form id="complete-bribe-form" class="form-horizontal" action="/admin/upgrades/swat/complete" method="post">
             {% raw xsrf_form_html() %}
             <input id="complete-bribe-uuid" type="hidden" name="uuid" value="" />
         </form>
@@ -70,7 +70,7 @@
     </div>
     <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <button id="complete-bribe-button" class="btn btn-primary" type="button">
+        <button id="complete-bribe-submit" class="btn btn-primary" type="button">
             Confirm
         </button>
     </div>

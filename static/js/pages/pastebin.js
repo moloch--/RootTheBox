@@ -1,10 +1,3 @@
-function submit_paste() {
-    if (notifier_ws !== undefined) {
-        notifier_ws.close();
-    }
-    return true;
-}
-
 $(document).ready(function() {
 
     $("#create-paste").click(function() {
