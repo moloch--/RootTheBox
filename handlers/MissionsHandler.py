@@ -31,16 +31,27 @@ from models.GameLevel import GameLevel
 from models.Flag import Flag
 from models.Box import Box
 from models.Hint import Hint
+from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
 
 
 class FirstLoginHandler(BaseHandler):
 
+    # Terminal JS needs eval()
+    relaxed_csp = "default-src 'self';" + \
+        "script-src 'self' 'unsafe-eval';" + \
+        "style-src 'self' 'unsafe-inline';" + \
+        "font-src 'self';" + \
+        "img-src 'self';" + \
+        "connect-src 'self' %s" % ConfigManager.instance().ws_connect
+
     @authenticated
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         reward = self.config.bot_reward
+        self.set_header("X-Content-Security-Policy", self.relaxed_csp)
+        self.set_header("Content-Security-Policy", self.relaxed_csp)
         self.render('missions/firstlogin.html', reward=reward, user=user)
 
 

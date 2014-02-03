@@ -34,9 +34,11 @@ from models.Box import Box
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.User import User, ADMIN_PERMISSION
-from libs.SecurityDecorators import authenticated, has_item, debug
+from libs.ConfigManager import ConfigManager
+from libs.SecurityDecorators import authenticated, has_item
 from mimetypes import guess_type
 from base64 import b64decode
+from string import ascii_letters
 
 
 class PasswordSecurityHandler(BaseHandler):
@@ -52,31 +54,24 @@ class PasswordSecurityHandler(BaseHandler):
     @has_item("Password Security")
     def post(self, *args, **kwargs):
         ''' Attempt to upgrade hash algo '''
-        form = Form(
-            old_password="Enter your existing password",
-            new_password1="Enter a new password",
-            new_password2="Confirm your new password",
-        )
-        if form.validate(self.request.arguments):
-            user = self.get_current_user()
-            passwd = self.get_argument('new_password1')
-            old_passwd = self.get_argument('old_password')
-            if not user.validate_bank_password(old_passwd):
-                self.render_page(["Invalid password"])
-            elif not passwd == self.get_argument('new_password2'):
-                self.render_page(["New passwords do not match"])
-            elif user.team.money < self.config.password_upgrade_cost:
-                self.render_page(["You cannot afford to upgrade your hash"])
-            elif len(passwd) <= self.config.max_password_length:
-                user.team.money -= self.config.password_upgrade_cost
-                self.dbsession.add(user.team)
-                self.dbsession.commit()
-                self.update_password(passwd)
-                self.render_page()
-            else:
-                self.render_page(["New password is too long"])
+        user = self.get_current_user()
+        passwd = self.get_argument('new_password1', '')
+        old_passwd = self.get_argument('old_password', '')
+        if not user.validate_bank_password(old_passwd):
+            self.render_page(["Invalid password"])
+        elif not passwd == self.get_argument('new_password2', None):
+            self.render_page(["New passwords do not match"])
+        elif user.team.money < self.config.password_upgrade_cost:
+            self.render_page(["You cannot afford to upgrade your hash"])
+        elif len(passwd) <= self.config.max_password_length:
+            user.team.money -= self.config.password_upgrade_cost
+            self.dbsession.add(user.team)
+            self.dbsession.commit()
+            self.update_password(passwd)
+            self.render_page()
         else:
-            self.render_page(form.errors)
+            self.render_page(["New password is too long"])
+
 
     def render_page(self, errors=None):
         user = self.get_current_user()
@@ -92,8 +87,8 @@ class PasswordSecurityHandler(BaseHandler):
         user = self.get_current_user()
         next_algorithm = user.next_algorithm()
         user.algorithm = next_algorithm[2]  # String
-        dbsession.add(user)
-        dbsession.flush()
+        self.dbsession.add(user)
+        self.dbsession.flush()
         user.bank_password = new_password
         self.dbsession.add(user)
         self.dbsession.commit()
@@ -101,10 +96,19 @@ class PasswordSecurityHandler(BaseHandler):
 
 class FederalReserveHandler(BaseHandler):
 
+    # Terminal JS needs eval() and inline for some dumb reason
+    relaxed_csp = "default-src 'self';" + \
+        "script-src 'self' 'unsafe-eval';" + \
+        "style-src 'self' 'unsafe-inline';" + \
+        "font-src 'self';" + \
+        "img-src 'self';" + \
+        "connect-src 'self' %s" % ConfigManager.instance().ws_connect
+
     @authenticated
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         user = self.get_current_user()
+        self.set_header("Content-Security-Policy", self.relaxed_csp)
         self.render('upgrades/federal_reserve.html', user=user)
 
 
@@ -246,20 +250,17 @@ class SourceCodeMarketHandler(BaseHandler):
     @authenticated
     @has_item("Source Code Market")
     def post(self, *args, **kwargs):
-        form = Form(box_uuid="Please select leaked code to buy")
-        if form.validate(self.request.arguments):
-            box = Box.by_uuid(self.get_argument('box_uuid', ''))
-            if box is not None and box.source_code is not None:
-                user = self.get_current_user()
-                if box.source_code.price <= user.team.money:
-                    self.purchase_code(box)
-                    self.redirect("/source_code_market")
-                else:
-                    self.render_page(["You cannot afford to purchase this code"])
+        box = Box.by_uuid(self.get_argument('box_uuid', ''))
+        if box is not None and box.source_code is not None:
+            user = self.get_current_user()
+            if box.source_code.price <= user.team.money:
+                self.purchase_code(box)
+                self.redirect("/source_code_market")
             else:
-                self.render_page(["Box does not exist"])
+                self.render_page(["You cannot afford to purchase this code"])
         else:
-            self.render_page(form.errors)
+            self.render_page(["Box does not exist"])
+
 
     def purchase_code(self, box):
         ''' Modify the database to reflect purchase '''
@@ -285,6 +286,8 @@ class SourceCodeMarketHandler(BaseHandler):
 class SourceCodeMarketDownloadHandler(BaseHandler):
     ''' Allows users to download files they have purchased '''
 
+    goodchars = ascii_letters + "1234567890-._"
+
     @authenticated
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
@@ -302,8 +305,9 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
                 if content_type is None: content_type = 'unknown/data'
                 self.set_header('Content-Type', content_type)
                 self.set_header('Content-Length', len(src_data))
+                fname = filter(lambda char: char in self.goodchars, box.source_code.file_name)
                 self.set_header('Content-Disposition',
-                    'attachment; filename=%s' % box.source_code.file_name
+                    'attachment; filename=%s' % fname
                 )
                 self.write(src_data)
                 self.finish()

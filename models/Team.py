@@ -94,9 +94,9 @@ class Team(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_name(cls, _name):
+    def by_name(cls, name):
         ''' Return the team object based on "team_name" '''
-        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
+        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
 
     @classmethod
     def ranks(cls):

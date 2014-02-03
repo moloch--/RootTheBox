@@ -27,16 +27,24 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/user/missions">
+                                    <i class="fa fa-terminal"></i>
                                     Missions
                                 </a>
                             </li>
                             {% if ConfigManager.instance().use_black_market %}
                             <li>
-                                <a href="/user/market">Black Market</a>
+                                <a href="/user/market">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Black Market
+                                </a>
                             </li>
-                            {% end %} {% if ConfigManager.instance().use_bots %}
+                            {% end %}
+                            {% if ConfigManager.instance().use_bots %}
                             <li class="dropdown-submenu">
-                                <a tabindex="-1" href="/user/bots/webmonitor">Botnet</a>
+                                <a tabindex="-1" href="/user/bots/webmonitor">
+                                    <i class="fa fa-android"></i>
+                                    Botnet
+                                </a>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="/user/bots/webmonitor">Command &amp; Control</a>

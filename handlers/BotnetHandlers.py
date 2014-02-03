@@ -246,7 +246,7 @@ class BotWebMonitorHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        self.render('bots/monitor.html')
+        self.render('botnet/monitor.html')
 
 
 class BotWebMonitorSocketHandler(BaseWebSocketHandler):
@@ -319,11 +319,10 @@ class BotDownloadHandler(BaseHandler):
         self.set_header("Content-Type", "application/exe")
         self.set_header("Content-disposition", "attachment; filename=rtb_bot.exe")
         if os.path.exists('bot/dist/bot.exe'):
-            f = open('bot/dist/bot.exe')
-            data = f.read()
-            self.set_header('Content-Length', len(data))
-            self.write(data)
-            f.close()
+            with open('bot/dist/bot.exe', 'rb') as fp:
+                data = fp.read()
+                self.set_header('Content-Length', len(data))
+                self.write(data)
         else:
             logging.error("Missing Windows bot file, please run build script: bot/build_bot.py")
             self.generic()
@@ -333,22 +332,21 @@ class BotDownloadHandler(BaseHandler):
         self.set_header("Content-Type", "text/x-python")
         self.set_header("Content-disposition", "attachment; filename=rtb_bot.py")
         if os.path.exists('bot/bot.py'):
-            f = open('bot/bot.py')
-            data = f.read()
-            self.set_header('Content-Length', len(data))
-            self.write(data)
-            f.close()
+            with open('bot/bot.py', 'rb') as fp:
+                data = fp.read()
+                self.set_header('Content-Length', len(data))
+                self.write(data)
 
     def monitor(self):
         ''' Send curses ui bot monitor '''
         self.set_header("Content-Type", "text/x-python")
         self.set_header("Content-disposition", "attachment; filename=botnet_monitor.py")
         if os.path.exists('bot/BotMonitor.py'):
-            f = open('bot/BotMonitor.py')
-            data = f.read()
-            self.set_header('Content-Length', len(data))
-            self.write(data)
-            f.close()
+            with open('bot/BotMonitor.py', 'rb') as fp:
+                data = fp.read()
+                self.set_header('Content-Length', len(data))
+                self.write(data)
+
 
 
 

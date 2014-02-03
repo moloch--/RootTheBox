@@ -114,7 +114,6 @@ class BaseHandler(RequestHandler):
         self.set_header("Server", "'; DROP TABLE server_types;--")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
-        self.add_header("X-Content-Security-Policy", self.default_csp)
         self.add_header("Content-Security-Policy", self.default_csp)
 
     def write_error(self, status_code, **kwargs):
