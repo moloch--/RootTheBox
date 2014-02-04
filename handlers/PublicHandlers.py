@@ -204,6 +204,7 @@ class RegistrationHandler(BaseHandler):
         if self.config.restrict_registration:
             rtok = self.get_argument('token', '')
             token = RegistrationToken.by_value(rtok)
+            token.used = True
             dbsession.add(token)
         dbsession.add(user)
         dbsession.flush()
