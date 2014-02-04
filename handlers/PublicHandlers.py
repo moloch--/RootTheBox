@@ -163,8 +163,10 @@ class RegistrationHandler(BaseHandler):
             errors.append(
                 'Bank account password must be 1-%d characters' % self.config.max_password_length
             )
-        elif RegistrationToken.by_value(rtok) is None and self.config.restrict_registration:
-            errors.append("Invalid registration token")
+        elif self.config.restrict_registration:
+            toke = RegistrationToken.by_value(rtok)
+            if toke is None or toke.used:
+                errors.append("Invalid registration token")
         return errors
 
     def validate_team(self):
