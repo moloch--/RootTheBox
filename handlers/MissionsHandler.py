@@ -85,7 +85,7 @@ class FlagSubmissionHandler(BaseHandler):
             if flag.is_file and 'flag' in self.request.files:
                 submission = self.request.files['flag'][0]['body']
             elif not flag.is_file:
-                submission = self.get_argument('token')
+                submission = self.get_argument('token', '')
             else:
                 submission = None
             old_reward = flag.value
@@ -102,18 +102,18 @@ class FlagSubmissionHandler(BaseHandler):
         logging.info("%s (%s) capture the flag '%s'" % (
             user.handle, user.team.name, flag.name
         ))
-        if submission is not None and flag.capture(submission):
-            user.team.flags.append(flag)
-            user.team.money += flag.value
-            self.dbsession.add(user.team)
-            flag.value = int(flag.value * 0.90)
-            self.dbsession.add(flag)
-            self.dbsession.commit()
-            event = self.event_manager.create_flag_capture_event(user, flag)
-            self.new_events.append(event)
-            return True
-        else:
-            return False
+        if submission is not None and flag not in user.team.flags:
+            if flag.capture(submission):
+                user.team.flags.append(flag)
+                user.team.money += flag.value
+                self.dbsession.add(user.team)
+                flag.value = int(flag.value * 0.90)
+                self.dbsession.add(flag)
+                self.dbsession.commit()
+                event = self.event_manager.create_flag_capture_event(user, flag)
+                self.new_events.append(event)
+                return True
+        return False
 
     def render_page(self, flag, errors=[]):
         ''' Wrapper to .render() to avoid duplicate code '''
