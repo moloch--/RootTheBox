@@ -89,7 +89,7 @@ class FlagSubmissionHandler(BaseHandler):
         logging.info("%s (%s) capture the flag '%s'" % (
             user.handle, user.team.name, flag.name
         ))
-        if submission is not None and flag.capture(submission):
+        if submission is not None and flag.capture(submission) and not flag in user.team.flags:
             user.team.flags.append(flag)
             user.team.money += flag.value
             dbsession.add(user.team)
