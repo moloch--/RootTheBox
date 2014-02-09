@@ -161,9 +161,9 @@ class ConfigManager(object):
                         else False
         http = 'https://' if self.use_ssl else 'http://'
         if default:
-            return "%s%s:%d" % (http, self.domain, self.listen_port)
+            return "%s%s" % (http, self.domain)
         else:
-            return "%s%s" % (http, self.domain, self.listen_port)
+            return "%s%s:%d" % (http, self.domain, self.listen_port)
     @property
     def use_bots(self):
         ''' Whether bots should be enabled in this game '''
