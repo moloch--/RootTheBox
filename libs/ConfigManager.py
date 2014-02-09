@@ -52,7 +52,12 @@ class ConfigManager(object):
     ''' Central class which handles any user-controlled settings '''
 
     _domain_warned = False
+
+    # These attributes can be explicently overwritten at runtime
+    _restrict_registration = None
+    _public_teams = None
     _db_connection = None
+
 
     def __init__(self, cfg_file='rootthebox.cfg'):
         self.filename = cfg_file
@@ -187,7 +192,15 @@ class ConfigManager(object):
 
     @property
     def max_team_size(self):
-        return self.config.getint("Game", 'max_team_size')
+        if self._max_team_size is None:
+            self._max_team_size = self.config.getint("Game", 'max_team_size')
+        return self._max_team_size
+
+    @max_team_size.setter
+    def max_team_size(self, value):
+        if int(value) <= 0:
+            raise ValueError("Max team size must be at least 1")
+        self._max_team_size = int(value)
 
     @property
     def bootstrap(self):
@@ -196,12 +209,24 @@ class ConfigManager(object):
     @property
     def public_teams(self):
         ''' Allow new users to create their own teams '''
-        return self.config.getboolean("Game", 'public_teams')
+        if self._public_teams is None:
+            self._public_teams = self.config.getboolean("Game", 'public_teams')
+        return self._public_teams
+
+    @public_teams.setter
+    def public_teams(self, value):
+        self._public_teams = bool(value)
 
     @property
     def restrict_registration(self):
         ''' Enable/disable registration tokens '''
-        return self.config.getboolean("Game", 'restrict_registration')
+        if self._restrict_registration is None:
+            self._restrict_registration = self.config.getboolean("Game", 'restrict_registration')
+        return self._restrict_registration
+
+    @restrict_registration.setter
+    def restrict_registration(self, value):
+        self._restrict_registration = bool(value)
 
     @property
     def default_theme(self):
@@ -234,8 +259,8 @@ class ConfigManager(object):
     @property
     def bot_reward_interval(self):
         ''' Check bots every so many minutes '''
-        conf = self.config.getint("Game", 'bot_reward_interval')
-        return  60000 * conf
+        _interval = self.config.getint("Game", 'bot_reward_interval')
+        return  60000 * _interval
 
     @bot_reward_interval.setter
     def bot_reward_interval(self, value):

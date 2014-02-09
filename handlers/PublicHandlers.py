@@ -118,8 +118,6 @@ class RegistrationHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
         try:
-            if self.get_argument('pass1', '') != self.get_argument('pass2', ''):
-                raise ValueError("Passwords do not match")
             if self.config.restrict_registration:
                 self.check_regtoken()
             team = self.get_team()
@@ -135,12 +133,14 @@ class RegistrationHandler(BaseHandler):
         if token is not None:
             token.used = True
             self.dbsession.add(token)
-            self.dbsession.flush()
+            self.dbsession.commit()
         else:
             raise ValueError("Invalid registration token")
 
     def create_user(self, team):
         ''' Add user to the database '''
+        if self.get_argument('pass1', '') != self.get_argument('pass2', ''):
+            raise ValueError("Passwords do not match")
         user = User()
         user.handle = self.get_argument('handle', '')
         user.password = self.get_argument('pass1', '')
