@@ -156,9 +156,14 @@ class ConfigManager(object):
 
     @property
     def origin(self):
+        default = True if (self.use_ssl and self.listen_port == 443) \
+                        or not self.use_ssl and self.listen_port == 80 \
+                        else False
         http = 'https://' if self.use_ssl else 'http://'
-        return "%s%s:%d" % (http, self.domain, self.listen_port)
-
+        if default:
+            return "%s%s:%d" % (http, self.domain, self.listen_port)
+        else:
+            return "%s%s" % (http, self.domain, self.listen_port)
     @property
     def use_bots(self):
         ''' Whether bots should be enabled in this game '''
