@@ -55,7 +55,7 @@ class HomeHandler(BaseHandler):
 class SettingsHandler(BaseHandler):
     ''' Modify user controlled attributes '''
 
-    extended_csp = "default-src 'self';" + \
+    relaxed = "default-src 'self';" + \
         "script-src 'self' www.google.com;" + \
         "style-src 'self' 'unsafe-inline';" + \
         "font-src 'self';" + \
@@ -66,16 +66,14 @@ class SettingsHandler(BaseHandler):
     @tornado.web.asynchronous
     def get(self, *args, **kwargs):
         ''' Display the user settings '''
-        self.set_header("X-Content-Security-Policy", self.extended_csp)
-        self.set_header("Content-Security-Policy", self.extended_csp)
+        self.set_header("Content-Security-Policy", self.relaxed)
         self.render_page()
 
     @authenticated
     @tornado.web.asynchronous
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
-        self.set_header("X-Content-Security-Policy", self.extended_csp)
-        self.set_header("Content-Security-Policy", self.extended_csp)
+        self.set_header("Content-Security-Policy", self.relaxed)
         post_functions = {
             'avatar': self.post_avatar,
             'password': self.post_password,

@@ -19,4 +19,26 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
-from tests import testModels
+import os
+import logging
+
+from libs.ConfigManager import ConfigManager
+
+
+def setup_database(db_name):
+    # Setup the test database
+    logging.debug("Setting up the test database connection ...")
+    config_manager = ConfigManager.instance()
+    config_manager.db_connection = 'sqlite:///%s.db' % db_name
+    assert config_manager.db_connection == 'sqlite:///%s.db' % db_name
+
+    # Create the default tables
+    logging.debug("Creating tables ... ")
+    from setup.create_database import create_tables, engine, metadata
+    create_tables(engine, metadata, False)
+    import setup.bootstrap
+
+
+def teardown_database(db_name):
+    if os.path.exists("%s.db" % db_name):
+        os.unlink("%s.db" % db_name)

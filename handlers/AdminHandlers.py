@@ -668,7 +668,6 @@ class AdminEditHandler(BaseHandler):
         else:
             self.render("admin/view/game_objects.html", errors=["User does not exist"])
 
-
     def edit_market_item(self):
         ''' Change a market item's price '''
         item = MarketItem.by_uuid(self.get_argument('item_uuid', ''))
@@ -699,13 +698,13 @@ class AdminDeleteHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Used to delete database objects '''
         uri = {
-                     'ip': self.del_ip,
-                   'flag': self.del_flag,
-                   'hint': self.del_hint,
-                    'box': self.del_box,
-            'corporation': self.del_corp,
-                   'user': self.del_user,
-                   'team': self.del_team,
+                 'ip': self.del_ip,
+               'flag': self.del_flag,
+               'hint': self.del_hint,
+                'box': self.del_box,
+        'corporation': self.del_corp,
+               'user': self.del_user,
+               'team': self.del_team,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -1170,14 +1169,7 @@ class AdminExportHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         ''' Export to document formats '''
-        uri = {
-            'xml': self.export_xml,
-            'json': self.export_json,
-        }
-        if len(args) == 1 and args[0] in uri:
-            uri[args[0]]()
-        else:
-            self.render('public/404.html')
+        self.render('admin/export.html')
 
     def export_xml(self):
         ''' Create and write XML document to page '''
@@ -1207,9 +1199,6 @@ class AdminExportHandler(BaseHandler):
             corp.to_xml(corps_elem)
         xml_dom = defusedxml.minidom.parseString(ET.tostring(root))
         return xml_dom.toprettyxml()
-
-    def export_json(self):
-        pass
 
 
 class AdminImportXmlHandler(BaseHandler):

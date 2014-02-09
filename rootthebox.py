@@ -23,6 +23,8 @@ command line arguments it calls various components setup/start/etc.
 
 import os
 import sys
+import nose
+import random
 import logging
 import argparse
 
@@ -47,9 +49,18 @@ def create():
     from libs.ConfigManager import ConfigManager  # Sets up logging
     print(INFO+'%s : Creating the database ...' % current_time())
     from setup.create_database import create_tables, engine, metadata
-    create_tables(engine, metadata, True)
+    dev = ConfigManager.instance().bootstrap == 'developement'
+    create_tables(engine, metadata, dev)
     print(INFO+'%s : Bootstrapping the database ...' % current_time())
     import setup.bootstrap
+    # Display Details
+    if dev:
+        environ = bold + R + "Developement boot strap" + W
+        details = ", admin password is 'nimda123'."
+    else:
+        environ = bold + "Production boot strap" + W
+        details = '.'
+    print INFO + '%s completed successfully%s' % (environ, details)
 
 
 def recovery():
@@ -74,6 +85,14 @@ def setup_xml(xml_params):
     print(INFO+"%s : Completed processing of all .xml file(s)" % current_time())
 
 
+def tests():
+    from tests import setup_database, teardown_database
+    db_name = 'test-%04s' % random.randint(0, 9999)
+    setup_database(db_name)
+    nose.run(module='tests', argv=[os.getcwd()])
+    teardown_database(db_name)
+
+
 def main(args):
     ''' Call functions in the correct order based on CLI params '''
     # Ensure that RootTheBox/ is the cwd
@@ -82,6 +101,9 @@ def main(args):
     if rtb_cwd != os.getcwd():
         print(INFO + "Switching CWD to '%s'" % rtb_cwd)
         os.chdir(rtb_cwd)
+    # Run unit tests
+    if args.run_tests:
+        tests()
     # Create tables / bootstrap db
     if args.create_tables:
         create()
@@ -113,6 +135,11 @@ if __name__ == '__main__':
         action='store_true',
         dest='start_server',
         help="start the server",
+    )
+    parser.add_argument("-t", "--tests",
+        action='store_true',
+        dest='run_tests',
+        help="run unit tests (developement only)",
     )
     parser.add_argument("-x", "--xml",
         nargs='*',

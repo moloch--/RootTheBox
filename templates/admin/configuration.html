@@ -1,4 +1,4 @@
-{% extends "../main.html" %} 
+{% extends "../main.html" %}
 
 {% block title %}Configuration{% end %}
 
@@ -6,15 +6,15 @@
 <div class="container">
     <h1>Configuration</h1>
     <br />
-    {% if errors is not None and len(errors) != 0 %} 
+    {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
             <h4 class="alert-heading">ERROR</h4>
             {{ error }}
         </div>
-        {% end %} 
-    {% end %} 
+        {% end %}
+    {% end %}
     {% if warning is not None %}
     <div class="alert alert-warning">
         <a class="close" data-dismiss="alert" href="#">&times;</a>
@@ -36,11 +36,11 @@
                 <div class="controls">
                     <select name="debug">
                         {% if config.debug %}
-                        <option value="true">Enabled</option>
-                        <option value="false">Disabled</option>
+                            <option value="true">Enabled</option>
+                            <option value="false">Disabled</option>
                         {% else %}
-                        <option value="false">Disabled</option>
-                        <option value="true">Enabled</option>
+                            <option value="false">Disabled</option>
+                            <option value="true">Enabled</option>
                         {% end %}
                     </select>
                 </div>

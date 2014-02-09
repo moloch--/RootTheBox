@@ -64,6 +64,11 @@ class Box(DatabaseObject):
         backref=backref("box", lazy="select")
     )
 
+    hints = relationship("Hint",
+        backref=backref("box", lazy="select"),
+        cascade="all,delete,delete-orphan"
+    )
+
     flags = relationship("Flag",
         backref=backref("box", lazy="select"),
         cascade="all,delete,delete-orphan"
@@ -217,11 +222,6 @@ class Box(DatabaseObject):
     @property
     def source_code(self):
         return SourceCode.by_box_id(self.id)
-
-    @property
-    def hints(self):
-        ''' Returns all hints on this box '''
-        return Hint.by_box_id(self.id)
 
     def get_garbage_cfg(self):
         return "[Bot]\nname = %s\ngarbage = %s\n" % (

@@ -78,7 +78,7 @@
                 <div class="control-group">
                     <label class="control-label" for="box_corporation">Corporation</label>
                     <div class="controls">
-                        <select id="box-corporation" name="corporation_uuid">
+                        <select id="edit-box-corporation" name="corporation_uuid">
                             {% for corporation in Corporation.all() %}
                                 <option value="{{ corporation.uuid }}">{{ corporation.name }}</option>
                             {% end %}
@@ -174,7 +174,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-box-uuid">Box</label>
                     <div class="controls">
-                        <select id="flag-box-uuid" name="box_uuid">
+                        <select id="edit-flag-box" name="box_uuid">
                             {% for box in Box.all() %}
                                 <option value="{{ box.uuid }}">{{ box.name }}</option>
                             {% end %}
@@ -397,7 +397,7 @@
                                     <i class="fa fa-desktop"></i>
                                     {{ box.name }}&nbsp;&nbsp;
                                 </h3>
-                                    <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}">
+                                    <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
                                         <i class="fa fa-pencil"></i>
                                         Edit Box
                                     </a>
@@ -521,7 +521,7 @@
                                                         <td>${{ flag.value }}</td>
                                                         <td>{{ str(flag._type) }}</td>
                                                         <td>
-                                                            <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-uuid="{{ flag.uuid }}">
+                                                            <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
                                                                 <i class="fa fa-pencil"></i>
                                                                 Edit Flag
                                                             </a>
@@ -567,7 +567,7 @@
                                                         <td>${{ hint.price }}</td>
                                                         <td>{{ hint.description }}</td>
                                                         <td>
-                                                            <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                            <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-pencil"></i>
                                                                 Edit Hint
                                                             </a>

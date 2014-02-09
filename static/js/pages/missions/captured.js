@@ -1,13 +1,14 @@
 function text_animation(term) {
     var index = 0;
-    var flag = document.getElementById('flag').value;
-    var reward = document.getElementById('reward').value;
+    var flag = $('#flag').val();
+    var reward = $('#reward').val();
+    var msg = $('#capture-message').val();
     intro_frames = [
         "  I have received the '" + flag + "' information.",
-        "  It appears to be genuine; thank you for your hard work.",
+        " ",
+        msg.toString(),
         " ",
         " I have transfered $" + reward + " to your team's account.",
-        " Just don't go spend it all in once place ;-)",
         " ",
         " Good hunting,\n    -Morris",
     ];

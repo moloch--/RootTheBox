@@ -3,7 +3,6 @@ function get_details(obj, uuid) {
     $("#edit-" + obj + "-uuid").val(uuid);
     $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
         $.each(data, function(key, value) {
-            // console.log("#" + obj + "-" + key + " <- " + value);
             $("#" + obj + "-" + key).val(value);
         });
     });
@@ -32,6 +31,7 @@ $(document).ready(function() {
     /* Box */
     $("a[id^=edit-box-button]").click(function() {
         get_details("box", $(this).data("uuid"));
+        $("#edit-box-corporation").val($(this).data("corporation-uuid"));
     });
 
     $("#edit-box-submit").click(function() {
@@ -49,6 +49,7 @@ $(document).ready(function() {
     /* Flag */
     $("a[id^=edit-flag-button]").click(function() {
         get_details("flag", $(this).data("uuid"));
+        $("#edit-flag-box").val($(this).data("box-uuid"));
     });
 
     $("#edit-flag-submit").click(function() {

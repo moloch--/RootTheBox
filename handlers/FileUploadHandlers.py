@@ -103,7 +103,6 @@ class FileDeleteHandler(BaseHandler):
     def post(self, *args, **kwargs):
         user = self.get_current_user()
         shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
-        print 'got', self.request.arguments
         if shared_file is not None and shared_file in user.team.files:
             logging.info("%s deleted a shared file %s" % (user.handle, shared_file.uuid))
             shared_file.delete_data()

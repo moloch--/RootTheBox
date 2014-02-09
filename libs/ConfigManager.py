@@ -51,12 +51,15 @@ logging_levels = {
 class ConfigManager(object):
     ''' Central class which handles any user-controlled settings '''
 
+    _domain_warned = False
+    _db_connection = None
+
     def __init__(self, cfg_file='rootthebox.cfg'):
         self.filename = cfg_file
         if os.path.exists(cfg_file) and os.path.isfile(cfg_file):
             self.conf = os.path.abspath(cfg_file)
         else:
-            sys.stderr.write(WARN+"No configuration file found at: %s." % self.conf)
+            sys.stderr.write(WARN + "No configuration file found at: %s." % self.conf)
             os._exit(1)
         self.refresh()
         self._logging()
@@ -91,15 +94,13 @@ class ConfigManager(object):
     def refresh(self):
         ''' Refresh config file settings '''
         self.config = ConfigParser.SafeConfigParser()
-        self.config_fp = open(self.conf, 'r')
-        self.config.readfp(self.config_fp)
+        with open(self.conf, 'r') as fp:
+            self.config.readfp(fp)
 
     def save(self):
         ''' Write current config to file '''
-        self.config_fp.close()
-        fp = open(self.conf, 'w')
-        self.config.write(fp)
-        fp.close()
+        with open(self.conf, 'w') as fp:
+            self.config.write(fp)
         self.refresh()
 
     @property
@@ -130,12 +131,6 @@ class ConfigManager(object):
         self.config.set("Server", 'debug', str(value))
 
     @property
-    def ws_connect(self):
-        ''' Websocket connection URL '''
-        ws = 'wss://' if self.use_ssl else 'ws://'
-        return '%s%s:%s' % (ws, self.domain, self.listen_port)
-
-    @property
     def domain(self):
         ''' Automatically resolve domain, or use manual setting '''
         _domain = self.config.get("Server", 'domain').strip()
@@ -151,11 +146,14 @@ class ConfigManager(object):
                 _domain = 'localhost'
             logging.debug("Domain was automatically configured to '%s'" % _domain)
         if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':
-            logging.warn("Possible misconfiguration 'domain' is set to 'localhost'")
+            if not self._domain_warned:
+                self._domain_warned = True
+                logging.warn("Possible misconfiguration 'domain' is set to 'localhost'")
         return _domain
 
     @property
     def origin(self):
+        ''' Origin URL (e.g. http://192.168.1.1:8888) '''
         default = True if (self.use_ssl and self.listen_port == 443) \
                         or not self.use_ssl and self.listen_port == 80 \
                         else False
@@ -164,6 +162,19 @@ class ConfigManager(object):
             return "%s%s" % (http, self.domain)
         else:
             return "%s%s:%d" % (http, self.domain, self.listen_port)
+
+    @property
+    def ws_connect(self):
+        ''' Websocket connection URL '''
+        default = True if (self.use_ssl and self.listen_port == 443) \
+                        or not self.use_ssl and self.listen_port == 80 \
+                        else False
+        ws = 'wss://' if self.use_ssl else 'ws://'
+        if default:
+            return '%s%s' % (ws, self.domain)
+        else:
+            return '%s%s:%s' % (ws, self.domain, self.listen_port)
+
     @property
     def use_bots(self):
         ''' Whether bots should be enabled in this game '''
@@ -365,15 +376,22 @@ class ConfigManager(object):
     @property
     def db_connection(self):
         ''' Db connection string, only read once '''
-        db = self.config.get("Database", 'db').lower().strip()
-        if db == 'sqlite':
-            db_conn = self.__sqlite__()
-        elif db == 'postgresql':
-            db_conn = self.__postgresql__()
-        else:
-            db_conn = self.__mysql__()
-        self._test_db_connection(db_conn)
-        return db_conn
+        if self._db_connection is None:
+            db = self.config.get("Database", 'dialect').lower().strip()
+            if db == 'sqlite':
+                db_conn = self.__sqlite__()
+            elif db == 'postgresql':
+                db_conn = self.__postgresql__()
+            elif db == 'mysql':
+                db_conn = self.__mysql__()
+            self._test_db_connection(db_conn)
+            self._db_connection = db_conn
+        return self._db_connection
+
+    @db_connection.setter
+    def db_connection(self, value):
+        self._test_db_connection(value)
+        self._db_connection = value
 
     def __postgresql__(self):
         '''

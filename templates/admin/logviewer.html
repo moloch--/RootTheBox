@@ -1,6 +1,6 @@
-{% extends "../main.html" %} 
+{% extends "../main.html" %}
 
-{% block title %}Log Viewer{% end %} 
+{% block title %}Log Viewer{% end %}
 
 {% block content %}
 <div class="row-fluid">
@@ -53,8 +53,8 @@
     }
     var notifier_ws;
     $(document).ready(function() {
-        var minLevel = logLevels.indexOf(document.getElementById('log-level').value);
-        notifier_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:{{ handler.application.settings['port'] }}/admin/logviewer/wsocket");
+        var minLevel = logLevels.indexOf($('#log-level').value);
+        notifier_ws = new WebSocket($("#ws-connect").val() + "/admin/logviewer/wsocket");
         notifier_ws.onmessage = function(evt) {
             var emit = jQuery.parseJSON(evt.data);
             for (var index = 0; index < emit['messages'].length; index++) {

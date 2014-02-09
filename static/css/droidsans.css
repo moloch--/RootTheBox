@@ -1,13 +1,13 @@
 @font-face {
-  font-family: 'Droid Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Droid Sans'), local('DroidSans'), url(/static/font/droidsans.woff) format('woff');
+    font-family: 'Droid Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Droid Sans'), local('DroidSans'), url(/static/font/droidsans.woff) format('woff');
 }
 
 @font-face {
-  font-family: 'Droid Sans';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Droid Sans Bold'), local('DroidSans-Bold'), url(/static/font/droidsans-bold.woff) format('woff');
+    font-family: 'Droid Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Droid Sans Bold'), local('DroidSans-Bold'), url(/static/font/droidsans-bold.woff) format('woff');
 }

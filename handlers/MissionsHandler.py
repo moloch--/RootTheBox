@@ -50,7 +50,6 @@ class FirstLoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         reward = self.config.bot_reward
-        self.set_header("X-Content-Security-Policy", self.relaxed_csp)
         self.set_header("Content-Security-Policy", self.relaxed_csp)
         self.render('missions/firstlogin.html', reward=reward, user=user)
 

@@ -137,12 +137,3 @@ admin_permission = Permission(
 )
 dbsession.add(admin_permission)
 dbsession.commit()
-
-# Display Details
-if config.bootstrap == 'developement':
-    environ = bold + R + "Developement boot strap" + W
-    details = ", default admin password is '%s'." % password
-else:
-    environ = bold + "Production boot strap" + W
-    details = '.'
-print INFO + '%s completed successfully%s' % (environ, details)

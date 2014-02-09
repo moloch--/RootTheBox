@@ -3,7 +3,6 @@ function get_details(obj, uuid) {
     $("#" + obj + "_uuid").val(uuid);
     $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
         $.each(data, function(key, value) {
-            console.log("#" + obj + "-" + key + " -> " + value);
             $("#" + obj + "-" + key).val(value);
         });
     });

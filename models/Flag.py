@@ -45,6 +45,7 @@ class Flag(DatabaseObject):
     _name = Column(Unicode(16), nullable=False)
     _token = Column(Unicode(256), nullable=False)
     _description = Column(Unicode(256), nullable=False)
+    _capture_message = Column(Unicode(256))
     value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
@@ -153,6 +154,14 @@ class Flag(DatabaseObject):
         if 256 < len(value):
             raise ValueError("Description must be less than 256 characters")
         self._description = unicode(value)
+
+    @property
+    def capture_message(self):
+        return self._capture_message
+
+    @capture_message.setter
+    def capture_message(self, value):
+        self._capture_message = unicode(value)
 
     @property
     def type(self):
