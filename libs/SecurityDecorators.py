@@ -33,7 +33,7 @@ def authenticated(method):
     def wrapper(self, *args, **kwargs):
         if self.session is not None:
             if self.session.ip_address == self.request.remote_ip:
-                if not self.get_current_user().locked: 
+                if not self.get_current_user().locked:
                     return method(self, *args, **kwargs)
                 else:
                     self.session.delete()
@@ -91,15 +91,6 @@ def restrict_origin(method):
         if self.request.headers['Origin'] == self.config.origin:
             return method(self, *args, **kwargs)
     return wrapper
-
-
-def async(method):
-    ''' Quick and easy async functions'''
-
-    @functools.wraps(method)
-    def __async__(*args, **kwargs):
-        worker = Thread(target=method, args=args, kwargs=kwargs)
-        worker.start()
 
 
 def debug(method):

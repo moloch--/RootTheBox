@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
 Unit tests for everything in models/
-
-You'll want to run test with a clean database.
-TODO: Create a temporary sqlite db for tests
 '''
 
 

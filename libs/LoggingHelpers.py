@@ -22,6 +22,7 @@ Created on Aug 26, 2013
 
 import logging
 
+from tornado.ioloop import IOLoop
 from libs.Singleton import Singleton
 from collections import deque
 
@@ -30,13 +31,14 @@ from collections import deque
 class ObservableLoggingHandler(logging.StreamHandler):
     '''
     An observable logging class, just shuffles logging messages
-    from the main logger to the observers.  A small history is 
-    stored in volatile memory. 
+    from the main logger to the observers.  A small history is
+    stored in volatile memory.
     '''
 
     max_history_size = 100
     _observers = []
     _history = deque()
+    io_loop = IOLoop.instance()
 
     def add_observer(self, observer):
         ''' Add new observer and send them any history '''
@@ -50,9 +52,13 @@ class ObservableLoggingHandler(logging.StreamHandler):
             self._observers.remove(observer)
 
     def emit(self, record):
-        ''' 
-        Overloaded method, gets called when logging messages are sent
         '''
+        Overloaded method, gets called when logging messages are sent
+        We just drop the log message onto the i/o loop and keep going
+        '''
+        self.io_loop.add_callback(self._emit, record)
+
+    def _emit(self, record):
         msg = self.format(record)
         for observer in self._observers:
             observer.update([msg])

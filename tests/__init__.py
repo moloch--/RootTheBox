@@ -17,7 +17,12 @@ Created on Mar 12, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+------------------------------------------------------------------------------
+
+Setup / delete the unit test database
+
 '''
+
 
 import os
 import logging
@@ -42,3 +47,5 @@ def setup_database(db_name):
 def teardown_database(db_name):
     if os.path.exists("%s.db" % db_name):
         os.unlink("%s.db" % db_name)
+    else:
+        raise ValueError("Cannot delete test database: %s.db" % db_name)

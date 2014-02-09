@@ -32,7 +32,7 @@ from datetime import datetime
 from libs.ConsoleColors import *
 
 
-__version__ = 'Root the Box - v0.3.1'
+__version__ = 'Root the Box - v0.4.0'
 current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 
@@ -86,6 +86,8 @@ def setup_xml(xml_params):
 
 
 def tests():
+    ''' Creates a temporary sqlite database and runs the unit tests '''
+    print(INFO+'%s : Running unit tests ...' % current_time())
     from tests import setup_database, teardown_database
     db_name = 'test-%04s' % random.randint(0, 9999)
     setup_database(db_name)

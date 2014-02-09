@@ -31,7 +31,6 @@ from libs.ConfigManager import ConfigManager
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from libs.Singleton import Singleton
-from libs.SecurityDecorators import async
 
 
 @Singleton
