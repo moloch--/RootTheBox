@@ -91,7 +91,7 @@ def tests():
     from tests import setup_database, teardown_database
     db_name = 'test-%04s' % random.randint(0, 9999)
     setup_database(db_name)
-    nose.run(module='tests', argv=[os.getcwd()])
+    nose.run(module='tests', argv=[os.getcwd() + '/tests'])
     teardown_database(db_name)
 
 
