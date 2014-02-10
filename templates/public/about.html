@@ -8,17 +8,24 @@
 
 {% block content %}
     <div class="container">
-        <h1>About v{{ handler.application.settings['version'] }}</h1>
+        <h1>
+            <i class="fa fa-info-circle"></i>
+            About v{{ handler.application.settings['version'] }}
+        </h1>
         <br />
         <div class="well">
-            <marquee behavior="scroll" direction="up" scrollamount="2">
+            <marquee behavior="scroll" direction="up" scrollamount="2" height="350">
                 <center><!-- Firefox fix -->
                 <!-- Programming -->
                     <hr>
                     <h2>Programming</h2>
                     <hr>
-                    <h3>Moloch</h3>
-                    <h3>Lavalamp</h3>
+                    <h3>
+                        Moloch
+                    </h3>
+                    <h3>
+                        Lavalamp
+                    </h3>
                     <br />
                 <!-- Special Thanks -->
                     <hr>
@@ -30,7 +37,7 @@
                     </a>
                     <br />
                     <br />
-                    <h2>...and all our contributors!</h2>
+                    <h2>...and to all our contributors!</h2>
                     <br />
                 </center>
             </marquee>

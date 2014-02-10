@@ -28,12 +28,8 @@
     <div class="well">
         <form class="form-horizontal" action="/admin/import/xml" method="post" enctype="multipart/form-data">
             {% raw xsrf_form_html() %}
-            <div class="control-group">
-                <label class="control-label" for="game-objects">XML File</label>
-                <div class="controls">
-                    <input id="game-objects" name="game-objects" type="checkbox">
-                </div>
-            </div>
+
+
             <div class="control-group">
                 <div class="controls">
                     <button class="btn btn-primary" type="submit">Export File</button>

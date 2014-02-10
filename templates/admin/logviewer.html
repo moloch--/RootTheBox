@@ -2,10 +2,12 @@
 
 {% block title %}Log Viewer{% end %}
 
-{% block content %}
+{% block header %}
 <script src="/static/js/pages/admin/logviewer.js"></script>
-<input id="ws-connect" value="{{ handler.application.settings['ws_connect'] }}" type="hidden" />
+{% end %}
 
+{% block content %}
+<input id="ws-connect" value="{{ handler.application.settings['ws_connect'] }}" type="hidden" />
 <div class="row-fluid">
     <h1>Log Viewer</h1>
     <br />

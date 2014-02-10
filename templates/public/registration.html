@@ -66,13 +66,19 @@
                         <div class="control-group">
                             <label class="control-label" for="team_name">Team Name</label>
                             <div class="controls">
-                                <input id="team_name" name="team_name" type="text" placeholder="Team Name">
+                                <input id="team-name" name="team_name" type="text" placeholder="Team Name"
+                                    rel="popover"
+                                    data-original-title="New Team Name"
+                                    data-content="Choose a name for your new team!" >
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="motto">Motto</label>
                             <div class="controls">
-                                <input id="motto" name="motto" type="text" placeholder="Team Motto">
+                                <input id="motto" name="motto" type="text" placeholder="Team Motto"
+                                    rel="popover"
+                                    data-original-title="Team Motto"
+                                    data-content="What's your team's motto?">
                             </div>
                         </div>
                     {% end %}
@@ -81,7 +87,7 @@
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">
                         <input required id="pass1" name="pass1" placeholder="Password" type="password"
-                            autocomplete="off" data-storage="false"
+                            autocomplete="off"
                             rel="popover"
                             data-original-title="Password"
                             data-content="Enter a complex password of 16+ characters" />
@@ -91,7 +97,7 @@
                     <label class="control-label" for="pass2">Confirm Account Password</label>
                     <div class="controls">
                         <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password"
-                            autocomplete="off" data-storage="false"
+                            autocomplete="off"
                             rel="popover"
                             data-original-title="Confirm Password"
                             data-content="Enter the same password as before" />
@@ -101,7 +107,7 @@
                     <label class="control-label" for="bpass1">Bank Account Password</label>
                     <div class="controls">
                         <input required id="bpass" name="bpass" placeholder="Bank Account Password" type="password"
-                            autocomplete="off" data-storage="false"
+                            autocomplete="off"
                             rel="popover"
                             data-original-title="Password"
                             data-content="Used to secure your (in-game) bank account.  Please do NOT enter your real bank account password." />
