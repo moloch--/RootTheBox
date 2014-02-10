@@ -1,8 +1,11 @@
 {% extends "../main.html" %} 
 
-{% block title %}Log Viewer{% end %} 
+{% block title %}Log Viewer{% end %}
 
 {% block content %}
+<script src="/static/js/pages/admin/logviewer.js"></script>
+<input id="ws-connect" value="{{ handler.application.settings['ws_connect'] }}" type="hidden" />
+
 <div class="row-fluid">
     <h1>Log Viewer</h1>
     <br />
@@ -28,44 +31,7 @@
         <input type="hidden" id="log-level" value="{{ log_level }}" />
         <h4>Current Level: {{ log_level }}</h4>
         <pre id="log-view">
-
         </pre>
     </div>
-    <script>
-    var logLevels = ['DEBUG', 'INFO', 'WARNING', 'ERROR'];
-    var entityMap = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': '&quot;',
-        "'": '&#39;',
-        "/": '&#x2F;'
-    };
-
-    function escapeHtml(string) {
-        return String(string).replace(/[&<>"'\/]/g, function(s) {
-            return entityMap[s];
-        });
-    }
-
-    function getLevel(msg) {
-        return msg.substring(msg.indexOf('[') + 1, msg.indexOf(']'));
-    }
-    var notifier_ws;
-    $(document).ready(function() {
-        var minLevel = logLevels.indexOf(document.getElementById('log-level').value);
-        notifier_ws = new WebSocket("ws://{{ handler.application.settings['domain'] }}:{{ handler.application.settings['port'] }}/admin/logviewer/wsocket");
-        notifier_ws.onmessage = function(evt) {
-            var emit = jQuery.parseJSON(evt.data);
-            for (var index = 0; index < emit['messages'].length; index++) {
-                line = emit['messages'][index].toString();
-                level = getLevel(line);
-                if (minLevel <= logLevels.indexOf(level)) {
-                    $('#log-view').prepend(escapeHtml(line) + "\n");
-                }
-            }
-        };
-    });
-    </script>
 </div>
 {% end %}

@@ -132,8 +132,14 @@ class ConfigManager(object):
     @property
     def ws_connect(self):
         ''' Websocket connection URL '''
+        default = True if (self.use_ssl and self.listen_port == 443) \
+                        or not self.use_ssl and self.listen_port == 80 \
+                        else False
         ws = 'wss://' if self.use_ssl else 'ws://'
-        return '%s%s:%s' % (ws, self.domain, self.listen_port)
+        if default:
+            return '%s%s' % (ws, self.domain)
+        else:
+            return '%s%s:%s' % (ws, self.domain, self.listen_port)
 
     @property
     def domain(self):
