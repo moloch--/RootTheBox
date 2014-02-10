@@ -5,16 +5,19 @@
 {% block content %}
     {% include ../notifier.html %}
     <div class="container">
-        <h1>Teams</h1>
+        <h1>
+            <i class="fa fa-group"></i>
+            Teams
+        </h1>
         <br />
-        {% from models import Team %}
+        {% from models.Team import Team %}
         {% for index, team in enumerate(Team.ranks()) %}
             <div id="{{ team.uuid }}" class="well">
                 <h2 style="display:inline;">{{ index }} - {{ team.name }}</h2>
                 <h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>
-                <hr>
-                <div class="container">
-                    <div class="row">
+                <hr />
+                <div class="row">
+                    <div class="container">
                         {% for user in team.members %}
                             <div class="span2">
                                 <center>
@@ -22,6 +25,37 @@
                                     <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
                                 </center>
                             </div>
+                        {% end %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container">
+                        <hr />
+                        {% if len(team.flags) %}
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Flag</th>
+                                        <th>Box</th>
+                                        <th>Game Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for f_index, flag in enumerate(team.flags) %}
+                                        <tr>
+                                            <td>{{ f_index + 1 }}</td>
+                                            <td>{{ flag.name }}</td>
+                                            <td>{{ flag.box.name }}</td>
+                                            <td>{{ flag.game_level.number }}</td>
+                                        </tr>
+                                    {% end %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>
+                                <h4 style="text-align:center;">No flags captured yet.</h4>
+                            </p>
                         {% end %}
                     </div>
                 </div>

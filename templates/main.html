@@ -24,6 +24,7 @@
     </head>
     <body>
         {% module Menu() %}
+        <input id="ws-connect" value="{{ handler.application.settings['ws_connect'] }}" type="hidden" />
         <div class="container-fluid animated fadeIn">
             {% block content %} Content Missing {% end %}
             <hr>

@@ -32,7 +32,8 @@ from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import debug
 from libs.GameHistory import GameHistory
 from libs.EventManager import EventManager
-from models import Team, WallOfSheep
+from models.Team import Team
+from models.WallOfSheep import WallOfSheep
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):

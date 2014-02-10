@@ -1,5 +1,5 @@
 {% from libs.BotManager import BotManager %}
-{% for (index, team) in enumerate(teams) %}
+{% for index, team in enumerate(teams) %}
     <tr>
         <td>{{ index }}</td>
         <td>{{ team.name }}</td>
@@ -8,8 +8,8 @@
         <td>${{ team.money }}</td>
         <td>{{ team.levels[-1].number }} </td>
         <td>
-            <a class="btn btn-mini" data-toggle="modal" onclick="window.location='/teams#{{ team.uuid }}'">
-                Team Members &raquo;
+            <a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.uuid }}">
+                Team Details &raquo;
             </a>
         </td>
     </tr>
