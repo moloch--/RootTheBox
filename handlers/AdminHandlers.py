@@ -217,6 +217,7 @@ class AdminCreateHandler(BaseHandler):
         if box is None:
             raise ValueError('Box does not exist')
         flag = Flag.create_flag(flag_type, box, name, token, description, reward)
+        flag.capture_message = self.get_argument('capture_message', '')
         self.dbsession.add(flag)
         self.dbsession.commit()
         self.redirect('/admin/view/game_objects')
@@ -1164,6 +1165,8 @@ class AdminGarbageCfgHandler(BaseHandler):
 
 class AdminExportHandler(BaseHandler):
 
+    API_VERSION = "1"
+
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
@@ -1189,6 +1192,7 @@ class AdminExportHandler(BaseHandler):
         For the record, I hate XML with a passion.
         '''
         root = ET.Element("rootthebox")
+        root.set("api", self.API_VERSION)
         levels_elem = ET.SubElement(root, "gamelevels")
         levels_elem.set("count", str(GameLevel.count()))
         for level in GameLevel.all()[1:]:

@@ -93,6 +93,7 @@ def create_flags(parent, box):
             flag.token = get_child_text(flag_elem, 'token')
             flag.value = get_child_text(flag_elem, 'value')
             flag.description = get_child_text(flag_elem, 'description')
+            flag.capture_message = get_child_text(flag_elem, 'capture_message')
             flag.type = flag_elem.get('type')
             dbsession.add(flag)
         except:

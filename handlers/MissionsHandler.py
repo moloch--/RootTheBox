@@ -76,6 +76,14 @@ class BoxHandler(BaseHandler):
 
 class FlagSubmissionHandler(BaseHandler):
 
+    # Terminal JS needs eval()
+    relaxed_csp = "default-src 'self';" + \
+        "script-src 'self' 'unsafe-eval';" + \
+        "style-src 'self' 'unsafe-inline';" + \
+        "font-src 'self';" + \
+        "img-src 'self';" + \
+        "connect-src 'self' %s" % ConfigManager.instance().ws_connect
+
     @authenticated
     def post(self, *args, **kwargs):
         ''' Check validity of flag submissions '''
@@ -89,6 +97,7 @@ class FlagSubmissionHandler(BaseHandler):
                 submission = None
             old_reward = flag.value
             if self.attempt_capture(flag, submission):
+                self.set_header("Content-Security-Policy", self.relaxed_csp)
                 self.render('missions/captured.html', flag=flag, reward=old_reward)
             else:
                 self.render_page(flag, errors=["Invalid flag submission"])

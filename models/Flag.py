@@ -157,7 +157,7 @@ class Flag(DatabaseObject):
 
     @property
     def capture_message(self):
-        return self._capture_message
+        return self._capture_message if self._capture_message else ''
 
     @capture_message.setter
     def capture_message(self, value):
@@ -203,6 +203,7 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "name").text = self.name
         ET.SubElement(flag_elem, "token").text = self.token
         ET.SubElement(flag_elem, "description").text = self.description
+        ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
 
     def to_dict(self):
@@ -212,6 +213,7 @@ class Flag(DatabaseObject):
             'name': self.name,
             'uuid': self.uuid,
             'description': self.description,
+            'capture_message': self.capture_message,
             'value': self.value,
             'box': box.uuid,
             'token': self.token,

@@ -12,7 +12,7 @@ function drawBotGraph(state) {
             zoomType: 'x',
         },
         title: {
-                text: 'Team Botnets',
+                text: 'Botnets',
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -43,7 +43,7 @@ function drawBotGraph(state) {
         tooltip: {
             enabled: true,
             formatter: function() {
-                return '<strong>' + escapeHtml(this.series.name) + '</strong><br />' + this.y + ' bot(s)';
+                return '<strong>' + escapeHtml(this.series.name) + '</strong><br />' + escapeHtml(this.y) + ' bot(s)';
             }
         },
         plotOptions: {
@@ -99,7 +99,7 @@ function drawMoneyGraph(state) {
         tooltip: {
             enabled: true,
             formatter: function() {
-                return '<strong>' + escapeHtml(this.series.name) + '</strong><br /> $' + this.y;
+                return '<strong>' + escapeHtml(this.series.name) + '</strong><br /> $' + escapeHtml(this.y);
             }
         },
         plotOptions: {
@@ -158,7 +158,7 @@ function drawFlagGraph(state) {
         tooltip: {
             enabled: true,
             formatter: function() {
-                return '<strong>' + escapeHtml(this.series.name) + '</strong><br />' + this.y + ' flag(s)';
+                return '<strong>' + escapeHtml(this.series.name) + '</strong><br />' + escapeHtml(this.y) + ' flag(s)';
             }
         },
         plotOptions: {
@@ -193,7 +193,7 @@ function updateFlagState(flagState, update) {
             /* Add to existing series' data array */
             flagState[seriesIndex].data.push([timestamp, flagCount]);
         } else {
-            console.log("Create new series: " + teamName);
+            console.log("Create flag series: " + teamName);
             newSeries = {
                 name: teamName,
                 data: [
@@ -237,7 +237,7 @@ function updateMoneyState(moneyState, update) {
             /* Add to existing series' data array */
             moneyState[seriesIndex].data.push([timestamp, money]);
         } else {
-            console.log("Create new series: " + teamName);
+            console.log("Create money series: " + teamName);
             newSeries = {
                 name: teamName,
                 data: [
@@ -280,7 +280,7 @@ function updateBotState(botState, update) {
             /* Add to existing series' data array */
             botState[seriesIndex].data.push([timestamp, bots]);
         } else {
-            console.log("Create new series: " + teamName);
+            console.log("Create bot series: " + teamName);
             newSeries = {
                 name: teamName,
                 data: [
@@ -353,9 +353,11 @@ $(document).ready(function() {
             initializeState(updateMoneyState, moneyState, msg['history']);
             initializeState(updateBotState, botState, msg['history']);
         } else if ('update' in msg) {
+            /* Update graph states */
             updateFlagState(flagState, msg['update']);
             updateMoneyState(moneyState, msg['update']);
             updateBotState(botState, msg['update']);
+            /* Update the live chart */
             liveUpdateCallback(chart, msg['update']);
         }
     };
