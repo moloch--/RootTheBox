@@ -117,7 +117,7 @@ urls = [
 
     # Scoreboard Handlers - ScoreboardHandlers.py
     (r'/scoreboard', ScoreboardHandler),
-    (r'/scoreboard/history/(.*)', ScoreboardHistoryHandler),
+    (r'/scoreboard/history', ScoreboardHistoryHandler),
     (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
     (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
     (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),

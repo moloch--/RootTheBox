@@ -1,44 +1,53 @@
 {% extends "../main.html" %}
 
 {% block header %}
-<script src="/static/js/libs/highcharts.js"></script>
-<script src="/static/js/libs/modules/exporting.js"></script>
+<script src="/static/js/libs/highcharts-all.js"></script>
 <script src="/static/js/pages/scoreboard/summary.js"></script>
 {% end %}
 
 {% block title %}Scoreboard{% end %}
 
 {% block content %}
-    {% include ../notifier.html %}
-    <!-- Team Details -->
-    <div class="row-fluid">
-        <h1 class="offset1">Scoreboard</h1>
-        <br />
-        <div class="well span5 offset1" id="pie_flags" >
-            <!-- Pie Chart Here -->
-        </div>
-        <div class="well span5" id="pie_money">
+{% from libs.ConfigManager import ConfigManager %}
+<div class="row-fluid">
+    <h1 class="offset1">
+        <i class="fa fa-bar-chart-o"></i>
+        Scoreboard
+    </h1>
+    <br />
+</div>
+<div class="row-fluid">
+    <div class="well span5 offset1">
+        <div id="pie_flags" style="height:300px;">
             <!-- Pie Chart Here -->
         </div>
     </div>
-    <div class="row-fluid">
-        <div class="well span10 offset1">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Team</th>
-                        <th>Flags Captured</th>
+    <div class="well span5">
+        <div id="pie_money" style="height:300px;">
+            <!-- Pie Chart Here -->
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="well span10 offset1">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Team</th>
+                    <th>Flags Captured</th>
+                    {% if ConfigManager.instance().use_bots %}
                         <th>Botnet</th>
-                        <th>Bank Account</th>
-                        <th>Game Level</th>
-                        <th><!-- Details --></th>
-                    </tr>
-                </thead>
-                <tbody id="summary_table">
-                    <!-- AJAX -->
-                </tbody>
-            </table>
-        </div>
+                    {% end %}
+                    <th>Bank Account</th>
+                    <th>Game Level</th>
+                    <th><!-- Details --></th>
+                </tr>
+            </thead>
+            <tbody id="summary_table">
+                <!-- AJAX -->
+            </tbody>
+        </table>
     </div>
+</div>
 {% end %}

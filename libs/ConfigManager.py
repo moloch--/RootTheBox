@@ -57,6 +57,7 @@ class ConfigManager(object):
     _restrict_registration = None
     _public_teams = None
     _db_connection = None
+    _max_team_size = None
 
 
     def __init__(self, cfg_file='rootthebox.cfg'):

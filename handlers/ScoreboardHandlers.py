@@ -109,43 +109,7 @@ class ScoreboardAjaxHandler(BaseHandler):
 class ScoreboardHistoryHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        uri = {
-            'money': self.money,
-            'flags': self.flags,
-            'bots': self.bots,
-        }
-        if 1 == len(args) and args[0] in uri:
-            uri[args[0]]()
-        else:
-            self.render('public/404.html')
-
-    def money(self):
-        game_history = GameHistory.instance()
-        history = {}
-        for team in Team.all():
-            history[team.name] = game_history.get_money_history_by_name(
-                team.name, -30
-            )
-        self.render('scoreboard/history/money.html', history=history)
-
-    def flags(self):
-        game_history = GameHistory.instance()
-        history = {}
-        for team in Team.all():
-            history[team.name] = game_history.get_flag_history_by_name(
-                team.name, -30
-            )
-        self.render('scoreboard/history/flags.html', history=history)
-
-    def bots(self):
-        #TODO disable this functionality when bots are not enabled
-        game_history = GameHistory.instance()
-        history = {}
-        for team in Team.all():
-            history[team.name] = game_history.get_bot_history_by_name(
-                team.name, -30
-            )
-        self.render('scoreboard/history/bots.html', history=history)
+        self.render('scoreboard/history.html')
 
 
 class ScoreboardHistorySocketHandler(WebSocketHandler):
@@ -198,9 +162,3 @@ class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         self.render('scoreboard/teams.html')
-
-
-class UsersHandler(BaseHandler):
-
-    def get(self, *args, **kwards):
-        self.render('scoreboard/users.html')

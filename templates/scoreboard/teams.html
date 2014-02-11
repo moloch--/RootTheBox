@@ -3,14 +3,33 @@
 {% block title %}Teams{% end %}
 
 {% block content %}
-    {% include ../notifier.html %}
-    <div class="container">
+{% from models.Team import Team %}
+<div class="row-fluid">
+    <div class="span2" />
+        <ul class="nav nav-tabs nav-stacked affix well">
+            <center>
+                <strong>
+                    <i class="fa fa-group"></i>
+                    Teams
+                </strong>
+            </center>
+            <br />
+            {% for team in Team.all() %}
+                <li>
+                    <a href="#{{ team.uuid }}">
+                        <i class="icon-chevron-right"></i>
+                        &nbsp;&nbsp;{{ team.name }}
+                    </a>
+                </li>
+            {% end %}
+        </ul>
+    </div>
+    <div class="span10">
         <h1>
             <i class="fa fa-group"></i>
             Teams
         </h1>
         <br />
-        {% from models.Team import Team %}
         {% for index, team in enumerate(Team.ranks()) %}
             <div id="{{ team.uuid }}" class="well">
                 <h2 style="display:inline;">{{ index }} - {{ team.name }}</h2>
@@ -62,4 +81,5 @@
             </div>
         {% end %}
     </div>
+</div>
 {% end %}
