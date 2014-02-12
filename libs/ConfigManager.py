@@ -56,20 +56,24 @@ class ConfigManager(object):
     _db_connection = None
 
     # Game Setup
+    _game_name = None
     _restrict_registration = None
     _public_teams = None
     _max_team_size = None
+    _max_password_length = None
 
     # Feature enable/disable
     _use_bots = None
+    _bot_reward = None
     _use_black_market = None
+    _password_upgrade_cost = None
 
     def __init__(self, cfg_file='rootthebox.cfg'):
         self.filename = cfg_file
         if os.path.exists(cfg_file) and os.path.isfile(cfg_file):
-            self.conf = os.path.abspath(cfg_file)
+            self.conf_path = os.path.abspath(cfg_file)
         else:
-            sys.stderr.write(WARN + "No configuration file found at: %s." % self.conf)
+            sys.stderr.write(WARN + "No configuration file found at: %s." % self.conf_path)
             os._exit(1)
         self.refresh()
         self._logging()
@@ -104,14 +108,78 @@ class ConfigManager(object):
     def refresh(self):
         ''' Refresh config file settings '''
         self.config = ConfigParser.SafeConfigParser()
-        with open(self.conf, 'r') as fp:
+        with open(self.conf_path, 'r') as fp:
             self.config.readfp(fp)
 
     def save(self):
         ''' Write current config to file '''
-        with open(self.conf, 'w') as fp:
+        # Set game config
+        self.config.set("Game", "game_name", self.game_name)
+        self.config.set("Game", "public_teams", self.public_teams)
+        self.config.set("Game", "max_team_size", self.max_team_size)
+        self.config.set("Game", "max_password_length", self.max_password_length)
+        self.config.set("Game", "restrict_registration", self.restrict_registration)
+        self.config.set("Game", "use_black_market", self.use_black_market)
+        self.config.set("Game", "use_bots", self.use_bots)
+        self.config.set("Game", "bot_reward", self.bot_reward)
+        self.config.set("Game", "password_upgrade_cost", self.password_upgrade_cost)
+        self.config.set("Game", "bribe_cost", self.bribe_cost)
+        self.config.set("Game", "whitelist_box_ips", self.whitelist_box_ips)
+        with open(self.conf_path, 'w') as fp:
             self.config.write(fp)
         self.refresh()
+
+    #####################################################################
+    #######################  [ SERVER SETTINGS ]  #######################
+    #####################################################################
+
+    @property
+    def memcached(self):
+        ''' Memached settings, cannot be changed from webui '''
+        memcached_host = self.config.get("Cache", 'memcached_host')
+        memcached_port = self.config.getint("Cache", 'memcached_port')
+        return "%s:%d" % (memcached_host, memcached_port)
+
+    @property
+    def session_age(self):
+        ''' Max session age in seconds '''
+        return abs(self.config.getint("Cache", 'session_age'))
+
+    @property
+    def session_regeneration_interval(self):
+        return abs(self.config.getint("Cache", 'session_regeneration_interval'))
+
+    @property
+    def admin_ips(self):
+        ''' Whitelist admin ip address, this may be bypassed if x-headers is enabled '''
+        ips = self.config.get("Security", 'admin_ips')
+        ips = ips.replace(" ", "").split(',')
+        ips.append('127.0.0.1')
+        ips.append('::1')
+        return tuple(set(ips))
+
+    @property
+    def x_headers(self):
+        ''' Enable/disable HTTP X-Headers '''
+        xheaders = self.config.getboolean("Security", 'x-headers')
+        if xheaders:
+            logging.warn("X-Headers is enabled, this may affect IP security restrictions")
+        return xheaders
+
+    @property
+    def recaptcha_enabled(self):
+        ''' Enable/Disable use of recaptcha '''
+        return self.config.getboolean("Recaptcha", 'use_recaptcha')
+
+    @recaptcha_enabled.setter
+    def recaptcha_enabled(self, value):
+        assert isinstance(value, bool)
+        self.config.set("Recaptcha", 'use_recaptcha', str(value))
+
+    @property
+    def recaptcha_private_key(self):
+        ''' Recaptcha API key '''
+        return self.config.get("Recaptcha", 'private_key')
 
     @property
     def listen_port(self):
@@ -134,11 +202,6 @@ class ConfigManager(object):
     def debug(self):
         ''' Debug mode '''
         return self.config.getboolean("Server", 'debug')
-
-    @debug.setter
-    def debug(self, value):
-        assert isinstance(value, bool)
-        self.config.set("Server", 'debug', str(value))
 
     @property
     def domain(self):
@@ -186,191 +249,12 @@ class ConfigManager(object):
             return '%s%s:%s' % (ws, self.domain, self.listen_port)
 
     @property
-    def use_bots(self):
-        ''' Whether bots should be enabled in this game '''
-        return self.config.getboolean("Game", "use_bots")
-
-    @property
-    def use_black_market(self):
-        ''' Whether the black market should be enabled in this game '''
-        return self.config.getboolean("Game", "use_black_market")
-
-    @property
-    def max_team_size(self):
-        if self._max_team_size is None:
-            self._max_team_size = self.config.getint("Game", 'max_team_size')
-        return self._max_team_size
-
-    @max_team_size.setter
-    def max_team_size(self, value):
-        if int(value) <= 0:
-            raise ValueError("Max team size must be at least 1")
-        self._max_team_size = int(value)
-
-    @property
     def bootstrap(self):
         return self.config.get("Server", 'bootstrap')
 
     @property
-    def public_teams(self):
-        ''' Allow new users to create their own teams '''
-        if self._public_teams is None:
-            self._public_teams = self.config.getboolean("Game", 'public_teams')
-        return self._public_teams
-
-    @public_teams.setter
-    def public_teams(self, value):
-        self._public_teams = bool(value)
-
-    @property
-    def restrict_registration(self):
-        ''' Enable/disable registration tokens '''
-        if self._restrict_registration is None:
-            self._restrict_registration = self.config.getboolean("Game", 'restrict_registration')
-        return self._restrict_registration
-
-    @restrict_registration.setter
-    def restrict_registration(self, value):
-        self._restrict_registration = bool(value)
-
-    @property
     def default_theme(self):
         return self.config.get("Server", "theme")
-
-    @property
-    def cache_files(self):
-        ''' Cache small files in memcached, only read once '''
-        return self.config.getboolean("Server", "cache_files")
-
-    @property
-    def game_name(self):
-        return self.config.get("Game", 'game_name')[:16]
-
-    @game_name.setter
-    def game_name(self, value):
-        assert isinstance(value, basestring)
-        self.config.set("Game", 'game_name', value[:16])
-
-    @property
-    def bot_reward(self):
-        ''' Reward per bot per interval '''
-        return abs(self.config.getint("Game", 'bot_reward'))
-
-    @bot_reward.setter
-    def bot_reward(self, value):
-        assert isinstance(value, int)
-        self.config.set("Game", 'bot_reward', str(value))
-
-    @property
-    def bot_reward_interval(self):
-        ''' Check bots every so many minutes '''
-        _interval = self.config.getint("Game", 'bot_reward_interval')
-        return  60000 * _interval
-
-    @bot_reward_interval.setter
-    def bot_reward_interval(self, value):
-        assert isinstance(value, int)
-        self.config.set("Game", 'bot_reward_interval', str(value))
-
-    @property
-    def whitelist_box_ips(self):
-        return self.config.getboolean('Game', 'whitelist_box_ips')
-
-    @property
-    def bribe_cost(self):
-        ''' Base amount of a SWAT bribe '''
-        return abs(self.config.getint("Game", 'bribe_cost'))
-
-    @bribe_cost.setter
-    def bribe_cost(self, value):
-        assert isinstance(value, int)
-        self.config.set("Game", 'bribe_cost', str(value))
-
-    @property
-    def history_snapshot_interval(self):
-        conf = self.config.getint("Game", 'history_snapshot_interval')
-        return 60000 * conf
-
-    @history_snapshot_interval.setter
-    def history_snapshot_interval(self, value):
-        assert isinstance(value, int)
-        self.config.set("Game", 'history_snapshot_interval', str(value))
-
-    @property
-    def memcached(self):
-        ''' Memached settings, cannot be changed from webui '''
-        memcached_host = self.config.get("Cache", 'memcached_host')
-        memcached_port = self.config.getint("Cache", 'memcached_port')
-        return "%s:%d" % (memcached_host, memcached_port)
-
-    @property
-    def session_age(self):
-        ''' Max session age in seconds '''
-        return abs(self.config.getint("Cache", 'session_age'))
-
-    @property
-    def session_regeneration_interval(self):
-        return abs(self.config.getint("Cache", 'session_regeneration_interval'))
-
-    @property
-    def admin_ips(self):
-        ''' Whitelist admin ip address, this may be bypassed if x-headers is enabled '''
-        ips = self.config.get("Security", 'admin_ips')
-        ips = ips.replace(" ", "").split(',')
-        ips.append('127.0.0.1')
-        ips.append('::1')
-        return tuple(set(ips))
-
-    @property
-    def x_headers(self):
-        ''' Enable/disable HTTP X-Headers '''
-        xheaders = self.config.getboolean("Security", 'x-headers')
-        if xheaders:
-            logging.warn("X-Headers is enabled, this may affect IP security restrictions")
-        return xheaders
-
-    @property
-    def max_password_length(self):
-        return abs(self.config.getint("Game", 'max_password_length'))
-
-    @max_password_length.setter
-    def max_password_length(self, value):
-        assert isinstance(value, int)
-        self.config.set("Game", 'max_password_length', str(value))
-
-    @property
-    def password_upgrade_cost(self):
-        return abs(self.config.getint("Game", 'password_upgrade_cost'))
-
-    @password_upgrade_cost.setter
-    def password_upgrade_cost(self, value):
-        assert isinstance(value, int)
-        self.config.set("Game", 'password_upgrade_cost', str(value))
-
-    @property
-    def recaptcha_enabled(self):
-        ''' Enable/Disable use of recaptcha '''
-        return self.config.getboolean("Recaptcha", 'use_recaptcha')
-
-    @recaptcha_enabled.setter
-    def recaptcha_enabled(self, value):
-        assert isinstance(value, bool)
-        self.config.set("Recaptcha", 'use_recaptcha', str(value))
-
-    @property
-    def recaptcha_private_key(self):
-        ''' Recaptcha API key '''
-        return self.config.get("Recaptcha", 'private_key')
-
-    @property
-    def log_sql(self):
-        ''' This value is only read once, no setter '''
-        return self.config.getboolean("Database", 'orm_sql')
-
-    @property
-    def bot_sql(self):
-        ''' This value is only read once, no setter '''
-        return self.config.getboolean("Database", 'bot_sql')
 
     @property
     def use_ssl(self):
@@ -395,6 +279,147 @@ class ConfigManager(object):
             os._exit(1)
         return key
 
+    #####################################################################
+    ########################  [ GAME SETTINGS ]  ########################
+    #####################################################################
+
+    @property
+    def game_name(self):
+        if self._game_name is None:
+            self._game_name = self.config.get("Game", 'game_name')[:16]
+        return self._game_name
+
+    @game_name.setter
+    def game_name(self, value):
+        self._game_name = value[:16]
+
+    @property
+    def restrict_registration(self):
+        ''' Enable/disable registration tokens '''
+        if self._restrict_registration is None:
+            self._restrict_registration = self.config.getboolean("Game", 'restrict_registration')
+        return self._restrict_registration
+
+    @restrict_registration.setter
+    def restrict_registration(self, value):
+        self._restrict_registration = bool(value)
+
+    @property
+    def public_teams(self):
+        ''' Allow new users to create their own teams '''
+        if self._public_teams is None:
+            self._public_teams = self.config.getboolean("Game", 'public_teams')
+        return self._public_teams
+
+    @public_teams.setter
+    def public_teams(self, value):
+        self._public_teams = bool(value)
+
+    @property
+    def max_team_size(self):
+        if self._max_team_size is None:
+            self._max_team_size = self.config.getint("Game", 'max_team_size')
+        return self._max_team_size
+
+    @max_team_size.setter
+    def max_team_size(self, value):
+        if int(value) <= 0:
+            raise ValueError("Max team size must be at least 1")
+        self._max_team_size = int(value)
+
+    @property
+    def max_password_length(self):
+        if self._max_password_length is None:
+            self._max_password_length = abs(self.config.getint("Game", 'max_password_length'))
+        return self._max_password_length
+
+    @max_password_length.setter
+    def max_password_length(self, value):
+        self._max_password_length = abs(int(value))
+
+    @property
+    def use_bots(self):
+        ''' Whether bots should be enabled in this game '''
+        if self._use_bots is None:
+            self._use_bots = self.config.getboolean("Game", "use_bots")
+        return self._use_bots
+
+    @use_bots.setter
+    def use_bots(self, value):
+        self._use_bots = bool(value)
+
+    @property
+    def bot_reward(self):
+        ''' Reward per bot per interval '''
+        if self._bot_reward is None:
+            self._bot_reward = abs(self.config.getint("Game", 'bot_reward'))
+        return self._bot_reward
+
+    @bot_reward.setter
+    def bot_reward(self, value):
+        self._bot_reward = abs(int(value))
+
+    @property
+    def use_black_market(self):
+        ''' Whether the black market should be enabled in this game '''
+        if self._use_black_market is None:
+            self._use_black_market = self.config.getboolean("Game", "use_black_market")
+        return self._use_black_market
+
+    @use_black_market.setter
+    def use_black_market(self, value):
+        self._use_black_market = bool(value)
+
+    @property
+    def password_upgrade_cost(self):
+        if self._password_upgrade_cost is None:
+            self._password_upgrade_cost = abs(self.config.getint("Game", 'password_upgrade_cost'))
+        return self._password_upgrade_cost
+
+    @password_upgrade_cost.setter
+    def password_upgrade_cost(self, value):
+        self._password_upgrade_cost = abs(int(value))
+
+    @property
+    def bribe_cost(self):
+        ''' Base amount of a SWAT bribe '''
+        if self._bribe_cost is None:
+            self._bribe_cost = abs(self.config.getint("Game", 'bribe_cost'))
+        return self._bribe_cost
+
+    @bribe_cost.setter
+    def bribe_cost(self, value):
+        self._bribe_cost = abs(int(value))
+
+    @property
+    def whitelist_box_ips(self):
+        if self._whitelist_box_ips is None:
+            self._whitelist_box_ips = self.config.getboolean('Game', 'whitelist_box_ips')
+        return self._whitelist_box_ips
+
+    @whitelist_box_ips.setter
+    def whitelist_box_ips(self, value):
+        self._whitelist_box_ips = bool(value)
+
+    #####################################################################
+    #######################  [ I/O LOOP SETTINGS ] ######################
+    #####################################################################
+
+    @property
+    def history_snapshot_interval(self):
+        conf = self.config.getint("Game", 'history_snapshot_interval')
+        return 60000 * conf
+
+    @property
+    def bot_reward_interval(self):
+        ''' Check bots every so many minutes '''
+        _interval = self.config.getint("Game", 'bot_reward_interval')
+        return  60000 * _interval
+
+    #####################################################################
+    ######################  [ DIRECTORY SETTINGS ]  #####################
+    #####################################################################
+
     @property
     def avatar_dir(self):
         return os.path.abspath('files/avatars') + '/'
@@ -402,6 +427,20 @@ class ConfigManager(object):
     @property
     def file_uploads_dir(self):
         return os.path.abspath('files/shares/') + '/'
+
+    #####################################################################
+    ######################  [ DATABASE SETTINGS ]  ######################
+    #####################################################################
+
+    @property
+    def log_sql(self):
+        ''' This value is only read once, no setter '''
+        return self.config.getboolean("Database", 'orm_sql')
+
+    @property
+    def bot_sql(self):
+        ''' This value is only read once, no setter '''
+        return self.config.getboolean("Database", 'bot_sql')
 
     @property
     def db_connection(self):
