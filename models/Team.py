@@ -114,7 +114,7 @@ class Team(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 < len(value) < 16:
+        if not 3 <= len(value) <= 16:
             raise ValueError("Team name must be 3 - 16 characters")
         self._name = unicode(value)
 
