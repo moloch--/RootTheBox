@@ -32,7 +32,13 @@
         <br />
         {% for index, team in enumerate(Team.ranks()) %}
             <div id="{{ team.uuid }}" class="well">
-                <h2 style="display:inline;">{{ index }} - {{ team.name }}</h2>
+                <h2 style="display:inline;">
+                    {% if index == 0 %}
+                        <i class="fa fa-trophy"></i> - {{ team.name }}
+                    {% else %}
+                        {{ index + 1 }} - {{ team.name }}
+                    {% end %}
+                </h2>
                 <h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>
                 <hr />
                 <div class="row">

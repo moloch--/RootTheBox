@@ -2,7 +2,13 @@
 {% from libs.ConfigManager import ConfigManager %}
 {% for index, team in enumerate(teams) %}
     <tr>
-        <td>{{ index }}</td>
+        <td>
+            {% if index == 0 %}
+                <i class="fa fa-trophy"></i>
+            {% else %}
+                {{ index + 1 }}
+            {% end %}
+        </td>
         <td>{{ team.name }}</td>
         <td>{{ len(team.flags) }}</td>
         {% if ConfigManager.instance().use_bots %}
