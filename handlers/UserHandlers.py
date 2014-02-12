@@ -31,7 +31,7 @@ import logging
 import tornado
 
 from uuid import uuid4
-from models.User import User
+from models.User import User, ADMIN_PERMISSION
 from models.Theme import Theme
 from models.Team import Team
 from libs.ConfigManager import ConfigManager
@@ -49,7 +49,10 @@ class HomeHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
         user = self.get_current_user()
-        self.render('user/home.html', user=user)
+        if user.has_permission(ADMIN_PERMISSION):
+            self.render('admin/home.html', user=user)
+        else:
+            self.render('user/home.html', user=user)
 
 
 class SettingsHandler(BaseHandler):
