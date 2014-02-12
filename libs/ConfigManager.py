@@ -51,14 +51,18 @@ logging_levels = {
 class ConfigManager(object):
     ''' Central class which handles any user-controlled settings '''
 
+    # Under the hood attributes
     _domain_warned = False
+    _db_connection = None
 
-    # These attributes can be explicently overwritten at runtime
+    # Game Setup
     _restrict_registration = None
     _public_teams = None
-    _db_connection = None
     _max_team_size = None
 
+    # Feature enable/disable
+    _use_bots = None
+    _use_black_market = None
 
     def __init__(self, cfg_file='rootthebox.cfg'):
         self.filename = cfg_file

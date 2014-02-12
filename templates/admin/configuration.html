@@ -2,9 +2,16 @@
 
 {% block title %}Configuration{% end %}
 
+{% block header %}
+<script src="/static/js/pages/admin/configuration.js"></script>
+{% end %}
+
 {% block content %}
 <div class="container">
-    <h1>Configuration</h1>
+    <h1>
+        <i class="fa fa-gear"></i>
+        Configuration
+    </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
@@ -26,65 +33,155 @@
         <form class="form-horizontal" action="/admin/configuration" method="post">
             {% raw xsrf_form_html() %}
             <div class="control-group">
-                <label class="control-label" for="game_name">Game Name</label>
+                <label class="control-label" for="game-name">Game Name</label>
                 <div class="controls">
-                    <input required type="text" name="game_name" value="{{ config.game_name }}" />
+                    <input required id="game-name" type="text" name="game_name" value="{{ config.game_name }}"
+                        rel="popover" pattern="^{3,15}$"
+                        data-original-title="Game Name"
+                        data-content="This is the name that will appear in the upper left corner" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="restrict-registartion">
+                    Registration Tokens
+                </label>
+                <div class="controls">
+                    <input id="restrict-registration" name="restrict_registration" type="hidden" value="{{ str(config.restrict_registration).lower() }}" />
+                    <div id="restrict-registration-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Registration Tokens"
+                        data-content="Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.">
+                        <button id="restrict-registration-enable" type="button" class="btn btn-success">
+                            <i id="restrict-registration-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="restrict-registration-disable" type="button" class="btn btn-danger">
+                            <i id="restrict-registration-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="debug">Debug Mode</label>
+                <label class="control-label" for="public-teams">
+                    Public Teams
+                </label>
                 <div class="controls">
-                    <select name="debug">
-                        {% if config.debug %}
-                            <option value="true">Enabled</option>
-                            <option value="false">Disabled</option>
-                        {% else %}
-                            <option value="false">Disabled</option>
-                            <option value="true">Enabled</option>
-                        {% end %}
-                    </select>
+                    <input id="public-teams" name="public_teams" type="hidden" value="{{ str(config.public_teams).lower() }}" />
+                    <div id="public-teams-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Public Teams"
+                        data-content="Enabling this feature will allow players to create their own teams during registration.  If this option is disabled the admin must create teams for players to join.">
+                        <button id="public-teams-enable" type="button" class="btn btn-success">
+                            <i id="public-teams-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="public-teams-disable" type="button" class="btn btn-danger">
+                            <i id="public-teams-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="max-team-size">Max Team Size</label>
+                <div class="controls">
+                    <input required id="max-team-size" type="text" name="max_team_size" value="{{ config.max_team_size }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Max Team Size"
+                        data-content="Limit number of players that can be on any one team" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="max-password-length">Bank Password Length</label>
+                <div class="controls">
+                    <input required id="max-password-length" type="text" name="max_password_length" value="{{ config.max_password_length }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Bank Password Length"
+                        data-content="Restrict player's bank password to this length" />
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="bots">
+                    <i class="fa fa-android"></i>
+                    Botnets
+                </label>
+                <div class="controls">
+                    <input id="use-bots" name="use_bots" type="hidden" value="{{ str(config.use_bots).lower() }}" />
+                    <div id="use-bots-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Botnets"
+                        data-content="Enabling this feature activates the 'botnet' features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.">
+                        <button id="use-bots-enable" type="button" class="btn btn-success">
+                            <i id="use-bots-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="use-bots-disable" type="button" class="btn btn-danger">
+                            <i id="use-bots-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="bot_reward">Bot Reward</label>
                 <div class="controls">
-                    <input required type="text" name="bot_reward" value="{{ config.bot_reward }}" />
+                    <input required id="bot-reward" type="text" name="bot_reward" value="{{ config.bot_reward }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Bot Reward"
+                        data-content="This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually; the default is 5 minutes." />
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="market">
+                    <i class="fa fa-shopping-cart"></i>
+                    Black Market
+                </label>
+                <div class="controls">
+                    <input id="use-black-market" name="use_black_market" type="hidden" value="{{ str(config.use_black_market).lower() }}" />
+                    <div id="use-black-market-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Black Market"
+                        data-content="Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.">
+                        <button id="use-black-market-enable" type="button" class="btn btn-success">
+                            <i id="use-black-market-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="use-black-market-disable" type="button" class="btn btn-danger">
+                            <i id="use-black-market-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="bot_reward_interval">Bot Reward Interval (minutes)</label>
+                <label class="control-label" for="password-upgrade-cost">Password Upgrade Cost</label>
                 <div class="controls">
-                    <input required type="text" name="bot_reward_interval" value="{{ int(config.bot_reward_interval / 60000) }}" />
+                    <input required id="password-upgrade-cost" type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Password Upgrade Cost"
+                        data-content="This is the amount a player must pay to upgrade their bank password's hashing algorithm; each subsequent purchase is also increased by this amount." />
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="history_snapshot_interval">History Interval
-                    <br />(minutes)</label>
+                <label class="control-label" for="bribe-cost">Bribe Price</label>
                 <div class="controls">
-                    <input required type="text" name="history_snapshot_interval" value="{{ int(config.history_snapshot_interval / 60000) }}" />
+                    <input required id="bribe-cost" type="text" name="bribe_cost" value="{{ config.bribe_cost }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Bribe Price"
+                        data-content="This is the amount a player must pay to 'SWAT' another player's account.  Subsequent SWATs of the same player are also increased by this amount each time." />
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label" for="max_password_length">Max Bank Password Length</label>
-                <div class="controls">
-                    <input required type="text" name="max_password_length" value="{{ config.max_password_length }}" />
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="password_upgrade_cost">Password Upgrade Cost</label>
-                <div class="controls">
-                    <input required type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}" />
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="bribe_cost">Bribe Base Cost</label>
-                <div class="controls">
-                    <input required type="text" name="bribe_cost" value="{{ config.bribe_cost }}" />
-                </div>
-            </div>
+            <hr />
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn btn-primary" type="submit">Save to Disk</button>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-save"></i>
+                        Save to Disk
+                    </button>
                 </div>
             </div>
         </form>
