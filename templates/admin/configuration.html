@@ -22,13 +22,6 @@
         </div>
         {% end %}
     {% end %}
-    {% if warning is not None %}
-    <div class="alert alert-warning">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <h4 class="alert-heading">WARNING</h4>
-        {{ warning }}
-    </div>
-    {% end %}
     <div class="well">
         <form class="form-horizontal" action="/admin/configuration" method="post">
             {% raw xsrf_form_html() %}
@@ -36,12 +29,11 @@
                 <label class="control-label" for="game-name">Game Name</label>
                 <div class="controls">
                     <input required id="game-name" type="text" name="game_name" value="{{ config.game_name }}"
-                        rel="popover" pattern="^{3,15}$"
+                        rel="popover"
                         data-original-title="Game Name"
                         data-content="This is the name that will appear in the upper left corner" />
                 </div>
             </div>
-
             <div class="control-group">
                 <label class="control-label" for="restrict-registartion">
                     Registration Tokens

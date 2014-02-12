@@ -67,6 +67,8 @@ class ConfigManager(object):
     _bot_reward = None
     _use_black_market = None
     _password_upgrade_cost = None
+    _bribe_cost = None
+    _whitelist_box_ips = None
 
     def __init__(self, cfg_file='rootthebox.cfg'):
         self.filename = cfg_file
@@ -115,19 +117,18 @@ class ConfigManager(object):
         ''' Write current config to file '''
         # Set game config
         self.config.set("Game", "game_name", self.game_name)
-        self.config.set("Game", "public_teams", self.public_teams)
-        self.config.set("Game", "max_team_size", self.max_team_size)
-        self.config.set("Game", "max_password_length", self.max_password_length)
-        self.config.set("Game", "restrict_registration", self.restrict_registration)
-        self.config.set("Game", "use_black_market", self.use_black_market)
-        self.config.set("Game", "use_bots", self.use_bots)
-        self.config.set("Game", "bot_reward", self.bot_reward)
-        self.config.set("Game", "password_upgrade_cost", self.password_upgrade_cost)
-        self.config.set("Game", "bribe_cost", self.bribe_cost)
-        self.config.set("Game", "whitelist_box_ips", self.whitelist_box_ips)
+        self.config.set("Game", "public_teams", str(self.public_teams))
+        self.config.set("Game", "max_team_size", str(self.max_team_size))
+        self.config.set("Game", "max_password_length", str(self.max_password_length))
+        self.config.set("Game", "restrict_registration", str(self.restrict_registration))
+        self.config.set("Game", "use_black_market", str(self.use_black_market))
+        self.config.set("Game", "use_bots", str(self.use_bots))
+        self.config.set("Game", "bot_reward", str(self.bot_reward))
+        self.config.set("Game", "password_upgrade_cost", str(self.password_upgrade_cost))
+        self.config.set("Game", "bribe_cost", str(self.bribe_cost))
+        self.config.set("Game", "whitelist_box_ips", str(self.whitelist_box_ips))
         with open(self.conf_path, 'w') as fp:
             self.config.write(fp)
-        self.refresh()
 
     #####################################################################
     #######################  [ SERVER SETTINGS ]  #######################
@@ -291,7 +292,8 @@ class ConfigManager(object):
 
     @game_name.setter
     def game_name(self, value):
-        self._game_name = value[:16]
+        if value != self._game_name:
+            self._game_name = value[:16]
 
     @property
     def restrict_registration(self):
@@ -323,6 +325,8 @@ class ConfigManager(object):
 
     @max_team_size.setter
     def max_team_size(self, value):
+        if isinstance(value, basestring) and not value.strip().isdigit():
+            ValueError("Max team size must be a number")
         if int(value) <= 0:
             raise ValueError("Max team size must be at least 1")
         self._max_team_size = int(value)
@@ -335,7 +339,11 @@ class ConfigManager(object):
 
     @max_password_length.setter
     def max_password_length(self, value):
-        self._max_password_length = abs(int(value))
+        if isinstance(value, basestring) and not value.strip().isdigit():
+            ValueError("Max password length must be a number")
+        if int(value) <= 0:
+            raise ValueError("Max password length must be at least 1")
+        self._max_password_length = int(value)
 
     @property
     def use_bots(self):
@@ -357,7 +365,11 @@ class ConfigManager(object):
 
     @bot_reward.setter
     def bot_reward(self, value):
-        self._bot_reward = abs(int(value))
+        if isinstance(value, basestring) and not value.strip().isdigit():
+            ValueError("Bot reward must be a number")
+        if int(value) <= 0:
+            raise ValueError("Bot reward must be at least 1")
+        self._bot_reward = int(value)
 
     @property
     def use_black_market(self):
@@ -378,7 +390,11 @@ class ConfigManager(object):
 
     @password_upgrade_cost.setter
     def password_upgrade_cost(self, value):
-        self._password_upgrade_cost = abs(int(value))
+        if isinstance(value, basestring) and not value.strip().isdigit():
+            ValueError("Password upgrade cost must be a number")
+        if int(value) <= 0:
+            raise ValueError("Password upgrade cost must be at least 1")
+        self._password_upgrade_cost = int(value)
 
     @property
     def bribe_cost(self):
@@ -389,7 +405,11 @@ class ConfigManager(object):
 
     @bribe_cost.setter
     def bribe_cost(self, value):
-        self._bribe_cost = abs(int(value))
+        if isinstance(value, basestring) and not value.strip().isdigit():
+            ValueError("Bribe price must be a number")
+        if int(value) <= 0:
+            raise ValueError("Bribe price must be at least 1")
+        self._bribe_cost = int(value)
 
     @property
     def whitelist_box_ips(self):

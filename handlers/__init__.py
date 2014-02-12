@@ -219,7 +219,6 @@ app = Application(
     debug=config.debug,
 
     # Application version
-    game_name=config.game_name,
     version='0.4.0',
 )
 

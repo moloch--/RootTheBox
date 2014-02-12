@@ -40,6 +40,7 @@ from hashlib import md5
 from libs.Form import Form
 from libs.LoggingHelpers import ObservableLoggingHandler
 from libs.EventManager import EventManager
+from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
 from models.Team import Team
 from models.Box import Box
@@ -1025,7 +1026,6 @@ class AdminConfigurationHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         self.render('admin/configuration.html',
-            warning=None,
             errors=[],
             config=self.config
         )
@@ -1035,111 +1035,23 @@ class AdminConfigurationHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         ''' Update configuration '''
-        all_errors = []
-        all_errors += self.game_name()
-        all_errors += self.bot_config()
-        all_errors += self.history_config()
-        all_errors += self.cost_config()
-        self.password_config()
-        self.debug_config()
-        self.config.save()
-        self.render('admin/configuration.html',
-            warning="Some configuration changes may require application restart to take affect.",
-            errors=all_errors,
-            config=self.config
-        )
-
-    def is_numeric_within(self, string, min_value, max_value):
-        ''' Check if string is a number within a range '''
         try:
-            return min_value <= int(string) <= max_value
-        except ValueError:
-            return False
-
-    def filter_string(self, data):
-        char_white_list = ascii_letters + digits + " -_:;"
-        return filter(lambda char: char in char_white_list, data)
-
-    def game_name(self):
-        ''' Update game name configuration '''
-        errors = []
-        game_name = self.get_argument('game_name', self.config.game_name)
-        game_name = self.filter_string(game_name)
-        if 0 < len(game_name):
-            if game_name != self.config.game_name:
-                self.config.game_name = game_name
-        else:
-            errors.append("Game name must be at least 1 character long.")
-        return errors
-
-    def bot_config(self):
-        ''' Updates bot related configuration '''
-        errors = []
-        # Update reward
-        reward = self.get_argument('bot_reward', self.config.bot_reward)
-        new_reward = filter(lambda char: char in digits, reward)
-        if self.is_numeric_within(new_reward, 1, 10000):
-            if new_reward != self.config.bot_reward:
-                self.config.bot_reward = int(new_reward)
-        else:
-            errors.append("Bot reward must be $1 - $10,0000")
-        # Update interval
-        old_interval = int(self.config.bot_reward_interval / 60000)
-        interval = self.get_argument('bot_reward_interval', old_interval)
-        new_interval = filter(lambda char: char in digits, interval)
-        if self.is_numeric_within(new_interval, 1, 30):
-            if new_interval != old_interval:
-                self.config.bot_reward_interval = int(new_interval)
-        else:
-            errors.append("Bot reward interval must be 1 - 30 mins")
-        return errors
-
-    def history_config(self):
-        ''' Update history configuration '''
-        errors = []
-        old_interval = int(self.config.history_snapshot_interval / 60000)
-        interval = self.get_argument('history_snapshot_interval', self.config.history_snapshot_interval)
-        new_interval = filter(lambda char: char in digits, interval)
-        if self.is_numeric_within(new_interval, 1, 30):
-            if new_interval != old_interval:
-                self.config.history_snapshot_interval = int(new_interval)
-        else:
-            self.errors.append("History interval must be 1 - 30 mins")
-        return errors
-
-    def password_config(self):
-        ''' Updates password configuration '''
-        password_length = self.get_argument('max_password_length', self.config.max_password_length)
-        new_length = filter(lambda char: char in digits, password_length)
-        if new_length != self.config.max_password_length:
-            self.config.max_password_length = abs(int(new_length))
-
-    def cost_config(self):
-        ''' Update cost configurations '''
-        # Update password upgrade cost
-        errors = []
-        pw_cost = self.get_argument('password_upgrade_cost', self.config.password_upgrade_cost)
-        pw_cost = filter(lambda char: char in digits, pw_cost)
-        if self.is_numeric_within(pw_cost, 100, 100000):
-            if pw_cost != self.config.password_upgrade_cost:
-                self.config.password_upgrade_cost = int(pw_cost)
-        else:
-            errors.append("Password upgrade cost must be $100 - $100,000")
-        # Update bribe cost
-        bribe_cost = self.get_argument('bribe_cost', self.config.bribe_cost)
-        bribe_cost = filter(lambda char: char in digits, bribe_cost)
-        if self.is_numeric_within(bribe_cost, 100, 100000):
-            if bribe_cost != self.config.bribe_cost:
-                self.config.bribe_cost = int(bribe_cost)
-        else:
-            errors.append("Bribe cost must be $100 - $100,000")
-        return errors
-
-    def debug_config(self):
-        ''' Update debug configuration '''
-        debug = self.get_argument('debug', str(self.config.debug).lower())
-        if debug != str(self.config.debug).lower():
-            self.config.debug = bool(debug == 'true')
+            config = ConfigManager.instance()
+            config.game_name = self.get_argument('game_name', '')
+            config.restrict_registration = self.get_argument('restrict_registration', '') == 'true'
+            config.public_teams = self.get_argument('public_teams', '') == 'true'
+            config.max_team_size = self.get_argument('max_team_size', '')
+            config.max_password_length = self.get_argument('max_password_length', '')
+            config.use_bots = self.get_argument('use_bots') == 'true'
+            config.bot_reward = self.get_argument('bot_reward', '')
+            config.use_black_market = self.get_argument('use_black_market', '') == 'true'
+            config.password_upgrade_cost = self.get_argument('password_upgrade_cost', '')
+            config.bribe_cost = self.get_argument('bribe_cost', '')
+            config.save()
+            self.render('admin/configuration.html', errors=None, config=self.config)
+        except Exception as error:
+            logging.exception("Configuration update threw an exception")
+            self.render('admin/configuration.html', errors=[str(error)], config=self.config)
 
 
 class AdminGarbageCfgHandler(BaseHandler):
