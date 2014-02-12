@@ -32,6 +32,7 @@ from models.Relationships import team_to_box, team_to_item, \
     team_to_hint
 from string import ascii_letters, digits
 from libs.BotManager import BotManager
+import xml.etree.cElementTree as ET
 
 
 class Team(DatabaseObject):
@@ -103,6 +104,10 @@ class Team(DatabaseObject):
         ''' Returns a list of all objects in the database '''
         return sorted(dbsession.query(cls).all())
 
+    @classmethod
+    def count(cls):
+        return dbsession.query(cls).count()
+
     @property
     def name(self):
         return self._name
@@ -137,6 +142,11 @@ class Team(DatabaseObject):
         bot_manager = BotManager.instance()
         return bot_manager.count_by_team_uuid(self.uuid)
 
+    def file_by_file_name(self, file_name):
+        ''' Return file object based on file_name '''
+        ls = self.files.filter_by(file_name=file_name)
+        return ls[0] if 0 < len(ls) else None
+
     def to_dict(self):
         ''' Use for JSON related tasks; return public data only '''
         return {
@@ -144,10 +154,14 @@ class Team(DatabaseObject):
             'motto': self.motto,
         }
 
-    def file_by_file_name(self, file_name):
-        ''' Return file object based on file_name '''
-        ls = self.files.filter_by(file_name=file_name)
-        return ls[0] if 0 < len(ls) else None
+    def to_xml(self, parent):
+        team_elem = ET.SubElement(parent, "team")
+        ET.SubElement(team_elem, "name").text = self.name
+        ET.SubElement(team_elem, "motto").text = self.motto
+        users_elem = ET.SubElement(team_elem, "users")
+        users_elem.set("count", str(len(self.members)))
+        for user in self.members:
+            user.to_xml(users_elem)
 
     def __repr__(self):
         return u'<Team - name: %s, money: %d>' % (self.name, self.money)

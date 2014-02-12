@@ -5,10 +5,10 @@ function text_animation(term) {
     var msg = $('#capture-message').val();
     intro_frames = [
         "  I have received the '" + flag + "' information.",
-        " ",
-        msg.toString(),
-        " ",
-        " I have transfered $" + reward + " to your team's account.",
+        "  ",
+        "  " + msg.toString(),
+        "  ",
+        "  I have transfered $" + reward + " to your team's account.",
         " ",
         " Good hunting,\n    -Morris",
     ];

@@ -466,10 +466,8 @@ class AdminEditHandler(BaseHandler):
                         (flag.name, flag._description, description,)
                     )
                     flag.description = description
-                logging.info("Updated %s's value %d -> %d" %
-                    (flag.name, flag.value, reward_value,)
-                )
                 flag.value = self.get_argument('value', '')
+                flag.capture_message = self.get_argument('capture_message', '')
                 box = Box.by_uuid(self.get_argument('box_uuid', ''))
                 if box is not None and flag not in box.flags:
                     logging.info("Updated %s's box %d -> %d" %
@@ -480,7 +478,7 @@ class AdminEditHandler(BaseHandler):
                     raise ValueError("Box does not exist")
                 self.dbsession.add(flag)
                 self.dbsession.commit()
-                self.redirect("admin/view/game_objects")
+                self.redirect("/admin/view/game_objects")
             except ValueError as error:
                 self.render("admin/view/game_objects.html", errors=["%s" % error])
         else:
@@ -1172,11 +1170,24 @@ class AdminExportHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         ''' Export to document formats '''
-        self.render('admin/export.html')
+        self.render('admin/export.html', errors=None)
 
-    def export_xml(self):
-        ''' Create and write XML document to page '''
-        xml_doc = self.create_xml()
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        ''' Include the requests exports in the xml dom '''
+        root = ET.Element("rootthebox")
+        root.set("api", self.API_VERSION)
+        if self.get_argument('game_objects', '') == 'true':
+            self.export_game_objects(root)
+        if self.get_argument('users', '') == 'true':
+            self.export_users(root)
+        xml_dom = defusedxml.minidom.parseString(ET.tostring(root))
+        self.write_xml(xml_dom.toprettyxml())
+
+    def write_xml(self, xml_doc):
+        ''' Write XML document to page '''
         self.set_header('Content-Type', 'text/xml')
         self.set_header(
             "Content-disposition", "attachment; filename=%s.xml" % (
@@ -1186,13 +1197,11 @@ class AdminExportHandler(BaseHandler):
         self.write(xml_doc.encode('utf-8'))
         self.finish()
 
-    def create_xml(self):
+    def export_game_objects(self, root):
         '''
         Exports the game objects to an XML doc.
         For the record, I hate XML with a passion.
         '''
-        root = ET.Element("rootthebox")
-        root.set("api", self.API_VERSION)
         levels_elem = ET.SubElement(root, "gamelevels")
         levels_elem.set("count", str(GameLevel.count()))
         for level in GameLevel.all()[1:]:
@@ -1201,8 +1210,12 @@ class AdminExportHandler(BaseHandler):
         corps_elem.set("count", str(Corporation.count()))
         for corp in Corporation.all():
             corp.to_xml(corps_elem)
-        xml_dom = defusedxml.minidom.parseString(ET.tostring(root))
-        return xml_dom.toprettyxml()
+
+    def export_users(self, root):
+        teams_elem = ET.SubElement(root, "teams")
+        teams_elem.set("count", str(Team.count()))
+        for team in Team.all():
+            team.to_xml(teams_elem)
 
 
 class AdminImportXmlHandler(BaseHandler):

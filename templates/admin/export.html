@@ -2,10 +2,14 @@
 
 {% block title %}Export XML{% end %}
 
+{% block header %}
+<script src="/static/js/pages/admin/export.js"></script>
+{% end %}
+
 {% block content %}
 <div class="container">
     <h1>
-        <i class="fa fa-upload"></i>
+        <i class="fa fa-download"></i>
         Export XML
     </h1>
     <br />
@@ -18,21 +22,28 @@
         </div>
         {% end %}
     {% end %}
-    {% if success is not None %}
-    <div class="alert alert-success">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <h4 class="alert-heading">SUCCESS</h4>
-        {{ success }}
-    </div>
-    {% end %}
     <div class="well">
-        <form class="form-horizontal" action="/admin/import/xml" method="post" enctype="multipart/form-data">
+        <form class="form-horizontal" action="/admin/export/xml" method="post">
             {% raw xsrf_form_html() %}
-
-
+            <input id="game-objects" name="game_objects" type="hidden" value="true">
+            <input id="users" name="users" type="hidden" value="false">
+            <h3>What do you want to export?</h3>
+            <div class="control-group">
+                <div class="btn-group" data-toggle="buttons-checkbox">
+                    <button id="export-game-objects-button" type="button" class="btn btn-primary active">
+                        Game Objects
+                    </button>
+                    <button id="export-users-button" type="button" class="btn btn-primary">
+                        Users
+                    </button>
+                </div>
+            </div>
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn btn-primary" type="submit">Export File</button>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-download"></i>
+                        Export File
+                    </button>
                 </div>
             </div>
         </form>

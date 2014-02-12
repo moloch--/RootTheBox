@@ -43,6 +43,7 @@ from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
 from string import ascii_letters, digits, printable
+import xml.etree.cElementTree as ET
 
 
 ### Constants
@@ -293,6 +294,23 @@ class User(DatabaseObject):
             'hash_algorithm': self.algorithm,
             'team_uuid': self.team.uuid,
         }
+
+    def to_xml(self, parent):
+        '''
+        Admins cannot be exported as XML, not that they would be
+        exported because they're not on a team, but check anyways
+        '''
+        if not self.has_permission(ADMIN_PERMISSION):
+            user_elem = ET.SubElement(parent, "user")
+            ET.SubElement(user_elem, "handle").text = self.handle
+            ET.SubElement(user_elem, "password").text = self._password
+            bpass_elem = ET.SubElement(user_elem, "bankpassword")
+            bpass_elem.text = self._bank_password
+            bpass_elem.set("algorithm", self.algorithm)
+            config = ConfigManager.instance()
+            with open(config.avatar_dir + self.avatar) as fp:
+                data = fp.read()
+                ET.SubElement(user_elem, "avatar").text = data.encode('base64')
 
     def __str__(self):
         return self.handle
