@@ -19,3 +19,4 @@ pip install pbkdf2
 pip install sqlalchemy
 pip install pylibmc
 pip install defusedxml
+pip install netaddr

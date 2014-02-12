@@ -7,31 +7,13 @@
 {% end %}
 
 {% block content %}
-<input id="ws-connect" value="{{ handler.application.settings['ws_connect'] }}" type="hidden" />
 <div class="row-fluid">
-    <h1>Log Viewer</h1>
+    <h1>
+        <i class="fa fa-bug"></i>
+        Log Viewer
+    </h1>
     <br />
-    <form class="form-horizontal" action="/admin/logviewer" method="get">
-        <label class="control-label" for="loglevel">Filter Log</label>
-        <div class="controls">
-            <select id="loglevel" name="loglevel">
-                <option value=""></option>
-                <option value="DEBUG">Debug</option>
-                <option value="INFO">Info</option>
-                <option value="WARNING">Warning</option>
-                <option value="ERROR">Error</option>
-            </select>
-        </div>
-        <br />
-        <div class="control-group">
-            <div class="controls">
-                <button class="btn" type="submit">Filter</button>
-            </div>
-        </div>
-    </form>
     <div class="well">
-        <input type="hidden" id="log-level" value="{{ log_level }}" />
-        <h4>Current Level: {{ log_level }}</h4>
         <pre id="log-view">
         </pre>
     </div>

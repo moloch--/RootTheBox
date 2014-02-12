@@ -14,26 +14,26 @@
                 <ul class="nav">
                     <li>
                         <a href="/user">
-                            <i class="fa fa-home"></i>
+                            <i class="fa fa-fw fa-home"></i>
                         </a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-gamepad"></i>
+                            <i class="fa fa-fw fa-gamepad"></i>
                             Game
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/user/missions">
-                                    <i class="fa fa-terminal"></i>
+                                    <i class="fa fa-fw fa-terminal"></i>
                                     Missions
                                 </a>
                             </li>
                             {% if ConfigManager.instance().use_black_market %}
                                 <li>
                                     <a href="/user/market">
-                                        <i class="fa fa-shopping-cart"></i>
+                                        <i class="fa fa-fw fa-shopping-cart"></i>
                                         Black Market
                                     </a>
                                 </li>
@@ -41,7 +41,7 @@
                             {% if ConfigManager.instance().use_bots %}
                                 <li class="dropdown-submenu">
                                     <a tabindex="-1" href="/user/bots/webmonitor">
-                                        <i class="fa fa-android"></i>
+                                        <i class="fa fa-fw fa-android"></i>
                                         Botnet
                                     </a>
                                     <ul class="dropdown-menu">
@@ -61,20 +61,20 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-wrench"></i>
+                            <i class="fa fa-fw fa-wrench"></i>
                             Tools
                             <b class="caret"></b>
                       </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/user/share/files">
-                                    <i class="fa fa-files-o"></i>
+                                    <i class="fa fa-fw fa-files-o"></i>
                                     Team File Sharing
                               </a>
                             </li>
                             <li>
                                 <a href="/user/share/pastebin">
-                                    <i class="fa fa-clipboard"></i>
+                                    <i class="fa fa-fw fa-clipboard"></i>
                                     Team PasteBin
                               </a>
                             </li>
@@ -83,7 +83,7 @@
                     {% if len(user.team.items) != 0 %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-dashboard"></i>
+                            <i class="fa fa-fw fa-dashboard"></i>
                             Unlocks
                             <b class="caret"></b>
                         </a>
@@ -91,7 +91,7 @@
                             {% if user.has_item("Source Code Market") %}
                             <li>
                                 <a href="/source_code_market">
-                                    <i class="fa fa-code"></i>
+                                    <i class="fa fa-fw fa-code"></i>
                                     Source Code Market
                                 </a>
                             </li>
@@ -99,7 +99,7 @@
                             {% if user.has_item("Password Security") %}
                             <li>
                                 <a href="/password_security">
-                                    <i class="fa fa-lock"></i>
+                                    <i class="fa fa-fw fa-lock"></i>
                                     Password Security
                                 </a>
                             </li>
@@ -107,7 +107,7 @@
                             {% if user.has_item("Federal Reserve") %}
                             <li>
                                 <a href="/federal_reserve">
-                                    <i class="fa fa-dollar"></i>
+                                    <i class="fa fa-fw fa-dollar"></i>
                                     Federal Reserve
                                 </a>
                             </li>
@@ -115,7 +115,7 @@
                             {% if user.has_item("SWAT") %}
                             <li>
                                 <a href="/swat">
-                                    <i class="fa fa-crosshairs"></i>
+                                    <i class="fa fa-fw fa-crosshairs"></i>
                                     S.W.A.T.
                                 </a>
                             </li>
@@ -125,7 +125,7 @@
                     {% end %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-bar-chart-o"></i>
+                            <i class="fa fa-fw fa-bar-chart-o"></i>
                             Scoreboard
                             <b class="caret"></b>
                       </a>
@@ -158,20 +158,20 @@
             <!-- Right Side -->
             <div class="btn-group pull-right">
                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user"></i>
+                    <i class="fa fa-fw fa-user"></i>
                     {{ user.handle }}
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                     <li>
                         <a href="/user/settings">
-                            <i class="fa fa-gears"></i>
+                            <i class="fa fa-fw fa-gears"></i>
                             Settings
                         </a>
                     </li>
                     <li>
                         <a href="/about">
-                            <i class="fa fa-info-circle"></i>
+                            <i class="fa fa-fw fa-info-circle"></i>
                             &nbsp;About
                         </a>
                     </li>
@@ -181,7 +181,7 @@
                             {% raw xsrf_form_html() %}
                         </form>
                         <a id="logout">
-                            <i class="fa fa-sign-out"></i>
+                            <i class="fa fa-fw fa-sign-out"></i>
                             Logout
                         </a>
                     </li>

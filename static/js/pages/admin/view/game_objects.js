@@ -46,6 +46,23 @@ $(document).ready(function() {
         $("#delete-box-form").submit();
     });
 
+    /* IP Address */
+    $("#add-ip-address-submit").click(function() {
+        $("#add-ip-address-form").submit();
+    });
+
+    $("a[id^=add-ip-address-button]").click(function() {
+        $("#add-ip-address-uuid").val($(this).data("uuid"));
+    });
+
+    $("#delete-ip-address-submit").click(function() {
+        $("#delete-ip-address-form").submit();
+    });
+
+    $("a[id^=delete-ip-address-button]").click(function() {
+        $("#delete-ip-address-uuid").val($(this).data("uuid"));
+    });
+
     /* Flag */
     $("a[id^=edit-flag-button]").click(function() {
         get_details("flag", $(this).data("uuid"));

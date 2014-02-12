@@ -14,61 +14,61 @@
                 <ul class="nav">
                     <li>
                         <a href="/user">
-                            <i class="fa fa-home"></i>
+                            <i class="fa fa-fw fa-home"></i>
                         </a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-plus"></i>
+                            <i class="fa fa-fw fa-plus"></i>
                             Create
                         <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/admin/create/team">
-                                    <i class="fa fa-group"></i>
+                                    <i class="fa fa-fw fa-group"></i>
                                     New Team
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/create/game_level">
-                                    <i class="fa fa-level-up"></i>
+                                    <i class="fa fa-fw fa-level-up"></i>
                                     New Game Level
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/create/corporation">
-                                    <i class="fa fa-building-o"></i>
+                                    <i class="fa fa-fw fa-building-o"></i>
                                     New Corporation
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/create/box">
-                                    <i class="fa fa-desktop"></i>
+                                    <i class="fa fa-fw fa-desktop"></i>
                                     New Box
                                 </a>
                             </li>
                             <li class="dropdown-submenu">
                                 <a tabindex="-1" href="#">
-                                    <i class="fa fa-flag"></i>
+                                    <i class="fa fa-fw fa-flag"></i>
                                     New Flag
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="/admin/create/flag/static">
-                                            <i class="fa fa-flag-o"></i>
+                                            <i class="fa fa-fw fa-flag-o"></i>
                                             Static Flag
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/admin/create/flag/regex">
-                                            <i class="fa fa-flag-o"></i>
+                                            <i class="fa fa-fw fa-flag-o"></i>
                                             Regex Flag
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/admin/create/flag/file">
-                                            <i class="fa fa-flag-o"></i>
+                                            <i class="fa fa-fw fa-flag-o"></i>
                                             File Flag
                                         </a>
                                     </li>
@@ -78,32 +78,32 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-eye"></i>
+                            <i class="fa fa-fw fa-eye"></i>
                             Game Management
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/admin/view/user_objects">
-                                    <i class="fa fa-group"></i>
+                                    <i class="fa fa-fw fa-group"></i>
                                     Users / Teams
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/view/game_objects">
-                                    <i class="fa fa-bullseye"></i>
+                                    <i class="fa fa-fw fa-bullseye"></i>
                                     Flags / Boxes / Corp.
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/view/game_levels">
-                                    <i class="fa fa-level-up"></i>
+                                    <i class="fa fa-fw fa-level-up"></i>
                                     Game Levels
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/view/market_objects">
-                                    <i class="fa fa-shopping-cart"></i>
+                                    <i class="fa fa-fw fa-shopping-cart"></i>
                                     Black Market
                                 </a>
                             </li>
@@ -111,20 +111,20 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-dashboard"></i>
+                            <i class="fa fa-fw fa-dashboard"></i>
                             Manage Upgrades
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/admin/upgrades/source_code_market">
-                                    <i class="fa fa-code"></i>
+                                    <i class="fa fa-fw fa-code"></i>
                                     Source Code Market
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/upgrades/swat">
-                                    <i class="fa fa-crosshairs"></i>
+                                    <i class="fa fa-fw fa-crosshairs"></i>
                                     S.W.A.T.
                                 </a>
                             </li>
@@ -132,20 +132,20 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-save"></i>
+                            <i class="fa fa-fw fa-save"></i>
                             Backup/Restore
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/admin/import/xml">
-                                    <i class="fa fa-upload"></i>
+                                    <i class="fa fa-fw fa-upload"></i>
                                     Import XML
                                 </a>
                             </li>
                             <li>
                                 <a href="/admin/export/xml" target="_blank">
-                                    <i class="fa fa-download"></i>
+                                    <i class="fa fa-fw fa-download"></i>
                                     Export XML
                                 </a>
                             </li>
@@ -153,14 +153,14 @@
                     </li>
                     <li>
                         <a href="/admin/configuration">
-                            <i class="fa fa-gear"></i>
+                            <i class="fa fa-fw fa-gear"></i>
                             Configuration
                         </a>
                     </li>
                     {% from libs.ConfigManager import ConfigManager %} {% if ConfigManager.instance().enable_logviewer %}
                     <li>
                         <a href="/admin/logviewer">
-                            <i class="fa fa-bug"></i>
+                            <i class="fa fa-fw fa-bug"></i>
                             Log Viewer
                         </a>
                     </li>
@@ -181,14 +181,14 @@
                 </ul>
                 <div class="btn-group pull-right">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user"></i>
+                        <i class="fa fa-fw fa-user"></i>
                         {{ handle }}
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="/user/settings">
-                                <i class="fa fa-gears"></i>
+                                <i class="fa fa-fw fa-gears"></i>
                                 Settings
                             </a>
                         </li>
@@ -198,7 +198,7 @@
                                 {% raw xsrf_form_html() %}
                             </form>
                             <a id="logout">
-                                <i class="fa fa-sign-out"></i>
+                                <i class="fa fa-fw fa-sign-out"></i>
                                 Logout
                             </a>
                         </li>

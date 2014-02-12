@@ -362,8 +362,7 @@ class AdminEditHandler(BaseHandler):
                    'flag': self.edit_flags,
                    'team': self.edit_teams,
                    'user': self.edit_users,
-                   'ipv4': self.edit_ipv4,
-                   'ipv6': self.edit_ipv6,
+                   'ip': self.edit_ip,
              'game_level': self.edit_game_level,
               'box_level': self.box_level,
                    'hint': self.edit_hint,
@@ -537,7 +536,7 @@ class AdminEditHandler(BaseHandler):
                 bank_password = self.get_argument('bank_password', '')
                 if 0 < len(bank_password):
                     user.bank_password = bank_password
-                team = Team.by_uuid(self.get_argument('team_uuid'))
+                team = Team.by_uuid(self.get_argument('team_uuid', ''))
                 if team is not None and user not in team.members:
                     logging.info("Updated %s's team %s -> %s" %
                         (user.handle, user.team_id, team.name))
@@ -551,53 +550,23 @@ class AdminEditHandler(BaseHandler):
         else:
             self.render("admin/view/user_objects.html", errors=["User does not exist"])
 
-    def edit_ipv4(self):
-        ''' Add ipv4 addresses to a box (sorta edits the box object) '''
+    def edit_ip(self):
+        ''' Add ip addresses to a box (sorta edits the box object) '''
         errors = []
-        box = Box.by_uuid(self.get_argument('box_uuid'))
+        box = Box.by_uuid(self.get_argument('box_uuid', ''))
         if box is not None:
-            ips_string = self.get_argument('ipv4').replace('\n', ',')
-            ips = filter(lambda char: char in "1234567890.,", ips_string).split(",")
-            for ip in filter(lambda ip: 0 < len(ip), ips):
+            addr = self.get_argument('ip_address', '')
+            if IpAddress.by_address(addr) is None:
                 try:
-                    if Box.by_ip_address(ip) is None:
-                        addr = IpAddress(box_id=box.id, v4=ip)
-                        dbsession.add(addr)
-                    else:
-                        errors.append("%s has already been assigned to %s." %
-                            (ip, box.name,)
-                        )
-                except ValueError:
-                    errors.append(
-                        "'%s' is not a valid IPv4 address" % str(ip[:15])
-                    )
-            dbsession.flush()
-        else:
-            errors.append("Box does not exist")
-        self.render("admin/view/game_objects.html", errors=errors)
-
-    def edit_ipv6(self):
-        ''' Add ipv6 addresses to a box (sorta edits the box object) '''
-        errors = []
-        box = Box.by_uuid(self.get_argument('box_uuid'))
-        if box is not None:
-            ips_string = self.get_argument('ipv6').replace('\n', ',').lower()
-            ips = filter(lambda char: char in "1234567890abcdef:,", ips_string).split(",")
-            for ip in filter(lambda ip: 0 < len(ip), ips):
-                try:
-                    box = Box.by_ip_address(ip)
-                    if box is None:
-                        addr = IpAddress(box_id=box.id, v6=ip)
-                        dbsession.add(addr)
-                    else:
-                        errors.append(
-                            "%s has already been assigned to %s." % (ip, box.name,)
-                        )
-                except ValueError:
-                    errors.append(
-                        "'%s' is not a valid IPv6 address" % str(ip[:39])
-                    )
-            dbsession.flush()
+                    ip = IpAddress(box_id=box.id, address=addr)
+                    box.ip_addresses.append(ip)
+                    self.dbsession.add(ip)
+                    self.dbsession.add(box)
+                    self.dbsession.commit()
+                except Exception as error:
+                    errors.append(str(error))
+            else:
+                errors.append("IP address is already in use")
         else:
             errors.append("Box does not exist")
         self.render("admin/view/game_objects.html", errors=errors)
@@ -704,7 +673,6 @@ class AdminDeleteHandler(BaseHandler):
                 'box': self.del_box,
         'corporation': self.del_corp,
                'user': self.del_user,
-               'team': self.del_team,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -713,7 +681,7 @@ class AdminDeleteHandler(BaseHandler):
 
     def del_ip(self):
         ''' Delete an ip address object '''
-        ip = IpAddress.by_address(self.get_argument('ip', ''))
+        ip = IpAddress.by_uuid(self.get_argument('ip_uuid', ''))
         if ip is not None:
             logging.info("Deleted IP address: '%s'" % str(ip))
             self.dbsession.delete(ip)
@@ -721,7 +689,7 @@ class AdminDeleteHandler(BaseHandler):
             self.redirect("/admin/view/game_objects")
         else:
             logging.info("IP address (%r) does not exist in database" %
-                self.get_argument('ip', '')
+                self.get_argument('ip_uuid', '')
             )
             self.render("admin/view/game_objects.html",
                 errors=["IP does not exist in database"]
@@ -1170,20 +1138,13 @@ class AdminImportXmlHandler(BaseHandler):
 
 class AdminLogViewerHandler(BaseHandler):
 
-    log_levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR']
-
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         ''' Import setup files '''
         if self.config.enable_logviewer:
-            requested_level = self.get_argument('loglevel', 'DEBUG')
-            if requested_level in self.log_levels:
-                level = requested_level
-            else:
-                level = 'DEBUG'
-            self.render('admin/logviewer.html', log_level=level)
+            self.render('admin/logviewer.html')
         else:
             self.render('public/404.html')
 
