@@ -134,7 +134,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
         except KeyError:
             logging.warn("[Web Socket] Connection has already been closed.")
 
-    def get_history(self, length=9):
+    def get_history(self, length=29):
         ''' Send history in JSON '''
         length = abs(length) + 1
         return json.dumps({'history': self.game_history[(-1 * length):]})

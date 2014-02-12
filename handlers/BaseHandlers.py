@@ -36,6 +36,7 @@ from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
 from libs.EventManager import EventManager
 from tornado.web import RequestHandler
+from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketHandler
 
 
@@ -174,13 +175,13 @@ class BaseHandler(RequestHandler):
         ''' Called after a response is sent to the client '''
         self._dbsession.close()
         if 0 < len(self.new_events):
-            self._fire_events()
+            self._event_callbacks()
 
-    def _fire_events(self):
+    def _event_callbacks(self):
         ''' Fire any new events '''
+        ioloop = IOLoop.instance()
         for event in self.new_events:
-            assert(2 == len(event))
-            event[0](**event[1])
+            ioloop.add_callback(event[0], **event[1])
 
 
 class BaseWebSocketHandler(WebSocketHandler):

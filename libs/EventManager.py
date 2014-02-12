@@ -161,7 +161,7 @@ class EventManager(object):
     def create_joined_team_event(self, user):
         ''' Callback when a user joins a team'''
         message = "%s has joined your team." % user.handle
-        evt_id = Notifier.team_success(user.team, "New Team Member", message)
+        evt_id = Notifier.team_custom(user.team, "New Team Member", message, '/avatars/' + user.avatar)
         return (self.push_team_notification, {
             'event_uuid': evt_id,
             'team_id': user.team.id
@@ -202,7 +202,7 @@ class EventManager(object):
             cracker.handle, victim.team.name, value,
         )
         evt_id = Notifier.broadcast_custom("Password Cracked",
-            message, cracker.avatar
+            message, '/avatars/' + cracker.avatar
         )
         event2 = (self.push_broadcast_notification, {'event_uuid':evt_id})
         return event1, event2
