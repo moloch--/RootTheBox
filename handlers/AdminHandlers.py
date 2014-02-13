@@ -36,7 +36,7 @@ from uuid import uuid4
 from tempfile import NamedTemporaryFile
 from string import ascii_letters, digits, printable
 from base64 import b64encode
-from hashlib import md5
+from hashlib import sha1
 from libs.Form import Form
 from libs.LoggingHelpers import ObservableLoggingHandler
 from libs.EventManager import EventManager
@@ -646,7 +646,7 @@ class AdminEditHandler(BaseHandler):
                 if item.price != price:
                     item.price = price
                 self.dbsession.add(item)
-                self.dbsession.flush()
+                self.dbsession.commit()
                 self.redirect('/admin/view/market_objects')
             except ValueError:
                 self.render('admin/view/market_objects.html',
@@ -888,14 +888,14 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         root = self.application.settings['source_code_market_dir']
         save_file = open(str(root + '/' + source_code.uuid), 'w')
         source_code.checksum = self.get_checksum(file_data)
-        save_file.write(b64encode(file_data))
+        save_file.write(file_data.encode('base64'))
         save_file.close()
         self.dbsession.add(source_code)
         self.dbsession.commit()
 
     def get_checksum(self, data):
         ''' Calculate checksum of file data '''
-        return md5(data).hexdigest()
+        return sha1(data).hexdigest()
 
     def delete_source_code(self):
         ''' Delete source code file '''
@@ -1002,7 +1002,10 @@ class AdminConfigurationHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        ''' Update configuration '''
+        '''
+        Update configuration
+        Disabled fields will not be send in the POST, so check for blank values
+        '''
         try:
             config = ConfigManager.instance()
             config.game_name = self.get_argument('game_name', '')
@@ -1011,10 +1014,16 @@ class AdminConfigurationHandler(BaseHandler):
             config.max_team_size = self.get_argument('max_team_size', '')
             config.max_password_length = self.get_argument('max_password_length', '')
             config.use_bots = self.get_argument('use_bots') == 'true'
-            config.bot_reward = self.get_argument('bot_reward', '')
+            reward = self.get_argument('bot_reward', '')
+            if reward != '':
+                config.bot_reward = reward
             config.use_black_market = self.get_argument('use_black_market', '') == 'true'
-            config.password_upgrade_cost = self.get_argument('password_upgrade_cost', '')
-            config.bribe_cost = self.get_argument('bribe_cost', '')
+            upgrade_cost = self.get_argument('password_upgrade_cost', '')
+            if upgrade_cost != '':
+                config.password_upgrade_cost = upgrade_cost
+            bribe_cost = self.get_argument('bribe_cost', '')
+            if bribe_cost != '':
+                config.bribe_cost = bribe_cost
             config.save()
             self.render('admin/configuration.html', errors=None, config=self.config)
         except Exception as error:

@@ -36,9 +36,9 @@ class SourceCode(DatabaseObject):
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    price = Column(Integer, nullable=False)
-    description = Column(Unicode(1024), nullable=False)
-    checksum = Column(String(32))
+    _price = Column(Integer, nullable=False)
+    _description = Column(Unicode(1024), nullable=False)
+    checksum = Column(String(40))
 
     _file_name = Column(String(64), nullable=False)
     file_name = synonym('_file_name', descriptor=property(
@@ -60,7 +60,7 @@ class SourceCode(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Returns a the object with a given _uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
     def by_box_id(cls, _id):
@@ -70,6 +70,28 @@ class SourceCode(DatabaseObject):
     def filter_string(cls, string, extra_chars=''):
         char_white_list = ascii_letters + digits + extra_chars
         return filter(lambda char: char in char_white_list, string)
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        if isinstance(value, basestring) and not value.strip().isdigit():
+            raise ValueError("Price must be an integer")
+        else:
+            value = int(value)
+        if value < 1:
+            raise ValueError("Price must be at least 1")
+        self._price = value
+
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        self._description = unicode(value[:1024])
 
     def to_dict(self):
         return {

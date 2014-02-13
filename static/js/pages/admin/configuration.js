@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     /* Disable feilds if their corisponding features are disabled */
     if ($("#use-bots").val() === "false") {
-        $('#bot-reward-input').prop('disabled', true);
+        $('#bot-reward').prop('disabled', true);
     }
     if ($("#use-black-market").val() === "false") {
         $('#password-upgrade-cost').prop('disabled', true);
@@ -79,6 +79,7 @@ $(document).ready(function() {
         $("#use-bots-enable-icon").addClass("fa-check-square-o");
         $("#use-bots-disable-icon").removeClass("fa-check-square-o");
         $("#use-bots-disable-icon").addClass("fa-square-o");
+        $('#bot-reward').prop('disabled', false);
     });
     $("#use-bots-disable").click(function() {
         $("#use-bots").val("false");
@@ -86,6 +87,7 @@ $(document).ready(function() {
         $("#use-bots-disable-icon").addClass("fa-check-square-o");
         $("#use-bots-enable-icon").removeClass("fa-check-square-o");
         $("#use-bots-enable-icon").addClass("fa-square-o");
+        $('#bot-reward').prop('disabled', true);
     });
 
     $("#use-black-market-enable").click(function() {
@@ -94,6 +96,8 @@ $(document).ready(function() {
         $("#use-black-market-enable-icon").addClass("fa-check-square-o");
         $("#use-black-market-disable-icon").removeClass("fa-check-square-o");
         $("#use-black-market-disable-icon").addClass("fa-square-o");
+        $('#password-upgrade-cost').prop('disabled', false);
+        $('#bribe-cost').prop('disabled', false);
     });
     $("#use-black-market-disable").click(function() {
         $("#use-black-market").val("false");
@@ -101,6 +105,8 @@ $(document).ready(function() {
         $("#use-black-market-disable-icon").addClass("fa-check-square-o");
         $("#use-black-market-enable-icon").removeClass("fa-check-square-o");
         $("#use-black-market-enable-icon").addClass("fa-square-o");
+        $('#password-upgrade-cost').prop('disabled', true);
+        $('#bribe-cost').prop('disabled', true);
     });
 
     /* Enable popovers */

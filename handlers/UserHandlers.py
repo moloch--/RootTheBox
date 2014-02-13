@@ -58,6 +58,7 @@ class HomeHandler(BaseHandler):
 class SettingsHandler(BaseHandler):
     ''' Modify user controlled attributes '''
 
+    # We need the google.com domain for ReCaptcha
     relaxed = "default-src 'self';" + \
         "script-src 'self' www.google.com;" + \
         "style-src 'self' 'unsafe-inline';" + \

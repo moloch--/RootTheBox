@@ -53,7 +53,7 @@ class FileUpload(DatabaseObject):
 
     @classmethod
     def by_uuid(cls, _uuid):
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
     def by_file_name(cls, file_name):
