@@ -302,7 +302,7 @@ class AdminAjaxObjectDataHandler(BaseHandler):
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
-    def get(self, *args, **kwargs):
+    def post(self, *args, **kwargs):
         game_objects = {
             'game_level': GameLevel,
             'corporation': Corporation,

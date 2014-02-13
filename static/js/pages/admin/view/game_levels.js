@@ -1,11 +1,17 @@
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+}
 
-function get_details(obj, uuid) {
-    $("#" + obj + "_uuid").val(uuid);
-    $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
-        $.each(data, function(key, value) {
+function getDetails(obj, uuid) {
+    $("#edit-" + obj + "-uuid").val(uuid);
+    data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}
+    $.post('/admin/ajax/objects', data, function(response) {
+        $.each(response, function(key, value) {
             $("#" + obj + "-" + key).val(value);
         });
-    });
+    }, 'json');
 }
 
 /* Add click events */
@@ -13,7 +19,7 @@ $(document).ready(function() {
 
     /* Game Level */
     $("a[id^=edit-game-level-button]").click(function() {
-        get_details("game_level", $(this).data("uuid"));
+        getDetails("game_level", $(this).data("uuid"));
     });
 
     $("#edit-game-level-submit").click(function() {

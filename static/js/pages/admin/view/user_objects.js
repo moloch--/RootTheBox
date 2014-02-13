@@ -1,16 +1,24 @@
-function get_details(obj, uuid) {
-    $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
-        $.each(data, function(key, value) {
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function getDetails(obj, uuid) {
+    $("#edit-" + obj + "-uuid").val(uuid);
+    data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}
+    $.post('/admin/ajax/objects', data, function(response) {
+        $.each(response, function(key, value) {
             $("#" + obj + "-" + key).val(value);
         });
-    });
+    }, 'json');
 }
 
 $(document).ready(function() {
 
     /* Team */
     $("a[id^=edit-team-button]").click(function() {
-        get_details("team", $(this).data("uuid"));
+        getDetails("team", $(this).data("uuid"));
     });
 
     $("#edit-team-submit").click(function() {
@@ -19,7 +27,7 @@ $(document).ready(function() {
 
     /* User */
     $("a[id^=edit-user-button]").click(function() {
-        get_details("user", $(this).data("uuid"));
+        getDetails("user", $(this).data("uuid"));
     });
 
     $("#edit-user-submit").click(function() {

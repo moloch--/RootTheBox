@@ -1,11 +1,18 @@
 
-function get_details(obj, uuid) {
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function getDetails(obj, uuid) {
     $("#edit-" + obj + "-uuid").val(uuid);
-    $.getJSON('/admin/ajax/objects?uuid=' + uuid + '&obj=' + obj, function(data) {
-        $.each(data, function(key, value) {
+    data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}
+    $.post('/admin/ajax/objects', data, function(response) {
+        $.each(response, function(key, value) {
             $("#" + obj + "-" + key).val(value);
         });
-    });
+    }, 'json');
 }
 
 /* Add click events */
@@ -13,7 +20,7 @@ $(document).ready(function() {
 
     /* Corporation */
     $("a[id^=edit-corporation-button]").click(function() {
-        get_details("corporation", $(this).data("uuid"));
+        getDetails("corporation", $(this).data("uuid"));
     });
 
     $("#edit-corporation-submit").click(function() {
@@ -30,7 +37,7 @@ $(document).ready(function() {
 
     /* Box */
     $("a[id^=edit-box-button]").click(function() {
-        get_details("box", $(this).data("uuid"));
+        getDetails("box", $(this).data("uuid"));
         $("#edit-box-corporation").val($(this).data("corporation-uuid"));
     });
 
@@ -65,7 +72,7 @@ $(document).ready(function() {
 
     /* Flag */
     $("a[id^=edit-flag-button]").click(function() {
-        get_details("flag", $(this).data("uuid"));
+        getDetails("flag", $(this).data("uuid"));
         $("#edit-flag-box").val($(this).data("box-uuid"));
     });
 
@@ -83,7 +90,7 @@ $(document).ready(function() {
 
     /* Hint */
     $("a[id^=edit-hint-button]").click(function() {
-        get_details("hint", $(this).data("uuid"));
+        getDetails("hint", $(this).data("uuid"));
     });
 
     $("#edit-hint-submit").click(function() {
