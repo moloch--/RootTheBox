@@ -141,19 +141,18 @@ class PurchaseHintHandler(BaseHandler):
         ''' Purchase a hint '''
         uuid = self.get_argument('uuid', '')
         hint = Hint.by_uuid(uuid)
-        box = Box.by_id(hint.box_id)
         if hint is not None:
             user = self.get_current_user()
             if hint.price <= user.team.money:
                 logging.info("%s (%s) purchased a hint for $%d on %s" % (
-                    user.handle, user.team.name, hint.price, box.name
+                    user.handle, user.team.name, hint.price, hint.box.name
                 ))
                 self._purchase_hint(hint, user.team)
-                self.render_page(box)
+                self.render_page(hint.box)
             else:
-                self.render_page(box, ["You cannot afford to purchase this hint."])
+                self.render_page(hint.box, ["You cannot afford to purchase this hint."])
         else:
-            self.render_page(box, ["Hint does not exist."])
+            self.render('public/404.html')
 
     def _purchase_hint(self, hint, team):
         ''' Add hint to team object '''
