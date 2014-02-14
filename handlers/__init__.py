@@ -88,6 +88,33 @@ urls = [
     (r'/user/missions/boxes', BoxHandler),
     (r'/user/missions/hint', PurchaseHintHandler),
 
+
+    ### BOTNET URLS ###
+    # Bot Handlers - BotHandlers.py
+    (r'/botnet/connect', BotSocketHandler),
+    (r'/botnet/climonitor', BotCliMonitorSocketHandler),
+    (r'/botnet/webmonitor', BotWebMonitorSocketHandler),
+    (r'/user/bots/download/(windows|linux|monitor)', BotDownloadHandler),
+    (r'/user/bots/webmonitor', BotWebMonitorHandler),
+
+
+    ### BLACK MARKET URLS ###
+    # This is only relevent if the black market is enabled
+    (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
+
+    # Market handlers - MarketHandlers.py
+    (r'/user/market', MarketViewHandler),
+    (r'/user/market/details', MarketDetailsHandler),
+
+    # Upgrade handlers - UpgradeHandlers.py
+    (r'/password_security', PasswordSecurityHandler),
+    (r'/federal_reserve', FederalReserveHandler),
+    (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
+    (r'/source_code_market', SourceCodeMarketHandler),
+    (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
+    (r'/swat', SwatHandler),
+
+
     # User handlers - UserHandlers.py
     (r'/user', HomeHandler),
     (r'/user/settings', SettingsHandler),
@@ -138,40 +165,6 @@ urls = [
     (r'/(.*)phpmyadmin(.*)', NoobHandler),
     (r'/administrator(.*)', NoobHandler)
 ]
-
-def add_bot_handlers(urls):
-    urls += [
-        # Bot Handlers - BotHandlers.py
-        (r'/botnet/connect', BotSocketHandler),
-        (r'/botnet/climonitor', BotCliMonitorSocketHandler),
-        (r'/botnet/webmonitor', BotWebMonitorSocketHandler),
-        (r'/user/bots/download/(windows|linux|monitor)', BotDownloadHandler),
-        (r'/user/bots/webmonitor', BotWebMonitorHandler)
-    ]
-# If the game is configured to use bots, associate the handlers necessary
-if config.use_bots:
-    add_bot_handlers(urls)
-
-def add_black_market_handlers(urls):
-    urls += [
-        # This is only relevent if the black market is enabled
-        (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
-
-        # Market handlers - MarketHandlers.py
-        (r'/user/market', MarketViewHandler),
-        (r'/user/market/details', MarketDetailsHandler),
-
-        # Upgrade handlers - UpgradeHandlers.py
-        (r'/password_security', PasswordSecurityHandler),
-        (r'/federal_reserve', FederalReserveHandler),
-        (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
-        (r'/source_code_market', SourceCodeMarketHandler),
-        (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
-        (r'/swat', SwatHandler),
-    ]
-# If the game is configured to use the black market, associate the handlers necessary
-if config.use_black_market:
-    add_black_market_handlers(urls)
 
 # This one has to be last
 urls.append((r'/(.*)', NotFoundHandler))

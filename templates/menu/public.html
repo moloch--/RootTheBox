@@ -46,11 +46,13 @@
                                   Teams
                               </a>
                             </li>
-                            <li>
-                                <a href="/scoreboard/wall_of_sheep">
-                                    Wall of Sheep
-                                </a>
-                            </li>
+                            {% if ConfigManager.instance().use_black_market %}
+                                <li>
+                                    <a href="/scoreboard/wall_of_sheep">
+                                        Wall of Sheep
+                                    </a>
+                                </li>
+                            {% end %}
                         </ul>
                     </li>
                     <li>

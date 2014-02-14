@@ -22,7 +22,7 @@ Created on Mar 13, 2012
 import logging
 import functools
 
-from threading import Thread
+from libs.ConfigManager import ConfigManager
 from models.User import User
 
 
@@ -127,3 +127,27 @@ def has_item(name):
                 self.redirect(self.application.settings['forbidden_url'])
         return wrapper
     return func
+
+
+def use_bots(method):
+    ''' Checks to see if a user has been authenticated '''
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if ConfigManager.instance().use_bots:
+            return method(self, *args, **kwargs)
+        else:
+            self.render('public/404.html')
+    return wrapper
+
+
+def use_black_market(method):
+    ''' Checks to see if a user has been authenticated '''
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if ConfigManager.instance().use_black_market:
+            return method(self, *args, **kwargs)
+        else:
+            self.render('public/404.html')
+    return wrapper

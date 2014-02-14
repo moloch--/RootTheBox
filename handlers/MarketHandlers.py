@@ -29,19 +29,21 @@ import logging
 from BaseHandlers import BaseHandler
 from models.MarketItem import MarketItem
 from models.Team import Team
-from libs.SecurityDecorators import authenticated
+from libs.SecurityDecorators import authenticated, use_black_market
 
 
 class MarketViewHandler(BaseHandler):
     ''' Renders views of items in the market '''
 
     @authenticated
+    @use_black_market
     def get(self, *args, **kwargs):
         ''' Renders the main table '''
         user = self.get_current_user()
         self.render('market/view.html', user=user, errors=None)
 
     @authenticated
+    @use_black_market
     def post(self, *args, **kwargs):
         ''' Called to purchase an item '''
         uuid = self.get_argument('uuid', '')
@@ -83,6 +85,7 @@ class MarketDetailsHandler(BaseHandler):
     ''' Renders views of items in the market '''
 
     @authenticated
+    @use_black_market
     def get(self, *args, **kwargs):
         ''' Get details on an item '''
         uuid = self.get_argument('uuid', '')

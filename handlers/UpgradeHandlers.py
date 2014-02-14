@@ -35,7 +35,7 @@ from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.User import User, ADMIN_PERMISSION
 from libs.ConfigManager import ConfigManager
-from libs.SecurityDecorators import authenticated, has_item
+from libs.SecurityDecorators import authenticated, has_item, use_black_market
 from mimetypes import guess_type
 from base64 import b64decode
 from string import ascii_letters
@@ -45,12 +45,14 @@ class PasswordSecurityHandler(BaseHandler):
     ''' Renders views of items in the market '''
 
     @authenticated
+    @use_black_market
     @has_item("Password Security")
     def get(self, *args, **kwargs):
         ''' Render update hash page '''
         self.render_page()
 
     @authenticated
+    @use_black_market
     @has_item("Password Security")
     def post(self, *args, **kwargs):
         ''' Attempt to upgrade hash algo '''
@@ -105,6 +107,7 @@ class FederalReserveHandler(BaseHandler):
         "connect-src 'self' %s" % ConfigManager.instance().ws_connect
 
     @authenticated
+    @use_black_market
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         user = self.get_current_user()
@@ -115,6 +118,7 @@ class FederalReserveHandler(BaseHandler):
 class FederalReserveAjaxHandler(BaseHandler):
 
     @authenticated
+    @use_black_market
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         commands = {
@@ -129,6 +133,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.finish()
 
     @authenticated
+    @use_black_market
     @has_item("Federal Reserve")
     def post(self, *args, **kwargs):
         self.get(*args, **kwargs)
@@ -243,11 +248,13 @@ class FederalReserveAjaxHandler(BaseHandler):
 class SourceCodeMarketHandler(BaseHandler):
 
     @authenticated
+    @use_black_market
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
         self.render_page()
 
     @authenticated
+    @use_black_market
     @has_item("Source Code Market")
     def post(self, *args, **kwargs):
         box = Box.by_uuid(self.get_argument('box_uuid', ''))
@@ -289,6 +296,7 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
     goodchars = ascii_letters + "1234567890-._"
 
     @authenticated
+    @use_black_market
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
         ''' Send file to user if their team owns it '''
@@ -321,12 +329,14 @@ class SwatHandler(BaseHandler):
     ''' Allows users to bribe "police" to SWAT other players '''
 
     @authenticated
+    @use_black_market
     @has_item("SWAT")
     def get(self, *args, **kwargs):
         ''' Render SWAT page '''
         self.render_page()
 
     @authenticated
+    @use_black_market
     @has_item("SWAT")
     def post(self, *args, **kwargs):
         ''' Validate user arguments for SWAT request '''

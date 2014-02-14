@@ -1051,7 +1051,7 @@ class AdminConfigurationHandler(BaseHandler):
             config.public_teams = self.get_argument('public_teams', '') == 'true'
             config.max_team_size = self.get_argument('max_team_size', '')
             config.max_password_length = self.get_argument('max_password_length', '')
-            self.config_bots()
+            self.config_bots(config)
             reward = self.get_argument('bot_reward', '')
             if reward != '':
                 config.bot_reward = reward
@@ -1068,7 +1068,7 @@ class AdminConfigurationHandler(BaseHandler):
             logging.exception("Configuration update threw an exception")
             self.render('admin/configuration.html', errors=[str(error)], config=self.config)
 
-    def config_bots(self):
+    def config_bots(self, config):
         ''' Updates bot config, and starts/stops the botnet callback '''
         config.use_bots = self.get_argument('use_bots') == 'true'
         if config.use_bots and not self.application.settings['score_bots_callback']._running:

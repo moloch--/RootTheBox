@@ -29,7 +29,7 @@ import logging
 
 from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
-from libs.SecurityDecorators import debug
+from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.EventManager import EventManager
 from models.Team import Team
@@ -142,6 +142,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 
 class ScoreboardWallOfSheepHandler(BaseHandler):
 
+    @use_black_market
     def get(self, *args, **kwargs):
         ''' Optionally order by argument; defaults to date/time '''
         order = self.get_argument('order_by', '').lower()
@@ -156,6 +157,7 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
             leaderboard=leaderboard,
             flock=sheep,
         )
+
 
 
 class TeamsHandler(BaseHandler):

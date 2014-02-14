@@ -157,14 +157,15 @@
                             Configuration
                         </a>
                     </li>
-                    {% from libs.ConfigManager import ConfigManager %} {% if ConfigManager.instance().enable_logviewer %}
+                    {% if ConfigManager.instance().enable_logviewer %}
                     <li>
                         <a href="/admin/logviewer">
                             <i class="fa fa-fw fa-bug"></i>
                             Log Viewer
                         </a>
                     </li>
-                    {% end %} {% if ConfigManager.instance().restrict_registration %}
+                    {% end %}
+                    {% if ConfigManager.instance().restrict_registration %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 RegTokens

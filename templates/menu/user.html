@@ -80,48 +80,50 @@
                             </li>
                         </ul>
                     </li>
-                    {% if len(user.team.items) != 0 %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-dashboard"></i>
-                            Unlocks
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% if user.has_item("Source Code Market") %}
-                            <li>
-                                <a href="/source_code_market">
-                                    <i class="fa fa-fw fa-code"></i>
-                                    Source Code Market
-                                </a>
-                            </li>
-                            {% end %}
-                            {% if user.has_item("Password Security") %}
-                            <li>
-                                <a href="/password_security">
-                                    <i class="fa fa-fw fa-lock"></i>
-                                    Password Security
-                                </a>
-                            </li>
-                            {% end %}
-                            {% if user.has_item("Federal Reserve") %}
-                            <li>
-                                <a href="/federal_reserve">
-                                    <i class="fa fa-fw fa-dollar"></i>
-                                    Federal Reserve
-                                </a>
-                            </li>
-                            {% end %}
-                            {% if user.has_item("SWAT") %}
-                            <li>
-                                <a href="/swat">
-                                    <i class="fa fa-fw fa-crosshairs"></i>
-                                    S.W.A.T.
-                                </a>
-                            </li>
-                            {% end %}
-                        </ul>
-                    </li>
+                    {% if ConfigManager.instance().use_black_market %}
+                        {% if len(user.team.items) != 0 %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-fw fa-dashboard"></i>
+                                Unlocks
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if user.has_item("Source Code Market") %}
+                                <li>
+                                    <a href="/source_code_market">
+                                        <i class="fa fa-fw fa-code"></i>
+                                        Source Code Market
+                                    </a>
+                                </li>
+                                {% end %}
+                                {% if user.has_item("Password Security") %}
+                                <li>
+                                    <a href="/password_security">
+                                        <i class="fa fa-fw fa-lock"></i>
+                                        Password Security
+                                    </a>
+                                </li>
+                                {% end %}
+                                {% if user.has_item("Federal Reserve") %}
+                                <li>
+                                    <a href="/federal_reserve">
+                                        <i class="fa fa-fw fa-dollar"></i>
+                                        Federal Reserve
+                                    </a>
+                                </li>
+                                {% end %}
+                                {% if user.has_item("SWAT") %}
+                                <li>
+                                    <a href="/swat">
+                                        <i class="fa fa-fw fa-crosshairs"></i>
+                                        S.W.A.T.
+                                    </a>
+                                </li>
+                                {% end %}
+                            </ul>
+                        </li>
+                        {% end %}
                     {% end %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -140,11 +142,13 @@
                                   History
                               </a>
                             </li>
+                            {% if ConfigManager.instance().use_black_market %}
                             <li>
                                 <a href="/scoreboard/wall_of_sheep">
                                     Wall of Sheep
                                 </a>
                             </li>
+                            {% end %}
                             <li>
                                 <a href="/teams">
                                     Teams

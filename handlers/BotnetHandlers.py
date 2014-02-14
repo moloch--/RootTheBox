@@ -73,10 +73,13 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         self.box_uuid = None
         self.remote_ip = None
         self.xid = os.urandom(16).encode('hex')
-        self.uuid = unicode(uuid4())
-        self.opcodes = {
-            'interrogation_response': self.interrogation_response,
-        }
+        if not self.config.use_bots:
+            self.close()
+        else:
+            self.uuid = unicode(uuid4())
+            self.opcodes = {
+                'interrogation_response': self.interrogation_response,
+            }
 
     def open(self, *args):
         ''' Steps 1 and 2; called when a new bot connects '''
@@ -177,12 +180,16 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
     '''
 
     def initialize(self):
+        self.config = ConfigManager.instance()
         self.bot_manager = BotManager.instance()
         self.team_name = None
-        self.uuid = unicode(uuid4())
-        self.opcodes = {
-            'auth': self.auth,
-        }
+        if not self.config.use_bots:
+            self.close()
+        else:
+            self.uuid = unicode(uuid4())
+            self.opcodes = {
+                'auth': self.auth,
+            }
 
     def open(self):
         logging.debug("Opened new monitor socket to %s" % self.request.remote_ip)
@@ -245,6 +252,7 @@ class BotWebMonitorHandler(BaseHandler):
     ''' Just renders the html page for the web monitor '''
 
     @authenticated
+    @use_bots
     def get(self, *args, **kwargs):
         self.render('botnet/monitor.html')
 
@@ -263,6 +271,11 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
         cls.ping
 
     '''
+
+    def initialize(self):
+        self.config = ConfigManager.instance()
+        if not self.config.use_bots:
+            self.close()
 
     @restrict_origin
     def open(self):
@@ -304,6 +317,7 @@ class BotDownloadHandler(BaseHandler):
     ''' Distributes bot binaries / scripts '''
 
     @authenticated
+    @use_bots
     def get(self, *args, **kwargs):
         download_options = {
             'windows': self.windows,
