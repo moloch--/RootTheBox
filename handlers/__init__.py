@@ -55,12 +55,12 @@ from handlers.FileUploadHandlers import *
 from handlers.NotificationHandlers import *
 from handlers.StaticFileHandler import StaticFileHandler
 
-### Setup cache
+### Singletons
+io_loop = IOLoop.instance()
 config = ConfigManager.instance()
-
+game_history = GameHistory.instance()
 
 ### Main URL Configuration
-
 # First get base URLs that all game types will require
 urls = [
     # Static Handlers - StaticFileHandler.py
@@ -95,6 +95,7 @@ urls = [
     (r'/logout', LogoutHandler),
 
     # Admin Handlers - AdminHandlers.py
+    (r'/admin/game', AdminGameHandler),
     (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
     (r'/admin/create/(.*)', AdminCreateHandler),
     (r'/admin/edit/(.*)', AdminEditHandler),
@@ -138,8 +139,7 @@ urls = [
     (r'/administrator(.*)', NoobHandler)
 ]
 
-# If the game is configured to use bots, associate the handlers necessary
-if config.use_bots:
+def add_bot_handlers(urls):
     urls += [
         # Bot Handlers - BotHandlers.py
         (r'/botnet/connect', BotSocketHandler),
@@ -148,9 +148,11 @@ if config.use_bots:
         (r'/user/bots/download/(windows|linux|monitor)', BotDownloadHandler),
         (r'/user/bots/webmonitor', BotWebMonitorHandler)
     ]
+# If the game is configured to use bots, associate the handlers necessary
+if config.use_bots:
+    add_bot_handlers(urls)
 
-# If the game is configured to use the black market, associate the handlers necessary
-if config.use_black_market:
+def add_black_market_handlers(urls):
     urls += [
         # This is only relevent if the black market is enabled
         (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
@@ -167,6 +169,9 @@ if config.use_black_market:
         (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
         (r'/swat', SwatHandler),
     ]
+# If the game is configured to use the black market, associate the handlers necessary
+if config.use_black_market:
+    add_black_market_handlers(urls)
 
 # This one has to be last
 urls.append((r'/(.*)', NotFoundHandler))
@@ -176,7 +181,7 @@ app = Application(
     urls,
 
     # Randomly generated secret key
-    cookie_secret=urandom(32).encode('base64'),
+    cookie_secret=urandom(32).encode('hex'),
 
     # Ip addresses that access the admin interface
     admin_ips=config.admin_ips,
@@ -218,8 +223,25 @@ app = Application(
     # Debug mode
     debug=config.debug,
 
+    # Flag used to start the game
+    game_started=False,
+
     # Application version
     version='0.4.0',
+
+    # Callback functions
+    score_bots_callback = PeriodicCallback(
+        score_bots,
+        config.bot_reward_interval,
+        io_loop=io_loop
+    ),
+
+    history_callback = PeriodicCallback(
+        game_history.take_snapshot,
+        config.history_snapshot_interval,
+        io_loop=io_loop
+    ),
+
 )
 
 
@@ -228,7 +250,6 @@ def start_server():
     ''' Main entry point for the application '''
     if config.debug:
         logging.warn("Debug mode is enabled; some security measures will be ignored")
-
     # Setup server object
     if config.use_ssl:
         server = HTTPServer(app,
@@ -240,28 +261,9 @@ def start_server():
         )
     else:
         server = HTTPServer(app, xheaders=config.x_headers)
-
-    # Bind to a socket
     sockets = netutil.bind_sockets(config.listen_port)
     server.add_sockets(sockets)
-
-    # Start the i/o loop, and callbacks
     try:
-        io_loop = IOLoop.instance()
-        game_history = GameHistory.instance()
-        history_callback = PeriodicCallback(
-            game_history.take_snapshot,
-            config.history_snapshot_interval,
-            io_loop=io_loop
-        )
-        if config.use_bots:
-            scoring_callback = PeriodicCallback(
-                score_bots,
-                config.bot_reward_interval,
-                io_loop=io_loop
-            )
-            scoring_callback.start()
-        history_callback.start()
         io_loop.start()
     except KeyboardInterrupt:
         sys.stdout.write('\r' + WARN + 'Shutdown Everything!\n')
@@ -269,8 +271,4 @@ def start_server():
         logging.exception("Main i/o loop threw exception")
     finally:
         io_loop.stop()
-        if config.debug and raw_input(PROMPT+"Flush Memcache? [Y/n]: ").lower() == 'y':
-            sys.stdout.write(INFO+'Flushing cache ... '),
-            FileCache.flush()
-            sys.stdout.write('okay\n')
         _exit(0)

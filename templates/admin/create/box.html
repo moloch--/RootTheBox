@@ -74,7 +74,7 @@
                         </button>
                         <button id="os-button" class="btn" type="button" data-os="apple">
                             <i class="fa fa-apple"></i>
-                            iOS / OSX
+                            OSX
                         </button>
                     </div>
                 </div>
@@ -82,7 +82,29 @@
             <div class="control-group">
                 <label class="control-label" for="description">Description</label>
                 <div class="controls">
-                    <textarea required id="description" name="description" placeholder="Description"></textarea>
+                    <textarea required id="description" name="description" placeholder="Description">
+                    </textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="autoformat">
+                    Autoformat Description
+                </label>
+                <div class="controls">
+                    <input id="autoformat" name="autoformat" type="hidden" value="true" />
+                    <div id="autoformat-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Autoformat"
+                        data-content="Automatically format the box description with proper spacing and newlines.">
+                        <button id="autoformat-enable" type="button" class="btn btn-success">
+                            <i id="autoformat-enable-icon" class="fa fa-fw fa-check-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="autoformat-disable" type="button" class="btn btn-danger">
+                            <i id="autoformat-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="control-group">

@@ -2,7 +2,9 @@
 
 {% block title %}Admin Home{% end %}
 
-{% block header %}{% end %}
+{% block header %}
+<script src="/static/js/pages/admin/home.js"></script>
+{% end %}
 
 {% block content %}
 <div class="container">
@@ -10,8 +12,24 @@
         <i class="fa fa-home"></i>
         Administrator Panel
     </h1>
-    <div class="well">
-        Put stuff here
+    <div class="well" style="margin-left: auto; margin-right: auto; text-align: center;">
+        <form id="start-game-form" action="/admin/game" method="post">
+            {% raw xsrf_form_html() %}
+            <input id="start-game" name="start_game" type="hidden" />
+        </form>
+        {% if not handler.application.settings['game_started'] %}
+            <button id="start-game-button" class="btn btn-success btn-large" type="button">
+                <i class="fa fa-fw fa-play"></i>
+                Start the Game
+            </button>
+        {% else %}
+            <button id="stop-game-button" class="btn btn-danger btn-large" type="button">
+                <i class="fa fa-fw fa-stop"></i>
+                Stop the Game
+            </button>
+        {% end %}
+        <br />
+        <br />
     </div>
 </div>
 {% end %}

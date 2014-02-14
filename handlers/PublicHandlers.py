@@ -62,17 +62,24 @@ class LoginHandler(BaseHandler):
         password_attempt = self.get_argument('password', '')
         if user is not None and user.validate_password(password_attempt):
             if not user.locked:
-                self.successful_login(user)
-                if user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
-                    self.redirect('/user/missions/firstlogin')
+                if self.game_started(user):
+                    self.successful_login(user)
+                    if user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
+                        self.redirect('/user/missions/firstlogin')
+                    else:
+                        self.redirect('/user')
                 else:
-                    self.redirect('/user')
+                    self.render('public/login.html', errors=["The game has not started yet"])
             else:
-                self.render('public/login.html',
-                    errors=["Your account has been locked"]
-                )
+                self.render('public/login.html', errors=["Your account has been locked"])
         else:
             self.failed_login()
+
+    def game_started(self, user):
+        if self.application.settings['game_started']:
+            return True
+        else:
+            return True if user.has_permission(ADMIN_PERMISSION) else False
 
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''

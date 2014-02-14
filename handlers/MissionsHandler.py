@@ -157,10 +157,11 @@ class PurchaseHintHandler(BaseHandler):
 
     def _purchase_hint(self, hint, team):
         ''' Add hint to team object '''
-        team.money -= abs(hint.price)
-        team.hints.append(hint)
-        self.dbsession.add(team)
-        self.dbsession.commit()
+        if hint not in team.hints:
+            team.money -= abs(hint.price)
+            team.hints.append(hint)
+            self.dbsession.add(team)
+            self.dbsession.commit()
 
     def render_page(self, box, errors=[]):
         ''' Wrapper to .render() to avoid duplicate code '''

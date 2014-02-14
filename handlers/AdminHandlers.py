@@ -59,6 +59,43 @@ from models.Flag import FLAG_STATIC, FLAG_REGEX, FLAG_FILE
 from setup.xmlsetup import import_xml
 
 
+
+class AdminGameHandler(BaseHandler):
+    ''' Start stop game '''
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        if self.get_argument('start_game') == 'true':
+            self.start_game()
+        else:
+            self.stop_game()
+        self.redirect('/user')
+
+    def start_game(self):
+        ''' Start the game and any related callbacks '''
+        if not self.application.settings['game_started']:
+            logging.info("The game is about to begin, good hunting!")
+            self.application.settings['game_started'] = True
+            self.application.settings['history_callback'].start()
+            if self.config.use_bots:
+                self.application.settings['score_bots_callback'].start()
+
+    def stop_game(self):
+        ''' Stop the game and all callbacks '''
+        logging.info("The game is stopping ...")
+        self.application.settings['game_started'] = False
+        if self.application.settings['history_callback']._running:
+            self.application.settings['history_callback'].stop()
+        if self.application.settings['score_bots_callback']._running:
+            self.application.settings['score_bots_callback'].start()
+        for user in User.all_users():
+            user.locked = True
+            self.dbsession.add(user)
+        self.dbsession.commit()
+
+
 class AdminCreateHandler(BaseHandler):
     ''' Handler used to create game objects '''
 
@@ -230,6 +267,7 @@ class AdminCreateHandler(BaseHandler):
         box = Box(corporation_id=corp.id, game_level_id=level.id)
         box.name = self.get_argument('name', '')
         box.description = self.get_argument('description', '')
+        box.autoformat = self.get_argument('autoformat', '') == 'true'
         box.difficulty = self.get_argument('difficulty', '')
         self.dbsession.add(box)
         self.dbsession.commit()
@@ -1013,7 +1051,7 @@ class AdminConfigurationHandler(BaseHandler):
             config.public_teams = self.get_argument('public_teams', '') == 'true'
             config.max_team_size = self.get_argument('max_team_size', '')
             config.max_password_length = self.get_argument('max_password_length', '')
-            config.use_bots = self.get_argument('use_bots') == 'true'
+            self.config_bots()
             reward = self.get_argument('bot_reward', '')
             if reward != '':
                 config.bot_reward = reward
@@ -1029,6 +1067,16 @@ class AdminConfigurationHandler(BaseHandler):
         except Exception as error:
             logging.exception("Configuration update threw an exception")
             self.render('admin/configuration.html', errors=[str(error)], config=self.config)
+
+    def config_bots(self):
+        ''' Updates bot config, and starts/stops the botnet callback '''
+        config.use_bots = self.get_argument('use_bots') == 'true'
+        if config.use_bots and not self.application.settings['score_bots_callback']._running:
+            logging.info("Starting botnet callback function")
+            self.application.settings['score_bots_callback'].start()
+        elif self.application.settings['score_bots_callback']._running:
+            logging.info("Stopping botnet callback function")
+            self.application.settings['score_bots_callback'].stop()
 
 
 class AdminGarbageCfgHandler(BaseHandler):

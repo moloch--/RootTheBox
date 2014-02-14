@@ -278,7 +278,10 @@
     <div id="add-ip-address-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Add IP address</h3>
+            <h3>
+                <i class="fa fa-plus"></i>
+                Add IP address
+            </h3>
         </div>
         <div class="modal-body">
         <form id="add-ip-address-form" class="form-horizontal" method="post" action="/admin/edit/ip">
@@ -295,6 +298,7 @@
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <button id="add-ip-address-submit" type="button" class="btn btn-primary">
+                <i class="fa fa-plus"></i>
                 Add
             </button>
         </div>
@@ -408,7 +412,8 @@
                                     </div>
                                     <div class="well span8">
                                         <h4 style="display:inline;">IP Address&nbsp;&nbsp;</h4>
-                                        <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
+                                        <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-primary btn-small" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
+                                            <i class="fa fa-plus"></i>
                                             Add IP Address
                                         </a>
                                         <br />
@@ -451,7 +456,8 @@
                                         <i class="fa fa-flag-o"></i>
                                         Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;
                                     </h4>
-                                    <a class="btn btn-mini" data-toggle="modal" href="/admin/create/flag">
+                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/flag">
+                                        <i class="fa fa-plus"></i>
                                         Add Flags
                                     </a>
                                     <hr>
@@ -503,7 +509,8 @@
                                         <i class="fa fa-ambulance"></i>
                                         Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;
                                     </h4>
-                                    <a class="btn btn-mini" data-toggle="modal" href="/admin/create/hint">
+                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/hint">
+                                        <i class="fa fa-plus"></i>
                                         Add Hint
                                     </a>
                                     <hr>
