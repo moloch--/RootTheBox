@@ -29,6 +29,8 @@ import imghdr
 import logging
 
 from uuid import uuid4
+from netaddr import IPAddress
+from libs.SecurityDecorators import blacklist_ips
 from libs.ConfigManager import ConfigManager
 from models.Team import Team
 from models.Theme import Theme
@@ -56,6 +58,7 @@ class LoginHandler(BaseHandler):
         else:
             self.render('public/login.html', errors=None)
 
+    @blacklist_ips
     def post(self, *args, **kwargs):
         ''' Checks submitted username and password '''
         user = User.by_handle(self.get_argument('account', ''))
@@ -105,11 +108,22 @@ class LoginHandler(BaseHandler):
         self.session.save()
 
     def failed_login(self):
-        ''' Called if username or password is invalid '''
-        logging.info("Failed login attempt from: %s" % self.request.remote_ip)
-        self.render('public/login.html',
-            errors=["Bad username and/or password, try again"]
-        )
+        ''' Called if username/password is invalid '''
+        ip = self.request.remote_ip
+        logging.info("Failed login attempt from: %s" % ip)
+        failed_logins = self.application.settings['failed_logins']
+        if ip in failed_logins:
+            failed_logins[ip] += 1
+        else:
+            failed_logins[ip] = 1
+        if self.application.settings['automatic_ban'] and self.application.settings['blacklist_threshold'] <= failed_logins[ip]:
+            logging.info("Automatically banned IP: %s" % ip)
+            try:
+                if not IPAddress(ip).is_loopback():
+                    self.application.settings['blacklisted_ips'].append(ip)
+            except:
+                logging.exception("Exception while attempting to ban ip address")
+        self.render('public/login.html', errors=["Bad username and/or password, try again"])
 
 
 class RegistrationHandler(BaseHandler):

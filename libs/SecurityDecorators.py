@@ -33,12 +33,17 @@ def authenticated(method):
     def wrapper(self, *args, **kwargs):
         if self.session is not None:
             if self.session.ip_address == self.request.remote_ip:
-                if not self.get_current_user().locked:
-                    return method(self, *args, **kwargs)
+                if not self.request.remote_ip in self.application.settings['blacklisted_ips']:
+                    if not self.get_current_user().locked:
+                        return method(self, *args, **kwargs)
+                    else:
+                        self.session.delete()
+                        self.clear_all_cookies()
+                        self.redirect('/403?locked=true')
                 else:
                     self.session.delete()
                     self.clear_all_cookies()
-                    self.redirect('/403?locked=true')
+                    self.redirect(self.application.settings['login_url'])
             else:
                 logging.warn("Session hijack attempt from %s?" % (
                     self.request.remote_ip,
@@ -61,6 +66,17 @@ def restrict_ip_address(method):
                 self.request.remote_ip, self.request.uri,
             ))
             self.redirect(self.application.settings['forbidden_url'])
+    return wrapper
+
+
+def blacklist_ips(method):
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if self.request.remote_ip not in self.application.settings['blacklisted_ips']:
+            return method(self, *args, **kwargs)
+        else:
+            self.render('public/login.html', errors=None)
     return wrapper
 
 

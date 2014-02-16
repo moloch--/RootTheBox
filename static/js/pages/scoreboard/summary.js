@@ -1,115 +1,114 @@
 var flag_chart;
 var money_chart;
 var game_data;
-function team_details(uuid) {
-    $.getJSON('/scoreboard/ajax/team?uuid='+uuid, function(data) {
-        console.log(data);
-    });
+
+function htmlEncode(value) {
+    return $('<div/>').text(value).html();
 }
-$(function () {
-    $(document).ready(function() {
-        /* Options for both graphs*/
-        Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
-            return {
-                radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
-                stops: [
-                    [0, color],
-                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]
-                ]
-            };
-        });
-        /* Flag Chart */
-        flag_chart = new Highcharts.Chart({
-            chart: {
-                renderTo: 'pie_flags',
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                backgroundColor:'transparent'
+
+/* Highcharts code */
+$(document).ready(function() {
+    /* Options for both graphs*/
+    Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
+        return {
+            radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+            stops: [
+                [0, color],
+                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]
+            ]
+        };
+    });
+    /* Flag Chart */
+    flag_chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'pie_flags',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            backgroundColor:'transparent'
+        },
+        title: {
+            text: '<strong>Flags Captured</strong>',
+            style: {
+                color: '#FFFFFF',
+                font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
+                'text-shadow': '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
             },
-            title: {
-                text: '<strong>Flags Captured</strong>',
-                style: {
+        },
+        tooltip: {
+            enable: true,
+            formatter: function() {
+                return htmlEncode(this.point.y) + ' flag(s)<br /><strong>' + htmlEncode(this.point.percentage.toFixed(2)) + '%</strong>';
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
                     color: '#FFFFFF',
-                    font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
-                    'text-shadow': '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
-                },
-            },
-            tooltip: {
-                pointFormat: '{series.name}: {point.y} flags <strong>{point.percentage}%</strong>',
-                percentageDecimals: 1
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        color: '#FFFFFF',
-                        connectorColor: '#FFFFFF',
-                        formatter: function() {
-                            return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">'+
-                                    this.point.name+'</div>';
-                        }
+                    connectorColor: '#FFFFFF',
+                    formatter: function() {
+                        return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">' +
+                                    htmlEncode(this.point.name) + '</div>';
                     }
                 }
-            },
-            series: [{
-                type: 'pie',
-                name: 'Flags Captured',
-                data: [
-                ]
-            }]
-        });
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Flags Captured',
+            data: []
+        }]
     });
-});
-/* Money Chart */
-$(function () {
-    $(document).ready(function() {
-        money_chart = new Highcharts.Chart({
-            chart: {
-                renderTo: 'pie_money',
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                backgroundColor:'transparent'
+    /* Money Chart */
+    money_chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'pie_money',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            backgroundColor:'transparent'
+        },
+        title: {
+            text: '<strong>Bank Account</strong>',
+            style: {
+                color: '#FFFFFF',
+                font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
+                'text-shadow': '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
             },
-            title: {
-                text: '<strong>Bank Account</strong>',
-                style: {
+        },
+        tooltip: {
+            enabled: true,
+            formatter: function() {
+                return '$' + htmlEncode(this.point.y) + '<br /><strong>' +
+                       htmlEncode(this.point.percentage.toFixed(2)) + '%</strong>';
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
                     color: '#FFFFFF',
-                    font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
-                    'text-shadow': '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
-                },
-            },
-            tooltip: {
-                pointFormat: '{series.name}: ${point.y} <strong>{point.percentage}%</strong>',
-                percentageDecimals: 1
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        color: '#FFFFFF',
-                        connectorColor: '#FFFFFF',
-                        formatter: function() {
-                            return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">'+
-                                    this.point.name+'</div>';
-                        }
+                    connectorColor: '#FFFFFF',
+                    formatter: function() {
+                        return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">' +
+                                    htmlEncode(this.point.name) + '</div>';
                     }
                 }
-            },
-            series: [{
-                type: 'pie',
-                name: 'Team Money',
-                data: [
-                ]
-            }]
-        });
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Team Money',
+            data: []
+        }]
     });
 });
+
 
 /* Update code */
 $(document).ready(function() {

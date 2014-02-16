@@ -1,5 +1,5 @@
 
-function escapeHtml(value) {
+function htmlEncode(value) {
     return $('<div/>').text(value).html();
 }
 
@@ -43,7 +43,7 @@ function drawBotGraph(state) {
         tooltip: {
             enabled: true,
             formatter: function() {
-                return '<strong>' + escapeHtml(this.series.name) + '</strong><br />' + escapeHtml(this.y) + ' bot(s)';
+                return '<strong>' + htmlEncode(this.series.name) + '</strong><br />' + htmlEncode(this.y) + ' bot(s)';
             }
         },
         plotOptions: {
@@ -99,7 +99,7 @@ function drawMoneyGraph(state) {
         tooltip: {
             enabled: true,
             formatter: function() {
-                return '<strong>' + escapeHtml(this.series.name) + '</strong><br /> $' + escapeHtml(this.y);
+                return '<strong>' + htmlEncode(this.series.name) + '</strong><br /> $' + htmlEncode(this.y);
             }
         },
         plotOptions: {
@@ -158,7 +158,7 @@ function drawFlagGraph(state) {
         tooltip: {
             enabled: true,
             formatter: function() {
-                return '<strong>' + escapeHtml(this.series.name) + '</strong><br />' + escapeHtml(this.y) + ' flag(s)';
+                return '<strong>' + htmlEncode(this.series.name) + '</strong><br />' + htmlEncode(this.y) + ' flag(s)';
             }
         },
         plotOptions: {

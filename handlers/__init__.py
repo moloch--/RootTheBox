@@ -123,6 +123,7 @@ urls = [
 
     # Admin Handlers - AdminHandlers.py
     (r'/admin/game', AdminGameHandler),
+    (r'/admin/ban/(add|clear|config)', AdminBanHammerHandler),
     (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
     (r'/admin/create/(.*)', AdminCreateHandler),
     (r'/admin/edit/(.*)', AdminEditHandler),
@@ -204,6 +205,12 @@ app = Application(
     domain=config.domain,
     port=config.listen_port,
 
+    # Anti-bruteforce
+    automatic_ban=False,
+    blacklist_threshold=10,
+    blacklisted_ips=[],
+    failed_logins={},
+
     # Special file directories
     source_code_market_dir=path.abspath('files/source_code_market/'),
 
@@ -219,9 +226,6 @@ app = Application(
     # Flag used to start the game
     game_started=False,
 
-    # Application version
-    version='0.4.0',
-
     # Callback functions
     score_bots_callback = PeriodicCallback(
         score_bots,
@@ -234,6 +238,9 @@ app = Application(
         config.history_snapshot_interval,
         io_loop=io_loop
     ),
+
+    # Application version
+    version='0.4.0',
 
 )
 

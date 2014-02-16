@@ -37,6 +37,7 @@ from tempfile import NamedTemporaryFile
 from string import ascii_letters, digits, printable
 from base64 import b64encode
 from hashlib import sha1
+from netaddr import IPAddress
 from libs.Form import Form
 from libs.LoggingHelpers import ObservableLoggingHandler
 from libs.EventManager import EventManager
@@ -53,11 +54,10 @@ from models.GameLevel import GameLevel
 from models.IpAddress import IpAddress
 from models.Swat import Swat
 from models.Hint import Hint
-from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from models.User import ADMIN_PERMISSION
 from models.Flag import FLAG_STATIC, FLAG_REGEX, FLAG_FILE
 from setup.xmlsetup import import_xml
-
+from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 
 class AdminGameHandler(BaseHandler):
@@ -94,6 +94,54 @@ class AdminGameHandler(BaseHandler):
             user.locked = True
             self.dbsession.add(user)
         self.dbsession.commit()
+
+
+class AdminBanHammerHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        self.uris = {
+            'add': self.ban_add,
+            'clear': self.ban_clear,
+            'config': self.ban_config,
+        }
+        if len(args) == 1 and args[0] in self.uris:
+            self.uris[args[0]]()
+        self.redirect('/user')
+
+    def ban_config(self):
+        ''' Configure the automatic ban settings '''
+        if self.get_argument('automatic_ban', '') == 'true':
+            self.application.settings['automatic_ban'] = True
+            try:
+                threshold = abs(int(self.get_argument('threshold_size', '10')))
+            except ValueError:
+                threshold = 10
+            logging.info("Automatic ban enabled, with threshold of %d" % threshold)
+            self.application.settings['blacklist_threshold'] = threshold
+        else:
+            logging.info("Automatic ban disabled")
+            self.application.settings['automatic_ban'] = False
+
+    def ban_add(self):
+        ''' Add an ip address to the banned list '''
+        try:
+            ip = self.get_argument('ip', '')
+            if not IPAddress(ip).is_loopback():
+                logging.info("Banned new ip: %s" % ip)
+                self.application.settings['blacklisted_ips'].append(ip)
+        except:
+            pass  # Don't care about exceptions here
+
+    def ban_clear(self):
+        ''' Remove an ip from the banned list '''
+        ip = self.get_argument('ip', '')
+        if ip in self.application.settings['blacklisted_ips']:
+            logging.info("Removed ban on ip: %s" % ip)
+            self.application.settings['blacklisted_ips'].remove(ip)
+        self.application.settings['failed_logins'][ip] = 0
 
 
 class AdminCreateHandler(BaseHandler):
