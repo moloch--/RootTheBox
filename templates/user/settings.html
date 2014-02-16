@@ -30,7 +30,7 @@
             {% end %}
         {% end %}
         <div class="row">
-            <div class="span5 well">
+            <div class="span6 well">
                 <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
                     <legend>Change Avatar</legend>
@@ -43,7 +43,7 @@
                     <br />
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary btn-large" type="submit"> Change Avatar </button>
+                            <button class="btn btn-primary" type="submit"> Change Avatar </button>
                         </div>
                     </div>
                 </form>
@@ -67,70 +67,86 @@
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary btn-large" type="submit"> Change Theme </button>
+                            <button class="btn btn-primary" type="submit"> Change Theme </button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="span10 well">
-            <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">
-                {% raw xsrf_form_html() %}
-                <legend>
-                    <i class="fa fa-lock"></i>
-                    Login Password
-                </legend>
-                <div class="control-group">
-                    <label class="control-label" for="old_password">Old Password</label>
-                    <div class="controls">
-                        <input required type="password" name="old_password" id="old_password" placeholder="Old Password" />
+        <div class"row">
+            <div class="well">
+                <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">
+                    {% raw xsrf_form_html() %}
+                    <legend>
+                        <i class="fa fa-lock"></i>
+                        Login Password
+                    </legend>
+                    <div class="control-group">
+                        <label class="control-label" for="old_password">Old Password</label>
+                        <div class="controls">
+                            <input required type="password" name="old_password" id="old_password" placeholder="Old Password" />
+                        </div>
                     </div>
-                </div>
-                <label class="control-label" for="new_password">New Password</label>
-                <div class="control-group">
-                    <div class="controls">
-                        <input required type="password" name="new_password" id="new_password" placeholder="New Password" />
+                    <label class="control-label" for="new_password">New Password</label>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input required type="password" name="new_password" id="new_password" placeholder="New Password" />
+                        </div>
                     </div>
-                </div>
-                <label class="control-label" for="new_password2">Confirm New Password</label>
-                <div class="control-group">
-                    <div class="controls">
-                        <input required type="password" name="new_password2" id="new_password2" placeholder="Confirm Password" />
+                    <label class="control-label" for="new_password2">Confirm New Password</label>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input required type="password" name="new_password2" id="new_password2" placeholder="Confirm Password" />
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit"> Update Password </button>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" type="submit"> Update Password </button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-        <div class="span10 well">
-            <form class="form-horizontal" action="/user/settings/bank_password" method="post" autocomplete="off">
-                {% raw xsrf_form_html() %}
-                <legend>
-                    <i class="fa fa-lock"></i>
-                    Bank Password
-                </legend>
-                <div class="control-group">
-                    <label class="control-label" for="old_bpassword">Current Bank Password</label>
-                    <div class="controls">
-                        <input required type="password" name="old_bpassword" id="old_bpassword" placeholder="Old Password" />
+        <div class="row-fluid">
+            <div class="well">
+                <form class="form-horizontal" action="/user/settings/bank_password" method="post" autocomplete="off">
+                    {% raw xsrf_form_html() %}
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <legend>
+                                <i class="fa fa-lock"></i>
+                                Bank Password
+                            </legend>
+                            <div class="control-group">
+                                <label class="control-label" for="old-password">
+                                    Current Bank Password
+                                </label>
+                                <div class="controls">
+                                    <input required id="old-password" type="password" name="old_bpassword" placeholder="Old Password" />
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="new_bpassword">
+                                    New Bank Password
+                                </label>
+                                <div class="controls">
+                                    <input required type="password" name="new_bpassword" id="new_bpassword" placeholder="New Password" />
+                                </div>
+                            </div>
+                        </div>
+                        {% module Recaptcha() %}
                     </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="new_bpassword">New Bank Password</label>
-                    <div class="controls">
-                        <input required type="password" name="new_bpassword" id="new_bpassword" placeholder="New Password" />
+                    <div class="row">
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn btn-primary" type="submit">
+                                    Update Bank Password
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                {% module Recaptcha() %}
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit"> Update Bank Password </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 {% end %}

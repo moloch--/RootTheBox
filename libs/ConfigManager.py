@@ -287,13 +287,13 @@ class ConfigManager(object):
     @property
     def game_name(self):
         if self._game_name is None:
-            self._game_name = self.config.get("Game", 'game_name')[:16]
+            self._game_name = self.config.get("Game", 'game_name')[:20]
         return self._game_name
 
     @game_name.setter
     def game_name(self, value):
         if value != self._game_name:
-            self._game_name = value[:16]
+            self._game_name = value[:20]
 
     @property
     def restrict_registration(self):
