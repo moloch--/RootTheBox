@@ -167,7 +167,7 @@ class User(DatabaseObject):
 
     @handle.setter
     def handle(self, new_handle):
-        if not 3 < len(new_handle) < 16:
+        if not 3 <= len(new_handle) <= 16:
             raise ValueError("Handle must be 3 - 16 characters")
         self._handle = unicode(new_handle)
 

@@ -64,7 +64,8 @@ def create_levels(levels):
     game_levels = GameLevel.all()
     for index, game_level in enumerate(game_levels):
         if index + 1 < len(game_levels):
-            game_level.next_game_level_id = game_levels[index + 1]
+            game_level.next_level_id = game_levels[index + 1].id
+            logging.info("%r -> %r" % (game_level, game_levels[index + 1]))
             dbsession.add(game_level)
     dbsession.commit()
 

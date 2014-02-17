@@ -7,9 +7,7 @@
 {% end %}
 
 {% block content %}
-    {% from models.GameLevel import GameLevel %}
-    {% include ../notifier.html %}
-    <!-- Unlock Level -->
+{% from models.GameLevel import GameLevel %}
     <div id="unlock-game-level-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -143,6 +141,5 @@
                     {% end %}
                 </div>
             {% end %}
-
     </div>
 {% end %}

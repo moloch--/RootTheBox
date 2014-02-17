@@ -88,7 +88,8 @@ class FlagSubmissionHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Check validity of flag submissions '''
         flag = Flag.by_uuid(self.get_argument('uuid', ''))
-        if flag is not None:
+        user = self.get_current_user()
+        if flag is not None and flag.game_level in user.team.game_levels:
             if flag.is_file and 'flag' in self.request.files:
                 submission = self.request.files['flag'][0]['body']
             elif not flag.is_file:
@@ -117,11 +118,23 @@ class FlagSubmissionHandler(BaseHandler):
                 self.dbsession.add(user.team)
                 flag.value = int(flag.value * 0.90)
                 self.dbsession.add(flag)
-                self.dbsession.commit()
+                self.dbsession.flush()
                 event = self.event_manager.create_flag_capture_event(user, flag)
                 self.new_events.append(event)
+                self._check_level(flag)
+                self.dbsession.commit()
                 return True
         return False
+
+    def _check_level(self, flag):
+        user = self.get_current_user()
+        if len(user.team.level_flags(flag.game_level.number)) == len(flag.game_level.flags):
+            next_level = flag.game_level.next()
+            logging.info("Next level is %r" % next_level)
+            if next_level is not None and next_level not in user.team.game_levels:
+                logging.info("Team completed level, unlocking the next level")
+                user.team.game_levels.append(next_level)
+                self.dbsession.add(user.team)
 
     def render_page(self, flag, errors=[]):
         ''' Wrapper to .render() to avoid duplicate code '''

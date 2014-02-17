@@ -60,7 +60,7 @@ class GameLevel(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a _uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
     def by_number(cls, number):
@@ -123,3 +123,8 @@ class GameLevel(DatabaseObject):
             return -1
         else:
             return 1
+
+    def __repr__(self):
+        return "<GameLevel number: %d, buyout: %d, next: id(%s)>" % (
+            self.number, self.buyout, self.next_level_id
+        )

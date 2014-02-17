@@ -92,7 +92,7 @@ class Team(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
     def by_name(cls, name):
