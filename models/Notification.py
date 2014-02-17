@@ -51,16 +51,14 @@ class Notification(DatabaseObject):
         return dbsession.query(cls).filter_by(user_id=None).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_user_id(cls, user_id):
+    def by_user_id(cls, _id):
         ''' Return notifications for a single user '''
-        return dbsession.query(cls).filter_by(user_id=user_id).order_by(
-            desc(cls.created)
-        ).all()
+        return dbsession.query(cls).filter_by(user_id=_id).order_by(desc(cls.created)).all()
 
     @classmethod
     def new_messages(cls, user_id):

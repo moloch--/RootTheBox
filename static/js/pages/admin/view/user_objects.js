@@ -28,6 +28,8 @@ $(document).ready(function() {
     /* User */
     $("a[id^=edit-user-button]").click(function() {
         getDetails("user", $(this).data("uuid"));
+        $("#user-team-uuid").val($(this).data("team-uuid"));
+        $("#user-hash-algorithm").val($(this).data("hash-algorithm"));
     });
 
     $("#edit-user-submit").click(function() {

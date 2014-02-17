@@ -8,11 +8,13 @@
 
 {% block content %}
     <div class="row">
-        <h1>
-            <i class="fa fa-home"></i>
-            Administrator Panel
-        </h1>
-        <br />
+        <div class="offset1">
+            <h1>
+                <i class="fa fa-home"></i>
+                Administrator Panel
+            </h1>
+            <br />
+        </div>
     </div>
     <div class="row">
         <div class="well span3 offset1">
@@ -30,7 +32,7 @@
                 {% raw xsrf_form_html() %}
                 <input id="clear-ip" name="ip" type="hidden" />
             </form>
-            <div style="margin-left: auto; margin-right: auto; text-align: center;">
+            <div style="margin-left:auto; margin-right:auto; text-align:center;">
                 <br />
                 {% if not handler.application.settings['game_started'] %}
                     <button id="start-game-button" class="btn btn-success btn-large" type="button">
@@ -130,7 +132,6 @@
                     <tr>
                         <th>#</th>
                         <th>IP Address</th>
-                        <!-- Blacklist Button -->
                     </tr>
                 </thead>
                 <tbody id="ip-table">
@@ -138,12 +139,6 @@
                         <tr>
                             <td>{{ index + 1 }}</td>
                             <td>{{ ip }}</td>
-                            <td>
-                                <a class="btn btn-success btn-small" data-ip="{{ ip }}" type="button">
-                                    <i class="fa fa-check-circle"></i>
-                                    Unban IP Address
-                                </a>
-                            </td>
                         </tr>
                     {% end %}
                 </tbody>

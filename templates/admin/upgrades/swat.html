@@ -8,7 +8,6 @@
 
 {% block content %}
 {% from models.Swat import Swat %}
-<!-- Start Modal -->
 <div id="accept-bribe-modal" class="modal hide fade" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -75,8 +74,6 @@
         </button>
     </div>
 </div>
-<!-- End Modal -->
-<!-- Start Visable -->
 <div class="container">
     <h1>
         <i class="fa fa-crosshairs"></i>
@@ -96,50 +93,44 @@
         <h3>Pending Bribes</h3>
         <hr>
         {% if len(pending_bribes) != 0 %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Created</th>
-                    <th>User Handle</th>
-                    <th>Target Handle</th>
-                    <th>Bribe Amount</th>
-                    <th>Previous Bribes</th>
-                    <th>
-                        <!-- Accept Button -->
-                    </th>
-                    <th>
-                        <!-- Decline Button -->
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for index, swat in enumerate(pending_bribes) %}
-                <tr>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ swat.created }}</td>
-                    <td>{{ swat.user.handle }}</td>
-                    <td>{{ swat.target.handle }}</td>
-                    <td>${{ swat.paid }}</td>
-                    <td>{{ Swat.count_completed_by_target_id(swat.target.id) }}</td>
-                    <td>
-                        <a id="accept-bribe-button{{ index }}" class="btn btn-mini btn-success" data-toggle="modal" href="#accept-bribe-modal" data-uuid="{{ swat.uuid }}">
-                            Accept
-                        </a>
-                    </td>
-                    <td>
-                        <a id="decline-bribe-button{{ index }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#decline-bribe-modal" data-uuid="{{ swat.uuid }}">
-                            Decline
-                        </a>
-                    </td>
-                </tr>
-                {% end %}
-            </tbody>
-        </table>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Created</th>
+                        <th>User Handle</th>
+                        <th>Target Handle</th>
+                        <th>Bribe Amount</th>
+                        <th>Previous Bribes</th>
+                        <th><!-- Accept Button --></th>
+                        <th><!-- Decline Button --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, swat in enumerate(pending_bribes) %}
+                    <tr>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ swat.created }}</td>
+                        <td>{{ swat.user.handle }}</td>
+                        <td>{{ swat.target.handle }}</td>
+                        <td>${{ swat.paid }}</td>
+                        <td>{{ Swat.count_completed_by_target_id(swat.target.id) }}</td>
+                        <td>
+                            <a id="accept-bribe-button{{ index }}" class="btn btn-mini btn-success" data-toggle="modal" href="#accept-bribe-modal" data-uuid="{{ swat.uuid }}">
+                                Accept
+                            </a>
+                        </td>
+                        <td>
+                            <a id="decline-bribe-button{{ index }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#decline-bribe-modal" data-uuid="{{ swat.uuid }}">
+                                Decline
+                            </a>
+                        </td>
+                    </tr>
+                    {% end %}
+                </tbody>
+            </table>
         {% else %}
-        <br />
-        No Pending Bribes...
-        <br />
+            <br />No Pending Bribes...<br />
         {% end %}
     </div>
     <br />
@@ -147,39 +138,36 @@
         <h3>Bribes in Progress</h3>
         <hr>
         {% if len(in_progress_bribes) != 0 %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Created</th>
-                    <th>User Handle</th>
-                    <th>Target Handle</th>
-                    <th>Bribe Amount</th>
-                    <th>
-                        <!-- Complete Button -->
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for index, swat in enumerate(in_progress_bribes) %}
-                <tr>
-                    <td>{{ index + 1}}</td>
-                    <td>{{ swat.created }}</td>
-                    <td>{{ swat.user.handle }}</td>
-                    <td>{{ swat.target.handle }}</td>
-                    <td>${{ swat.paid }}</td>
-                    <td>
-                        <a id="complete-bribe-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#complete-bribe-modal" data-uuid="{{ swat.uuid }}">
-                            Complete
-                        </a>
-                    </td>
-                </tr>
-                {% end %}
-            </tbody>
-        </table>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Created</th>
+                        <th>User Handle</th>
+                        <th>Target Handle</th>
+                        <th>Bribe Amount</th>
+                        <th><!-- Complete Button --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, swat in enumerate(in_progress_bribes) %}
+                    <tr>
+                        <td>{{ index + 1}}</td>
+                        <td>{{ swat.created }}</td>
+                        <td>{{ swat.user.handle }}</td>
+                        <td>{{ swat.target.handle }}</td>
+                        <td>${{ swat.paid }}</td>
+                        <td>
+                            <a id="complete-bribe-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#complete-bribe-modal" data-uuid="{{ swat.uuid }}">
+                                Complete
+                            </a>
+                        </td>
+                    </tr>
+                    {% end %}
+                </tbody>
+            </table>
         {% else %}
-        <br />No Bribes in Progress...
-        <br />
+            <br />No Bribes in Progress...<br />
         {% end %}
     </div>
     <br />
@@ -201,9 +189,9 @@
                 <tbody>
                     {% for index, swat in enumerate(completed_bribes) %}
                         {% if swat.is_declined() %}
-                        <tr class="error">
+                            <tr class="error">
                         {% else %}
-                        <tr class="success">
+                            <tr class="success">
                         {% end %}
                             <td>{{ index + 1}}</td>
                             <td>{{ swat.created }}</td>
@@ -211,18 +199,16 @@
                             <td>{{ swat.target.handle }}</td>
                             <td>${{ swat.paid }}</td>
                             {% if swat.is_declined() %}
-                            <td>Declined</td>
+                                <td>Declined</td>
                             {% else %}
-                            <td>Accepted</td>
+                                <td>Accepted</td>
                             {% end %}
                         </tr>
                     {% end %}
                 </tbody>
             </table>
         {% else %}
-            <br />
-            No Completed Bribes...
-            <br />
+            <br />No Completed Bribes...<br />
         {% end %}
     </div>
 </div>

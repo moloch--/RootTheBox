@@ -3,69 +3,69 @@
 {% block title %}Wall of Sheep{% end %}
 
 {% block content %}
-    {% include ../notifier.html %}
-    {% from models import WallOfSheep %}
-
-    <div class="container">
-        <h1>Wall of Sheep</h1>
-        <br />
-        <div class="well">
-            {% if len(flock) != 0 %}
-                <h3>Sheep</h3>
-                <table class="table table-striped">
-                    <thead>
+{% from models import WallOfSheep %}
+<div class="container">
+    <h1>Wall of Sheep</h1>
+    <br />
+    <div class="well">
+        {% if len(flock) != 0 %}
+            <h3>Sheep</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date / Time</th>
+                        <th>Handle</th>
+                        <th>Plaintext</th>
+                        <th>Cash Stolen</th>
+                        <th>Cracked by</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, sheep in enumerate(flock) %}
                         <tr>
-                            <th>#</th>
-                            <th>Date / Time</th>
-                            <th>Handle</th>
-                            <th>Plaintext</th>
-                            <th>Cash Stolen</th>
-                            <th>Cracked by</th>
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ sheep.created }}</td>
+                            <td>{{ sheep.victim.handle }}</td>
+                            <td>{{ sheep.preimage }}</td>
+                            <td>${{ sheep.value }}</td>
+                            <td>{{ sheep.cracker.handle }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for index, sheep in enumerate(flock) %}
-                            <tr>
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ sheep.created }}</td>
-                                <td>{{ sheep.victim.handle }}</td>
-                                <td>{{ sheep.preimage }}</td>
-                                <td>${{ sheep.value }}</td>
-                                <td>{{ sheep.cracker.handle }}</td>
-                            </tr>
-                        {% end %}
-                    </tbody>
-                </table>
-            {% else %}
-                <strong>No sheep yet; check back later.</strong>
-                <br />
-            {% end %}
-        </div>
-        {% if len(leaderboard) != 0 %}
+                    {% end %}
+                </tbody>
+            </table>
+        {% else %}
+            <strong>No sheep yet; check back later.</strong>
             <br />
-            <div class="well">
-                <h3>Password Cracking Leaderboard</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Handle</th>
-                            <th>Team</th>
-                            <th>Passwords Cracked</th>
-                            <th>Total Cash Stolen<th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for entry in leaderboard %}
-                            <tr>
-                                <td>{{ entry[0].handle }}</td>
-                                <td>{{ entry[0].team.name }}</td>
-                                <td>{{ entry[1] }}</td>
-                                <td>${{ entry[2] }}</td>
-                            </tr>
-                        {% end %}
-                    </tbody>
-                </table>
-            </div>
         {% end %}
     </div>
+    {% if len(leaderboard) != 0 %}
+        <br />
+        <div class="well">
+            <h3>Password Cracking Leaderboard</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Handle</th>
+                        <th>Team</th>
+                        <th>Passwords Cracked</th>
+                        <th>Total Cash Stolen<th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, entry in enumerate(leaderboard) %}
+                        <tr>
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ entry[0].handle }}</td>
+                            <td>{{ entry[0].team.name }}</td>
+                            <td>{{ entry[1] }}</td>
+                            <td>${{ entry[2] }}</td>
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+        </div>
+    {% end %}
+</div>
 {% end %}

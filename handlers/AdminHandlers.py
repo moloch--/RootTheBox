@@ -606,16 +606,16 @@ class AdminEditHandler(BaseHandler):
                     else:
                         raise ValueError("Handle is already in use")
                 hash_algorithm = self.get_argument('hash_algorithm', '')
-                if hash_algorithm in user.algorithms and user.algorithm != hash_algorithm:
-                    if 0 < len(self.get_argument('bank_password', '')):
-                        logging.info("Updated %s's hashing algorithm %s -> %s" %
-                            (user.handle, user.algorithm, hash_algorithm,)
-                        )
-                        user.algorithm = hash_algorithm
+                if hash_algorithm != user.algorithm:
+                    if hash_algorithm in user.algorithms:
+                        if 0 < len(self.get_argument('bank_password', '')):
+                            logging.info("Updated %s's hashing algorithm %s -> %s" %
+                                (user.handle, user.algorithm, hash_algorithm,))
+                            user.algorithm = hash_algorithm
+                        else:
+                            raise ValueError("You must provide a new bank password when updating the hashing algorithm")
                     else:
-                        raise ValueError("You must provide a new bank password when updating the hashing algorithm")
-                else:
-                    raise ValueError("Not a valid hash algorithm")
+                        raise ValueError("Not a valid hash algorithm")
                 password = self.get_argument('password', '')
                 if 0 < len(password):
                     user.password = password
@@ -623,14 +623,16 @@ class AdminEditHandler(BaseHandler):
                 if 0 < len(bank_password):
                     user.bank_password = bank_password
                 team = Team.by_uuid(self.get_argument('team_uuid', ''))
-                if team is not None and user not in team.members:
-                    logging.info("Updated %s's team %s -> %s" %
-                        (user.handle, user.team_id, team.name))
-                    user.team_id = team.id
+                if team is not None:
+                    if user not in team.members:
+                        logging.info("Updated %s's team %s -> %s" %
+                            (user.handle, user.team_id, team.name))
+                        user.team_id = team.id
                 else:
                     raise ValueError("Team does not exist in database")
                 self.dbsession.add(user)
                 self.dbsession.commit()
+                self.redirect('/admin/view/user_objects')
             except ValueError as error:
                 self.render("admin/view/user_objects.html", errors=["%s" % error])
         else:

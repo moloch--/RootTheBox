@@ -21,7 +21,6 @@ $(document).ready(function() {
 
     $("#ban-ip-button").click(function() {
         $("#ban-ip").val($(this).data("ip"));
-                alert('foobar');
         $("#ban-ip-form").submit();
     });
 
