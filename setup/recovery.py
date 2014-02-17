@@ -83,7 +83,7 @@ class RecoveryConsole(cmd.Cmd):
         else:
             print(WARN + "Syntax error; see 'help ls'.")
 
-    def do_delete(self, username):
+    def do_rmuser(self, username):
         '''
         Delete a user from the database
         Usage: delete <handle>
@@ -97,8 +97,7 @@ class RecoveryConsole(cmd.Cmd):
             if raw_input(PROMPT + "Delete [y/n]: ").lower() == 'y':
                 permissions = Permission.by_user_id(user.id)
                 for perm in permissions:
-                    print(
-                        INFO + "Removing permission: " + perm.name)
+                    print(INFO + "Removing permission: " + perm.name)
                     dbsession.delete(perm)
                 dbsession.flush()
                 dbsession.delete(user)
@@ -155,8 +154,7 @@ class RecoveryConsole(cmd.Cmd):
             dbsession.add(permission)
             dbsession.add(user)
             dbsession.commit()
-            print(INFO + "Successfully granted %s permissions to %s." %
-                (name, user.handle,))
+            print(INFO + "Successfully granted %s permissions to %s." % (name, user.handle,))
 
     def do_strip(self, username):
         '''
@@ -196,8 +194,7 @@ class RecoveryConsole(cmd.Cmd):
                 user.team_id = team.id
                 dbsession.add(user)
                 dbsession.commit()
-                print(INFO + "Successfully changed %s's team to %s." % (
-                        user.handle, team.name))
+                print(INFO + "Successfully changed %s's team to %s." % (user.handle, team.name))
             else:
                 print(WARN + "Team does not exist.")
 
