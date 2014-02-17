@@ -57,7 +57,7 @@ class RecoveryConsole(cmd.Cmd):
             sys.stdout.flush()
             user.password = getpass.getpass()
             dbsession.add(user)
-            dbsession.flush()
+            dbsession.commit()
             print(INFO + "Updated %s password successfully." % user.handle)
 
     def do_ls(self, obj):
@@ -79,13 +79,9 @@ class RecoveryConsole(cmd.Cmd):
                 print(INFO + bold + user.handle + W + team + permissions)
         elif obj.lower() == "team" or obj.lower() == "teams":
             for team in Team.all():
-                print(INFO + team.name)
+                print(INFO + team.name + ": " + ", ".join([user.handle for user in team.members]))
         else:
             print(WARN + "Syntax error; see 'help ls'.")
-
-    def do_teams(self, nop):
-        for team in Team.all():
-            print(INFO + team.name + ": " + ", ".join([user.handle for user in team.members]))
 
     def do_delete(self, username):
         '''
@@ -106,7 +102,7 @@ class RecoveryConsole(cmd.Cmd):
                     dbsession.delete(perm)
                 dbsession.flush()
                 dbsession.delete(user)
-                dbsession.flush()
+                dbsession.commit()
                 print(INFO + "Successfully deleted %s from database." % username)
 
     def do_mkuser(self, nop):
@@ -124,7 +120,7 @@ class RecoveryConsole(cmd.Cmd):
             sys.stdout.flush()
             user.password = getpass.getpass()
             dbsession.add(user)
-            dbsession.flush()
+            dbsession.commit()
             print(INFO + "Successfully created new account.")
         except:
             print(WARN + "Failed to create new account.")
@@ -140,7 +136,7 @@ class RecoveryConsole(cmd.Cmd):
                 motto=unicode(raw_input(PROMPT + "Team motto: ")),
             )
             dbsession.add(team)
-            dbsession.flush()
+            dbsession.commit()
             print(INFO + "Successfully created new team.")
         except:
             print(WARN + "Failed to create new team.")
@@ -161,7 +157,7 @@ class RecoveryConsole(cmd.Cmd):
             )
             dbsession.add(permission)
             dbsession.add(user)
-            dbsession.flush()
+            dbsession.commit()
             print(INFO + "Successfully granted %s permissions to %s." %
                 (name, user.name,)
             )
@@ -184,7 +180,7 @@ class RecoveryConsole(cmd.Cmd):
                     print(
                         INFO + "Removing permission: " + perm.permission_name)
                     dbsession.delete(perm)
-            dbsession.flush()
+            dbsession.commit()
             print(INFO + "Successfully removed %s's permissions." % user.handle)
 
     def do_chteam(self, username):
@@ -204,7 +200,7 @@ class RecoveryConsole(cmd.Cmd):
             if team is not None:
                 user.team_id = team.id
                 dbsession.add(user)
-                dbsession.flush()
+                dbsession.commit()
                 print(INFO + "Successfully changed %s's team to %s." % (
                         user.handle, team.name
                 ))
