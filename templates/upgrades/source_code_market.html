@@ -2,40 +2,38 @@
 
 {% block title %}Source Code Market{% end %}
 
+{% block header %}
+<script src="/static/js/pages/upgrades/source_code_market.js"></script>
+{% end %}
+
 {% block content %}
-    {% include ../notifier.html %}
-    <!-- Buy Source Code -->
-    <div id="buySourceCodeModal" class="modal hide fade" style="display: none; ">
+    <div id="buy-source-code-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>Buy Source Code</h3>
         </div>
         <div class="modal-body">
-            <form id="buy-src" class="form-horizontal" action="/source_code_market" method="post">
+            <form id="buy-source-code-form" class="form-horizontal" action="/source_code_market" method="post">
                 {% raw xsrf_form_html() %}
-                <input id="buy_box_uuid" type="hidden" name="box_uuid" value="" />
+                <input id="buy-source-code-uuid" type="hidden" name="box_uuid" value="" />
             </form>
-            <p id="buy_dialog">
+            <p id="buy-source-code-dialog">
                 Are you sure you want to buy this code?
             </p>
             <br />
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
-            <button class="btn btn-primary" type="button" onclick="document.forms['buy-src'].submit();">
+            <button id="buy-source-code-submit" class="btn btn-primary" type="button">
                 Buy
             </button>
         </div>
-    </div><!-- End Modal -->
-    <script>
-        function buy_src(box_uuid, price) {
-            $("#buy_box_uuid").val(box_uuid);
-            msg = "Are you sure you want to buy this code for $" + price + "?";
-            $("#buy_dialog").text(msg);
-        }
-    </script>
+    </div>
     <div class="container">
-        <h1>Source Code Market</h1>
+        <h1>
+            <i class="fa fa-fw fa-code"></i>
+            Source Code Market
+        </h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
@@ -47,7 +45,7 @@
             {% end %}
         {% end %}
         <div class="well">
-            {% if 0 == len(boxes) %}
+            {% if len(boxes) == 0 %}
                 <br />
                 <h4 style="text-align:center;">No Source Code For Sale at This Time</h4>
                 <br />
@@ -60,8 +58,8 @@
                             <th>Level</th>
                             <th>Price</th>
                             <th>File Name</th>
-                            <th>MD5 Checksum</th>
-                            <th><!-- Button --></th>
+                            <th>Checksum</th>
+                            <th><!-- Buy/Download --></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -79,15 +77,14 @@
                                 <td>{{ box.source_code.checksum }}</td>
                                 {% if box.source_code in user.team.purchased_source_code %}
                                     <td>
-                                        <a class="btn btn-mini btn-success" data-toggle="modal"
-                                           onclick="window.open('/source_code_market/download?uuid={{ box.uuid }}', '_newtab');">
-                                            Download Souce Code
+                                        <a id="download-source-code-button{{ index }}" class="btn btn-mini btn-success" data-toggle="modal" data-uuid="{{ box.uuid }}">
+                                            <i class="fa fa-fw fa-download"></i>
+                                            Download
                                         </a>
                                     </td>
                                 {% else %}
                                     <td>
-                                        <a class="btn btn-mini" data-toggle="modal" href="#buySourceCodeModal"
-                                            onclick="buy_src('{{ box.uuid }}', {{ box.source_code.price }})">
+                                        <a id="buy-source-code-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#buy-source-code-modal" data-uuid="{{ box.uuid }}" data-price="{{ box.source_code.price }}">
                                             Buy Source Code
                                         </a>
                                     </td>
