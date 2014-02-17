@@ -13,7 +13,7 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
-                <i class="fa fa-pencil"></i>
+                <i class="fa fa-fw fa-pencil"></i>
                 Edit Team
             </h3>
         </div>
@@ -38,7 +38,7 @@
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <button id="edit-team-submit" type="button" class="btn btn-primary">
-                <i class="fa fa-save"></i>
+                <i class="fa fa-fw fa-save"></i>
                 Save
             </button>
         </div>
@@ -48,7 +48,7 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
-                <i class="fa fa-pencil"></i>
+                <i class="fa fa-fw fa-pencil"></i>
                 Edit User
             </h3>
         </div>
@@ -101,7 +101,7 @@
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <button id="edit-user-submit" type="button" class="btn btn-primary">
-                <i class="fa fa-save"></i>
+                <i class="fa fa-fw fa-save"></i>
                 Save
             </button>
         </div>
@@ -109,7 +109,7 @@
     <div id="delete-user-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-times-circle-o"></i> Delete User</h3>
+            <h3><i class="fa fa-fw fa-times-circle-o"></i> Delete User</h3>
         </div>
         <div class="modal-body">
         <p>
@@ -123,7 +123,7 @@
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <button id="delete-user-submit" type="button" class="btn btn-danger">
-                <i class="fa fa-times-circle-o"></i>
+                <i class="fa fa-fw fa-times-circle-o"></i>
                 Delete
             </button>
         </div>
@@ -137,7 +137,7 @@
     <div class="row-fluid">
         <div class="span10 offset1">
             <h1>
-                <i class="fa fa-group"></i>
+                <i class="fa fa-fw fa-group"></i>
                 User Management
             </h1>
             <br />
@@ -157,8 +157,8 @@
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
                     <h4 style="display:inline;">&quot;{{ team.motto }}&quot;&nbsp;&nbsp;</h4>
-                    <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}">
-                        <i class="fa fa-pencil"></i>
+                    <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}" style="float:right;">
+                        <i class="fa fa-fw fa-pencil"></i>
                         Edit Team
                     </a>
                     <hr />
@@ -202,25 +202,25 @@
                                     <td>
                                         {% if user.locked %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
-                                                <i class="fa fa-unlock"></i>
+                                                <i class="fa fa-fw fa-unlock"></i>
                                                 Unlock
                                             </a>
                                         {% else %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-warning" data-uuid="{{ user.uuid }}">
-                                                <i class="fa fa-lock"></i>
+                                                <i class="fa fa-fw fa-lock"></i>
                                                 Lock
                                             </a>
                                         {% end %}
                                     </td>
                                     <td>
                                         <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}" data-hash-algorithm="{{ user.algorithm }}" data-team-uuid="{{ user.team.uuid }}">
-                                            <i class="fa fa-pencil"></i>
+                                            <i class="fa fa-fw fa-pencil"></i>
                                             Edit
                                         </a>
                                     </td>
                                     <td>
                                         <a id="delete-user-button-{{ user.uuid }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-user-modal" data-uuid="{{ user.uuid }}">
-                                            <i class="fa fa-times-circle-o"></i>
+                                            <i class="fa fa-fw fa-times-circle-o"></i>
                                             Delete
                                         </a>
                                     </td>

@@ -43,9 +43,15 @@ class RegistrationToken(DatabaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
-    def by_id(cls, ident):
-        ''' Returns a the object with id of ident '''
-        return dbsession.query(cls).filter_by(id=ident).first()
+    def by_id(cls, _id):
+        ''' Returns a the object with id of _id '''
+        return dbsession.query(cls).filter_by(id=_id).first()
+
+    @classmethod
+    def count(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).count()
+
 
     @classmethod
     def by_value(cls, value):

@@ -2,31 +2,31 @@
 
 {% block title %}Create RegToken{% end %}
 
+{% block header %}
+<script src="/static/js/pages/admin/view/token.js"></script>
+{% end %}
+
 {% block content %}
+{% from models.RegistrationToken import RegistrationToken %}
     <div class="container">
         <h1>Registration Tokens</h1>
         <br />
-        <script>
-            function del_token(token_value) {
-                $('input[name=token_value]').val(token_value);
-                document.token_form.submit();
-            }    
-        </script>
-        <form name="token_form" action="/admin/regtoken/view" method="post">
+        <form id="token-form" action="/admin/regtoken/view" method="post">
             {% raw xsrf_form_html() %}
-            <input name="token_value" type="hidden" value="blank" />
+            <input id="token-value" name="token_value" type="hidden" value="blank" />
         </form>
         {% if errors != None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                      <h4 class="alert-heading">ERROR</h4>
-                          {{ error }}
+                        <h4 class="alert-heading">ERROR</h4>
+                        {{ error }}
                 </div>
             {% end %}
         {% end %}
         <div class="well">
-            <table class="table table-hover">
+            {% if RegistrationToken.count() %}
+            <table class="table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -36,21 +36,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% from models.RegistrationToken import RegistrationToken %}
-                    {% for token in RegistrationToken.all() %}
+                    {% for index, token in enumerate(RegistrationToken.all()) %}
                         <tr>
-                          <td>{{ token.id }}</td>
-                          <td>{{ token.value }}</td>
-                          <td>{{ token.used }}</td>
-                          <td>
-                              <button class="btn btn-danger btn-mini" type="button" onclick="del_token('{{ token.value }}')">
-                                  Delete
-                              </button>
-                          </td>
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ token.value }}</td>
+                            <td>{{ token.used }}</td>
+                            <td>
+                                <a id="delete-token-button{{ index }}" class="btn btn-danger btn-mini" type="button" data-value="{{ token.value }}">
+                                    <i class="fa fa-fw fa-times-circle-o"></i>
+                                    Delete
+                                </a>
+                            </td>
                         </tr>
                     {% end %}
                 </tbody>
             </table>
+            {% else %}
+                <h4>No Tokens in Database</h4>
+            {% end %}
         </div>
     </div>
 {% end %}
