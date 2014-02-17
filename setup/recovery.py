@@ -98,7 +98,7 @@ class RecoveryConsole(cmd.Cmd):
                 permissions = Permission.by_user_id(user.id)
                 for perm in permissions:
                     print(
-                        INFO + "Removing permission: " + perm.permission_name)
+                        INFO + "Removing permission: " + perm.name)
                     dbsession.delete(perm)
                 dbsession.flush()
                 dbsession.delete(user)
@@ -151,16 +151,12 @@ class RecoveryConsole(cmd.Cmd):
             print(WARN + "'%s' user not found in database." % username)
         else:
             name = raw_input(PROMPT + "Add permission: ")
-            permission = Permission(
-                permission_name=unicode(name),
-                user_id=user.id
-            )
+            permission = Permission(name=unicode(name), user_id=user.id)
             dbsession.add(permission)
             dbsession.add(user)
             dbsession.commit()
             print(INFO + "Successfully granted %s permissions to %s." %
-                (name, user.name,)
-            )
+                (name, user.handle,))
 
     def do_strip(self, username):
         '''
@@ -177,8 +173,7 @@ class RecoveryConsole(cmd.Cmd):
                 print(WARN + "%s has no permissions." % user.handle)
             else:
                 for perm in permissions:
-                    print(
-                        INFO + "Removing permission: " + perm.permission_name)
+                    print(INFO + "Removing permission: " + perm.name)
                     dbsession.delete(perm)
             dbsession.commit()
             print(INFO + "Successfully removed %s's permissions." % user.handle)
@@ -202,8 +197,7 @@ class RecoveryConsole(cmd.Cmd):
                 dbsession.add(user)
                 dbsession.commit()
                 print(INFO + "Successfully changed %s's team to %s." % (
-                        user.handle, team.name
-                ))
+                        user.handle, team.name))
             else:
                 print(WARN + "Team does not exist.")
 

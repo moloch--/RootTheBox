@@ -41,6 +41,10 @@ class Permission(DatabaseObject):
         ''' Returns a the object with id of _id '''
         return dbsession.query(cls).filter_by(id=_id).first()
 
+    @classmethod
+    def by_user_id(cls, _id):
+        return dbsession.query(cls).filter_by(user_id=_id).all()
+
     def to_xml(self, parent):
         pass
 
