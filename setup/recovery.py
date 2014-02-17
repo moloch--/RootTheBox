@@ -29,7 +29,10 @@ import getpass
 
 from libs.ConsoleColors import *
 from libs.Notifier import Notifier
-from models import dbsession, User, Permission, Team
+
+# We have to import all of the classes to avoid mapper errors
+from setup.create_database import *
+from models import dbsession
 
 
 class RecoveryConsole(cmd.Cmd):
@@ -79,6 +82,10 @@ class RecoveryConsole(cmd.Cmd):
                 print(INFO + team.name)
         else:
             print(WARN + "Syntax error; see 'help ls'.")
+
+    def do_teams(self, nop):
+        for team in Team.all():
+            print(INFO + team.name + ": " + ", ".join([user.handle for user in team.members]))
 
     def do_delete(self, username):
         '''
@@ -181,8 +188,8 @@ class RecoveryConsole(cmd.Cmd):
             print(INFO + "Successfully removed %s's permissions." % user.handle)
 
     def do_chteam(self, username):
-        ''' 
-        Change a user's team 
+        '''
+        Change a user's team
         Usage: chteam <handle>
         '''
         user = User.by_handle(username)
@@ -211,7 +218,7 @@ class RecoveryConsole(cmd.Cmd):
         '''
         user = User.by_id(user_id)
         if user is None:
-            print(WARN + "'%s' user not found in database." % username)
+            print(WARN + "'%s' user not found in database." % user_id)
         else:
             print INFO + repr(user)
 

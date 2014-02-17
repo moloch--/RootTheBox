@@ -34,8 +34,8 @@ class GameLevel(DatabaseObject):
     ''' Game Level definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    _number = Column(Integer, unique=True, nullable=False)
     next_level_id = Column(Integer, ForeignKey('game_level.id'))
+    _number = Column(Integer, unique=True, nullable=False)
     _buyout = Column(Integer, nullable=False)
 
     boxes = relationship("Box",
