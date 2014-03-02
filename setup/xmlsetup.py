@@ -61,7 +61,8 @@ def create_levels(levels):
             except:
                 logging.exception("Failed to import game level #%d" % (index + 1))
     dbsession.flush()
-    for index, game_level in enumerate(GameLevel.all()):
+    game_levels = GameLevel.all()
+    for index, game_level in enumerate(game_levels):
         if index + 1 < len(game_levels):
             game_level.next_level_id = game_levels[index + 1].id
             logging.info("%r -> %r" % (game_level, game_levels[index + 1]))
