@@ -38,7 +38,6 @@ from string import ascii_letters, digits, printable
 from base64 import b64encode
 from hashlib import sha1
 from netaddr import IPAddress
-from libs.Form import Form
 from libs.LoggingHelpers import ObservableLoggingHandler
 from libs.EventManager import EventManager
 from libs.ConfigManager import ConfigManager
