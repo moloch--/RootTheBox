@@ -361,7 +361,6 @@ $(document).ready(function() {
                 this.echo(" ");
                 this.echo(" [[b;;]accounts] - Get a list of active bank accounts");
                 this.echo(" [[b;;]users]    - Get information on users");
-                this.echo(" [[b;;]report]   - Generate a report on an account");
                 this.echo(" [[b;;]transfer] - Transfer funds from one account to another");
                 this.echo(" [[b;;]intro]    - Change console intro animation");
                 this.echo(" ");
