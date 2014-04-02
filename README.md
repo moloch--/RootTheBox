@@ -14,7 +14,7 @@ Money can be used to unlock new levels, buy hints to flags, download a target's 
 
 Player's "bank account passwords" are also publically displayed by the scoring engine, allowing players to crack each other's passwords and steal each other's money.
 
-More details: [Root the Box](http://rootthebox.com/)
+More details: [Root the Box](http://root-the-box.com/)
 
 Features
 -------------------
