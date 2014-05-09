@@ -49,12 +49,12 @@ def create():
     from libs.ConfigManager import ConfigManager  # Sets up logging
     print(INFO+'%s : Creating the database ...' % current_time())
     from setup.create_database import create_tables, engine, metadata
-    dev = ConfigManager.instance().bootstrap == 'developement'
-    create_tables(engine, metadata, dev)
+    is_devel = ConfigManager.instance().bootstrap.startswith('dev')
+    create_tables(engine, metadata, is_devel)
     print(INFO+'%s : Bootstrapping the database ...' % current_time())
     import setup.bootstrap
     # Display Details
-    if dev:
+    if is_devel:
         environ = bold + R + "Developement boot strap" + W
         details = ", admin password is 'nimda123'."
     else:
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Root the Box: A Game of Hackers',
     )
-    parser.add_argument('-v', '--version',
+    parser.add_argument("-v", "--version",
         action='version',
         version=__version__,
     )
@@ -147,8 +147,7 @@ if __name__ == '__main__':
         nargs='*',
         help="import xml file(s), or directories of xml files",
     )
-    parser.add_argument(
-        "-r", "--recovery",
+    parser.add_argument("-r", "--recovery",
         action='store_true',
         help="start the admin recovery console",
     )

@@ -20,3 +20,4 @@ pip install sqlalchemy
 pip install pylibmc
 pip install defusedxml
 pip install netaddr
+pip install nose

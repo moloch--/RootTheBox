@@ -53,15 +53,11 @@ class BaseHandler(RequestHandler):
 
     def initialize(self):
         ''' Setup sessions, etc '''
-        self.session = None
+        self._session = None
         self._dbsession = dbsession
         self.new_events = []
         self.event_manager = self.application.settings['event_manager']
         self.config = ConfigManager.instance()
-        session_id = self.get_secure_cookie('session_id')
-        if session_id is not None:
-            self.session = self._create_session(session_id)
-            self.session.refresh()
 
     def get_current_user(self):
         ''' Get current user object from database '''
@@ -86,29 +82,45 @@ class BaseHandler(RequestHandler):
 
     def _connect_memcached(self):
         ''' Connects to Memcached instance '''
-        self.memd_conn = pylibmc.Client(
-            [self.config.memcached],
-            binary=True,
-        )
+        self.memd_conn = pylibmc.Client([self.config.memcached], binary=True)
         self.memd_conn.behaviors['no_block'] = 1  # async I/O
 
-    def _create_session(self, session_id=None):
+    def _create_session(self):
         ''' Creates a new session '''
         self._connect_memcached()
         kwargs = {
-            'duration': self.config.session_age,
+            'connection': self.memd_conn,
             'ip_address': self.request.remote_ip,
-            'regeneration_interval': self.config.session_regeneration_interval,
         }
-        new_session = None
-        old_session = MemcachedSession.load(session_id, self.memd_conn)
-        if old_session is None or old_session._is_expired():
-            new_session = MemcachedSession(self.memd_conn, **kwargs)
-        if old_session is not None:
-            if old_session._should_regenerate():
-                old_session.refresh(new_session_id=True)
-            return old_session
+        new_session = MemcachedSession(**kwargs)
+        new_session.save()
         return new_session
+
+    @property
+    def session(self):
+        if self._session is None:
+            session_id = self.get_secure_cookie('session_id')
+            if session_id is not None:
+                self._session = self._get_session(session_id)
+        return self._session
+
+    @session.setter
+    def session(self, new_session):
+        self._session = new_session
+
+    def _get_session(self, session_id):
+        self._connect_memcached()
+        kwargs = {
+            'connection': self.memd_conn,
+            'session_id': session_id,
+            'ip_address': self.request.remote_ip,
+        }
+        old_session = MemcachedSession.load(**kwargs)
+        if old_session and not old_session.is_expired():
+            old_session.refresh()
+            return old_session
+        else:
+            return None
 
     def set_default_headers(self):
         ''' Set security HTTP headers '''
@@ -179,9 +191,9 @@ class BaseHandler(RequestHandler):
 
     def _event_callbacks(self):
         ''' Fire any new events '''
-        ioloop = IOLoop.instance()
+        io_loop = IOLoop.instance()
         for event in self.new_events:
-            ioloop.add_callback(event[0], **event[1])
+            io_loop.add_callback(event[0], **event[1])
 
 
 class BaseWebSocketHandler(WebSocketHandler):
@@ -189,34 +201,23 @@ class BaseWebSocketHandler(WebSocketHandler):
 
     def initialize(self):
         ''' Setup sessions, etc '''
-        self.session = None
         self.manager = EventManager.instance()
         self.config = ConfigManager.instance()
+
+    @property
+    def session(self, session_id):
         session_id = self.get_secure_cookie('session_id')
         if session_id is not None:
-            self.conn = pylibmc.Client(
-                [self.config.memcached],
-                binary=True
-            )
-            self.conn.behaviors['no_block'] = 1  # async I/O
-            self.session = self._create_session(session_id)
-            self.session.refresh()
+            return self._get_session(session_id)
 
-    def _create_session(self, session_id=None):
-        ''' Creates a new session '''
-        kwargs = {
-            'duration': self.config.session_age,
-            'ip_address': self.request.remote_ip,
-            'regeneration_interval': self.config.session_regeneration_interval,
-        }
-        new_session = None
-        old_session = None
-        old_session = MemcachedSession.load(session_id, self.conn)
-        if old_session is None or old_session._is_expired():
-            new_session = MemcachedSession(self.conn, **kwargs)
-        if old_session is not None:
+    def _get_session(self, session_id):
+        old_session = MemcachedSession.load(session_id)
+        if old_session and not old_session.is_expired():
+            old_session.refresh()
             return old_session
-        return new_session
+        else:
+            return None
+
 
     def get_current_user(self):
         ''' Get current user object from database '''

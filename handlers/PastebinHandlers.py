@@ -28,7 +28,6 @@ import logging
 from handlers.BaseHandlers import BaseHandler
 from models.User import User
 from models.PasteBin import PasteBin
-from libs.Form import Form
 from libs.SecurityDecorators import authenticated
 
 
