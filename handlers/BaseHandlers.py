@@ -201,23 +201,40 @@ class BaseWebSocketHandler(WebSocketHandler):
 
     def initialize(self):
         ''' Setup sessions, etc '''
+        self._session = None
         self.manager = EventManager.instance()
         self.config = ConfigManager.instance()
 
+    def _connect_memcached(self):
+        ''' Connects to Memcached instance '''
+        self.memd_conn = pylibmc.Client([self.config.memcached], binary=True)
+        self.memd_conn.behaviors['no_block'] = 1  # async I/O
+
     @property
-    def session(self, session_id):
-        session_id = self.get_secure_cookie('session_id')
-        if session_id is not None:
-            return self._get_session(session_id)
+    def session(self):
+        if self._session is None:
+            session_id = self.get_secure_cookie('session_id')
+            if session_id is not None:
+                self._session = self._get_session(session_id)
+        return self._session
+
+    @session.setter
+    def session(self, new_session):
+        self._session = new_session
 
     def _get_session(self, session_id):
-        old_session = MemcachedSession.load(session_id)
+        self._connect_memcached()
+        kwargs = {
+            'connection': self.memd_conn,
+            'session_id': session_id,
+            'ip_address': self.request.remote_ip,
+        }
+        old_session = MemcachedSession.load(**kwargs)
         if old_session and not old_session.is_expired():
             old_session.refresh()
             return old_session
         else:
             return None
-
 
     def get_current_user(self):
         ''' Get current user object from database '''

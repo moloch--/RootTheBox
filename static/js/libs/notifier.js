@@ -101,7 +101,7 @@ $(document).ready(function() {
     };
 
     if ($("#ws-connect").length) {
-        var notifier_ws = new WebSocket($("#ws-connect").val() + "/notifications/wsocket/updates");
+        var notifier_ws = new WebSocket($("#ws-connect").data("url") + "/notifications/wsocket/updates");
         notifier_ws.onmessage = function(evt) {
             notification = $.parseJSON(evt.data);
             if (notification['category'] == 'success') {

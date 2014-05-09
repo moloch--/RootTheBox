@@ -322,7 +322,7 @@ function initializeState(updater, state, updates) {
 
 $(document).ready(function() {
 
-    var history_ws = new WebSocket($("#ws-connect").val() + "/scoreboard/wsocket/game_history");
+    var history_ws = new WebSocket($("#ws-connect").data("url") + "/scoreboard/wsocket/game_history");
     var chart = undefined;
     var flagState = []; // List of Highchart series
     var moneyState = [];

@@ -116,7 +116,8 @@ class LoginHandler(BaseHandler):
             failed_logins[ip] += 1
         else:
             failed_logins[ip] = 1
-        if self.application.settings['automatic_ban'] and self.application.settings['blacklist_threshold'] <= failed_logins[ip]:
+        threshold = self.application.settings['blacklist_threshold']
+        if self.application.settings['automatic_ban'] and threshold <= failed_logins[ip]:
             logging.info("Automatically banned IP: %s" % ip)
             try:
                 if not IPAddress(ip).is_loopback():

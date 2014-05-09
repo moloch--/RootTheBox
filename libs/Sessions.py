@@ -174,20 +174,20 @@ class MemcachedSession(BaseSession):
         time and session expiry.
         '''
         if self.dirty:
-            logging.debug("[Memcached] Saving session with ID '%s'" % self.session_id)
+            #logging.debug("[Memcached] Saving session with ID '%s'" % self.session_id)
             ttl = self.expires - datetime.utcnow()
-            logging.debug("[Memcached] Serialized -> %s" % self.serialize().decode('base64'))
+            #logging.debug("[Memcached] Serialized -> %s" % self.serialize().decode('base64'))
             self.connection.set(self.session_id, self.serialize(), time=ttl.seconds)
             self.dirty = False
 
     @staticmethod
     def load(connection, session_id, ip_address):
         '''Load the session from storage.'''
-        logging.debug("[Memcached] Loading session with ID '%s'" % session_id)
+        #logging.debug("[Memcached] Loading session with ID '%s'" % session_id)
         session = None
         try:
             value = connection.get(session_id)
-            logging.debug('[Memcached] Got back %s' % value.decode('base64'))
+            #logging.debug('[Memcached] Got back %s' % value.decode('base64'))
             if value:
                 kwargs = MemcachedSession.deserialize(value)
                 session = MemcachedSession(connection, **kwargs)

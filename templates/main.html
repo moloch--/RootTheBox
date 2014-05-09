@@ -23,7 +23,7 @@
         <script src="/static/js/libs/notifier.js" type="text/javascript"></script>
         <script src="/static/js/pages/main.js" type="text/javascript"></script>
         {% block header %}{% end %}
-        <meta id="ws-connect" value="{{ handler.application.settings['ws_connect'] }}" />
+        <meta id="ws-connect" data-url="{{ handler.application.settings['ws_connect'] }}" />
     </head>
     <body>
         {% module Menu() %}
