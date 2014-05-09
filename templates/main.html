@@ -16,22 +16,22 @@
         <!--[if lt IE 9]>
             <script src="/static/js/libs/html5.js"></script>
         <![endif]-->
-        <script src="/static/js/jquery.js" type="text/javascript"></script>
+        <script src="/static/js/jquery.min.js" type="text/javascript"></script>
         <script src="/static/js/underscore.min.js" type="text/javascript"></script>
         <script src="/static/js/backbone.min.js" type="text/javascript"></script>
         <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="/static/js/libs/notifier.js" type="text/javascript"></script>
         <script src="/static/js/pages/main.js" type="text/javascript"></script>
         {% block header %}{% end %}
+        <meta id="ws-connect" value="{{ handler.application.settings['ws_connect'] }}" />
     </head>
     <body>
         {% module Menu() %}
-        <input id="ws-connect" value="{{ handler.application.settings['ws_connect'] }}" type="hidden" />
         <div class="container-fluid animated fadeIn">
             {% block content %} Content Missing {% end %}
             <hr>
             <footer>
-                <a href="http://rootthebox.com" target="_blank">Root the Box</a>
+                <a href="http://root-the-box.com" target="_blank">Root the Box</a>
                 &copy; {{ datetime.date.today().year }} -
                 <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a>
                 - Version {{ handler.application.settings['version'] }}
