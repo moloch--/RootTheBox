@@ -177,7 +177,7 @@ class MemcachedSession(BaseSession):
             #logging.debug("[Memcached] Saving session with ID '%s'" % self.session_id)
             ttl = self.expires - datetime.utcnow()
             #logging.debug("[Memcached] Serialized -> %s" % self.serialize().decode('base64'))
-            self.connection.set(self.session_id, self.serialize(), time=ttl.seconds)
+            self.connection.set(str(self.session_id), self.serialize(), time=ttl.seconds)
             self.dirty = False
 
     @staticmethod
