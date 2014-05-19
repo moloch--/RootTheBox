@@ -58,6 +58,7 @@ class BaseHandler(RequestHandler):
     _dbsession = dbsession
     _memcached = None
     new_events = []
+    io_loop = IOLoop.instance()
     event_manager = EventManager.instance()
     config = ConfigManager.instance()
 
@@ -227,6 +228,7 @@ class BaseWebSocketHandler(WebSocketHandler):
 
     _session = None
     _memcached = None
+    io_loop = IOLoop.instance()
     manager = EventManager.instance()
     config = ConfigManager.instance()
 
