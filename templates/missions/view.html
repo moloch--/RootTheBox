@@ -6,8 +6,7 @@
 <script src="/static/js/pages/missions/view.js"></script>
 {% end %}
 
-{% block content %}
-{% from models.GameLevel import GameLevel %}
+{% block modals %}
     <div id="unlock-game-level-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -31,6 +30,10 @@
             </button>
         </div>
     </div>
+{% end %}
+
+{% block content %}
+{% from models.GameLevel import GameLevel %}
     <!-- Visable -->
     <div class="container">
         <h1>Missions</h1>

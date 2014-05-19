@@ -60,7 +60,7 @@ def create():
     else:
         environ = bold + "Production boot strap" + W
         details = '.'
-    print INFO + '%s completed successfully%s' % (environ, details)
+    print(INFO + '%s completed successfully%s' % (environ, details))
 
 
 def recovery():

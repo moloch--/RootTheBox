@@ -6,10 +6,7 @@
 <script src="/static/js/pages/market/view.js"></script>
 {% end %}
 
-{% block content %}
-{% include ../notifier.html %}
-{% from models.MarketItem import MarketItem %}
-<div class="container">
+{% block modals %}
     <!-- Hidden Download Form -->
     <div id="buy-market-item-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -51,7 +48,12 @@
             </button>
         </div>
     </div>
-    <!-- Start Visable -->
+{% end %}
+
+{% block content %}
+{% include ../notifier.html %}
+{% from models.MarketItem import MarketItem %}
+<div class="container">
     <h2>
         <i class="fa fa-shopping-cart"></i>
         Black Market

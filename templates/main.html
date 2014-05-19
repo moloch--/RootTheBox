@@ -25,6 +25,7 @@
         {% block header %}{% end %}
         <meta id="ws-connect" data-url="{{ handler.application.settings['ws_connect'] }}" />
     </head>
+    {% block modals %}{% end %}
     <body>
         {% module Menu() %}
         <div class="container-fluid animated fadeIn">

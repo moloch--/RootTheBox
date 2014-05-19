@@ -6,8 +6,7 @@
 <script src="/static/js/pages/upgrades/swat.js"></script>
 {% end %}
 
-{% block content %}
-{% include ../notifier.html %}
+{% block modals %}
     <!-- Swat Player Modal -->
     <div id="swat-player-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
@@ -30,6 +29,10 @@
             </button>
         </div>
     </div><!-- End Modal -->
+{% end %}
+
+{% block content %}
+{% from models.Swat import Swat %}
     <div class="container">
         <h1>
             <i class="fa fa-crosshairs"></i>
@@ -59,7 +62,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% from models.Swat import Swat %}
                     {% for index, target in enumerate(targets) %}
                         {% if Swat.user_is_pending(target) %}
                             <tr class="warning">

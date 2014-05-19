@@ -6,7 +6,7 @@
 <script src="/static/js/pages/admin/view/user_objects.js"></script>
 {% end %}
 
-{% block content %}
+{% block modals %}
 {% from models.Team import Team %}
     <!-- Edit Team -->
     <div id="edit-team-modal" class="modal hide fade" style="display: none; ">
@@ -128,6 +128,10 @@
             </button>
         </div>
     </div>
+{% end %}
+
+{% block content %}
+{% from models.Team import Team %}
     <!-- Lock Form -->
     <form id="lock-user-form" action="/admin/lock" method="post">
         {% raw xsrf_form_html() %}

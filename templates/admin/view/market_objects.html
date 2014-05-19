@@ -6,8 +6,7 @@
 <script src="/static/js/pages/admin/view/market_objects.js"></script>
 {% end %}
 
-{% block content %}
-{% from models.MarketItem import MarketItem %}
+{% block modals %}
 <!-- Hidden Edit Form -->
 <div id="edit-market-item-modal" class="modal hide fade" style="display: none; ">
     <div class="modal-header">
@@ -38,6 +37,10 @@
         </button>
     </div>
 </div>
+{% end %}
+
+{% block content %}
+{% from models.MarketItem import MarketItem %}
 <div class="container">
     <h2>
         <i class="fa fa-shopping-cart"></i>

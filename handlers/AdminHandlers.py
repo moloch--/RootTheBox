@@ -19,9 +19,12 @@ Created on Mar 13, 2012
     limitations under the License.
 ----------------------------------------------------------------------------
 
+This file contains all of the adminstrative functions.
 There's a lot of code in here ... and it's mostly ugly validation code...
 
-This file contains all of the adminstrative functions.
+Guidelines for writing code in this file:
+    - GET requests should NEVER alter application state
+    - All functions should check authentication/IP address/permission
 
 '''
 
@@ -60,7 +63,7 @@ from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 
 class AdminGameHandler(BaseHandler):
-    ''' Start stop game '''
+    ''' Start or stop the game '''
 
     @restrict_ip_address
     @authenticated
@@ -88,7 +91,7 @@ class AdminGameHandler(BaseHandler):
         if self.application.settings['history_callback']._running:
             self.application.settings['history_callback'].stop()
         if self.application.settings['score_bots_callback']._running:
-            self.application.settings['score_bots_callback'].start()
+            self.application.settings['score_bots_callback'].stop()
         for user in User.all_users():
             user.locked = True
             self.dbsession.add(user)
@@ -151,7 +154,7 @@ class AdminCreateHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         ''' Renders Corp/Box/Flag create pages '''
-        self.game_objects = {
+        game_objects = {
             'corporation': 'admin/create/corporation.html',
                     'box': 'admin/create/box.html',
                    'flag': 'admin/create/flag.html',
@@ -162,8 +165,8 @@ class AdminCreateHandler(BaseHandler):
              'game_level': 'admin/create/game_level.html',
                    'hint': 'admin/create/hint.html',
         }
-        if len(args) == 1 and args[0] in self.game_objects:
-            self.render(self.game_objects[args[0]], errors=None)
+        if len(args) == 1 and args[0] in game_objects:
+            self.render(game_objects[args[0]], errors=None)
         else:
             self.render("public/404.html")
 
@@ -172,7 +175,7 @@ class AdminCreateHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         ''' Calls a function based on URL '''
-        self.game_objects = {
+        game_objects = {
             'corporation': self.create_corporation,
                     'box': self.create_box,
               'flag/file': self.create_flag_file,
@@ -182,8 +185,8 @@ class AdminCreateHandler(BaseHandler):
              'game_level': self.create_game_level,
                    'hint': self.create_hint,
         }
-        if len(args) == 1 and args[0] in self.game_objects:
-            self.game_objects[args[0]]()
+        if len(args) == 1 and args[0] in game_objects:
+            game_objects[args[0]]()
         else:
             self.render("public/404.html")
 
@@ -356,29 +359,15 @@ class AdminViewHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Calls a view function based on URI '''
         uri = {
-              'game_objects': self.view_game_objects,
-               'game_levels': self.view_game_levels,
-              'user_objects': self.view_user_objects,
-            'market_objects': self.view_market_objects,
+              'game_objects': "admin/view/game_objects.html",
+               'game_levels': "admin/view/game_levels.html",
+              'user_objects': 'admin/view/user_objects.html',
+            'market_objects': 'admin/view/market_objects.html',
         }
-        if len(args) == 1 and args[0] in uri:
-            uri[args[0]]()
+        if len(args) and args[0] in uri:
+            self.render(uri[args[0]], errors=None)
         else:
             self.render("public/404.html")
-
-    def view_market_objects(self):
-        self.render('admin/view/market_objects.html', errors=None)
-
-    def view_game_objects(self):
-        ''' Renders the view corporations page '''
-        self.render("admin/view/game_objects.html", errors=None)
-
-    def view_game_levels(self):
-        self.render("admin/view/game_levels.html", errors=None)
-
-    def view_user_objects(self):
-        ''' Renders the view registration token page '''
-        self.render('admin/view/user_objects.html', errors=None)
 
 
 class AdminAjaxObjectDataHandler(BaseHandler):
@@ -431,7 +420,7 @@ class AdminEditHandler(BaseHandler):
                    'hint': 'game_objects',
             'market_item': 'market_objects',
         }
-        if len(args) == 1 and args[0] in uri:
+        if len(args) and args[0] in uri:
             self.redirect('/admin/view/%s' % uri[args[0]])
         else:
             self.render("public/404.html")
@@ -453,7 +442,7 @@ class AdminEditHandler(BaseHandler):
                    'hint': self.edit_hint,
             'market_item': self.edit_market_item,
         }
-        if len(args) == 1 and args[0] in uri:
+        if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")

@@ -7,12 +7,10 @@
 {% end %}
 
 {% block content %}
-    {% include ../notifier.html %}
     <form id="delete-paste-form" method="post" action="/user/share/pastebin/delete" >
         {% raw xsrf_form_html() %}
         <input id="delete-paste-uuid" name="uuid" type="hidden" value="" />
     </form>
-    <div class="row-fluid">
     <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">

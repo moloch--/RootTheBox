@@ -6,8 +6,7 @@
 <script src="/static/js/pages/missions/box.js"></script>
 {% end %}
 
-{% block content %}
-    {% include ../notifier.html %}
+{% block modals %}
     <!-- Submit text flag -->
     <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -80,6 +79,10 @@
             </button>
         </div>
     </div>
+{% end %}
+
+{% block content %}
+{% include ../notifier.html %}
     <!-- Visable -->
     <div class="container">
         <h1>

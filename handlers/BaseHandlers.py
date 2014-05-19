@@ -43,21 +43,31 @@ from tornado.websocket import WebSocketHandler
 class BaseHandler(RequestHandler):
     ''' User handlers extend this class '''
 
-    # JQuery requires an style 'unsafe-inline'
-    default_csp = "default-src 'self';" + \
-        "script-src 'self';" + \
-        "style-src 'self' 'unsafe-inline';" + \
-        "font-src 'self';" + \
-        "img-src 'self';" + \
-        "connect-src 'self' %s" % ConfigManager.instance().ws_connect
+    csp = {
+        "default-src": set(["'self'"]),
+        "script-src": set(),
+        "connect-src": set(),
+        "frame-src": set(),
+        "img-src": set(),
+        "media-src": set(),
+        "font-src": set(),
+        "object-src": set(),
+        "style-src": set(),
+    }
+    _session = None
+    _dbsession = dbsession
+    _memcached = None
+    new_events = []
+    event_manager = EventManager.instance()
+    config = ConfigManager.instance()
 
     def initialize(self):
         ''' Setup sessions, etc '''
-        self._session = None
-        self._dbsession = dbsession
-        self.new_events = []
-        self.event_manager = self.application.settings['event_manager']
-        self.config = ConfigManager.instance()
+        self.add_content_policy('connect-src', self.config.ws_connect)
+
+    @property
+    def dbsession(self):
+        return self._dbsession
 
     def get_current_user(self):
         ''' Get current user object from database '''
@@ -80,16 +90,34 @@ class BaseHandler(RequestHandler):
             HttpOnly=True,
         )
 
-    def _connect_memcached(self):
+    def add_content_policy(self, src, policy):
+        ''' Add to the existing CSP header '''
+        if src in self.csp:
+            self.csp[src].add(policy)
+            self._refresh_csp()
+        else:
+            raise ValueError("Invalid content source")
+
+    def _refresh_csp(self):
+        ''' Rebuild the Content-Security-Policy header '''
+        _csp = ''
+        for src, policies in self.csp.iteritems():
+            if len(policies):
+                _csp += "%s: %s; " % (src, " ".join(policies))
+        self.set_header("Content-Security-Policy", _csp)
+
+    @property
+    def memcached(self):
         ''' Connects to Memcached instance '''
-        self.memd_conn = pylibmc.Client([self.config.memcached], binary=True)
-        self.memd_conn.behaviors['no_block'] = 1  # async I/O
+        if self._memcached is None:
+            self._memcached = pylibmc.Client([self.config.memcached], binary=True)
+            self._memcached.behaviors['no_block'] = 1  # async I/O
+        return self._memcached
 
     def _create_session(self):
         ''' Creates a new session '''
-        self._connect_memcached()
         kwargs = {
-            'connection': self.memd_conn,
+            'connection': self.memcached,
             'ip_address': self.request.remote_ip,
         }
         new_session = MemcachedSession(**kwargs)
@@ -109,9 +137,8 @@ class BaseHandler(RequestHandler):
         self._session = new_session
 
     def _get_session(self, session_id):
-        self._connect_memcached()
         kwargs = {
-            'connection': self.memd_conn,
+            'connection': self.memcached,
             'session_id': session_id,
             'ip_address': self.request.remote_ip,
         }
@@ -127,7 +154,7 @@ class BaseHandler(RequestHandler):
         self.set_header("Server", "'; DROP TABLE server_types;--")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
-        self.add_header("Content-Security-Policy", self.default_csp)
+        self._refresh_csp()
 
     def write_error(self, status_code, **kwargs):
         ''' Write our custom error pages '''
@@ -191,24 +218,25 @@ class BaseHandler(RequestHandler):
 
     def _event_callbacks(self):
         ''' Fire any new events '''
-        io_loop = IOLoop.instance()
         for event in self.new_events:
-            io_loop.add_callback(event[0], **event[1])
+            self.io_loop.add_callback(event[0], **event[1])
 
 
 class BaseWebSocketHandler(WebSocketHandler):
     ''' Handles websocket connections '''
 
-    def initialize(self):
-        ''' Setup sessions, etc '''
-        self._session = None
-        self.manager = EventManager.instance()
-        self.config = ConfigManager.instance()
+    _session = None
+    _memcached = None
+    manager = EventManager.instance()
+    config = ConfigManager.instance()
 
-    def _connect_memcached(self):
+    @property
+    def memcached(self):
         ''' Connects to Memcached instance '''
-        self.memd_conn = pylibmc.Client([self.config.memcached], binary=True)
-        self.memd_conn.behaviors['no_block'] = 1  # async I/O
+        if self._memcached is None:
+            self._memcached = pylibmc.Client([self.config.memcached], binary=True)
+            self._memcached.behaviors['no_block'] = 1  # async I/O
+        return self._memcached
 
     @property
     def session(self):
@@ -223,9 +251,8 @@ class BaseWebSocketHandler(WebSocketHandler):
         self._session = new_session
 
     def _get_session(self, session_id):
-        self._connect_memcached()
         kwargs = {
-            'connection': self.memd_conn,
+            'connection': self.memcached,
             'session_id': session_id,
             'ip_address': self.request.remote_ip,
         }

@@ -6,7 +6,7 @@
 <script src="/static/js/pages/admin/view/game_objects.js"></script>
 {% end %}
 
-{% block content %}
+{% block modals %}
 {% from models.Corporation import Corporation %}
 {% from models.Box import Box %}
     <!-- Edit Corporation -->
@@ -329,6 +329,11 @@
             </button>
         </div>
     </div>
+{% end %}
+
+{% block content %}
+{% from models.Corporation import Corporation %}
+{% from models.Box import Box %}
     <!-- Start Visable -->
     <div class="row-fluid">
         <div class="span2" />

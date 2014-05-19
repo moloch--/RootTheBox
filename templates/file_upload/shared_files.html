@@ -6,7 +6,7 @@
 <script src="/static/js/pages/file_upload/shared_files.js"></script>
 {% end %}
 
-{% block content %}
+{% block modals %}
     <div id="delete-file-upload-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -32,6 +32,9 @@
             </button>
         </div>
     </div>
+{% end %}
+
+{% block content %}
     <div class="container">
         <h1>
             <i class="fa fa-files-o"></i>
