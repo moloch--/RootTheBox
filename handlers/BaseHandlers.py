@@ -102,6 +102,14 @@ class BaseHandler(RequestHandler):
         else:
             raise ValueError("Invalid content source")
 
+    def clear_content_policy(self, src):
+        ''' Clear a content source in the existing CSP header '''
+        if src in self.csp:
+            self.csp[src] = set()
+            self._refresh_csp()
+        else:
+            raise ValueError("Invalid content source")
+
     def _refresh_csp(self):
         ''' Rebuild the Content-Security-Policy header '''
         _csp = ''
@@ -158,6 +166,7 @@ class BaseHandler(RequestHandler):
         self.set_header("Server", "'; DROP TABLE server_types;--")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
+        self.add_header("X-Content-Type-Options", "nosniff")
         self._refresh_csp()
 
     def write_error(self, status_code, **kwargs):

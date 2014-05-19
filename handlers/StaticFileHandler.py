@@ -37,7 +37,6 @@ import threading
 
 from tornado.web import RequestHandler, HTTPError
 from tornado.web import StaticFileHandler as DefaultStaticHandler
-from libs.Memcache import FileCache
 
 
 class StaticFileHandler(DefaultStaticHandler):
@@ -52,6 +51,7 @@ class StaticFileHandler(DefaultStaticHandler):
         self.set_header("Server", "'; DROP TABLE servertypes; --")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
+        self.add_header("X-Content-Type-Options", "nosniff")
 
     def write_error(self, status_code, **kwargs):
         ''' Render a generic error page '''
