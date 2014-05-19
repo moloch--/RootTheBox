@@ -45,14 +45,14 @@ class BaseHandler(RequestHandler):
 
     csp = {
         "default-src": set(["'self'"]),
-        "script-src": set(),
-        "connect-src": set(),
-        "frame-src": set(),
-        "img-src": set(),
-        "media-src": set(),
-        "font-src": set(),
-        "object-src": set(),
-        "style-src": set(),
+        "script-src": set(["'self'"]),
+        "connect-src": set(["'self'"]),
+        "frame-src": set(["'self'"]),
+        "img-src": set(["'self'"]),
+        "media-src": set(["'self'"]),
+        "font-src": set(["'self'"]),
+        "object-src": set(["'self'"]),
+        "style-src": set(["'self'"]),
     }
     _session = None
     _dbsession = dbsession
@@ -65,6 +65,9 @@ class BaseHandler(RequestHandler):
     def initialize(self):
         ''' Setup sessions, etc '''
         self.add_content_policy('connect-src', self.config.ws_connect)
+        # We need this for a few things, and so far as I know it doesn't present
+        # too much of a security risk - TODO: no longer require inline styles
+        self.add_content_policy('style-src', "'unsafe-inline'")
 
     @property
     def dbsession(self):
@@ -104,7 +107,7 @@ class BaseHandler(RequestHandler):
         _csp = ''
         for src, policies in self.csp.iteritems():
             if len(policies):
-                _csp += "%s: %s; " % (src, " ".join(policies))
+                _csp += "%s %s; " % (src, " ".join(policies))
         self.set_header("Content-Security-Policy", _csp)
 
     @property

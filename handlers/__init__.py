@@ -217,9 +217,6 @@ app = Application(
     # Notifier WebSocket
     ws_connect=config.ws_connect,
 
-    # Event manager
-    event_manager=EventManager.instance(),
-
     # Debug mode
     debug=config.debug,
 
