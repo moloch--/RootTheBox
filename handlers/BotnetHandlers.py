@@ -152,12 +152,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.send_error("Duplicate bot")
 
     def is_valid_xid(self, box, response_xid):
-<<<<<<< Updated upstream
         return response_xid == sha1(self.xid + box.garbage).hexdigest()
-=======
-        round1 = sha512(self.xid + box.garbage).digest()
-        return response_xid == sha512(round1).hexdigest()
->>>>>>> Stashed changes
 
     def ping(self):
         ''' Just make sure we can write data to the socket '''
