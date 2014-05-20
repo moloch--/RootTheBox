@@ -74,7 +74,6 @@ class PasswordSecurityHandler(BaseHandler):
         else:
             self.render_page(["New password is too long"])
 
-
     def render_page(self, errors=None):
         user = self.get_current_user()
         self.render('upgrades/password_security.html',
@@ -98,20 +97,11 @@ class PasswordSecurityHandler(BaseHandler):
 
 class FederalReserveHandler(BaseHandler):
 
-    # Terminal JS needs eval() and inline for some dumb reason
-    relaxed_csp = "default-src 'self';" + \
-        "script-src 'self' 'unsafe-eval';" + \
-        "style-src 'self' 'unsafe-inline';" + \
-        "font-src 'self';" + \
-        "img-src 'self';" + \
-        "connect-src 'self' %s" % ConfigManager.instance().ws_connect
-
     @authenticated
     @use_black_market
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         user = self.get_current_user()
-        self.set_header("Content-Security-Policy", self.relaxed_csp)
         self.render('upgrades/federal_reserve.html', user=user)
 
 
@@ -267,7 +257,6 @@ class SourceCodeMarketHandler(BaseHandler):
                 self.render_page(["You cannot afford to purchase this code"])
         else:
             self.render_page(["Box does not exist"])
-
 
     def purchase_code(self, box):
         ''' Modify the database to reflect purchase '''

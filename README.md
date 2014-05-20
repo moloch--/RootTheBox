@@ -43,7 +43,8 @@ Setup TL;DR
 * Edit settings in __rootthebox.cfg__ to your liking, you can also manage many of these settings from the admin web ui
 * __./rootthebox.py --create-tables__ to create, and initialize the database (only need to do this once)
 * __./rootthebox.py --start__ To start the application
-* You can import XML files (automatically setup Boxes/Flags) from the command line using __./rootthebox.py --xml game.xml__ 
+* You can import XML files (automatically setup Boxes/Flags) from the command line using __./rootthebox.py --xml game.xml__
+* Recompile the Windows bot .exe file using __bot/build_bot.py__ (only if you don't trust me :P)
 
 To Do
 ---------------------

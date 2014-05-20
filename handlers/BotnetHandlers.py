@@ -44,8 +44,8 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         a) If IP config.whitelist_box_ips is enabled, check
            the datbase for boxes with matching IPs
 
-    2) Servers responds with "Interrogation" message
-        a) This message includes a random string 'xid'
+    2) Server responds with "Interrogation" request
+        a) This request includes a random string 'xid'
 
     3) Bot responds with a "InterrogationResponse", includes
         a) The value of SHA1(xid + box garbage)
@@ -64,14 +64,15 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
 
     '''
 
+    bot_manager = BotManager.instance()
+    event_manager = EventManager.instance()
+    config = ConfigManager.instance()
+    team_name = None
+    team_uuid = None
+    box_uuid = None
+    remote_ip = None
+
     def initialize(self):
-        self.bot_manager = BotManager.instance()
-        self.event_manager = EventManager.instance()
-        self.config = ConfigManager.instance()
-        self.team_name = None
-        self.team_uuid = None
-        self.box_uuid = None
-        self.remote_ip = None
         self.xid = os.urandom(16).encode('hex')
         if not self.config.use_bots:
             self.close()
@@ -151,9 +152,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.send_error("Duplicate bot")
 
     def is_valid_xid(self, box, response_xid):
-        sha = sha1()
-        sha.update(self.xid + box.garbage)
-        return response_xid == sha.hexdigest()
+        return response_xid == sha1(self.xid + box.garbage).hexdigest()
 
     def ping(self):
         ''' Just make sure we can write data to the socket '''
@@ -179,10 +178,11 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
     TODO: Trash this and use the web api handler, w/ normal session cookie
     '''
 
+    config = ConfigManager.instance()
+    bot_manager = BotManager.instance()
+    team_name = None
+
     def initialize(self):
-        self.config = ConfigManager.instance()
-        self.bot_manager = BotManager.instance()
-        self.team_name = None
         if not self.config.use_bots:
             self.close()
         else:
@@ -324,7 +324,7 @@ class BotDownloadHandler(BaseHandler):
             'linux': self.generic,
             'monitor': self.monitor,
         }
-        if len(args) == 1 and args[0] in download_options:
+        if len(args) and args[0] in download_options:
             download_options[args[0]]()
         self.finish()
 

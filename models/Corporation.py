@@ -56,9 +56,9 @@ class Corporation(DatabaseObject):
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_name(cls, _name):
-        ''' Returns a the object with name of _name '''
-        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
+    def by_name(cls, name):
+        ''' Returns a the object with name of name '''
+        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
