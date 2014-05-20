@@ -110,7 +110,7 @@ class LoginHandler(BaseHandler):
     def failed_login(self):
         ''' Called if username/password is invalid '''
         ip = self.request.remote_ip
-        logging.info("Failed login attempt from: %s" % ip)
+        logging.info("[BAN HAMMER] Failed login attempt from: %s" % ip)
         failed_logins = self.application.settings['failed_logins']
         if ip in failed_logins:
             failed_logins[ip] += 1
@@ -118,12 +118,14 @@ class LoginHandler(BaseHandler):
             failed_logins[ip] = 1
         threshold = self.application.settings['blacklist_threshold']
         if self.application.settings['automatic_ban'] and threshold <= failed_logins[ip]:
-            logging.info("Automatically banned IP: %s" % ip)
+            logging.info("[BAN HAMMER] Automatically banned IP: %s" % ip)
             try:
                 if not IPAddress(ip).is_loopback():
                     self.application.settings['blacklisted_ips'].append(ip)
+                else:
+                    logging.warning("[BAN HAMMER] Cannot blacklist loopback address")
             except:
-                logging.exception("Exception while attempting to ban ip address")
+                logging.exception("[BAN HAMMER] Exception while attempting to ban ip address")
         self.render('public/login.html', errors=["Bad username and/or password, try again"])
 
 
@@ -198,7 +200,9 @@ class RegistrationHandler(BaseHandler):
 class FakeRobotsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        ''' Troll time '''
+        '''
+        Troll time :P - TODO: Add BeEF to these pages
+        '''
         self.set_header('Content-Type', 'text/plain')
         self.write('# Block access to admin stuff\n\n')
         self.write('User-agent: *\n\n')
@@ -206,6 +210,7 @@ class FakeRobotsHandler(BaseHandler):
         self.write('/admin/create/flag_capture\n')
         self.write('/admin/view/db_users.txt\n')
         self.write('/admin/view/passwords.txt\n')
+        self.write('/admin/manager/c99.php\n')
         self.finish()
 
 
