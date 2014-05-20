@@ -171,7 +171,6 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         self.close()
 
 
-
 class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
     '''
     Handles the CLI BotMonitor websocket connections, has custom auth.
