@@ -31,7 +31,6 @@ from modules.Menu import Menu
 from modules.Recaptcha import Recaptcha
 from modules.CssTheme import CssTheme
 from libs.ConsoleColors import *
-from libs.Memcache import FileCache
 from libs.Scoreboard import score_bots
 from libs.BotManager import BotManager, ping_bots
 from libs.GameHistory import GameHistory

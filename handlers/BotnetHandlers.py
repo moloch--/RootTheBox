@@ -48,14 +48,14 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         a) This request includes a random string 'xid'
 
     3) Bot responds with a "InterrogationResponse", includes
-        a) The value of SHA1(xid + box garbage)
+        a) The value of SHA512(SHA512(xid + garbage))
         b) Asserted user handle (reward goes to user.team)
         c) Asserted box name
 
     4) Server looks up asserted box and user in database, ensures
-        they do exist, and the user is not an admin.
+       they do exist, and the user is not an admin.
 
-    5) Server then computes it's own SHA1(xid + box garbage)
+    5) Server then computes it's own SHA512(SHA512(xid + box garbage))
         a) Check if the server's value matches the bot's
 
     6) Check for duplicate bots (one bot per box per team)
@@ -152,7 +152,12 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.send_error("Duplicate bot")
 
     def is_valid_xid(self, box, response_xid):
+<<<<<<< Updated upstream
         return response_xid == sha1(self.xid + box.garbage).hexdigest()
+=======
+        round1 = sha512(self.xid + box.garbage).digest()
+        return response_xid == sha512(round1).hexdigest()
+>>>>>>> Stashed changes
 
     def ping(self):
         ''' Just make sure we can write data to the socket '''
@@ -360,7 +365,3 @@ class BotDownloadHandler(BaseHandler):
                 data = fp.read()
                 self.set_header('Content-Length', len(data))
                 self.write(data)
-
-
-
-

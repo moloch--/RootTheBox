@@ -436,7 +436,7 @@ class AdminEditHandler(BaseHandler):
                    'flag': self.edit_flags,
                    'team': self.edit_teams,
                    'user': self.edit_users,
-                   'ip': self.edit_ip,
+                     'ip': self.edit_ip,
              'game_level': self.edit_game_level,
               'box_level': self.box_level,
                    'hint': self.edit_hint,

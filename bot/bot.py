@@ -43,7 +43,7 @@ import ConfigParser
 
 from urlparse import urlparse
 from datetime import datetime
-from hashlib import sha1
+from hashlib import sha512, sha1
 
 
 ### Settings
@@ -855,16 +855,15 @@ def display_status(ws, response, verbose=False):
         sys.stdout.write('\n')
     sys.stdout.flush()
 
-def get_rxid(garbage, xid):
-    sha = sha1()
-    sha.update(xid + garbage)
-    return sha.hexdigest()
+def get_response_xid(garbage, xid):
+    round1 = sha512(xid + garbage).digest()
+    return sha512(round1).hexdigest()
 
 def send_interrogation_response(ws, response):
     display_status(ws, {'message': "Authorizing, please wait ..."})
     solved_xid = {
         'opcode': 'interrogation_response',
-        'rxid': get_rxid(ws.garbage, response['xid']),
+        'response_xid': get_response_xid(ws.garbage, response['xid']),
         'box_name': ws.box_name,
         'handle': ws.user
     }
