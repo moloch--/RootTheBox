@@ -163,7 +163,8 @@ class BaseHandler(RequestHandler):
 
     def set_default_headers(self):
         ''' Set security HTTP headers '''
-        self.set_header("Server", "'; DROP TABLE server_types;--")
+        self.set_header("Server", "Microsoft-IIS/7.0")
+        self.add_header("X-AspNet-Version", "2.0.50727")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
         self.add_header("X-Content-Type-Options", "nosniff")

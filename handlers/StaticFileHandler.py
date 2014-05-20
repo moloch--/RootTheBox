@@ -41,7 +41,13 @@ class StaticFileHandler(DefaultStaticHandler):
     config = ConfigManager.instance()
 
     def set_default_headers(self):
-        self.set_header("Server", "'; DROP TABLE server_types;--")
+        '''
+        We need to add the security headers here too, especially the
+        X-Content-Type-Options header, since we whitelist file extenstions.
+        this should prevent anyone from serving html/etc from the static handler
+        '''
+        self.set_header("Server", "Microsoft-IIS/7.0")
+        self.add_header("X-AspNet-Version", "2.0.50727")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
         self.add_header("X-Content-Type-Options", "nosniff")
