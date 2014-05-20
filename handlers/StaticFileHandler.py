@@ -54,7 +54,7 @@ class StaticFileHandler(DefaultStaticHandler):
         self.add_header("X-XSS-Protection", "1; mode=block")
         self.add_header("X-Content-Type-Options", "nosniff")
         if self.config.use_ssl:
-            self.add_header("Strict-Transport-Security" '"max-age=31536000; includeSubDomains";')
+            self.add_header("Strict-Transport-Security", '"max-age=31536000; includeSubDomains";')
 
     def write_error(self, status_code, **kwargs):
         ''' Render a generic error page '''
