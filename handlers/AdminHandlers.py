@@ -1168,7 +1168,7 @@ class AdminExportHandler(BaseHandler):
             "Content-disposition", "attachment; filename=%s.xml" % (
                 filter(lambda char: char in printable[:-38], self.config.game_name),
         ))
-        self.set_header('Content-Length', len(xml_doc))
+        self.set_header('Content-Length', len(xml_doc.encode('utf-8')))
         self.write(xml_doc.encode('utf-8'))
         self.finish()
 
