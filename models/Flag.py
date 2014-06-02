@@ -62,9 +62,9 @@ class Flag(DatabaseObject):
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_name(cls, _name):
+    def by_name(cls, name):
         ''' Returns a the object with name of _name '''
-        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
+        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
@@ -72,9 +72,9 @@ class Flag(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
-    def by_token(cls, _token):
+    def by_token(cls, token):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(token=unicode(_token)).first()
+        return dbsession.query(cls).filter_by(_token=unicode(token)).first()
 
     @classmethod
     def by_type(cls, __type):

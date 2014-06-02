@@ -6,7 +6,7 @@
 <script src="/static/js/pages/admin/view/game_levels.js"></script>
 {% end %}
 
-{% block content %}
+{% block modals %}
 {% from models.GameLevel import GameLevel %}
     <!-- Edit Level -->
     <div id="edit-game-level-modal" class="modal hide fade" style="display: none; ">
@@ -98,6 +98,10 @@
             </button>
         </div>
     </div>
+{% end %}
+
+{% block content %}
+{% from models.GameLevel import GameLevel %}
     <div class="container">
         <h1>
             <i class="fa fa-level-up"></i>

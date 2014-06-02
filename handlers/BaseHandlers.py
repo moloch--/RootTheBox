@@ -162,12 +162,19 @@ class BaseHandler(RequestHandler):
             return None
 
     def set_default_headers(self):
-        ''' Set security HTTP headers '''
-        self.set_header("Server", "'; DROP TABLE server_types;--")
+        '''
+        Set security HTTP headers, and add some troll-y version headers
+        '''
+        self.set_header("Server", "Microsoft-IIS/7.5")
+        self.add_header("X-AspNetMvc-Version", "3.0")
+        self.add_header("X-AspNet-Version", "4.0.30319")
+        self.add_header("X-Powered-By", "ASP.NET")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
         self.add_header("X-Content-Type-Options", "nosniff")
         self._refresh_csp()
+        if self.config.use_ssl:
+            self.add_header("Strict-Transport-Security", 'max-age=31536000; includeSubDomains;')
 
     def write_error(self, status_code, **kwargs):
         ''' Write our custom error pages '''

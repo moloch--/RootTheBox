@@ -56,9 +56,9 @@ class IpAddress(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
-    def by_address(cls, addr):
+    def by_address(cls, address):
         ''' Return and object based on an address '''
-        return dbsession.query(cls).filter_by(address=addr).first()
+        return dbsession.query(cls).filter_by(_address=address).first()
 
     @property
     def address(self):

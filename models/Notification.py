@@ -25,7 +25,6 @@ import json
 import imghdr
 
 from urlparse import urlparse
-from libs.Memcache import FileCache
 from libs.SecurityDecorators import debug
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_

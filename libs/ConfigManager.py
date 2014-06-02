@@ -26,7 +26,12 @@ import urllib
 import socket
 import getpass
 import logging
-import ConfigParser
+
+# Python3 compatability
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser
 
 # Python3 compatability
 try:
