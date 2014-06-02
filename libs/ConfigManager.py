@@ -28,6 +28,12 @@ import getpass
 import logging
 import ConfigParser
 
+# Python3 compatability
+try:
+    from urllib.parse import quote_plus
+except ImportError:
+    from urllib import quote_plus
+
 from libs.ConsoleColors import *
 from libs.Singleton import Singleton
 from sqlalchemy import create_engine
@@ -538,9 +544,9 @@ class ConfigManager(object):
             sys.stdout.write(PROMPT+"Database password: ")
             sys.stdout.flush()
             password = getpass.getpass()
-        db_host = urllib.quote_plus(host)
-        db_name = urllib.quote_plus(name)
-        db_user = urllib.quote_plus(user)
-        db_password = urllib.quote_plus(password)
+        db_host = quote_plus(host)
+        db_name = quote_plus(name)
+        db_user = quote_plus(user)
+        db_password = quote_plus(password)
         return db_host, db_name, db_user, db_password
 
