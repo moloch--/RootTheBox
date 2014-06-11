@@ -84,6 +84,11 @@ def setup_xml(xml_params):
         import_xml(xml_param)
     print(INFO+"%s : Completed processing of all .xml file(s)" % current_time())
 
+def restart_serve():
+    ''' Shutdown the actual process and restart the service. Useful for rootthebox.cfg changes. '''
+    print(INFO+'%s : Restarting the service ...' % current_time())
+    os.execl('restart.sh', '')
+
 
 def tests():
     ''' Creates a temporary sqlite database and runs the unit tests '''
@@ -118,6 +123,9 @@ def main(args):
     # Start server
     if args.start_server:
         serve()
+    # Restart server
+    if args.restart_service:
+        restart_serve()
 
 ### Main
 if __name__ == '__main__':
@@ -151,4 +159,10 @@ if __name__ == '__main__':
         action='store_true',
         help="start the admin recovery console",
     )
+    parser.add_argument("-rr", "--restart",
+        action='store_true',
+	dest='restart_service',
+        help="restart the service",
+    )
+
     main(parser.parse_args())
