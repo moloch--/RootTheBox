@@ -39,7 +39,7 @@ class Team(DatabaseObject):
     ''' Team definition '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    _name = Column(Unicode(16), unique=True, nullable=False)
+    _name = Column(Unicode(24), unique=True, nullable=False)
     _motto = Column(Unicode(32))
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
@@ -114,8 +114,8 @@ class Team(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 <= len(value) <= 16:
-            raise ValueError("Team name must be 3 - 16 characters")
+        if not 3 <= len(value) <= 24:
+            raise ValueError("Team name must be 3 - 24 characters")
         self._name = unicode(value)
 
     @property
@@ -150,6 +150,7 @@ class Team(DatabaseObject):
     def to_dict(self):
         ''' Use for JSON related tasks; return public data only '''
         return {
+            'uuid': self.uuid,
             'name': self.name,
             'motto': self.motto,
         }
