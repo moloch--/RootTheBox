@@ -76,9 +76,10 @@ class Notification(DatabaseObject):
         notify = dbsession.query(cls).filter(
             and_(cls.event_uuid == uuid, cls.user_id == user_id)
         ).first()
-        notify.viewed = True
-        dbsession.add(notify)
-        dbsession.commit()
+        if notify is not None:
+            notify.viewed = True
+            dbsession.add(notify)
+            dbsession.commit()
 
     def to_dict(self):
         ''' Return public data as dict '''
