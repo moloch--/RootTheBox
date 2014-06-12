@@ -32,12 +32,7 @@ Setup
 See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 ### Requirements
 * Python 2.7.x (Python 3.x support pending)
-* Supported platforms: Install scripts are for Ubuntu/Debian, but the application should work on any Linux, BSD, or OSX system.  Windows has not been tested.
-
-To Do
----------------------
-* More documentation
-* An actual stable release :D
+* Supported platforms: Install scripts are for Ubuntu/Debian, but the application should work on any Linux, BSD, or OSX system.
 
 Questions? Problems?
 -------------------------------
