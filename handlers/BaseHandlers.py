@@ -68,6 +68,9 @@ class BaseHandler(RequestHandler):
         # We need this for a few things, and so far as I know it doesn't present
         # too much of a security risk - TODO: no longer require inline styles
         self.add_content_policy('style-src', "'unsafe-inline'")
+        # This add unsafe eval to script src header 
+        # -> CSP problem & use of console commands. 
+        self.add_content_policy('script-src', "'unsafe-eval'")
 
     @property
     def dbsession(self):
