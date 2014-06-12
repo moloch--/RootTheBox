@@ -14,10 +14,7 @@ Money can be used to unlock new levels, buy hints to flags, download a target's 
 
 Player's "bank account passwords" are also publically displayed by the scoring engine, allowing players to crack each other's passwords and steal each other's money.
 
-More details: [Root the Box](http://root-the-box.com/)
-
-Features
--------------------
+### Features
 * [Distributed under the Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 * [Team based botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
 * Real-time scoreboard graphs using websockets
@@ -36,7 +33,6 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 ### Requirements
 * Python 2.7.x (Python 3.x support pending)
 * Supported platforms: Install scripts are for Ubuntu/Debian, but the application should work on any Linux, BSD, or OSX system.  Windows has not been tested.
-
 
 To Do
 ---------------------
