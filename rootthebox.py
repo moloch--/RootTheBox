@@ -94,6 +94,11 @@ def tests():
     nose.run(module='tests', argv=[os.getcwd() + '/tests'])
     teardown_database(db_name)
 
+def restart_serve():
+    ''' Shutdown the actual process and restart the service. Useful for rootthebox.cfg changes. '''
+    pid = os.getpid()
+    print(INFO+'%s : Restarting the service (%i)...' % (current_time(), pid) )
+    os.execl('./setup/restart.sh', '')
 
 def main(args):
     ''' Call functions in the correct order based on CLI params '''
@@ -116,7 +121,9 @@ def main(args):
     if args.recovery:
         recovery()
     # Start server
-    if args.start_server:
+    if args.restart_service:
+        restart_serve()
+    elif args.start_server:
         serve()
 
 ### Main
@@ -150,5 +157,10 @@ if __name__ == '__main__':
     parser.add_argument("-r", "--recovery",
         action='store_true',
         help="start the admin recovery console",
+    )
+    parser.add_argument("-R", "--restart",
+        action='store_true',
+        dest='restart_service',
+        help="restart the service",
     )
     main(parser.parse_args())
