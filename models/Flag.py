@@ -49,6 +49,7 @@ class Flag(DatabaseObject):
     value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+    attachements = Column(Integer, ForeignKey('flag_attachment.id'), nullable=False)
     FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC]
 
     @classmethod
@@ -205,6 +206,10 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
+        attachements_elem = ET.SubElement(flag_elem, "attachements")
+        attachements_elem.set("count", str(len(self.attachements)))
+        for attachement in attachements:
+            attachement.to_xml(attachements_elem)
 
     def to_dict(self):
         ''' Returns public data as a dict '''

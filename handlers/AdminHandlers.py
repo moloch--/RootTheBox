@@ -227,25 +227,54 @@ class AdminCreateHandler(BaseHandler):
             self.render('admin/create/box.html', errors=["%s" % error])
 
     def create_flag_static(self):
-        ''' Create a flag '''
+        ''' Create a static flag '''
         try:
             self._mkflag(FLAG_STATIC)
         except Exception as error:
             self.render('admin/create/flag-static.html', errors=[str(error)])
 
     def create_flag_regex(self):
-        ''' Create a flag '''
+        ''' Create a regex flag '''
         try:
             self._mkflag(FLAG_REGEX)
         except Exception as error:
             self.render('admin/create/flag-regex.html', errors=[str(error)])
 
     def create_flag_file(self):
-        ''' Create a flag '''
+        ''' Create a flag flag '''
         try:
             self._mkflag(FLAG_FILE, is_file=True)
         except Exception as error:
             self.render('admin/create/flag-file.html', errors=[str(error)])
+
+    def _mkflag(self, flag_type, is_file=False):
+        ''' Creates the flag in the database '''
+        if box is None:
+            raise ValueError('Box does not exist')
+        if is_file:
+            if not 'flag' in self.request.files:
+                raise ValueError('No file in request')
+            token = self.request.files['flag'][0]['body']
+        else:
+            token = self.get_argument('token', '')
+        name = self.get_argument('flag_name', '')
+        description = self.get_argument('description', '')
+        reward = self.get_argument('reward', '')
+        box = Box.by_uuid(self.get_argument('box_uuid', ''))
+        flag = Flag.create_flag(flag_type, box, name, token, description, reward)
+        flag.capture_message = self.get_argument('capture_message', '')
+        self.add_attachments(flag)
+        self.dbsession.add(flag)
+        self.dbsession.commit()
+        self.redirect('/admin/view/game_objects')
+
+    def add_attachments(self, flag):
+        ''' Add uploaded files as attachments to flags '''
+        for attachment in self.request.files['attachments']:
+            flag_attachment = FlagAttachment(file_name=attachment['name'])
+            flag_attachment.data = attachment['body']
+            flag.attachments.append(flag_attachment)
+            self.dbsession.add(flag_attachment)
 
     def create_team(self):
         ''' Create a new team in the database '''
@@ -290,25 +319,6 @@ class AdminCreateHandler(BaseHandler):
                 self.render('admin/create/hint.html', errors=["%s" % error])
         else:
             self.render('admin/create/hint.html', errors=["Box does not exist"])
-
-    def _mkflag(self, flag_type, is_file=False):
-        name = self.get_argument('flag_name', '')
-        if is_file:
-            if not 'flag' in self.request.files:
-                raise ValueError('No file in request')
-            token = self.request.files['flag'][0]['body']
-        else:
-            token = self.get_argument('token', '')
-        description = self.get_argument('description', '')
-        reward = int(self.get_argument('reward', ''))
-        box = Box.by_uuid(self.get_argument('box_uuid', ''))
-        if box is None:
-            raise ValueError('Box does not exist')
-        flag = Flag.create_flag(flag_type, box, name, token, description, reward)
-        flag.capture_message = self.get_argument('capture_message', '')
-        self.dbsession.add(flag)
-        self.dbsession.commit()
-        self.redirect('/admin/view/game_objects')
 
     def _make_box(self, level_number):
         ''' Creates a box in the database '''
@@ -750,7 +760,7 @@ class AdminDeleteHandler(BaseHandler):
         'corporation': self.del_corp,
                'user': self.del_user,
         }
-        if len(args) == 1 and args[0] in uri:
+        if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")
@@ -918,7 +928,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             '/add': self.add_source_code,
             '/delete': self.delete_source_code,
         }
-        if 1 == len(args) and args[0] in uri:
+        if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")
@@ -1023,7 +1033,7 @@ class AdminSwatHandler(BaseHandler):
             '/accept': self.accept_bribe,
             '/complete': self.complete_bribe,
         }
-        if len(args) == 1 and args[0] in uri:
+        if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render('public/404.html')

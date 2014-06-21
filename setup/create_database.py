@@ -40,6 +40,7 @@ from models.User import User
 from models.FileUpload import FileUpload
 from models.WallOfSheep import WallOfSheep
 from models.Flag import Flag
+from models.FlagAttachment import FlagAttachment
 from models.Notification import Notification
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
@@ -52,8 +53,3 @@ from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.Hint import Hint
-#from models.Sponsor import Sponsor
-#from models.BoxResource import BoxResource
-
-
-

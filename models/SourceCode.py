@@ -19,6 +19,7 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
+import os
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
@@ -39,13 +40,7 @@ class SourceCode(DatabaseObject):
     _price = Column(Integer, nullable=False)
     _description = Column(Unicode(1024), nullable=False)
     checksum = Column(String(40))
-
     _file_name = Column(String(64), nullable=False)
-    file_name = synonym('_file_name', descriptor=property(
-        lambda self: self._file_name,
-        lambda self, file_name: setattr(
-            self, '_file_name', self.__class__.filter_string(file_name, ".-_"))
-    ))
 
     @classmethod
     def all(cls):
@@ -70,6 +65,14 @@ class SourceCode(DatabaseObject):
     def filter_string(cls, string, extra_chars=''):
         char_white_list = ascii_letters + digits + extra_chars
         return filter(lambda char: char in char_white_list, string)
+
+    @property
+    def file_name(self):
+        return self._file_name
+
+    @file_name.setter
+    def file_name(self, value):
+        self._file_name = os.path.basename(value).replace('\n', '').replace('\r', '')
 
     @property
     def price(self):
