@@ -102,6 +102,9 @@ class FederalReserveHandler(BaseHandler):
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         user = self.get_current_user()
+        # CSP problem & use of console commands.
+        # TODO: Fix Terminal.js so that this is no longer needed.
+        self.add_content_policy('script-src', "'unsafe-eval'")
         self.render('upgrades/federal_reserve.html', user=user)
 
 
