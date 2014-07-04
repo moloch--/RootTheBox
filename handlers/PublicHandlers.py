@@ -101,6 +101,7 @@ class LoginHandler(BaseHandler):
         self.session['user_uuid'] = user.uuid
         self.session['handle'] = user.handle
         self.session['theme'] = [str(f) for f in theme.files]
+        self.session['theme_id'] = int(theme.id)
         if user.has_permission(ADMIN_PERMISSION):
             self.session['menu'] = 'admin'
         else:

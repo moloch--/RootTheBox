@@ -71,7 +71,7 @@ css_files = [
     (u"Spacelab", [u'spacelab.min.css']),
     (u"Superhero", [u'superhero.min.css']),
     (u"Geocities", [u'geocities.min.css']),
-    (u"386", [u'386.css', u'386.responsive.css']),
+    (u"386", [u'386.css', u'386.js', u'386.responsive.css']),
 ]
 for css in css_files:
     theme = Theme(name=css[0])

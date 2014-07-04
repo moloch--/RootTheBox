@@ -81,7 +81,7 @@ class SettingsHandler(BaseHandler):
 
     def render_page(self, errors=[], success=[]):
         ''' Small wrap for self.render to cut down on lenghty params '''
-        current_theme = Theme.by_cssfile(self.session["theme"])
+        current_theme = Theme.by_id(self.session["theme_id"])
         self.render("user/settings.html",
             errors=errors,
             success=success,
@@ -102,7 +102,8 @@ class SettingsHandler(BaseHandler):
         ''' Change per-user theme '''
         theme = Theme.by_uuid(self.get_argument('theme_uuid', ''))
         if theme is not None:
-            self.session['theme'] = ''.join(theme.cssfile)
+            self.session['theme_id'] = theme.id
+            self.session['theme'] = [str(f) for f in theme.files]
             self.session.save()
             user = self.get_current_user()
             user.theme_id = theme.id

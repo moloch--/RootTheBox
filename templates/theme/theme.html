@@ -1,7 +1,3 @@
-{% for resource in theme_files %}
-    {% if resource.endswith('.css') %}
-        <link href="/static/css/themes/{{ resource }}" rel="stylesheet" />
-    {% elif resource.endswith('.js') %}
-        <script src="/static/js/themes/{{ resource }}" />
-    {% end %}
-{% end %}
+{% for resource in theme_files %}{% if resource.endswith('.css') %}<link href="/static/css/themes/{{ resource }}" rel="stylesheet" />
+{% elif resource.endswith('.js') %}<script src="/static/js/themes/{{ resource }}"></script>
+{% end %}{% end %}
