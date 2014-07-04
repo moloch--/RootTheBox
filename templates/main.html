@@ -8,7 +8,6 @@
         <meta name="author" content="moloch">
         <link href="/static/images/favicon.ico" rel="shortcut icon" />
         <link href="/static/css/bootstrap-responsive.css" rel="stylesheet" />
-        {% module Theme() %}
         <link href="/static/css/font-awesome.min.css" rel="stylesheet" />
         <link href="/static/css/animate.css" rel="stylesheet" />
         <link href="/static/css/notifier.css" rel="stylesheet" />
@@ -23,6 +22,7 @@
         <script src="/static/js/libs/notifier.js" type="text/javascript"></script>
         <script src="/static/js/pages/main.js" type="text/javascript"></script>
         {% block header %}{% end %}
+        {% module Theme() %}
         <meta id="ws-connect" data-url="{{ handler.application.settings['ws_connect'] }}" />
     </head>
     {% block modals %}{% end %}
