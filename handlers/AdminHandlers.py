@@ -63,6 +63,7 @@ from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 
 class AdminGameHandler(BaseHandler):
+
     ''' Start or stop the game '''
 
     @restrict_ip_address
@@ -121,7 +122,8 @@ class AdminBanHammerHandler(BaseHandler):
                 threshold = abs(int(self.get_argument('threshold_size', '10')))
             except ValueError:
                 threshold = 10
-            logging.info("Automatic ban enabled, with threshold of %d" % threshold)
+            logging.info(
+                "Automatic ban enabled, with threshold of %d" % threshold)
             self.application.settings['blacklist_threshold'] = threshold
         else:
             logging.info("Automatic ban disabled")
@@ -147,6 +149,7 @@ class AdminBanHammerHandler(BaseHandler):
 
 
 class AdminCreateHandler(BaseHandler):
+
     ''' Handler used to create game objects '''
 
     @restrict_ip_address
@@ -156,13 +159,13 @@ class AdminCreateHandler(BaseHandler):
         ''' Renders Corp/Box/Flag create pages '''
         game_objects = {
             'corporation': 'admin/create/corporation.html',
-                    'box': 'admin/create/box.html',
+            'box': 'admin/create/box.html',
                    'flag': 'admin/create/flag.html',
-             'flag/regex': 'admin/create/flag-regex.html',
-              'flag/file': 'admin/create/flag-file.html',
+            'flag/regex': 'admin/create/flag-regex.html',
+            'flag/file': 'admin/create/flag-file.html',
             'flag/static': 'admin/create/flag-static.html',
                    'team': 'admin/create/team.html',
-             'game_level': 'admin/create/game_level.html',
+            'game_level': 'admin/create/game_level.html',
                    'hint': 'admin/create/hint.html',
         }
         if len(args) == 1 and args[0] in game_objects:
@@ -177,13 +180,13 @@ class AdminCreateHandler(BaseHandler):
         ''' Calls a function based on URL '''
         game_objects = {
             'corporation': self.create_corporation,
-                    'box': self.create_box,
-              'flag/file': self.create_flag_file,
-             'flag/regex': self.create_flag_regex,
+            'box': self.create_box,
+            'flag/file': self.create_flag_file,
+            'flag/regex': self.create_flag_regex,
             'flag/static': self.create_flag_static,
-                   'team': self.create_team,
-             'game_level': self.create_game_level,
-                   'hint': self.create_hint,
+            'team': self.create_team,
+            'game_level': self.create_game_level,
+            'hint': self.create_hint,
         }
         if len(args) == 1 and args[0] in game_objects:
             game_objects[args[0]]()
@@ -213,12 +216,14 @@ class AdminCreateHandler(BaseHandler):
             corp_uuid = self.get_argument('corporation_uuid', '')
             if Box.by_name(self.get_argument('name', '')) is not None:
                 self.render("admin/create/box.html",
-                    errors=["Box name already exists"]
-                )
+                            errors=["Box name already exists"]
+                            )
             elif Corporation.by_uuid(corp_uuid) is None:
-                self.render("admin/create/box.html", errors=["Corporation does not exist"])
+                self.render(
+                    "admin/create/box.html", errors=["Corporation does not exist"])
             elif GameLevel.by_number(game_level) is None:
-                self.render("admin/create/box.html", errors=["Game level does not exist"])
+                self.render(
+                    "admin/create/box.html", errors=["Game level does not exist"])
             else:
                 box = self._make_box(game_level)
                 self.dbsession.commit()
@@ -261,7 +266,8 @@ class AdminCreateHandler(BaseHandler):
         description = self.get_argument('description', '')
         reward = self.get_argument('reward', '')
         box = Box.by_uuid(self.get_argument('box_uuid', ''))
-        flag = Flag.create_flag(flag_type, box, name, token, description, reward)
+        flag = Flag.create_flag(
+            flag_type, box, name, token, description, reward)
         flag.capture_message = self.get_argument('capture_message', '')
         self.add_attachments(flag)
         self.dbsession.add(flag)
@@ -294,15 +300,15 @@ class AdminCreateHandler(BaseHandler):
             game_level = abs(int(lvl)) if lvl.isdigit() else 0
             if GameLevel.by_number(game_level) is not None:
                 self.render('admin/create/game_level.html',
-                    errors=["Game level number must be unique"]
-                )
+                            errors=["Game level number must be unique"]
+                            )
             else:
                 self._make_level(game_level)
                 self.redirect('/admin/view/game_levels')
         except ValueError:
             self.render('admin/create/game_level.html',
-                errors=["Invalid level number"]
-            )
+                        errors=["Invalid level number"]
+                        )
 
     def create_hint(self):
         ''' Add hint to database '''
@@ -318,7 +324,8 @@ class AdminCreateHandler(BaseHandler):
             except ValueError as error:
                 self.render('admin/create/hint.html', errors=["%s" % error])
         else:
-            self.render('admin/create/hint.html', errors=["Box does not exist"])
+            self.render(
+                'admin/create/hint.html', errors=["Box does not exist"])
 
     def _make_box(self, level_number):
         ''' Creates a box in the database '''
@@ -361,6 +368,7 @@ class AdminCreateHandler(BaseHandler):
 
 
 class AdminViewHandler(BaseHandler):
+
     ''' View game objects '''
 
     @restrict_ip_address
@@ -369,9 +377,9 @@ class AdminViewHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Calls a view function based on URI '''
         uri = {
-              'game_objects': "admin/view/game_objects.html",
-               'game_levels': "admin/view/game_levels.html",
-              'user_objects': 'admin/view/user_objects.html',
+            'game_objects': "admin/view/game_objects.html",
+            'game_levels': "admin/view/game_levels.html",
+            'user_objects': 'admin/view/user_objects.html',
             'market_objects': 'admin/view/market_objects.html',
         }
         if len(args) and args[0] in uri:
@@ -381,6 +389,7 @@ class AdminViewHandler(BaseHandler):
 
 
 class AdminAjaxObjectDataHandler(BaseHandler):
+
     ''' Handles AJAX data for admin handlers '''
 
     @restrict_ip_address
@@ -393,7 +402,7 @@ class AdminAjaxObjectDataHandler(BaseHandler):
             'flag': Flag,
             'user': User,
             'team': Team,
-             'box': Box,
+            'box': Box,
             'hint': Hint,
         }
         obj_name = self.get_argument('obj', '')
@@ -410,6 +419,7 @@ class AdminAjaxObjectDataHandler(BaseHandler):
 
 
 class AdminEditHandler(BaseHandler):
+
     ''' Edit game objects '''
 
     @restrict_ip_address
@@ -419,14 +429,14 @@ class AdminEditHandler(BaseHandler):
         ''' Just redirect to the corisponding /view page '''
         uri = {
             'corporation': 'game_objects',
-                    'box': 'game_objects',
+            'box': 'game_objects',
                    'flag': 'game_objects',
                    'team': 'game_objects',
                    'user': 'user_objects',
                    'ipv4': 'game_objects',
                    'ipv6': 'game_objects',
-             'game_level': 'game_levels',
-              'box_level': 'game_levels',
+            'game_level': 'game_levels',
+            'box_level': 'game_levels',
                    'hint': 'game_objects',
             'market_item': 'market_objects',
         }
@@ -442,14 +452,14 @@ class AdminEditHandler(BaseHandler):
         ''' Calls an edit function based on URL '''
         uri = {
             'corporation': self.edit_corporations,
-                    'box': self.edit_boxes,
-                   'flag': self.edit_flags,
-                   'team': self.edit_teams,
-                   'user': self.edit_users,
-                     'ip': self.edit_ip,
-             'game_level': self.edit_game_level,
-              'box_level': self.box_level,
-                   'hint': self.edit_hint,
+            'box': self.edit_boxes,
+            'flag': self.edit_flags,
+            'team': self.edit_teams,
+            'user': self.edit_users,
+            'ip': self.edit_ip,
+            'game_level': self.edit_game_level,
+            'box_level': self.box_level,
+            'hint': self.edit_hint,
             'market_item': self.edit_market_item,
         }
         if len(args) and args[0] in uri:
@@ -464,17 +474,19 @@ class AdminEditHandler(BaseHandler):
             try:
                 name = self.get_argument('name', '')
                 if name != corp.name:
-                    logging.info("Updated corporation name %s -> %s" % (corp.name, name))
+                    logging.info(
+                        "Updated corporation name %s -> %s" % (corp.name, name))
                     corp.name = name
                     self.dbsession.add(corp)
                     self.dbsession.commit()
                 self.redirect('/admin/view/game_objects')
             except ValueError as error:
-                self.render("admin/view/game_objects.html", errors=["%s" % error])
+                self.render(
+                    "admin/view/game_objects.html", errors=["%s" % error])
         else:
             self.render("admin/view/game_objects.html",
-                errors=["Corporation does not exist"]
-            )
+                        errors=["Corporation does not exist"]
+                        )
 
     def edit_boxes(self):
         '''
@@ -486,28 +498,30 @@ class AdminEditHandler(BaseHandler):
                 name = self.get_argument('name', '')
                 if name != box.name:
                     if Box.by_name(name) is None:
-                        logging.info("Updated box name %s -> %s" % (box.name, name,))
+                        logging.info(
+                            "Updated box name %s -> %s" % (box.name, name,))
                         box.name = name
                     else:
                         raise ValueError("Box name already exists")
-                corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
+                corp = Corporation.by_uuid(
+                    self.get_argument('corporation_uuid'))
                 if corp is not None and corp.id != box.corporation_id:
                     logging.info("Updated %s's corporation %s -> %s" %
-                        (box.name, box.corporation_id, corp.id,))
+                                (box.name, box.corporation_id, corp.id,))
                     box.corporation_id = corp.id
                 elif corp is None:
                     raise ValueError("Corporation does not exist")
                 description = self.get_argument('description', '')
                 if description != box._description:
                     logging.info("Updated %s's description %s -> %s" %
-                        (box.name, box.description, description,)
-                    )
+                                (box.name, box.description, description,)
+                                 )
                     box.description = description
                 difficulty = self.get_argument('difficulty', '')
                 if difficulty != box.difficulty:
                     logging.info("Updated %s's difficulty %s -> %s" %
-                        (box.name, box.difficulty, difficulty,)
-                    )
+                                (box.name, box.difficulty, difficulty,)
+                                 )
                     box.difficulty = difficulty
                 if 'avatar' in self.request.files:
                     box.avatar = self.request.files['avatar'][0]['body']
@@ -515,11 +529,12 @@ class AdminEditHandler(BaseHandler):
                 self.dbsession.commit()
                 self.redirect("/admin/view/game_objects")
             except ValueError as error:
-                self.render("admin/view/game_objects.html", errors=["%s" % error])
+                self.render(
+                    "admin/view/game_objects.html", errors=["%s" % error])
         else:
             self.render("admin/view/game_objects.html",
-                errors=["Box does not exist"]
-            )
+                        errors=["Box does not exist"]
+                        )
 
     def edit_flags(self):
         ''' Super ugly code, yes - Edit existing flags in the database '''
@@ -530,8 +545,8 @@ class AdminEditHandler(BaseHandler):
                 if flag.name != name:
                     if Flag.by_name(name) is None:
                         logging.info("Updated flag name %s -> %s" %
-                            (flag.name, name,)
-                        )
+                                    (flag.name, name,)
+                                     )
                         flag.name = name
                     else:
                         raise ValueError("Flag name already exists")
@@ -539,24 +554,24 @@ class AdminEditHandler(BaseHandler):
                 if flag.token != token:
                     if Flag.by_token(token) is None:
                         logging.info("Updated %s's token %s -> %s" %
-                            (flag.name, flag.token, token)
-                        )
+                                    (flag.name, flag.token, token)
+                                     )
                         flag.token = token
                     else:
                         raise ValueError("Token is not unique")
                 description = self.get_argument('description', '')
                 if flag._description != description:
                     logging.info("Updated %s's description %s -> %s" %
-                        (flag.name, flag._description, description,)
-                    )
+                                (flag.name, flag._description, description,)
+                                 )
                     flag.description = description
                 flag.value = self.get_argument('value', '')
                 flag.capture_message = self.get_argument('capture_message', '')
                 box = Box.by_uuid(self.get_argument('box_uuid', ''))
                 if box is not None and flag not in box.flags:
                     logging.info("Updated %s's box %d -> %d" %
-                        (flag.name, flag.box_id, box.id)
-                    )
+                                (flag.name, flag.box_id, box.id)
+                                 )
                     flag.box_id = box.id
                 elif box is None:
                     raise ValueError("Box does not exist")
@@ -564,11 +579,12 @@ class AdminEditHandler(BaseHandler):
                 self.dbsession.commit()
                 self.redirect("/admin/view/game_objects")
             except ValueError as error:
-                self.render("admin/view/game_objects.html", errors=["%s" % error])
+                self.render(
+                    "admin/view/game_objects.html", errors=["%s" % error])
         else:
             self.render("admin/view/game_objects.html",
-                errors=["Flag does not exist"]
-            )
+                        errors=["Flag does not exist"]
+                        )
 
     def edit_teams(self):
         ''' Edit existing team objects in the database '''
@@ -577,19 +593,23 @@ class AdminEditHandler(BaseHandler):
             try:
                 name = self.get_argument('name', '')
                 if team.name != name:
-                    logging.info("Updated team name %s -> %s" % (team.name, name))
+                    logging.info(
+                        "Updated team name %s -> %s" % (team.name, name))
                     team.name = name
                 motto = self.get_argument('motto', '')
                 if team.motto != motto:
-                    logging.info("Updated %s's motto %s -> %s" % (team.name, team.motto, motto))
+                    logging.info("Updated %s's motto %s -> %s" %
+                                 (team.name, team.motto, motto))
                     team.motto = motto
                 self.dbsession.add(team)
                 self.dbsession.close()
                 self.redirect("/admin/view/user_objects")
             except ValueError as error:
-                self.render("admin/view/user_objects.html", errors=["%s" % error])
+                self.render(
+                    "admin/view/user_objects.html", errors=["%s" % error])
         else:
-            self.render("admin/view/user_objects.html", errors=["Team does not exist"])
+            self.render(
+                "admin/view/user_objects.html", errors=["Team does not exist"])
 
     def edit_users(self):
         ''' Update user objects in the database '''
@@ -599,7 +619,8 @@ class AdminEditHandler(BaseHandler):
                 handle = self.get_argument('handle', '')
                 if user.handle != handle:
                     if User.by_handle(handle) is None:
-                        logging.info("Updated user handle %s -> %s" % (user.handle, handle))
+                        logging.info(
+                            "Updated user handle %s -> %s" % (user.handle, handle))
                         user.handle = handle
                     else:
                         raise ValueError("Handle is already in use")
@@ -607,11 +628,13 @@ class AdminEditHandler(BaseHandler):
                 if hash_algorithm != user.algorithm:
                     if hash_algorithm in user.algorithms:
                         if 0 < len(self.get_argument('bank_password', '')):
-                            logging.info("Updated %s's hashing algorithm %s -> %s" %
+                            logging.info(
+                                "Updated %s's hashing algorithm %s -> %s" %
                                 (user.handle, user.algorithm, hash_algorithm,))
                             user.algorithm = hash_algorithm
                         else:
-                            raise ValueError("You must provide a new bank password when updating the hashing algorithm")
+                            raise ValueError(
+                                "You must provide a new bank password when updating the hashing algorithm")
                     else:
                         raise ValueError("Not a valid hash algorithm")
                 password = self.get_argument('password', '')
@@ -624,7 +647,7 @@ class AdminEditHandler(BaseHandler):
                 if team is not None:
                     if user not in team.members:
                         logging.info("Updated %s's team %s -> %s" %
-                            (user.handle, user.team_id, team.name))
+                                    (user.handle, user.team_id, team.name))
                         user.team_id = team.id
                 else:
                     raise ValueError("Team does not exist in database")
@@ -632,9 +655,11 @@ class AdminEditHandler(BaseHandler):
                 self.dbsession.commit()
                 self.redirect('/admin/view/user_objects')
             except ValueError as error:
-                self.render("admin/view/user_objects.html", errors=["%s" % error])
+                self.render(
+                    "admin/view/user_objects.html", errors=["%s" % error])
         else:
-            self.render("admin/view/user_objects.html", errors=["User does not exist"])
+            self.render(
+                "admin/view/user_objects.html", errors=["User does not exist"])
 
     def edit_ip(self):
         ''' Add ip addresses to a box (sorta edits the box object) '''
@@ -712,16 +737,19 @@ class AdminEditHandler(BaseHandler):
                 price = self.get_argument('price', hint.price)
                 if hint.price != price:
                     hint.price = price
-                description = self.get_argument('description', hint.description)
+                description = self.get_argument(
+                    'description', hint.description)
                 if hint.description != description:
                     hint.description = description
                 self.dbsession.add(hint)
                 self.dbsession.commit()
                 self.redirect('/admin/view/game_objects')
             except ValueError as error:
-                self.render("admin/view/game_objects.html", errors=["%s" % error])
+                self.render(
+                    "admin/view/game_objects.html", errors=["%s" % error])
         else:
-            self.render("admin/view/game_objects.html", errors=["User does not exist"])
+            self.render(
+                "admin/view/game_objects.html", errors=["User does not exist"])
 
     def edit_market_item(self):
         ''' Change a market item's price '''
@@ -736,15 +764,16 @@ class AdminEditHandler(BaseHandler):
                 self.redirect('/admin/view/market_objects')
             except ValueError:
                 self.render('admin/view/market_objects.html',
-                    errors=["Invalid price."]
-                )
+                            errors=["Invalid price."]
+                            )
         else:
             self.render('admin/view/market_objects.html',
-                errors=["Item does not exist."]
-            )
+                        errors=["Item does not exist."]
+                        )
 
 
 class AdminDeleteHandler(BaseHandler):
+
     ''' Delete flags/ips from the database '''
 
     @restrict_ip_address
@@ -753,12 +782,12 @@ class AdminDeleteHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Used to delete database objects '''
         uri = {
-                 'ip': self.del_ip,
-               'flag': self.del_flag,
-               'hint': self.del_hint,
-                'box': self.del_box,
-        'corporation': self.del_corp,
-               'user': self.del_user,
+            'ip': self.del_ip,
+            'flag': self.del_flag,
+            'hint': self.del_hint,
+            'box': self.del_box,
+            'corporation': self.del_corp,
+            'user': self.del_user,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -775,11 +804,11 @@ class AdminDeleteHandler(BaseHandler):
             self.redirect("/admin/view/game_objects")
         else:
             logging.info("IP address (%r) does not exist in database" %
-                self.get_argument('ip_uuid', '')
-            )
+                         self.get_argument('ip_uuid', '')
+                         )
             self.render("admin/view/game_objects.html",
-                errors=["IP does not exist in database"]
-            )
+                        errors=["IP does not exist in database"]
+                        )
 
     def del_flag(self):
         ''' Delete a flag object from the database '''
@@ -791,11 +820,11 @@ class AdminDeleteHandler(BaseHandler):
             self.redirect('/admin/view/game_objects')
         else:
             logging.info("Flag (%r) does not exist in the database" %
-                self.get_argument('uuid', '')
-            )
+                         self.get_argument('uuid', '')
+                         )
             self.render("admin/view/game_objects.html",
-                errors=["Flag does not exist in database."]
-            )
+                        errors=["Flag does not exist in database."]
+                        )
 
     def del_hint(self):
         ''' Delete a hint from the database '''
@@ -807,8 +836,8 @@ class AdminDeleteHandler(BaseHandler):
             self.redirect('/admin/view/game_objects')
         else:
             self.render('admin/view/game_objects.html',
-                errors=["Hint does not exist in database."]
-            )
+                        errors=["Hint does not exist in database."]
+                        )
 
     def del_corp(self):
         ''' Delete a corporation '''
@@ -820,8 +849,8 @@ class AdminDeleteHandler(BaseHandler):
             self.redirect('/admin/view/game_objects')
         else:
             self.render('admin/view/game_objects.html',
-                errors=["Corporation does not exist in database."]
-            )
+                        errors=["Corporation does not exist in database."]
+                        )
 
     def del_box(self):
         ''' Delete  a box '''
@@ -833,8 +862,8 @@ class AdminDeleteHandler(BaseHandler):
             self.redirect('/admin/view/game_objects')
         else:
             self.render('admin/view/game_objects.html',
-                errors=["Box does not exist in database."]
-            )
+                        errors=["Box does not exist in database."]
+                        )
 
     def del_user(self):
         ''' Delete a user '''
@@ -846,11 +875,12 @@ class AdminDeleteHandler(BaseHandler):
             self.redirect('/admin/view/user_objects')
         else:
             self.render('admin/view/user_objects.html',
-                errors=["User does not exist in database."]
-            )
+                        errors=["User does not exist in database."]
+                        )
 
 
 class AdminLockHandler(BaseHandler):
+
     ''' Used to manually lock/unlocked accounts '''
 
     @restrict_ip_address
@@ -867,6 +897,7 @@ class AdminLockHandler(BaseHandler):
 
 
 class AdminRegTokenHandler(BaseHandler):
+
     ''' Manages registration tokens '''
 
     @restrict_ip_address
@@ -876,7 +907,7 @@ class AdminRegTokenHandler(BaseHandler):
         ''' Call method based on URI '''
         uri = {
             'create': self.create,
-              'view': self.view,
+            'view': self.view,
         }
         if len(args) == 1 and args[0] in uri:
             uri[args[0]]()
@@ -896,8 +927,8 @@ class AdminRegTokenHandler(BaseHandler):
             self.redirect('/admin/regtoken/view')
         else:
             self.render('admin/view/token.html',
-                errors=["Token does not exist"]
-            )
+                        errors=["Token does not exist"]
+                        )
 
     def create(self):
         ''' Adds a registration token to the db and displays the value '''
@@ -912,6 +943,7 @@ class AdminRegTokenHandler(BaseHandler):
 
 
 class AdminSourceCodeMarketHandler(BaseHandler):
+
     ''' Add source code files to the source code market '''
 
     @restrict_ip_address
@@ -938,23 +970,23 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         if box is not None:
             if not 'source_archive' in self.request.files and 0 < len(self.request.files['source_archive']):
                 self.render('admin/upgrades/source_code_market.html',
-                    errors=["No file data"]
-                )
+                            errors=["No file data"]
+                            )
             else:
                 try:
                     price = abs(int(self.get_argument('price', 'NaN')))
                     self.create_source_code(box, price)
                     self.render('admin/upgrades/source_code_market.html',
-                        errors=None
-                    )
+                                errors=None
+                                )
                 except ValueError:
                     self.render('admin/upgrades/source_code_market.html',
-                        errors=["Price must be an integer"]
-                    )
+                                errors=["Price must be an integer"]
+                                )
         else:
             self.render('admin/upgrades/source_code_market.html',
-                errors=["The selected box does not exist"]
-            )
+                        errors=["The selected box does not exist"]
+                        )
 
     def create_source_code(self, box, price):
         ''' Save file data and create object in database '''
@@ -994,8 +1026,8 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             root = self.application.settings['source_code_market_dir']
             source_code_path = root + '/' + source_code_uuid
             logging.info("Delete souce code market file: %s (box: %s)" %
-                (source_code_path, box.name,)
-            )
+                        (source_code_path, box.name,)
+                         )
             if os.path.exists(source_code_path):
                 os.unlink(source_code_path)
             errors = None
@@ -1005,6 +1037,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
 
 
 class AdminSwatHandler(BaseHandler):
+
     ''' Manage SWAT requests '''
 
     @restrict_ip_address
@@ -1018,11 +1051,11 @@ class AdminSwatHandler(BaseHandler):
         if errors is not None and not isinstance(errors, list):
             errors = [str(errors), ]
         self.render('admin/upgrades/swat.html',
-            pending_bribes=Swat.all_pending(),
-            in_progress_bribes=Swat.all_in_progress(),
-            completed_bribes=Swat.all_completed(),
-            errors=errors,
-        )
+                    pending_bribes=Swat.all_pending(),
+                    in_progress_bribes=Swat.all_in_progress(),
+                    completed_bribes=Swat.all_completed(),
+                    errors=errors,
+                    )
 
     @restrict_ip_address
     @authenticated
@@ -1051,8 +1084,8 @@ class AdminSwatHandler(BaseHandler):
             self.render_page()
         else:
             logging.warn("Invalid request to accept bribe with uuid: %r" %
-                (self.get_argument('uuid', ''),)
-            )
+                        (self.get_argument('uuid', ''),)
+                         )
             self.render_page('Requested SWAT object does not exist')
 
     def complete_bribe(self):
@@ -1068,8 +1101,8 @@ class AdminSwatHandler(BaseHandler):
             self.render_page()
         else:
             logging.warn("Invalid request to complete bribe with uuid: %r" %
-                (self.get_argument('uuid', ''),)
-            )
+                        (self.get_argument('uuid', ''),)
+                         )
             self.render_page('Requested SWAT object does not exist')
 
 
@@ -1080,9 +1113,9 @@ class AdminConfigurationHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
         self.render('admin/configuration.html',
-            errors=[],
-            config=self.config
-        )
+                    errors=[],
+                    config=self.config
+                    )
 
     @restrict_ip_address
     @authenticated
@@ -1095,15 +1128,19 @@ class AdminConfigurationHandler(BaseHandler):
         try:
             config = ConfigManager.instance()
             config.game_name = self.get_argument('game_name', '')
-            config.restrict_registration = self.get_argument('restrict_registration', '') == 'true'
-            config.public_teams = self.get_argument('public_teams', '') == 'true'
+            config.restrict_registration = self.get_argument(
+                'restrict_registration', '') == 'true'
+            config.public_teams = self.get_argument(
+                'public_teams', '') == 'true'
             config.max_team_size = self.get_argument('max_team_size', '')
-            config.max_password_length = self.get_argument('max_password_length', '')
+            config.max_password_length = self.get_argument(
+                'max_password_length', '')
             self.config_bots(config)
             reward = self.get_argument('bot_reward', '')
             if reward != '':
                 config.bot_reward = reward
-            config.use_black_market = self.get_argument('use_black_market', '') == 'true'
+            config.use_black_market = self.get_argument(
+                'use_black_market', '') == 'true'
             upgrade_cost = self.get_argument('password_upgrade_cost', '')
             if upgrade_cost != '':
                 config.password_upgrade_cost = upgrade_cost
@@ -1111,10 +1148,12 @@ class AdminConfigurationHandler(BaseHandler):
             if bribe_cost != '':
                 config.bribe_cost = bribe_cost
             config.save()
-            self.render('admin/configuration.html', errors=None, config=self.config)
+            self.render(
+                'admin/configuration.html', errors=None, config=self.config)
         except Exception as error:
             logging.exception("Configuration update threw an exception")
-            self.render('admin/configuration.html', errors=[str(error)], config=self.config)
+            self.render('admin/configuration.html',
+                        errors=[str(error)], config=self.config)
 
     def config_bots(self, config):
         ''' Updates bot config, and starts/stops the botnet callback '''
@@ -1141,7 +1180,7 @@ class AdminGarbageCfgHandler(BaseHandler):
             self.set_header(
                 "Content-disposition", "attachment; filename=%s.garbage" % (
                     filter(lambda char: char in printable[:-38], box.name),
-            ))
+                ))
             self.set_header('Content-Length', len(data))
             self.write(data)
 
@@ -1176,8 +1215,9 @@ class AdminExportHandler(BaseHandler):
         self.set_header('Content-Type', 'text/xml')
         self.set_header(
             "Content-disposition", "attachment; filename=%s.xml" % (
-                filter(lambda char: char in printable[:-38], self.config.game_name),
-        ))
+                filter(lambda char: char in printable[
+                       :-38], self.config.game_name),
+            ))
         self.set_header('Content-Length', len(xml_doc.encode('utf-8')))
         self.write(xml_doc.encode('utf-8'))
         self.finish()
@@ -1230,7 +1270,8 @@ class AdminImportXmlHandler(BaseHandler):
             os.unlink(fxml)
             self.render('admin/import.html', success=success, errors=errors)
         else:
-            self.render('admin/import.html', success=None, errors=["No file data."])
+            self.render(
+                'admin/import.html', success=None, errors=["No file data."])
 
     def _get_tmp(self):
         ''' Creates a tmp file with the file data '''

@@ -29,8 +29,8 @@ from mimetypes import guess_type
 from libs.ConfigManager import ConfigManager
 
 
-class FlagAttachment(DatabaseObject):
-    ''' Flag definition '''
+class ChallengeAttachment(DatabaseObject):
+    ''' Files attached to a challenge '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _file_name = Column(Unicode(64), nullable=False)
@@ -78,3 +78,63 @@ class FlagAttachment(DatabaseObject):
         config = ConfigManager.instance()
         with open(config.file_uploads_dir + self.uuid, 'rb') as fp:
             ET.SubElement(attachment_elem, "data").text = fp.read()
+
+
+class ChallengeSubmission(DatabaseObject):
+
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    attachments = relationship("ChallengeAttachment",
+        backref=backref("challenge", lazy="select"),
+        cascade="all,delete,delete-orphan"
+    )
+    _description = Column(Unicode(256), nullable=False)
+
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        if 256 < len(value):
+            raise ValueError("Description must be less than 256 characters")
+        self._description = unicode(value)
+
+
+class Challenge(DatabaseObject):
+    ''' Flag definition '''
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    attachments = relationship("ChallengeAttachment",
+        backref=backref("challenge", lazy="select"),
+        cascade="all,delete,delete-orphan"
+    )
+    _description = Column(Unicode(256), nullable=False)
+    _capture_message = Column(Unicode(256))
+    value = Column(Integer, nullable=False)
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not 3 < len(value) < 16:
+            raise ValueError("Challenge name must be 3 - 16 characters")
+        self._name = unicode(value)
+
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        if 256 < len(value):
+            raise ValueError("Description must be less than 256 characters")
+        self._description = unicode(value)
+
+    @property
+    def capture_message(self):
+        return self._capture_message if self._capture_message else ''
+
+    @capture_message.setter
+    def capture_message(self, value):
+        self._capture_message = unicode(value)

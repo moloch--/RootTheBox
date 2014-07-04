@@ -29,7 +29,7 @@ import sys
 from os import urandom, path, _exit
 from modules.Menu import Menu
 from modules.Recaptcha import Recaptcha
-from modules.CssTheme import CssTheme
+from modules.AppTheme import AppTheme
 from libs.ConsoleColors import *
 from libs.Scoreboard import score_bots
 from libs.BotManager import BotManager, ping_bots
@@ -193,7 +193,7 @@ app = Application(
     # UI Modules
     ui_modules={
         "Menu": Menu,
-        "CssTheme": CssTheme,
+        "Theme": AppTheme,
         "Recaptcha": Recaptcha,
     },
 
@@ -237,7 +237,7 @@ app = Application(
     ),
 
     # Application version
-    version='0.4.0',
+    version='0.5.0',
 
 )
 

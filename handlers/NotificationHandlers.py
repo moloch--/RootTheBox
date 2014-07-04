@@ -19,7 +19,7 @@ Created on Mar 15, 2012
     limitations under the License.
 '''
 
-
+import json
 import logging
 
 from models.Notification import Notification
@@ -44,11 +44,18 @@ class NotifySocketHandler(BaseWebSocketHandler):
             )
             for notify in notifications:
                 self.write_message(notify.to_dict())
-                Notification.delivered(notify.user_id, notify.event_uuid)
         else:
             logging.debug("[Web Socket] Opened public notification socket.")
         self.start_time = datetime.now()
         self.manager.add_connection(self)
+
+    def on_message(self, message):
+        message = json.loads(message)
+        notify = Notification.by_uuid(message['uuid'])
+        if notify.user_id == self.session['user_id']:
+            notify.viewed = True
+            self.dbsession.add(notify)
+            self.dbsession.commit()
 
     @property
     def team_id(self):

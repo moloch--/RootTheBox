@@ -23,16 +23,14 @@ Created on Mar 14, 2012
 from tornado.web import UIModule
 from libs.ConfigManager import ConfigManager
 
-
-class CssTheme(UIModule):
+class AppTheme(UIModule):
 
     def render(self, *args, **kwargs):
         ''' Includes different CSS themes based on user prefs '''
         if self.handler.session is not None:
-            return self.render_string("theme/css.html",
-                theme=self.handler.session['theme']
-            )
+            return self.render_string("theme/theme.html",
+                                      theme_files=self.handler.session['theme']
+                                      )
         else:
             config = ConfigManager.instance()
-            default_theme = config.default_theme
-            return self.render_string("theme/css.html", theme=default_theme)
+            return self.render_string("theme/theme.html", theme_files=config.default_theme)

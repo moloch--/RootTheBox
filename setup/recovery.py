@@ -28,7 +28,6 @@ import sys
 import getpass
 
 from libs.ConsoleColors import *
-from libs.Notifier import Notifier
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *

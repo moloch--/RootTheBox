@@ -94,11 +94,13 @@ def tests():
     nose.run(module='tests', argv=[os.getcwd() + '/tests'])
     teardown_database(db_name)
 
+
 def restart_serve():
     ''' Shutdown the actual process and restart the service. Useful for rootthebox.cfg changes. '''
     pid = os.getpid()
     print(INFO+'%s : Restarting the service (%i)...' % (current_time(), pid) )
     os.execl('./setup/restart.sh', '')
+
 
 def main(args):
     ''' Call functions in the correct order based on CLI params '''

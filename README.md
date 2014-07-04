@@ -7,7 +7,7 @@ The application can be easily modified for any hacker CTF game. Root the Box att
 hackers alike by combining a fun game-like environment, with realistic challenges that convey knowledge applicable 
 to real-world penetration testing. Just as in traditional CTF games, each team attacks targets of varying difficulty 
 and sophistication, attempting to collect flags. However in Root the Box, teams can also create "Botnets" by uploading
-a small bot program to target machines. Teams are periodically rewarded with (in-game) money for each bot in their botnet; 
+a small bot program to target machines. Teams are periodically rewarded with (in-game) money for each bot in their botnet;
 the larger the botnet the larger the reward.
 
 Money can be used to unlock new levels, buy hints to flags, download a target's source code, or even "SWAT" other players by bribing the (in-game) police.
@@ -33,6 +33,7 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 ### Requirements
 * Python 2.7.x (Python 3.x support pending)
 * Supported platforms: Install scripts are for Ubuntu/Debian, but the application should work on any Linux, BSD, or OSX system.
+* Internet Explorer is _not_ supported. Please use the latest release of Firefox, Chrome, Operah, or any other browser that supports open standards.
 
 Questions? Problems?
 -------------------------------

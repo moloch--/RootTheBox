@@ -23,10 +23,38 @@ Created on Mar 12, 2012
 from uuid import uuid4
 from string import ascii_letters, digits
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym
+from sqlalchemy.orm import synonym, relationship
 from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
+
+
+class ThemeFile(DatabaseObject):
+    '''
+    Holds theme related settings
+    '''
+    theme_id =Column(Integer, ForeignKey('theme.id'), nullable=False)
+    _file_name = Column(Unicode(64), nullable=False)
+
+    @classmethod
+    def _filter_string(cls, string, extra_chars=""):
+        ''' Remove any non-white listed chars from a string '''
+        char_white_list = ascii_letters + digits + extra_chars
+        return filter(lambda char: char in char_white_list, string)
+
+    @property
+    def file_name(self):
+        return self._file_name
+
+    @file_name.setter
+    def file_name(self, value):
+        self._file_name = self._filter_string(value, ".")
+
+    def __str__(self):
+        return self._file_name
+
+    def __unicode__(self):
+        return self._file_name
 
 
 class Theme(DatabaseObject):
@@ -35,20 +63,8 @@ class Theme(DatabaseObject):
     '''
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-
     _name = Column(Unicode(64), unique=True, nullable=False)
-    name = synonym('_name', descriptor=property(
-        lambda self: self._name,
-        lambda self, name: setattr(self, '_name',
-            self.__class__._filter_string(name))
-    ))
-
-    _cssfile = Column(Unicode(64), unique=True, nullable=False)
-    cssfile = synonym('_cssfile', descriptor=property(
-        lambda self: self._cssfile,
-        lambda self, cssfile: setattr(self, '_cssfile',
-            self.__class__._filter_string(cssfile, "."))
-    ))
+    files = relationship("ThemeFile", lazy="joined")
 
     @classmethod
     def all(cls):
@@ -63,20 +79,23 @@ class Theme(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return the object whose uuid is _uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
-    def by_name(cls, _name):
+    def by_name(cls, name):
         ''' Return the object whose name is _name '''
-        return dbsession.query(cls).filter_by(name=_name).first()
-
-    @classmethod
-    def by_cssfile(cls, _cssfile):
-        ''' Return the object whose name is theme_name '''
-        return dbsession.query(cls).filter_by(cssfile=_cssfile).first()
+        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):
         ''' Remove any non-white listed chars from a string '''
         char_white_list = ascii_letters + digits + extra_chars
         return filter(lambda char: char in char_white_list, string)
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = self._filter_string(value, ".")

@@ -29,7 +29,7 @@ from libs.ConsoleColors import *
 from libs.ConfigManager import ConfigManager
 from models import dbsession
 from models.Permission import Permission
-from models.Theme import Theme
+from models.Theme import Theme, ThemeFile
 from models.MarketItem import MarketItem
 from models.GameLevel import GameLevel
 from models.User import User, ADMIN_PERMISSION
@@ -58,27 +58,29 @@ else:
 
 # Theme objects
 css_files = [
-    (u"Bootstrap", u'bootstrap.min.css'),
-    (u"Amelia", u'amelia.min.css'),
-    (u"Cyborg", u'cyborg.min.css'),
-    (u"Readable", u'readable.min.css'),
-    (u"Slate", u'slate.min.css'),
-    (u"Spruce", u'spruce.min.css'),
-    (u"United", u'united.min.css'),
-    (u"Cerulean", u'cerulean.min.css'),
-    (u"Journal", u'journal.min.css'),
-    (u"Simplex", u'simplex.min.css'),
-    (u"Spacelab", u'spacelab.min.css'),
-    (u"Superhero", u'superhero.min.css'),
-    (u"Geocities", u'geocities.min.css'),
+    (u"Bootstrap", [u'bootstrap.min.css']),
+    (u"Amelia", [u'amelia.min.css']),
+    (u"Cyborg", [u'cyborg.min.css']),
+    (u"Readable", [u'readable.min.css']),
+    (u"Slate", [u'slate.min.css']),
+    (u"Spruce", [u'spruce.min.css']),
+    (u"United", [u'united.min.css']),
+    (u"Cerulean", [u'cerulean.min.css']),
+    (u"Journal", [u'journal.min.css']),
+    (u"Simplex", [u'simplex.min.css']),
+    (u"Spacelab", [u'spacelab.min.css']),
+    (u"Superhero", [u'superhero.min.css']),
+    (u"Geocities", [u'geocities.min.css']),
+    (u"386", [u'386.css', u'386.responsive.css']),
 ]
 for css in css_files:
-    theme = Theme(
-        name=css[0],
-        cssfile=css[1],
-    )
-    dbsession.add(theme)
+    theme = Theme(name=css[0])
     dbsession.flush()
+    for f in css[1]:
+        theme_file = ThemeFile(theme_id= theme.id, file_name=f)
+        theme.files.append(theme_file)
+        dbsession.add(theme_file)
+    dbsession.add(theme)
 
 # Market Items
 item = MarketItem(

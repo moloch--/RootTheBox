@@ -44,7 +44,7 @@ from models.FlagAttachment import FlagAttachment
 from models.Notification import Notification
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
-from models.Theme import Theme
+from models.Theme import Theme, ThemeFile
 from models.RegistrationToken import RegistrationToken
 from models.MarketItem import MarketItem
 from models.IpAddress import IpAddress

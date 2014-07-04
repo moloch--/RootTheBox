@@ -49,7 +49,7 @@ import xml.etree.cElementTree as ET
 ### Constants
 ADMIN_PERMISSION = u'admin'
 DEFAULT_HASH_ALGORITHM = 'md5'
-ITERATE = 0xbad  # 2989
+ITERATE = 0x2bad  # 11181
 
 # Change this for your production deployments
 # NOTE: Passwords are also individually salted

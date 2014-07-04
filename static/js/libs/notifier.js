@@ -104,6 +104,7 @@ $(document).ready(function() {
         var notifier_ws = new WebSocket($("#ws-connect").data("url") + "/notifications/wsocket/updates");
         notifier_ws.onmessage = function(evt) {
             notification = $.parseJSON(evt.data);
+            console.log("[Notifier] " + evt.data);
             if (notification['category'] == 'success') {
                 Notifier.success(notification['message'], notification['title']);
             } else if (notification['category'] == 'info') {

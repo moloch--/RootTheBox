@@ -72,6 +72,7 @@ class ConfigManager(object):
     _public_teams = None
     _max_team_size = None
     _max_password_length = None
+    _default_theme = None
 
     # Feature enable/disable
     _use_bots = None
@@ -266,7 +267,15 @@ class ConfigManager(object):
 
     @property
     def default_theme(self):
-        return self.config.get("Server", "theme")
+        if self._default_theme is None:
+            from models.Theme import Theme
+            theme_name = self.config.get("Server", "theme")
+            self._default_theme = Theme.by_name(theme_name)
+            print "Default theme: %s -> %s" % (self._default_theme, self._default_theme.files)
+            if self._default_theme is None:
+                logging.error("The default theme does not exist, fix your configuration file")
+                self._default_theme = Theme.all()[0]
+        return [str(f) for f in self._default_theme.files]
 
     @property
     def use_ssl(self):

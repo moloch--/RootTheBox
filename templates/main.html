@@ -8,7 +8,7 @@
         <meta name="author" content="moloch">
         <link href="/static/images/favicon.ico" rel="shortcut icon" />
         <link href="/static/css/bootstrap-responsive.css" rel="stylesheet" />
-        {% module CssTheme() %}
+        {% module Theme() %}
         <link href="/static/css/font-awesome.min.css" rel="stylesheet" />
         <link href="/static/css/animate.css" rel="stylesheet" />
         <link href="/static/css/notifier.css" rel="stylesheet" />
@@ -32,10 +32,12 @@
             {% block content %} Content Missing {% end %}
             <hr />
             <footer>
-                <a href="http://root-the-box.com" target="_blank">Root the Box</a> &copy; {{ datetime.date.today().year }} -
+                <a href="http://root-the-box.com" target="_blank">
+                    Root the Box
+                </a> &copy; {{ datetime.date.today().year }} -
                 Version {{ handler.application.settings['version'] }} -
                 <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a> -
-                <a href="https://github.com/moloch--/RootTheBox/issues">Submit a Bug</a>
+                <a href="https://github.com/moloch--/RootTheBox/issues" target="_blank">Submit a Bug</a>
             </footer>
         </div><!--/.fluid-container-->
     </body>
