@@ -69,6 +69,8 @@ class ConfigManager(object):
     _password_upgrade_cost = None
     _bribe_cost = None
     _whitelist_box_ips = None
+    _dynamic_flag_value = None
+    _flag_value_decrease = None
 
     def __init__(self, cfg_file='rootthebox.cfg'):
         self.filename = cfg_file
@@ -420,6 +422,26 @@ class ConfigManager(object):
     @whitelist_box_ips.setter
     def whitelist_box_ips(self, value):
         self._whitelist_box_ips = bool(value)
+
+    @property
+    def dynamic_flag_value(self):
+        if self._dynamic_flag_value is None:
+            self._dynamic_flag_value = self.config.getboolean('Game', 'dynamic_flag_value')
+        return self._dynamic_flag_value
+
+    @property.setter
+    def dynamic_flag_value(self, value):
+        self._dynamic_flag_value = bool(value)
+
+    @property
+    def flag_value_decrease(self):
+        if self._flag_value_decrease is None:
+            self._flag_value_decrease = self.config.getboolean('Game', 'flag_value_decrease')
+        return self._flag_value_decrease
+
+    @property.setter
+    def flag_value_decrease(self, value):
+        self._flag_value_decrease = int(value)
 
     #####################################################################
     #######################  [ I/O LOOP SETTINGS ] ######################
