@@ -429,7 +429,7 @@ class ConfigManager(object):
             self._dynamic_flag_value = self.config.getboolean('Game', 'dynamic_flag_value')
         return self._dynamic_flag_value
 
-    @property.setter
+    @dynamic_flag_value.setter
     def dynamic_flag_value(self, value):
         self._dynamic_flag_value = bool(value)
 
@@ -439,7 +439,7 @@ class ConfigManager(object):
             self._flag_value_decrease = self.config.getboolean('Game', 'flag_value_decrease')
         return self._flag_value_decrease
 
-    @property.setter
+    @flag_value_decrease.setter
     def flag_value_decrease(self, value):
         self._flag_value_decrease = int(value)
 
