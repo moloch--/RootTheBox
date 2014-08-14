@@ -437,7 +437,7 @@ class ConfigManager(object):
     def flag_value_decrease(self):
         if self._flag_value_decrease is None:
             self._flag_value_decrease = self.config.getint('Game', 'flag_value_decrease')
-        return self._flag_value_decrease
+        return float(self._flag_value_decrease)
 
     @flag_value_decrease.setter
     def flag_value_decrease(self, value):
