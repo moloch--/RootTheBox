@@ -30,6 +30,7 @@ from models.BaseModels import DatabaseObject
 
 
 class SnapshotTeam(DatabaseObject):
+
     '''
     Used by game history; snapshot of a single team in history
     '''
@@ -39,14 +40,14 @@ class SnapshotTeam(DatabaseObject):
     bots = Column(Integer, nullable=False)
 
     game_levels = relationship("GameLevel",
-        secondary=snapshot_team_to_game_level,
-        backref=backref("snapshot_team", lazy="select")
-    )
+                               secondary=snapshot_team_to_game_level,
+                               backref=backref("snapshot_team", lazy="select")
+                               )
 
     flags = relationship("Flag",
-        secondary=snapshot_team_to_flag,
-        backref=backref("snapshot_team", lazy="select")
-    )
+                         secondary=snapshot_team_to_flag,
+                         backref=backref("snapshot_team", lazy="select")
+                         )
 
     @property
     def name(self):

@@ -22,17 +22,19 @@ Created on Mar 12, 2012
 import os
 
 from uuid import uuid4
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, Integer, Boolean, String
+from sqlalchemy import Column
+from sqlalchemy.types import Unicode, Integer, String
 from models.BaseModels import DatabaseObject
 from mimetypes import guess_type
 from libs.ConfigManager import ConfigManager
 
 
 class ChallengeAttachment(DatabaseObject):
+
     ''' Files attached to a challenge '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _file_name = Column(Unicode(64), nullable=False)
     byte_size = Column(Integer, nullable=False)
 
@@ -42,7 +44,8 @@ class ChallengeAttachment(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        self._file_name = os.path.basename(value).replace('\n', '').replace('\r', '')
+        _name = os.path.basename(value)
+        self._file_name = _name.replace('\n', '').replace('\r', '')
 
     @property
     def content_type(self):
@@ -82,11 +85,12 @@ class ChallengeAttachment(DatabaseObject):
 
 class ChallengeSubmission(DatabaseObject):
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     attachments = relationship("ChallengeAttachment",
-        backref=backref("challenge", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                               backref=backref("challenge", lazy="select"),
+                               cascade="all,delete,delete-orphan"
+                               )
     _description = Column(Unicode(256), nullable=False)
 
     @property
@@ -101,12 +105,14 @@ class ChallengeSubmission(DatabaseObject):
 
 
 class Challenge(DatabaseObject):
+
     ''' Flag definition '''
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     attachments = relationship("ChallengeAttachment",
-        backref=backref("challenge", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                               backref=backref("challenge", lazy="select"),
+                               cascade="all,delete,delete-orphan"
+                               )
     _description = Column(Unicode(256), nullable=False)
     _capture_message = Column(Unicode(256))
     value = Column(Integer, nullable=False)

@@ -53,6 +53,7 @@ class BaseHandler(RequestHandler):
         "font-src": set(["'self'"]),
         "object-src": set(["'self'"]),
         "style-src": set(["'self'"]),
+        "data-src": set(["'self'"]),
     }
     _session = None
     _dbsession = dbsession

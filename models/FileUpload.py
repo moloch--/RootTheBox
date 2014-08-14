@@ -26,16 +26,15 @@ from uuid import uuid4
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, String, Integer
-from string import printable
 from mimetypes import guess_type
 from libs.ConfigManager import ConfigManager
 
 
 class FileUpload(DatabaseObject):
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
     byte_size = Column(Integer, nullable=False)
     _description = Column(Unicode(1024), nullable=False)
@@ -58,7 +57,8 @@ class FileUpload(DatabaseObject):
     @classmethod
     def by_file_name(cls, file_name):
         ''' Return the user object whose file name is "file_name" '''
-        return dbsession.query(cls).filter_by(_file_name=unicode(file_name)).first()
+        return dbsession.query(cls).filter_by(
+            _file_name=unicode(file_name)).first()
 
     @property
     def file_name(self):
@@ -66,7 +66,8 @@ class FileUpload(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        self._file_name = os.path.basename(value).replace('\n', '').replace('\r', '')
+        self._file_name = os.path.basename(
+            value).replace('\n', '').replace('\r', '')
 
     @property
     def content_type(self):
@@ -102,4 +103,5 @@ class FileUpload(DatabaseObject):
             os.unlink(config.file_uploads_dir + self.uuid)
 
     def __repr__(self):
-        return u'<FileUpload - name: %s, size: %s>' % (self.file_name, self.byte_size)
+        return u'<FileUpload - name: %s, size: %s>' % (
+            self.file_name, self.byte_size)

@@ -29,20 +29,14 @@ Guidelines for writing code in this file:
 '''
 
 
-import re
 import os
-import imghdr
 import defusedxml.minidom
 import xml.etree.cElementTree as ET
 
-from uuid import uuid4
 from tempfile import NamedTemporaryFile
-from string import ascii_letters, digits, printable
-from base64 import b64encode
 from hashlib import sha1
 from netaddr import IPAddress
 from libs.LoggingHelpers import ObservableLoggingHandler
-from libs.EventManager import EventManager
 from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
 from models.Team import Team

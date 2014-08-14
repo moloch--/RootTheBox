@@ -27,9 +27,7 @@ indiviudal user, such as handle/account/password/etc
 
 import os
 import imghdr
-import logging
 
-from os import urandom
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
 from pbkdf2 import PBKDF2
@@ -42,11 +40,11 @@ from models.Team import Team
 from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
-from string import ascii_letters, digits, printable
+from string import printable
 import xml.etree.cElementTree as ET
 
 
-### Constants
+# Constants
 ADMIN_PERMISSION = u'admin'
 DEFAULT_HASH_ALGORITHM = 'md5'
 ITERATE = 0x2bad  # 11181
@@ -58,41 +56,47 @@ STATIC_SALT = """
     based soley on information stored in the database.
 """
 
+
 class User(DatabaseObject):
+
     ''' User definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     team_id = Column(Integer, ForeignKey('team.id'))
-    theme_id = Column(Integer, ForeignKey('theme.id'), default=3, nullable=False)
+    theme_id = Column(
+        Integer, ForeignKey('theme.id'), default=3, nullable=False)
     _avatar = Column(String(64))
     _locked = Column(Boolean, default=False, nullable=False)
-    algorithm = Column(String(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
+    algorithm = Column(
+        String(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
     last_login = Column(DateTime)
     logins = Column(Integer, default=0)
     _handle = Column(Unicode(16), unique=True, nullable=False)
 
     permissions = relationship("Permission",
-        backref=backref("user", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                               backref=backref("user", lazy="select"),
+                               cascade="all,delete,delete-orphan"
+                               )
 
     notifications = relationship("Notification",
-        backref=backref("user", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                                 backref=backref("user", lazy="select"),
+                                 cascade="all,delete,delete-orphan"
+                                 )
 
     _password = Column('password', String(64))
     password = synonym('_password', descriptor=property(
         lambda self: self._password,
         lambda self, password: setattr(
-                self, '_password', self.__class__._hash_password(password))
+            self, '_password', self.__class__._hash_password(password))
     ))
 
     _bank_password = Column('bank_password', String(128))
     bank_password = synonym('_bank_password', descriptor=property(
         lambda self: self._bank_password,
         lambda self, bank_password: setattr(
-            self, '_bank_password', self.__class__._hash_bank_password(self.algorithm, bank_password))
+            self, '_bank_password', self.__class__._hash_bank_password(
+                self.algorithm, bank_password))
     ))
 
     algorithms = {
@@ -111,7 +115,8 @@ class User(DatabaseObject):
     def all_users(cls):
         ''' Return all non-admin user objects '''
         return filter(
-            lambda user: user.has_permission(ADMIN_PERMISSION) is False, cls.all()
+            lambda user: user.has_permission(
+                ADMIN_PERMISSION) is False, cls.all()
         )
 
     @classmethod
@@ -201,7 +206,6 @@ class User(DatabaseObject):
 
     @property
     def avatar(self):
-        config = ConfigManager.instance()
         if self._avatar is not None:
             return self._avatar
         else:
@@ -220,7 +224,8 @@ class User(DatabaseObject):
                     fp.write(image_data)
                 self._avatar = self.uuid + '.' + ext
             else:
-                raise ValueError("Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
+                raise ValueError(
+                    "Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
         else:
             raise ValueError("The image is too large")
 
@@ -238,7 +243,8 @@ class User(DatabaseObject):
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
         if self._password is not None:
-            return self.password == PBKDF2.crypt(attempt + STATIC_SALT, self.password)
+            return self.password == PBKDF2.crypt(
+                attempt + STATIC_SALT, self.password)
         else:
             return False
 
@@ -269,7 +275,8 @@ class User(DatabaseObject):
         @return: Most recent notifications
         @rtype: List of Notification objects
         '''
-        return self.notifications.sort(key=lambda notify: notify.created)[:limit]
+        return self.notifications.sort(
+            key=lambda notify: notify.created)[:limit]
 
     def next_algorithm(self):
         ''' Returns next algo '''

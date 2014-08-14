@@ -25,7 +25,6 @@ This file contains the code for displaying flags / recv flag submissions
 
 
 import logging
-import hashlib
 
 from models.GameLevel import GameLevel
 from models.Flag import Flag
@@ -57,10 +56,10 @@ class BoxHandler(BaseHandler):
         if box is not None:
             user = self.get_current_user()
             self.render('missions/box.html',
-                box=box,
-                team=user.team,
-                errors=[],
-            )
+                        box=box,
+                        team=user.team,
+                        errors=[],
+                        )
         else:
             self.render('public/404.html')
 
@@ -82,7 +81,8 @@ class FlagSubmissionHandler(BaseHandler):
             old_reward = flag.value
             if self.attempt_capture(flag, submission):
                 self.set_header("Content-Security-Policy", self.relaxed_csp)
-                self.render('missions/captured.html', flag=flag, reward=old_reward)
+                self.render(
+                    'missions/captured.html', flag=flag, reward=old_reward)
             else:
                 self.render_page(flag, errors=["Invalid flag submission"])
         else:
@@ -104,7 +104,8 @@ class FlagSubmissionHandler(BaseHandler):
                     flag.value = int(flag.value - ((flag.value / config.flag_value_decrease)/100))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
-                event = self.event_manager.create_flag_capture_event(user, flag)
+                event = self.event_manager.create_flag_capture_event(
+                    user, flag)
                 self.new_events.append(event)
                 self._check_level(flag)
                 self.dbsession.commit()
@@ -126,10 +127,10 @@ class FlagSubmissionHandler(BaseHandler):
         user = self.get_current_user()
         box = Box.by_id(flag.box_id)
         self.render('missions/box.html',
-            box=box,
-            team=user.team,
-            errors=errors,
-        )
+                    box=box,
+                    team=user.team,
+                    errors=errors,
+                    )
 
 
 class PurchaseHintHandler(BaseHandler):
@@ -148,7 +149,8 @@ class PurchaseHintHandler(BaseHandler):
                 self._purchase_hint(hint, user.team)
                 self.render_page(hint.box)
             else:
-                self.render_page(hint.box, ["You cannot afford to purchase this hint."])
+                self.render_page(
+                    hint.box, ["You cannot afford to purchase this hint."])
         else:
             self.render('public/404.html')
 
@@ -164,13 +166,14 @@ class PurchaseHintHandler(BaseHandler):
         ''' Wrapper to .render() to avoid duplicate code '''
         user = self.get_current_user()
         self.render('missions/box.html',
-            box=box,
-            team=user.team,
-            errors=errors,
-        )
+                    box=box,
+                    team=user.team,
+                    errors=errors,
+                    )
 
 
 class MissionsHandler(BaseHandler):
+
     ''' Renders pages related to Missions/Flag submissions '''
 
     @authenticated
@@ -201,16 +204,17 @@ class MissionsHandler(BaseHandler):
                 user.team.money -= level.buyout
                 self.dbsession.add(user.team)
                 self.dbsession.commit()
-                event = self.event_manager.create_unlocked_level_event(user, level)
+                event = self.event_manager.create_unlocked_level_event(
+                    user, level)
                 self.new_events.append(event)
                 self.redirect("/user/missions")
             else:
                 self.render("missions/view.html",
-                    team=user.team,
-                    errors=["You do not have enough money to unlock this level"]
-                )
+                            team=user.team,
+                            errors=["You do not have enough money to unlock this level"]
+                            )
         else:
             self.render("missions/view.html",
-                team=user.team,
-                errors=["Level does not exist"]
-            )
+                        team=user.team,
+                        errors=["Level does not exist"]
+                        )

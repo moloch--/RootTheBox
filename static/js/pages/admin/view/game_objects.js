@@ -1,10 +1,3 @@
-
-function getCookie(name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
-}
-
 function getDetails(obj, uuid) {
     $("#edit-" + obj + "-uuid").val(uuid);
     data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}

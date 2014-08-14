@@ -31,11 +31,13 @@ from models.BaseModels import DatabaseObject
 
 
 class Swat(DatabaseObject):
+
     '''
     Holds the bribe history of players that get 'SWAT'd
     '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     target_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     paid = Column(Integer, nullable=False)
@@ -61,7 +63,8 @@ class Swat(DatabaseObject):
 
     @classmethod
     def all_completed(cls):
-        return dbsession.query(cls).filter_by(completed=True).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).filter_by(
+            completed=True).order_by(desc(cls.created)).all()
 
     @classmethod
     def pending_by_target_id(cls, uid):
@@ -126,11 +129,14 @@ class Swat(DatabaseObject):
         ''' Calculate price of next bribe based on history '''
         config = ConfigManager.instance()
         base_price = config.bribe_cost
-        return base_price + (cls.count_completed_by_target_id(user.id) * base_price)
+        return base_price + (
+            cls.count_completed_by_target_id(user.id) * base_price)
 
     @classmethod
     def user_is_pending(cls, user):
-        ''' Return bool based on if there are any pending bribes in database '''
+        '''
+        Return bool based on if there are any pending bribes in database
+        '''
         return 0 < len(cls.pending_by_target_id(user.id))
 
     @classmethod
@@ -159,4 +165,5 @@ class Swat(DatabaseObject):
         return True if self.accepted and self.completed else False
 
     def __repr__(self):
-        return '<SWAT user_id: %d, target_id: %d' % (self.user_id, self.target_id,)
+        return '<SWAT user_id: %d, target_id: %d' % (
+            self.user_id, self.target_id,)

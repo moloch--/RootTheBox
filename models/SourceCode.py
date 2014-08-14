@@ -23,8 +23,7 @@ import os
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym
-from sqlalchemy.types import String, Unicode, Integer, String
+from sqlalchemy.types import String, Unicode, Integer
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from string import ascii_letters, digits
@@ -32,10 +31,12 @@ from string import ascii_letters, digits
 
 class SourceCode(DatabaseObject):
     '''
-    Holds the source code for a box which can be purchased from the source code market
+    Holds the source code for a box which can be purchased from the
+    source code market
     '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     _price = Column(Integer, nullable=False)
     _description = Column(Unicode(1024), nullable=False)
@@ -72,7 +73,8 @@ class SourceCode(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        self._file_name = os.path.basename(value).replace('\n', '').replace('\r', '')
+        self._file_name = os.path.basename(
+            value).replace('\n', '').replace('\r', '')
 
     @property
     def price(self):

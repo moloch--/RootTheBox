@@ -29,6 +29,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 class _DatabaseObject(object):
+
     ''' All game objects inherit from this object '''
 
     @declared_attr
@@ -39,7 +40,7 @@ class _DatabaseObject(object):
             name[0].lower() +
             re.sub(r'([A-Z])',
                    lambda letter: "_" + letter.group(0).lower(), name[1:]
-            )
+                   )
         )
 
     id = Column(Integer, primary_key=True)  # lint:ok

@@ -9,18 +9,15 @@ This module implements sessions for Tornado using Memcached.
 
 import re
 import os
-import time
 import json
-import base64
-import pylibmc
 import logging
 import collections
 
-from os import _exit
 from datetime import datetime, timedelta
 
 ID_SIZE = 16  # Size in bytes
 DURATION = 30  # Minutes
+
 
 class BaseSession(collections.MutableMapping):
     '''
@@ -44,7 +41,9 @@ class BaseSession(collections.MutableMapping):
     of the already available classes and documentation to aformentioned
     functions.
     '''
-    def __init__(self, session_id=None, data=None, expires=None, ip_address=None,  **kwargs):
+
+    def __init__(self, session_id=None, data=None, expires=None,
+                 ip_address=None,  **kwargs):
         # if session_id is True, we're loading a previously initialized session
         if session_id:
             self.session_id = session_id
@@ -59,7 +58,8 @@ class BaseSession(collections.MutableMapping):
         self.ip_address = ip_address
 
     def __repr__(self):
-        return '<Session id: %s, Expires: %s>' % (self.session_id, self.expires)
+        return '<Session id: %s, Expires: %s>' % (
+            self.session_id, self.expires)
 
     def __str__(self):
         return self.session_id
@@ -131,7 +131,8 @@ class BaseSession(collections.MutableMapping):
     @staticmethod
     def deserialize(datastring):
         dump = json.loads(datastring.decode('base64'))
-        dump['expires'] = datetime.strptime(dump['expires'], "%Y-%m-%d %H:%M:%S.%f")
+        dump['expires'] = datetime.strptime(
+            dump['expires'], "%Y-%m-%d %H:%M:%S.%f")
         return dump
 
 
@@ -174,20 +175,17 @@ class MemcachedSession(BaseSession):
         time and session expiry.
         '''
         if self.dirty:
-            #logging.debug("[Memcached] Saving session with ID '%s'" % self.session_id)
             ttl = self.expires - datetime.utcnow()
-            #logging.debug("[Memcached] Serialized -> %s" % self.serialize().decode('base64'))
-            self.connection.set(str(self.session_id), self.serialize(), time=ttl.seconds)
+            self.connection.set(
+                str(self.session_id), self.serialize(), time=ttl.seconds)
             self.dirty = False
 
     @staticmethod
     def load(connection, session_id, ip_address):
         '''Load the session from storage.'''
-        #logging.debug("[Memcached] Loading session with ID '%s'" % session_id)
         session = None
         try:
             value = connection.get(session_id)
-            #logging.debug('[Memcached] Got back %s' % value.decode('base64'))
             if value:
                 kwargs = MemcachedSession.deserialize(value)
                 session = MemcachedSession(connection, **kwargs)

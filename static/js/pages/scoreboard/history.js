@@ -1,8 +1,3 @@
-
-function htmlEncode(value) {
-    return $('<div/>').text(value).html();
-}
-
 function drawBotGraph(state) {
     var chart = new Highcharts.Chart({
         chart: {
@@ -322,7 +317,7 @@ function initializeState(updater, state, updates) {
 
 $(document).ready(function() {
 
-    var history_ws = new WebSocket($("#ws-connect").data("url") + "/scoreboard/wsocket/game_history");
+    var history_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_history");
     var chart = undefined;
     var flagState = []; // List of Highchart series
     var moneyState = [];

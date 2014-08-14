@@ -19,8 +19,6 @@ Created on Mar 11, 2012
     limitations under the License.
 '''
 
-
-import json
 import datetime
 
 from sqlalchemy.orm import relationship, backref
@@ -38,9 +36,9 @@ class Snapshot(DatabaseObject):
 
     # Has many 'SnapshotTeam' objects
     teams = relationship("SnapshotTeam",
-        secondary=snapshot_to_snapshot_team,
-        backref=backref("snapshot", lazy="select")
-    )
+                         secondary=snapshot_to_snapshot_team,
+                         backref=backref("snapshot", lazy="select")
+                         )
 
     @classmethod
     def all(cls):

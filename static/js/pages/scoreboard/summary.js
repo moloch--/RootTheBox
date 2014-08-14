@@ -2,10 +2,6 @@ var flag_chart;
 var money_chart;
 var game_data;
 
-function htmlEncode(value) {
-    return $('<div/>').text(value).html();
-}
-
 /* Highcharts code */
 $(document).ready(function() {
     /* Options for both graphs*/
@@ -112,7 +108,7 @@ $(document).ready(function() {
 
 /* Update code */
 $(document).ready(function() {
-    var ws = new WebSocket($("#ws-connect").data("url") + "/scoreboard/wsocket/game_data");
+    var ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
 
     ws.onmessage = function(event) {
         game_data = jQuery.parseJSON(event.data);

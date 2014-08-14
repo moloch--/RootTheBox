@@ -21,13 +21,14 @@ Created on Mar 21, 2012
 
 
 from sqlalchemy import Column, ForeignKey, desc
-from sqlalchemy.types import Integer, Unicode, String
+from sqlalchemy.types import Integer, Unicode
 from models import dbsession
 from models.User import User
 from models.BaseModels import DatabaseObject
 
 
 class WallOfSheep(DatabaseObject):
+
     '''
     Stores a record of cracked passwords, and publically displays
     them for all to see.
@@ -87,10 +88,11 @@ class WallOfSheep(DatabaseObject):
         for user in User.all_users():
             if 0 < cls.count_cracked_by(user.id):
                 leaders.append((user,
-                    cls.count_cracked_by(user.id),
-                    sum(cls.by_cracker_id(user.id)),
-                ))
-        if order_by not in orders: order_by = 'passwords'
+                                cls.count_cracked_by(user.id),
+                                sum(cls.by_cracker_id(user.id)),
+                                ))
+        if order_by not in orders:
+            order_by = 'passwords'
         leaders.sort(key=lambda stats: stats[orders[order_by]], reverse=True)
         return leaders
 

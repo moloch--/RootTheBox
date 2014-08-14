@@ -22,7 +22,6 @@ Created on June 30, 2012
 
 import os
 import sys
-import urllib
 import socket
 import getpass
 import logging
@@ -47,19 +46,21 @@ from libs.LoggingHelpers import ObservableLoggingHandler
 
 # .basicConfig must be called prior to ANY call to logging.XXXX so make sure
 # this module gets imported prior to any logging!
-logging.basicConfig(format='\r[%(levelname)s] %(asctime)s - %(message)s', level=logging.NOTSET)
+logging.basicConfig(
+    format='\r[%(levelname)s] %(asctime)s - %(message)s', level=logging.NOTSET)
 logging_levels = {
-       'notset': logging.NOTSET,
-        'debug': logging.DEBUG,
-         'info': logging.INFO,
-  'information': logging.INFO,
-         'warn': logging.WARN,
-      'warning': logging.WARN,
+    'notset': logging.NOTSET,
+    'debug': logging.DEBUG,
+    'info': logging.INFO,
+    'information': logging.INFO,
+    'warn': logging.WARN,
+    'warning': logging.WARN,
 }
 
 
 @Singleton
 class ConfigManager(object):
+
     ''' Central class which handles any user-controlled settings '''
 
     # Under the hood attributes
@@ -89,7 +90,8 @@ class ConfigManager(object):
         if os.path.exists(cfg_file) and os.path.isfile(cfg_file):
             self.conf_path = os.path.abspath(cfg_file)
         else:
-            sys.stderr.write(WARN + "No configuration file found at: %s." % self.conf_path)
+            sys.stderr.write(
+                WARN + "No configuration file found at: %s." % self.conf_path)
             os._exit(1)
         self.refresh()
         self._logging()
@@ -108,7 +110,8 @@ class ConfigManager(object):
         ''' Configure File Logger '''
         file_log = logging.FileHandler('%s' % self.logfile)
         logger.addHandler(file_log)
-        file_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
+        file_format = logging.Formatter(
+            '[%(levelname)s] %(asctime)s - %(message)s')
         file_log.setFormatter(file_format)
         flevel = self.config.get("Logging", 'file_level').lower()
         file_log.setLevel(logging_levels.get(flevel, logging.NOTSET))
@@ -117,7 +120,8 @@ class ConfigManager(object):
         ''' Configure WebSocket Logger '''
         ws_log = ObservableLoggingHandler.instance()
         logger.addHandler(ws_log)
-        msg_format = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s')
+        msg_format = logging.Formatter(
+            '[%(levelname)s] %(asctime)s - %(message)s')
         ws_log.setFormatter(msg_format)
         ws_log.setLevel(logging.DEBUG)
 
@@ -133,14 +137,18 @@ class ConfigManager(object):
         self.config.set("Game", "game_name", self.game_name)
         self.config.set("Game", "public_teams", str(self.public_teams))
         self.config.set("Game", "max_team_size", str(self.max_team_size))
-        self.config.set("Game", "max_password_length", str(self.max_password_length))
-        self.config.set("Game", "restrict_registration", str(self.restrict_registration))
+        self.config.set(
+            "Game", "max_password_length", str(self.max_password_length))
+        self.config.set(
+            "Game", "restrict_registration", str(self.restrict_registration))
         self.config.set("Game", "use_black_market", str(self.use_black_market))
         self.config.set("Game", "use_bots", str(self.use_bots))
         self.config.set("Game", "bot_reward", str(self.bot_reward))
-        self.config.set("Game", "password_upgrade_cost", str(self.password_upgrade_cost))
+        self.config.set(
+            "Game", "password_upgrade_cost", str(self.password_upgrade_cost))
         self.config.set("Game", "bribe_cost", str(self.bribe_cost))
-        self.config.set("Game", "whitelist_box_ips", str(self.whitelist_box_ips))
+        self.config.set(
+            "Game", "whitelist_box_ips", str(self.whitelist_box_ips))
         with open(self.conf_path, 'w') as fp:
             self.config.write(fp)
 
@@ -166,7 +174,10 @@ class ConfigManager(object):
 
     @property
     def admin_ips(self):
-        ''' Whitelist admin ip address, this may be bypassed if x-headers is enabled '''
+        '''
+        Whitelist admin ip address, this may be bypassed if
+        x-headers is enabled
+        '''
         ips = self.config.get("Security", 'admin_ips')
         ips = ips.replace(" ", "").split(',')
         ips.append('127.0.0.1')
@@ -226,25 +237,28 @@ class ConfigManager(object):
             try:
                 _domain = socket.gethostbyname(socket.gethostname())
                 # On some Linux systems the hostname resolves to ~127.0.0.1
-                # per /etc/hosts, so fallback and try to get the fqdn if we can.
+                # per /etc/hosts, so fallback and try to get the fqdn if we
+                # can.
                 if _domain.startswith('127.'):
                     _domain = socket.gethostbyname(socket.getfqdn())
             except:
                 logging.warn("Failed to automatically resolve domain, please set manually")
                 _domain = 'localhost'
-            logging.debug("Domain was automatically configured to '%s'" % _domain)
+            logging.debug(
+                "Domain was automatically configured to '%s'" % _domain)
         if _domain == 'localhost' or _domain.startswith('127.') or _domain == '::1':
             if not self._domain_warned:
                 self._domain_warned = True
-                logging.warn("Possible misconfiguration 'domain' is set to 'localhost'")
+                logging.warn(
+                    "Possible misconfiguration 'domain' is set to 'localhost'")
         return _domain
 
     @property
     def origin(self):
         ''' Origin URL (e.g. http://192.168.1.1:8888) '''
         default = True if (self.use_ssl and self.listen_port == 443) \
-                        or not self.use_ssl and self.listen_port == 80 \
-                        else False
+            or not self.use_ssl and self.listen_port == 80 \
+            else False
         http = 'https://' if self.use_ssl else 'http://'
         if default:
             return "%s%s" % (http, self.domain)
@@ -255,8 +269,8 @@ class ConfigManager(object):
     def ws_connect(self):
         ''' Websocket connection URL '''
         default = True if (self.use_ssl and self.listen_port == 443) \
-                        or not self.use_ssl and self.listen_port == 80 \
-                        else False
+            or not self.use_ssl and self.listen_port == 80 \
+            else False
         ws = 'wss://' if self.use_ssl else 'ws://'
         if default:
             return '%s%s' % (ws, self.domain)
@@ -273,7 +287,6 @@ class ConfigManager(object):
             from models.Theme import Theme
             theme_name = self.config.get("Server", "theme")
             self._default_theme = Theme.by_name(theme_name)
-            print "Default theme: %s -> %s" % (self._default_theme, self._default_theme.files)
             if self._default_theme is None:
                 logging.error("The default theme does not exist, fix your configuration file")
                 self._default_theme = Theme.all()[0]
@@ -298,7 +311,8 @@ class ConfigManager(object):
         ''' SSL Key file path '''
         key = os.path.abspath(self.config.get("Ssl", 'key_file'))
         if not os.path.exists(key):
-            logging.fatal("SSL misconfiguration, key file '%s' not found." % key)
+            logging.fatal(
+                "SSL misconfiguration, key file '%s' not found." % key)
             os._exit(1)
         return key
 
@@ -321,7 +335,8 @@ class ConfigManager(object):
     def restrict_registration(self):
         ''' Enable/disable registration tokens '''
         if self._restrict_registration is None:
-            self._restrict_registration = self.config.getboolean("Game", 'restrict_registration')
+            self._restrict_registration = self.config.getboolean(
+                "Game", 'restrict_registration')
         return self._restrict_registration
 
     @restrict_registration.setter
@@ -356,7 +371,8 @@ class ConfigManager(object):
     @property
     def max_password_length(self):
         if self._max_password_length is None:
-            self._max_password_length = abs(self.config.getint("Game", 'max_password_length'))
+            self._max_password_length = abs(
+                self.config.getint("Game", 'max_password_length'))
         return self._max_password_length
 
     @max_password_length.setter
@@ -397,7 +413,8 @@ class ConfigManager(object):
     def use_black_market(self):
         ''' Whether the black market should be enabled in this game '''
         if self._use_black_market is None:
-            self._use_black_market = self.config.getboolean("Game", "use_black_market")
+            self._use_black_market = self.config.getboolean(
+                "Game", "use_black_market")
         return self._use_black_market
 
     @use_black_market.setter
@@ -407,7 +424,8 @@ class ConfigManager(object):
     @property
     def password_upgrade_cost(self):
         if self._password_upgrade_cost is None:
-            self._password_upgrade_cost = abs(self.config.getint("Game", 'password_upgrade_cost'))
+            self._password_upgrade_cost = abs(
+                self.config.getint("Game", 'password_upgrade_cost'))
         return self._password_upgrade_cost
 
     @password_upgrade_cost.setter
@@ -436,7 +454,8 @@ class ConfigManager(object):
     @property
     def whitelist_box_ips(self):
         if self._whitelist_box_ips is None:
-            self._whitelist_box_ips = self.config.getboolean('Game', 'whitelist_box_ips')
+            self._whitelist_box_ips = self.config.getboolean(
+                'Game', 'whitelist_box_ips')
         return self._whitelist_box_ips
 
     @whitelist_box_ips.setter
@@ -446,7 +465,8 @@ class ConfigManager(object):
     @property
     def dynamic_flag_value(self):
         if self._dynamic_flag_value is None:
-            self._dynamic_flag_value = self.config.getboolean('Game', 'dynamic_flag_value')
+            self._dynamic_flag_value = self.config.getboolean(
+                'Game', 'dynamic_flag_value')
         return self._dynamic_flag_value
 
     @dynamic_flag_value.setter
@@ -456,7 +476,8 @@ class ConfigManager(object):
     @property
     def flag_value_decrease(self):
         if self._flag_value_decrease is None:
-            self._flag_value_decrease = self.config.getboolean('Game', 'flag_value_decrease')
+            self._flag_value_decrease = self.config.getboolean(
+                'Game', 'flag_value_decrease')
         return self._flag_value_decrease
 
     @flag_value_decrease.setter
@@ -476,7 +497,7 @@ class ConfigManager(object):
     def bot_reward_interval(self):
         ''' Check bots every so many minutes '''
         _interval = self.config.getint("Game", 'bot_reward_interval')
-        return  60000 * _interval
+        return 60000 * _interval
 
     #####################################################################
     ######################  [ DIRECTORY SETTINGS ]  #####################
@@ -526,14 +547,15 @@ class ConfigManager(object):
 
     def __postgresql__(self):
         '''
-        Configure to use postgresql, there is not built-in support for postgresql
-        so make sure we can import the 3rd party python lib 'pypostgresql'
+        Configure to use postgresql, there is not built-in support for
+        postgresql so make sure we can import the 3rd party python
+        lib 'pypostgresql'
         '''
         logging.debug("Configured to use Postgresql for a database")
         try:
             import pypostgresql
         except ImportError:
-            print(WARN+"You must install 'pypostgresql' to use a postgresql database.")
+            print(WARN + "You must install 'pypostgresql' to use a postgresql database.")
             os._exit(1)
         db_host, db_name, db_user, db_password = self.__db__()
         return 'postgresql+pypostgresql://%s:%s@%s/%s' % (
@@ -541,7 +563,9 @@ class ConfigManager(object):
         )
 
     def __sqlite__(self):
-        ''' SQLite connection string, always save db file to cwd, or in-memory '''
+        '''
+        SQLite connection string, always save db file to cwd, or in-memory
+        '''
         logging.debug("Configured to use SQLite for a database")
         db_name = os.path.basename(self.config.get("Database", 'name'))
         if 0 == len(db_name):
@@ -557,7 +581,9 @@ class ConfigManager(object):
         )
 
     def _test_db_connection(self, connection_string):
-        ''' Test the connection string to see if we can connect to the database'''
+        '''
+        Test the connection string to see if we can connect to the database
+        '''
         engine = create_engine(connection_string)
         try:
             connection = engine.connect()
@@ -575,9 +601,9 @@ class ConfigManager(object):
         user = self.config.get("Database", 'user')
         password = self.config.get("Database", 'password')
         if user == '' or user == 'RUNTIME':
-            user = raw_input(PROMPT+"Database User: ")
+            user = raw_input(PROMPT + "Database User: ")
         if password == '' or password == 'RUNTIME':
-            sys.stdout.write(PROMPT+"Database password: ")
+            sys.stdout.write(PROMPT + "Database password: ")
             sys.stdout.flush()
             password = getpass.getpass()
         db_host = quote_plus(host)
@@ -585,4 +611,3 @@ class ConfigManager(object):
         db_user = quote_plus(user)
         db_password = quote_plus(password)
         return db_host, db_name, db_user, db_password
-

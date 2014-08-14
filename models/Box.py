@@ -27,7 +27,7 @@ import xml.etree.cElementTree as ET
 from os import urandom
 from uuid import uuid4
 from libs.ConfigManager import ConfigManager
-from sqlalchemy import Column, ForeignKey, or_
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String, Boolean
 from models import dbsession
@@ -37,47 +37,50 @@ from models.IpAddress import IpAddress
 from models.GameLevel import GameLevel
 from models.Corporation import Corporation
 from models.SourceCode import SourceCode
-from models.Hint import Hint
 
 
 class Box(DatabaseObject):
+
     ''' Box definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    corporation_id = Column(Integer, ForeignKey('corporation.id'), nullable=False)
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    corporation_id = Column(
+        Integer, ForeignKey('corporation.id'), nullable=False)
     _name = Column(Unicode(16), unique=True, nullable=False)
     _operating_system = Column(Unicode(16))
     _description = Column(Unicode(1024))
     _difficulty = Column(Unicode(16))
-    game_level_id = Column(Integer, ForeignKey('game_level.id'), nullable=False)
+    game_level_id = Column(
+        Integer, ForeignKey('game_level.id'), nullable=False)
     _avatar = Column(String(64))
     autoformat = Column(Boolean, default=True)
 
     garbage = Column(String(32),
-        unique=True,
-        nullable=False,
-        default=lambda: urandom(16).encode('hex')
-    )
+                     unique=True,
+                     nullable=False,
+                     default=lambda: urandom(16).encode('hex')
+                     )
 
     teams = relationship("Team",
-        secondary=team_to_box,
-        backref=backref("box", lazy="select")
-    )
+                         secondary=team_to_box,
+                         backref=backref("box", lazy="select")
+                         )
 
     hints = relationship("Hint",
-        backref=backref("box", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                         backref=backref("box", lazy="select"),
+                         cascade="all,delete,delete-orphan"
+                         )
 
     flags = relationship("Flag",
-        backref=backref("box", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                         backref=backref("box", lazy="select"),
+                         cascade="all,delete,delete-orphan"
+                         )
 
     ip_addresses = relationship("IpAddress",
-        backref=backref("box", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                                backref=backref("box", lazy="select"),
+                                cascade="all,delete,delete-orphan"
+                                )
 
     @classmethod
     def all(cls):
@@ -192,7 +195,8 @@ class Box(DatabaseObject):
                     fp.write(image_data)
                 self._avatar = self.uuid + '.' + ext
             else:
-                raise ValueError("Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
+                raise ValueError(
+                    "Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
         else:
             raise ValueError("The image is too large")
 
@@ -227,7 +231,8 @@ class Box(DatabaseObject):
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
-        ET.SubElement(box_elem, "operatingsystem").text = self._operating_system
+        ET.SubElement(
+            box_elem, "operatingsystem").text = self._operating_system
         ET.SubElement(box_elem, "description").text = self._description
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = self.garbage

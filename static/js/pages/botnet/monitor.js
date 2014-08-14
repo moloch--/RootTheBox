@@ -1,24 +1,11 @@
-var entityMap = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': '&quot;',
-    "'": '&#39;',
-    "/": '&#x2F;'
-};
-
-function escapeHtml(string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
-        return entityMap[s];
-    });
-}
-
 $(document).ready(function() {
     $('#table-footer').text('WebSocket Connecting ...');
-    var monitor_ws = new WebSocket($("#ws-botnet").val() + "/botnet/webmonitor");
+    var monitor_ws = new WebSocket(wsUrl() + "/botnet/webmonitor");
+
     monitor_ws.onerror = function (evt) {
         alert("ERROR: " + evt.data.toString());
     };
+
     monitor_ws.onmessage = function (evt) {
         msg = jQuery.parseJSON(evt.data);
         if ('opcode' in msg) {

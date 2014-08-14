@@ -21,13 +21,11 @@ $(document).ready(function() {
         container: $("<div></div>")
     };
 
-    $(document).ready(function() {
-        config.container.css("position", "fixed");
-        config.container.css("z-index", 9999);
-        config.container.css(config.position[0], "12px");
-        config.container.css(config.position[1], "12px");
-        $("body").append(config.container);
-    });
+    config.container.css("position", "fixed");
+    config.container.css("z-index", 9999);
+    config.container.css(config.position[0], "12px");
+    config.container.css(config.position[1], "12px");
+    $("body").append(config.container);
 
     function getNotificationElement() {
         return $("<div>").css(config.notificationStyles).hover(function() {
@@ -101,7 +99,7 @@ $(document).ready(function() {
     };
 
     if ($("#ws-connect").length) {
-        var notifier_ws = new WebSocket($("#ws-connect").data("url") + "/notifications/wsocket/updates");
+        var notifier_ws = new WebSocket(wsUrl() + "/notifications/wsocket/updates");
         notifier_ws.onmessage = function(evt) {
             notification = $.parseJSON(evt.data);
             console.log("[Notifier] " + evt.data);
