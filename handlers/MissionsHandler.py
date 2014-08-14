@@ -116,8 +116,9 @@ class FlagSubmissionHandler(BaseHandler):
                 user.team.flags.append(flag)
                 user.team.money += flag.value
                 self.dbsession.add(user.team)
-                if ConfigManager.dynamic_flag_value:
-                    flag.value = int(flag.value - ((flag.value / ConfigManager.flag_value_decrease)/100))
+                config = ConfigManager.instance()
+                if config.dynamic_flag_value:
+                    flag.value = int(flag.value - ((flag.value / config.flag_value_decrease)/100))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
                 event = self.event_manager.create_flag_capture_event(user, flag)
