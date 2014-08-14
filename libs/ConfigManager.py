@@ -436,7 +436,7 @@ class ConfigManager(object):
     @property
     def flag_value_decrease(self):
         if self._flag_value_decrease is None:
-            self._flag_value_decrease = self.config.getboolean('Game', 'flag_value_decrease')
+            self._flag_value_decrease = self.config.getint('Game', 'flag_value_decrease')
         return self._flag_value_decrease
 
     @flag_value_decrease.setter
@@ -565,4 +565,3 @@ class ConfigManager(object):
         db_user = urllib.quote_plus(user)
         db_password = urllib.quote_plus(password)
         return db_host, db_name, db_user, db_password
-
