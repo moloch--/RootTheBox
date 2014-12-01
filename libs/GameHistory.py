@@ -19,7 +19,7 @@ Created on Nov 11, 2012
 '''
 
 
-import pylibmc
+import memcache
 import logging
 
 from models import dbsession
@@ -43,7 +43,7 @@ class GameHistory(object):
     def __init__(self):
         self.config = ConfigManager.instance()
         self.dbsession = dbsession
-        self.cache = pylibmc.Client([self.config.memcached], binary=True)
+        self.cache = memcache.Client([self.config.memcached], debug=0)
         self.epoch = None  # Date/time of first snapshot
         self._load()
         self.event_manager = EventManager.instance()
@@ -59,7 +59,7 @@ class GameHistory(object):
             start_index = 1 if len(self) <= 10 else max_index - 9
             for index in range(start_index, max_index + 1):
                 snapshot = Snapshot.by_id(index)
-                if not snapshot.key in self.cache:
+                if self.cache.get(snapshot.key) is None:
                     logging.info("Cached snapshot (%d of %d)" % (
                         snapshot.id, max_index
                     ))

@@ -17,7 +17,7 @@
 pip3 install tornado
 pip3 install pbkdf2
 pip3 install sqlalchemy
-pip3 install pylibmc
+pip3 install python-memcached
 pip3 install defusedxml
 pip3 install netaddr
 pip3 install nose

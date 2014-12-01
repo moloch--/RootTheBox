@@ -26,7 +26,7 @@ from these base classes.
 
 
 import logging
-import pylibmc
+import memcache
 import traceback
 
 from models import dbsession
@@ -127,10 +127,7 @@ class BaseHandler(RequestHandler):
     def memcached(self):
         ''' Connects to Memcached instance '''
         if self._memcached is None:
-            self._memcached = pylibmc.Client([self.config.memcached],
-                                             binary=True
-                                             )
-            self._memcached.behaviors['no_block'] = 1  # async I/O
+            self._memcached = memcache.Client([self.config.memcached], debug=0)
         return self._memcached
 
     def _create_session(self):

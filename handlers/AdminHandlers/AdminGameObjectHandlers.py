@@ -361,7 +361,7 @@ class AdminEditHandler(BaseHandler):
             self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_flags(self):
-        ''' Super ugly code, yes - Edit existing flags in the database '''
+        ''' Edit existing flags in the database '''
         try:
             flag = Flag.by_uuid(self.get_argument('uuid', ''))
             if flag is None:
@@ -461,46 +461,36 @@ class AdminEditHandler(BaseHandler):
 
     def edit_hint(self):
         ''' Edit a hint object '''
-        hint = Hint.by_uuid(self.get_argument('uuid', ''))
-        if hint is not None:
-            try:
-                logging.debug("Edit hint object with uuid of %s" % hint.uuid)
-                price = self.get_argument('price', '')
-                if hint.price != price:
-                    hint.price = price
-                description = self.get_argument(
-                    'description', hint.description)
-                if hint.description != description:
-                    hint.description = description
-                self.dbsession.add(hint)
-                self.dbsession.commit()
-                self.redirect('/admin/view/game_objects')
-            except ValidationError as error:
-                self.render(
-                    "admin/view/game_objects.html", errors=["%s" % error])
-        else:
-            self.render(
-                "admin/view/game_objects.html", errors=["Hint does not exist"])
+        try:
+            hint = Hint.by_uuid(self.get_argument('uuid', ''))
+            if hint is None:
+                raise ValidationError("Hint does not exist")
+            logging.debug("Edit hint object with uuid of %s" % hint.uuid)
+            price = self.get_argument('price', '')
+            if hint.price != price:
+                hint.price = price
+            description = self.get_argument('description', '')
+            hint.description = description
+            self.dbsession.add(hint)
+            self.dbsession.commit()
+            self.redirect('/admin/view/game_objects')
+        except ValidationError as error:
+            self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_market_item(self):
         ''' Change a market item's price '''
-        item = MarketItem.by_uuid(self.get_argument('item_uuid', ''))
-        if item is not None:
-            try:
-                price = self.get_argument('price', item.price)
-                if item.price != price:
-                    item.price = price
-                self.dbsession.add(item)
-                self.dbsession.commit()
-                self.redirect('/admin/view/market_objects')
-            except ValidationError:
-                self.render('admin/view/market_objects.html',
-                            errors=["Invalid price."]
-                            )
-        else:
-            self.render('admin/view/market_objects.html',
-                        errors=["Item does not exist."]
-                        )
+        try:
+            item = MarketItem.by_uuid(self.get_argument('item_uuid', ''))
+            if item is None:
+                raise ValidationError("Item does not exist")
+            price = self.get_argument('price', item.price)
+            if item.price != price:
+                item.price = price
+            self.dbsession.add(item)
+            self.dbsession.commit()
+            self.redirect('/admin/view/market_objects')
+        except ValidationError as error:
+            self.render('admin/view/market_objects.html', errors=[str(error)])
 
 
 class AdminDeleteHandler(BaseHandler):

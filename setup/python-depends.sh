@@ -17,7 +17,7 @@
 pip install tornado
 pip install pbkdf2
 pip install sqlalchemy
-pip install pylibmc
+pip install python-memcached
 pip install defusedxml
 pip install netaddr
 pip install nose

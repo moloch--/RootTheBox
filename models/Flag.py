@@ -68,7 +68,7 @@ class Flag(DatabaseObject):
     _type = Column(Unicode(16), default=False)
 
     flag_attachments = relationship("FlagAttachment",
-                                    backref=backref("flag", lazy="join")
+                                    backref=backref("flag", lazy="select")
                                     )
 
     FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC]
@@ -249,8 +249,8 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
-        attachements_elem = ET.SubElement(flag_elem, "attachements")
-        attachements_elem.set("count", str(len(self.attachements)))
+        attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
+        attachements_elem.set("count", str(len(self.flag_attachments)))
         for attachement in self.attachements:
             attachement.to_xml(attachements_elem)
 
