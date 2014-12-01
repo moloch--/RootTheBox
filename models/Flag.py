@@ -172,6 +172,8 @@ class Flag(DatabaseObject):
     def name(self, value):
         if not 3 < len(value) < 16:
             raise ValidationError("Flag name must be 3 - 16 characters")
+        if self.by_name(value) is not None:
+            raise ValidationError("Flag name must be unique")
         self._name = unicode(value)
 
     @property
@@ -180,9 +182,7 @@ class Flag(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        if 256 < len(value):
-            raise ValidationError("Description must be less than 256 characters")
-        self._description = unicode(value)
+        self._description = unicode(value)[:256]
 
     @property
     def capture_message(self):

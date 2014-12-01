@@ -17,6 +17,9 @@ Created on Nov 24, 2014
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+
+Handlers for user-related tasks.
 '''
 
 import logging
@@ -155,4 +158,4 @@ class AdminLockHandler(BaseHandler):
             user.locked = False if user.locked else True
             self.dbsession.add(user)
             self.dbsession.commit()
-        self.redirect('/admin/view/user_objects')
+        self.redirect('/admin/users')

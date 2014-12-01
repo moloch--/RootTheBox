@@ -24,24 +24,31 @@ import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, asc
-from sqlalchemy.types import Unicode, Integer, String
+from sqlalchemy.types import Integer, String
 from sqlalchemy.orm import relationship, backref
+from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
 
 class GameLevel(DatabaseObject):
+
     ''' Game Level definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
     next_level_id = Column(Integer, ForeignKey('game_level.id'))
     _number = Column(Integer, unique=True, nullable=False)
     _buyout = Column(Integer, nullable=False)
 
     boxes = relationship("Box",
-        backref=backref("game_level", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                         backref=backref("game_level", lazy="select"),
+                         cascade="all,delete,delete-orphan"
+                         )
 
     @classmethod
     def all(cls):
@@ -65,7 +72,7 @@ class GameLevel(DatabaseObject):
     @classmethod
     def by_number(cls, number):
         ''' Returns a the object with number of number '''
-        return dbsession.query(cls).filter_by(_number=int(number)).first()
+        return dbsession.query(cls).filter_by(_number=abs(int(number))).first()
 
     @property
     def number(self):
@@ -73,9 +80,12 @@ class GameLevel(DatabaseObject):
 
     @number.setter
     def number(self, value):
-        if isinstance(value, basestring) and not value.strip().isdigit():
-            raise ValueError("Game level number must be an Integer")
-        self._number = abs(int(value))
+        try:
+            if self.by_number(value) is not None:
+                raise ValidationError("Game level number must be unique")
+            self._number = abs(int(value))
+        except ValueError:
+            raise ValidationError("Game level number must be an integer")
 
     @property
     def buyout(self):

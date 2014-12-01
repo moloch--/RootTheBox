@@ -212,7 +212,6 @@ app = Application(
 
     # Special file directories
     source_code_market_dir=path.abspath('files/source_code_market/'),
-    flag_attachments_dir=path.abspath('files/flag_attachments/'),
 
     # Notifier WebSocket
     ws_connect=config.ws_connect,
@@ -237,7 +236,7 @@ app = Application(
     ),
 
     # Application version
-    version='0.5.0',
+    version='0.6.0',
 
 )
 

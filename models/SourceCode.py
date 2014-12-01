@@ -26,7 +26,8 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import String, Unicode, Integer
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from string import ascii_letters, digits
+from libs.ValidationError import ValidationError
+from libs.ConfigManager import ConfigManager
 
 
 class SourceCode(DatabaseObject):
@@ -35,6 +36,8 @@ class SourceCode(DatabaseObject):
     Holds the source code for a box which can be purchased from the
     source code market.
     '''
+
+    DIR = 'source_code_market/'
 
     uuid = Column(String(36),
                   unique=True,
@@ -67,19 +70,36 @@ class SourceCode(DatabaseObject):
     def by_box_id(cls, _id):
         return dbsession.query(cls).filter_by(box_id=_id).first()
 
-    @classmethod
-    def filter_string(cls, string, extra_chars=''):
-        char_white_list = ascii_letters + digits + extra_chars
-        return filter(lambda char: char in char_white_list, string)
-
     @property
     def file_name(self):
         return self._file_name
 
     @file_name.setter
     def file_name(self, value):
-        self._file_name = os.path.basename(
-            value).replace('\n', '').replace('\r', '')
+        fname = value.replace('\n', '').replace('\r', '')
+        self._file_name = unicode(os.path.basename(fname))[:64]
+
+    @property
+    def data(self):
+        config = ConfigManager.instance()
+        with open(config.file_uploads_dir + self.DIR + self.uuid, 'rb') as fp:
+            return fp.read().decode('base64')
+
+    @data.setter
+    def data(self, value):
+        config = ConfigManager.instance()
+        if self.uuid is None:
+            self.uuid = str(uuid4())
+        self.byte_size = len(value)
+        with open(config.file_uploads_dir + self.DIR + self.uuid, 'wb') as fp:
+            fp.write(value.encode('base64'))
+
+    def delete_data(self):
+        ''' Remove the file from the file system, if it exists '''
+        config = ConfigManager.instance()
+        fpath = config.file_uploads_dir + self.DIR + self.uuid
+        if os.path.exists(fpath) and os.path.isfile(fpath):
+            os.unlink(fpath)
 
     @property
     def price(self):
@@ -87,13 +107,10 @@ class SourceCode(DatabaseObject):
 
     @price.setter
     def price(self, value):
-        if isinstance(value, basestring) and not value.strip().isdigit():
-            raise ValueError("Price must be an integer")
-        else:
-            value = int(value)
-        if value < 1:
-            raise ValueError("Price must be at least 1")
-        self._price = value
+        try:
+            self._price = abs(int(value))
+        except ValueError:
+            raise ValidationError("Price must be an integer")
 
     @property
     def description(self):

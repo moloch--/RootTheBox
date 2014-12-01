@@ -20,8 +20,6 @@ Created on Nov 24, 2014
 
 
 Handlers related to controlling and configuring the overall game.
-
-
 '''
 
 import os
@@ -31,6 +29,8 @@ import xml.etree.cElementTree as ET
 
 from tempfile import NamedTemporaryFile
 from libs.SecurityDecorators import *
+from models.Swat import Swat
+from models.RegistrationToken import RegistrationToken
 from models.User import ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
@@ -57,17 +57,23 @@ class AdminGameHandler(BaseHandler):
             self.application.settings['history_callback'].start()
             if self.config.use_bots:
                 self.application.settings['score_bots_callback'].start()
+            self.set_all_users_lock(False)
 
     def stop_game(self):
         ''' Stop the game and all callbacks '''
-        logging.info("The game is stopping ...")
-        self.application.settings['game_started'] = False
-        if self.application.settings['history_callback']._running:
-            self.application.settings['history_callback'].stop()
-        if self.application.settings['score_bots_callback']._running:
-            self.application.settings['score_bots_callback'].stop()
+        if self.application.settings['game_started']:
+            logging.info("The game is stopping ...")
+            self.application.settings['game_started'] = False
+            if self.application.settings['history_callback']._running:
+                self.application.settings['history_callback'].stop()
+            if self.application.settings['score_bots_callback']._running:
+                self.application.settings['score_bots_callback'].stop()
+            self.set_all_users_lock(True)
+
+    def set_all_users_lock(self, lock):
+        ''' Set the lock attribute on all accounts '''
         for user in User.all_users():
-            user.locked = True
+            user.locked = lock
             self.dbsession.add(user)
         self.dbsession.commit()
 
@@ -85,7 +91,7 @@ class AdminRegTokenHandler(BaseHandler):
             'create': self.create,
             'view': self.view,
         }
-        if len(args) == 1 and args[0] in uri:
+        if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")
@@ -137,39 +143,34 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             '/delete': self.delete_source_code,
         }
         if len(args) and args[0] in uri:
-            uri[args[0]]()
+            try:
+                uri[args[0]]()
+            except ValidationError as error:
+                self.render('admin/upgrades/source_code_market.html',
+                            errors=[str(error), ]
+                            )
         else:
             self.render("public/404.html")
 
     def add_source_code(self):
         box = Box.by_uuid(self.get_argument('box_uuid'))
         if box is not None:
-            if not 'source_archive' in self.request.files and 0 < len(self.request.files['source_archive']):
-                self.render('admin/upgrades/source_code_market.html',
-                            errors=["No file data"]
-                            )
+            file_count = len(self.request.files['source_archive'])
+            if not 'source_archive' in self.request.files and 0 < file_count:
+                raise ValidationError("No file data")
             else:
-                try:
-                    price = abs(int(self.get_argument('price', 'NaN')))
-                    self.create_source_code(box, price)
-                    self.render('admin/upgrades/source_code_market.html',
-                                errors=None
-                                )
-                except ValueError:
-                    self.render('admin/upgrades/source_code_market.html',
-                                errors=["Price must be an integer"]
-                                )
+                price = self.get_argument('price', '')
+                self.create_source_code(box, price)
+                self.render('admin/upgrades/source_code_market.html',
+                            errors=None
+                            )
         else:
-            self.render('admin/upgrades/source_code_market.html',
-                        errors=["The selected box does not exist"]
-                        )
+            raise ValidationError("The selected box does not exist")
 
     def create_source_code(self, box, price):
         ''' Save file data and create object in database '''
-        description = unicode(self.get_argument('description', ''))
-        file_name = unicode(
-            self.request.files['source_archive'][0]['filename']
-        )
+        description = self.get_argument('description', '')
+        file_name = self.request.files['source_archive'][0]['filename']
         source_code = SourceCode(
             file_name=file_name,
             box_id=box.id,
@@ -178,38 +179,21 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         )
         self.dbsession.add(source_code)
         self.dbsession.flush()
-        file_data = self.request.files['source_archive'][0]['body']
-        root = self.application.settings['source_code_market_dir']
-        save_file = open(str(root + '/' + source_code.uuid), 'w')
-        source_code.checksum = self.get_checksum(file_data)
-        save_file.write(file_data.encode('base64'))
-        save_file.close()
+        source_code.data = self.request.files['source_archive'][0]['body']
         self.dbsession.add(source_code)
         self.dbsession.commit()
-
-    def get_checksum(self, data):
-        ''' Calculate checksum of file data '''
-        return sha1(data).hexdigest()
 
     def delete_source_code(self):
         ''' Delete source code file '''
         uuid = self.get_argument('box_uuid', '')
         box = Box.by_uuid(uuid)
         if box is not None and box.source_code is not None:
-            source_code_uuid = box.source_code.uuid
+            box.source_code.delete_data()
             self.dbsession.delete(box.source_code)
             self.dbsession.commit()
-            root = self.application.settings['source_code_market_dir']
-            source_code_path = root + '/' + source_code_uuid
-            logging.info("Delete souce code market file: %s (box: %s)" %
-                        (source_code_path, box.name,)
-                         )
-            if os.path.exists(source_code_path):
-                os.unlink(source_code_path)
-            errors = None
         else:
-            errors = ["Box does not exist, or contains no source code"]
-        self.render('admin/upgrades/source_code_market.html', errors=errors)
+            raise ValidationError("Box/source code does not exist")
+        self.render('admin/upgrades/source_code_market.html', errors=None)
 
 
 class AdminSwatHandler(BaseHandler):
@@ -259,9 +243,9 @@ class AdminSwatHandler(BaseHandler):
             self.dbsession.commit()
             self.render_page()
         else:
-            logging.warn("Invalid request to accept bribe with uuid: %r" %
-                        (self.get_argument('uuid', ''),)
-                         )
+            logging.warn("Invalid request to accept bribe with uuid: %r" % (
+                self.get_argument('uuid', ''),
+            ))
             self.render_page('Requested SWAT object does not exist')
 
     def complete_bribe(self):
@@ -276,9 +260,9 @@ class AdminSwatHandler(BaseHandler):
             self.dbsession.commit()
             self.render_page()
         else:
-            logging.warn("Invalid request to complete bribe with uuid: %r" %
-                        (self.get_argument('uuid', ''),)
-                         )
+            logging.warn("Invalid request to complete bribe with uuid: %r" % (
+                self.get_argument('uuid', ''),
+            ))
             self.render_page('Requested SWAT object does not exist')
 
 
@@ -381,18 +365,16 @@ class AdminExportHandler(BaseHandler):
         root.set("api", self.API_VERSION)
         if self.get_argument('game_objects', '') == 'true':
             self.export_game_objects(root)
-        if self.get_argument('users', '') == 'true':
-            self.export_users(root)
         xml_dom = defusedxml.minidom.parseString(ET.tostring(root))
         self.write_xml(xml_dom.toprettyxml())
 
     def write_xml(self, xml_doc):
         ''' Write XML document to page '''
         self.set_header('Content-Type', 'text/xml')
+        whitelist = lambda char: char in printable[:-38]
         self.set_header(
             "Content-disposition", "attachment; filename=%s.xml" % (
-                filter(lambda char: char in printable[
-                       :-38], self.config.game_name),
+                filter(whitelist, self.config.game_name),
             ))
         self.set_header('Content-Length', len(xml_doc.encode('utf-8')))
         self.write(xml_doc.encode('utf-8'))
@@ -412,12 +394,6 @@ class AdminExportHandler(BaseHandler):
         for corp in Corporation.all():
             corp.to_xml(corps_elem)
 
-    def export_users(self, root):
-        teams_elem = ET.SubElement(root, "teams")
-        teams_elem.set("count", str(Team.count()))
-        for team in Team.all():
-            team.to_xml(teams_elem)
-
 
 class AdminImportXmlHandler(BaseHandler):
 
@@ -436,7 +412,7 @@ class AdminImportXmlHandler(BaseHandler):
         Import XML file uploaded by the admin.
         '''
         if 'xml_file' in self.request.files:
-            fxml = self._get_tmp()
+            fxml = self._get_tmp_file()
             errors = []
             success = None
             if import_xml(fxml):
@@ -446,10 +422,12 @@ class AdminImportXmlHandler(BaseHandler):
             os.unlink(fxml)
             self.render('admin/import.html', success=success, errors=errors)
         else:
-            self.render(
-                'admin/import.html', success=None, errors=["No file data."])
+            self.render('admin/import.html',
+                        success=None,
+                        errors=["No file data."]
+                        )
 
-    def _get_tmp(self):
+    def _get_tmp_file(self):
         ''' Creates a tmp file with the file data '''
         data = self.request.files['xml_file'][0]['body']
         tmp_file = NamedTemporaryFile(delete=False)

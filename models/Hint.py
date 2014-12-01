@@ -24,21 +24,26 @@ import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym
 from sqlalchemy.types import Unicode, Integer, String
+from libs.ValidationError import ValidationError
 from models.BaseModels import DatabaseObject
 from models import dbsession
-from string import ascii_letters, digits
 
 
 class Hint(DatabaseObject):
+
     '''
-    Holds the source code for a box which can be purchased from the source code market
+    Holds the source code for a box which can be purchased from
+    the source code market.
     '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    price = Column(Integer, nullable=False)
+    _price = Column(Integer, nullable=False)
     _description = Column(Unicode(256), nullable=False)
 
     @classmethod
@@ -59,6 +64,17 @@ class Hint(DatabaseObject):
     @classmethod
     def by_box_id(cls, _id):
         return dbsession.query(cls).filter_by(box_id=_id).all()
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        try:
+            self._price = abs(int(value))
+        except ValueError:
+            raise ValidationError("Hint price must be an integer")
 
     @property
     def description(self):

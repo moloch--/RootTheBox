@@ -56,5 +56,3 @@ from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.Hint import Hint
-#from models.Sponsor import Sponsor
-#from models.BoxResource import BoxResource

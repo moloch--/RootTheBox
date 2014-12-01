@@ -18,8 +18,8 @@ Created on Nov 24, 2014
     See the License for the specific language governing permissions and
     limitations under the License.
 
-CRUD game objects:
 
+CRUD for game objects:
     - Corporations
     - Boxes (and IpAddress)
     - Flags (and FlagAttachment)
@@ -32,7 +32,6 @@ import logging
 
 from libs.SecurityDecorators import *
 from handlers.BaseHandlers import BaseHandler
-from models.Team import Team
 from models.Box import Box
 from models.Flag import Flag
 from models.Corporation import Corporation
@@ -57,11 +56,10 @@ class AdminCreateHandler(BaseHandler):
             'flag/regex': 'admin/create/flag-regex.html',
             'flag/file': 'admin/create/flag-file.html',
             'flag/static': 'admin/create/flag-static.html',
-            'team': 'admin/create/team.html',
             'game_level': 'admin/create/game_level.html',
             'hint': 'admin/create/hint.html',
         }
-        if len(args) == 1 and args[0] in game_objects:
+        if len(args) and args[0] in game_objects:
             self.render(game_objects[args[0]], errors=None)
         else:
             self.render("public/404.html")
@@ -77,11 +75,10 @@ class AdminCreateHandler(BaseHandler):
             'flag/file': self.create_flag_file,
             'flag/regex': self.create_flag_regex,
             'flag/static': self.create_flag_static,
-            'team': self.create_team,
             'game_level': self.create_game_level,
             'hint': self.create_hint,
         }
-        if len(args) == 1 and args[0] in game_objects:
+        if len(args) and args[0] in game_objects:
             game_objects[args[0]]()
         else:
             self.render("public/404.html")
@@ -99,37 +96,35 @@ class AdminCreateHandler(BaseHandler):
                 self.dbsession.commit()
                 self.redirect('/admin/view/game_objects')
         except ValidationError as error:
-            self.render("admin/create/corporation.html", errors=["%s" % error])
+            self.render("admin/create/corporation.html", errors=[str(error), ])
 
     def create_box(self):
         ''' Create a box object '''
         try:
-            lvl = self.get_argument('game_level', '')
-            game_level = abs(int(lvl)) if lvl.isdigit() else 0
+            game_level = self.get_argument('game_level', '')
             corp_uuid = self.get_argument('corporation_uuid', '')
             if Box.by_name(self.get_argument('name', '')) is not None:
-                self.render("admin/create/box.html",
-                            errors=["Box name already exists"]
-                            )
+                raise ValidationError("Box name already exists")
             elif Corporation.by_uuid(corp_uuid) is None:
-                self.render("admin/create/box.html",
-                            errors=["Corporation does not exist"]
-                            )
+                raise ValidationError("Corporation does not exist")
             elif GameLevel.by_number(game_level) is None:
-                self.render("admin/create/box.html",
-                            errors=["Game level does not exist"]
-                            )
+                raise ValidationError("Game level does not exist")
             else:
-                self._make_box(game_level)
+                corp = Corporation.by_uuid(corp_uuid)
+                level = GameLevel.by_number(level_number)
+                box = Box(corporation_id=corp.id, game_level_id=level.id)
+                box.name = self.get_argument('name', '')
+                box.description = self.get_argument('description', '')
+                box.autoformat = self.get_argument('autoformat', '') == 'true'
+                box.difficulty = self.get_argument('difficulty', '')
+                self.dbsession.add(box)
+                self.dbsession.commit()
+                if 'avatar' in self.request.files:
+                    box.avatar = self.request.files['avatar'][0]['body']
                 self.dbsession.commit()
                 self.redirect('/admin/view/game_objects')
         except ValidationError as error:
-            self.render('admin/create/box.html', errors=["%s" % error])
-        except:
-            logging.exception("Failed to create flag")
-            self.render('admin/create/flag-regex.html',
-                        errors=["Unknown error, check logs"]
-                        )
+            self.render('admin/create/box.html', errors=[str(error), ])
 
     def create_flag_static(self):
         ''' Create a static flag '''
@@ -137,11 +132,6 @@ class AdminCreateHandler(BaseHandler):
             self._mkflag(FLAG_STATIC)
         except ValidationError as error:
             self.render('admin/create/flag-static.html', errors=[str(error)])
-        except:
-            logging.exception("Failed to create flag")
-            self.render('admin/create/flag-regex.html',
-                        errors=["Unknown error, check logs"]
-                        )
 
     def create_flag_regex(self):
         ''' Create a regex flag '''
@@ -149,18 +139,56 @@ class AdminCreateHandler(BaseHandler):
             self._mkflag(FLAG_REGEX)
         except ValidationError as error:
             self.render('admin/create/flag-regex.html', errors=[str(error)])
-        except:
-            logging.exception("Failed to create flag")
-            self.render('admin/create/flag-regex.html',
-                        errors=["Unknown error, check logs"]
-                        )
 
     def create_flag_file(self):
         ''' Create a flag flag '''
         try:
             self._mkflag(FLAG_FILE, is_file=True)
-        except Exception as error:
+        except ValidationError as error:
             self.render('admin/create/flag-file.html', errors=[str(error)])
+
+    def create_game_level(self):
+        '''
+        Creates a new level in the database, the levels are basically a
+        linked-list where each level points to the next, and the last points to
+        None.  This function creates a new level and sorts everything based on
+        the 'number' attrib
+        '''
+        try:
+            new_level = GameLevel()
+            new_level.number = self.get_argument('level_number', '')
+            new_level.buyout = self.get_argument('buyout', '')
+            game_levels = GameLevel.all()
+            game_levels.append(new_level)
+            game_levels = sorted(game_levels)
+            index = 0
+            for level in game_levels[:-1]:
+                level.next_level_id = game_levels[index + 1].id
+                self.dbsession.add(level)
+                index += 1
+            game_levels[0].number = 0
+            self.dbsession.add(game_levels[0])
+            game_levels[-1].next_level_id = None
+            self.dbsession.add(game_levels[-1])
+            self.dbsession.commit()
+            self.redirect('/admin/view/game_levels')
+        except ValidationError as error:
+            self.render('admin/create/game_level.html', errors=[str(error), ])
+
+    def create_hint(self):
+        ''' Add hint to database '''
+        try:
+            box = Box.by_uuid(self.get_argument('box_uuid', ''))
+            if box is None:
+                raise ValidationError("Box does not exist")
+            hint = Hint(box_id=box.id)
+            hint.price = self.get_argument('price', '')
+            hint.description = self.get_argument('description', '')
+            self.dbsession.add(hint)
+            self.dbsession.commit()
+            self.redirect('/admin/view/game_objects')
+        except ValidationError as error:
+            self.render('admin/create/hint.html', errors=[str(error), ])
 
     def _mkflag(self, flag_type, is_file=False):
         ''' Creates the flag in the database '''
@@ -193,90 +221,7 @@ class AdminCreateHandler(BaseHandler):
             flag_attachment.data = attachment['body']
             flag.attachments.append(flag_attachment)
             self.dbsession.add(flag_attachment)
-
-    def create_team(self):
-        ''' Create a new team in the database '''
-        team = Team()
-        team.name = self.get_argument('team_name', '')
-        team.motto = self.get_argument('motto', '')
-        level_0 = GameLevel.all()[0]
-        team.game_levels.append(level_0)
-        self.dbsession.add(team)
-        self.dbsession.commit()
-        self.redirect('/admin/view/user_objects')
-
-    def create_game_level(self):
-        ''' Creates a game level '''
-        try:
-            lvl = self.get_argument('level_number', '')
-            game_level = abs(int(lvl)) if lvl.isdigit() else 0
-            if GameLevel.by_number(game_level) is not None:
-                self.render('admin/create/game_level.html',
-                            errors=["Game level number must be unique"]
-                            )
-            else:
-                self._make_level(game_level)
-                self.redirect('/admin/view/game_levels')
-        except ValueError:
-            self.render('admin/create/game_level.html',
-                        errors=["Invalid level number"]
-                        )
-
-    def create_hint(self):
-        ''' Add hint to database '''
-        box = Box.by_uuid(self.get_argument('box_uuid', ''))
-        if box is not None:
-            try:
-                hint = Hint(box_id=box.id)
-                hint.price = self.get_argument('price', '')
-                hint.description = self.get_argument('description', '')
-                self.dbsession.add(hint)
-                self.dbsession.commit()
-                self.redirect('/admin/view/game_objects')
-            except ValidationError as error:
-                self.render('admin/create/hint.html', errors=["%s" % error])
-        else:
-            self.render(
-                'admin/create/hint.html', errors=["Box does not exist"])
-
-    def _make_box(self, level_number):
-        ''' Creates a box in the database '''
-        corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
-        level = GameLevel.by_number(level_number)
-        box = Box(corporation_id=corp.id, game_level_id=level.id)
-        box.name = self.get_argument('name', '')
-        box.description = self.get_argument('description', '')
-        box.autoformat = self.get_argument('autoformat', '') == 'true'
-        box.difficulty = self.get_argument('difficulty', '')
-        self.dbsession.add(box)
-        self.dbsession.commit()
-        if 'avatar' in self.request.files:
-            box.avatar = self.request.files['avatar'][0]['body']
-        return box
-
-    def _make_level(self, level_number):
-        '''
-        Creates a new level in the database, the levels are basically a
-        linked-list where each level points to the next, and the last points to
-        None.  This function creates a new level and sorts everything based on
-        the 'number' attrib
-        '''
-        new_level = GameLevel()
-        new_level.number = level_number
-        new_level.buyout = self.get_argument('buyout', '')
-        game_levels = GameLevel.all()
-        game_levels.append(new_level)
-        game_levels = sorted(game_levels)
-        index = 0
-        for level in game_levels[:-1]:
-            level.next_level_id = game_levels[index + 1].id
-            self.dbsession.add(level)
-            index += 1
-        game_levels[0].number = 0
-        self.dbsession.add(game_levels[0])
-        game_levels[-1].next_level_id = None
-        self.dbsession.add(game_levels[-1])
-        self.dbsession.commit()
+        self.dbsession.flush()
 
 
 class AdminViewHandler(BaseHandler):
@@ -348,150 +293,109 @@ class AdminEditHandler(BaseHandler):
 
     def edit_corporations(self):
         ''' Updates corporation object in the database '''
-        corp = Corporation.by_uuid(self.get_argument('uuid', ''))
-        if corp is not None:
-            try:
-                name = self.get_argument('name', '')
-                if name != corp.name:
-                    logging.info("Updated corporation name %s -> %s" % (
-                        corp.name, name
-                    ))
-                    corp.name = name
-                    self.dbsession.add(corp)
-                    self.dbsession.commit()
-                self.redirect('/admin/view/game_objects')
-            except ValidationError as error:
-                self.render(
-                    "admin/view/game_objects.html", errors=["%s" % error])
-        else:
-            self.render("admin/view/game_objects.html",
-                        errors=["Corporation does not exist"]
-                        )
+        try:
+            corp = Corporation.by_uuid(self.get_argument('uuid', ''))
+            if corp is None:
+                raise ValidationError("Corporation does not exist")
+            name = self.get_argument('name', '')
+            if name != corp.name:
+                logging.info("Updated corporation name %s -> %s" % (
+                    corp.name, name
+                ))
+                corp.name = name
+                self.dbsession.add(corp)
+                self.dbsession.commit()
+            self.redirect('/admin/view/game_objects')
+        except ValidationError as error:
+            self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_boxes(self):
         '''
         Edit existing boxes in the database, and log the changes
         '''
-        box = Box.by_uuid(self.get_argument('uuid', ''))
-        if box is not None:
-            try:
-                name = self.get_argument('name', '')
-                if name != box.name:
-                    if Box.by_name(name) is None:
-                        logging.info(
-                            "Updated box name %s -> %s" % (box.name, name,))
-                        box.name = name
-                    else:
-                        raise ValidationError("Box name already exists")
-                corp = Corporation.by_uuid(
-                    self.get_argument('corporation_uuid'))
-                if corp is not None and corp.id != box.corporation_id:
-                    logging.info("Updated %s's corporation %s -> %s" % (
-                        box.name, box.corporation_id, corp.id,
+        try:
+            box = Box.by_uuid(self.get_argument('uuid', ''))
+            if box is None:
+                raise ValidationError("Box does not exist")
+            # Name
+            name = self.get_argument('name', '')
+            if name != box.name:
+                if Box.by_name(name) is None:
+                    logging.info("Updated box name %s -> %s" % (
+                        box.name, name,
                     ))
-                    box.corporation_id = corp.id
-                elif corp is None:
-                    raise ValidationError("Corporation does not exist")
-                description = self.get_argument('description', '')
-                if description != box._description:
-                    logging.info("Updated %s's description %s -> %s" % (
-                        box.name, box.description, description,
-                    ))
-                    box.description = description
-                difficulty = self.get_argument('difficulty', '')
-                if difficulty != box.difficulty:
-                    logging.info("Updated %s's difficulty %s -> %s" % (
-                        box.name, box.difficulty, difficulty,
-                    ))
-                    box.difficulty = difficulty
-                if 'avatar' in self.request.files:
-                    box.avatar = self.request.files['avatar'][0]['body']
-                self.dbsession.add(box)
-                self.dbsession.commit()
-                self.redirect("/admin/view/game_objects")
-            except ValidationError as error:
-                self.render(
-                    "admin/view/game_objects.html", errors=["%s" % error])
-        else:
-            self.render("admin/view/game_objects.html",
-                        errors=["Box does not exist"]
-                        )
+                    box.name = name
+                else:
+                    raise ValidationError("Box name already exists")
+            # Corporation
+            corp = Corporation.by_uuid(self.get_argument('corporation_uuid'))
+            if corp is not None and corp.id != box.corporation_id:
+                logging.info("Updated %s's corporation %s -> %s" % (
+                    box.name, box.corporation_id, corp.id,
+                ))
+                box.corporation_id = corp.id
+            elif corp is None:
+                raise ValidationError("Corporation does not exist")
+            # Description
+            description = self.get_argument('description', '')
+            if description != box._description:
+                logging.info("Updated %s's description %s -> %s" % (
+                    box.name, box.description, description,
+                ))
+                box.description = description
+            # Difficulty
+            difficulty = self.get_argument('difficulty', '')
+            if difficulty != box.difficulty:
+                logging.info("Updated %s's difficulty %s -> %s" % (
+                    box.name, box.difficulty, difficulty,
+                ))
+                box.difficulty = difficulty
+            # Avatar
+            if 'avatar' in self.request.files:
+                box.avatar = self.request.files['avatar'][0]['body']
+
+            self.dbsession.add(box)
+            self.dbsession.commit()
+            self.redirect("/admin/view/game_objects")
+        except ValidationError as error:
+            self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_flags(self):
         ''' Super ugly code, yes - Edit existing flags in the database '''
-        flag = Flag.by_uuid(self.get_argument('uuid', ''))
-        if flag is not None:
-            try:
-                name = self.get_argument('name', '')
-                if flag.name != name:
-                    if Flag.by_name(name) is None:
-                        logging.info("Updated flag name %s -> %s" % (
-                            flag.name, name,
-                        ))
-                        flag.name = name
-                    else:
-                        raise ValidationError("Flag name already exists")
-                token = self.get_argument('token', '')
-                if flag.token != token:
-                    if Flag.by_token(token) is None:
-                        logging.info("Updated %s's token %s -> %s" % (
-                            flag.name, flag.token, token
-                        ))
-                        flag.token = token
-                    else:
-                        raise ValidationError("Token is not unique")
-                description = self.get_argument('description', '')
-                if flag._description != description:
-                    logging.info("Updated %s's description %s -> %s" % (
-                        flag.name, flag._description, description,
-                    ))
-                    flag.description = description
-                flag.value = self.get_argument('value', '')
-                flag.capture_message = self.get_argument('capture_message', '')
-                box = Box.by_uuid(self.get_argument('box_uuid', ''))
-                if box is not None and flag not in box.flags:
-                    logging.info("Updated %s's box %d -> %d" % (
-                        flag.name, flag.box_id, box.id
-                    ))
-                    flag.box_id = box.id
-                elif box is None:
-                    raise ValidationError("Box does not exist")
-                self.dbsession.add(flag)
-                self.dbsession.commit()
-                self.redirect("/admin/view/game_objects")
-            except ValidationError as error:
-                self.render(
-                    "admin/view/game_objects.html", errors=["%s" % error])
-        else:
-            self.render("admin/view/game_objects.html",
-                        errors=["Flag does not exist"]
-                        )
-
-    def edit_teams(self):
-        ''' Edit existing team objects in the database '''
-        team = Team.by_uuid(self.get_argument('uuid', ''))
-        if team is not None:
-            try:
-                name = self.get_argument('name', '')
-                if team.name != name:
-                    logging.info(
-                        "Updated team name %s -> %s" % (team.name, name))
-                    team.name = name
-                motto = self.get_argument('motto', '')
-                if team.motto != motto:
-                    logging.info("Updated %s's motto %s -> %s" % (
-                        team.name, team.motto, motto
-                    ))
-                    team.motto = motto
-                self.dbsession.add(team)
-                self.dbsession.close()
-                self.redirect("/admin/view/user_objects")
-            except ValidationError as error:
-                self.render(
-                    "admin/view/user_objects.html", errors=["%s" % error])
-        else:
-            self.render(
-                "admin/view/user_objects.html", errors=["Team does not exist"])
+        try:
+            flag = Flag.by_uuid(self.get_argument('uuid', ''))
+            if flag is None:
+                raise ValidationError("Flag does not exist")
+            name = self.get_argument('name', '')
+            if flag.name != name:
+                logging.info("Updated flag name %s -> %s" % (
+                    flag.name, name,
+                ))
+                flag.name = name
+            token = self.get_argument('token', '')
+            if flag.token != token:
+                flag.token = token
+            description = self.get_argument('description', '')
+            if flag._description != description:
+                logging.info("Updated %s's description %s -> %s" % (
+                    flag.name, flag._description, description,
+                ))
+                flag.description = description
+            flag.value = self.get_argument('value', '')
+            flag.capture_message = self.get_argument('capture_message', '')
+            box = Box.by_uuid(self.get_argument('box_uuid', ''))
+            if box is not None and flag not in box.flags:
+                logging.info("Updated %s's box %d -> %d" % (
+                    flag.name, flag.box_id, box.id
+                ))
+                flag.box_id = box.id
+            elif box is None:
+                raise ValidationError("Box does not exist")
+            self.dbsession.add(flag)
+            self.dbsession.commit()
+            self.redirect("/admin/view/game_objects")
+        except ValidationError as error:
+            self.render("admin/view/game_objects.html", errors=["%s" % error])
 
     def edit_ip(self):
         ''' Add ip addresses to a box (sorta edits the box object) '''
@@ -516,34 +420,30 @@ class AdminEditHandler(BaseHandler):
 
     def edit_game_level(self):
         ''' Update game level objects '''
-        errors = []
-        level = GameLevel.by_uuid(self.get_argument('uuid'))
         try:
-            new_number = int(self.get_argument('number', ''))
-            new_buyout = int(self.get_argument('buyout', ''))
-            if level.number != new_number and GameLevel.by_number(new_number) is None:
-                level.number = new_number
-                self.dbsession.add(level)
-                # Fix the linked-list
-                game_levels = sorted(GameLevel.all())
-                index = 0
-                for game_level in game_levels[:-1]:
-                    game_level.next_level_id = game_levels[index + 1].id
-                    self.dbsession.add(game_level)
-                    index += 1
-                game_levels[0].number = 0
-                self.dbsession.add(game_levels[0])
-                game_levels[-1].next_level_id = None
-                self.dbsession.add(game_levels[-1])
-            if GameLevel.by_number(new_number) is not None:
-                errors.append("GameLevel number is not unique")
-            if level.buyout != new_buyout:
-                level.buyout = new_buyout
-                self.dbsession.add(level)
+            level = GameLevel.by_uuid(self.get_argument('uuid'))
+            if level is None:
+                raise ValidationError("Game level does not exist")
+            level.number = self.get_argument('number', '')
+            self.dbsession.add(level)
+            # Fix the linked-list
+            game_levels = sorted(GameLevel.all())
+            index = 0
+            for game_level in game_levels[:-1]:
+                game_level.next_level_id = game_levels[index + 1].id
+                self.dbsession.add(game_level)
+                index += 1
+            game_levels[0].number = 0
+            self.dbsession.add(game_levels[0])
+            game_levels[-1].next_level_id = None
+            self.dbsession.add(game_levels[-1])
+            level.buyout = self.get_argument('buyout', '')
+            self.dbsession.add(level)
             self.dbsession.commit()
         except ValueError:
-            errors.append("That was not a number ...")
-        self.render("admin/view/game_levels.html", errors=errors)
+            raise ValidationError("That was not a number ...")
+        except ValidationError as error:
+            self.render("admin/view/game_levels.html", errors=[str(error), ])
 
     def box_level(self):
         ''' Changes a boxs level '''
@@ -566,7 +466,7 @@ class AdminEditHandler(BaseHandler):
         if hint is not None:
             try:
                 logging.debug("Edit hint object with uuid of %s" % hint.uuid)
-                price = self.get_argument('price', hint.price)
+                price = self.get_argument('price', '')
                 if hint.price != price:
                     hint.price = price
                 description = self.get_argument(
