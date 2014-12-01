@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 '''
-Created on Mar 15, 2012
+Created on Nov 24, 2014
 
 @author: moloch
 
-    Copyright 2012 Root the Box
+    Copyright 2014 Root the Box
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -19,26 +19,23 @@ Created on Mar 15, 2012
     limitations under the License.
 '''
 
-
 import os
 
 from uuid import uuid4
-from models import dbsession
-from models.BaseModels import DatabaseObject
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, String, Integer
-from mimetypes import guess_type
+from models.BaseModels import DatabaseObject
 from libs.ConfigManager import ConfigManager
 
 
-class FileUpload(DatabaseObject):
+class FlagAttachment(DatabaseObject):
 
     '''
-    This is the object that stores data about files shared by
-    players via the team file sharing feature.
+    These are files that the administrator wants to
+    distribute alongside a flag.
     '''
 
-    DIR = 'shares/'
+    DIR = 'flag_attachments/'
 
     uuid = Column(String(36),
                   unique=True,
@@ -46,24 +43,8 @@ class FileUpload(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
 
-    team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
-    byte_size = Column(Integer, nullable=False)
-    _description = Column(Unicode(1024), nullable=False)
+    flag_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     _file_name = Column(Unicode(64), nullable=False)
-
-    @classmethod
-    def all(cls):
-        ''' Returns a list of all objects in the database '''
-        return dbsession.query(cls).all()
-
-    @classmethod
-    def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
-        return dbsession.query(cls).filter_by(id=_id).first()
-
-    @classmethod
-    def by_uuid(cls, _uuid):
-        return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @property
     def file_name(self):
@@ -71,21 +52,8 @@ class FileUpload(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        self._file_name = os.path.basename(
-            value).replace('\n', '').replace('\r', '')
-
-    @property
-    def content_type(self):
-        content = guess_type(self.file_name)
-        return content[0] if content[0] is not None else 'unknown'
-
-    @property
-    def description(self):
-        return self._description if self._description else u'No description'
-
-    @description.setter
-    def description(self, value):
-        self._description = unicode(value)
+        fname = value.replace('\n', '').replace('\r', '')
+        self._file_name = unicode(os.path.basename(fname))[:64]
 
     @property
     def data(self):
@@ -103,10 +71,8 @@ class FileUpload(DatabaseObject):
             fp.write(value.encode('base64'))
 
     def delete_data(self):
+        ''' Remove the file from the file system, if it exists '''
         config = ConfigManager.instance()
-        if os.path.exists(config.file_uploads_dir + self.DIR + self.uuid):
-            os.unlink(config.file_uploads_dir + self.DIR + self.uuid)
-
-    def __repr__(self):
-        return u'<FileUpload - name: %s, size: %s>' % (
-            self.file_name, self.byte_size)
+        fpath = config.file_uploads_dir + self.DIR + self.uuid
+        if os.path.exists(fpath) and os.path.isfile(fpath):
+            os.unlink(fpath)

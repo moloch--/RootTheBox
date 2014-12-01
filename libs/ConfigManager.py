@@ -509,7 +509,7 @@ class ConfigManager(object):
 
     @property
     def file_uploads_dir(self):
-        return os.path.abspath('files/shares/') + '/'
+        return os.path.abspath('files/') + '/'
 
     #####################################################################
     ######################  [ DATABASE SETTINGS ]  ######################

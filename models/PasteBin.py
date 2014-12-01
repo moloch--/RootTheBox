@@ -21,7 +21,7 @@ Created on Mar 12, 2012
 
 
 from uuid import uuid4
-from sqlalchemy import Column, ForeignKey, desc
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
@@ -33,7 +33,12 @@ MAX_PASTE_SIZE = 4096
 class PasteBin(DatabaseObject):
     ''' PasteBin definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
     _name = Column(Unicode(32), nullable=False)
     _contents = Column(Unicode(MAX_PASTE_SIZE), nullable=False)

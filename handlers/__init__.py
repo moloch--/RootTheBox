@@ -118,15 +118,17 @@ urls = [
     (r'/user/settings/(.*)', SettingsHandler),
     (r'/logout', LogoutHandler),
 
-    # Admin Handlers - AdminHandlers.py
+    # Admin Handlers
     (r'/admin/game', AdminGameHandler),
     (r'/admin/ban/(add|clear|config)', AdminBanHammerHandler),
     (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
+
     (r'/admin/create/(.*)', AdminCreateHandler),
     (r'/admin/edit/(.*)', AdminEditHandler),
     (r'/admin/view/(.*)', AdminViewHandler),
     (r'/admin/delete/(.*)', AdminDeleteHandler),
-    (r'/admin/ajax/objects(.*)', AdminAjaxObjectDataHandler),
+    (r'/admin/ajax/objects(.*)', AdminAjaxGameObjectDataHandler),
+
     (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
     (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
     (r'/admin/lock', AdminLockHandler),

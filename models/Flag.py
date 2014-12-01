@@ -40,7 +40,16 @@ FLAG_FILE = u'file'
 
 
 class Flag(DatabaseObject):
-    ''' Flag definition '''
+
+    '''
+    Flags that can be captured by players and what not. This object comes in
+    three flavors:
+        -static
+        -regex
+        -file
+
+    Depending on the cls._type value. For more information see the wiki.
+    '''
 
     uuid = Column(String(36),
                   unique=True,
@@ -48,17 +57,16 @@ class Flag(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
 
+    box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+
     _name = Column(Unicode(16), nullable=False)
     _token = Column(Unicode(256), nullable=False)
     _description = Column(Unicode(256), nullable=False)
     _capture_message = Column(Unicode(256))
-    value = Column(Integer, nullable=False)
+    _value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
-    box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    attachements = Column(Integer,
-                          ForeignKey('flag_attachment.id'),
-                          nullable=False
-                          )
+    flag_attachements = Column(Integer, ForeignKey('flag_attachment.id'))
+
     FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC]
 
     @classmethod
@@ -87,9 +95,9 @@ class Flag(DatabaseObject):
         return dbsession.query(cls).filter_by(_token=unicode(token)).first()
 
     @classmethod
-    def by_type(cls, __type):
+    def by_type(cls, _type):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_type=unicode(__type)).all()
+        return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
 
     @classmethod
     def create_flag(cls, _type, box, name, raw_token, description, value):
@@ -101,11 +109,8 @@ class Flag(DatabaseObject):
         }
         if cls.by_name(name) is not None:
             raise ValidationError('Flag name already exists in database')
-        if not isinstance(description, basestring) or not len(description):
-            raise ValidationError('Flag description is not valid')
         assert box is not None and isinstance(box, Box)
-        reward = abs(int(value))
-        new_flag = creators[_type](box, name, raw_token, description, reward)
+        new_flag = creators[_type](box, name, raw_token, description, value)
         new_flag._type = _type
         return new_flag
 
@@ -204,6 +209,17 @@ class Flag(DatabaseObject):
     @token.setter
     def token(self, value):
         self._token = unicode(value)
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        try:
+            self._value = abs(int(value))
+        except ValueError:
+            raise ValidationError("Reward value must be an integer")
 
     @property
     def is_file(self):

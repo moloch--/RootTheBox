@@ -35,6 +35,7 @@ StartSession = lambda: _Session(autoflush=True)
 
 dbsession = StartSession()
 
+
 @contextmanager
 def cxt_dbsession():
     ''' Provide a transactional scope around a series of operations. '''

@@ -30,13 +30,18 @@ from string import ascii_letters, digits
 
 
 class SourceCode(DatabaseObject):
+
     '''
     Holds the source code for a box which can be purchased from the
-    source code market
+    source code market.
     '''
 
-    uuid = Column(
-        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     _price = Column(Integer, nullable=False)
     _description = Column(Unicode(1024), nullable=False)
