@@ -24,7 +24,6 @@ This file conatains handlers related to the file sharing functionality
 '''
 
 
-import os
 import logging
 
 from models.FileUpload import FileUpload
@@ -32,11 +31,12 @@ from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
 from string import printable
 
-MAX_FILE_SIZE = 50 * (1024**2)  # Max file size 50Mb
+MAX_FILE_SIZE = 50 * (1024 ** 2)  # Max file size 50Mb
 MAX_UPLOADS = 5
 
 
 class FileUploadHandler(BaseHandler):
+
     ''' Handles file shares for teams '''
 
     @authenticated
@@ -44,8 +44,8 @@ class FileUploadHandler(BaseHandler):
         ''' Renders upload file page '''
         user = self.get_current_user()
         self.render("file_upload/shared_files.html",
-            errors=None, shares=user.team.files
-        )
+                    errors=None, shares=user.team.files
+                    )
 
     @authenticated
     def post(self, *args, **kwargs):
@@ -57,7 +57,8 @@ class FileUploadHandler(BaseHandler):
                 errors.append("The file %s is too large")
             else:
                 file_upload = self.create_file(user, shared_file)
-                event = self.event_manager.create_team_file_share_event(user, file_upload)
+                event = self.event_manager.create_team_file_share_event(
+                    user, file_upload)
                 self.new_events.append(event)
         if not len(errors):
             self.redirect("/user/share/files")
@@ -76,9 +77,10 @@ class FileUploadHandler(BaseHandler):
 
 
 class FileDownloadHandler(BaseHandler):
+
     ''' Download shared files from here '''
 
-    good_chars = printable[:-38] + '.-_'
+    char_whitelist = lambda char: char in str(printable[:-38] + '.-_')
 
     @authenticated
     def get(self, *args, **kwargs):
@@ -89,14 +91,14 @@ class FileDownloadHandler(BaseHandler):
             self.set_header('Content-Type', shared_file.content_type)
             self.set_header('Content-Length', shared_file.byte_size)
             self.set_header('Content-Disposition', 'attachment; filename=%s' %
-                filter(lambda char: char in self.good_chars, shared_file.file_name)
-            )
+                            filter(self.char_whitelist, shared_file.file_name))
             self.write(shared_file.data)
         else:
             self.render("public/404.html")
 
 
 class FileDeleteHandler(BaseHandler):
+
     ''' Delete shared files '''
 
     @authenticated
@@ -104,7 +106,8 @@ class FileDeleteHandler(BaseHandler):
         user = self.get_current_user()
         shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
         if shared_file is not None and shared_file in user.team.files:
-            logging.info("%s deleted a shared file %s" % (user.handle, shared_file.uuid))
+            logging.info("%s deleted a shared file %s" %
+                         (user.handle, shared_file.uuid))
             shared_file.delete_data()
             self.dbsession.delete(shared_file)
             self.dbsession.commit()

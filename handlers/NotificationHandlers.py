@@ -29,6 +29,7 @@ from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 
 class NotifySocketHandler(BaseWebSocketHandler):
+
     ''' Handles websocket connections '''
 
     @restrict_origin

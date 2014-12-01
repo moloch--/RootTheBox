@@ -77,4 +77,3 @@ class NoobHandler(BaseHandler):
                 user.handle, self.request.remote_ip
             ))
         self.render("public/noob.html")
-

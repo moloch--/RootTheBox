@@ -101,7 +101,8 @@ class FlagSubmissionHandler(BaseHandler):
                 self.dbsession.add(user.team)
                 config = ConfigManager.instance()
                 if config.dynamic_flag_value:
-                    flag.value = int(flag.value - ((flag.value / config.flag_value_decrease)/100))
+                    depreciation = flag.value / config.flag_value_decrease
+                    flag.value = int(flag.value - (depreciation / 100.0))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
                 event = self.event_manager.create_flag_capture_event(
@@ -211,7 +212,8 @@ class MissionsHandler(BaseHandler):
             else:
                 self.render("missions/view.html",
                             team=user.team,
-                            errors=["You do not have enough money to unlock this level"]
+                            errors=[
+                                "You do not have enough money to unlock this level"]
                             )
         else:
             self.render("missions/view.html",

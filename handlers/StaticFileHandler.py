@@ -27,11 +27,11 @@ Modification of the tornado web StaticFileHandler
 import logging
 
 from libs.ConfigManager import ConfigManager
-from tornado.web import RequestHandler, HTTPError
 from tornado.web import StaticFileHandler as DefaultStaticHandler
 
 
 class StaticFileHandler(DefaultStaticHandler):
+
     '''
     Same as the normal Tornado StaticFileHandler with a
     couple overloaded methods.
@@ -44,7 +44,8 @@ class StaticFileHandler(DefaultStaticHandler):
         '''
         We need to add the security headers here too, especially the
         X-Content-Type-Options header, since we whitelist file extenstions.
-        this should prevent anyone from serving html/etc from the static handler
+        this should prevent anyone from serving html/etc from the static
+        handler
         '''
         self.set_header("Server", "Microsoft-IIS/7.5")
         self.add_header("X-AspNetMvc-Version", "3.0")
@@ -54,7 +55,7 @@ class StaticFileHandler(DefaultStaticHandler):
         self.add_header("X-XSS-Protection", "1; mode=block")
         self.add_header("X-Content-Type-Options", "nosniff")
         if self.config.use_ssl:
-            self.add_header("Strict-Transport-Security", 'max-age=31536000; includeSubDomains;')
+            self.add_header("Strict-Transport-Security", 'max-age=31536000;')
 
     def write_error(self, status_code, **kwargs):
         ''' Render a generic error page '''
@@ -63,4 +64,3 @@ class StaticFileHandler(DefaultStaticHandler):
         ))
         # Reguardless of error, send a 404
         self.render('public/404.html')
-

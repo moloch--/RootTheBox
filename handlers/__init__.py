@@ -32,9 +32,7 @@ from modules.Recaptcha import Recaptcha
 from modules.AppTheme import AppTheme
 from libs.ConsoleColors import *
 from libs.Scoreboard import score_bots
-from libs.BotManager import BotManager, ping_bots
 from libs.GameHistory import GameHistory
-from libs.EventManager import EventManager
 from libs.ConfigManager import ConfigManager
 from tornado import netutil
 from tornado.web import Application
@@ -54,12 +52,12 @@ from handlers.FileUploadHandlers import *
 from handlers.NotificationHandlers import *
 from handlers.StaticFileHandler import StaticFileHandler
 
-### Singletons
+# Singletons
 io_loop = IOLoop.instance()
 config = ConfigManager.instance()
 game_history = GameHistory.instance()
 
-### Main URL Configuration
+# Main URL Configuration
 # First get base URLs that all game types will require
 urls = [
     # Static Handlers - StaticFileHandler.py
@@ -81,7 +79,7 @@ urls = [
 
     # Mission handlers - MissionHandlers.py
     (r'/user/missions', MissionsHandler),
-    (r'/user/missions/capture',FlagSubmissionHandler),
+    (r'/user/missions/capture', FlagSubmissionHandler),
     (r'/user/missions/(flag|buyout)', MissionsHandler),
     (r'/user/missions/firstlogin', FirstLoginHandler),
     (r'/user/missions/boxes', BoxHandler),
@@ -224,13 +222,13 @@ app = Application(
     game_started=False,
 
     # Callback functions
-    score_bots_callback = PeriodicCallback(
+    score_bots_callback=PeriodicCallback(
         score_bots,
         config.bot_reward_interval,
         io_loop=io_loop
     ),
 
-    history_callback = PeriodicCallback(
+    history_callback=PeriodicCallback(
         game_history.take_snapshot,
         config.history_snapshot_interval,
         io_loop=io_loop
@@ -246,16 +244,17 @@ app = Application(
 def start_server():
     ''' Main entry point for the application '''
     if config.debug:
-        logging.warn("Debug mode is enabled; some security measures will be ignored")
+        logging.warn(
+            "Debug mode is enabled; some security measures will be ignored")
     # Setup server object
     if config.use_ssl:
         server = HTTPServer(app,
-            ssl_options={
-                "certfile": config.certfile,
-                "keyfile": config.keyfile,
-            },
-            xheaders=config.x_headers
-        )
+                            ssl_options={
+                                "certfile": config.certfile,
+                                "keyfile": config.keyfile,
+                            },
+                            xheaders=config.x_headers
+                            )
     else:
         server = HTTPServer(app, xheaders=config.x_headers)
     sockets = netutil.bind_sockets(config.listen_port)

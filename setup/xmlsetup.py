@@ -30,6 +30,7 @@ import defusedxml.cElementTree as ET
 from setup.create_database import *
 from models import dbsession
 
+
 def get_child_by_tag(elem, tag_name):
     ''' Return child elements with a given tag '''
     tags = filter(

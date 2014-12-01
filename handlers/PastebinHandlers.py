@@ -23,15 +23,14 @@ This file contains handlers related to the pastebin functionality
 
 '''
 
-import logging
 
 from handlers.BaseHandlers import BaseHandler
-from models.User import User
 from models.PasteBin import PasteBin
 from libs.SecurityDecorators import authenticated
 
 
 class PasteHandler(BaseHandler):
+
     ''' Renders the main page '''
 
     @authenticated
@@ -41,12 +40,12 @@ class PasteHandler(BaseHandler):
 
 
 class CreatePasteHandler(BaseHandler):
+
     ''' Creates paste bin shares '''
 
     @authenticated
     def get(self, *args, **kwargs):
         ''' AJAX // Display team text shares '''
-        user = self.get_current_user()
         self.render('pastebin/create.html', errors=None)
 
     @authenticated
@@ -65,10 +64,12 @@ class CreatePasteHandler(BaseHandler):
             self.new_events.append(event)
             self.redirect('/user/share/pastebin')
         else:
-            self.render('pastebin/create.html', errors=["Missing name or content"])
+            self.render(
+                'pastebin/create.html', errors=["Missing name or content"])
 
 
 class DisplayPasteHandler(BaseHandler):
+
     ''' Displays shared texts '''
 
     @authenticated
@@ -78,12 +79,15 @@ class DisplayPasteHandler(BaseHandler):
         user = self.get_current_user()
         paste = PasteBin.by_uuid(paste_uuid)
         if paste is None or paste not in user.team.pastes:
-            self.render("pastebin/display.html", errors=["Paste does not exist."], paste=None)
+            self.render("pastebin/display.html",
+                        errors=["Paste does not exist."],
+                        paste=None)
         else:
             self.render("pastebin/display.html", errors=None, paste=paste)
 
 
 class DeletePasteHandler(BaseHandler):
+
     ''' Deletes shared texts '''
 
     @authenticated

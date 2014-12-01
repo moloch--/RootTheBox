@@ -36,9 +36,11 @@ import xml.etree.cElementTree as ET
 
 
 class Team(DatabaseObject):
+
     ''' Team definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(
+        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _name = Column(Unicode(24), unique=True, nullable=False)
     _motto = Column(Unicode(32))
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
@@ -46,38 +48,38 @@ class Team(DatabaseObject):
     money = Column(Integer, default=500, nullable=False)
 
     members = relationship("User",
-        backref=backref("team", lazy="select")
-    )
+                           backref=backref("team", lazy="select")
+                           )
 
     flags = relationship("Flag",
-        secondary=team_to_flag,
-        backref=backref("team", lazy="select")
-    )
+                         secondary=team_to_flag,
+                         backref=backref("team", lazy="select")
+                         )
 
     boxes = relationship("Box",
-        secondary=team_to_box,
-        backref=backref("team", lazy="select")
-    )
+                         secondary=team_to_box,
+                         backref=backref("team", lazy="select")
+                         )
 
     items = relationship("MarketItem",
-        secondary=team_to_item,
-        backref=backref("team", lazy="joined")
-    )
+                         secondary=team_to_item,
+                         backref=backref("team", lazy="joined")
+                         )
 
     purchased_source_code = relationship("SourceCode",
-        secondary=team_to_source_code,
-        backref=backref("team", lazy="select")
-    )
+                                         secondary=team_to_source_code,
+                                         backref=backref("team", lazy="select")
+                                         )
 
     hints = relationship("Hint",
-        secondary=team_to_hint,
-        backref=backref("team", lazy="select")
-    )
+                         secondary=team_to_hint,
+                         backref=backref("team", lazy="select")
+                         )
 
     game_levels = relationship("GameLevel",
-        secondary=team_to_game_level,
-        backref=backref("team", lazy="select")
-    )
+                               secondary=team_to_game_level,
+                               backref=backref("team", lazy="select")
+                               )
 
     @classmethod
     def all(cls):

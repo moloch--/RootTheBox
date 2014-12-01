@@ -154,10 +154,9 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
             sheep = WallOfSheep.all_order_created()
         leaderboard = WallOfSheep.leaderboard()
         self.render('scoreboard/wall_of_sheep.html',
-            leaderboard=leaderboard,
-            flock=sheep,
-        )
-
+                    leaderboard=leaderboard,
+                    flock=sheep,
+                    )
 
 
 class TeamsHandler(BaseHandler):

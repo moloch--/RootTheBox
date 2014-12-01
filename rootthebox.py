@@ -97,12 +97,11 @@ def tests():
 
 def restart_serve():
     '''
-    Shutdown the actual process and restart the service. Useful for
-    rootthebox.cfg changes.
+    Shutdown the actual process and restart the service.
+    Useful for rootthebox.cfg changes.
     '''
     pid = os.getpid()
-    print(INFO + '%s : Restarting the service (%i)...' % (
-        current_time(), pid))
+    print(INFO + '%s : Restarting the service (%i)...' % (current_time(), pid))
     os.execl('./setup/restart.sh', '')
 
 
@@ -144,7 +143,7 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--create-tables",
                         action='store_true',
                         dest='create_tables',
-                        help="create and initialize database (run once)",
+                        help="create and initialize database tables (run once)",
                         )
     parser.add_argument("-s", "--start",
                         action='store_true',

@@ -33,6 +33,7 @@ from libs.SecurityDecorators import authenticated, use_black_market
 
 
 class MarketViewHandler(BaseHandler):
+
     ''' Renders views of items in the market '''
 
     @authenticated
@@ -53,9 +54,9 @@ class MarketViewHandler(BaseHandler):
             team = Team.by_id(user.team.id)  # Refresh object
             if user.has_item(item.name):
                 self.render('market/view.html',
-                    user=user,
-                    errors=["You have already purchased this item."]
-                )
+                            user=user,
+                            errors=["You have already purchased this item."]
+                            )
             elif team.money < item.price:
                 message = "You only have $%d" % (team.money,)
                 self.render('market/view.html', user=user, errors=[message])
@@ -64,14 +65,15 @@ class MarketViewHandler(BaseHandler):
                     user.handle, team.name, item.name, item.price
                 ))
                 self.purchase_item(team, item)
-                event = self.event_manager.create_purchased_item_event(user, item)
+                event = self.event_manager.create_purchased_item_event(
+                    user, item)
                 self.new_events.append(event)
                 self.redirect('/user/market')
         else:
             self.render('market/view.html',
-                user=self.get_current_user(),
-                errors=["Item does not exist."]
-            )
+                        user=self.get_current_user(),
+                        errors=["Item does not exist."]
+                        )
 
     def purchase_item(self, team, item):
         ''' Conducts the actual purchase of an item '''
@@ -82,6 +84,7 @@ class MarketViewHandler(BaseHandler):
 
 
 class MarketDetailsHandler(BaseHandler):
+
     ''' Renders views of items in the market '''
 
     @authenticated

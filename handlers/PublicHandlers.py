@@ -25,13 +25,10 @@ any authentication) with the exception of error handlers and the scoreboard
 '''
 
 
-import imghdr
 import logging
 
-from uuid import uuid4
 from netaddr import IPAddress
 from libs.SecurityDecorators import blacklist_ips
-from libs.ConfigManager import ConfigManager
 from models.Team import Team
 from models.Theme import Theme
 from models.RegistrationToken import RegistrationToken
@@ -49,6 +46,7 @@ class HomePageHandler(BaseHandler):
 
 
 class LoginHandler(BaseHandler):
+
     ''' Takes care of the login process '''
 
     def get(self, *args, **kwargs):
@@ -72,9 +70,11 @@ class LoginHandler(BaseHandler):
                     else:
                         self.redirect('/user')
                 else:
-                    self.render('public/login.html', errors=["The game has not started yet"])
+                    self.render('public/login.html',
+                                errors=["The game has not started yet"])
             else:
-                self.render('public/login.html', errors=["Your account has been locked"])
+                self.render('public/login.html',
+                            errors=["Your account has been locked"])
         else:
             self.failed_login()
 
@@ -124,13 +124,16 @@ class LoginHandler(BaseHandler):
                 if not IPAddress(ip).is_loopback():
                     self.application.settings['blacklisted_ips'].append(ip)
                 else:
-                    logging.warning("[BAN HAMMER] Cannot blacklist loopback address")
+                    logging.warning(
+                        "[BAN HAMMER] Cannot blacklist loopback address")
             except:
                 logging.exception("[BAN HAMMER] Exception while attempting to ban ip address")
-        self.render('public/login.html', errors=["Bad username and/or password, try again"])
+        self.render('public/login.html',
+                    errors=["Bad username and/or password, try again"])
 
 
 class RegistrationHandler(BaseHandler):
+
     ''' Registration Code '''
 
     def get(self, *args, **kwargs):

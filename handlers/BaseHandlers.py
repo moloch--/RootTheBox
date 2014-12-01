@@ -41,6 +41,7 @@ from tornado.websocket import WebSocketHandler
 
 
 class BaseHandler(RequestHandler):
+
     ''' User handlers extend this class '''
 
     csp = {
@@ -49,9 +50,9 @@ class BaseHandler(RequestHandler):
         "connect-src": set(["'self'"]),
         "frame-src": set(["'self'"]),
         "img-src": set(["'self'"]),
-        "media-src": set(["'self'"]),
+        "media-src": set(["'none'"]),
         "font-src": set(["'self'"]),
-        "object-src": set(["'self'"]),
+        "object-src": set(["'none'"]),
         "style-src": set(["'self'"]),
         "data-src": set(["'self'"]),
     }
@@ -66,8 +67,9 @@ class BaseHandler(RequestHandler):
     def initialize(self):
         ''' Setup sessions, etc '''
         self.add_content_policy('connect-src', self.config.ws_connect)
-        # We need this for a few things, and so far as I know it doesn't present
-        # too much of a security risk - TODO: no longer require inline styles
+        # We need this for a few things, and so far as I know it doesn't
+        # present too much of a security risk - TODO: no longer require
+        # inline styles
         self.add_content_policy('style-src', "'unsafe-inline'")
 
     @property
@@ -88,12 +90,14 @@ class BaseHandler(RequestHandler):
     def start_session(self):
         ''' Starts a new session '''
         self.session = self._create_session()
-        self.set_secure_cookie('session_id',
-            self.session.session_id,
-            expires=self.session.expires,
-            path='/',
-            HttpOnly=True,
-        )
+        flags = {
+            'expires': self.session.expires,
+            'path': '/',
+            'HttpOnly': True
+        }
+        if self.config.use_ssl:
+            flags['Secure'] = True
+        self.set_secure_cookie('session_id', self.session.session_id, **flags)
 
     def add_content_policy(self, src, policy):
         ''' Add to the existing CSP header '''
@@ -123,7 +127,9 @@ class BaseHandler(RequestHandler):
     def memcached(self):
         ''' Connects to Memcached instance '''
         if self._memcached is None:
-            self._memcached = pylibmc.Client([self.config.memcached], binary=True)
+            self._memcached = pylibmc.Client([self.config.memcached],
+                                             binary=True
+                                             )
             self._memcached.behaviors['no_block'] = 1  # async I/O
         return self._memcached
 
@@ -175,7 +181,8 @@ class BaseHandler(RequestHandler):
         self.add_header("X-Content-Type-Options", "nosniff")
         self._refresh_csp()
         if self.config.use_ssl:
-            self.add_header("Strict-Transport-Security", 'max-age=31536000; includeSubDomains;')
+            self.add_header("Strict-Transport-Security",
+                            'max-age=31536000; includeSubDomains;')
 
     def write_error(self, status_code, **kwargs):
         ''' Write our custom error pages '''
@@ -244,6 +251,7 @@ class BaseHandler(RequestHandler):
 
 
 class BaseWebSocketHandler(WebSocketHandler):
+
     ''' Handles websocket connections '''
 
     _session = None
@@ -256,7 +264,8 @@ class BaseWebSocketHandler(WebSocketHandler):
     def memcached(self):
         ''' Connects to Memcached instance '''
         if self._memcached is None:
-            self._memcached = pylibmc.Client([self.config.memcached], binary=True)
+            self._memcached = pylibmc.Client(
+                [self.config.memcached], binary=True)
             self._memcached.behaviors['no_block'] = 1  # async I/O
         return self._memcached
 

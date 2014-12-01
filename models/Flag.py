@@ -26,22 +26,28 @@ import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, Integer, Boolean, String
+from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.Box import Box
 from models.BaseModels import DatabaseObject
+from libs.ValidationError import ValidationError
 
 
 ### Constants
 FLAG_STATIC = u'static'
-FLAG_REGEX  = u'regex'
-FLAG_FILE   = u'file'
+FLAG_REGEX = u'regex'
+FLAG_FILE = u'file'
 
 
 class Flag(DatabaseObject):
     ''' Flag definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
     _name = Column(Unicode(16), nullable=False)
     _token = Column(Unicode(256), nullable=False)
     _description = Column(Unicode(256), nullable=False)
@@ -49,7 +55,10 @@ class Flag(DatabaseObject):
     value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    attachements = Column(Integer, ForeignKey('flag_attachment.id'), nullable=False)
+    attachements = Column(Integer,
+                          ForeignKey('flag_attachment.id'),
+                          nullable=False
+                          )
     FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC]
 
     @classmethod
@@ -87,17 +96,16 @@ class Flag(DatabaseObject):
         ''' Check parameters applicable to all flag types '''
         creators = {
             FLAG_STATIC: cls._create_flag_static,
-             FLAG_REGEX: cls._create_flag_regex,
-              FLAG_FILE: cls._create_flag_file,
+            FLAG_REGEX: cls._create_flag_regex,
+            FLAG_FILE: cls._create_flag_file,
         }
         if cls.by_name(name) is not None:
-            raise ValueError('Flag name already exists in database')
-        if not isinstance(value, int):
-            raise ValueError('Flag value must be an integer')
+            raise ValidationError('Flag name already exists in database')
         if not isinstance(description, basestring) or not len(description):
-            raise ValueError('Flag description is not valid')
+            raise ValidationError('Flag description is not valid')
         assert box is not None and isinstance(box, Box)
-        new_flag = creators[_type](box, name, raw_token, description, value)
+        reward = abs(int(value))
+        new_flag = creators[_type](box, name, raw_token, description, reward)
         new_flag._type = _type
         return new_flag
 
@@ -106,8 +114,13 @@ class Flag(DatabaseObject):
         ''' Check flag file specific parameters '''
         token = cls.digest(raw_token)
         if cls.by_token(token) is not None:
-            raise ValueError('Flag token already exists in database')
-        return cls(box_id=box.id, name=name, token=token, description=description, value=value)
+            raise ValidationError('Flag token already exists in database')
+        return cls(box_id=box.id,
+                   name=name,
+                   token=token,
+                   description=description,
+                   value=value
+                   )
 
     @classmethod
     def _create_flag_regex(cls, box,  name, raw_token, description, value):
@@ -115,17 +128,27 @@ class Flag(DatabaseObject):
         try:
             re.compile(raw_token)
         except:
-            raise ValueError('Flag token is not a valid regex')
+            raise ValidationError('Flag token is not a valid regex')
         if cls.by_token(raw_token) is not None:
-            raise ValueError('Flag token already exists in database')
-        return cls(box_id=box.id, name=name, token=raw_token, description=description, value=value)
+            raise ValidationError('Flag token already exists in database')
+        return cls(box_id=box.id,
+                   name=name,
+                   token=raw_token,
+                   description=description,
+                   value=value
+                   )
 
     @classmethod
     def _create_flag_static(cls, box,  name, raw_token, description, value):
         ''' Check flag static specific parameters '''
         if cls.by_token(raw_token) is not None:
-            raise ValueError('Flag token already exists in database')
-        return cls(box_id=box.id, name=name, token=raw_token, description=description, value=value)
+            raise ValidationError('Flag token already exists in database')
+        return cls(box_id=box.id,
+                   name=name,
+                   token=raw_token,
+                   description=description,
+                   value=value
+                   )
 
     @classmethod
     def digest(self, data):
@@ -143,7 +166,7 @@ class Flag(DatabaseObject):
     @name.setter
     def name(self, value):
         if not 3 < len(value) < 16:
-            raise ValueError("Flag name must be 3 - 16 characters")
+            raise ValidationError("Flag name must be 3 - 16 characters")
         self._name = unicode(value)
 
     @property
@@ -153,7 +176,7 @@ class Flag(DatabaseObject):
     @description.setter
     def description(self, value):
         if 256 < len(value):
-            raise ValueError("Description must be less than 256 characters")
+            raise ValidationError("Description must be less than 256 characters")
         self._description = unicode(value)
 
     @property
@@ -208,7 +231,7 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "value").text = str(self.value)
         attachements_elem = ET.SubElement(flag_elem, "attachements")
         attachements_elem.set("count", str(len(self.attachements)))
-        for attachement in attachements:
+        for attachement in self.attachements:
             attachement.to_xml(attachements_elem)
 
     def to_dict(self):

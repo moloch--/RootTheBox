@@ -22,7 +22,6 @@ Created on Sep 20, 2012
 from tornado.ioloop import IOLoop
 from libs.Singleton import Singleton
 from libs.Scoreboard import Scoreboard
-from libs.SecurityDecorators import debug
 from models.Notification import Notification
 
 
