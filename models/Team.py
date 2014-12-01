@@ -21,16 +21,14 @@ Created on Mar 12, 2012
 
 
 from uuid import uuid4
-from random import randint
 from sqlalchemy import Column
-from sqlalchemy.orm import relationship, backref, synonym
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Relationships import team_to_box, team_to_item, \
     team_to_flag, team_to_game_level, team_to_source_code, \
     team_to_hint
-from string import ascii_letters, digits
 from libs.BotManager import BotManager
 import xml.etree.cElementTree as ET
 

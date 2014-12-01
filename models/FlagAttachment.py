@@ -43,7 +43,7 @@ class FlagAttachment(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
 
-    flag_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+    flag_id = Column(Integer, ForeignKey('flag.id'), nullable=False)
     _file_name = Column(Unicode(64), nullable=False)
 
     @property

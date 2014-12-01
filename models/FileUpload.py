@@ -71,8 +71,8 @@ class FileUpload(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        self._file_name = os.path.basename(
-            value).replace('\n', '').replace('\r', '')
+        fname = value.replace('\n', '').replace('\r', '')
+        self._file_name = unicode(os.path.basename(fname))[:64]
 
     @property
     def content_type(self):

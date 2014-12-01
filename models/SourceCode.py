@@ -22,6 +22,7 @@ Created on Mar 12, 2012
 import os
 
 from uuid import uuid4
+from hashlib import sha1
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import String, Unicode, Integer
 from models import dbsession
@@ -91,6 +92,7 @@ class SourceCode(DatabaseObject):
         if self.uuid is None:
             self.uuid = str(uuid4())
         self.byte_size = len(value)
+        self.checksum = sha1(value).hexdigest()
         with open(config.file_uploads_dir + self.DIR + self.uuid, 'wb') as fp:
             fp.write(value.encode('base64'))
 
@@ -118,7 +120,7 @@ class SourceCode(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value[:1024])
+        self._description = unicode(value)[:1024]
 
     def to_dict(self):
         return {

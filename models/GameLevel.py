@@ -81,9 +81,10 @@ class GameLevel(DatabaseObject):
     @number.setter
     def number(self, value):
         try:
-            if self.by_number(value) is not None:
+            if self.by_number(value) is None:
+                self._number = abs(int(value))
+            else:
                 raise ValidationError("Game level number must be unique")
-            self._number = abs(int(value))
         except ValueError:
             raise ValidationError("Game level number must be an integer")
 
@@ -93,9 +94,10 @@ class GameLevel(DatabaseObject):
 
     @buyout.setter
     def buyout(self, value):
-        if isinstance(value, basestring) and not value.strip().isdigit():
-            raise ValueError("Game level number must be an Integer")
-        self._buyout = abs(int(value))
+        try:
+            self._buyout = abs(int(value))
+        except ValueError:
+            raise ValidationError("Buyout value must be an integer")
 
     @property
     def flags(self):

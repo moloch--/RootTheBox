@@ -24,8 +24,9 @@ import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column
-from sqlalchemy.types import Unicode, Integer, String
+from sqlalchemy.types import Unicode, String
 from sqlalchemy.orm import relationship, backref
+from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
@@ -33,13 +34,18 @@ from models.BaseModels import DatabaseObject
 class Corporation(DatabaseObject):
     ''' Corporation definition '''
 
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
     _name = Column(Unicode(32), unique=True, nullable=False)
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
     boxes = relationship("Box",
-        backref=backref("corporation", lazy="select"),
-        cascade="all,delete,delete-orphan"
-    )
+                         backref=backref("corporation", lazy="select"),
+                         cascade="all,delete,delete-orphan"
+                         )
 
     @classmethod
     def all(cls):
@@ -72,7 +78,7 @@ class Corporation(DatabaseObject):
     @name.setter
     def name(self, value):
         if not 3 < len(value) < 32:
-            raise ValueError("Corporation name must be 3 - 32 characters")
+            raise ValidationError("Corporation name must be 3 - 32 characters")
         self._name = unicode(value)
 
     def to_dict(self):
@@ -80,6 +86,7 @@ class Corporation(DatabaseObject):
         return {
             "uuid": self.uuid,
             "name": self.name,
+            # "boxes": [box.uuid for box in self.boxes],
         }
 
     def to_xml(self, parent):

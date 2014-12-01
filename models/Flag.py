@@ -26,9 +26,11 @@ import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.Box import Box
+from models.FlagAttachment import FlagAttachment  # Fix object mapper
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
 
@@ -56,7 +58,6 @@ class Flag(DatabaseObject):
                   nullable=False,
                   default=lambda: str(uuid4())
                   )
-
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
 
     _name = Column(Unicode(16), nullable=False)
@@ -65,7 +66,10 @@ class Flag(DatabaseObject):
     _capture_message = Column(Unicode(256))
     _value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
-    flag_attachements = Column(Integer, ForeignKey('flag_attachment.id'))
+
+    flag_attachments = relationship("FlagAttachment",
+                                    backref=backref("flag", lazy="join")
+                                    )
 
     FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC]
 

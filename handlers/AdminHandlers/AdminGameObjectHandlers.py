@@ -30,14 +30,15 @@ CRUD for game objects:
 
 import logging
 
-from libs.SecurityDecorators import *
 from handlers.BaseHandlers import BaseHandler
 from models.Box import Box
-from models.Flag import Flag
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
 from models.Hint import Hint
 from models.User import ADMIN_PERMISSION
+from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC
+from libs.ValidationError import ValidationError
+from libs.SecurityDecorators import *
 
 
 class AdminCreateHandler(BaseHandler):
@@ -111,7 +112,7 @@ class AdminCreateHandler(BaseHandler):
                 raise ValidationError("Game level does not exist")
             else:
                 corp = Corporation.by_uuid(corp_uuid)
-                level = GameLevel.by_number(level_number)
+                level = GameLevel.by_number(game_level)
                 box = Box(corporation_id=corp.id, game_level_id=level.id)
                 box.name = self.get_argument('name', '')
                 box.description = self.get_argument('description', '')
@@ -161,12 +162,11 @@ class AdminCreateHandler(BaseHandler):
             game_levels = GameLevel.all()
             game_levels.append(new_level)
             game_levels = sorted(game_levels)
-            index = 0
-            for level in game_levels[:-1]:
+            for index, level in enumerate(game_levels[:-1]):
                 level.next_level_id = game_levels[index + 1].id
                 self.dbsession.add(level)
-                index += 1
-            game_levels[0].number = 0
+            if game_levels[0].number != 0:
+                game_levels[0].number = 0
             self.dbsession.add(game_levels[0])
             game_levels[-1].next_level_id = None
             self.dbsession.add(game_levels[-1])
@@ -428,12 +428,11 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.add(level)
             # Fix the linked-list
             game_levels = sorted(GameLevel.all())
-            index = 0
-            for game_level in game_levels[:-1]:
+            for index, game_level in enumerate(game_levels[:-1]):
                 game_level.next_level_id = game_levels[index + 1].id
                 self.dbsession.add(game_level)
-                index += 1
-            game_levels[0].number = 0
+            if game_levels[0].number != 0:
+                game_levels[0].number = 0
             self.dbsession.add(game_levels[0])
             game_levels[-1].next_level_id = None
             self.dbsession.add(game_levels[-1])
