@@ -174,7 +174,7 @@ class Flag(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 < len(value) < 16:
+        if not 3 <= len(value) <= 16:
             raise ValidationError("Flag name must be 3 - 16 characters")
         if self.by_name(value) is not None:
             raise ValidationError("Flag name must be unique")

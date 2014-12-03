@@ -28,12 +28,17 @@ import defusedxml.minidom
 import xml.etree.cElementTree as ET
 
 from tempfile import NamedTemporaryFile
-from libs.SecurityDecorators import *
 from models.Box import Box
 from models.Swat import Swat
-from models.RegistrationToken import RegistrationToken
+from models.GameLevel import GameLevel
 from models.User import ADMIN_PERMISSION
+from models.SourceCode import SourceCode
+from models.Corporation import Corporation
+from models.RegistrationToken import RegistrationToken
+from libs.SecurityDecorators import *
+from libs.ValidationError import ValidationError
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
+from string import printable
 
 
 class AdminGameHandler(BaseHandler):
@@ -372,10 +377,9 @@ class AdminExportHandler(BaseHandler):
     def write_xml(self, xml_doc):
         ''' Write XML document to page '''
         self.set_header('Content-Type', 'text/xml')
-        whitelist = lambda char: char in printable[:-38]
         self.set_header(
             "Content-disposition", "attachment; filename=%s.xml" % (
-                filter(whitelist, self.config.game_name),
+                self.config.game_name.replace('\n', '').replace('\r', ''),
             ))
         self.set_header('Content-Length', len(xml_doc.encode('utf-8')))
         self.write(xml_doc.encode('utf-8'))

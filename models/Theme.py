@@ -33,7 +33,7 @@ class ThemeFile(DatabaseObject):
     '''
     Holds theme related settings
     '''
-    theme_id =Column(Integer, ForeignKey('theme.id'), nullable=False)
+    theme_id = Column(Integer, ForeignKey('theme.id'), nullable=False)
     _file_name = Column(Unicode(64), nullable=False)
 
     @classmethod
@@ -49,6 +49,9 @@ class ThemeFile(DatabaseObject):
     @file_name.setter
     def file_name(self, value):
         self._file_name = self._filter_string(value, ".")
+
+    def endswith(self, needle):
+        return str(self).endswith(needle)
 
     def __str__(self):
         return self._file_name
@@ -99,3 +102,7 @@ class Theme(DatabaseObject):
     @name.setter
     def name(self, value):
         self._name = self._filter_string(value, ".")
+
+    def __iter__(self):
+        for _file in self.files:
+            yield _file

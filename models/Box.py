@@ -26,7 +26,6 @@ import xml.etree.cElementTree as ET
 
 from os import urandom
 from uuid import uuid4
-from libs.ConfigManager import ConfigManager
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String, Boolean
@@ -43,10 +42,16 @@ class Box(DatabaseObject):
 
     ''' Box definition '''
 
-    uuid = Column(
-        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
-    corporation_id = Column(
-        Integer, ForeignKey('corporation.id'), nullable=False)
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
+    corporation_id = Column(Integer, ForeignKey('corporation.id'),
+                            nullable=False
+                            )
+
     _name = Column(Unicode(16), unique=True, nullable=False)
     _operating_system = Column(Unicode(16))
     _description = Column(Unicode(1024))
@@ -187,10 +192,9 @@ class Box(DatabaseObject):
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                config = ConfigManager.instance()
-                if self._avatar is not None and os.path.exists(config.avatar_dir + self._avatar):
-                    os.unlink(config.avatar_dir + self._avatar)
-                file_path = str(config.avatar_dir + self.uuid + '.' + ext)
+                if self._avatar is not None and os.path.exists(options.avatar_dir + self._avatar):
+                    os.unlink(options.avatar_dir + self._avatar)
+                file_path = str(options.avatar_dir + self.uuid + '.' + ext)
                 with open(file_path, 'wb') as fp:
                     fp.write(image_data)
                 self._avatar = self.uuid + '.' + ext
@@ -242,8 +246,8 @@ class Box(DatabaseObject):
         for hint in self.hints:
             hint.to_xml(hints_elem)
         ips_elem = ET.SubElement(box_elem, "ipaddresses")
-        ips_elem.set("count", str(len(self.ips)))
-        for ip in self.ips:
+        ips_elem.set("count", str(len(self.ip_addresses)))
+        for ip in self.ip_addresses:
             ip.to_xml(ips_elem)
         config = ConfigManager.instance()
         with open(config.avatar_dir + self.avatar) as favatar:

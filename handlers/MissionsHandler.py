@@ -30,7 +30,6 @@ from models.GameLevel import GameLevel
 from models.Flag import Flag
 from models.Box import Box
 from models.Hint import Hint
-from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
 
@@ -100,15 +99,12 @@ class FlagSubmissionHandler(BaseHandler):
                 user.team.flags.append(flag)
                 user.team.money += flag.value
                 self.dbsession.add(user.team)
-                config = ConfigManager.instance()
-                if config.dynamic_flag_value:
-                    depreciation = flag.value / config.flag_value_decrease
+                if self.config.dynamic_flag_value:
+                    depreciation = flag.value / self.config.flag_value_decrease
                     flag.value = int(flag.value - (depreciation / 100.0))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
-                event = self.event_manager.create_flag_capture_event(
-                    user, flag)
-                self.new_events.append(event)
+                self.event_manager.create_flag_capture_event(user, flag)
                 self._check_level(flag)
                 self.dbsession.commit()
                 return True
@@ -206,15 +202,12 @@ class MissionsHandler(BaseHandler):
                 user.team.money -= level.buyout
                 self.dbsession.add(user.team)
                 self.dbsession.commit()
-                event = self.event_manager.create_unlocked_level_event(
-                    user, level)
-                self.new_events.append(event)
+                self.event_manager.create_unlocked_level_event(user, level)
                 self.redirect("/user/missions")
             else:
                 self.render("missions/view.html",
                             team=user.team,
-                            errors=[
-                                "You do not have enough money to unlock this level"]
+                            errors=["You do not have enough money to unlock this level"]
                             )
         else:
             self.render("missions/view.html",

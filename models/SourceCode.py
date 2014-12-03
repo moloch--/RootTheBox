@@ -28,7 +28,7 @@ from sqlalchemy.types import String, Unicode, Integer
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
-from libs.ConfigManager import ConfigManager
+from tornado.options import options
 
 
 class SourceCode(DatabaseObject):
@@ -82,24 +82,21 @@ class SourceCode(DatabaseObject):
 
     @property
     def data(self):
-        config = ConfigManager.instance()
-        with open(config.file_uploads_dir + self.DIR + self.uuid, 'rb') as fp:
+        with open(options.source_code_market_dir + self.DIR + self.uuid, 'rb') as fp:
             return fp.read().decode('base64')
 
     @data.setter
     def data(self, value):
-        config = ConfigManager.instance()
         if self.uuid is None:
             self.uuid = str(uuid4())
         self.byte_size = len(value)
         self.checksum = sha1(value).hexdigest()
-        with open(config.file_uploads_dir + self.DIR + self.uuid, 'wb') as fp:
+        with open(options.source_code_market_dir + self.DIR + self.uuid, 'wb') as fp:
             fp.write(value.encode('base64'))
 
     def delete_data(self):
         ''' Remove the file from the file system, if it exists '''
-        config = ConfigManager.instance()
-        fpath = config.file_uploads_dir + self.DIR + self.uuid
+        fpath = options.source_code_market_dir + self.DIR + self.uuid
         if os.path.exists(fpath) and os.path.isfile(fpath):
             os.unlink(fpath)
 

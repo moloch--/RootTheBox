@@ -19,17 +19,44 @@ Created on Sep 12, 2012
     limitations under the License.
 '''
 
+import time
+import logging
 
-from sqlalchemy import create_engine
+from tornado.options import options
+from sqlalchemy import event, create_engine
 from sqlalchemy.orm import sessionmaker
-from libs.ConfigManager import ConfigManager
+from sqlalchemy.engine import Engine
 from contextlib import contextmanager
+from libs.DatabaseConnection import DatabaseConnection
+
+if options.log_sql:
+
+    sql_logger = logging.getLogger('sqlalchemy.engine')
+    sql_logger.setLevel(logging.INFO)
+
+    # This benchmarks the amount of time spent quering the database
+    @event.listens_for(Engine, "before_cursor_execute")
+    def before_cursor_execute(conn, cursor, statement, parameters,
+                              context, executemany):
+        conn.info.setdefault('query_start_time', []).append(time.time())
+
+    @event.listens_for(Engine, "after_cursor_execute")
+    def after_cursor_execute(conn, cursor, statement, parameters,
+                             context, executemany):
+        total = time.time() - conn.info['query_start_time'].pop(-1)
+        logging.debug("\033[34mTotal query time: \033[1m%f\033[0m" % total)
+
+
+db_connection = DatabaseConnection(database=options.sql_database,
+                                   hostname=options.sql_host,
+                                   port=options.sql_port,
+                                   username=options.sql_user,
+                                   password=options.sql_password,
+                                   dialect=options.sql_dialect)
 
 
 ### Setup the database session
-_config = ConfigManager.instance()
-engine = create_engine(_config.db_connection)
-setattr(engine, 'echo', False)
+engine = create_engine(str(db_connection))
 _Session = sessionmaker(bind=engine)
 StartSession = lambda: _Session(autoflush=True)
 
@@ -48,3 +75,27 @@ def cxt_dbsession():
         raise
     finally:
         session.close()
+
+# Avoids mapper issues
+from models.Box import Box
+from models.PasteBin import PasteBin
+from models.Permission import Permission
+from models.Team import Team
+from models.User import User
+from models.FileUpload import FileUpload
+from models.WallOfSheep import WallOfSheep
+from models.Flag import Flag
+from models.FlagAttachment import FlagAttachment
+from models.Notification import Notification
+from models.Corporation import Corporation
+from models.GameLevel import GameLevel
+from models.Theme import Theme, ThemeFile
+from models.RegistrationToken import RegistrationToken
+from models.MarketItem import MarketItem
+from models.IpAddress import IpAddress
+from models.Snapshot import Snapshot
+from models.SnapshotTeam import SnapshotTeam
+from models.SourceCode import SourceCode
+from models.Swat import Swat
+from models.Hint import Hint
+

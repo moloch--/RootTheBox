@@ -60,12 +60,12 @@ class CreatePasteHandler(BaseHandler):
             paste.contents = content
             self.dbsession.add(paste)
             self.dbsession.commit()
-            event = self.event_manager.create_paste_bin_event(user, paste)
-            self.new_events.append(event)
+            self.event_manager.create_paste_bin_event(user, paste)
             self.redirect('/user/share/pastebin')
         else:
-            self.render(
-                'pastebin/create.html', errors=["Missing name or content"])
+            self.render('pastebin/create.html',
+                        errors=["Missing name or content"]
+                        )
 
 
 class DisplayPasteHandler(BaseHandler):
@@ -81,7 +81,8 @@ class DisplayPasteHandler(BaseHandler):
         if paste is None or paste not in user.team.pastes:
             self.render("pastebin/display.html",
                         errors=["Paste does not exist."],
-                        paste=None)
+                        paste=None
+                        )
         else:
             self.render("pastebin/display.html", errors=None, paste=paste)
 

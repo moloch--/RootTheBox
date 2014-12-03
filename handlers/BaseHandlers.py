@@ -31,7 +31,6 @@ import traceback
 
 from models import dbsession
 from models.User import User
-from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
 from libs.EventManager import EventManager
@@ -39,6 +38,7 @@ from urlparse import urlparse
 from tornado.web import RequestHandler
 from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketHandler
+from tornado.options import options
 
 
 class BaseHandler(RequestHandler):
@@ -63,11 +63,11 @@ class BaseHandler(RequestHandler):
     new_events = []
     io_loop = IOLoop.instance()
     event_manager = EventManager.instance()
-    config = ConfigManager.instance()
+    config = options  # backward compatability
 
     def initialize(self):
         ''' Setup sessions, etc '''
-        self.add_content_policy('connect-src', self.config.ws_connect)
+        self.add_content_policy('connect-src', self.config.origin)
         # We need this for a few things, and so far as I know it doesn't
         # present too much of a security risk - TODO: no longer require
         # inline styles
@@ -92,7 +92,7 @@ class BaseHandler(RequestHandler):
             'path': '/',
             'HttpOnly': True
         }
-        if self.config.use_ssl:
+        if self.config.ssl:
             flags['Secure'] = True
         self.set_secure_cookie('session_id', self.session.session_id, **flags)
 
@@ -174,7 +174,7 @@ class BaseHandler(RequestHandler):
         self.add_header("X-XSS-Protection", "1; mode=block")
         self.add_header("X-Content-Type-Options", "nosniff")
         self._refresh_csp()
-        if self.config.use_ssl:
+        if self.config.ssl:
             self.add_header("Strict-Transport-Security",
                             'max-age=31536000; includeSubDomains;')
 
@@ -231,13 +231,6 @@ class BaseHandler(RequestHandler):
     def on_finish(self, *args, **kwargs):
         ''' Called after a response is sent to the client '''
         self.dbsession.close()
-        if 0 < len(self.new_events):
-            self._event_callbacks()
-
-    def _event_callbacks(self):
-        ''' Fire any new events '''
-        for event in self.new_events:
-            self.io_loop.add_callback(event[0], **event[1])
 
 
 class BaseWebSocketHandler(WebSocketHandler):
@@ -248,7 +241,7 @@ class BaseWebSocketHandler(WebSocketHandler):
     _memcached = None
     io_loop = IOLoop.instance()
     manager = EventManager.instance()
-    config = ConfigManager.instance()
+    config = options  # backward compatability
 
     def check_origin(self, origin):
         ''' Parses the request's origin header '''
@@ -260,7 +253,7 @@ class BaseWebSocketHandler(WebSocketHandler):
             ))
             return request_origin.netloc.endswith(origin)
         except:
-            logging.exception("Failed to parse origin: %r" % origin)
+            logging.exception("Failed to parse request origin: %r" % origin)
             return False
 
     @property

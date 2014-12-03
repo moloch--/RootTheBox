@@ -33,7 +33,6 @@ from modules.AppTheme import AppTheme
 from libs.ConsoleColors import *
 from libs.Scoreboard import score_bots
 from libs.GameHistory import GameHistory
-from libs.ConfigManager import ConfigManager
 from tornado import netutil
 from tornado.web import Application
 from tornado.httpserver import HTTPServer
@@ -51,20 +50,30 @@ from handlers.ScoreboardHandlers import *
 from handlers.FileUploadHandlers import *
 from handlers.NotificationHandlers import *
 from handlers.StaticFileHandler import StaticFileHandler
+from tornado.options import options
 
 # Singletons
 io_loop = IOLoop.instance()
-config = ConfigManager.instance()
 game_history = GameHistory.instance()
 
 # Main URL Configuration
 # First get base URLs that all game types will require
 urls = [
-    # Static Handlers - StaticFileHandler.py
-    (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv|eot|svg|ttf|woff|otf))',
-        StaticFileHandler, {'path': 'static/'}),
-    (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))',
-        StaticFileHandler, {'path': 'files/avatars/'}),
+
+    # Public handlers - PublicHandlers.py
+    (r'/login', LoginHandler),
+    (r'/registration', RegistrationHandler),
+    (r'/about', AboutHandler),
+    (r'/', HomePageHandler),
+    (r'/robots(|\.txt)', FakeRobotsHandler),
+
+    # Scoreboard Handlers - ScoreboardHandlers.py
+    (r'/scoreboard', ScoreboardHandler),
+    (r'/scoreboard/history', ScoreboardHistoryHandler),
+    (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
+    (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
+    (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
+    (r'/teams', TeamsHandler),
 
     # FileUploadHandlers - FileUploadHandlers.py
     (r'/user/shares/delete', FileDeleteHandler),
@@ -118,6 +127,16 @@ urls = [
     (r'/user/settings/(.*)', SettingsHandler),
     (r'/logout', LogoutHandler),
 
+    # Notificaiton handlers - NotificationHandlers.py
+    (r'/notifications/all', AllNotificationsHandler),
+    (r'/notifications/wsocket/updates', NotifySocketHandler),
+
+    # Static Handlers - StaticFileHandler.py
+    (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv|eot|svg|ttf|woff|otf))',
+        StaticFileHandler, {'path': 'static/'}),
+    (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))',
+        StaticFileHandler, {'path': 'files/avatars/'}),
+
     # Admin Handlers
     (r'/admin/game', AdminGameHandler),
     (r'/admin/ban/(add|clear|config)', AdminBanHammerHandler),
@@ -139,25 +158,6 @@ urls = [
     (r'/admin/logviewer/wsocket', AdminLogViewerSocketHandler),
     (r'/admin/garbage', AdminGarbageCfgHandler),
 
-    # Notificaiton handlers - NotificationHandlers.py
-    (r'/notifications/all', AllNotificationsHandler),
-    (r'/notifications/wsocket/updates', NotifySocketHandler),
-
-    # Scoreboard Handlers - ScoreboardHandlers.py
-    (r'/scoreboard', ScoreboardHandler),
-    (r'/scoreboard/history', ScoreboardHistoryHandler),
-    (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
-    (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
-    (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
-    (r'/teams', TeamsHandler),
-
-    # Public handlers - PublicHandlers.py
-    (r'/login', LoginHandler),
-    (r'/registration', RegistrationHandler),
-    (r'/about', AboutHandler),
-    (r'/', HomePageHandler),
-    (r'/robots(|\.txt)', FakeRobotsHandler),
-
     # Error handlers - ErrorHandlers.py
     (r'/403', UnauthorizedHandler),
     (r'/(.*).php', NoobHandler),
@@ -177,7 +177,7 @@ app = Application(
     cookie_secret=urandom(32).encode('hex'),
 
     # Ip addresses that access the admin interface
-    admin_ips=config.admin_ips,
+    admin_ips=options.admin_ips,
 
     # Template directory
     template_path='templates/',
@@ -200,24 +200,14 @@ app = Application(
     # Enable XSRF protected forms; not optional
     xsrf_cookies=True,
 
-    # Current domain settings
-    domain=config.domain,
-    port=config.listen_port,
-
     # Anti-bruteforce
     automatic_ban=False,
     blacklist_threshold=10,
     blacklisted_ips=[],
     failed_logins={},
 
-    # Special file directories
-    source_code_market_dir=path.abspath('files/source_code_market/'),
-
-    # Notifier WebSocket
-    ws_connect=config.ws_connect,
-
     # Debug mode
-    debug=config.debug,
+    debug=options.debug,
 
     # Flag used to start the game
     game_started=False,
@@ -225,13 +215,13 @@ app = Application(
     # Callback functions
     score_bots_callback=PeriodicCallback(
         score_bots,
-        config.bot_reward_interval,
+        options.bot_reward_interval,
         io_loop=io_loop
     ),
 
     history_callback=PeriodicCallback(
         game_history.take_snapshot,
-        config.history_snapshot_interval,
+        options.history_snapshot_interval,
         io_loop=io_loop
     ),
 
@@ -244,21 +234,21 @@ app = Application(
 # Main entry point
 def start_server():
     ''' Main entry point for the application '''
-    if config.debug:
+    if options.debug:
         logging.warn(
             "Debug mode is enabled; some security measures will be ignored")
     # Setup server object
-    if config.use_ssl:
+    if options.ssl:
         server = HTTPServer(app,
                             ssl_options={
-                                "certfile": config.certfile,
-                                "keyfile": config.keyfile,
+                                "certfile": options.certfile,
+                                "keyfile": options.keyfile,
                             },
-                            xheaders=config.x_headers
+                            xheaders=options.x_headers
                             )
     else:
-        server = HTTPServer(app, xheaders=config.x_headers)
-    sockets = netutil.bind_sockets(config.listen_port)
+        server = HTTPServer(app, xheaders=options.x_headers)
+    sockets = netutil.bind_sockets(options.listen_port)
     server.add_sockets(sockets)
     try:
         io_loop.start()

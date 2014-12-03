@@ -19,18 +19,14 @@ Created on Mar 12, 2012
     limitations under the License.
 '''
 
+import logging
 
-import os
-import json
-import imghdr
-
-from urlparse import urlparse
 from uuid import uuid4
-from libs.SecurityDecorators import debug
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, String, Integer, Boolean
 from models import dbsession
+from models.User import User
 from models.BaseModels import DatabaseObject
 
 ### Constants ###
@@ -42,10 +38,16 @@ CUSTOM = u"custom"
 
 
 class Notification(DatabaseObject):
+
     ''' Notification definition '''
 
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
     user_id = Column(Integer, ForeignKey('user.id'))
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     event_uuid = Column(Unicode(36), nullable=False)
     title = Column(Unicode(256), nullable=False)
     message = Column(Unicode(256), nullable=False)
@@ -71,13 +73,15 @@ class Notification(DatabaseObject):
     @classmethod
     def by_user_id(cls, _id):
         ''' Return notifications for a single user '''
-        return dbsession.query(cls).filter_by(user_id=_id).order_by(desc(cls.created)).all()
+        return dbsession.query(cls).filter_by(user_id=_id).order_by(
+            desc(cls.created)
+        ).all()
 
     @classmethod
     def new_messages(cls, user_id):
         ''' Return all notification which have not been viewed '''
         return dbsession.query(cls).filter(
-            and_(cls.user_id == user_id, cls.viewed == False)
+            and_(cls.user_id == user_id, cls.viewed is False)
         ).all()
 
     @classmethod
@@ -97,6 +101,7 @@ class Notification(DatabaseObject):
     def team_success(cls, team, title, message):
         ''' Create success notification to each user on a team '''
         event_uuid = unicode(uuid4())
+        logging.debug("Creating TEAM/SUCCESS event for %r" % team)
         cls.__anonymous__(title, message, SUCCESS, event_uuid)
         for user in team.members:
             cls.__create__(user, title, message, SUCCESS, event_uuid)
@@ -233,6 +238,7 @@ class Notification(DatabaseObject):
     @classmethod
     def __create__(cls, user, title, message, category, event_uuid, icon=None):
         ''' Create a notification and save it to the database '''
+        logging.debug("Creating notification '%s' for %r" % (title, user))
         notification = Notification(
             user_id=user.id,
             event_uuid=event_uuid,
@@ -243,7 +249,7 @@ class Notification(DatabaseObject):
         if icon is not None:
             notification.icon = icon
         dbsession.add(notification)
-        dbsession.flush()
+        dbsession.commit()
         return notification
 
     def to_dict(self):
@@ -255,4 +261,3 @@ class Notification(DatabaseObject):
             'message': self.message,
             'icon_url': self.icon_url,
         }
-

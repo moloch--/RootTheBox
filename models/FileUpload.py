@@ -28,7 +28,7 @@ from models.BaseModels import DatabaseObject
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, String, Integer
 from mimetypes import guess_type
-from libs.ConfigManager import ConfigManager
+from tornado.options import options
 
 
 class FileUpload(DatabaseObject):
@@ -89,23 +89,20 @@ class FileUpload(DatabaseObject):
 
     @property
     def data(self):
-        config = ConfigManager.instance()
-        with open(config.file_uploads_dir + self.DIR + self.uuid, 'rb') as fp:
+        with open(options.share_dir + self.DIR + self.uuid, 'rb') as fp:
             return fp.read().decode('base64')
 
     @data.setter
     def data(self, value):
-        config = ConfigManager.instance()
         if self.uuid is None:
             self.uuid = str(uuid4())
         self.byte_size = len(value)
-        with open(config.file_uploads_dir + self.DIR + self.uuid, 'wb') as fp:
+        with open(options.share_dir + self.DIR + self.uuid, 'wb') as fp:
             fp.write(value.encode('base64'))
 
     def delete_data(self):
-        config = ConfigManager.instance()
-        if os.path.exists(config.file_uploads_dir + self.DIR + self.uuid):
-            os.unlink(config.file_uploads_dir + self.DIR + self.uuid)
+        if os.path.exists(options.share_dir + self.DIR + self.uuid):
+            os.unlink(options.share_dir + self.DIR + self.uuid)
 
     def __repr__(self):
         return u'<FileUpload - name: %s, size: %s>' % (

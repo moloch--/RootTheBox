@@ -25,7 +25,7 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, String, Integer
 from models.BaseModels import DatabaseObject
-from libs.ConfigManager import ConfigManager
+from tornado.options import options
 
 
 class FlagAttachment(DatabaseObject):

@@ -40,7 +40,6 @@ RECAPTCHA_URL = 'http://www.google.com/recaptcha/api/verify'
 class HomeHandler(BaseHandler):
 
     @authenticated
-    @tornado.web.asynchronous
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
         user = self.get_current_user()
@@ -77,6 +76,8 @@ class SettingsHandler(BaseHandler):
     def render_page(self, errors=[], success=[]):
         ''' Small wrap for self.render to cut down on lenghty params '''
         current_theme = Theme.by_id(self.session["theme_id"])
+        self.add_content_policy('script', 'www.google.com')
+        self.add_content_policy('img', 'www.google.com')
         self.render("user/settings.html",
                     errors=errors,
                     success=success,

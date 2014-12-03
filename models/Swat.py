@@ -21,7 +21,6 @@ Created on Mar 12, 2012
 
 
 from uuid import uuid4
-from libs.ConfigManager import ConfigManager
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Integer, Boolean, String
@@ -36,8 +35,12 @@ class Swat(DatabaseObject):
     Holds the bribe history of players that get 'SWAT'd
     '''
 
-    uuid = Column(
-        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     target_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     paid = Column(Integer, nullable=False)
@@ -127,8 +130,7 @@ class Swat(DatabaseObject):
     @classmethod
     def get_price(cls, user):
         ''' Calculate price of next bribe based on history '''
-        config = ConfigManager.instance()
-        base_price = config.bribe_cost
+        base_price = options.bribe_cost
         return base_price + (
             cls.count_completed_by_target_id(user.id) * base_price)
 

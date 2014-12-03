@@ -7,7 +7,7 @@
 {% end %}
 
 {% block content %}
-{% from libs.ConfigManager import ConfigManager %}
+{% from tornado.options import options %}
 {% from models.Team import Team %}
     <div class="container">
         <h1>
@@ -54,14 +54,14 @@
                             <select name="team">
                                 <option value=""></option>
                                 {% for team in Team.all() %}
-                                    {% if len(team.members) < ConfigManager.instance().max_team_size %}
+                                    {% if len(team.members) < options.max_team_size %}
                                         <option value="{{ team.uuid }}">{{ team.name }}</option>
                                     {% end %}
                                 {% end %}
                             </select>
                         </div>
                     </div>
-                    {% if ConfigManager.instance().public_teams %}
+                    {% if options.public_teams %}
                         <h5>Start a New Team</h5>
                         <div class="control-group">
                             <label class="control-label" for="team_name">Team Name</label>
@@ -113,7 +113,7 @@
                             data-content="Used to secure your (in-game) bank account.  Please do NOT enter your real bank account password." />
                     </div>
                 </div>
-                {% if ConfigManager.instance().restrict_registration %}
+                {% if options.restrict_registration %}
                     <div class="control-group">
                         <label class="control-label" for="token">Registration Token</label>
                         <div class="controls">

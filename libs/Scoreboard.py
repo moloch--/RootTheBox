@@ -27,7 +27,7 @@ import logging
 from models import dbsession
 from models.Team import Team
 from libs.BotManager import BotManager
-from libs.ConfigManager import ConfigManager
+from tornado.options import options
 
 
 class Scoreboard(object):
@@ -49,16 +49,15 @@ def score_bots():
     ''' Award money for botnets '''
     logging.info("Scoring botnets, please wait ...")
     bot_manager = BotManager.instance()
-    config = ConfigManager.instance()
     for team in Team.all():
         bots = bot_manager.by_team(team.name)
         reward = 0
         for bot in bots:
             try:
-                reward += config.bot_reward
+                reward += options.bot_reward
                 bot.write_message({
                     'opcode': 'status',
-                    'message': 'Collected $%d reward' % config.bot_reward
+                    'message': 'Collected $%d reward' % options.bot_reward
                 })
             except:
                 logging.info(
@@ -68,7 +67,7 @@ def score_bots():
             logging.info("%s was awarded $%d for controlling %s bot(s)" % (
                 team.name, reward, len(bots),
             ))
-            bot_manager.add_rewards(team.name, config.bot_reward)
+            bot_manager.add_rewards(team.name, options.bot_reward)
             bot_manager.notify_monitors(team.name)
             team.money += reward
             dbsession.add(team)

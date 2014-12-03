@@ -1,4 +1,4 @@
-{% from libs.ConfigManager import ConfigManager %}
+{% from tornado.options import options %}
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="/">
-                {{ ConfigManager.instance().game_name }}
+                {{ options.game_name }}
             </a>
             <div class="nav-collapse">
                 <ul class="nav">
@@ -46,7 +46,7 @@
                                   Teams
                               </a>
                             </li>
-                            {% if ConfigManager.instance().use_black_market %}
+                            {% if options.use_black_market %}
                                 <li>
                                     <a href="/scoreboard/wall_of_sheep">
                                         Wall of Sheep

@@ -20,15 +20,14 @@ Created on Mar 14, 2012
 '''
 
 
-from libs.ConfigManager import ConfigManager
 from tornado.web import UIModule
+from tornado.options import options
 
 
 class Recaptcha(UIModule):
 
     def render(self, *args, **kwargs):
-        config = ConfigManager.instance()
-        if config.recaptcha_enabled:
+        if options.use_recaptcha:
             return self.render_string('recaptcha/captcha.html')
         else:
             return self.render_string('recaptcha/disabled.html')

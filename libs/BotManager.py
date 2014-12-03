@@ -30,7 +30,6 @@ import logging
 from os import urandom
 from datetime import datetime
 from libs.Singleton import Singleton
-from libs.ConfigManager import ConfigManager
 from sqlalchemy import Column, create_engine
 from sqlalchemy.sql import and_
 from sqlalchemy.orm import sessionmaker
@@ -38,6 +37,7 @@ from sqlalchemy.types import DateTime, Integer, Unicode
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
 from models import dbsession
 from models.Box import Box
+from tornado.options import options
 
 
 class MemoryDatabaseObject(object):
@@ -103,11 +103,9 @@ class BotManager(object):
     '''
 
     def __init__(self):
-        config = ConfigManager.instance()
         self.botnet = {}  # Holds refs to wsockets
         self.monitors = {}
-        self.sqlite_engine = create_engine(u'sqlite://')
-        setattr(self.sqlite_engine, 'echo', config.bot_sql)
+        self.sqlite_engine = create_engine(u'sqlite://', echo=False)
         Session = sessionmaker(bind=self.sqlite_engine, autocommit=True)
         self.botdb = Session(autoflush=True)
         MemoryBaseObject.metadata.create_all(self.sqlite_engine)

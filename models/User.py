@@ -27,6 +27,7 @@ indiviudal user, such as handle/account/password/etc
 
 import os
 import imghdr
+import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
@@ -34,14 +35,14 @@ from pbkdf2 import PBKDF2
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
-from libs.ConfigManager import ConfigManager
 from models import dbsession
 from models.Team import Team
 from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
 from string import printable
-import xml.etree.cElementTree as ET
+from tornado.options import options
+
 
 
 # Constants
@@ -61,24 +62,29 @@ class User(DatabaseObject):
 
     ''' User definition '''
 
-    uuid = Column(
-        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
     team_id = Column(Integer, ForeignKey('team.id'))
-    theme_id = Column(
-        Integer, ForeignKey('theme.id'), default=3, nullable=False)
+    theme_id = Column(Integer, ForeignKey('theme.id'),
+                      default=3,
+                      nullable=False
+                      )
     _avatar = Column(String(64))
     _locked = Column(Boolean, default=False, nullable=False)
-    algorithm = Column(
-        String(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
+    algorithm = Column(String(8),
+                       default=DEFAULT_HASH_ALGORITHM,
+                       nullable=False
+                       )
     last_login = Column(DateTime)
     logins = Column(Integer, default=0)
     _handle = Column(Unicode(16), unique=True, nullable=False)
-
     permissions = relationship("Permission",
                                backref=backref("user", lazy="select"),
                                cascade="all,delete,delete-orphan"
                                )
-
     notifications = relationship("Notification",
                                  backref=backref("user", lazy="select"),
                                  cascade="all,delete,delete-orphan"
@@ -216,10 +222,9 @@ class User(DatabaseObject):
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                config = ConfigManager.instance()
-                if self._avatar is not None and os.path.exists(config.avatar_dir + self._avatar):
-                    os.unlink(config.avatar_dir + self._avatar)
-                file_path = str(config.avatar_dir + self.uuid + '.' + ext)
+                if self._avatar is not None and os.path.exists(options.avatar_dir + self._avatar):
+                    os.unlink(options.avatar_dir + self._avatar)
+                file_path = str(options.avatar_dir + self.uuid + '.' + ext)
                 with open(file_path, 'wb') as fp:
                     fp.write(image_data)
                 self._avatar = self.uuid + '.' + ext

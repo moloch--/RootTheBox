@@ -34,7 +34,6 @@ from models.Box import Box
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.User import User, ADMIN_PERMISSION
-from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import authenticated, has_item, use_black_market
 from mimetypes import guess_type
 from base64 import b64decode
@@ -77,8 +76,10 @@ class PasswordSecurityHandler(BaseHandler):
     def render_page(self, errors=None):
         user = self.get_current_user()
         self.render('upgrades/password_security.html',
-            errors=errors, user=user, cost=self.config.password_upgrade_cost,
-        )
+                    errors=errors,
+                    user=user,
+                    cost=self.config.password_upgrade_cost,
+                    )
 
     def update_password(self, new_password):
         '''
@@ -208,7 +209,9 @@ class FederalReserveAjaxHandler(BaseHandler):
             xfer = self.theft(victim_user, destination, amount, password)
             self.write({
                 "success":
-                "Confirmed transfer to '%s' for $%d (after 15%s commission)" % (destination.name, xfer, '%',)
+                "Confirmed transfer to '%s' for $%d (15%s commission)" % (
+                    destination.name, xfer, '%'
+                )
             })
         else:
             self.write({"error": "Incorrect password for account, try again"})
@@ -230,11 +233,9 @@ class FederalReserveAjaxHandler(BaseHandler):
         )
         self.dbsession.add(sheep)
         self.dbsession.commit()
-        event1, event2 = self.event_manager.create_cracked_password_events(
+        self.event_manager.create_cracked_password_events(
             user, victim, preimage, value
         )
-        self.new_events.append(event1)
-        self.new_events.append(event2)
         return value
 
 
@@ -267,9 +268,9 @@ class SourceCodeMarketHandler(BaseHandler):
         source_code = SourceCode.by_box_id(box.id)
         team.money -= abs(source_code.price)
         team.purchased_source_code.append(source_code)
-        logging.info("%s purchased '%s' from the source code market." %
-            (team.name, source_code.file_name,)
-        )
+        logging.info("%s purchased '%s' from the source code market." % (
+            team.name, source_code.file_name,
+        ))
         self.dbsession.add(team)
         self.dbsession.commit()
 
@@ -278,8 +279,10 @@ class SourceCodeMarketHandler(BaseHandler):
         user = self.get_current_user()
         boxes = filter(lambda box: box.source_code is not None, Box.all())
         self.render('upgrades/source_code_market.html',
-            user=user, boxes=boxes, errors=errors
-        )
+                    user=user,
+                    boxes=boxes,
+                    errors=errors
+                    )
 
 
 class SourceCodeMarketDownloadHandler(BaseHandler):

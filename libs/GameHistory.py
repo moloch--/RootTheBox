@@ -27,10 +27,10 @@ from models.Team import Team
 from models.Snapshot import Snapshot
 from models.SnapshotTeam import SnapshotTeam
 from sqlalchemy import desc
-from libs.ConfigManager import ConfigManager
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from libs.Singleton import Singleton
+from tornado.options import options
 
 
 @Singleton
@@ -41,7 +41,7 @@ class GameHistory(object):
     '''
 
     def __init__(self):
-        self.config = ConfigManager.instance()
+        self.config = options
         self.dbsession = dbsession
         self.cache = memcache.Client([self.config.memcached], debug=0)
         self.epoch = None  # Date/time of first snapshot

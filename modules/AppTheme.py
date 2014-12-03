@@ -21,9 +21,13 @@ Created on Mar 14, 2012
 
 
 from tornado.web import UIModule
-from libs.ConfigManager import ConfigManager
+from tornado.options import options
+from models.Theme import Theme
+
 
 class AppTheme(UIModule):
+
+    theme = Theme.by_name(options.default_theme)
 
     def render(self, *args, **kwargs):
         ''' Includes different CSS themes based on user prefs '''
@@ -32,5 +36,4 @@ class AppTheme(UIModule):
                                       theme_files=self.handler.session['theme']
                                       )
         else:
-            config = ConfigManager.instance()
-            return self.render_string("theme/theme.html", theme_files=config.default_theme)
+            return self.render_string("theme/theme.html", theme_files=self.theme)

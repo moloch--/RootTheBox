@@ -26,8 +26,8 @@ Modification of the tornado web StaticFileHandler
 
 import logging
 
-from libs.ConfigManager import ConfigManager
 from tornado.web import StaticFileHandler as DefaultStaticHandler
+from tornado.options import options
 
 
 class StaticFileHandler(DefaultStaticHandler):
@@ -38,7 +38,7 @@ class StaticFileHandler(DefaultStaticHandler):
     '''
 
     session = None
-    config = ConfigManager.instance()
+    config = options
 
     def set_default_headers(self):
         '''
@@ -54,7 +54,7 @@ class StaticFileHandler(DefaultStaticHandler):
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
         self.add_header("X-Content-Type-Options", "nosniff")
-        if self.config.use_ssl:
+        if self.config.ssl:
             self.add_header("Strict-Transport-Security", 'max-age=31536000;')
 
     def write_error(self, status_code, **kwargs):

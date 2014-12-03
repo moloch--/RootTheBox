@@ -22,8 +22,8 @@ Created on Mar 13, 2012
 import logging
 import functools
 
-from libs.ConfigManager import ConfigManager
 from models.User import User
+from tornado.options import options
 
 
 def authenticated(method):
@@ -140,7 +140,7 @@ def use_bots(method):
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        if ConfigManager.instance().use_bots:
+        if options.use_bots:
             return method(self, *args, **kwargs)
         else:
             self.render('public/404.html')
@@ -152,7 +152,7 @@ def use_black_market(method):
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        if ConfigManager.instance().use_black_market:
+        if options.use_black_market:
             return method(self, *args, **kwargs)
         else:
             self.render('public/404.html')

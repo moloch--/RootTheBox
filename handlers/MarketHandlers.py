@@ -61,13 +61,11 @@ class MarketViewHandler(BaseHandler):
                 message = "You only have $%d" % (team.money,)
                 self.render('market/view.html', user=user, errors=[message])
             else:
-                logging.info("%s (%s) purchased the market item '%s' for $%d" % (
+                logging.info("%s (%s) purchased '%s' for $%d" % (
                     user.handle, team.name, item.name, item.price
                 ))
                 self.purchase_item(team, item)
-                event = self.event_manager.create_purchased_item_event(
-                    user, item)
-                self.new_events.append(event)
+                self.event_manager.create_purchased_item_event(user, item)
                 self.redirect('/user/market')
         else:
             self.render('market/view.html',

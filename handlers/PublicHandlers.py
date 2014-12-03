@@ -127,7 +127,7 @@ class LoginHandler(BaseHandler):
                     logging.warning(
                         "[BAN HAMMER] Cannot blacklist loopback address")
             except:
-                logging.exception("[BAN HAMMER] Exception while attempting to ban ip address")
+                logging.exception("Error while attempting to ban ip address")
         self.render('public/login.html',
                     errors=["Bad username and/or password, try again"])
 
@@ -177,8 +177,7 @@ class RegistrationHandler(BaseHandler):
         self.dbsession.add(user)
         self.dbsession.add(team)
         self.dbsession.commit()
-        event = self.event_manager.create_joined_team_event(user)
-        self.new_events.append(event)
+        self.event_manager.create_joined_team_event(user)
         return user
 
     def get_team(self):

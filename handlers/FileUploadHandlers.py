@@ -57,9 +57,8 @@ class FileUploadHandler(BaseHandler):
                 errors.append("The file %s is too large")
             else:
                 file_upload = self.create_file(user, shared_file)
-                event = self.event_manager.create_team_file_share_event(
-                    user, file_upload)
-                self.new_events.append(event)
+                self.event_manager.create_team_file_share_event(user,
+                                                                file_upload)
         if not len(errors):
             self.redirect("/user/share/files")
         else:

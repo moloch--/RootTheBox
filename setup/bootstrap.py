@@ -26,24 +26,23 @@ import sys
 import getpass
 
 from libs.ConsoleColors import *
-from libs.ConfigManager import ConfigManager
 from models import dbsession
 from models.Permission import Permission
 from models.Theme import Theme, ThemeFile
 from models.MarketItem import MarketItem
 from models.GameLevel import GameLevel
 from models.User import User, ADMIN_PERMISSION
+from tornado.options import options
 
 
 # Fills the database with some startup data.
-config = ConfigManager.instance()
 password = ""
 
-if config.bootstrap == 'developement':
+if options.setup.lower().startswith('dev'):
     admin_handle = u'admin'
     password = 'nimda123'
 else:
-    admin_handle = unicode(raw_input(PROMPT+"Admin username: "))
+    admin_handle = unicode(raw_input(PROMPT + "Admin username: "))
     sys.stdout.write(PROMPT+"New Admin ")
     sys.stdout.flush()
     password1 = getpass.getpass()

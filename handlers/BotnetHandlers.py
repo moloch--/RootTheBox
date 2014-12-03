@@ -27,13 +27,13 @@ import tornado.websocket
 
 from uuid import uuid4
 from hashlib import sha1
-from libs.ConfigManager import ConfigManager
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from models import Box, Team, User
 from models.User import ADMIN_PERMISSION
 from BaseHandlers import BaseHandler, BaseWebSocketHandler
 from libs.SecurityDecorators import *
+from tornado.options import options
 
 
 class BotSocketHandler(tornado.websocket.WebSocketHandler):
@@ -66,7 +66,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
 
     bot_manager = BotManager.instance()
     event_manager = EventManager.instance()
-    config = ConfigManager.instance()
+    config = options
     team_name = None
     team_uuid = None
     box_uuid = None
@@ -177,7 +177,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
     TODO: Trash this and use the web api handler, w/ normal session cookie
     '''
 
-    config = ConfigManager.instance()
+    config = options
     bot_manager = BotManager.instance()
     team_name = None
 
