@@ -35,12 +35,13 @@ from sqlalchemy.sql import and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.types import DateTime, Integer, Unicode
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
+from tempfile import NamedTemporaryFile
 from models import dbsession
 from models.Box import Box
 from tornado.options import options
 
 
-class MemoryDatabaseObject(object):
+class _BotDatabaseObject(object):
     '''
     Base object for in-memory database
     '''
@@ -58,10 +59,10 @@ class MemoryDatabaseObject(object):
     created = Column(DateTime, default=datetime.now)
 
 
-MemoryBaseObject = declarative_base(cls=MemoryDatabaseObject)
+BotDatabaseObject = declarative_base(cls=_BotDatabaseObject)
 
 
-class Bot(MemoryBaseObject):
+class Bot(BotDatabaseObject):
     ''' Bot Class '''
 
     last_ping  = Column(DateTime, default=datetime.now)
@@ -105,10 +106,16 @@ class BotManager(object):
     def __init__(self):
         self.botnet = {}  # Holds refs to wsockets
         self.monitors = {}
-        self.sqlite_engine = create_engine(u'sqlite://', echo=False)
+        if options.botnet_db == ":tempfile:":
+            options.botnet_db = NamedTemporaryFile(delete=False).name
+        self.db_path = u'sqlite:///%s' % options.botnet_db
+        logging.debug("Created botnet database at: %s" % self.db_path)
+        self.sqlite_engine = create_engine(self.db_path,
+                                           echo=options.log_sql
+                                           )
         Session = sessionmaker(bind=self.sqlite_engine, autocommit=True)
         self.botdb = Session(autoflush=True)
-        MemoryBaseObject.metadata.create_all(self.sqlite_engine)
+        BotDatabaseObject.metadata.create_all(self.sqlite_engine)
         self.dbsession = dbsession
 
     def all(self):

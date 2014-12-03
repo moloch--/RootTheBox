@@ -298,6 +298,11 @@ define("use_bots",
        help="enable the use of botnets",
        type=bool)
 
+define("botnet_db",
+       default=":tempfile:",
+       group="game",
+       help="botnet database path")
+
 define("bot_reward",
        default=50,
        group="game",
