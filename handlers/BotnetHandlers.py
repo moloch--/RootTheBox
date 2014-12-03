@@ -276,7 +276,6 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
         if not self.config.use_bots:
             self.close()
 
-    @restrict_origin
     def open(self):
         ''' Only open sockets from authenticated clients '''
         if self.session is not None and 'team_id' in self.session:

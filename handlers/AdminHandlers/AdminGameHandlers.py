@@ -29,6 +29,7 @@ import xml.etree.cElementTree as ET
 
 from tempfile import NamedTemporaryFile
 from libs.SecurityDecorators import *
+from models.Box import Box
 from models.Swat import Swat
 from models.RegistrationToken import RegistrationToken
 from models.User import ADMIN_PERMISSION
@@ -452,7 +453,6 @@ class AdminLogViewerHandler(BaseHandler):
 class AdminLogViewerSocketHandler(BaseWebSocketHandler):
 
     @restrict_ip_address
-    @restrict_origin
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def open(self):

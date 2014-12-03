@@ -24,17 +24,12 @@ This file contains code for managing user accounts
 '''
 
 
-import os
-import imghdr
 import urllib
 import logging
 import tornado
 
-from uuid import uuid4
 from models.User import User, ADMIN_PERMISSION
 from models.Theme import Theme
-from models.Team import Team
-from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
 
@@ -83,10 +78,10 @@ class SettingsHandler(BaseHandler):
         ''' Small wrap for self.render to cut down on lenghty params '''
         current_theme = Theme.by_id(self.session["theme_id"])
         self.render("user/settings.html",
-            errors=errors,
-            success=success,
-            current_theme=current_theme
-        )
+                    errors=errors,
+                    success=success,
+                    current_theme=current_theme
+                    )
 
     def post_avatar(self, *args, **kwargs):
         '''

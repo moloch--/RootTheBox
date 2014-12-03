@@ -35,6 +35,7 @@ from models.Box import Box
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
 from models.Hint import Hint
+from models.IpAddress import IpAddress
 from models.User import ADMIN_PERMISSION
 from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC
 from libs.ValidationError import ValidationError
@@ -257,7 +258,6 @@ class AdminEditHandler(BaseHandler):
             'corporation': 'game_objects',
             'box': 'game_objects',
             'flag': 'game_objects',
-            'team': 'game_objects',
             'ipv4': 'game_objects',
             'ipv6': 'game_objects',
             'game_level': 'game_levels',
@@ -279,7 +279,6 @@ class AdminEditHandler(BaseHandler):
             'corporation': self.edit_corporations,
             'box': self.edit_boxes,
             'flag': self.edit_flags,
-            'team': self.edit_teams,
             'ip': self.edit_ip,
             'game_level': self.edit_game_level,
             'box_level': self.box_level,
@@ -366,6 +365,7 @@ class AdminEditHandler(BaseHandler):
             flag = Flag.by_uuid(self.get_argument('uuid', ''))
             if flag is None:
                 raise ValidationError("Flag does not exist")
+            # Name
             name = self.get_argument('name', '')
             if flag.name != name:
                 logging.info("Updated flag name %s -> %s" % (
@@ -375,12 +375,14 @@ class AdminEditHandler(BaseHandler):
             token = self.get_argument('token', '')
             if flag.token != token:
                 flag.token = token
+            # Description
             description = self.get_argument('description', '')
             if flag._description != description:
                 logging.info("Updated %s's description %s -> %s" % (
                     flag.name, flag._description, description,
                 ))
                 flag.description = description
+            # Value
             flag.value = self.get_argument('value', '')
             flag.capture_message = self.get_argument('capture_message', '')
             box = Box.by_uuid(self.get_argument('box_uuid', ''))
@@ -399,24 +401,24 @@ class AdminEditHandler(BaseHandler):
 
     def edit_ip(self):
         ''' Add ip addresses to a box (sorta edits the box object) '''
-        errors = []
-        box = Box.by_uuid(self.get_argument('box_uuid', ''))
-        if box is not None:
-            addr = self.get_argument('ip_address', '')
-            if IpAddress.by_address(addr) is None:
-                try:
-                    ip = IpAddress(box_id=box.id, address=addr)
-                    box.ip_addresses.append(ip)
-                    self.dbsession.add(ip)
-                    self.dbsession.add(box)
-                    self.dbsession.commit()
-                except Exception as error:
-                    errors.append(str(error))
+        try:
+            box = Box.by_uuid(self.get_argument('box_uuid', ''))
+            if box is None:
+                raise ValidationError("Box does not exist")
+            ip_addr = self.get_argument('ip_address', '')
+            if IpAddress.by_address(ip_addr) is None:
+                ip = IpAddress(box_id=box.id, address=ip_addr)
+                if self.get_argument('visable', '').lower() != 'true':
+                    ip.visable = False
+                box.ip_addresses.append(ip)
+                self.dbsession.add(ip)
+                self.dbsession.add(box)
+                self.dbsession.commit()
+                self.redirect('/admin/view/game_objects')
             else:
-                errors.append("IP address is already in use")
-        else:
-            errors.append("Box does not exist")
-        self.render("admin/view/game_objects.html", errors=errors)
+                raise ValidationError("IP address is already in use")
+        except ValidationError as error:
+            self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_game_level(self):
         ''' Update game level objects '''
@@ -523,9 +525,9 @@ class AdminDeleteHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects")
         else:
-            logging.info("IP address (%r) does not exist in database" %
-                         self.get_argument('ip_uuid', '')
-                         )
+            logging.info("IP address (%r) does not exist in database" % (
+                self.get_argument('ip_uuid', ''),
+            ))
             self.render("admin/view/game_objects.html",
                         errors=["IP does not exist in database"]
                         )
@@ -539,9 +541,9 @@ class AdminDeleteHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect('/admin/view/game_objects')
         else:
-            logging.info("Flag (%r) does not exist in the database" %
-                         self.get_argument('uuid', '')
-                         )
+            logging.info("Flag (%r) does not exist in the database" % (
+                self.get_argument('uuid', '')
+            ))
             self.render("admin/view/game_objects.html",
                         errors=["Flag does not exist in database."]
                         )

@@ -35,6 +35,7 @@ from libs.ConfigManager import ConfigManager
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
 from libs.EventManager import EventManager
+from urlparse import urlparse
 from tornado.web import RequestHandler
 from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketHandler
@@ -57,7 +58,7 @@ class BaseHandler(RequestHandler):
         "data-src": set(["'self'"]),
     }
     _session = None
-    _dbsession = dbsession
+    dbsession = dbsession
     _memcached = None
     new_events = []
     io_loop = IOLoop.instance()
@@ -71,10 +72,6 @@ class BaseHandler(RequestHandler):
         # present too much of a security risk - TODO: no longer require
         # inline styles
         self.add_content_policy('style-src', "'unsafe-inline'")
-
-    @property
-    def dbsession(self):
-        return self._dbsession
 
     def get_current_user(self):
         ''' Get current user object from database '''
@@ -101,6 +98,8 @@ class BaseHandler(RequestHandler):
 
     def add_content_policy(self, src, policy):
         ''' Add to the existing CSP header '''
+        if not src.endswith('-src'):
+            src += '-src'
         if src in self.csp:
             self.csp[src].add(policy)
             self._refresh_csp()
@@ -117,11 +116,11 @@ class BaseHandler(RequestHandler):
 
     def _refresh_csp(self):
         ''' Rebuild the Content-Security-Policy header '''
-        _csp = ''
+        _csp = []
         for src, policies in self.csp.iteritems():
             if len(policies):
-                _csp += "%s %s; " % (src, " ".join(policies))
-        self.set_header("Content-Security-Policy", _csp)
+                _csp.append("%s %s; " % (src, " ".join(policies)))
+        self.set_header("Content-Security-Policy", ''.join(_csp))
 
     @property
     def memcached(self):
@@ -170,8 +169,6 @@ class BaseHandler(RequestHandler):
         Set security HTTP headers, and add some troll-y version headers
         '''
         self.set_header("Server", "Microsoft-IIS/7.5")
-        self.add_header("X-AspNetMvc-Version", "3.0")
-        self.add_header("X-AspNet-Version", "4.0.30319")
         self.add_header("X-Powered-By", "ASP.NET")
         self.add_header("X-Frame-Options", "DENY")
         self.add_header("X-XSS-Protection", "1; mode=block")
@@ -198,10 +195,6 @@ class BaseHandler(RequestHandler):
         else:
             # If debug mode is enabled, just call Tornado's write_error()
             super(BaseHandler, self).write_error(status_code, **kwargs)
-
-    @property
-    def dbsession(self):
-        return self._dbsession
 
     def get(self, *args, **kwargs):
         ''' Placeholder, incase child class does not impl this method '''
@@ -237,7 +230,7 @@ class BaseHandler(RequestHandler):
 
     def on_finish(self, *args, **kwargs):
         ''' Called after a response is sent to the client '''
-        self._dbsession.close()
+        self.dbsession.close()
         if 0 < len(self.new_events):
             self._event_callbacks()
 
@@ -257,13 +250,24 @@ class BaseWebSocketHandler(WebSocketHandler):
     manager = EventManager.instance()
     config = ConfigManager.instance()
 
+    def check_origin(self, origin):
+        ''' Parses the request's origin header '''
+        try:
+            request_origin = urlparse(origin)
+            origin = urlparse(self.config.origin).netloc.split(':')[0]
+            logging.debug("Checking request Origin '%s'.endswith '%s'" % (
+                request_origin, origin
+            ))
+            return request_origin.netloc.endswith(origin)
+        except:
+            logging.exception("Failed to parse origin: %r" % origin)
+            return False
+
     @property
     def memcached(self):
         ''' Connects to Memcached instance '''
         if self._memcached is None:
-            self._memcached = pylibmc.Client(
-                [self.config.memcached], binary=True)
-            self._memcached.behaviors['no_block'] = 1  # async I/O
+            self._memcached = memcache.Client([self.config.memcached], debug=0)
         return self._memcached
 
     @property

@@ -99,16 +99,6 @@ def authorized(permission):
     return func
 
 
-def restrict_origin(method):
-    ''' Check the origin header / prevent CSRF+WebSocket '''
-
-    @functools.wraps(method)
-    def wrapper(self, *args, **kwargs):
-        if self.request.headers['Origin'] == self.config.origin:
-            return method(self, *args, **kwargs)
-    return wrapper
-
-
 def debug(method):
     ''' Logs a method call/return '''
 

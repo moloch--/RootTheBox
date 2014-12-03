@@ -25,20 +25,25 @@ import xml.etree.cElementTree as ET
 from uuid import uuid4
 from netaddr import IPAddress
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym
-from sqlalchemy.types import Integer, String
+from sqlalchemy.types import Integer, String, Boolean
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from tornado import netutil
+from libs.ValidationError import ValidationError
 
 
 class IpAddress(DatabaseObject):
     ''' Wraps the netaddr IPAddress class '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36),
+                  unique=True,
+                  nullable=False,
+                  default=lambda: str(uuid4())
+                  )
+
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     _address = Column(String(40), unique=True)
     _ip_address = None
+    visable = Column(Boolean, default=True)
 
     @classmethod
     def all(cls):
@@ -70,9 +75,9 @@ class IpAddress(DatabaseObject):
     def address(self, value):
         ip = IPAddress(value)
         if ip.is_loopback():
-            raise ValueError("You cannot use a loopback address")
+            raise ValidationError("You cannot use a loopback address")
         if ip.is_multicast():
-            raise ValueError("You cannot use a multicast address")
+            raise ValidationError("You cannot use a multicast address")
         self._address = value
 
     @property

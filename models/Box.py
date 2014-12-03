@@ -201,21 +201,18 @@ class Box(DatabaseObject):
             raise ValueError("The image is too large")
 
     @property
-    def ips(self):
-        ''' Return all ip addresses '''
-        return self.ipv4 + self.ipv6
-
-    @property
-    def ipv4(self):
+    def ipv4s(self):
         ''' Return a list of all ipv4 addresses '''
-        ips = [ip.v4 for ip in self.ip_addresses]
-        return filter(lambda ip: ip is not None, ips)
+        return filter(lambda ip: ip.version == 4, self.ip_addresses)
 
     @property
-    def ipv6(self):
+    def ipv6s(self):
         ''' Return a list of all ipv6 addresses '''
-        ips = [ip.v6 for ip in self.ip_addresses]
-        return filter(lambda ip: ip is not None, ips)
+        return filter(lambda ip: ip.version == 6, self.ip_addresses)
+
+    @property
+    def visable_ips(self):
+        return filter(lambda ip: ip.visable is True, self.ip_addresses)
 
     @property
     def source_code(self):

@@ -1,4 +1,4 @@
-#> Root the Box
+# >_ Root the Box
 
 A Game of Hackers
 -------------------
@@ -14,7 +14,8 @@ Money can be used to unlock new levels, buy hints to flags, download a target's 
 
 Player's "bank account passwords" are also publically displayed by the scoring engine, allowing players to crack each other's passwords and steal each other's money.
 
-### Features
+Features
+-------------
 * [Distributed under the Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 * [Team based botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
 * Real-time scoreboard graphs using websockets
@@ -22,18 +23,18 @@ Player's "bank account passwords" are also publically displayed by the scoring e
 * Built-in team based file/text sharing
 * A wall of sheep displaying cracked passwords
 * Unlocks and upgrades as users caputre flags
-* Supports MySQL, SQLite, or Postgresql
-* Export and share Boxes/Flags (or backup)
-* Lots of HTML5 & CSS3
+* Export and share Boxes/Flags
 * Other cool stuff
 
 Setup
 -------------------
 See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
-### Requirements
-* Python 2.7.x (Python 3.x support pending)
-* Supported platforms: Install scripts are for Ubuntu/Debian, but the application should work on any Linux, BSD, or OSX system.
-* Internet Explorer is _not_ supported. Please use the latest release of Firefox, Chrome, Operah, or any other browser that supports open standards.
+
+Platform Requirements
+-------------------------
+* [Python 2.7.x](https://www.python.org/) or [Pypy 2.x](http://pypy.org/)
+* Install scripts are for [Ubuntu](http://www.ubuntu.com/) (or [Debian](https://www.debian.org/)) but the application should work on any Linux, BSD, or OSX system.
+* Internet Explorer is *NOT* supported, any compatability with IE is purely coincidental. Please use the latest release of [Firefox](https://www.mozilla.org/en-US/), [Chrome](https://www.google.com/chrome/), [Opera](http://www.opera.com/), or any other browser that supports open standards.
 
 Questions? Problems?
 -------------------------------

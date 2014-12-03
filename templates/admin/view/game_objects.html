@@ -293,6 +293,13 @@
                     <input autofocus id="ip-address" name="ip_address" type="text" placeholder="192.168.1.1" />
                 </div>
             </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="checkbox">
+                        <input name="visable" value="true" type="checkbox" checked> Visable to Players
+                    </label>
+                </div>
+            </div>
         </form>
         </div>
         <div class="modal-footer">
@@ -429,8 +436,8 @@
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Address</th>
-                                                        <th>Version</th>
-                                                        <th>Private</th>
+                                                        <th>IP Version</th>
+                                                        <th>Visable</th>
                                                         <th><!-- Delete --></th>
                                                     </tr>
                                                 </thead>
@@ -440,7 +447,7 @@
                                                             <td>{{ index + 1 }}</td>
                                                             <td>{{ ip.address }}</td>
                                                             <td>{{ ip.version }}</td>
-                                                            <td>{% if ip.is_private %} Yes {% else %} No {% end %}</td>
+                                                            <td>{% if ip.visable %} Yes {% else %} No {% end %}</td>
                                                             <td>
                                                                 <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
                                                                     <i class="fa fa-fw fa-times-circle-o"></i>

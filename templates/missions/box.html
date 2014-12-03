@@ -82,10 +82,7 @@
 {% end %}
 
 {% block content %}
-<<<<<<< HEAD
     <!-- Visable -->
-=======
->>>>>>> master
     <div class="container">
         <h1>
             {% if box.operating_system.lower() == 'windows' %}
@@ -171,6 +168,32 @@
                 </tbody>
             </table>
         </div>
+        {% if len(box.visable_ips) != 0 %}
+            <br />
+            <div class="well">
+                <table class="table table-hover">
+                    <caption><h4> - Known IP Addresses - </h4></caption>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Address</th>
+                            <th>IP Version</th>
+                            <th>Private</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, ip in enumerate(box.visable_ips) %}
+                            <tr>
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ str(ip) }}</td>
+                                <td>{{ ip.version }}</td>
+                                <td>{{ str(ip.is_private) }}</td>
+                            </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            </div>
+        {% end %}
         {% if len(box.hints) != 0 %}
             <br />
             <div class="well">

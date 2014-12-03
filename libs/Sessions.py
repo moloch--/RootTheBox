@@ -195,4 +195,4 @@ class MemcachedSession(BaseSession):
 
     def delete(self):
         '''Delete the session from storage.'''
-        self.connection.delete(self.session_id)
+        self.connection.delete(self.session_id.encode('ascii', 'ignore'))

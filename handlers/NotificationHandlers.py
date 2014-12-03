@@ -32,15 +32,14 @@ class NotifySocketHandler(BaseWebSocketHandler):
 
     ''' Handles websocket connections '''
 
-    @restrict_origin
     def open(self):
         ''' When we receive a new websocket connect '''
         if self.session is not None and 'team_id' in self.session:
-            logging.debug("[Web Socket] Opened new websocket with user id: %s" % (
+            logging.debug("Opened new websocket with user id: %s" % (
                 self.session['user_id'],
             ))
             notifications = Notification.new_messages(self.session['user_id'])
-            logging.debug("[Web Socket] %d new notification(s) for user id %d" % (
+            logging.debug("%d new notification(s) for user id %d" % (
                 len(notifications), self.session['user_id']),
             )
             for notify in notifications:
@@ -71,7 +70,7 @@ class NotifySocketHandler(BaseWebSocketHandler):
 
     @property
     def user_id(self):
-        return '$public_user' if self.session is None else self.session['user_id']
+        return '$public' if self.session is None else self.session['user_id']
 
     @user_id.setter
     def user_id(self, value):
