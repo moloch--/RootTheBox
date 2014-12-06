@@ -28,6 +28,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import Engine
 from contextlib import contextmanager
 from libs.DatabaseConnection import DatabaseConnection
+from libs.ConsoleColors import *
 
 if options.log_sql:
 
@@ -44,7 +45,8 @@ if options.log_sql:
     def after_cursor_execute(conn, cursor, statement, parameters,
                              context, executemany):
         total = time.time() - conn.info['query_start_time'].pop(-1)
-        logging.debug("\033[34mTotal query time: \033[1m%f\033[0m" % total)
+        color = R if total > 0.01 else BLU
+        logging.debug("Total query time: %s%s%f%s" % (bold, color, total, W))
 
 
 db_connection = DatabaseConnection(database=options.sql_database,

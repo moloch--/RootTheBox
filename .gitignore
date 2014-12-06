@@ -1,3 +1,4 @@
+# Bytecode
 *.py[co]
 
 # File uploads and what not
@@ -5,6 +6,8 @@ files/avatars/*-*
 files/icons/*-*
 files/shares/*-*
 files/source_code_market/*-*
+files/*.db
+files/*.cfg
 
 # Packages
 *.egg

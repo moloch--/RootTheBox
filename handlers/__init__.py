@@ -154,8 +154,6 @@ urls = [
     (r'/admin/configuration', AdminConfigurationHandler),
     (r'/admin/export/(.*)', AdminExportHandler),
     (r'/admin/import/xml', AdminImportXmlHandler),
-    (r'/admin/logviewer', AdminLogViewerHandler),
-    (r'/admin/logviewer/wsocket', AdminLogViewerSocketHandler),
     (r'/admin/garbage', AdminGarbageCfgHandler),
 
     # Error handlers - ErrorHandlers.py

@@ -37,7 +37,8 @@ from models.Corporation import Corporation
 from models.RegistrationToken import RegistrationToken
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
-from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
+from libs.ConfigHelpers import save_config
+from handlers.BaseHandlers import BaseHandler
 from string import printable
 
 
@@ -274,6 +275,19 @@ class AdminSwatHandler(BaseHandler):
 
 class AdminConfigurationHandler(BaseHandler):
 
+    ''' '''
+
+    def get_int(self, name, default=0):
+        try:
+            return abs(int(self.get_argument(name, default)))
+        except:
+            return default
+
+    def get_bool(self, name, default=''):
+        if not isinstance(default, basestring):
+            default = str(default).lower()
+        return self.get_argument(name, default) == 'true'
+
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
@@ -291,45 +305,33 @@ class AdminConfigurationHandler(BaseHandler):
         Update configuration
         Disabled fields will not be send in the POST, so check for blank values
         '''
-        try:
-            config = ConfigManager.instance()
-            config.game_name = self.get_argument('game_name', '')
-            config.restrict_registration = self.get_argument(
-                'restrict_registration', '') == 'true'
-            config.public_teams = self.get_argument(
-                'public_teams', '') == 'true'
-            config.max_team_size = self.get_argument('max_team_size', '')
-            config.max_password_length = self.get_argument(
-                'max_password_length', '')
-            self.config_bots(config)
-            reward = self.get_argument('bot_reward', '')
-            if reward != '':
-                config.bot_reward = reward
-            config.use_black_market = self.get_argument(
-                'use_black_market', '') == 'true'
-            upgrade_cost = self.get_argument('password_upgrade_cost', '')
-            if upgrade_cost != '':
-                config.password_upgrade_cost = upgrade_cost
-            bribe_cost = self.get_argument('bribe_cost', '')
-            if bribe_cost != '':
-                config.bribe_cost = bribe_cost
-            config.save()
-            self.render(
-                'admin/configuration.html', errors=None, config=self.config)
-        except ValidationError as error:
-            logging.exception("Configuration update threw an exception")
-            self.render('admin/configuration.html',
-                        errors=[str(error)], config=self.config)
+        self.config.game_name = self.get_argument('game_name', 'Root the Box')
+        self.config.restrict_registration = self.get_bool('restrict_registration', False)
+        self.config.public_teams = self.get_bool('public_teams')
+        self.config.max_team_size = self.get_int('max_team_size')
+        self.config.max_password_length = self.get_int('max_password_length', '7')
+        self.config_bots()
+        self.config.bot_reward = self.get_int('bot_reward', 50)
+        self.config.use_black_market = self.get_bool('use_black_market', True)
+        self.config.password_upgrade_cost = self.get_int('password_upgrade_cost', 1500)
+        self.config.bribe_cost = self.get_int('bribe_cost', 1500)
+        self.render('admin/configuration.html',
+                    errors=None,
+                    config=self.config
+                    )
 
-    def config_bots(self, config):
+    def config_bots(self):
         ''' Updates bot config, and starts/stops the botnet callback '''
-        config.use_bots = self.get_argument('use_bots') == 'true'
-        if config.use_bots and not self.application.settings['score_bots_callback']._running:
+        self.config.use_bots = self.get_bool('use_bots', True)
+        if self.config.use_bots and not self.application.settings['score_bots_callback']._running:
             logging.info("Starting botnet callback function")
             self.application.settings['score_bots_callback'].start()
         elif self.application.settings['score_bots_callback']._running:
             logging.info("Stopping botnet callback function")
             self.application.settings['score_bots_callback'].stop()
+
+    def on_finish(self):
+        save_config()
 
 
 class AdminGarbageCfgHandler(BaseHandler):
@@ -452,27 +454,3 @@ class AdminLogViewerHandler(BaseHandler):
             self.render('admin/logviewer.html')
         else:
             self.render('public/404.html')
-
-
-class AdminLogViewerSocketHandler(BaseWebSocketHandler):
-
-    @restrict_ip_address
-    @authenticated
-    @authorized(ADMIN_PERMISSION)
-    def open(self):
-        ''' Add this object as an observer '''
-        self.observerable_log = None
-        if self.config.enable_logviewer:
-            self.observerable_log = ObservableLoggingHandler.instance()
-            self.observerable_log.add_observer(self)
-        else:
-            self.close()
-
-    def update(self, messages):
-        ''' Write logging messages to wsocket '''
-        self.write_message({'messages': messages})
-
-    def on_close(self):
-        ''' Remove the ref to this object '''
-        if self.observerable_log is not None:
-            self.observerable_log.remove_observer(self)

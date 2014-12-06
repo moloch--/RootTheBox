@@ -25,9 +25,9 @@ Not gonna sugar code it, this shit gets a bit complicated.
 
 
 import re
+import os
 import logging
 
-from os import urandom
 from datetime import datetime
 from libs.Singleton import Singleton
 from sqlalchemy import Column, create_engine
@@ -210,6 +210,10 @@ class BotManager(object):
             bot.total_reward += reward
             self.botdb.add(bot)
             self.botdb.flush()
+
+    def __del__(self):
+        if os.path.exists(options.botnet_db):
+            os.unlink(options.botnet_db)
 
 
 def ping_bots():

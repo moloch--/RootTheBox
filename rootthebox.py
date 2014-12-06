@@ -25,11 +25,11 @@ import os
 import nose
 import random
 import logging
-import argparse
 
 from datetime import datetime
 from tornado.options import define, options
 from libs.ConsoleColors import *
+from libs.ConfigHelpers import save_config
 
 
 __version__ = 'Root the Box - v0.6.0'
@@ -40,6 +40,7 @@ def start():
     ''' Starts the application '''
     from handlers import start_server
     print(INFO + '%s : Starting application ...' % current_time())
+    save_config()
     start_server()
 
 
@@ -132,41 +133,55 @@ def check_cwd():
 
 # HTTP Server Settings
 define("origin",
-       default="ws://localhost:8080",
+       default="ws://localhost:8888",
+       group="server",
        help="validate websocket connections against this origin")
 
 define("listen_port",
        default=8888,
+       group="server",
        help="run instances starting the given port",
        type=int)
 
 define("session_age",
        default=int(60 * 60),
+       group="server",
        help="max session age (seconds)",
        type=int)
 
 define("session_regeneration_interval",
        default=int(60 * 60),
+       group="server",
        help="regenerate session time frame (seconds)",
        type=int)
 
 define("x_headers",
        default=False,
+       group="server",
        help="honor the `X-FORWARDED-FOR` and `X-REAL-IP` http headers",
        type=bool)
 
 define("ssl",
        default=False,
+       group="server",
        help="enable the use of ssl/tls",
        type=bool)
 
 define("certfile",
        default="",
+       group="server",
        help="the certificate file path (for ssl/tls)")
 
 define("keyfile",
        default="",
+       group="server",
        help="the key file path (for ssl/tls)")
+
+define("admin_ips",
+       multiple=True,
+       default=['127.0.0.1', '::1'],
+       group="server",
+       help="whitelist of ip addresses that can access the admin ui")
 
 # Application Settings
 define("debug",
@@ -174,12 +189,6 @@ define("debug",
        group="application",
        help="start the application in debugging mode",
        type=bool)
-
-define("admin_ips",
-       multiple=True,
-       default=['127.0.0.1', '::1'],
-       group="application",
-       help="whitelist of ip addresses that can access the admin ui")
 
 define("avatar_dir",
        default="./files/avatars",
@@ -205,19 +214,18 @@ define("source_code_market_dir",
 define("use_recaptcha",
        default=True,
        help="enable the use of recaptcha for bank passwords",
+       group='recaptcha',
        type=bool)
 
 define("recaptcha_api_key",
        default="6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf",
+       group='recaptcha',
        help="recaptcha api key")
-
-define("config",
-       default="rootthebox.cfg",
-       help="root the box configuration file")
 
 # Database settings
 define("sql_dialect",
        default="mysql",
+       group="database",
        help="define the type of database (mysql|postgres|sqlite)")
 
 define("sql_database",
@@ -231,9 +239,10 @@ define("sql_host",
        help="database sever hostname")
 
 define("sql_port",
-       default="3306",
+       default=3306,
        group="database",
-       help="database tcp port")
+       help="database tcp port",
+       type=int)
 
 define("sql_user",
        default="rtb",
@@ -257,16 +266,18 @@ define("memcached",
        help="memcached sever hostname")
 
 define("memcached_port",
-       default="11011",
+       default=11011,
        group="cache",
-       help="memcached tcp port")
+       help="memcached tcp port",
+       type=int)
 
 
 # Game Settings
 define("game_name",
        default="Root the Box",
        group="game",
-       help="the name of the current game")
+       help="the name of the current game",
+       type=basestring)
 
 define("restrict_registration",
        default=False,
@@ -299,7 +310,7 @@ define("use_bots",
        type=bool)
 
 define("botnet_db",
-       default=":tempfile:",
+       default="files/botnet.db",
        group="game",
        help="botnet database path")
 
@@ -341,7 +352,7 @@ define("flag_value_decrease",
        default=10,
        group="game",
        help="decrease flag reward by this percent per capture",
-       type=float)
+       type=int)
 
 define("default_theme",
        default="cyborg",
@@ -386,18 +397,26 @@ define("restart",
        help="restart the server",
        type=bool)
 
+define("config",
+       default="files/rootthebox.cfg",
+       help="root the box configuration file")
+
+
 
 if __name__ == '__main__':
 
-    check_cwd()
+    # We need this to pull the --config option
     options.parse_command_line()
 
+    check_cwd()
     if os.path.exists(options.config) and os.path.isfile(options.config):
         logging.debug("Parsing config file `%s`" % (
             os.path.abspath(options.config),
         ))
         options.parse_config_file(options.config)
 
+    # Make sure that cli args always have president over the file
+    options.parse_command_line()
     if options.setup.lower()[:3] in ['pro', 'dev']:
         setup()
     elif options.start:
