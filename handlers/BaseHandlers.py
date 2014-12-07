@@ -55,7 +55,7 @@ class BaseHandler(RequestHandler):
         "font-src": set(["'self'"]),
         "object-src": set(["'none'"]),
         "style-src": set(["'self'"]),
-        "data-src": set(["'self'"]),
+        # "data-src": set(["'self'"]),
     }
     _session = None
     dbsession = dbsession

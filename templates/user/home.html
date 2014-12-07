@@ -20,8 +20,8 @@
                 <strong>Team:</strong> {{ user.team.name }} <br />
                 <strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
                 <strong>Bank Account:</strong> ${{ user.team.money }} <br />
-                {% from libs.ConfigManager import ConfigManager %}
-                {% if ConfigManager.instance().use_bots %}
+                {% from tornado.options import options %}
+                {% if options.use_bots %}
                 <strong>Active Bots:</strong> {{ user.team.bot_count }} <br />
                 {% end %}
                 <strong>Flags Captured:</strong> {{ len(user.team.flags) }} <br />

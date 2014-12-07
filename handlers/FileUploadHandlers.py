@@ -79,8 +79,6 @@ class FileDownloadHandler(BaseHandler):
 
     ''' Download shared files from here '''
 
-    char_whitelist = lambda char: char in str(printable[:-38] + '.-_')
-
     @authenticated
     def get(self, *args, **kwargs):
         ''' Get a file and send it to the user '''
@@ -89,8 +87,9 @@ class FileDownloadHandler(BaseHandler):
         if shared_file is not None and shared_file in user.team.files:
             self.set_header('Content-Type', shared_file.content_type)
             self.set_header('Content-Length', shared_file.byte_size)
+            char_whitelist = lambda char: char in str(printable[:-38] + '.-_')
             self.set_header('Content-Disposition', 'attachment; filename=%s' %
-                            filter(self.char_whitelist, shared_file.file_name))
+                            filter(char_whitelist, shared_file.file_name))
             self.write(shared_file.data)
         else:
             self.render("public/404.html")

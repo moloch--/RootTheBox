@@ -38,8 +38,6 @@ class FileUpload(DatabaseObject):
     players via the team file sharing feature.
     '''
 
-    DIR = 'shares/'
-
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
@@ -89,7 +87,7 @@ class FileUpload(DatabaseObject):
 
     @property
     def data(self):
-        with open(options.share_dir + self.DIR + self.uuid, 'rb') as fp:
+        with open(options.share_dir + '/' + self.uuid, 'rb') as fp:
             return fp.read().decode('base64')
 
     @data.setter
@@ -97,12 +95,12 @@ class FileUpload(DatabaseObject):
         if self.uuid is None:
             self.uuid = str(uuid4())
         self.byte_size = len(value)
-        with open(options.share_dir + self.DIR + self.uuid, 'wb') as fp:
+        with open(options.share_dir + '/' + self.uuid, 'wb') as fp:
             fp.write(value.encode('base64'))
 
     def delete_data(self):
-        if os.path.exists(options.share_dir + self.DIR + self.uuid):
-            os.unlink(options.share_dir + self.DIR + self.uuid)
+        if os.path.exists(options.share_dir + '/' + self.uuid):
+            os.unlink(options.share_dir + '/' + self.uuid)
 
     def __repr__(self):
         return u'<FileUpload - name: %s, size: %s>' % (

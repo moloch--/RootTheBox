@@ -35,8 +35,6 @@ class FlagAttachment(DatabaseObject):
     distribute alongside a flag.
     '''
 
-    DIR = 'flag_attachments/'
-
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
@@ -58,7 +56,7 @@ class FlagAttachment(DatabaseObject):
     @property
     def data(self):
         config = ConfigManager.instance()
-        with open(config.file_uploads_dir + self.DIR + self.uuid, 'rb') as fp:
+        with open(config.file_uploads_dir + '/' + self.uuid, 'rb') as fp:
             return fp.read().decode('base64')
 
     @data.setter
@@ -67,12 +65,12 @@ class FlagAttachment(DatabaseObject):
         if self.uuid is None:
             self.uuid = str(uuid4())
         self.byte_size = len(value)
-        with open(config.file_uploads_dir + self.DIR + self.uuid, 'wb') as fp:
+        with open(config.file_uploads_dir + '/' + self.uuid, 'wb') as fp:
             fp.write(value.encode('base64'))
 
     def delete_data(self):
         ''' Remove the file from the file system, if it exists '''
         config = ConfigManager.instance()
-        fpath = config.file_uploads_dir + self.DIR + self.uuid
+        fpath = config.file_uploads_dir + '/' + self.uuid
         if os.path.exists(fpath) and os.path.isfile(fpath):
             os.unlink(fpath)

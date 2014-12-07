@@ -38,8 +38,6 @@ class SourceCode(DatabaseObject):
     source code market.
     '''
 
-    DIR = 'source_code_market/'
-
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
@@ -82,7 +80,7 @@ class SourceCode(DatabaseObject):
 
     @property
     def data(self):
-        with open(options.source_code_market_dir + self.DIR + self.uuid, 'rb') as fp:
+        with open(options.source_code_market_dir + '/' + self.uuid, 'rb') as fp:
             return fp.read().decode('base64')
 
     @data.setter
@@ -91,12 +89,12 @@ class SourceCode(DatabaseObject):
             self.uuid = str(uuid4())
         self.byte_size = len(value)
         self.checksum = sha1(value).hexdigest()
-        with open(options.source_code_market_dir + self.DIR + self.uuid, 'wb') as fp:
+        with open(options.source_code_market_dir + '/' + self.uuid, 'wb') as fp:
             fp.write(value.encode('base64'))
 
     def delete_data(self):
         ''' Remove the file from the file system, if it exists '''
-        fpath = options.source_code_market_dir + self.DIR + self.uuid
+        fpath = options.source_code_market_dir + '/' + self.uuid
         if os.path.exists(fpath) and os.path.isfile(fpath):
             os.unlink(fpath)
 

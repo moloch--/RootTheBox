@@ -1,4 +1,4 @@
-{% from libs.ConfigManager import ConfigManager %}
+{% from tornado.options import options %}
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="/">
-                {{ ConfigManager.instance().game_name }}
+                {{ options.game_name }}
             </a>
             <div class="nav-collapse">
                 <ul class="nav">
@@ -30,7 +30,7 @@
                                     Missions
                                 </a>
                             </li>
-                            {% if ConfigManager.instance().use_black_market %}
+                            {% if options.use_black_market %}
                                 <li>
                                     <a href="/user/market">
                                         <i class="fa fa-fw fa-shopping-cart"></i>
@@ -38,7 +38,7 @@
                                     </a>
                                 </li>
                             {% end %}
-                            {% if ConfigManager.instance().use_bots %}
+                            {% if options.use_bots %}
                                 <li class="dropdown-submenu">
                                     <a tabindex="-1" href="/user/bots/webmonitor">
                                         <i class="fa fa-fw fa-android"></i>
@@ -80,7 +80,7 @@
                             </li>
                         </ul>
                     </li>
-                    {% if ConfigManager.instance().use_black_market %}
+                    {% if options.use_black_market %}
                         {% if len(user.team.items) != 0 %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -142,7 +142,7 @@
                                   History
                               </a>
                             </li>
-                            {% if ConfigManager.instance().use_black_market %}
+                            {% if options.use_black_market %}
                             <li>
                                 <a href="/scoreboard/wall_of_sheep">
                                     Wall of Sheep
