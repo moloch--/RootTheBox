@@ -1,8 +1,8 @@
 function wsUrl() {
     if (window.location.protocol != "https:") {
-        return "ws://" + window.location.hostname
+        return "ws://" + window.location.host
     } else {
-        return "wss://" + window.location.hostname
+        return "wss://" + window.location.host
     }
 }
 

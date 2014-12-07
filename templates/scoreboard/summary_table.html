@@ -1,5 +1,5 @@
 {% from libs.BotManager import BotManager %}
-{% from libs.ConfigManager import ConfigManager %}
+{% from tornado.options import options %}
 {% for index, team in enumerate(teams) %}
     <tr>
         <td>
@@ -11,7 +11,7 @@
         </td>
         <td>{{ team.name }}</td>
         <td>{{ len(team.flags) }}</td>
-        {% if ConfigManager.instance().use_bots %}
+        {% if options.use_bots %}
             <td>{{ BotManager.instance().count_by_team(team) }}<br /></td>
         {% end %}
         <td>${{ team.money }}</td>

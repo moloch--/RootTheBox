@@ -8,7 +8,7 @@
 {% block title %}Scoreboard{% end %}
 
 {% block content %}
-{% from libs.ConfigManager import ConfigManager %}
+{% from tornado.options import options %}
 <div class="row-fluid">
     <h1 class="offset1">
         <i class="fa fa-bar-chart-o"></i>
@@ -36,7 +36,7 @@
                     <th>#</th>
                     <th>Team</th>
                     <th>Flags Captured</th>
-                    {% if ConfigManager.instance().use_bots %}
+                    {% if options.use_bots %}
                         <th>Botnet</th>
                     {% end %}
                     <th>Bank Account</th>

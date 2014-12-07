@@ -8,7 +8,7 @@
 {% end %}
 
 {% block content %}
-{% from libs.ConfigManager import ConfigManager %}
+{% from tornado.options import options %}
 <div class="navbar navbar-inverse">
     <div class="navbar-inner">
         <div class="container">
@@ -30,7 +30,7 @@
                             Money
                         </a>
                     </li>
-                    {% if ConfigManager.instance().use_bots %}
+                    {% if options.use_bots %}
                         <li>
                             <a id="bots-history-button" href="#">
                                 <i class="fa fa-android"></i>

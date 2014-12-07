@@ -152,7 +152,7 @@ class GameHistory(object):
     def __at__(self, index):
         ''' Get snapshot at specific index '''
         key = Snapshot.to_key(index + 1)
-        if key in self.cache:
+        if self.cache.get(key) is not None:
             return self.cache.get(key)
         else:
             snapshot = Snapshot.by_id(index + 1)
