@@ -272,7 +272,7 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
     '''
 
     def initialize(self):
-        self.config = ConfigManager.instance()
+        self.config = options
         if not self.config.use_bots:
             self.close()
 

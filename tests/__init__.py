@@ -27,15 +27,15 @@ Setup / delete the unit test database
 import os
 import logging
 
-from libs.ConfigManager import ConfigManager
+from tornado.options import options
 
 
 def setup_database(db_name):
     # Setup the test database
     logging.debug("Setting up the test database connection ...")
-    config_manager = ConfigManager.instance()
-    config_manager.db_connection = 'sqlite:///%s.db' % db_name
-    assert config_manager.db_connection == 'sqlite:///%s.db' % db_name
+
+    options.sql_dialect = 'sqlite'
+    options.sql_database = '%s.db' % db_name
 
     # Create the default tables
     logging.debug("Creating tables ... ")

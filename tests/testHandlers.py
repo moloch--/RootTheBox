@@ -6,9 +6,9 @@ Unit tests for everything in handlers/
 from models import dbsession
 from models.User import User
 from models.Team import Team
-from libs.ConfigManager import ConfigManager
 from tests.HTTPClient import ApplicationTest
 from tests.Helpers import *
+from tornado.options import options
 
 
 class TestPublicHandlers(ApplicationTest):
@@ -63,13 +63,12 @@ class TestPublicHandlers(ApplicationTest):
         self._registration_post_team_name(form)
 
     def _registration_post_token(self, form):
-        config_manager = ConfigManager.instance()
-        config_manager.restrict_registration = True
+        options.restrict_registration = True
         form['token'] = 'NotARealRegToken'
         self.post('/registration', data=form)(self.stop)
         rsp, body = self.wait()
         assert "Invalid registration token" in body
-        config_manager.restrict_registration = False
+        options.restrict_registration = False
 
     def _registration_post_team_name(self, form):
         form['team_name'] = ''
