@@ -24,9 +24,11 @@ Handlers for user-related tasks.
 
 import logging
 
-from libs.SecurityDecorators import *
+from models.Team import Team
 from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
+from libs.SecurityDecorators import *
+from libs.ValidationError import ValidationError
 
 
 class AdminManageUsersHandler(BaseHandler):
@@ -35,13 +37,40 @@ class AdminManageUsersHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        pass
+        self.render('admin/view/users.html', errors=None)
+
+
+class AdminEditUsersHandler(BaseHandler):
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        pass
+        uri = {
+            'user': self.edit_user,
+            'team': self.edit_team,
+        }
+        if len(args) and args[0] in uri:
+            uri[args[0]]()
+        else:
+            self.redirect('/admin/users')
+
+    def edit_team(self):
+        ''' Edits the team object '''
+        try:
+            team = Team.by_uuid(self.get_argument('uuid', ''))
+            if team is None:
+                raise ValidationError("Team does not exist")
+            team.name = self.get_argument('name', team.name)
+            team.motto = self.get_argument('motto', team.motto)
+            team.money = self.get_argument('money', team.money)
+            self.dbsession.add(team)
+            self.dbsession.commit()
+            self.redirect('/admin/users')
+        except ValidationError as error:
+            self.render('admin/view/users.html',
+                        errors=[str(error), ]
+                        )
 
     def edit_user(self):
         ''' Update user objects in the database '''
@@ -71,12 +100,9 @@ class AdminManageUsersHandler(BaseHandler):
                             "You must provide a new bank password when updating the hashing algorithm")
                 else:
                     raise ValidationError("Not a valid hash algorithm")
-            password = self.get_argument('password', '')
-            if 0 < len(password):
-                user.password = password
-            bank_password = self.get_argument('bank_password', '')
-            if 0 < len(bank_password):
-                user.bank_password = bank_password
+            user.password = self.get_argument('password', '')
+            if len(self.get_argument('bank_password', '')):
+                user.bank_password = self.get_argument('bank_password', '')
             team = Team.by_uuid(self.get_argument('team_uuid', ''))
             if team is not None:
                 if user not in team.members:
@@ -88,10 +114,10 @@ class AdminManageUsersHandler(BaseHandler):
                 raise ValidationError("Team does not exist in database")
             self.dbsession.add(user)
             self.dbsession.commit()
-            self.redirect('/admin/view/user_objects')
+            self.redirect('/admin/users')
         except ValidationError as error:
-            self.render("admin/view/user_objects.html",
-                        errors=["%s" % error]
+            self.render("admin/view/users.html",
+                        errors=[str(error), ]
                         )
 
 
@@ -101,13 +127,13 @@ class AdminBanHammerHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        self.uris = {
+        uri = {
             'add': self.ban_add,
             'clear': self.ban_clear,
             'config': self.ban_config,
         }
-        if len(args) == 1 and args[0] in self.uris:
-            self.uris[args[0]]()
+        if len(args) and args[0] in uri:
+            uri[args[0]]()
         self.redirect('/user')
 
     def ban_config(self):
@@ -159,3 +185,33 @@ class AdminLockHandler(BaseHandler):
             self.dbsession.add(user)
             self.dbsession.commit()
         self.redirect('/admin/users')
+
+
+class AdminAjaxUserHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        uri = {
+            'user': self.user_details,
+            'team': self.team_details,
+        }
+        if len(args) and args[0] in uri:
+            uri[args[0]]()
+
+    def team_details(self):
+        print self.get_argument('uuid', '')
+        team = Team.by_uuid(self.get_argument('uuid', ''))
+        if team is not None:
+            self.write(team.to_dict())
+        else:
+            self.write({})
+
+    def user_details(self):
+        user = User.by_uuid(self.get_argument('uuid', ''))
+        print user
+        if user is not None:
+            self.write(user.to_dict())
+        else:
+            self.write({})

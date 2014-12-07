@@ -40,6 +40,7 @@ from models.Team import Team
 from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
+from libs.ValidationError import ValidationError
 from string import printable
 from tornado.options import options
 
@@ -49,13 +50,6 @@ from tornado.options import options
 ADMIN_PERMISSION = u'admin'
 DEFAULT_HASH_ALGORITHM = 'md5'
 ITERATE = 0x2bad  # 11181
-
-# Change this for your production deployments
-# NOTE: Passwords are also individually salted
-STATIC_SALT = """
-    Just a little extra something so you cannot crack the passwords
-    based soley on information stored in the database.
-"""
 
 
 class User(DatabaseObject):
@@ -67,20 +61,26 @@ class User(DatabaseObject):
                   nullable=False,
                   default=lambda: str(uuid4())
                   )
+
     team_id = Column(Integer, ForeignKey('team.id'))
+    _avatar = Column(String(64))
+    _locked = Column(Boolean, default=False, nullable=False)
+    last_login = Column(DateTime)
+    logins = Column(Integer, default=0)
+    _handle = Column(Unicode(16), unique=True, nullable=False)
+    _password = Column('password', String(64))
+    _bank_password = Column('bank_password', String(128))
+
     theme_id = Column(Integer, ForeignKey('theme.id'),
                       default=3,
                       nullable=False
                       )
-    _avatar = Column(String(64))
-    _locked = Column(Boolean, default=False, nullable=False)
+
     algorithm = Column(String(8),
                        default=DEFAULT_HASH_ALGORITHM,
                        nullable=False
                        )
-    last_login = Column(DateTime)
-    logins = Column(Integer, default=0)
-    _handle = Column(Unicode(16), unique=True, nullable=False)
+
     permissions = relationship("Permission",
                                backref=backref("user", lazy="select"),
                                cascade="all,delete,delete-orphan"
@@ -89,21 +89,6 @@ class User(DatabaseObject):
                                  backref=backref("user", lazy="select"),
                                  cascade="all,delete,delete-orphan"
                                  )
-
-    _password = Column('password', String(64))
-    password = synonym('_password', descriptor=property(
-        lambda self: self._password,
-        lambda self, password: setattr(
-            self, '_password', self.__class__._hash_password(password))
-    ))
-
-    _bank_password = Column('bank_password', String(128))
-    bank_password = synonym('_bank_password', descriptor=property(
-        lambda self: self._bank_password,
-        lambda self, bank_password: setattr(
-            self, '_bank_password', self.__class__._hash_bank_password(
-                self.algorithm, bank_password))
-    ))
 
     algorithms = {
         'md5': (md5, 1, 'md5',),
@@ -155,10 +140,6 @@ class User(DatabaseObject):
         only used for the admin accounts.  We only allow
         whitespace/non-ascii.
         '''
-        config = ConfigManager.instance()
-        password = filter(lambda char: char in printable[:-6], password)
-        if config.max_password_length < len(password):
-            raise ValueError("Bank password is too long")
         if algorithm_name is None:
             algorithm_name = DEFAULT_HASH_ALGORITHM
         if algorithm_name in cls.algorithms:
@@ -170,7 +151,32 @@ class User(DatabaseObject):
 
     @classmethod
     def _hash_password(cls, password):
-        return PBKDF2.crypt(password + STATIC_SALT, iterations=ITERATE)
+        return PBKDF2.crypt(password, iterations=ITERATE)
+
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        if 16 <= len(value) or options.debug:
+            self._password = self._hash_password(value)
+        else:
+            raise ValidationError("Account password is too short (16+)")
+
+    @property
+    def bank_password(self):
+        return self._bank_password
+
+    @bank_password.setter
+    def bank_password(self, value):
+        _password = filter(lambda char: char in printable[:-6], value)
+        if 0 < len(_password) <= options.max_password_length:
+            self._bank_password = self._hash_bank_password(self.algorithm, _password)
+        else:
+            raise ValidationError("Invalid bank password length (max %d chars)" % (
+                options.max_password_length,
+            ))
 
     @property
     def handle(self):
@@ -179,7 +185,7 @@ class User(DatabaseObject):
     @handle.setter
     def handle(self, new_handle):
         if not 3 <= len(new_handle) <= 16:
-            raise ValueError("Handle must be 3 - 16 characters")
+            raise ValidationError("Handle must be 3 - 16 characters")
         self._handle = unicode(new_handle)
 
     @property
@@ -248,8 +254,7 @@ class User(DatabaseObject):
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
         if self._password is not None:
-            return self.password == PBKDF2.crypt(
-                attempt + STATIC_SALT, self.password)
+            return self.password == PBKDF2.crypt(attempt, self.password)
         else:
             return False
 
@@ -319,8 +324,7 @@ class User(DatabaseObject):
             bpass_elem = ET.SubElement(user_elem, "bankpassword")
             bpass_elem.text = self._bank_password
             bpass_elem.set("algorithm", self.algorithm)
-            config = ConfigManager.instance()
-            with open(config.avatar_dir + self.avatar) as fp:
+            with open(options.avatar_dir + self.avatar) as fp:
                 data = fp.read()
                 ET.SubElement(user_elem, "avatar").text = data.encode('base64')
 

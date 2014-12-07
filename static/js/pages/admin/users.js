@@ -6,9 +6,10 @@ function getCookie(name) {
 
 function getDetails(obj, uuid) {
     $("#edit-" + obj + "-uuid").val(uuid);
-    data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}
-    $.post('/admin/ajax/objects', data, function(response) {
+    data = {'uuid': uuid, '_xsrf': getCookie("_xsrf")}
+    $.post('/admin/ajax/' + obj, data, function(response) {
         $.each(response, function(key, value) {
+            // console.log("#" + obj + "-" + key + " => " + value);
             $("#" + obj + "-" + key).val(value);
         });
     }, 'json');

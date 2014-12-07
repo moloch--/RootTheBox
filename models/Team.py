@@ -155,6 +155,7 @@ class Team(DatabaseObject):
             'uuid': self.uuid,
             'name': self.name,
             'motto': self.motto,
+            'money': self.money,
         }
 
     def to_xml(self, parent):

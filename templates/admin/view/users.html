@@ -3,7 +3,7 @@
 {% block title %}User Management{% end %}
 
 {% block header %}
-<script src="/static/js/pages/admin/view/user_objects.js"></script>
+<script src="/static/js/pages/admin/users.js"></script>
 {% end %}
 
 {% block modals %}
@@ -18,7 +18,7 @@
             </h3>
         </div>
         <div class="modal-body">
-            <form id="edit-team-form" class="form-horizontal" method="post" action="/admin/edit/team">
+            <form id="edit-team-form" class="form-horizontal" method="post" action="/admin/users/edit/team">
                 {% raw xsrf_form_html() %}
                 <input id="team-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
@@ -31,6 +31,12 @@
                     <label class="control-label" for="team-motto">Team Motto</label>
                     <div class="controls">
                         <input required id="team-motto" name="motto" type="text" placeholder="Team Motto">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="team-money">Bank Account</label>
+                    <div class="controls">
+                        <input required id="team-money" name="money" type="text" placeholder="Bank Account">
                     </div>
                 </div>
             </form>
@@ -53,7 +59,7 @@
             </h3>
         </div>
         <div class="modal-body">
-            <form id="edit-user-form" class="form-horizontal" method="post" action="/admin/edit/user">
+            <form id="edit-user-form" class="form-horizontal" method="post" action="/admin/users/edit/user">
                 {% raw xsrf_form_html() %}
                 <input id="user-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
@@ -74,15 +80,15 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user-password">Account Password</label>
-                    <div class="controls">
-                        <input id="user-password" name="password" type="password" placeholder="New Password">
-                    </div>
-                </div>
-                <div class="control-group">
                     <label class="control-label" for="bank-password">Bank Password</label>
                     <div class="controls">
                         <input id="bank-password" name="bank_password" type="password" placeholder="New Bank Password">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="user-password">Account Password</label>
+                    <div class="controls">
+                        <input id="user-password" name="password" type="password" placeholder="New Password">
                     </div>
                 </div>
                 <div class="control-group">
@@ -160,7 +166,9 @@
             {% for team_index, team in enumerate(Team.all()) %}
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
-                    <h4 style="display:inline;">&quot;{{ team.motto }}&quot;&nbsp;&nbsp;</h4>
+                    <h4 style="display:inline;">
+                        ${{ team.money }}
+                    </h4>
                     <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}" style="float:right;">
                         <i class="fa fa-fw fa-pencil"></i>
                         Edit Team

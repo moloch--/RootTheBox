@@ -29,6 +29,7 @@ import logging
 
 from netaddr import IPAddress
 from libs.SecurityDecorators import blacklist_ips
+from libs.ValidationError import ValidationError
 from models.Team import Team
 from models.Theme import Theme
 from models.RegistrationToken import RegistrationToken
@@ -151,24 +152,23 @@ class RegistrationHandler(BaseHandler):
             team = self.get_team()
             user = self.create_user(team)
             self.render('public/successful_reg.html', account=user.handle)
-        except Exception as error:
-            logging.exception("Registration got invalid data")
+        except ValidationError as error:
             self.render('public/registration.html', errors=[str(error)])
 
     def check_regtoken(self):
         regtoken = self.get_argument('token', '')
         token = RegistrationToken.by_value(regtoken)
-        if token is not None:
+        if token is not None and not token.used:
             token.used = True
             self.dbsession.add(token)
             self.dbsession.commit()
         else:
-            raise ValueError("Invalid registration token")
+            raise ValidationError("Invalid registration token")
 
     def create_user(self, team):
         ''' Add user to the database '''
         if self.get_argument('pass1', '') != self.get_argument('pass2', ''):
-            raise ValueError("Passwords do not match")
+            raise ValidationError("Passwords do not match")
         user = User()
         user.handle = self.get_argument('handle', '')
         user.password = self.get_argument('pass1', '')
@@ -184,7 +184,7 @@ class RegistrationHandler(BaseHandler):
         ''' Create a team object, or pull the existing one '''
         team = Team.by_uuid(self.get_argument('team', ''))
         if team is not None and self.config.max_team_size <= len(team.members):
-            raise ValueError("Team %s is already full" % team.name)
+            raise ValidationError("Team %s is already full" % team.name)
         return team if team is not None else self.create_team()
 
     def create_team(self):
@@ -197,7 +197,7 @@ class RegistrationHandler(BaseHandler):
             team.game_levels.append(level_0)
             return team
         else:
-            raise ValueError("Public teams are not enabled")
+            raise ValidationError("Public teams are not enabled")
 
 
 class FakeRobotsHandler(BaseHandler):

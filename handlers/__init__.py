@@ -148,7 +148,7 @@ urls = [
     (r'/admin/game', AdminGameHandler),
     (r'/admin/ban/(add|clear|config)', AdminBanHammerHandler),
     (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
-
+    (r'/admin/garbage', AdminGarbageCfgHandler),
     (r'/admin/create/(.*)', AdminCreateHandler),
     (r'/admin/edit/(.*)', AdminEditHandler),
     (r'/admin/view/(.*)', AdminViewHandler),
@@ -157,11 +157,15 @@ urls = [
 
     (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
     (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
+
+    (r'/admin/users', AdminManageUsersHandler),
+    (r'/admin/users/edit/(user|team)', AdminEditUsersHandler),
+    (r'/admin/ajax/(user|team)', AdminAjaxUserHandler),
     (r'/admin/lock', AdminLockHandler),
+
     (r'/admin/configuration', AdminConfigurationHandler),
     (r'/admin/export/(.*)', AdminExportHandler),
     (r'/admin/import/xml', AdminImportXmlHandler),
-    (r'/admin/garbage', AdminGarbageCfgHandler),
 
     # Error handlers - ErrorHandlers.py
     (r'/403', UnauthorizedHandler),
