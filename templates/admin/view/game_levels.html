@@ -50,7 +50,9 @@
         </div>
         <div class="modal-body">
         <p>
-            Are you sure you want to delete this game level? <br />
+            Are you sure you want to delete this game level? <br /> <br />
+            <strong>WARNING:</strong>
+            This will also delete boxes and flags associated with this level. <br />
         </p>
         <form id="delete-game-level-form" method="post" action="/admin/delete/game_level">
             {% raw xsrf_form_html() %}
@@ -103,6 +105,15 @@
 {% block content %}
 {% from models.GameLevel import GameLevel %}
     <div class="container">
+        {% if errors != None and len(errors) != 0 %}
+            {% for error in errors %}
+                <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">ERROR</h4>
+                    {{ error }}
+                </div>
+            {% end %}
+        {% end %}
         <h1>
             <i class="fa fa-level-up"></i>
             Game Levels

@@ -179,12 +179,11 @@ class Team(DatabaseObject):
         return not self.__eq__(other)
 
     def __cmp__(self, other):
+        ''' Compare based on the config option rank_by '''
         if options.rank_by.lower() != 'money':
-            this = len(self.flags)
-            that = len(other.flags)
+            this, that = len(self.flags), len(other.flags)
         else:
-            this = self.money
-            that = other.money
+            this, that = self.money, other.money
         if this < that:
             return 1
         elif this == that:

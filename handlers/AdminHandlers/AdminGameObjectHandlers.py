@@ -160,9 +160,9 @@ class AdminCreateHandler(BaseHandler):
             new_level = GameLevel()
             new_level.number = self.get_argument('level_number', '')
             new_level.buyout = self.get_argument('buyout', '')
-            game_levels = GameLevel.all()
-            game_levels.append(new_level)
-            game_levels = sorted(game_levels)
+            self.dbsession.add(new_level)
+            self.dbsession.flush()
+            game_levels = sorted(GameLevel.all())
             for index, level in enumerate(game_levels[:-1]):
                 level.next_level_id = game_levels[index + 1].id
                 self.dbsession.add(level)
@@ -423,11 +423,14 @@ class AdminEditHandler(BaseHandler):
     def edit_game_level(self):
         ''' Update game level objects '''
         try:
-            level = GameLevel.by_uuid(self.get_argument('uuid'))
+            level = GameLevel.by_uuid(self.get_argument('uuid', ''))
             if level is None:
                 raise ValidationError("Game level does not exist")
-            level.number = self.get_argument('number', '')
+            if int(self.get_argument('number', level.number)) != level.number:
+                level.number = self.get_argument('number')
+            level.buyout = self.get_argument('buyout', '1')
             self.dbsession.add(level)
+            self.dbsession.flush()
             # Fix the linked-list
             game_levels = sorted(GameLevel.all())
             for index, game_level in enumerate(game_levels[:-1]):
@@ -438,9 +441,9 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.add(game_levels[0])
             game_levels[-1].next_level_id = None
             self.dbsession.add(game_levels[-1])
-            level.buyout = self.get_argument('buyout', '')
             self.dbsession.add(level)
             self.dbsession.commit()
+            self.redirect('/admin/view/game_levels')
         except ValueError:
             raise ValidationError("That was not a number ...")
         except ValidationError as error:
@@ -510,6 +513,7 @@ class AdminDeleteHandler(BaseHandler):
             'hint': self.del_hint,
             'box': self.del_box,
             'corporation': self.del_corp,
+            'game_level': self.del_game_level,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -575,7 +579,7 @@ class AdminDeleteHandler(BaseHandler):
                         )
 
     def del_box(self):
-        ''' Delete  a box '''
+        ''' Delete a box '''
         box = Box.by_uuid(self.get_argument('uuid', ''))
         if box is not None:
             logging.info("Delete box: %s" % box.name)
@@ -585,6 +589,29 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render('admin/view/game_objects.html',
                         errors=["Box does not exist in database."]
+                        )
+
+    def del_game_level(self):
+        ''' Deletes a game level, and fixes the linked list '''
+        game_level = GameLevel.by_uuid(self.get_argument('uuid', ''))
+        if game_level is not None:
+            self.dbsession.delete(game_level)
+            self.dbsession.flush()
+            # Fix the linked-list
+            game_levels = sorted(GameLevel.all())
+            for index, level in enumerate(game_levels[:-1]):
+                level.next_level_id = game_levels[index + 1].id
+                self.dbsession.add(level)
+            if game_levels[0].number != 0:
+                game_levels[0].number = 0
+            self.dbsession.add(game_levels[0])
+            game_levels[-1].next_level_id = None
+            self.dbsession.add(game_levels[-1])
+            self.dbsession.commit()
+            self.redirect('/admin/view/game_levels')
+        else:
+            self.render('admin/view/game_levels.html',
+                        errors=["Game level does not exist in database."]
                         )
 
 
