@@ -36,6 +36,7 @@ from models.IpAddress import IpAddress
 from models.GameLevel import GameLevel
 from models.Corporation import Corporation
 from models.SourceCode import SourceCode
+from tornado.options import options
 
 
 class Box(DatabaseObject):
@@ -249,9 +250,8 @@ class Box(DatabaseObject):
         ips_elem.set("count", str(len(self.ip_addresses)))
         for ip in self.ip_addresses:
             ip.to_xml(ips_elem)
-        config = ConfigManager.instance()
-        with open(config.avatar_dir + self.avatar) as favatar:
-            data = favatar.read()
+        with open(options.avatar_dir + '/' + self.avatar) as _avatar:
+            data = _avatar.read()
             ET.SubElement(box_elem, "avatar").text = data.encode('base64')
 
     def to_dict(self):

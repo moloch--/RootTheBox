@@ -40,7 +40,6 @@ def start():
     ''' Starts the application '''
     from handlers import start_server
     print(INFO + '%s : Starting application ...' % current_time())
-    save_config()
     start_server()
 
 
@@ -359,6 +358,11 @@ define("default_theme",
        group="game",
        help="the default css theme")
 
+define("rank_by",
+       default="flags",
+       group="game",
+       help="rank teams by (flags or money)")
+
 # I/O Loop Settings
 define("history_snapshot_interval",
        default=int(60000 * 5),
@@ -397,6 +401,11 @@ define("restart",
        help="restart the server",
        type=bool)
 
+define("save",
+       default=False,
+       help="save the current configuration to file",
+       type=bool)
+
 define("config",
        default="files/rootthebox.cfg",
        help="root the box configuration file")
@@ -409,7 +418,7 @@ if __name__ == '__main__':
     options.parse_command_line()
 
     check_cwd()
-    if os.path.exists(options.config) and os.path.isfile(options.config):
+    if os.path.isfile(options.config):
         logging.debug("Parsing config file `%s`" % (
             os.path.abspath(options.config),
         ))
@@ -417,6 +426,9 @@ if __name__ == '__main__':
 
     # Make sure that cli args always have president over the file
     options.parse_command_line()
+    if options.save:
+        save_config()
+
     if options.setup.lower()[:3] in ['pro', 'dev']:
         setup()
     elif options.start:

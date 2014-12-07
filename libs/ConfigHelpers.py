@@ -1,9 +1,12 @@
 
+import logging
+
 from tornado.options import options
 from datetime import datetime
 
 
 def save_config():
+    logging.info("Saving current config to: %s" % options.config)
     with open(options.config, 'w') as fp:
         fp.write("##########################")
         fp.write(" Root the Box Config File ")

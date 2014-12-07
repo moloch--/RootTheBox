@@ -20,6 +20,8 @@ Created on Mar 12, 2012
 '''
 
 
+import xml.etree.cElementTree as ET
+
 from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref
@@ -30,7 +32,7 @@ from models.Relationships import team_to_box, team_to_item, \
     team_to_flag, team_to_game_level, team_to_source_code, \
     team_to_hint
 from libs.BotManager import BotManager
-import xml.etree.cElementTree as ET
+from tornado.options import options
 
 
 class Team(DatabaseObject):
@@ -177,9 +179,15 @@ class Team(DatabaseObject):
         return not self.__eq__(other)
 
     def __cmp__(self, other):
-        if len(self.flags) < len(other.flags):
+        if options.rank_by.lower() != 'money':
+            this = len(self.flags)
+            that = len(other.flags)
+        else:
+            this = self.money
+            that = other.money
+        if this < that:
             return 1
-        elif len(self.flags) == len(other.flags):
+        elif this == that:
             return 0
         else:
             return -1

@@ -56,6 +56,13 @@ from tornado.options import options
 io_loop = IOLoop.instance()
 game_history = GameHistory.instance()
 
+def get_cookie_secret():
+    if options.debug:
+        return "Don't use this in production"
+    else:
+        return urandom(32).encode('hex')
+
+
 # Main URL Configuration
 # First get base URLs that all game types will require
 urls = [
@@ -172,7 +179,7 @@ app = Application(
     urls,
 
     # Randomly generated secret key
-    cookie_secret=urandom(32).encode('hex'),
+    cookie_secret=get_cookie_secret(),
 
     # Ip addresses that access the admin interface
     admin_ips=options.admin_ips,
@@ -233,8 +240,9 @@ app = Application(
 def start_server():
     ''' Main entry point for the application '''
     if options.debug:
-        logging.warn(
-            "Debug mode is enabled; some security measures will be ignored")
+        logging.warn("%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (
+            bold + R, W
+        ))
     # Setup server object
     if options.ssl:
         server = HTTPServer(app,

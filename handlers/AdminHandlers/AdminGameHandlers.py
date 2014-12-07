@@ -275,7 +275,7 @@ class AdminSwatHandler(BaseHandler):
 
 class AdminConfigurationHandler(BaseHandler):
 
-    ''' '''
+    ''' Allows the admin to change some of the configuraiton options '''
 
     def get_int(self, name, default=0):
         try:
@@ -313,8 +313,8 @@ class AdminConfigurationHandler(BaseHandler):
         self.config_bots()
         self.config.bot_reward = self.get_int('bot_reward', 50)
         self.config.use_black_market = self.get_bool('use_black_market', True)
-        self.config.password_upgrade_cost = self.get_int('password_upgrade_cost', 1500)
-        self.config.bribe_cost = self.get_int('bribe_cost', 1500)
+        self.config.password_upgrade_cost = self.get_int('password_upgrade_cost', 1000)
+        self.config.bribe_cost = self.get_int('bribe_cost', 2500)
         self.render('admin/configuration.html',
                     errors=None,
                     config=self.config
@@ -442,15 +442,3 @@ class AdminImportXmlHandler(BaseHandler):
         tmp_file.close()
         return tmp_file.name
 
-
-class AdminLogViewerHandler(BaseHandler):
-
-    @restrict_ip_address
-    @authenticated
-    @authorized(ADMIN_PERMISSION)
-    def get(self, *args, **kwargs):
-        ''' Import setup files '''
-        if self.config.enable_logviewer:
-            self.render('admin/logviewer.html')
-        else:
-            self.render('public/404.html')

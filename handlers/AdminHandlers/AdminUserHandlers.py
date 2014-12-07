@@ -45,54 +45,54 @@ class AdminManageUsersHandler(BaseHandler):
 
     def edit_user(self):
         ''' Update user objects in the database '''
-        user = User.by_uuid(self.get_argument('uuid', ''))
-        if user is not None:
-            try:
-                handle = self.get_argument('handle', '')
-                if user.handle != handle:
-                    if User.by_handle(handle) is None:
-                        logging.info("Updated user handle %s -> %s" % (
-                            user.handle, handle
-                        ))
-                        user.handle = handle
-                    else:
-                        raise ValidationError("Handle is already in use")
-                hash_algorithm = self.get_argument('hash_algorithm', '')
-                if hash_algorithm != user.algorithm:
-                    if hash_algorithm in user.algorithms:
-                        if 0 < len(self.get_argument('bank_password', '')):
-                            logging.info(
-                                "Updated %s's hashing algorithm %s -> %s" %
-                                (user.handle, user.algorithm, hash_algorithm,))
-                            user.algorithm = hash_algorithm
-                        else:
-                            raise ValidationError(
-                                "You must provide a new bank password when updating the hashing algorithm")
-                    else:
-                        raise ValidationError("Not a valid hash algorithm")
-                password = self.get_argument('password', '')
-                if 0 < len(password):
-                    user.password = password
-                bank_password = self.get_argument('bank_password', '')
-                if 0 < len(bank_password):
-                    user.bank_password = bank_password
-                team = Team.by_uuid(self.get_argument('team_uuid', ''))
-                if team is not None:
-                    if user not in team.members:
-                        logging.info("Updated %s's team %s -> %s" %
-                                    (user.handle, user.team_id, team.name))
-                        user.team_id = team.id
+        try:
+            user = User.by_uuid(self.get_argument('uuid', ''))
+            if user is None:
+                raise ValidationError("User does not exist")
+            handle = self.get_argument('handle', '')
+            if user.handle != handle:
+                if User.by_handle(handle) is None:
+                    logging.info("Updated user handle %s -> %s" % (
+                        user.handle, handle
+                    ))
+                    user.handle = handle
                 else:
-                    raise ValidationError("Team does not exist in database")
-                self.dbsession.add(user)
-                self.dbsession.commit()
-                self.redirect('/admin/view/user_objects')
-            except ValidationError as error:
-                self.render(
-                    "admin/view/user_objects.html", errors=["%s" % error])
-        else:
-            self.render(
-                "admin/view/user_objects.html", errors=["User does not exist"])
+                    raise ValidationError("Handle is already in use")
+            hash_algorithm = self.get_argument('hash_algorithm', '')
+            if hash_algorithm != user.algorithm:
+                if hash_algorithm in user.algorithms:
+                    if 0 < len(self.get_argument('bank_password', '')):
+                        logging.info("Updated %s's hashing algorithm %s -> %s" % (
+                            user.handle, user.algorithm, hash_algorithm,
+                        ))
+                        user.algorithm = hash_algorithm
+                    else:
+                        raise ValidationError(
+                            "You must provide a new bank password when updating the hashing algorithm")
+                else:
+                    raise ValidationError("Not a valid hash algorithm")
+            password = self.get_argument('password', '')
+            if 0 < len(password):
+                user.password = password
+            bank_password = self.get_argument('bank_password', '')
+            if 0 < len(bank_password):
+                user.bank_password = bank_password
+            team = Team.by_uuid(self.get_argument('team_uuid', ''))
+            if team is not None:
+                if user not in team.members:
+                    logging.info("Updated %s's team %s -> %s" % (
+                        user.handle, user.team_id, team.name
+                    ))
+                    user.team_id = team.id
+            else:
+                raise ValidationError("Team does not exist in database")
+            self.dbsession.add(user)
+            self.dbsession.commit()
+            self.redirect('/admin/view/user_objects')
+        except ValidationError as error:
+            self.render("admin/view/user_objects.html",
+                        errors=["%s" % error]
+                        )
 
 
 class AdminBanHammerHandler(BaseHandler):

@@ -251,7 +251,7 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "value").text = str(self.value)
         attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
         attachements_elem.set("count", str(len(self.flag_attachments)))
-        for attachement in self.attachements:
+        for attachement in self.flag_attachments:
             attachement.to_xml(attachements_elem)
 
     def to_dict(self):
