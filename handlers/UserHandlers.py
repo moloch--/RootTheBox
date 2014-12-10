@@ -92,6 +92,9 @@ class SettingsHandler(BaseHandler):
         user = User.by_id(self.session['user_id'])
         if 'avatar' in self.request.files:
             user.avatar = self.request.files['avatar'][0]['body']
+            self.dbsession.add(user)
+            self.dbsession.commit()
+            self.render_page(success=["Updated avatar"])
         else:
             self.render_page(errors=["Please provide an image"])
 

@@ -50,6 +50,7 @@ from tornado.options import options
 ADMIN_PERMISSION = u'admin'
 DEFAULT_HASH_ALGORITHM = 'md5'
 ITERATE = 0x2bad  # 11181
+IMG_FORMATS = ['png', 'jpeg', 'gif', 'bmp']
 
 
 class User(DatabaseObject):
@@ -227,7 +228,7 @@ class User(DatabaseObject):
     def avatar(self, image_data):
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
-            if ext in ['png', 'jpeg', 'gif', 'bmp']:
+            if ext in IMG_FORMATS:
                 if self._avatar is not None and os.path.exists(options.avatar_dir + self._avatar):
                     os.unlink(options.avatar_dir + '/' + self._avatar)
                 file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
@@ -235,10 +236,11 @@ class User(DatabaseObject):
                     fp.write(image_data)
                 self._avatar = self.uuid + '.' + ext
             else:
-                raise ValueError(
-                    "Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
+                raise ValidationError("Invalid image format, avatar must be: %s" % (
+                    ' '.join(IMG_FORMATS)
+                ))
         else:
-            raise ValueError("The image is too large")
+            raise ValidationError("The image is too large")
 
     def has_item(self, item_name):
         ''' Check to see if a team has purchased an item '''
