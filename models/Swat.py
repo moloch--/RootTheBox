@@ -27,6 +27,7 @@ from sqlalchemy.types import Integer, Boolean, String
 from models import dbsession
 from models.User import User
 from models.BaseModels import DatabaseObject
+from tornado.options import options
 
 
 class Swat(DatabaseObject):

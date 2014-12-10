@@ -95,13 +95,13 @@ class Notification(DatabaseObject):
     def _create(cls, user, title, message, icon=None):
         ''' Create a notification and save it to the database '''
         logging.debug("Creating notification '%s' for %r" % (title, user))
+        icon = icon if icon is not None else INFO
         notification = Notification(
             user_id=user.id,
             title=unicode(title),
             message=unicode(message),
             icon_url=urlparse(icon).path,
         )
-        notification.icon = icon if icon is not None else WARNING
         return notification
 
     def to_dict(self):

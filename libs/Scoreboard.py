@@ -33,6 +33,7 @@ from tornado.options import options
 class Scoreboard(object):
     ''' Manages websocket connections (mostly thread safe) '''
 
+    @classmethod
     def now(self):
         ''' Returns the current game state '''
         game_state = {}

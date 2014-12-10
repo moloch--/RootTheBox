@@ -31,30 +31,35 @@ from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
-from libs.EventManager import EventManager
+from libs.Scoreboard import Scoreboard
 from models.Team import Team
 from models.WallOfSheep import WallOfSheep
+from datetime import datetime, timedelta
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):
     ''' Get Score data via websocket '''
 
+    connections = set()
+
     def initialize(self):
-        ''' Setup sessions '''
-        self.manager = EventManager.instance()
+        self.last_message = datetime.now()
 
     def open(self):
         ''' When we receive a new websocket connect '''
-        self.manager.scoreboard_connections.append(self)
-        self.write_message(self.manager.scoreboard.now())
+        self.connections.add(self)
+        self.write_message(Scoreboard.now())
 
     def on_message(self, message):
-        pass
+        ''' We ignore messages if there are more than 1 every 5 seconds '''
+        if self.last_message - datetime.now() > timedelta(seconds=5):
+            self.last_message = datetime.now()
+            self.write_message(Scoreboard.now())
 
     def on_close(self):
         ''' Lost connection to client '''
         try:
-            self.manager.scoreboard_connections.remove(self)
+            self.connecitons.remove(self)
         except KeyError:
             logging.warn("[Web Socket] Connection has already been closed.")
 
@@ -74,7 +79,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             'summary': self.summary_table,
             'team': self.team_details,
         }
-        if 1 == len(args) and args[0] in uri:
+        if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render('public/404.html')
@@ -114,25 +119,26 @@ class ScoreboardHistoryHandler(BaseHandler):
 
 class ScoreboardHistorySocketHandler(WebSocketHandler):
 
+    connections = set()
+    game_history = GameHistory.instance()
+
     def initialize(self):
-        ''' Setup sessions '''
-        self.manager = EventManager.instance()
-        self.game_history = GameHistory.instance()
+        self.last_message = datetime.now()
 
     def open(self):
         ''' When we receive a new websocket connect '''
-        self.manager.history_connections.append(self)
+        self.connections.add(self)
         self.write_message(self.get_history())
 
     def on_message(self, message):
-        pass
+        ''' We ignore messages if there are more than 1 every 5 seconds '''
+        if self.last_message - datetime.now() > timedelta(seconds=5):
+            self.last_message = datetime.now()
+            self.write_message(game_history[:-1])
 
     def on_close(self):
         ''' Lost connection to client '''
-        try:
-            self.manager.history_connections.remove(self)
-        except KeyError:
-            logging.warn("[Web Socket] Connection has already been closed.")
+        self.connections.remove(self)
 
     def get_history(self, length=29):
         ''' Send history in JSON '''

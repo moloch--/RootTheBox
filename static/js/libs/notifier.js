@@ -89,7 +89,17 @@ $(document).ready(function() {
     notifier_ws.onmessage = function(evt) {
         var notification = $.parseJSON(evt.data);
         console.log("[Notifier] " + evt.data);
-        Notifier.notify(notification['message'], notification['title'], notification['icon_url']);
+        if ('update' in notification) {
+            if (window.history_ws !== undefined) {
+                window.history_ws.send('update');
+            }
+            if (window.scoreboard_ws !== undefined) {
+                window.scoreboard_ws.send('update');
+            }
+        }
+        if ('message' in notification) {
+            Notifier.notify(notification['message'], notification['title'], notification['icon_url']);
+        }
     };
 
 });

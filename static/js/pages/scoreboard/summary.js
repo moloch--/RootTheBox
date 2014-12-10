@@ -108,9 +108,9 @@ $(document).ready(function() {
 
 /* Update code */
 $(document).ready(function() {
-    var ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
+    window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
 
-    ws.onmessage = function(event) {
+    scoreboard_ws.onmessage = function(event) {
         game_data = jQuery.parseJSON(event.data);
 
         /* Update Money */

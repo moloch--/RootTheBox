@@ -45,7 +45,6 @@ class EventManager(object):
     auth_connections = {}
 
     def __init__(self):
-        self.scoreboard = Scoreboard()
         self.io_loop = IOLoop.instance()
 
     # [ Connection Methods ] -----------------------------------------------
@@ -69,10 +68,12 @@ class EventManager(object):
             self.public_connections.remove(connection)
         else:
             team_connections = self.auth_connections[connection.team_id]
-            team_connections[user_id].remove(connection)
+            team_connections[connection.user_id].remove(connection)
 
     def deauth(self, user):
         ''' Send a deauth message to a user's client(s) '''
+        if user.team is None:
+            return
         connections = self.get_user_connections(user.team.id, user.id)
         for connection in connections:
             connection.close()
@@ -128,14 +129,12 @@ class EventManager(object):
         dbsession.commit()
 
     def push_scoreboard(self):
-        ''' Push to everyone '''
-        update = self.scoreboard.now()
+        msg = {'update': ['scoreboard']}
         for connection in self.all_connections:
-            self.safe_write_message(connection, update)
+            self.safe_write_message(connection, msg)
 
-    def push_history(self, snapshot):
-        ''' Push latest snapshot to everyone '''
-        msg = {'update': snapshot}
+    def push_history(self):
+        msg = {'update': ['history']}
         for connection in self.all_connections:
             self.safe_write_message(connection, msg)
 
@@ -216,7 +215,7 @@ class EventManager(object):
         This is created when a user successfully cracks another
         players password.
         '''
-        user_msg = "WARNING: Your password '%s' was cracked by %s" % (
+        user_msg = "Your password '%s' was cracked by %s" % (
             password, cracker.handle,
         )
         Notification.create_user(victim, "Security Breach", user_msg, ERROR)

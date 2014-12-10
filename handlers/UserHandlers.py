@@ -30,6 +30,7 @@ import tornado
 
 from models.User import User, ADMIN_PERMISSION
 from models.Theme import Theme
+from libs.EventManager import EventManager
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
 
@@ -200,6 +201,8 @@ class LogoutHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Clears cookies and session data '''
         if self.session is not None:
+            user = self.get_current_user()
+            EventManager.instance().deauth(user)
             self.session.delete()
         self.clear_all_cookies()
         self.redirect("/")

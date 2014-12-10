@@ -300,19 +300,15 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
         if box is not None and box.source_code is not None:
             user = self.get_current_user()
             if box.source_code in user.team.purchased_source_code:
-                root = self.application.settings['source_code_market_dir']
-                src_file = open(root + '/' + box.source_code.uuid, 'r')
-                src_data = b64decode(src_file.read())
-                src_file.close()
                 content_type = guess_type(box.source_code.file_name)[0]
                 if content_type is None: content_type = 'unknown/data'
                 self.set_header('Content-Type', content_type)
-                self.set_header('Content-Length', len(src_data))
+                self.set_header('Content-Length', len(box.source_code.data))
                 fname = filter(lambda char: char in self.goodchars, box.source_code.file_name)
                 self.set_header('Content-Disposition',
                     'attachment; filename=%s' % fname
                 )
-                self.write(src_data)
+                self.write(box.source_code.data)
                 self.finish()
             else:
                 self.render('public/404.html')
