@@ -177,7 +177,7 @@ class RegistrationHandler(BaseHandler):
         self.dbsession.add(user)
         self.dbsession.add(team)
         self.dbsession.commit()
-        self.event_manager.create_joined_team_event(user)
+        self.event_manager.user_joined_team(user)
         return user
 
     def get_team(self):

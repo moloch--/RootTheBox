@@ -75,6 +75,7 @@ class SettingsHandler(BaseHandler):
 
     def render_page(self, errors=[], success=[]):
         ''' Small wrap for self.render to cut down on lenghty params '''
+        self.add_content_policy('script', "'unsafe-eval'")
         current_theme = Theme.by_id(self.session["theme_id"])
         self.add_content_policy('script', 'www.google.com')
         self.add_content_policy('img', 'www.google.com')

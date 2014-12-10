@@ -80,9 +80,11 @@ class FlagSubmissionHandler(BaseHandler):
                 submission = None
             old_reward = flag.value
             if self.attempt_capture(flag, submission):
-                self.set_header("Content-Security-Policy", self.relaxed_csp)
-                self.render(
-                    'missions/captured.html', flag=flag, reward=old_reward)
+                self.add_content_policy('script', "'unsafe-eval'")
+                self.render('missions/captured.html',
+                            flag=flag,
+                            reward=old_reward
+                            )
             else:
                 self.render_page(flag, errors=["Invalid flag submission"])
         else:
@@ -104,7 +106,7 @@ class FlagSubmissionHandler(BaseHandler):
                     flag.value = int(flag.value - (depreciation / 100.0))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
-                self.event_manager.create_flag_capture_event(user, flag)
+                self.event_manager.flag_captured(user, flag)
                 self._check_level(flag)
                 self.dbsession.commit()
                 return True
@@ -184,7 +186,7 @@ class MissionsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Submit flags/buyout to levels '''
         uri = {'buyout': self.buyout}
-        if len(args) == 1 and args[0] in uri:
+        if len(args) and args[0] in uri:
             uri[str(args[0])]()
         else:
             self.render("public/404.html")
@@ -202,7 +204,7 @@ class MissionsHandler(BaseHandler):
                 user.team.money -= level.buyout
                 self.dbsession.add(user.team)
                 self.dbsession.commit()
-                self.event_manager.create_unlocked_level_event(user, level)
+                self.event_manager.level_unlocked(user, level)
                 self.redirect("/user/missions")
             else:
                 self.render("missions/view.html",

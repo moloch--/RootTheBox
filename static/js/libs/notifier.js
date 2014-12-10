@@ -85,35 +85,11 @@ $(document).ready(function() {
         config.container.prepend(notificationElement);
     };
 
-    Notifier.info = function(message, title) {
-        Notifier.notify(message, title, "/static/images/info.png")
-    };
-    Notifier.warning = function(message, title) {
-        Notifier.notify(message, title, "/static/images/warning.png")
-    };
-    Notifier.error = function(message, title) {
-        Notifier.notify(message, title, "/static/images/error.png")
-    };
-    Notifier.success = function(message, title) {
-        Notifier.notify(message, title, "/static/images/success.png")
+    window.notifier_ws = new WebSocket(wsUrl() + "/connect/notifications/updates");
+    notifier_ws.onmessage = function(evt) {
+        var notification = $.parseJSON(evt.data);
+        console.log("[Notifier] " + evt.data);
+        Notifier.notify(notification['message'], notification['title'], notification['icon_url']);
     };
 
-    if ($("#ws-connect").length) {
-        var notifier_ws = new WebSocket(wsUrl() + "/notifications/wsocket/updates");
-        notifier_ws.onmessage = function(evt) {
-            notification = $.parseJSON(evt.data);
-            console.log("[Notifier] " + evt.data);
-            if (notification['category'] == 'success') {
-                Notifier.success(notification['message'], notification['title']);
-            } else if (notification['category'] == 'info') {
-                Notifier.info(notification['message'], notification['title']);
-            } else if (notification['category'] == 'warning') {
-                Notifier.warning(notification['message'], notification['title']);
-            } else if (notification['category'] == 'error') {
-                Notifier.error(notification['message'], notification['title']);
-            } else if (notification['category'] == 'custom') {
-                Notifier.notify(notification['message'], notification['title'], notification['icon_url']);
-            }
-        };
-    }
 });

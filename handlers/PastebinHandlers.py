@@ -60,7 +60,7 @@ class CreatePasteHandler(BaseHandler):
             paste.contents = content
             self.dbsession.add(paste)
             self.dbsession.commit()
-            self.event_manager.create_paste_bin_event(user, paste)
+            self.event_manager.team_paste_shared(user, paste)
             self.redirect('/user/share/pastebin')
         else:
             self.render('pastebin/create.html',

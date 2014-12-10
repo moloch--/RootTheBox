@@ -136,7 +136,7 @@ urls = [
 
     # Notificaiton handlers - NotificationHandlers.py
     (r'/notifications/all', AllNotificationsHandler),
-    (r'/notifications/wsocket/updates', NotifySocketHandler),
+    (r'/connect/notifications/updates', NotifySocketHandler),
 
     # Static Handlers - StaticFileHandler.py
     (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv|eot|svg|ttf|woff|otf))',

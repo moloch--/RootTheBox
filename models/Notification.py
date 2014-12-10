@@ -22,6 +22,7 @@ Created on Mar 12, 2012
 import logging
 
 from uuid import uuid4
+from urlparse import urlparse
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, String, Integer, Boolean
@@ -30,30 +31,21 @@ from models.User import User
 from models.BaseModels import DatabaseObject
 
 ### Constants ###
-SUCCESS = u"success"
-INFO = u"info"
-WARNING = u"warning"
-ERROR = u"error"
-CUSTOM = u"custom"
+SUCCESS = u"/static/images/success.png"
+INFO = u"/static/images/info.png"
+WARNING = u"/static/images/warning.png"
+ERROR = u"/static/images/error.png"
 
 
 class Notification(DatabaseObject):
 
     ''' Notification definition '''
 
-    uuid = Column(String(36),
-                  unique=True,
-                  nullable=False,
-                  default=lambda: str(uuid4())
-                  )
-
     user_id = Column(Integer, ForeignKey('user.id'))
-    event_uuid = Column(Unicode(36), nullable=False)
     title = Column(Unicode(256), nullable=False)
     message = Column(Unicode(256), nullable=False)
     viewed = Column(Boolean, default=False)
     icon_url = Column(Unicode(256), nullable=True)
-    category = Column(Unicode(64), nullable=False)
 
     @classmethod
     def all(cls):
@@ -66,11 +58,6 @@ class Notification(DatabaseObject):
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
-    def by_uuid(cls, _uuid):
-        ''' Returns a the object with id of _uuid '''
-        return dbsession.query(cls).filter_by(uuid=_uuid).first()
-
-    @classmethod
     def by_user_id(cls, _id):
         ''' Return notifications for a single user '''
         return dbsession.query(cls).filter_by(user_id=_id).order_by(
@@ -78,185 +65,48 @@ class Notification(DatabaseObject):
         ).all()
 
     @classmethod
-    def new_messages(cls, user_id):
+    def unread_by_user_id(cls, user_id):
         ''' Return all notification which have not been viewed '''
         return dbsession.query(cls).filter(
-            and_(cls.user_id == user_id, cls.viewed is False)
+            and_(cls.user_id == user_id, cls.viewed == False)
         ).all()
 
     @classmethod
-    def by_event_uuid(cls, uuid):
-        ''' Always returns anonymous notification '''
-        return dbsession.query(cls).filter_by(event_uuid=uuid).all()
-
-    @classmethod
-    def user_success(cls, user, title, message):
-        ''' Create success notification for a single user '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, SUCCESS, event_uuid)
-        cls.__create__(user, title, message, SUCCESS, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def team_success(cls, team, title, message):
-        ''' Create success notification to each user on a team '''
-        event_uuid = unicode(uuid4())
-        logging.debug("Creating TEAM/SUCCESS event for %r" % team)
-        cls.__anonymous__(title, message, SUCCESS, event_uuid)
-        for user in team.members:
-            cls.__create__(user, title, message, SUCCESS, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def broadcast_success(cls, title, message):
-        ''' Send a success notification to all users '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, SUCCESS, event_uuid)
-        for user in User.all_users():
-            cls.__create__(user, title, message, SUCCESS, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def user_info(cls, user, title, message):
-        ''' Create info notification for a single user '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, INFO, event_uuid)
-        cls.__create__(user, title, message, INFO, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def team_info(cls, team, title, message):
-        ''' Create info notification to each user on a team '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, INFO, event_uuid)
-        for user in team.members:
-            cls.__create__(user, title, message, INFO, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def broadcast_info(cls, title, message):
-        ''' Send a info notification to all users '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, INFO, event_uuid)
-        for user in User.all_users():
-            cls.__create__(user, title, message, INFO, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def user_warning(cls, user, title, message):
-        ''' Create warning notification for a single user '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, WARNING, event_uuid)
-        cls.__create__(user, title, message, WARNING, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def team_warning(cls, team, title, message):
-        ''' Create warning notification to each user on a team '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, WARNING, event_uuid)
-        for user in team.members:
-            cls.__create__(user, title, message, WARNING, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def broadcast_warning(cls, title, message):
-        ''' Send a warning notification to all users '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, WARNING, event_uuid)
-        for user in User.all_users():
-            cls.__create__(user, title, message, WARNING, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def user_error(cls, user, title, message):
-        ''' Create error notification for a single user '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, ERROR, event_uuid)
-        cls.__create__(user, title, message, ERROR, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def team_error(cls, team, title, message):
-        ''' Create error notification to each user on a team '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, ERROR, event_uuid)
-        for user in team.members:
-            cls.__create__(user, title, message, ERROR, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def broadcast_error(cls, title, message):
-        ''' Send a error notification to all users '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, ERROR, event_uuid)
-        for user in User.all_users():
-            cls.__create__(user, title, message, ERROR, event_uuid)
-        return event_uuid
-
-    @classmethod
-    def user_custom(cls, user, title, message, icon):
-        ''' Create custom notification for a single user '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(user, title, message, CUSTOM, event_uuid, icon)
-        cls.__create__(user, title, message, CUSTOM, event_uuid, icon)
-        return event_uuid
-
-    @classmethod
-    def team_custom(cls, team, title, message, icon):
-        ''' Create custom notification to each user on a team '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, CUSTOM, event_uuid, icon)
-        for user in team.members:
-            cls.__create__(user, title, message, CUSTOM, event_uuid, icon)
-        return event_uuid
-
-    @classmethod
-    def broadcast_custom(cls, title, message, icon):
-        ''' Send a custom notification to all users '''
-        event_uuid = unicode(uuid4())
-        cls.__anonymous__(title, message, CUSTOM, event_uuid, icon)
-        for user in User.all_users():
-            cls.__create__(user, title, message, CUSTOM, event_uuid, icon)
-        return event_uuid
-
-    @classmethod
-    def __anonymous__(cls, title, message, category, event_uuid, icon=None):
-        ''' Creates anonysmous notification where user_id = NULL '''
-        notification = Notification(
-            user_id=None,
-            event_uuid=event_uuid,
-            title=unicode(title),
-            message=unicode(message),
-            category=category,
-        )
-        if icon is not None:
-            notification.icon = icon
+    def create_user(cls, user, title, message, icon=None):
+        notification = cls._create(user, title, message, icon)
         dbsession.add(notification)
         dbsession.commit()
 
     @classmethod
-    def __create__(cls, user, title, message, category, event_uuid, icon=None):
+    def create_team(cls, team, title, message, icon=None):
+        for user in team.members:
+            notification = cls._create(user, title, message, icon)
+            dbsession.add(notification)
+        dbsession.commit()
+
+    @classmethod
+    def create_broadcast(cls, title, message, icon=None):
+        for user in User.all_users():
+            notification = cls._create(user, title, message, icon)
+            dbsession.add(notification)
+        dbsession.commit()
+
+    @classmethod
+    def _create(cls, user, title, message, icon=None):
         ''' Create a notification and save it to the database '''
         logging.debug("Creating notification '%s' for %r" % (title, user))
         notification = Notification(
             user_id=user.id,
-            event_uuid=event_uuid,
             title=unicode(title),
             message=unicode(message),
-            category=category,
+            icon_url=urlparse(icon).path,
         )
-        if icon is not None:
-            notification.icon = icon
-        dbsession.add(notification)
-        dbsession.commit()
+        notification.icon = icon if icon is not None else WARNING
         return notification
 
     def to_dict(self):
         ''' Return public data as dict '''
         return {
-            'uuid': self.uuid,
-            'category': self.category,
             'title': self.title,
             'message': self.message,
             'icon_url': self.icon_url,

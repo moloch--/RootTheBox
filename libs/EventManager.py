@@ -19,13 +19,18 @@ Created on Sep 20, 2012
     limitations under the License.
 '''
 
+import logging
+
 from tornado.ioloop import IOLoop
+from tornado.websocket import WebSocketClosedError
 from libs.Singleton import Singleton
 from libs.Scoreboard import Scoreboard
-from models.Notification import Notification
+from models import dbsession
 from models.User import User
 from models.Flag import Flag
 from models.PasteBin import PasteBin
+from models.Notification import Notification, \
+    SUCCESS, INFO, WARNING, ERROR
 
 
 @Singleton
@@ -36,196 +41,188 @@ class EventManager(object):
     This class holds refs to all open web sockets
     '''
 
+    public_connections = set()
+    auth_connections = {}
+
     def __init__(self):
-        self.notify_connections = {}
-        self.scoreboard_connections = []
-        self.history_connections = []
         self.scoreboard = Scoreboard()
         self.io_loop = IOLoop.instance()
 
-    @property
-    def users_online(self):
-        ''' Number of currently open notify sockets '''
-        sumation = 0
-        for team_id in self.notify_connections:
-            sumation += len(self.notify_connections[team_id])
-        return sumation
+    # [ Connection Methods ] -----------------------------------------------
+    def add_connection(self, connection):
+        ''' Add a connection '''
+        if connection.team_id is None:
+            self.public_connections.add(connection)
+        else:
+            # Create team dictionary is none exists
+            if not connection.team_id in self.auth_connections:
+                self.auth_connections[connection.team_id] = {}
+            # Create a set() of user connections, and/or add connection
+            team_connections = self.auth_connections[connection.team_id]
+            if not connection.user_id in team_connections:
+                team_connections[connection.user_id] = set()
+            team_connections[connection.user_id].add(connection)
+
+    def remove_connection(self, connection):
+        ''' Remove connection '''
+        if connection.team_id is None:
+            self.public_connections.remove(connection)
+        else:
+            team_connections = self.auth_connections[connection.team_id]
+            team_connections[user_id].remove(connection)
+
+    def deauth(self, user):
+        ''' Send a deauth message to a user's client(s) '''
+        connections = self.get_user_connections(user.team.id, user.id)
+        for connection in connections:
+            connection.close()
+
+    def get_user_connections(self, team_id, user_id):
+        ''' For an user object this method returns a set() of connections '''
+        if team_id in self.auth_connections:
+            if user_id in self.auth_connections[team_id]:
+                return self.auth_connections[team_id][user_id]
+        return set()
 
     def is_online(self, user):
         '''
         Returns bool if the given user has an open notify socket
         '''
-        if user.team.id in self.notify_connections:
-            if user.id in self.notify_connections[user.team.id]:
-                return 0 < len(self.notify_connections[user.team.id][user.id])
-        return False
+        connections = self.get_user_connection(user)
+        return False if connections is None or len(connections) else True
 
-    # [ Connection Methods ] -----------------------------------------------
-    def add_connection(self, wsocket):
-        ''' Add a connection '''
-        if not wsocket.team_id in self.notify_connections:
-            self.notify_connections[wsocket.team_id] = {}
-        if wsocket.user_id in self.notify_connections[wsocket.team_id]:
-            self.notify_connections[wsocket.team_id][
-                wsocket.user_id].append(wsocket)
-        else:
-            self.notify_connections[wsocket.team_id][
-                wsocket.user_id] = [wsocket]
-
-    def remove_connection(self, wsocket):
-        ''' Remove connection '''
-        connections = self.notify_connections[wsocket.team_id][wsocket.user_id]
-        connections.remove(wsocket)
-        if len(connections) == 0:
-            del connections
-
-    def deauth(self, user):
-        ''' Send a deauth message to the client ws '''
-        if user.team.id in self.notify_connections:
-            if user.id in self.notify_connections[user.team.id]:
-                wsocks = self.notify_connections[user.team.id][user.id]
-                for wsock in wsocks:
-                    wsock.write_message({
-                        'warn': "You have been deauthenticated"
-                    })
-                    wsock.close()
+    @property
+    def all_connections(self):
+        ''' Iterate ALL THE THINGS! '''
+        for team_id in self.auth_connections:
+            for user_id in self.auth_connections[team_id]:
+                for connection in self.auth_connections[team_id][user_id]:
+                    yield connection
+        for connection in self.public_connections:
+            yield connection
 
     # [ Push Updates ] -----------------------------------------------------
-    def refresh_scoreboard(self):
+    def push_broadcast(self):
+        ''' Push to everyone '''
+        for team_id in self.auth_connections:
+            self.push_team(team_id)
+
+    def push_team(self, team_id):
+        for user_id in self.auth_connections[team_id]:
+            self.push_user(team_id, user_id)
+
+    def push_user(self, team_id, user_id):
+        ''' Push all unread notifications to open user websockets '''
+        connections = self.get_user_connections(team_id, user_id)
+        notifications = Notification.unread_by_user_id(user_id)
+        logging.debug("User #%s has %d unread notification(s)" % (
+            user_id, len(notifications)
+        ))
+        for notification in notifications:
+            for connection in connections:
+                self.safe_write_message(connection,
+                                        notification.to_dict()
+                                        )
+            notification.viewed = True
+            dbsession.add(notification)
+        dbsession.commit()
+
+    def push_scoreboard(self):
         ''' Push to everyone '''
         update = self.scoreboard.now()
-        for wsocket in self.scoreboard_connections:
-            wsocket.write_message(update)
+        for connection in self.all_connections:
+            self.safe_write_message(connection, update)
 
     def push_history(self, snapshot):
         ''' Push latest snapshot to everyone '''
-        for wsocket in self.history_connections:
-            wsocket.write_message({'update': snapshot})
+        msg = {'update': snapshot}
+        for connection in self.all_connections:
+            self.safe_write_message(connection, msg)
 
-    def push_broadcast_notification(self, event_uuid):
-        ''' Push to everyone '''
-        json = Notification.by_event_uuid(event_uuid).to_dict()
-        for team_id in self.notify_connections:
-            for user_id in self.notify_connections[team_id]:
-                for wsocket in self.notify_connections[team_id][user_id]:
-                    wsocket.write_message(json)
-                    # Only mark delivered for non-public users
-                    if wsocket.user_id != '$public':
-                        Notification.delivered(user_id, event_uuid)
-
-    def push_team_notification(self, event_uuid, team_id):
-        ''' Push to one team '''
-        if team_id in self.notify_connections:
-            json = Notification.by_event_uuid(event_uuid).to_dict()
-            for user_id in self.notify_connections[team_id]:
-                for wsocket in self.notify_connections[team_id][user_id]:
-                    wsocket.write_message(json)
-                    Notification.delivered(wsocket.user_id, event_uuid)
-
-    def push_user_notification(self, event_uuid, team_id, user_id):
-        ''' Push to one user '''
-        if team_id in self.notify_connections and user_id in self.notify_connections[team_id]:
-            json = Notification.by_event_uuid(event_uuid).to_dict()
-            for wsocket in self.notify_connections[team_id][user_id]:
-                wsocket.write_message(json)
-                Notification.delivered(wsocket.user_id, event_uuid)
+    def safe_write_message(self, connection, msg):
+        '''
+        Catches and handles possible exceptions that occur when sending
+        messages over the websocket.
+        '''
+        try:
+            connection.write_message(msg)
+        except WebSocketClosedError:
+            self.io_loop.add_callback(self.remove_connection, connection)
 
     # [ Broadcast Events ] -------------------------------------------------
-    def create_flag_capture_event(self, user, flag):
+    def flag_captured(self, user, flag):
         ''' Callback for when a flag is captured '''
-        self.io_loop.add_callback(self.refresh_scoreboard)
-        message = "%s has captured '%s'." % (user.team.name, flag.name)
-        evt_id = Notification.broadcast_success("Flag Capture", message)
-        return (self.push_broadcast_notification, {'event_uuid': evt_id})
+        message = "%s has captured the '%s' flag" % (
+            user.team.name, flag.name
+        )
+        Notification.create_broadcast("Flag Capture", message)
+        self.io_loop.add_callback(self.push_broadcast)
+        self.io_loop.add_callback(self.push_scoreboard)
 
-    def create_unlocked_level_event(self, user, level):
+    def level_unlocked(self, user, level):
         ''' Callback for when a team unlocks a new level '''
-        self.io_loop.add_callback(self.refresh_scoreboard)
-        message = "%s unlocked level #%d." % (user.team.name, level.number,)
-        evt_id = Notification.broadcast_success("Level Unlocked", message)
-        self.io_loop.add_callback(self.push_broadcast_notification,
-                                  event_uuid=evt_id
-                                  )
+        message = "%s unlocked level #%d." % (
+            user.team.name, level.number
+        )
+        Notification.broadcast_success("Level Unlocked", message)
+        self.io_loop.add_callback(self.push_broadcast)
+        self.io_loop.add_callback(self.push_scoreboard)
 
-    def create_purchased_item_event(self, user, item):
+    def item_purchased(self, user, item):
         ''' Callback when a team purchases an item '''
-        self.io_loop.add_callback(self.refresh_scoreboard)
-        message = "%s purchased %s from the black market." % (
+        message = "%s purchased %s from the black market" % (
             user.handle, item.name,
         )
-        evt_id = Notification.team_success(user.team, "Upgrade Purchased",
-                                           message)
-        self.push_broadcast_notification(evt_id)
-        message2 = "%s unlocked %s." % (user.team.name, item.name,)
-        evt_id2 = Notification.broadcast_warning("Team Upgrade", message2)
-        self.io_loop.add_callback(self.push_broadcast_notification,
-                                  event_uuid=evt_id2
-                                  )
+        Notification.create_team(user.team, "Upgrade Purchased", message, SUCCESS)
+        self.io_loop.add_callback(self.push_team, user.team.id)
+        self.io_loop.add_callback(self.push_scoreboard)
 
-    def create_swat_player_event(self, user, target):
+    def player_swated(self, user, target):
         message = "%s called the SWAT team on %s." % (
             user.handle, target.handle
         )
-        evt_id = Notification.broadcast_warning("Player Arrested!", message)
-        self.io_loop.add_callback(self.push_broadcast_notification,
-                                  event_uuid=evt_id
-                                  )
+        evt_id = Notification.create_broadcast("Player Arrested!", message)
+        self.io_loop.add_callback(self.push_broadcast)
+        self.io_loop.add_callback(self.push_scoreboard)
 
     # [ Team Events ] ------------------------------------------------------
-    def create_joined_team_event(self, user):
+    def user_joined_team(self, user):
         ''' Callback when a user joins a team'''
-        message = "%s has joined your team." % user.handle
-        evt_id = Notification.team_custom(user.team, "New Team Member",
-                                          message, '/avatars/' + user.avatar)
-        self.io_loop.add_callback(self.push_team_notification,
-                                  event_uuid=evt_id,
-                                  team_id=user.team.id
-                                  )
+        message = "%s has joined the %s team" % (
+            user.handle, user.team.name,
+        )
+        Notification.create_team(user.team, "New Team Member", message, INFO)
+        self.io_loop.add_callback(self.push_team)
 
-    def create_team_file_share_event(self, user, file_upload):
+    def team_file_shared(self, user, file_upload):
         ''' Callback when a team file share is created '''
-        message = "%s has shared a file called '%s'" % (
+        message = "%s has shared the file '%s'" % (
             user.handle, file_upload.file_name,
         )
-        evt_id = Notification.team_success(user.team, "File Share", message)
-        self.io_loop.add_callback(self.push_team_notification,
-                                  event_uuid=evt_id,
-                                  team_id=user.team.id
-                                  )
+        Notification.create_team(user.team, "File Share", message, INFO)
+        self.io_loop.add_callback(self.push_team)
 
-    def create_paste_bin_event(self, user, paste_bin):
+    def team_paste_shared(self, user, paste_bin):
         ''' Callback when a pastebin is created '''
         message = "%s posted '%s' to the team paste bin" % (
             user.handle, paste_bin.name
         )
-        evt_id = Notification.team_success(user.team, "Text Share", message)
-        self.io_loop.add_callback(self.push_team_notification,
-                                  event_uuid=evt_id,
-                                  team_id=user.team.id
-                                  )
+        evt_id = Notification.create_team(user.team, "Text Share", message, INFO)
+        self.io_loop.add_callback(self.push_team, user.team.id)
 
     # [ Misc Events ] ------------------------------------------------------
-    def create_cracked_password_events(self, cracker, victim, password, value):
+    def cracked_password(self, cracker, victim, password, value):
         '''
         This is created when a user successfully cracks another
         players password.
         '''
-        user_msg = "Your password '%s' was cracked by %s." % (
+        user_msg = "WARNING: Your password '%s' was cracked by %s" % (
             password, cracker.handle,
         )
-        evt_id = Notification.user_warning(victim, "Security Breach", user_msg)
-        self.io_loop.add_callback(self.push_user_notification,
-                                  event_uuid=evt_id,
-                                  team_id=victim.team.id,
-                                  user_id=victim.id
-                                  )
+        Notification.create_user(victim, "Security Breach", user_msg, ERROR)
         message = "%s hacked %s's bank account and stole $%d" % (
             cracker.handle, victim.team.name, value,
         )
-        evt_id = Notification.broadcast_custom("Password Cracked",
-                                               message, '/avatars/' +
-                                               cracker.avatar
-                                               )
-        self.io_loop.add_callback(self.push_broadcast_notification,
-                                  event_uuid=evt_id
-                                  )
+        Notification.create_broadcast("Password Cracked", message, SUCCESS)
+        self.io_loop.add_callback(self.push_broadcast)
+        self.io_loop.add_callback(self.push_scoreboard)

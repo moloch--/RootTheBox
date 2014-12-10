@@ -14,15 +14,7 @@
         <div class="row">
             <div class="span1 offset1">
                 {% if notify.icon_url is not None %}
-                    <img src="/avatars/{{ notify.icon_url }}" />
-                {% elif notify.category == "success" %}
-                    <img src="/static/images/success.png" />
-                {% elif notify.category == "info" %}
-                    <img src="/static/images/info.png" />
-                {% elif notify.category == "warning" %}
-                    <img src="/static/images/warning.png" />
-                {% elif notify.category == "error" %}
-                    <img src="/static/images/error.png" />
+                    <img src="{{ notify.icon_url }}" />
                 {% end %}
             </div>
             <div class="span7">

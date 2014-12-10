@@ -233,7 +233,7 @@ class FederalReserveAjaxHandler(BaseHandler):
         )
         self.dbsession.add(sheep)
         self.dbsession.commit()
-        self.event_manager.create_cracked_password_events(
+        self.event_manager.cracked_password(
             user, victim, preimage, value
         )
         return value

@@ -247,8 +247,8 @@ class BaseWebSocketHandler(WebSocketHandler):
         ''' Parses the request's origin header '''
         try:
             request_origin = urlparse(origin)
-            origin = urlparse(self.config.origin).netloc.split(':')[0]
-            logging.debug("Checking request Origin '%s'.endswith '%s'" % (
+            origin = urlparse(self.config.origin)
+            logging.debug("Checking request origin '%s' ends with '%s'" % (
                 request_origin, origin
             ))
             return request_origin.netloc.endswith(origin)

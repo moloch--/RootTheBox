@@ -25,6 +25,7 @@ import logging
 from models.Notification import Notification
 from datetime import datetime
 from libs.SecurityDecorators import *
+from libs.EventManager import EventManager
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 
@@ -32,36 +33,28 @@ class NotifySocketHandler(BaseWebSocketHandler):
 
     ''' Handles websocket connections '''
 
+    event_manager = EventManager.instance()
+
     def open(self):
         ''' When we receive a new websocket connect '''
+        self.event_manager.add_connection(self)
         if self.session is not None and 'team_id' in self.session:
             logging.debug("Opened new websocket with user id: %s" % (
                 self.session['user_id'],
             ))
-            notifications = Notification.new_messages(self.session['user_id'])
-            logging.debug("%d new notification(s) for user id %d" % (
-                len(notifications), self.session['user_id']),
-            )
-            for notify in notifications:
-                self.write_message(notify.to_dict())
+            self.io_loop.add_callback(self.event_manager.push_user,
+                                      self.team_id, self.user_id
+                                      )
         else:
             logging.debug("[Web Socket] Opened public notification socket.")
-        self.start_time = datetime.now()
-        self.manager.add_connection(self)
 
-    def on_message(self, message):
-        message = json.loads(message)
-        notify = Notification.by_uuid(message['uuid'])
-        if notify.user_id == self.session['user_id']:
-            notify.viewed = True
-            self.dbsession.add(notify)
-            self.dbsession.commit()
+    def on_close(self):
+        ''' Lost connection to client '''
+        self.event_manager.remove_connection(self)
 
     @property
     def team_id(self):
-        if self.session is None or 'team_id' not in self.session:
-            return '$public_team'
-        else:
+        if self.session is not None and 'team_id' in self.session:
             return self.session['team_id']
 
     @team_id.setter
@@ -70,22 +63,12 @@ class NotifySocketHandler(BaseWebSocketHandler):
 
     @property
     def user_id(self):
-        return '$public' if self.session is None else self.session['user_id']
+        if self.session is not None and 'user_id' in self.session:
+            return self.session['user_id']
 
     @user_id.setter
     def user_id(self, value):
         raise ValueError('Cannot set user_id')
-
-    @property
-    def time_elapsed(self):
-        return datetime.now() - self.start_time
-
-    def on_close(self):
-        ''' Lost connection to client '''
-        try:
-            self.manager.remove_connection(self)
-        except KeyError:
-            logging.warn("[Web Socket] Manager has no ref to self ???")
 
 
 class AllNotificationsHandler(BaseHandler):
