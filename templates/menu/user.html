@@ -8,7 +8,12 @@
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="/">
-                {{ options.game_name }}
+                {% if options.debug %}
+                    <i class="fa fa-fw fa-bug"></i>
+                    DEBUG
+                {% else %}
+                    {{ options.game_name }}
+                {% end %}
             </a>
             <div class="nav-collapse">
                 <ul class="nav">
