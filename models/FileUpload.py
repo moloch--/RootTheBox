@@ -29,6 +29,11 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, String, Integer
 from mimetypes import guess_type
 from tornado.options import options
+from string import printable
+from libs.ValidationError import ValidationError
+
+
+MAX_FILE_SIZE = 50 * (1024 ** 2)  # Max file size 50Mb
 
 
 class FileUpload(DatabaseObject):
@@ -69,13 +74,19 @@ class FileUpload(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        fname = value.replace('\n', '').replace('\r', '')
-        self._file_name = unicode(os.path.basename(fname))[:64]
+        fname = unicode(os.path.basename(value))[:64]
+        fname = filter(lambda char: char in printable[:-6], fname)
+        if len(fname) <= 2:
+            raise ValidationError("File name is too short")
+        self._file_name = fname
 
     @property
     def content_type(self):
         content = guess_type(self.file_name)
-        return content[0] if content[0] is not None else 'unknown'
+        if content[0] is not None:
+            return content[0]
+        else:
+            'application/octet-stream'
 
     @property
     def description(self):
@@ -92,6 +103,8 @@ class FileUpload(DatabaseObject):
 
     @data.setter
     def data(self, value):
+        if MAX_FILE_SIZE <= len(value):
+            raise ValidationError("File is too large")
         if self.uuid is None:
             self.uuid = str(uuid4())
         self.byte_size = len(value)

@@ -40,6 +40,7 @@ from models.Team import Team
 from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
+from libs.XSSImageCheck import is_xss_image
 from libs.ValidationError import ValidationError
 from string import printable
 from tornado.options import options
@@ -228,8 +229,8 @@ class User(DatabaseObject):
     def avatar(self, image_data):
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
-            if ext in IMG_FORMATS:
-                if self._avatar is not None and os.path.exists(options.avatar_dir + self._avatar):
+            if ext in IMG_FORMATS and not is_xss_image(image_data):
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
                     os.unlink(options.avatar_dir + '/' + self._avatar)
                 file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
                 with open(file_path, 'wb') as fp:

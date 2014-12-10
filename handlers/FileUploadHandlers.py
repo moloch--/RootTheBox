@@ -27,11 +27,11 @@ This file conatains handlers related to the file sharing functionality
 import logging
 
 from models.FileUpload import FileUpload
+from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
-from string import printable
 
-MAX_FILE_SIZE = 50 * (1024 ** 2)  # Max file size 50Mb
+
 MAX_UPLOADS = 5
 
 
@@ -44,34 +44,45 @@ class FileUploadHandler(BaseHandler):
         ''' Renders upload file page '''
         user = self.get_current_user()
         self.render("file_upload/shared_files.html",
-                    errors=None, shares=user.team.files
+                    errors=None,
+                    shares=user.team.files
                     )
 
     @authenticated
     def post(self, *args, **kwargs):
         ''' Shit form validation '''
         user = self.get_current_user()
-        errors = []
-        for shared_file in self.request.files['files'][:MAX_UPLOADS]:
-            if MAX_FILE_SIZE < len(shared_file['body']):
-                errors.append("The file %s is too large")
-            else:
+        self.errors = []
+        if hasattr(self.request, 'files'):
+            for shared_file in self.request.files['files'][:MAX_UPLOADS]:
                 file_upload = self.create_file(user, shared_file)
-                self.event_manager.team_file_shared(user, file_upload)
-        if not len(errors):
-            self.redirect("/user/share/files")
+                if file_upload is not None:
+                    self.event_manager.team_file_shared(user, file_upload)
+            if not len(self.errors):
+                self.redirect("/user/share/files")
+            else:
+                self.render("file_upload/shared_files.html",
+                            errors=self.errors,
+                            shares=user.team.files
+                            )
         else:
-            self.render("file_upload/")
+            self.render("file_upload/shared_files.html",
+                        errors=["No files in request"],
+                        shares=user.team.files
+                        )
 
     def create_file(self, user, shared_file):
         ''' Saves uploaded file '''
-        file_upload = FileUpload(team_id=user.team.id)
-        file_upload.file_name = shared_file['filename']
-        file_upload.data = shared_file['body']
-        file_upload.description = self.get_argument('description', '')
-        self.dbsession.add(file_upload)
-        self.dbsession.commit()
-        return file_upload
+        try:
+            file_upload = FileUpload(team_id=user.team.id)
+            file_upload.file_name = shared_file['filename']
+            file_upload.data = shared_file['body']
+            file_upload.description = self.get_argument('description', '')
+            self.dbsession.add(file_upload)
+            self.dbsession.commit()
+            return file_upload
+        except ValidationError as error:
+            self.errors.append(str(error))
 
 
 class FileDownloadHandler(BaseHandler):
@@ -86,9 +97,7 @@ class FileDownloadHandler(BaseHandler):
         if shared_file is not None and shared_file in user.team.files:
             self.set_header('Content-Type', shared_file.content_type)
             self.set_header('Content-Length', shared_file.byte_size)
-            char_whitelist = lambda char: char in str(printable[:-38] + '.-_')
-            self.set_header('Content-Disposition', 'attachment; filename=%s' %
-                            filter(char_whitelist, shared_file.file_name))
+            self.set_header('Content-Disposition', 'attachment; filename=%s' % shared_file.file_name)
             self.write(shared_file.data)
         else:
             self.render("public/404.html")

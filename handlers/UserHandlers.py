@@ -90,8 +90,8 @@ class SettingsHandler(BaseHandler):
         '''
         Saves avatar - Reads file header an only allows approved formats
         '''
-        user = User.by_id(self.session['user_id'])
-        if 'avatar' in self.request.files:
+        user = self.get_current_user()
+        if hasattr(self.request, 'files') and 'avatar' in self.request.files:
             user.avatar = self.request.files['avatar'][0]['body']
             self.dbsession.add(user)
             self.dbsession.commit()

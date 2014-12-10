@@ -121,7 +121,7 @@ class AdminCreateHandler(BaseHandler):
                 box.difficulty = self.get_argument('difficulty', '')
                 self.dbsession.add(box)
                 self.dbsession.commit()
-                if 'avatar' in self.request.files:
+                if hasattr(self.request, 'files') and 'avatar' in self.request.files:
                     box.avatar = self.request.files['avatar'][0]['body']
                 self.dbsession.commit()
                 self.redirect('/admin/view/game_objects')
@@ -215,14 +215,15 @@ class AdminCreateHandler(BaseHandler):
 
     def add_attachments(self, flag):
         ''' Add uploaded files as attachments to flags '''
-        if not 'attachments' in self.request.files:
-            return
-        for attachment in self.request.files['attachments']:
-            flag_attachment = FlagAttachment(file_name=attachment['name'])
-            flag_attachment.data = attachment['body']
-            flag.attachments.append(flag_attachment)
-            self.dbsession.add(flag_attachment)
-        self.dbsession.flush()
+        if hasattr(self.request, 'files'):
+            if not 'attachments' in self.request.files:
+                return
+            for attachment in self.request.files['attachments']:
+                flag_attachment = FlagAttachment(file_name=attachment['name'])
+                flag_attachment.data = attachment['body']
+                flag.attachments.append(flag_attachment)
+                self.dbsession.add(flag_attachment)
+            self.dbsession.flush()
 
 
 class AdminViewHandler(BaseHandler):
