@@ -52,6 +52,8 @@ ADMIN_PERMISSION = u'admin'
 DEFAULT_HASH_ALGORITHM = 'md5'
 ITERATE = 0x2bad  # 11181
 IMG_FORMATS = ['png', 'jpeg', 'gif', 'bmp']
+MAX_AVATAR_SIZE = 1024 * 1024
+MIN_AVATAR_SIZE = 64
 
 
 class User(DatabaseObject):
@@ -227,7 +229,7 @@ class User(DatabaseObject):
 
     @avatar.setter
     def avatar(self, image_data):
-        if len(image_data) < (1024 * 1024):
+        if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
             ext = imghdr.what("", h=image_data)
             if ext in IMG_FORMATS and not is_xss_image(image_data):
                 if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
@@ -241,7 +243,9 @@ class User(DatabaseObject):
                     ' '.join(IMG_FORMATS)
                 ))
         else:
-            raise ValidationError("The image is too large")
+            raise ValidationError("The image is too large must be %d - %d bytes"  % (
+                MIN_AVATAR_SIZE, MAX_AVATAR_SIZE
+            ))
 
     def has_item(self, item_name):
         ''' Check to see if a team has purchased an item '''

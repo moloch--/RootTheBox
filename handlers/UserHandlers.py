@@ -31,6 +31,7 @@ import tornado
 from models.User import User, ADMIN_PERMISSION
 from models.Theme import Theme
 from libs.EventManager import EventManager
+from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
 
@@ -92,10 +93,13 @@ class SettingsHandler(BaseHandler):
         '''
         user = self.get_current_user()
         if hasattr(self.request, 'files') and 'avatar' in self.request.files:
-            user.avatar = self.request.files['avatar'][0]['body']
-            self.dbsession.add(user)
-            self.dbsession.commit()
-            self.render_page(success=["Updated avatar"])
+            try:
+                user.avatar = self.request.files['avatar'][0]['body']
+                self.dbsession.add(user)
+                self.dbsession.commit()
+                self.render_page(success=["Updated avatar"])
+            except ValidationError as error:
+                self.render_page(errors=[str(error), ])
         else:
             self.render_page(errors=["Please provide an image"])
 
