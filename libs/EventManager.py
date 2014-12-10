@@ -163,7 +163,7 @@ class EventManager(object):
         message = "%s unlocked level #%d." % (
             user.team.name, level.number
         )
-        Notification.broadcast_success("Level Unlocked", message)
+        Notification.create_broadcast("Level Unlocked", message)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
