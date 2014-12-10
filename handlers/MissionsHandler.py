@@ -72,12 +72,12 @@ class FlagSubmissionHandler(BaseHandler):
         flag = Flag.by_uuid(self.get_argument('uuid', ''))
         user = self.get_current_user()
         if flag is not None and flag.game_level in user.team.game_levels:
-            if flag.is_file and 'flag' in self.request.files:
-                submission = self.request.files['flag'][0]['body']
-            elif not flag.is_file:
-                submission = self.get_argument('token', '')
+            submission = ''
+            if flag.is_file:
+                if hasattr(self.request, 'files') and 'flag' in self.request.files:
+                    submission = self.request.files['flag'][0]['body']
             else:
-                submission = None
+                submission = self.get_argument('token', '')
             old_reward = flag.value
             if self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
@@ -102,8 +102,8 @@ class FlagSubmissionHandler(BaseHandler):
                 user.team.money += flag.value
                 self.dbsession.add(user.team)
                 if self.config.dynamic_flag_value:
-                    depreciation = flag.value / self.config.flag_value_decrease
-                    flag.value = int(flag.value - (depreciation / 100.0))
+                    depreciation = float(1.0 / self.config.flag_value_decrease)
+                    flag.value -= int(flag.value * depreciation)
                 self.dbsession.add(flag)
                 self.dbsession.flush()
                 self.event_manager.flag_captured(user, flag)
