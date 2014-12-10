@@ -20,6 +20,8 @@ command line arguments it calls various components setup/start/etc.
 
 '''
 
+from __future__ import print_function
+
 
 import os
 import nose
@@ -309,7 +311,7 @@ define("use_bots",
        type=bool)
 
 define("botnet_db",
-       default="files/botnet.db",
+       default="./files/botnet.db",
        group="game",
        help="botnet database path")
 

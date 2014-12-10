@@ -20,7 +20,7 @@ Created on Sep 12, 2012
 '''
 
 
-from BaseModels import DatabaseObject
+from models.BaseModels import DatabaseObject
 from sqlalchemy import Column, Table, ForeignKey
 from sqlalchemy.types import Integer
 

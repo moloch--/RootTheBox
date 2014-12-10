@@ -50,3 +50,6 @@ pip-log.txt
 
 # OSX
 .DS_Store
+
+__pycache__
+*/__pycache__

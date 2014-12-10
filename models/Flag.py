@@ -60,10 +60,10 @@ class Flag(DatabaseObject):
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
 
-    _name = Column(Unicode(16), nullable=False)
+    _name = Column(Unicode(64), nullable=False)
     _token = Column(Unicode(256), nullable=False)
-    _description = Column(Unicode(256), nullable=False)
-    _capture_message = Column(Unicode(256))
+    _description = Column(Unicode(1024), nullable=False)
+    _capture_message = Column(Unicode(512))
     _value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
 

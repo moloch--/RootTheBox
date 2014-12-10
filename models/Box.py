@@ -53,7 +53,7 @@ class Box(DatabaseObject):
                             nullable=False
                             )
 
-    _name = Column(Unicode(16), unique=True, nullable=False)
+    _name = Column(Unicode(32), unique=True, nullable=False)
     _operating_system = Column(Unicode(16))
     _description = Column(Unicode(1024))
     _difficulty = Column(Unicode(16))
@@ -127,8 +127,8 @@ class Box(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 < len(value) < 16:
-            raise ValueError("Name must be 3 - 16 characters")
+        if not 3 <= len(unicode(value)) <= 32:
+            raise ValidationError("Name must be 3 - 16 characters")
         self._name = unicode(value)
 
     @property
