@@ -108,6 +108,8 @@ class BaseHandler(RequestHandler):
 
     def clear_content_policy(self, src):
         ''' Clear a content source in the existing CSP header '''
+        if not src.endswith('-src'):
+            src += '-src'
         if src in self.csp:
             self.csp[src] = set()
             self._refresh_csp()

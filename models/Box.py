@@ -37,6 +37,7 @@ from models.GameLevel import GameLevel
 from models.Corporation import Corporation
 from models.SourceCode import SourceCode
 from tornado.options import options
+from libs.XSSImageCheck import is_xss_image
 
 
 class Box(DatabaseObject):
@@ -192,18 +193,18 @@ class Box(DatabaseObject):
             self.uuid = str(uuid4())
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
-            if ext in ['png', 'jpeg', 'gif', 'bmp']:
-                if self._avatar is not None and os.path.exists(options.avatar_dir + self._avatar):
+            if ext in ['png', 'jpeg', 'gif', 'bmp'] and not is_xss_image(image_data):
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
                     os.unlink(options.avatar_dir + self._avatar)
                 file_path = str(options.avatar_dir + self.uuid + '.' + ext)
                 with open(file_path, 'wb') as fp:
                     fp.write(image_data)
                 self._avatar = self.uuid + '.' + ext
             else:
-                raise ValueError(
+                raise ValidationError(
                     "Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
         else:
-            raise ValueError("The image is too large")
+            raise ValidationError("The image is too large")
 
     @property
     def ipv4s(self):
