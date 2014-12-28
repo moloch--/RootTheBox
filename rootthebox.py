@@ -120,6 +120,11 @@ def restart():
     os.execl('./setup/restart.sh', '')
 
 
+def update():
+    ''' TODO: Expand on this to be a more feature rich update mechanism '''
+    os.system("git pull")
+
+
 def version():
     from sqlalchemy import __version__ as orm_version
     from tornado import version as tornado_version
@@ -416,6 +421,11 @@ define("version",
        help="display version information and exit",
        type=bool)
 
+define("update",
+       default=False,
+       help="fetch the latest code",
+       type=bool)
+
 define("save",
        default=False,
        help="save the current configuration to file",
@@ -453,3 +463,5 @@ if __name__ == '__main__':
         recovery()
     elif options.version:
         version()
+    elif options.update:
+        update()
