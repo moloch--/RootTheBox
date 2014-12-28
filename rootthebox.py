@@ -32,9 +32,9 @@ from datetime import datetime
 from tornado.options import define, options
 from libs.ConsoleColors import *
 from libs.ConfigHelpers import save_config
+from setup import __version__
 
 
-__version__ = 'Root the Box - v0.6.0'
 current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 
@@ -118,6 +118,14 @@ def restart():
     pid = os.getpid()
     print(INFO + '%s : Restarting the service (%i)...' % (current_time(), pid))
     os.execl('./setup/restart.sh', '')
+
+
+def version():
+    from sqlalchemy import __version__ as orm_version
+    from tornado import version as tornado_version
+    print(bold + "Root the Box%s v%s" % (W, __version__))
+    print(bold + " SQL Alchemy%s v%s" % (W, orm_version))
+    print(bold + "     Torando%s v%s" % (W, tornado_version))
 
 
 def check_cwd():
@@ -403,6 +411,11 @@ define("restart",
        help="restart the server",
        type=bool)
 
+define("version",
+       default=False,
+       help="display version information and exit",
+       type=bool)
+
 define("save",
        default=False,
        help="save the current configuration to file",
@@ -411,7 +424,6 @@ define("save",
 define("config",
        default="files/rootthebox.cfg",
        help="root the box configuration file")
-
 
 
 if __name__ == '__main__':
@@ -439,3 +451,5 @@ if __name__ == '__main__':
         restart()
     elif options.recovery:
         recovery()
+    elif options.version:
+        version()

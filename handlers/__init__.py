@@ -26,7 +26,8 @@ This is the main file the defines what URLs get routed to what handlers
 
 import sys
 
-from os import urandom, path, _exit
+from setup import __version__
+from os import urandom, _exit
 from modules.Menu import Menu
 from modules.Recaptcha import Recaptcha
 from modules.AppTheme import AppTheme
@@ -55,6 +56,7 @@ from tornado.options import options
 # Singletons
 io_loop = IOLoop.instance()
 game_history = GameHistory.instance()
+
 
 def get_cookie_secret():
     if options.debug:
@@ -235,7 +237,7 @@ app = Application(
     ),
 
     # Application version
-    version='0.6.0',
+    version=__version__,
 
 )
 
