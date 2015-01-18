@@ -58,7 +58,7 @@ class DatabaseConnection(object):
         SQLite connection string, always save db file to cwd, or in-memory
         '''
         logging.debug("Configured to use SQLite for a database")
-        db_name = os.path.basename(self.config.get("Database", 'name'))
+        db_name = self.database
         if not len(db_name):
             db_name = 'rtb'
         return 'sqlite:///%s.db' % db_name

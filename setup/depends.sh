@@ -19,11 +19,31 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
+# -y flag will be passed to this variable for a non-interactive setup.
+SKIP=""
+
+while getopts "y" OPTION
+do
+    case $OPTION in
+        y)
+	    SKIP=" -y"
+            ;;
+    esac
+done
+
+if [ "$SKIP" == " -y" ]
+then
+    echo "[*] Non-interactive setup - Setting mysql password to 'your_password'"
+    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
+    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
+fi
+
 echo "[*] Installing pip/gcc ..."
-apt-get install python-pip python-dev build-essential
+apt-get install python-pip python-dev build-essential $SKIP
+
 
 echo "[*] Installing packages ..."
-apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev
+apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev libmysqlclient-dev $SKIP
 
 echo "[*] Installing python libs ..."
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
