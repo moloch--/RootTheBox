@@ -27,7 +27,7 @@ apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-my
 
 echo "[*] Installing python libs ..."
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-sh "$DIR/python-depends.sh"
+pip install -r "$DIR/requirements.txt"
 
 echo ""
 echo "[*] Setup Completed."

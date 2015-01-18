@@ -1,0 +1,10 @@
+tornado
+pbkdf2
+mysql-python
+pymysql
+sqlalchemy
+python-memcached
+defusedxml
+netaddr
+nose
+future
