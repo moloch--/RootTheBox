@@ -13,7 +13,8 @@ def save_config():
         fp.write("##########################\n")
         fp.write("# Last updated: %s\n" % datetime.now())
         for group in options.groups():
-            if group == '':
+            # Shitty work around for Tornado 4.1
+            if 'rootthebox.py' in group.lower() or group == '':
                 continue
             fp.write("\n# [ %s ]\n" % group.title())
             for key, value in options.group_dict(group).iteritems():
