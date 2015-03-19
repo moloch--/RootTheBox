@@ -55,7 +55,6 @@ class BaseHandler(RequestHandler):
         "font-src": set(["'self'"]),
         "object-src": set(["'none'"]),
         "style-src": set(["'self'"]),
-        # "data-src": set(["'self'"]),
     }
     _session = None
     dbsession = dbsession
@@ -122,7 +121,9 @@ class BaseHandler(RequestHandler):
         for src, policies in self.csp.iteritems():
             if len(policies):
                 _csp.append("%s %s; " % (src, " ".join(policies)))
-        self.set_header("Content-Security-Policy", ''.join(_csp))
+        csp = ''.join(_csp)
+        # Disabled until i can figure out the bug
+        # self.set_header("Content-Security-Policy", csp)
 
     @property
     def memcached(self):
