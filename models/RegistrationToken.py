@@ -27,14 +27,13 @@ from models import dbsession
 from models.BaseModels import DatabaseObject
 
 
-
-gen_token = lambda: urandom(3).encode('hex')
-
-
 class RegistrationToken(DatabaseObject):
-    ''' User definition '''
+    ''' Registration token definition '''
 
-    value = Column(String(6), unique=True, nullable=False, default=gen_token)
+    value = Column(String(6),
+                   unique=True,
+                   nullable=False,
+                   default=lambda: urandom(3).encode('hex'))
     used = Column(Boolean, nullable=False, default=False)
 
     @classmethod
@@ -51,7 +50,6 @@ class RegistrationToken(DatabaseObject):
     def count(cls):
         ''' Returns a list of all objects in the database '''
         return dbsession.query(cls).count()
-
 
     @classmethod
     def by_value(cls, value):

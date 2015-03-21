@@ -60,7 +60,7 @@ game_history = GameHistory.instance()
 
 def get_cookie_secret():
     if options.debug:
-        return "Don't use this in production"
+        return "OMFG Don't use this in production"
     else:
         return urandom(32).encode('hex')
 
@@ -104,7 +104,7 @@ urls = [
     (r'/user/missions/hint', PurchaseHintHandler),
 
 
-    ### BOTNET URLS ###
+    # BOTNET URLS ###
     # Bot Handlers - BotHandlers.py
     (r'/botnet/connect', BotSocketHandler),
     (r'/botnet/climonitor', BotCliMonitorSocketHandler),
@@ -112,8 +112,7 @@ urls = [
     (r'/user/bots/download/(windows|linux|monitor)', BotDownloadHandler),
     (r'/user/bots/webmonitor', BotWebMonitorHandler),
 
-
-    ### BLACK MARKET URLS ###
+    # BLACK MARKET URLS ###
     # This is only relevent if the black market is enabled
     (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
 

@@ -36,7 +36,6 @@ from models.Swat import Swat
 from models.User import User, ADMIN_PERMISSION
 from libs.SecurityDecorators import authenticated, has_item, use_black_market
 from mimetypes import guess_type
-from base64 import b64decode
 from string import ascii_letters
 
 
@@ -189,7 +188,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({"error": "Source account does not exist"})
         elif destination is None:
             self.write({"error": "Destination account does not exist"})
-        elif victim_user is None or not victim_user in source.members:
+        elif victim_user is None or victim_user not in source.members:
             self.write({"error": "User is not authorized for this account"})
         elif victim_user in user.team.members:
             self.write({"error": "You cannot steal from your own team"})
@@ -301,13 +300,13 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
             user = self.get_current_user()
             if box.source_code in user.team.purchased_source_code:
                 content_type = guess_type(box.source_code.file_name)[0]
-                if content_type is None: content_type = 'unknown/data'
+                if content_type is None:
+                    content_type = 'unknown/data'
                 self.set_header('Content-Type', content_type)
                 self.set_header('Content-Length', len(box.source_code.data))
                 fname = filter(lambda char: char in self.goodchars, box.source_code.file_name)
                 self.set_header('Content-Disposition',
-                    'attachment; filename=%s' % fname
-                )
+                                'attachment; filename=%s' % fname)
                 self.write(box.source_code.data)
                 self.finish()
             else:

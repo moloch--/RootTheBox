@@ -214,5 +214,4 @@ class MissionsHandler(BaseHandler):
         else:
             self.render("missions/view.html",
                         team=user.team,
-                        errors=["Level does not exist"]
-                        )
+                        errors=["Level does not exist"])

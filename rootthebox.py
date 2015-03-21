@@ -175,6 +175,12 @@ define("x_headers",
        help="honor the `X-FORWARDED-FOR` and `X-REAL-IP` http headers",
        type=bool)
 
+define("csp",
+       default=True,
+       group="server",
+       help="endable/disable the server's content-security-policy",
+       type=bool)
+
 define("ssl",
        default=False,
        group="server",
@@ -391,7 +397,7 @@ define("bot_reward_interval",
        help="interval for rewarding botnets (milliseconds)",
        type=int)
 
-# Process modes
+# Process modes/flags
 define("setup",
        default="",
        help="setup a database (prod|devel)")
@@ -450,6 +456,7 @@ if __name__ == '__main__':
 
     # Make sure that cli args always have president over the file
     options.parse_command_line()
+
     if options.save:
         save_config()
 

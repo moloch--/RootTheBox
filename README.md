@@ -43,3 +43,7 @@ Open a ticket on GitHub and I'd be happy to help you out with setup/configuratio
 Feature Requests
 ----------------------
 Open a ticket on GitHub, and I'll see what I can do for you.  I'm always brainstorming new ideas, and looking for cool stuff to add!
+
+Contributing
+----------------
+We welcome code contributions, please [see our contributing guidelines](https://github.com/moloch--/RootTheBox/wiki/Contributing) on the wiki for more information.

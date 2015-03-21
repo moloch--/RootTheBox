@@ -46,7 +46,6 @@ from string import printable
 from tornado.options import options
 
 
-
 # Constants
 ADMIN_PERMISSION = u'admin'
 DEFAULT_HASH_ALGORITHM = 'md5'

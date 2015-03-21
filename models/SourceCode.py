@@ -41,8 +41,7 @@ class SourceCode(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
-                  )
+                  default=lambda: str(uuid4()))
 
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     _price = Column(Integer, nullable=False)
