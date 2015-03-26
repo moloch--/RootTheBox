@@ -98,10 +98,12 @@ class DatabaseConnection(object):
 
     def _db_credentials(self):
         ''' Pull db creds and return them url encoded '''
-        if self.password == '' or self.password == 'RUNTIME':
+        if self.password == 'RUNTIME':
             sys.stdout.write(PROMPT + "Database password: ")
             sys.stdout.flush()
             self.password = getpass.getpass()
+        elif self.password == 'ENV':
+            self.password = os.environ['sql_password']
         db_host = quote(self.hostname)
         db_name = quote(self.database)
         db_user = quote(self.username)

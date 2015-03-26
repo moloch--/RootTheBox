@@ -45,8 +45,7 @@ class FileUploadHandler(BaseHandler):
         user = self.get_current_user()
         self.render("file_upload/shared_files.html",
                     errors=None,
-                    shares=user.team.files
-                    )
+                    shares=user.team.files)
 
     @authenticated
     def post(self, *args, **kwargs):
@@ -63,13 +62,11 @@ class FileUploadHandler(BaseHandler):
             else:
                 self.render("file_upload/shared_files.html",
                             errors=self.errors,
-                            shares=user.team.files
-                            )
+                            shares=user.team.files)
         else:
             self.render("file_upload/shared_files.html",
                         errors=["No files in request"],
-                        shares=user.team.files
-                        )
+                        shares=user.team.files)
 
     def create_file(self, user, shared_file):
         ''' Saves uploaded file '''
@@ -97,7 +94,8 @@ class FileDownloadHandler(BaseHandler):
         if shared_file is not None and shared_file in user.team.files:
             self.set_header('Content-Type', shared_file.content_type)
             self.set_header('Content-Length', shared_file.byte_size)
-            self.set_header('Content-Disposition', 'attachment; filename=%s' % shared_file.file_name)
+            self.set_header('Content-Disposition', 'attachment; filename=%s' % (
+                shared_file.file_name))
             self.write(shared_file.data)
         else:
             self.render("public/404.html")
@@ -112,8 +110,8 @@ class FileDeleteHandler(BaseHandler):
         user = self.get_current_user()
         shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
         if shared_file is not None and shared_file in user.team.files:
-            logging.info("%s deleted a shared file %s" %
-                         (user.handle, shared_file.uuid))
+            logging.info("%s deleted a shared file %s" % (
+                user.handle, shared_file.uuid))
             shared_file.delete_data()
             self.dbsession.delete(shared_file)
             self.dbsession.commit()

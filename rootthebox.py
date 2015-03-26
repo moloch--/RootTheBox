@@ -375,7 +375,7 @@ define("flag_value_decrease",
        type=int)
 
 define("default_theme",
-       default="cyborg",
+       default="Cyborg",
        group="game",
        help="the default css theme")
 
