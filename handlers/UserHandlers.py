@@ -84,8 +84,7 @@ class SettingsHandler(BaseHandler):
         self.render("user/settings.html",
                     errors=errors,
                     success=success,
-                    current_theme=current_theme
-                    )
+                    current_theme=current_theme)
 
     def post_avatar(self, *args, **kwargs):
         '''
@@ -175,7 +174,9 @@ class SettingsHandler(BaseHandler):
         try:
             recaptcha_http = tornado.httpclient.AsyncHTTPClient()
             recaptcha_req_body = urllib.urlencode(recaptcha_req_data)
-            recaptcha_http.fetch(RECAPTCHA_URL, self.recaptcha_callback, method='POST', body=recaptcha_req_body)
+            recaptcha_http.fetch(RECAPTCHA_URL, self.recaptcha_callback,
+                                 method='POST',
+                                 body=recaptcha_req_body)
         except tornado.httpclient.HTTPError:
             logging.exception('Recaptcha AsyncHTTP request threw an exception')
             self.recaptcha_callback(None)

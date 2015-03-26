@@ -19,11 +19,8 @@ Created on Mar 15, 2012
     limitations under the License.
 '''
 
-import json
 import logging
 
-from models.Notification import Notification
-from datetime import datetime
 from libs.SecurityDecorators import *
 from libs.EventManager import EventManager
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler

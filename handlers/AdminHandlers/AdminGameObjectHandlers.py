@@ -35,6 +35,7 @@ from models.Box import Box
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
 from models.Hint import Hint
+from models.Team import Team
 from models.IpAddress import IpAddress
 from models.User import ADMIN_PERMISSION
 from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC
@@ -60,6 +61,7 @@ class AdminCreateHandler(BaseHandler):
             'flag/static': 'admin/create/flag-static.html',
             'game_level': 'admin/create/game_level.html',
             'hint': 'admin/create/hint.html',
+            'team': 'admin/create/team.html',
         }
         if len(args) and args[0] in game_objects:
             self.render(game_objects[args[0]], errors=None)
@@ -79,11 +81,26 @@ class AdminCreateHandler(BaseHandler):
             'flag/static': self.create_flag_static,
             'game_level': self.create_game_level,
             'hint': self.create_hint,
+            'team': self.create_team,
         }
         if len(args) and args[0] in game_objects:
             game_objects[args[0]]()
         else:
             self.render("public/404.html")
+
+    def create_team(self):
+        ''' Admins can create teams manually '''
+        try:
+            name = self.get_argument('team_name', '')
+            motto = self.get_argument('motto', '')
+            if Team.by_name(name) is not None:
+                raise ValidationError("Team already exists")
+            team = Team(name=name, motto=motto)
+            self.dbsession.add(team)
+            self.dbsession.commit()
+            self.redirect('/admin/users')
+        except ValidationError as error:
+            self.render("admin/create/team.html", errors=[str(error), ])
 
     def create_corporation(self):
         ''' Add a new corporation to the database '''

@@ -134,7 +134,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
         ''' We ignore messages if there are more than 1 every 5 seconds '''
         if self.last_message - datetime.now() > timedelta(seconds=5):
             self.last_message = datetime.now()
-            self.write_message(game_history[:-1])
+            self.write_message(self.game_history[:-1])
 
     def on_close(self):
         ''' Lost connection to client '''
@@ -161,8 +161,7 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
         leaderboard = WallOfSheep.leaderboard()
         self.render('scoreboard/wall_of_sheep.html',
                     leaderboard=leaderboard,
-                    flock=sheep,
-                    )
+                    flock=sheep)
 
 
 class TeamsHandler(BaseHandler):
