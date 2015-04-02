@@ -108,7 +108,6 @@ class GameHistory(object):
         ''' Returns snapshot object it as a dict '''
         snapshot = Snapshot()
         bot_manager = BotManager.instance()
-        #self.dbsession = DBSession()
         for team in Team.all():
             snapshot_team = SnapshotTeam(
                 team_id=team.id,
@@ -133,7 +132,9 @@ class GameHistory(object):
 
     def __len__(self):
         ''' Return length of the game history '''
-        return self.dbsession.query(Snapshot).order_by(desc(Snapshot.id)).first().id
+        return self.dbsession.query(Snapshot).order_by(
+            desc(Snapshot.id)
+        ).first().id
 
     def __getitem__(self, key):
         ''' Implements slices and indexs '''

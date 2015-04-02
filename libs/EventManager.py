@@ -90,7 +90,7 @@ class EventManager(object):
         Returns bool if the given user has an open notify socket
         '''
         connections = self.get_user_connection(user)
-        return False if connections is None or len(connections) else True
+        return False if connections is None or len(connections) == 0 else True
 
     @property
     def all_connections(self):
@@ -180,7 +180,7 @@ class EventManager(object):
         message = "%s called the SWAT team on %s." % (
             user.handle, target.handle
         )
-        evt_id = Notification.create_broadcast("Player Arrested!", message)
+        Notification.create_broadcast("Player Arrested!", message)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
@@ -206,7 +206,7 @@ class EventManager(object):
         message = "%s posted '%s' to the team paste bin" % (
             user.handle, paste_bin.name
         )
-        evt_id = Notification.create_team(user.team, "Text Share", message, INFO)
+        Notification.create_team(user.team, "Text Share", message, INFO)
         self.io_loop.add_callback(self.push_team, user.team.id)
 
     # [ Misc Events ] ------------------------------------------------------
