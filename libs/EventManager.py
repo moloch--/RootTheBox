@@ -191,7 +191,7 @@ class EventManager(object):
             user.handle, user.team.name,
         )
         Notification.create_team(user.team, "New Team Member", message, INFO)
-        self.io_loop.add_callback(self.push_team)
+        self.io_loop.add_callback(self.push_team, user.team.id)
 
     def team_file_shared(self, user, file_upload):
         ''' Callback when a team file share is created '''
@@ -199,7 +199,7 @@ class EventManager(object):
             user.handle, file_upload.file_name,
         )
         Notification.create_team(user.team, "File Share", message, INFO)
-        self.io_loop.add_callback(self.push_team)
+        self.io_loop.add_callback(self.push_team, user.team.id)
 
     def team_paste_shared(self, user, paste_bin):
         ''' Callback when a pastebin is created '''

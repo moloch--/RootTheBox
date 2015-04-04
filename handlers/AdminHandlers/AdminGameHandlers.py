@@ -160,7 +160,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             self.render("public/404.html")
 
     def add_source_code(self):
-        box = Box.by_uuid(self.get_argument('box_uuid'))
+        box = Box.by_uuid(self.get_argument('box_uuid'), '')
         if box is not None:
             file_count = len(self.request.files['source_archive'])
             if not 'source_archive' in self.request.files and 0 < file_count:
@@ -169,8 +169,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
                 price = self.get_argument('price', '')
                 self.create_source_code(box, price)
                 self.render('admin/upgrades/source_code_market.html',
-                            errors=None
-                            )
+                            errors=None)
         else:
             raise ValidationError("The selected box does not exist")
 
@@ -221,8 +220,7 @@ class AdminSwatHandler(BaseHandler):
                     pending_bribes=Swat.all_pending(),
                     in_progress_bribes=Swat.all_in_progress(),
                     completed_bribes=Swat.all_completed(),
-                    errors=errors,
-                    )
+                    errors=errors)
 
     @restrict_ip_address
     @authenticated
@@ -431,8 +429,7 @@ class AdminImportXmlHandler(BaseHandler):
         else:
             self.render('admin/import.html',
                         success=None,
-                        errors=["No file data."]
-                        )
+                        errors=["No file data."])
 
     def _get_tmp_file(self):
         ''' Creates a tmp file with the file data '''
@@ -441,4 +438,3 @@ class AdminImportXmlHandler(BaseHandler):
         tmp_file.write(data)
         tmp_file.close()
         return tmp_file.name
-

@@ -58,8 +58,7 @@ class BoxHandler(BaseHandler):
             self.render('missions/box.html',
                         box=box,
                         team=user.team,
-                        errors=[],
-                        )
+                        errors=[])
         else:
             self.render('public/404.html')
 
@@ -83,8 +82,7 @@ class FlagSubmissionHandler(BaseHandler):
                 self.add_content_policy('script', "'unsafe-eval'")
                 self.render('missions/captured.html',
                             flag=flag,
-                            reward=old_reward
-                            )
+                            reward=old_reward)
             else:
                 self.render_page(flag, errors=["Invalid flag submission"])
         else:
@@ -129,8 +127,7 @@ class FlagSubmissionHandler(BaseHandler):
         self.render('missions/box.html',
                     box=box,
                     team=user.team,
-                    errors=errors,
-                    )
+                    errors=errors)
 
 
 class PurchaseHintHandler(BaseHandler):
@@ -168,8 +165,7 @@ class PurchaseHintHandler(BaseHandler):
         self.render('missions/box.html',
                     box=box,
                     team=user.team,
-                    errors=errors,
-                    )
+                    errors=errors)
 
 
 class MissionsHandler(BaseHandler):
@@ -209,8 +205,7 @@ class MissionsHandler(BaseHandler):
             else:
                 self.render("missions/view.html",
                             team=user.team,
-                            errors=["You do not have enough money to unlock this level"]
-                            )
+                            errors=["You do not have enough money to unlock this level"])
         else:
             self.render("missions/view.html",
                         team=user.team,

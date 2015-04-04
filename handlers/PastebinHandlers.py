@@ -64,8 +64,7 @@ class CreatePasteHandler(BaseHandler):
             self.redirect('/user/share/pastebin')
         else:
             self.render('pastebin/create.html',
-                        errors=["Missing name or content"]
-                        )
+                        errors=["Missing name or content"])
 
 
 class DisplayPasteHandler(BaseHandler):

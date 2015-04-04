@@ -78,8 +78,7 @@ class PasswordSecurityHandler(BaseHandler):
         self.render('upgrades/password_security.html',
                     errors=errors,
                     user=user,
-                    cost=self.config.password_upgrade_cost,
-                    )
+                    cost=self.config.password_upgrade_cost)
 
     def update_password(self, new_password):
         '''
@@ -229,8 +228,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             preimage=unicode(preimage),
             cracker_id=user.id,
             victim_id=victim.id,
-            value=value,
-        )
+            value=value)
         self.dbsession.add(sheep)
         self.dbsession.commit()
         self.event_manager.cracked_password(
@@ -281,8 +279,7 @@ class SourceCodeMarketHandler(BaseHandler):
         self.render('upgrades/source_code_market.html',
                     user=user,
                     boxes=boxes,
-                    errors=errors
-                    )
+                    errors=errors)
 
 
 class SourceCodeMarketDownloadHandler(BaseHandler):
@@ -335,7 +332,7 @@ class SwatHandler(BaseHandler):
         if target is not None and not target.has_permission(ADMIN_PERMISSION):
             if not Swat.user_is_pending(target) and not Swat.user_is_in_progress(target):
                 user = self.get_current_user()
-                if not target in user.team.members:
+                if target not in user.team.members:
                     if Swat.get_price(target) <= user.team.money:
                         self.create_swat(user, target)
                         self.redirect('/swat')
@@ -356,8 +353,7 @@ class SwatHandler(BaseHandler):
         swat = Swat(
             user_id=user.id,
             target_id=target.id,
-            paid=price,
-        )
+            paid=price)
         self.dbsession.add(swat)
         self.dbsession.add(user.team)
         self.dbsession.commit()
@@ -365,11 +361,11 @@ class SwatHandler(BaseHandler):
     def render_page(self, errors=None):
         ''' Render page with extra arguments '''
         if errors is not None and not isinstance(errors, list):
-            errors = [str(errors),]
+            errors = [str(errors), ]
         user = self.get_current_user()
-        targets = filter(lambda target: target not in user.team.members, User.all_users())
+        targets = filter(
+            lambda target: target not in user.team.members, User.all_users())
         self.render('upgrades/swat.html',
-            targets=targets,
-            user_bribes=Swat.ordered_by_user_id(user.id),
-            errors=None,
-        )
+                    targets=targets,
+                    user_bribes=Swat.ordered_by_user_id(user.id),
+                    errors=None)
