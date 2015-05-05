@@ -121,7 +121,7 @@
         <p>
             Are you sure you want to delete this user? <br />
         </p>
-        <form id="delete-user-form" method="post" action="/admin/delete/user">
+        <form id="delete-user-form" method="post" action="/admin/users/delete/user">
             {% raw xsrf_form_html() %}
             <input id="delete-user-uuid" name="uuid" type="hidden" value="" />
         </form>

@@ -39,7 +39,6 @@ class AdminManageUsersHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('admin/view/users.html', errors=None)
 
-
 class AdminEditUsersHandler(BaseHandler):
 
     @restrict_ip_address
@@ -120,6 +119,32 @@ class AdminEditUsersHandler(BaseHandler):
                         errors=[str(error), ]
                         )
 
+class AdminDeleteUsersHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        uri = {
+            'user': self.del_user,
+        }
+        if len(args) and args[0] in uri:
+            uri[args[0]]()
+        else:
+            self.redirect('/admin/users')
+
+    def del_user(self):
+        ''' Delete user objects in the database '''
+        user = User.by_uuid(self.get_argument('uuid', ''))
+        if user is not None:
+            logging.info("Deleted User: '%s'" % str(user.handle))
+            self.dbsession.delete(user)
+            self.dbsession.commit()
+            self.redirect("/admin/users")
+        else:
+            self.render("admin/view/users.html",
+                        errors=["User is not exist"]
+                        )
 
 class AdminBanHammerHandler(BaseHandler):
 
