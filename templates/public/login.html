@@ -7,12 +7,11 @@
 {% end %}
 
 {% block content %}
+
 <div class="container">
-    <form class="form-signin" action="/login" method="post">
-        <h3 class="form-signin-heading">
-            <i class="fa fa-lock"></i>
-            Authentication Required
-        </h3>
+
+    <form class="form-signin" method="post" action="/login">
+        {% raw xsrf_form_html() %}
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error" >
@@ -21,15 +20,21 @@
                     {{ error }}
                 </div>
             {% end %}
+        {% else %}
+            <h4 class="form-signin-heading">
+                <i class="fa fa-lock"></i>
+                Authentication Required
+            </h4>
         {% end %}
-        {% raw xsrf_form_html() %}
-        <input name="account" type="text" class="input-block-level" placeholder="Handle" autofocus>
-        <input name="password" type="password" class="input-block-level" placeholder="Password" autocomplete="off">
-        <button class="btn btn-primary" type="submit">
+
+        <input name="account" class="form-control" placeholder="Handle" type="text" required autofocus>
+        <input name="password" class="form-control" placeholder="Password" type="password" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">
             <i class="fa fa-sign-in"></i>
             Login
         </button>
     </form>
+
 </div> <!-- /container -->
-<br />
 {% end %}

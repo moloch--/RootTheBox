@@ -1,13 +1,14 @@
 {% from tornado.options import options %}
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="/">
+            </button>
+            <a class="navbar-brand" href="/">
                 {% if options.debug %}
                     <i class="fa fa-fw fa-bug"></i>
                     DEBUG
@@ -15,60 +16,53 @@
                     {{ options.game_name }}
                 {% end %}
             </a>
-            <div class="nav-collapse">
-                <ul class="nav">
-                    <li>
-                        <a href="/login">
-                            <i class="fa fa-fw fa-sign-in"></i>
-                            Login
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/registration">
-                            <i class="fa fa-fw fa-pencil"></i>
-                            Registration
-                        </a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-bar-chart-o"></i>
-                            Scoreboard
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/scoreboard">
-                                    Summary
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/scoreboard/history">
-                                    History
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/teams">
-                                  Teams
-                              </a>
-                            </li>
-                            {% if options.use_black_market %}
-                                <li>
-                                    <a href="/scoreboard/wall_of_sheep">
-                                        Wall of Sheep
-                                    </a>
-                                </li>
-                            {% end %}
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="/about">
-                            <i class="fa fa-fw fa-info-circle"></i>
-                            &nbsp;About
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
         </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/login">
+                        <i class="fa fa-fw fa-sign-in"></i>
+                        Login
+                    </a>
+                </li>
+                <li>
+                    <a href="/registration">
+                        <i class="fa fa-fw fa-pencil"></i>
+                        Registration
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-fw fa-bar-chart-o"></i>
+                        Scoreboard
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/scoreboard">
+                                Summary
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/scoreboard/history">
+                                History
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/teams">
+                              Teams
+                          </a>
+                        </li>
+                        {% if options.use_black_market %}
+                            <li>
+                                <a href="/scoreboard/wall_of_sheep">
+                                    Wall of Sheep
+                                </a>
+                            </li>
+                        {% end %}
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
     </div>
-</div>
+</nav>

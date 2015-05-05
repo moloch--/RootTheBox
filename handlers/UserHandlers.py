@@ -36,7 +36,7 @@ from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
 
 
-RECAPTCHA_URL = 'http://www.google.com/recaptcha/api/verify'
+RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/verify'
 
 
 class HomeHandler(BaseHandler):

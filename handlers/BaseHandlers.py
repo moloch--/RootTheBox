@@ -184,7 +184,7 @@ class BaseHandler(RequestHandler):
         ''' Write our custom error pages '''
         if not self.config.debug:
             trace = "".join(traceback.format_exception(*kwargs["exc_info"]))
-            logging.error("Request from %s resulted in an error code %d:\n%s" % (
+            logging.error("Request from %s resulted in an error %d:\n%s" % (
                 self.request.remote_ip, status_code, trace
             ))
             if status_code in [403]:
