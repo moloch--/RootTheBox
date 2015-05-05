@@ -160,7 +160,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             self.render("public/404.html")
 
     def add_source_code(self):
-        box = Box.by_uuid(self.get_argument('box_uuid'), '')
+        box = Box.by_uuid(self.get_argument('box_uuid', ''))
         if box is not None:
             file_count = len(self.request.files['source_archive'])
             if not 'source_archive' in self.request.files and 0 < file_count:

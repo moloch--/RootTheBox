@@ -167,6 +167,8 @@ class RegistrationHandler(BaseHandler):
 
     def create_user(self, team):
         ''' Add user to the database '''
+        if User.by_handle(self.get_argument('handle', '')) is not None:
+            raise ValidationError("This hacker name is already registered")
         if self.get_argument('pass1', '') != self.get_argument('pass2', ''):
             raise ValidationError("Passwords do not match")
         user = User()
@@ -190,6 +192,8 @@ class RegistrationHandler(BaseHandler):
     def create_team(self):
         ''' Create a new team '''
         if self.config.public_teams:
+            if Team.by_name(self.get_argument('team_name', '')) is not None:
+                raise ValidationError("This team name is already registered")
             team = Team()
             team.name = self.get_argument('team_name', '')
             team.motto = self.get_argument('motto', '')

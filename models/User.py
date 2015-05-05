@@ -335,6 +335,12 @@ class User(DatabaseObject):
                 data = fp.read()
                 ET.SubElement(user_elem, "avatar").text = data.encode('base64')
 
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self == other
+
     def __str__(self):
         return self.handle
 
