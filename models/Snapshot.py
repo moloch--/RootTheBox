@@ -26,7 +26,6 @@ from models import dbsession
 from models.Relationships import snapshot_to_snapshot_team
 from models.BaseModels import DatabaseObject
 
-### Constants ###
 # Ignore time zone for now
 UNIX_EPOCH = datetime.datetime(year=1970, month=1, day=1)
 
