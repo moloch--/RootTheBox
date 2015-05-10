@@ -4,8 +4,10 @@
 
 {% block content %}
 {% from models.Team import Team %}
-<div class="row-fluid">
-    <div class="span2" />
+<div class="row">
+
+    <!-- Nav -->
+    <div class="col-md-2" />
         <ul class="nav nav-tabs nav-stacked affix well">
             <center>
                 <strong>
@@ -24,7 +26,9 @@
             {% end %}
         </ul>
     </div>
-    <div class="span10">
+
+    <!-- Groups -->
+    <div class="col-md-8">
         <h1>
             <i class="fa fa-group"></i>
             Teams
@@ -43,19 +47,25 @@
                 <hr />
                 <div class="row">
                     <div class="container">
-                        {% for user in team.members %}
-                            <div class="span2">
-                                <center>
-                                    <h5>{{ user.handle }}</h5>
-                                    <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
-                                </center>
-                            </div>
+                        {% if 0 < len(team.members) %}
+                            {% for user in team.members %}
+                                <div class="col-md-2">
+                                    <center>
+                                        <h5>{{ user.handle }}</h5>
+                                        <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+                                    </center>
+                                </div>
+                            {% end %}
+                        {% else %}
+                            <p>
+                                <h4 class="text-center">No flags captured yet.</h4>
+                            </p>
                         {% end %}
                     </div>
                 </div>
+                <hr />
                 <div class="row">
                     <div class="container">
-                        <hr />
                         {% if len(team.flags) %}
                             <table class="table table-striped">
                                 <thead>
@@ -79,7 +89,7 @@
                             </table>
                         {% else %}
                             <p>
-                                <h4 style="text-align:center;">No flags captured yet.</h4>
+                                <h4 class="text-center">No flags captured yet.</h4>
                             </p>
                         {% end %}
                     </div>
