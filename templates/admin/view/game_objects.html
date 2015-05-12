@@ -343,14 +343,14 @@
 {% from models.Box import Box %}
     <!-- Start Visable -->
     <div class="row-fluid">
-        <div class="span2" />
+        <div class="col-md-2" />
             <ul class="nav nav-tabs nav-stacked affix well">
-                <center>
+                <div class="text-center">
                     <strong>
                         <i class="fa fa-building-o"></i>
                         Corporations
                     </strong>
-                </center>
+                </div>
                 <br />
                 {% for corporation in Corporation.all() %}
                     <li>
@@ -362,7 +362,7 @@
                 {% end %}
             </ul>
         </div>
-        <div class="span10">
+        <div class="col-md-10">
             <h1>
                 <i class="fa fa-bullseye"></i>
                 Target Management
@@ -383,7 +383,7 @@
                         <i class="fa fa-fw fa-building-o"></i>
                         {{ corporation.name }}&nbsp;&nbsp;
                     </h2>
-                    <a id="edit-corporation-button{{ corp_index }}" class="btn btn-small" data-toggle="modal" href="#edit-corporation-modal" data-uuid="{{ corporation.uuid }}">
+                    <a id="edit-corporation-button{{ corp_index }}" class="btn btn-small btn-info" data-toggle="modal" href="#edit-corporation-modal" data-uuid="{{ corporation.uuid }}">
                         <i class="fa fa-fw fa-pencil"></i>
                         Edit Corp
                     </a>
@@ -400,7 +400,7 @@
                                     <i class="fa fa-desktop"></i>
                                     {{ box.name }}&nbsp;&nbsp;
                                 </h3>
-                                    <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
+                                    <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small btn-info" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
                                         <i class="fa fa-pencil"></i>
                                         Edit Box
                                     </a>
@@ -415,11 +415,11 @@
                                 <br />
                                 <br />
                                 <div class="row-fluid">
-                                    <div class="span4">
+                                    <div class="col-md-4">
                                         <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                                         <br /><br />
                                     </div>
-                                    <div class="span8">
+                                    <div class="col-md-8">
                                         <h4 style="display:inline;">
                                             <i class="fa fa-fw fa-globe"></i>
                                             IP Address&nbsp;&nbsp;

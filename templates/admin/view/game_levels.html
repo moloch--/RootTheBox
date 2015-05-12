@@ -115,7 +115,7 @@
             {% end %}
         {% end %}
         <h1>
-            <i class="fa fa-level-up"></i>
+            <i class="fa fa-fw fa-level-up"></i>
             Game Levels
         </h1>
         <br />
@@ -124,7 +124,7 @@
                 <h2 style="display:inline;">
                     Level #{{ level.number }} - ${{ level.buyout }}&nbsp;&nbsp;&nbsp;
                 </h2>
-                <a id="edit-game-level-button{{ index }}" class="btn btn-small" data-toggle="modal" href="#edit-game-level-modal" data-uuid="{{ level.uuid }}">
+                <a id="edit-game-level-button{{ index }}" class="btn btn-small btn-info" data-toggle="modal" href="#edit-game-level-modal" data-uuid="{{ level.uuid }}">
                     <i class="fa fa-pencil"></i>
                     Edit Game Level
                 </a>
@@ -134,7 +134,7 @@
                 </a>
                 <hr />
                 {% if len(level.boxes) != 0 %}
-                    <table class="table table-striped">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -150,7 +150,7 @@
                                     <td>{{ box.name }}</td>
                                     <td>{{ len(box.flags) }}</td>
                                     <td>
-                                          <a id="switch-level-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#switch-level-modal" data-level-uuid="{{ level.uuid }}" data-box-uuid="{{ box.uuid }}">
+                                          <a id="switch-level-button{{ index }}" class="btn btn-sm btn-warning" data-toggle="modal" href="#switch-level-modal" data-level-uuid="{{ level.uuid }}" data-box-uuid="{{ box.uuid }}">
                                             <i class="fa fa-arrows-v"></i>
                                             Switch Level
                                           </a>

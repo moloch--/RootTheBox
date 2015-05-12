@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container">
     <h1>
-        <i class="fa fa-building-o"></i>
+        <i class="fa fa-fw fa-building-o"></i>
         Create Corporation
     </h1>
     <br />{% if errors is not None and len(errors) != 0 %}
@@ -18,18 +18,19 @@
         {% end %}
     {% end %}
     <div class="well">
-        <form class="form-horizontal" action="/admin/create/corporation" method="post">
+        <form action="/admin/create/corporation" method="post">
             {% raw xsrf_form_html() %}
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="corporation_name">Corporation Name</label>
                 <div class="controls">
-                    <input autofocus required id="corporation_name" name="corporation_name" type="text" placeholder="Corporation Name">
+                    <input autofocus required id="corporation_name" class="form-control" name="corporation_name" type="text" placeholder="Corporation Name">
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn btn-primary" type="submit">Create Corporation</button>
-                </div>
+            <div class="form-group">
+                <button class="btn btn-primary form-control" type="submit">
+                    <i class="fa fa-fw fa-building"></i>
+                    Create Corporation
+                </button>
             </div>
         </form>
     </div>
