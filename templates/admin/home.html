@@ -8,17 +8,16 @@
 
 {% block content %}
     <div class="row">
-        <div class="offset1">
-            <h1>
-                <i class="fa fa-home"></i>
+        <div class="col-md-offset-1">
+            <h2>
+                <i class="fa fa-fw fa-home"></i>
                 Administrator Panel
-            </h1>
-            <br />
+            </h2>
         </div>
     </div>
     <div class="row">
-        <div class="well span3 offset1">
-            <h3>Game Control</h3>
+        <div class="well col-md-2 col-md-offset-1">
+            <h3 class="text-center">Game Control</h3>
             <hr />
             <form id="start-game-form" action="/admin/game" method="post">
                 {% raw xsrf_form_html() %}
@@ -32,15 +31,15 @@
                 {% raw xsrf_form_html() %}
                 <input id="clear-ip" name="ip" type="hidden" />
             </form>
-            <div style="margin-left:auto; margin-right:auto; text-align:center;">
+            <div class="text-center">
                 <br />
                 {% if not handler.application.settings['game_started'] %}
-                    <button id="start-game-button" class="btn btn-success btn-large" type="button">
+                    <button id="start-game-button" class="btn btn-success btn-large form-control" type="button">
                         <i class="fa fa-fw fa-play"></i>
                         Start the Game
                     </button>
                 {% else %}
-                    <button id="stop-game-button" class="btn btn-danger btn-large" type="button">
+                    <button id="stop-game-button" class="btn btn-danger btn-large form-control" type="button">
                         <i class="fa fa-fw fa-stop"></i>
                         Stop the Game
                     </button>
@@ -49,9 +48,8 @@
             <br />
             <br />
         </div>
-        <div class="well span10">
+        <div class="well col-md-7 col-md-offset-1">
             <h3>Failed Logins</h3>
-            <hr />
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -88,13 +86,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="well span3 offset1">
-            <h3>Automatic Ban</h3>
+        <div class="well col-md-2 col-md-offset-1">
+            <h3 class="text-center">Automatic Ban</h3>
             <hr />
             <form action="/admin/ban/config" method="post">
                 {% raw xsrf_form_html() %}
-                <div class="control-group">
-                    <div class="controls">
+                <div class="form-group">
+                    <div class="radio-inline">
                         <input id="automatic-ban" name="automatic_ban" type="hidden" value="{{ str(handler.application.settings['automatic_ban']).lower() }}" />
                         <div id="automatic-ban-button" class="btn-group" data-toggle="buttons-radio">
                             <button id="automatic-ban-enable" type="button" class="btn btn-success">
@@ -108,25 +106,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="threshold-size">Threshold</label>
+                <div class="form-group">
+                    <label for="threshold-size">Threshold</label>
                     <div class="controls">
-                        <input id="threshold-size" type="text" name="threshold_size" value="{{ handler.application.settings['blacklist_threshold'] }}" />
+                        <input id="threshold-size" class="form-control" type="text" name="threshold_size" value="{{ handler.application.settings['blacklist_threshold'] }}" />
                     </div>
                 </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fa fa-save"></i>
-                            Save
-                        </button>
-                    </div>
+                <div class="form-group">
+                    <button class="btn btn-primary form-control" type="submit">
+                        <i class="fa fa-save"></i>
+                        Save
+                    </button>
                 </div>
             </form>
         </div>
-        <div class="well span10">
+        <div class="well col-md-7 col-md-offset-1">
             <h3>Banned IPs</h3>
-            <hr />
             <table class="table table-striped">
                 <thead>
                     <tr>

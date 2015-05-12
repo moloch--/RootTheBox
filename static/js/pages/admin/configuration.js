@@ -110,14 +110,14 @@ $(document).ready(function() {
     });
 
     /* Enable popovers */
-    $("#game-name").popover({placement:'right', trigger:'hover'});
-    $("#restrict-registration-button").popover({placement:'right', trigger:'hover'})
-    $("#public-teams-button").popover({placement:'right', trigger:'hover'})
-    $("#max-team-size").popover({placement:'right', trigger:'hover'});
-    $("#max-password-length").popover({placement:'right', trigger:'hover'});
-    $("#use-bots-button").popover({placement:'right', trigger:'hover'});
-    $("#bot-reward").popover({placement:'right', trigger:'hover'});
-    $("#use-black-market-button").popover({placement:'right', trigger:'hover'});
-    $("#password-upgrade-cost").popover({placement:'right', trigger:'hover'});
-    $("#bribe-cost").popover({placement:'right', trigger:'hover'});
+    $("#game-name").popover({placement:'bottom', trigger:'hover'});
+    $("#restrict-registration-button").popover({placement:'bottom', trigger:'hover'})
+    $("#public-teams-button").popover({placement:'bottom', trigger:'hover'})
+    $("#max-team-size").popover({placement:'bottom', trigger:'hover'});
+    $("#max-password-length").popover({placement:'bottom', trigger:'hover'});
+    $("#use-bots-button").popover({placement:'bottom', trigger:'hover'});
+    $("#bot-reward").popover({placement:'bottom', trigger:'hover'});
+    $("#use-black-market-button").popover({placement:'bottom', trigger:'hover'});
+    $("#password-upgrade-cost").popover({placement:'bottom', trigger:'hover'});
+    $("#bribe-cost").popover({placement:'bottom', trigger:'hover'});
 });

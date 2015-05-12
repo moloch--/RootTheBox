@@ -29,7 +29,7 @@
             {% end %}
         {% end %}
         <div class="row">
-            <div class="span6 well">
+            <div class="col-md-6 well">
                 <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
                     <legend>Change Avatar</legend>
@@ -47,7 +47,7 @@
                     </div>
                 </form>
             </div>
-            <div class="span5 well">
+            <div class="col-md-5 well">
                 <form action="/user/settings/theme" method="post">
                     {% raw xsrf_form_html() %}
                     <legend>Change Theme</legend>
@@ -111,7 +111,7 @@
                 <form class="form-horizontal" action="/user/settings/bank_password" method="post" autocomplete="off">
                     {% raw xsrf_form_html() %}
                     <div class="row-fluid">
-                        <div class="span6">
+                        <div class="col-md-6">
                             <legend>
                                 <i class="fa fa-lock"></i>
                                 Bank Password
