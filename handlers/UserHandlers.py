@@ -34,6 +34,7 @@ from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
+from tornado.options import options
 
 
 RECAPTCHA_URL = 'http://www.google.com/recaptcha/api/verify'
@@ -130,13 +131,15 @@ class SettingsHandler(BaseHandler):
         ''' Sets a users password '''
         if user.validate_password(old_password):
             if new_password == new_password2:
-                if 16 <= len(new_password) or self.config.debug:
+                if len(new_password) >= options.min_user_password_length or self.config.debug:
                     user.password = new_password
                     self.dbsession.add(user)
                     self.dbsession.commit()
                     self.render_page(success=["Successfully updated password"])
                 else:
-                    self.render_page(errors=["Password must be at least 16 characters"])
+                    self.render_page(errors=["Password must be at least %d characters " % (
+                        options.min_user_password_length,
+                    )])
             else:
                 self.render_page(errors=["New password's didn't match"])
         else:

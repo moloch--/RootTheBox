@@ -111,9 +111,10 @@ $(document).ready(function() {
 
     /* Enable popovers */
     $("#game-name").popover({placement:'right', trigger:'hover'});
-    $("#restrict-registration-button").popover({placement:'right', trigger:'hover'})
-    $("#public-teams-button").popover({placement:'right', trigger:'hover'})
+    $("#restrict-registration-button").popover({placement:'right', trigger:'hover'});
+    $("#public-teams-button").popover({placement:'right', trigger:'hover'});
     $("#max-team-size").popover({placement:'right', trigger:'hover'});
+    $("#min-user-password-length").popover({placement:'right', trigger:'hover'});
     $("#max-password-length").popover({placement:'right', trigger:'hover'});
     $("#use-bots-button").popover({placement:'right', trigger:'hover'});
     $("#bot-reward").popover({placement:'right', trigger:'hover'});
