@@ -137,8 +137,8 @@ class SettingsHandler(BaseHandler):
                     self.dbsession.commit()
                     self.render_page(success=["Successfully updated password"])
                 else:
-                    self.render_page(errors=["Password must be at least 16 characters " % (
-                        options.max_password_length,
+                    self.render_page(errors=["Password must be at least %d characters " % (
+                        options.min_user_password_length,
                     )])
             else:
                 self.render_page(errors=["New password's didn't match"])
