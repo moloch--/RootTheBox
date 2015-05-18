@@ -181,7 +181,7 @@ class User(DatabaseObject):
             self._bank_password = self._hash_bank_password(self.algorithm, _password)
         else:
             raise ValidationError("Invalid bank password length (max %d chars)" % (
-                options.max_bank_password_length,
+                options.max_password_length,
             ))
 
     @property
