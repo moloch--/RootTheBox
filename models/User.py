@@ -163,7 +163,7 @@ class User(DatabaseObject):
     @password.setter
     def password(self, value):
         _password = filter(lambda char: char in printable[:-6], value)
-        if len(_password) <= options.min_user_password_length:
+        if len(_password) >= options.min_user_password_length:
             self._password = self._hash_password(value)
         else:
             raise ValidationError("Invalid password length (min %d chars)" % (
