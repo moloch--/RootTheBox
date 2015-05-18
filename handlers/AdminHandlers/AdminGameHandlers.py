@@ -307,6 +307,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.restrict_registration = self.get_bool('restrict_registration', False)
         self.config.public_teams = self.get_bool('public_teams')
         self.config.max_team_size = self.get_int('max_team_size')
+        self.config.min_user_password_lenght = self.get_int('min_user_password_lenght', '16')
         self.config.max_password_length = self.get_int('max_password_length', '7')
         self.config_bots()
         self.config.bot_reward = self.get_int('bot_reward', 50)

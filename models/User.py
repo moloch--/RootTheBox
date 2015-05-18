@@ -162,10 +162,13 @@ class User(DatabaseObject):
 
     @password.setter
     def password(self, value):
-        if 16 <= len(value) or options.debug:
+        _password = filter(lambda char: char in printable[:-6], value)
+        if len(_password) <= options.min_user_password_length:
             self._password = self._hash_password(value)
         else:
-            raise ValidationError("Account password is too short (16+)")
+            raise ValidationError("Invalid password length (min %d chars)" % (
+                options.min_user_password_length,
+            ))
 
     @property
     def bank_password(self):
@@ -178,7 +181,7 @@ class User(DatabaseObject):
             self._bank_password = self._hash_bank_password(self.algorithm, _password)
         else:
             raise ValidationError("Invalid bank password length (max %d chars)" % (
-                options.max_password_length,
+                options.max_bank_password_length,
             ))
 
     @property
