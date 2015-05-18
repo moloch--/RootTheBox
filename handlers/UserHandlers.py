@@ -131,7 +131,7 @@ class SettingsHandler(BaseHandler):
         ''' Sets a users password '''
         if user.validate_password(old_password):
             if new_password == new_password2:
-                if 16 <= len(new_password) or self.config.debug:
+                if len(new_password) >= options.min_user_password_length or self.config.debug:
                     user.password = new_password
                     self.dbsession.add(user)
                     self.dbsession.commit()
