@@ -317,6 +317,12 @@ define("max_team_size",
        help="max number of players on any one team",
        type=int)
 
+define("min_user_password_length",
+       default=1,
+       group="game",
+       help="min user password length",
+       type=int)
+
 define("max_password_length",
        default=7,
        group="game",
