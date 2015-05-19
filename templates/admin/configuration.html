@@ -86,6 +86,15 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="min-user-password-length">Minimum User Password Length</label>
+                <div class="controls">
+                    <input required id="min-user-password-length" type="text" name="min_user_password_length" value="{{ config.min_user_password_length }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Min user password length"
+                        data-content="Restrict players user password to this length" />
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="max-password-length">Bank Password Length</label>
                 <div class="controls">
                     <input required id="max-password-length" type="text" name="max_password_length" value="{{ config.max_password_length }}"
