@@ -86,11 +86,11 @@
                 <div class="control-group">
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">
-                        <input required id="pass1" name="pass1" maxlenght="{{ config.min_user_password_length }}" placeholder="Password" type="password"
+                        <input required id="pass1" name="pass1" maxlenght="{% config.min_user_password_length %}" placeholder="Password" type="password"
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Password"
-                            data-content="Enter a complex password of {{ config.min_user_password_length }}+ characters" />
+                            data-content="Enter a complex password of {% config.min_user_password_length %}+ characters" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -106,7 +106,7 @@
                 <div class="control-group">
                     <label class="control-label" for="bpass1">Bank Account Password</label>
                     <div class="controls">
-                        <input required id="bpass" name="bpass" maxlenght="{{ config.max_password_length }}" placeholder="Bank Account Password" type="password"
+                        <input required id="bpass" name="bpass" maxlenght="{% config.max_password_length %}" placeholder="Bank Account Password" type="password"
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Password"
