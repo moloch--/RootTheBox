@@ -66,19 +66,19 @@
                         <div class="control-group">
                             <label class="control-label" for="team_name">Team Name</label>
                             <div class="controls">
-                                <input id="team-name" name="team_name" type="text" placeholder="Team Name"
+                                <input id="team-name" name="team_name" maxlength="25" type="text" placeholder="Team Name"
                                     rel="popover"
                                     data-original-title="New Team Name"
-                                    data-content="Choose a name for your new team![Max: 24 Characters" >
+                                    data-content="Choose a name for your new team![3-24 Characters]" >
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="motto">Motto</label>
                             <div class="controls">
-                                <input id="motto" name="motto" type="text" placeholder="Team Motto"
+                                <input id="motto" name="motto" maxlength="33" type="text" placeholder="Team Motto"
                                     rel="popover"
                                     data-original-title="Team Motto"
-                                    data-content="What's your team's motto? [Max: 24 Characters]">
+                                    data-content="What's your team's motto? [Max: 32 Characters]">
                             </div>
                         </div>
                     {% end %}
