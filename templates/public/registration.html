@@ -69,7 +69,7 @@
                                 <input id="team-name" name="team_name" type="text" placeholder="Team Name"
                                     rel="popover"
                                     data-original-title="New Team Name"
-                                    data-content="Choose a name for your new team!" >
+                                    data-content="Choose a name for your new team![Max: 24 Characters" >
                             </div>
                         </div>
                         <div class="control-group">
@@ -78,7 +78,7 @@
                                 <input id="motto" name="motto" type="text" placeholder="Team Motto"
                                     rel="popover"
                                     data-original-title="Team Motto"
-                                    data-content="What's your team's motto?">
+                                    data-content="What's your team's motto? [Max: 24 Characters]">
                             </div>
                         </div>
                     {% end %}
@@ -96,7 +96,7 @@
                 <div class="control-group">
                     <label class="control-label" for="pass2">Confirm Account Password</label>
                     <div class="controls">
-                        <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password"
+                        <input required id="pass2" name="pass2" maxlenght="{{ options.min_user_password_length }}" placeholder="Confirm Password" type="password"
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Confirm Password"
@@ -110,7 +110,7 @@
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Password"
-                            data-content="Used to secure your (in-game) bank account.  Please do NOT enter your real bank account password." />
+                            data-content="Used to secure your (in-game) bank account. [Max: {{ options.max_password_length }} characters].  Please do NOT enter your real bank account password." />
                     </div>
                 </div>
                 {% if options.restrict_registration %}
