@@ -118,7 +118,8 @@ class Team(DatabaseObject):
     def name(self, value):
         if not 3 <= len(value) <= 24:
             raise ValueError("Team name must be 3 - 24 characters")
-        self._name = unicode(value)
+        else:
+            self._name = unicode(value)
 
     @property
     def motto(self):
@@ -128,7 +129,8 @@ class Team(DatabaseObject):
     def motto(self, value):
         if 32 < len(value):
             raise ValueError("Motto must be less than 32 characters")
-        self._motto = unicode(value)
+        else:
+            self._motto = unicode(value)
 
     @property
     def levels(self):
