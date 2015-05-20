@@ -36,10 +36,10 @@
                         Handle
                     </label>
                     <div class="controls">
-                        <input required id="handle" name="handle" placeholder="Hacker Name" type="text"
-                            rel="popover" pattern="^[a-zA-Z0-9 ]{3,15}$"
+                        <input required id="handle" name="handle" maxlength="16" placeholder="Hacker Name" type="text"
+                            rel="popover" pattern="^[a-zA-Z0-9 ]{3,16}$"
                             data-original-title="Hacker Name Selection"
-                            data-content="Your handle must be 3-15 alpha-numeric characters" />
+                            data-content="Your handle must be 3-16 alpha-numeric characters" />
                     </div>
                 </div>
 
@@ -66,19 +66,19 @@
                         <div class="control-group">
                             <label class="control-label" for="team_name">Team Name</label>
                             <div class="controls">
-                                <input id="team-name" name="team_name" type="text" placeholder="Team Name"
+                                <input id="team-name" name="team_name" maxlength="24" type="text" placeholder="Team Name"
                                     rel="popover"
                                     data-original-title="New Team Name"
-                                    data-content="Choose a name for your new team!" >
+                                    data-content="Choose a name for your new team![3-24 Characters]" >
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="motto">Motto</label>
                             <div class="controls">
-                                <input id="motto" name="motto" type="text" placeholder="Team Motto"
+                                <input id="motto" name="motto" maxlength="32" type="text" placeholder="Team Motto"
                                     rel="popover"
                                     data-original-title="Team Motto"
-                                    data-content="What's your team's motto?">
+                                    data-content="What's your team's motto? [Max: 32 Characters]">
                             </div>
                         </div>
                     {% end %}
@@ -96,7 +96,7 @@
                 <div class="control-group">
                     <label class="control-label" for="pass2">Confirm Account Password</label>
                     <div class="controls">
-                        <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password"
+                        <input required id="pass2" name="pass2" maxlenght="{{ options.min_user_password_length }}" placeholder="Confirm Password" type="password"
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Confirm Password"
@@ -110,7 +110,7 @@
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Password"
-                            data-content="Used to secure your (in-game) bank account.  Please do NOT enter your real bank account password." />
+                            data-content="Used to secure your (in-game) bank account. [Max: {{ options.max_password_length }} characters].  Please do NOT enter your real bank account password." />
                     </div>
                 </div>
                 {% if options.restrict_registration %}

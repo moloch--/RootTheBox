@@ -32,6 +32,7 @@ from models.Relationships import team_to_box, team_to_item, \
     team_to_flag, team_to_game_level, team_to_source_code, \
     team_to_hint
 from libs.BotManager import BotManager
+from libs.ValidationError import ValidationError
 from tornado.options import options
 
 
@@ -117,8 +118,9 @@ class Team(DatabaseObject):
     @name.setter
     def name(self, value):
         if not 3 <= len(value) <= 24:
-            raise ValueError("Team name must be 3 - 24 characters")
-        self._name = unicode(value)
+            raise ValidationError("Team name must be 3 - 24 characters")
+        else:
+            self._name = unicode(value)
 
     @property
     def motto(self):
@@ -127,8 +129,9 @@ class Team(DatabaseObject):
     @motto.setter
     def motto(self, value):
         if 32 < len(value):
-            raise ValueError("Motto must be less than 32 characters")
-        self._motto = unicode(value)
+            raise ValidationError("Motto must be less than 32 characters")
+        else:
+            self._motto = unicode(value)
 
     @property
     def levels(self):
