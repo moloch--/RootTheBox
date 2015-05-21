@@ -2,6 +2,10 @@
 
 {% block title %}Create Corporation{% end %}
 
+{% block header %}
+    <script src="/static/js/pages/admin/create/corporation.js"></script>
+{% end %}
+
 {% block content %}
 <div class="container">
     <h1>
@@ -23,7 +27,7 @@
             <div class="control-group">
                 <label class="control-label" for="corporation_name">Corporation Name</label>
                 <div class="controls">
-                    <input autofocus required id="corporation_name" name="corporation_name" maxlenght='32' type="text" placeholder="Corporation Name"
+                    <input autofocus required id="corporation-name" name="corporation_name" maxlength='32' type="text" placeholder="Corporation Name"
                            rel="popover"
                            data-original-title="Corporation Name"
                            data-content="What's your Corporation Name? [3-32 Characters]">

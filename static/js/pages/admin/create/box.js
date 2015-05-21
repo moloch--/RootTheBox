@@ -21,5 +21,11 @@ $(document).ready(function() {
     });
 
     /* Popovers */
+    $("#box-name").popover({placement:'right', trigger:'hover'});
+    $("#game-level").popover({placement:'right', trigger:'hover'});
+    $("#corporation").popover({placement:'right', trigger:'hover'});
+    $("#operating-system").popover({placement:'right', trigger:'hover'});
+    $("#description").popover({placement:'right', trigger:'hover'});
     $("#autoformat-button").popover({placement:'right', trigger:'hover'});
-});
+    $("#difficulty").popover({placement:'right', trigger:'hover'});
+    });
