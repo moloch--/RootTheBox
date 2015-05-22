@@ -38,6 +38,7 @@ from models.Corporation import Corporation
 from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image
+from libs.ValidationError import ValidationError
 
 
 class Box(DatabaseObject):
@@ -129,7 +130,7 @@ class Box(DatabaseObject):
     @name.setter
     def name(self, value):
         if not 3 <= len(unicode(value)) <= 32:
-            raise ValidationError("Name must be 3 - 16 characters")
+            raise ValidationError("Name must be 3 - 32 characters")
         self._name = unicode(value)
 
     @property
@@ -166,8 +167,8 @@ class Box(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        if 1024 < len(value):
-            raise ValueError("Description must be less than 1024 characters")
+        if 1025 < len(value):
+            raise ValidationError("Description cannot be greater than 1024 characters")
         self._description = unicode(value)
 
     @property
@@ -176,8 +177,8 @@ class Box(DatabaseObject):
 
     @difficulty.setter
     def difficulty(self, value):
-        if 16 < len(value):
-            raise ValueError("Difficulty must be less than 16 characters")
+        if 17 < len(value):
+            raise ValidationError("Difficulty cannot be greater than 16 characters")
         self._difficulty = unicode(value)
 
     @property

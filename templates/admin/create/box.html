@@ -30,13 +30,19 @@
             <div class="control-group">
                 <label class="control-label" for="box_name">Box Name</label>
                 <div class="controls">
-                    <input autofocus required id="box_name" name="name" type="text" placeholder="Box Name">
+                    <input autofocus required id="box-name" name="name" maxlength="32" type="text" placeholder="Box Name"
+                           rel="popover"
+                           data-original-title="Box Name"
+                           data-content="What's the name of this box? [3-32 Characters]">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="game_level">Game Level</label>
                 <div class="controls">
-                    <select name="game_level">
+                    <select id="game-level" name="game_level"
+                           rel="popover"
+                           data-original-title="Game Level"
+                           data-content="Level to put box in?">
                         <option value=""></option>
                         {% for level in GameLevel.all() %}
                         <option value="{{ level.number }}">{{ level.number }}</option>
@@ -47,7 +53,10 @@
             <div class="control-group">
                 <label class="control-label" for="corporation">Corporation</label>
                 <div class="controls">
-                    <select id="corporation" name="corporation_uuid">
+                    <select id="corporation" name="corporation_uuid"
+                            rel="popover"
+                            data-original-title="Corporation"
+                            data-content="Corporation box belongs too?">
                         <option value=""></option>
                         {% for corp in Corporation.all() %}
                         <option value="{{ corp.uuid }}">{{ corp.name }}</option>
@@ -58,8 +67,11 @@
             <div class="control-group">
                 <label class="control-label" for="operatingsystem">Operating System</label>
                 <div class="controls">
-                    <input id="operating-system" name="operating_system" type="hidden" value="?" />
-                    <div class="btn-group" data-toggle="buttons-radio">
+                    <input id="operating_system" name="operating_system" type="hidden" value="?" />
+                    <div id="operating-system" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Operating System"
+                            data-content="What type of operating system is this?">
                         <button id="os-button" class="btn active" type="button" data-os="?">
                             <i class="fa fa-question"></i>
                             Unknown
@@ -82,7 +94,10 @@
             <div class="control-group">
                 <label class="control-label" for="description">Description</label>
                 <div class="controls">
-                    <textarea required id="description" name="description" placeholder="Description">
+                    <textarea required id="description" name="description" maxlength="1024" placeholder="Description"
+                              rel="popover"
+                              data-original-title="Description"
+                              data-content="A brief description of the box [Max: 1024 Characters]">
                     </textarea>
                 </div>
             </div>
@@ -110,7 +125,10 @@
             <div class="control-group">
                 <label class="control-label" for="difficulty">Difficulty</label>
                 <div class="controls">
-                    <input required id="difficulty" name="difficulty" type="text" placeholder="Difficulty">
+                    <input required id="difficulty" name="difficulty" maxlength="16" type="text" placeholder="Difficulty"
+                        rel="popover"
+                        data-original-title="Box Difficulty"
+                        data-content="What's the difficulty of the box? [Max: 16 Characters]">
                 </div>
             </div>
             <div class="control-group">

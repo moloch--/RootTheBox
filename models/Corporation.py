@@ -77,7 +77,7 @@ class Corporation(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 < len(value) < 32:
+        if not 3 <= len(value) <= 32:
             raise ValidationError("Corporation name must be 3 - 32 characters")
         self._name = unicode(value)
 
