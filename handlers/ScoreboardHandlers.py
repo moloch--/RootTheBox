@@ -59,7 +59,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
     def on_close(self):
         ''' Lost connection to client '''
         try:
-            self.connecitons.remove(self)
+            self.connections.remove(self)
         except KeyError:
             logging.warn("[Web Socket] Connection has already been closed.")
 
