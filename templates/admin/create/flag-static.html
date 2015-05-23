@@ -2,6 +2,10 @@
 
 {% block title %}Create Flag{% end %}
 
+{% block header %}
+<script src="/static/js/pages/admin/create/flags.js"></script>
+{% end %}
+
 {% block content %}
 {% from models.Box import Box %}
 <div class="container">
@@ -27,7 +31,10 @@
                     <div class="control-group">
                         <label class="control-label" for="flag_name">Flag Name</label>
                         <div class="controls">
-                            <input autofocus required id="flag_name" name="flag_name" type="text" placeholder="Flag Name">
+                            <input autofocus required id="flag-name" maxlength="16" name="flag_name" type="text" placeholder="Flag Name"
+                                    rel="popover"
+                                    data-original-title="Flag Name"
+                                    data-content="This is what you want the flag to be displayed as." />
                         </div>
                     </div>
                     <div class="control-group">
@@ -39,27 +46,39 @@
                     <div class="control-group">
                         <label class="control-label" for="description">Description</label>
                         <div class="controls">
-                            <textarea required id="description" name="description" type="text" placeholder="Description">
+                            <textarea required id="description" name="description" type="text" placeholder="Description"
+                                    rel="popover"
+                                    data-original-title="Description"
+                                    data-content="This is the description.">
                             </textarea>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="capture-message">Capture Message</label>
                         <div class="controls">
-                            <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)">
+                            <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)"
+                                    rel="popover"
+                                    data-original-title="Capture Message"
+                                    data-content="This is the message displayed to the user once inputed." >
                             </textarea>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="reward">Reward</label>
                         <div class="controls">
-                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="$ Reward">
+                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="$ Reward"
+                                   rel="popover"
+                                   data-original-title="Reward"
+                                   data-content="This is the amount of money rewarded for capturing the flag.">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="box_uuid">Box</label>
                         <div class="controls">
-                            <select name="box_uuid">
+                            <select id="box-uuid" name="box_uuid"
+                                    rel="popover"
+                                    data-original-title="Box"
+                                    data-content="This is the box the flag is located on.">
                                 <option value=""></option>
                                 {% for box in Box.all() %}
                                 <option value="{{ box.uuid }}">
