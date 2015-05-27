@@ -95,7 +95,10 @@ class AdminCreateHandler(BaseHandler):
             motto = self.get_argument('motto', '')
             if Team.by_name(name) is not None:
                 raise ValidationError("Team already exists")
-            team = Team(name=name, motto=motto)
+            team = Team()
+            team.name = self.get_argument('team_name', '')
+            team.motto = self.get_argument('motto', '')
+            level_0 = GameLevel.all()[0]
             self.dbsession.add(team)
             self.dbsession.commit()
             self.redirect('/admin/users')

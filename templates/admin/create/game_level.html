@@ -2,6 +2,10 @@
 
 {% block title %}Create Game Level{% end %}
 
+{% block header %}
+<script src="/static/js/pages/admin/create/game_level.js"></script>
+{% end %}
+
 {% block content %}
 <div class="container">
     <h1>
@@ -24,13 +28,19 @@
             <div class="control-group">
                 <label class="control-label" for="level_number">Level Number</label>
                 <div class="controls">
-                    <input autofocus required id="level_number" name="level_number" type="text" pattern="[0-9]+" placeholder="Level Number">
+                    <input autofocus required id="level-number" name="level_number" type="text" pattern="[0-9]+" placeholder="Level Number"
+                            rel="popover"
+                            data-original-title="Level Number"
+                            data-content="Nuber of new Level [0-9]+ Must be unique" />
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="buyout">Buyout Price</label>
                 <div class="controls">
-                    <input required id="buyout" name="buyout" type="text" pattern="[0-9]+" placeholder="Level Number">
+                    <input required id="buyout" name="buyout" type="text" pattern="[0-9]+" placeholder="Level Number"
+                            rel="popover"
+                            data-original-title="Buyout Price"
+                            data-content="Cost to open this level and see flags [0-9]+" />
                 </div>
             </div>
             <div class="control-group">
