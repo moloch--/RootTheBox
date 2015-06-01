@@ -856,7 +856,10 @@ def display_status(ws, response, verbose=False):
     sys.stdout.flush()
 
 def get_response_xid(garbage, xid):
-    round1 = sha512(xid + garbage).digest()
+    round1 = sha512(xid + garbage).hexdigest()
+    print("Garbage: " + garbage)
+    print("XID :" + xid)
+    print("[*] Return: " + str(sha512(round1).hexdigest()))
     return sha512(round1).hexdigest()
 
 def send_interrogation_response(ws, response):
