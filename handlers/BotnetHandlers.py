@@ -26,7 +26,7 @@ import tornado.websocket
 
 
 from uuid import uuid4
-from hashlib import sha1, sha512
+from hashlib import sha512
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from models import Box, Team, User

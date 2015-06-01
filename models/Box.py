@@ -120,7 +120,6 @@ class Box(DatabaseObject):
         Returns a box object based on an ip address, supports both ipv4
         and ipv6
         '''
-#        ip = dbsession.query(cls).by_address(ip_addr).first()
         ip = IpAddress.by_address(ip_addr)
 
         return ip.box if ip is not None else None
