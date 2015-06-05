@@ -26,7 +26,7 @@ import tornado.websocket
 
 
 from uuid import uuid4
-from hashlib import sha1
+from hashlib import sha512
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from models import Box, Team, User
@@ -119,8 +119,8 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
 
     def interrogation_response(self, msg):
         ''' Steps 3 and 4; validate repsonses '''
-        logging.debug("Recieved interrogate response, validating ...")
-        response_xid = msg['rxid']
+        logging.debug("Received interrogate response, validating ...")
+        response_xid = msg['response_xid']
         user = User.by_handle(msg['handle'])
         box = Box.by_name(msg['box_name'])
         if self.config.whitelist_box_ips and self.remote_ip not in box.ips:
@@ -152,7 +152,8 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.send_error("Duplicate bot")
 
     def is_valid_xid(self, box, response_xid):
-        return response_xid == sha1(self.xid + box.garbage).hexdigest()
+        round1 = sha512(self.xid + box.garbage).hexdigest()
+        return response_xid == sha512(round1).hexdigest()
 
     def ping(self):
         ''' Just make sure we can write data to the socket '''
