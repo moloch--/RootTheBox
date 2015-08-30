@@ -597,7 +597,7 @@ class WebSocket(object):
 
         payload: data payload to send server.
         """
-        logging.degug("Got <- PING")
+        logging.debug("Got <- PING")
         self.send(payload, ABNF.OPCODE_PING)
 
     def pong(self, payload):
