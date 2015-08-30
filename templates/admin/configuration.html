@@ -178,6 +178,15 @@
             </div>
             <hr />
             <div class="control-group">
+                <label class="control-label" for="max_pastebin_size">Pastebin Character limit</label>
+                <div class="controls">
+                    <input required id="max-pastebin-size" type="text" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Max PasteBin Size"
+                        data-content="This is the the limit of characters allowed for a pastebin post." />
+                </div>
+            </div>
+            <div class="control-group">
                 <div class="controls">
                     <button class="btn btn-primary" type="submit">
                         Update Configuration
