@@ -108,6 +108,9 @@ class BotManager(object):
         self.monitors = {}
         if options.botnet_db == ":tempfile:":
             options.botnet_db = NamedTemporaryFile(delete=False).name
+        if os.path.exists(options.botnet_db):
+                os.remove(options.botnet_db)
+                logging.debug("Removing old botnet database file")
         self.db_path = u'sqlite:///%s' % options.botnet_db
         logging.debug("Created botnet database at: %s" % self.db_path)
         self.sqlite_engine = create_engine(self.db_path,
