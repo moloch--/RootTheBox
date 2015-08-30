@@ -325,7 +325,7 @@ define("use_bots",
        type=bool)
 
 define("botnet_db",
-       default="./files/botnet.db",
+       default="files/botnet.db",
        group="game",
        help="botnet database path")
 
@@ -378,6 +378,11 @@ define("rank_by",
        default="flags",
        group="game",
        help="rank teams by (flags or money)")
+
+define("max_pastebin_size",
+       default=4096,
+       group="game",
+       help="Pastebin Character limit")
 
 # I/O Loop Settings
 define("history_snapshot_interval",

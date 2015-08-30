@@ -19,15 +19,16 @@
         {% end %}
         <form id="create-paste" action="/user/share/pastebin/create" method="post" autocomplete="off">
             {% raw xsrf_form_html() %}
+            {% from tornado.options import options %}
             <fieldset>
             <legend>Create New Paste</legend>
                 <p>
                     <label for="name">Name</label>
-                    <input autofocus required name="name" id="name" placeholder="Paste Name" type="text" />
+                    <input autofocus required name="name" id="name" maxlength="32" placeholder="Paste Name" type="text" />
                 </p>
                 <p>
                     <label for="content">Content</label>
-                    <textarea required name="content" placeholder="Paste Text Here" style="width:auto;" rows="10" cols="60">
+                    <textarea required name="content" maxlength="{{ options.max_pastebin_size }}" placeholder="Paste Text Here" style="width:auto;" rows="10" cols="60">
                     </textarea>
                 </p>
             </fieldset>

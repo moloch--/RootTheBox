@@ -25,9 +25,8 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
+from tornado.options import options
 
-
-MAX_PASTE_SIZE = 4096
 
 
 class PasteBin(DatabaseObject):
@@ -41,7 +40,7 @@ class PasteBin(DatabaseObject):
 
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
     _name = Column(Unicode(32), nullable=False)
-    _contents = Column(Unicode(MAX_PASTE_SIZE), nullable=False)
+    _contents = Column(Unicode(options.max_pastebin_size), nullable=False)
 
     @classmethod
     def all(cls):
@@ -72,7 +71,7 @@ class PasteBin(DatabaseObject):
 
     @contents.setter
     def contents(self, value):
-        self._contents = unicode(value[:MAX_PASTE_SIZE])
+        self._contents = unicode(value[:options.max_pastebin_size])
 
     def __repr__(self):
         return ('<PasteBin - name:%s, user_id:%d>' % (self.name, self.user_id))

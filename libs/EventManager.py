@@ -133,7 +133,7 @@ class EventManager(object):
         for connection in self.all_connections:
             self.safe_write_message(connection, msg)
 
-    def push_history(self):
+    def push_history(self, *args):
         msg = {'update': ['history']}
         for connection in self.all_connections:
             self.safe_write_message(connection, msg)

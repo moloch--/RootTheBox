@@ -314,6 +314,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.use_black_market = self.get_bool('use_black_market', True)
         self.config.password_upgrade_cost = self.get_int('password_upgrade_cost', 1000)
         self.config.bribe_cost = self.get_int('bribe_cost', 2500)
+        self.config.max_pastebin_size = self.get_int('max_pastebin_size', '4096')
         self.render('admin/configuration.html',
                     errors=None,
                     config=self.config
