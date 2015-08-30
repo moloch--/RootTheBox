@@ -68,7 +68,7 @@ class GameHistory(object):
         except KeyboardInterrupt:
             logging.info("History load stopped by user.")
 
-    def take_snapshot(self):
+    def take_snapshot(self,*args):
         ''' Take a snapshot of the current game data '''
         snapshot = self.__now__()
         self.cache.set(snapshot.key, snapshot.to_dict())
