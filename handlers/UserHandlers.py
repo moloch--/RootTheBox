@@ -67,6 +67,7 @@ class SettingsHandler(BaseHandler):
         ''' Calls function based on parameter '''
         post_functions = {
             'avatar': self.post_avatar,
+            'team_avatar': self.post_team_avatar,
             'password': self.post_password,
             'bank_password': self.post_bankpassword,
             'theme': self.post_theme,
@@ -98,6 +99,22 @@ class SettingsHandler(BaseHandler):
                 self.dbsession.add(user)
                 self.dbsession.commit()
                 self.render_page(success=["Updated avatar"])
+            except ValidationError as error:
+                self.render_page(errors=[str(error), ])
+        else:
+            self.render_page(errors=["Please provide an image"])
+
+    def post_team_avatar(self, *args, **kwargs):
+        '''
+        Saves team avatar - Reads file header an only allows approved formats
+        '''
+        user = self.get_current_user()
+        if hasattr(self.request, 'files') and 'team_avatar' in self.request.files:
+            try:
+                user.team.avatar = self.request.files['team_avatar'][0]['body']
+                self.dbsession.add(user)
+                self.dbsession.commit()
+                self.render_page(success=["Updated team avatar"])
             except ValidationError as error:
                 self.render_page(errors=[str(error), ])
         else:

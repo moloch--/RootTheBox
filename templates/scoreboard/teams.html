@@ -39,16 +39,16 @@
                         #{{ index + 1 }} - {{ team.name }}
                     {% end %}
                 </h2>
-                <h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>
-                <hr />
+                <h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4><br>
+                <img src="/avatars/{{ team.avatar }}" class="img-polaroid" align="middle" />
+                <!--<hr /> -->
                 <div class="row">
                     <div class="container">
                         {% for user in team.members %}
-                            <div class="span2">
-                                <center>
+                            <div class="span2" align="middle">
                                     <h5>{{ user.handle }}</h5>
                                     <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
-                                </center>
+
                             </div>
                         {% end %}
                     </div>
