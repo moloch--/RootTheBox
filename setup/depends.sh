@@ -14,6 +14,11 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+# #########################
+#     value
+# #########################
+pgram=brew
+
 if [ "$(id -u)" != "0" ]; then
     echo "[!] This script must be run as root." 1>&2
     exit 1
@@ -38,6 +43,10 @@ then
     sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
 fi
 
+if [ $OSTYPE == "linux-gnu" ]; then
+	echo -e "\t#########################"
+	echo -e "\t   linux Configuration"
+	echo -e "\t#########################"
 echo "[*] Installing pip/gcc ..."
 apt-get install python-pip python-dev build-essential $SKIP
 
@@ -51,3 +60,26 @@ sh "$DIR/python-depends.sh"
 
 echo ""
 echo "[*] Setup Completed."
+
+fi
+
+if [ ${OSTYPE} == "darwin14" ]; then
+	# Check if homebrew is installed
+	if test ! $(which brew); then
+		echo "\nInstalling homebrew..."
+		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew		/install/master/install)"
+	fi
+# Update homebrew recipes
+echo "\nUpdate homebrew..."
+$pgram update
+echo "\nBrew install package..."
+$prgram install python mysql memcached libmemcached zlib	
+
+echo "[*] Installing python libs ..."
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+sh "$DIR/python-depends.sh"
+	
+echo ""
+echo "[*] Setup Completed."
+		
+fi		
