@@ -31,7 +31,7 @@
         </h1>
         <br />
         {% for index, team in enumerate(Team.ranks()) %}
-            <div id="{{ team.uuid }}" class="well">
+            <div id="{{ team.uuid }}" class="container" align="middle">
                 <h2 style="display:inline;">
                     {% if index == 0 %}
                         <i class="fa fa-trophy"></i> - {{ team.name }}

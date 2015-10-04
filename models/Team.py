@@ -24,7 +24,6 @@ import xml.etree.cElementTree as ET
 
 import os
 import imghdr
-import logging
 from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref
@@ -39,7 +38,7 @@ from libs.ValidationError import ValidationError
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image
 
-MAX_AVATAR_SIZE = 500 * 500
+MAX_AVATAR_SIZE = 1024 * 1024
 MIN_AVATAR_SIZE = 64
 IMG_FORMATS = ['png', 'jpeg', 'gif', 'bmp']
 
@@ -153,12 +152,12 @@ class Team(DatabaseObject):
         if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
             ext = imghdr.what("", h=image_data)
             if ext in IMG_FORMATS and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
-                    os.unlink(options.avatar_dir + '/' + self._avatar)
-                file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/team-' + self._avatar):
+                    os.unlink(options.avatar_dir + '/team-' + self._avatar)
+                file_path = str(options.avatar_dir + '/team-' + self.name + '.' + ext)
                 with open(file_path, 'wb') as fp:
                     fp.write(image_data)
-                self._avatar = self.uuid + '.' + ext
+                self._avatar = 'team-' + self.name + '.' + ext
             else:
                 raise ValidationError("Invalid image format, avatar must be: %s" % (
                     ' '.join(IMG_FORMATS)
