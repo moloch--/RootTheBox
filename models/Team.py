@@ -22,6 +22,8 @@ Created on Mar 12, 2012
 
 import xml.etree.cElementTree as ET
 
+import os
+import imghdr
 from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref
@@ -34,7 +36,11 @@ from models.Relationships import team_to_box, team_to_item, \
 from libs.BotManager import BotManager
 from libs.ValidationError import ValidationError
 from tornado.options import options
+from libs.XSSImageCheck import is_xss_image
 
+MAX_AVATAR_SIZE = 1024 * 1024
+MIN_AVATAR_SIZE = 64
+IMG_FORMATS = ['png', 'jpeg', 'gif', 'bmp']
 
 class Team(DatabaseObject):
 
@@ -44,6 +50,7 @@ class Team(DatabaseObject):
         String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _name = Column(Unicode(24), unique=True, nullable=False)
     _motto = Column(Unicode(32))
+    _avatar = Column(String(64))
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
     money = Column(Integer, default=500, nullable=False)
@@ -132,6 +139,33 @@ class Team(DatabaseObject):
             raise ValidationError("Motto must be less than 32 characters")
         else:
             self._motto = unicode(value)
+
+    @property
+    def avatar(self):
+        if self._avatar is not None:
+            return self._avatar
+        else:
+            return "default_avatar.jpeg"
+
+    @avatar.setter
+    def avatar(self, image_data):
+        if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
+            ext = imghdr.what("", h=image_data)
+            if ext in IMG_FORMATS and not is_xss_image(image_data):
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/team-' + self._avatar):
+                    os.unlink(options.avatar_dir + '/team-' + self._avatar)
+                file_path = str(options.avatar_dir + '/team-' + self.name + '.' + ext)
+                with open(file_path, 'wb') as fp:
+                    fp.write(image_data)
+                self._avatar = 'team-' + self.name + '.' + ext
+            else:
+                raise ValidationError("Invalid image format, avatar must be: %s" % (
+                    ' '.join(IMG_FORMATS)
+                ))
+        else:
+            raise ValidationError("The image is too large must be %d - %d bytes"  % (
+                MIN_AVATAR_SIZE, MAX_AVATAR_SIZE
+            ))
 
     @property
     def levels(self):

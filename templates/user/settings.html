@@ -29,7 +29,28 @@
             {% end %}
         {% end %}
         <div class="row">
-            <div class="span6 well">
+            <div class="span3 well">
+                <form action="/user/settings/team_avatar" method="post" enctype="multipart/form-data">
+                    {% raw xsrf_form_html() %}
+                    <legend>Change Team Avatar</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="team_avatar">Avatar File h250 x w500 (Max 1Mb)</label>
+                        <div class="controls">
+                            <input type="file" name="team_avatar" id="team_avatar" style="color:white;" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" type="submit"> Change Avatar </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+        <div class="row">
+            <div class="span3 well">
                 <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
                     <legend>Change Avatar</legend>
@@ -47,7 +68,7 @@
                     </div>
                 </form>
             </div>
-            <div class="span5 well">
+            <div class="span4 well">
                 <form action="/user/settings/theme" method="post">
                     {% raw xsrf_form_html() %}
                     <legend>Change Theme</legend>
@@ -72,7 +93,7 @@
                 </form>
             </div>
         </div>
-        <div class"row">
+        <div class="row">
             <div class="well">
                 <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">
                     {% raw xsrf_form_html() %}
@@ -148,4 +169,5 @@
             </div>
         </div>
     </div>
+</div>
 {% end %}
