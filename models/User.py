@@ -28,7 +28,6 @@ indiviudal user, such as handle/account/password/etc
 import os
 import imghdr
 import xml.etree.cElementTree as ET
-
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
 from pbkdf2 import PBKDF2
@@ -36,7 +35,6 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
 from models import dbsession
-from models.Team import Team
 from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
@@ -54,7 +52,6 @@ ITERATE = 0x2bad  # 11181
 IMG_FORMATS = ['png', 'jpeg', 'gif', 'bmp']
 MAX_AVATAR_SIZE = 1024 * 1024
 MIN_AVATAR_SIZE = 64
-
 
 class User(DatabaseObject):
 
