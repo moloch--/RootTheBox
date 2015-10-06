@@ -152,12 +152,12 @@ class Team(DatabaseObject):
         if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
             ext = imghdr.what("", h=image_data)
             if ext in IMG_FORMATS and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(options.avatar_dir + '/team-' + self._avatar):
-                    os.unlink(options.avatar_dir + '/team-' + self._avatar)
-                file_path = str(options.avatar_dir + '/team-' + self.name + '.' + ext)
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
+                    os.unlink(options.avatar_dir + '/' + self._avatar)
+                file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
                 with open(file_path, 'wb') as fp:
                     fp.write(image_data)
-                self._avatar = 'team-' + self.name + '.' + ext
+                self._avatar = self.uuid + '.' + ext
             else:
                 raise ValidationError("Invalid image format, avatar must be: %s" % (
                     ' '.join(IMG_FORMATS)
