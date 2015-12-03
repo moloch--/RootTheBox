@@ -40,7 +40,7 @@ from libs.ValidationError import ValidationError
 from libs.ConfigHelpers import save_config
 from handlers.BaseHandlers import BaseHandler
 from string import printable
-
+from setup.xmlsetup import import_xml
 
 class AdminGameHandler(BaseHandler):
 
