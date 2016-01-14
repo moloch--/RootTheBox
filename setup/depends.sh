@@ -17,69 +17,64 @@
 # #########################
 #     value
 # #########################
-pgram=brew
+current_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [ "$(id -u)" != "0" ]; then
-    echo "[!] This script must be run as root." 1>&2
-    exit 1
+if [[ "$EUID" != "0" ]]; then
+  echo "[!] This script must be run as root." 1>&2
+  exit 1
 fi
 
 # -y flag will be passed to this variable for a non-interactive setup.
 SKIP=""
 
-while getopts "y" OPTION
-do
-    case $OPTION in
-        y)
-	    SKIP=" -y"
-            ;;
-    esac
+while getopts "y" OPTION; do
+  case $OPTION in
+    y)
+      SKIP=" -y"
+      ;;
+  esac
 done
 
-if [ "$SKIP" == " -y" ]
-then
-    echo "[*] Non-interactive setup - Setting mysql password to 'your_password'"
-    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
-    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
+if [[ "$SKIP" == " -y" ]]; then
+  echo "[*] Non-interactive setup - Setting mysql password to 'your_password'"
+  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
+  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
 fi
 
-if [ $OSTYPE == "linux-gnu" ]; then
-	echo -e "\t#########################"
-	echo -e "\t   linux Configuration"
-	echo -e "\t#########################"
-echo "[*] Installing pip/gcc ..."
-apt-get install python-pip python-dev build-essential $SKIP
+if [[ $OSTYPE == "linux-gnu" ]]; then
+  echo -e "\t#########################"
+  echo -e "\t   linux Configuration"
+  echo -e "\t#########################"
 
+  echo "[*] Installing pip/gcc..."
+  apt-get install python-pip python-dev build-essential "$SKIP"
 
-echo "[*] Installing packages ..."
-apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev libmysqlclient-dev $SKIP
+  echo "[*] Installing packages..."
+  apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev libmysqlclient-dev "$SKIP"
 
-echo "[*] Installing python libs ..."
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-sh "$DIR/python-depends.sh"
+  echo "[*] Installing python libs..."
+  sh "$current_path/python-depends.sh"
 
-echo ""
-echo "[*] Setup Completed."
+  echo ""
+  echo "[*] Setup Completed."
 
-fi
+elif [[ ${OSTYPE} == "darwin14" ]]; then
+  # Check if homebrew is installed
+  if test ! "$(which brew)"; then
+    echo "Installing homebrew..."
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
 
-if [ ${OSTYPE} == "darwin14" ]; then
-	# Check if homebrew is installed
-	if test ! $(which brew); then
-		echo "\nInstalling homebrew..."
-		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew		/install/master/install)"
-	fi
-# Update homebrew recipes
-echo "\nUpdate homebrew..."
-$pgram update
-echo "\nBrew install package..."
-$prgram install python mysql memcached libmemcached zlib	
+  # Update homebrew recipes
+  echo "Update homebrew..."
+  brew update
 
-echo "[*] Installing python libs ..."
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-sh "$DIR/python-depends.sh"
-	
-echo ""
-echo "[*] Setup Completed."
-		
-fi		
+  echo "Brew install package..."
+  brew install python mysql memcached libmemcached zlib	
+
+  echo "[*] Installing python libs..."
+  sh "$current_path/python-depends.sh"
+
+  echo "[*] Setup Completed."
+
+fi	
