@@ -14,12 +14,12 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-pip install tornado --upgrade
-pip install pbkdf2 --upgrade
-pip install mysql-python --upgrade
-pip install sqlalchemy --upgrade
-pip install python-memcached --upgrade
-pip install defusedxml --upgrade
-pip install netaddr --upgrade
-pip install nose --upgrade
-pip install future --upgrade
+pip2 install tornado --upgrade
+pip2 install pbkdf2 --upgrade
+pip2 install mysql-python --upgrade
+pip2 install sqlalchemy --upgrade
+pip2 install python-memcached --upgrade
+pip2 install defusedxml --upgrade
+pip2 install netaddr --upgrade
+pip2 install nose --upgrade
+pip2 install future --upgrade
