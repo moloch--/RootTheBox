@@ -17,8 +17,20 @@ def save_config():
             if 'rootthebox.py' in group.lower() or group == '':
                 continue
             fp.write("\n# [ %s ]\n" % group.title())
-            for key, value in options.group_dict(group).iteritems():
-                if isinstance(value, basestring):
+            try:
+                # python2
+                opt = options.group_dict(group).iteritems()
+            except AttributeError:
+                # python3
+                opt = options.group_dict(group).items()
+            for key, value in opt:
+                try:
+                    # python2
+                    value_type = basestring
+                except NameError:
+                    # python 3
+                    value_type = str
+                if isinstance(value, value_type):
                     # Str/Unicode needs to have quotes
                     fp.write(u'%s = "%s"\n' % (key, value))
                 else:
