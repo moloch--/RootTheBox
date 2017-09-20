@@ -117,6 +117,7 @@ class SettingsHandler(BaseHandler):
                     user.team.avatar = self.request.files['team_avatar'][0]['body']
                     self.dbsession.add(user)
                     self.dbsession.commit()
+                    self.render_page(success=["Updated team avatar"])
             except ValidationError as error:
                 self.render_page(errors=[str(error), ])
         else:
