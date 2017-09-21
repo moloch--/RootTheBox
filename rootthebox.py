@@ -282,11 +282,18 @@ define("memcached_port",
 
 
 # Game Settings
+try:
+    # python2
+    game_type = basestring
+except NameError:
+    # python 3
+    game_type = str
+
 define("game_name",
        default="Root the Box",
        group="game",
        help="the name of the current game",
-       type=basestring)
+       type=game_type)
 
 define("restrict_registration",
        default=False,
