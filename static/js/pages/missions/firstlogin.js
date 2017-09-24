@@ -4,7 +4,7 @@ function text_animation(term) {
     var reward = $('#reward').val();
     intro_frames = [
         " Hello [[b;;]" + user + "],\n",
-        "   I am your new employer, you may call me [[b;;]Morris].",
+        "  I am your new employer. You may call me [[b;;]Morris].",
         " ",
         "  I hope you're well rested.  We have a lot of work to do.",
         "  I have several assignments which require your... special skill set.",
@@ -12,8 +12,8 @@ function text_animation(term) {
         "  You may view your current assignments by selecting \"Missions\" from the Game menu.",
         "  I will also be glad to rent your botnet for $" + reward + " per bot.",
         " ",
-        "  I've taken the liberty of despositing some seed in your team's bank account,",
-        "  see that it's put to good use.",
+        "  I've taken the liberty of depositing some seed money in your team's bank account.",
+        "  See that it's put to good use.",
         " ",
         " Good hunting,\n    -Morris",
     ];

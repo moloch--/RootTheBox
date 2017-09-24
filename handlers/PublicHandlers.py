@@ -42,8 +42,11 @@ from datetime import datetime
 class HomePageHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        ''' Renders the about page '''
-        self.render("public/home.html")
+        ''' Renders the main page '''
+        if self.session is not None:
+            self.redirect('/user')
+        else:
+            self.render("public/home.html")
 
 
 class LoginHandler(BaseHandler):

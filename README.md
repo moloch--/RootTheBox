@@ -22,7 +22,7 @@ Features
 * Real-time status updates using websockets
 * Built-in team based file/text sharing
 * A wall of sheep displaying cracked passwords
-* Unlocks and upgrades as users caputre flags
+* Unlocks and upgrades as users capture flags
 * Export and share Boxes/Flags
 * Other cool stuff
 
