@@ -261,7 +261,7 @@ $(document).ready(function() {
             },
             intro: function(value) {
                 if (value != undefined) {
-                    value = value.toLowerCase();
+                    value = String(value).toLowerCase();
                 }
                 if (value == "off" || value == "ascii" || value == "metasploit") {
                     localStorage["intro"] = value;
