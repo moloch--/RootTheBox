@@ -95,4 +95,5 @@ class Hint(DatabaseObject):
         return {
             'price': str(self.price),
             'description': self.description,
+            'uuid': self.uuid,
         }
