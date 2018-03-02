@@ -152,6 +152,11 @@ define("listen_port",
        help="run instances starting the given port",
        type=int)
 
+define("listen_interface",
+       default="0.0.0.0",
+	   group="server",
+	   help="attach to which interface. 0.0.0.0 implies all available.")
+
 define("session_age",
        default=int(60 * 60),
        group="server",
