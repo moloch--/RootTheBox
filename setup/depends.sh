@@ -43,7 +43,7 @@ fi
 
 if [[ $OSTYPE == "linux-gnu" ]]; then
   echo -e "\t#########################"
-  echo -e "\t   linux Configuration"
+  echo -e "\t   Linux Configuration"
   echo -e "\t#########################"
 
   echo "[*] Installing pip/gcc..."
@@ -52,13 +52,10 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   echo "[*] Installing packages..."
   apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev libmysqlclient-dev "$SKIP"
 
-  echo "[*] Installing python libs..."
-  sh "$current_path/python-depends.sh"
-
-  echo ""
-  echo "[*] Setup Completed."
-
 elif [[ ${OSTYPE} == "darwin14" ]]; then
+  echo -e "\t#########################"
+  echo -e "\t   OSX Configuration"
+  echo -e "\t#########################"
   # Check if homebrew is installed
   if test ! "$(which brew)"; then
     echo "Installing homebrew..."
@@ -72,9 +69,17 @@ elif [[ ${OSTYPE} == "darwin14" ]]; then
   echo "Brew install package..."
   brew install python mysql memcached libmemcached zlib	
 
-  echo "[*] Installing python libs..."
-  sh "$current_path/python-depends.sh"
-
-  echo "[*] Setup Completed."
-
 fi	
+
+echo "[*] Installing python libs..."
+
+#sh "$current_path/python-depends.sh"
+python_version="$(python -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
+if [[ "$python_version" == "2" ]]; then
+    sh "$current_path/python2-depends.sh"
+else
+    sh "$current_path/python3-depends.sh"
+fi
+
+echo ""
+echo "[*] Setup Completed."
