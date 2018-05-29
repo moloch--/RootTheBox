@@ -14,7 +14,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-pip3 install tornado --upgrade
+pip3 install tornado==4.5.3 --upgrade
 pip3 install pbkdf2 --upgrade
 pip3 install PyMySQL --upgrade
 pip3 install sqlalchemy --upgrade
