@@ -261,7 +261,7 @@ def start_server():
                             )
     else:
         server = HTTPServer(app, xheaders=options.x_headers)
-    sockets = netutil.bind_sockets(options.listen_port)
+    sockets = netutil.bind_sockets(options.listen_port, options.listen_interface)
     server.add_sockets(sockets)
     try:
         io_loop.start()
