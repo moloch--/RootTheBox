@@ -2,3 +2,12 @@ body {
     padding-top: 60px;
     padding-bottom: 40px;
 }
+footer {
+    font-size: 75%;
+    position: fixed;
+    bottom: -30px;
+    width: 100%;
+}
+.footernav {
+    padding: 5px 20px;
+}

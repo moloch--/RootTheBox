@@ -29,15 +29,19 @@
         {% module Menu() %}
         <div class="container-fluid animated fadeIn">
             {% block content %} Content Missing {% end %}
-            <hr />
-            <footer>
+           
+        </div><!--/.fluid-container-->
+        <footer>
+            <hr style="margin-bottom: -1px;">
+            <div class="navbar-inner footernav">
                 <a href="http://root-the-box.com" target="_blank">
                     Root the Box
                 </a> &copy; {{ datetime.date.today().year }} -
                 Version {{ handler.application.settings['version'] }} -
                 <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a> -
                 <a href="https://github.com/moloch--/RootTheBox/issues" target="_blank">Submit a Bug</a>
-            </footer>
-        </div><!--/.fluid-container-->
+            </div>
+         </footer>
+   
     </body>
 </html>
