@@ -27,6 +27,8 @@ indiviudal user, such as handle/account/password/etc
 
 import os
 import imghdr
+import string
+import random
 import xml.etree.cElementTree as ET
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
@@ -174,7 +176,11 @@ class User(DatabaseObject):
 
     @bank_password.setter
     def bank_password(self, value):
-        _password = filter(lambda char: char in printable[:-6], value)
+        if not options.banking:
+            #random password
+            _password = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(options.max_password_length))
+        else:
+            _password = filter(lambda char: char in printable[:-6], value)
         if 0 < len(_password) <= options.max_password_length:
             self._bank_password = self._hash_bank_password(self.algorithm, _password)
         else:

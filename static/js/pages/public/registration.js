@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $("#handle").popover({placement:'right', trigger:'focus'});
+    $("#playername").popover({placement:'right', trigger:'focus'});
     $("#pass1").popover({placement:'right', trigger:'focus'});
     $("#pass2").popover({placement:'right', trigger:'focus'});
     $("#bpass").popover({placement:'right', trigger:'focus'});

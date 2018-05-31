@@ -4,6 +4,7 @@
 
 {% block content %}
 {% from models.Theme import Theme %}
+{% from tornado.options import options %}
     <div class="container">
         <h1>
             <i class="fa fa-gears"></i>
@@ -29,10 +30,10 @@
             {% end %}
         {% end %}
         <div class="row">
-            <div class="span3 well">
+            <div class="span{% if options.teams %}3{% else %}4{% end %} well">
                 <form action="/user/settings/team_avatar" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
-                    <legend>Change Team Avatar</legend>
+                    <legend>Change {% if options.teams %}Team {% end %}Avatar</legend>
                     <div class="control-group">
                         <label class="control-label" for="team_avatar">Avatar File h250 x w500 (Max 1Mb)</label>
                         <div class="controls">
@@ -48,9 +49,10 @@
                 </form>
             </div>
 
-
+        
         <div class="row">
-            <div class="span3 well">
+            {% if options.teams %}
+            <div class="span3 well">   
                 <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
                     <legend>Change Avatar</legend>
@@ -67,7 +69,9 @@
                         </div>
                     </div>
                 </form>
+                
             </div>
+            {% end %}
             <div class="span4 well">
                 <form action="/user/settings/theme" method="post">
                     {% raw xsrf_form_html() %}
@@ -127,6 +131,7 @@
                 </form>
             </div>
         </div>
+        {% if options.banking %}
         <div class="row-fluid">
             <div class="well">
                 <form class="form-horizontal" action="/user/settings/bank_password" method="post" autocomplete="off">
@@ -168,6 +173,7 @@
                 </form>
             </div>
         </div>
+        {% end %}
     </div>
 </div>
 {% end %}

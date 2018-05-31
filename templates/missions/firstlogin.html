@@ -17,6 +17,8 @@
             <i class="fa fa-globe"></i>
             Incoming Transmission
         </h3>
+        <input id="banking" type="hidden" value="{{ str(bank).lower() }}" />
+        <input id="usebots" type="hidden" value="{{ str(bots).lower() }}" />
         <input id="handle" type="hidden" value="{{ user.handle }}" />
         <input id="reward" type="hidden" value="{{ reward }}" />
         <div id="console" style="width: auto; height: 500px;">

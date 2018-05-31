@@ -34,13 +34,28 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Team</th>
+                    <th>
+                        {% if options.teams %}
+                            Team
+                        {% else %}
+                            Player
+                        {% end %}
+                    </th>
                     <th>Flags Captured</th>
                     {% if options.use_bots %}
                         <th>Botnet</th>
                     {% end %}
-                    <th>Bank Account</th>
                     <th>Game Level</th>
+                    {% if options.hints_taken %}
+                        <th>Hints</th>
+                    {% end %}
+                    <th id="bankname">
+                        {% if options.banking %}
+                            Bank Account
+                        {% else %}
+                            Score
+                        {% end %}
+                    </th>
                     <th><!-- Details --></th>
                 </tr>
             </thead>

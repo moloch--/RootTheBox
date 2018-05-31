@@ -23,6 +23,7 @@ import logging
 
 from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketClosedError
+from tornado.options import options
 from libs.Singleton import Singleton
 from libs.Scoreboard import Scoreboard
 from models import dbsession
@@ -185,12 +186,18 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     # [ Team Events ] ------------------------------------------------------
-    def user_joined_team(self, user):
+    def user_joined_team(self, user):            
         ''' Callback when a user joins a team'''
-        message = "%s has joined the %s team" % (
-            user.handle, user.team.name,
-        )
-        Notification.create_team(user.team, "New Team Member", message, INFO)
+        if options.team:
+            message = "%s has joined the %s team" % (
+                user.handle, user.team.name,
+            )
+            Notification.create_team(user.team, "New Team Member", message, INFO)
+        else:
+            message = "%s has joined the game" % (
+                user.handle,
+            )
+            Notification.create_team(user.team, "New Player", message, INFO) 
         self.io_loop.add_callback(self.push_team, user.team.id)
 
     def team_file_shared(self, user, file_upload):

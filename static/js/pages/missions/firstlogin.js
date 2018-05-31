@@ -2,6 +2,8 @@ function text_animation(term) {
     var index = 0;
     var user = $('#handle').val();
     var reward = $('#reward').val();
+    var bots = $('#usebots').val();
+    var bank = $('#banking').val();
     intro_frames = [
         " Hello [[b;;]" + user + "],\n",
         "  I am your new employer. You may call me [[b;;]Morris].",
@@ -10,13 +12,18 @@ function text_animation(term) {
         "  I have several assignments which require your... special skill set.",
         " ",
         "  You may view your current assignments by selecting \"Missions\" from the Game menu.",
-        "  I will also be glad to rent your botnet for $" + reward + " per bot.",
-        " ",
-        "  I've taken the liberty of depositing some seed money in your team's bank account.",
-        "  See that it's put to good use.",
-        " ",
-        " Good hunting,\n    -Morris",
     ];
+    if (bots === 'true') {
+        intro_frames.push("  I will also be glad to rent your botnet for $" + reward + " per bot.");
+    }
+    if (bank === 'true') {
+        intro_frames.push(" ",
+            "  I've taken the liberty of depositing some seed money in your team's bank account.",
+            "  See that it's put to good use."
+        );
+    }
+    intro_frames.push(" ", " Good hunting,\n    -Morris");
+
     term.echo("[[b;;]*************** BEGIN SECURE COMMUNIQUE ****************]\n");
 
     function display(term, index) {

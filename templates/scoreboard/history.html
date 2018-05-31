@@ -9,11 +9,16 @@
 
 {% block content %}
 {% from tornado.options import options %}
+<script type="application/javascript">
+    setGraphTitle("{% if options.banking %}Bank Account Balance{% else %}Score{% end %}");
+    setGraphScale("{% if options.banking %}Money{% else %}Points{% end %}");
+    setGraphSymbol("{% if options.banking %}${% end %}");
+</script>
 <div class="navbar navbar-inverse">
     <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="#">
-                <i id="history-icon" class="fa fa-fw fa-flag"></i>
+                <i id="history-icon" class="fa fa-fw fa-calendar"></i>
                 History
             </a>
             <div class="nav-collapse collapse">
@@ -26,8 +31,13 @@
                     </li>
                     <li>
                         <a id="money-history-button" href="#">
-                            <i class="fa fa-dollar"></i>
-                            Money
+                            {% if options.banking %}
+                                <i class="fa fa-dollar"></i>
+                                Money
+                            {% else %}
+                                <i class="fa fa-fw fa-bar-chart-o"></i>
+                                Score
+                            {% end %}
                         </a>
                     </li>
                     {% if options.use_bots %}

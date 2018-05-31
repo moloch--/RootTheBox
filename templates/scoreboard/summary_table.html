@@ -14,11 +14,14 @@
         {% if options.use_bots %}
             <td>{{ BotManager.instance().count_by_team(team) }}<br /></td>
         {% end %}
-        <td>${{ team.money }}</td>
         <td>{{ team.levels[-1].number }} </td>
+        {% if options.hints_taken %}
+            <td>{{ len(team.hints) }}</td>
+        {% end %}
+        <td>{% if options.banking %}${% end %}{{ team.money }}</td>
         <td>
             <a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.uuid }}">
-                Team Details &raquo;
+                Details &raquo;
             </a>
         </td>
     </tr>

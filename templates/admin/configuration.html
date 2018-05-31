@@ -4,6 +4,7 @@
 
 {% block header %}
 <script src="/static/js/pages/admin/configuration.js"></script>
+<link href="/static/css/pages/admin/configuration.css" rel="stylesheet" />
 {% end %}
 
 {% block content %}
@@ -35,6 +36,15 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="min-user-password-length">Minimum User Password Length</label>
+                <div class="controls">
+                    <input required id="min-user-password-length" type="text" name="min_user_password_length" value="{{ config.min_user_password_length }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Min user password length"
+                        data-content="Restrict players user password to this length" />
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="restrict-registartion">
                     Registration Tokens
                 </label>
@@ -56,45 +66,114 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="public-teams">
-                    Public Teams
+                    <label class="control-label" for="hints-taken">
+                        Display Hints Taken
+                    </label>
+                    <div class="controls">
+                        <input id="hints-taken" name="hints_taken" type="hidden" value="{{ str(config.hints_taken).lower() }}" />
+                        <div id="hints-taken-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Display Hints Taken"
+                            data-content="Enabling this feature will display the number of hints taken on the scoreboad by a team or player.  Usefull when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.">
+                            <button id="hints-taken-enable" type="button" class="btn btn-success">
+                                <i id="hints-taken-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                Enable
+                            </button>
+                            <button id="hints-taken-disable" type="button" class="btn btn-danger">
+                                <i id="hints-taken-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="teams">
+                    <i class="fa fa-group"></i>
+                    Team Play
                 </label>
                 <div class="controls">
-                    <input id="public-teams" name="public_teams" type="hidden" value="{{ str(config.public_teams).lower() }}" />
-                    <div id="public-teams-button" class="btn-group" data-toggle="buttons-radio"
+                    <input id="teams" name="teams" type="hidden" value="{{ str(config.teams).lower() }}" />
+                    <div id="teams-button" class="btn-group" data-toggle="buttons-radio"
                         rel="popover"
-                        data-original-title="Public Teams"
-                        data-content="Enabling this feature will allow players to create their own teams during registration.  If this option is disabled the admin must create teams for players to join.">
-                        <button id="public-teams-enable" type="button" class="btn btn-success">
-                            <i id="public-teams-enable-icon" class="fa fa-fw fa-square-o"></i>
+                        data-original-title="Team Play"
+                        data-content="Enabling this feature will set the game and scoreboard up for team play.  If this option is disabled, the game is set up for individal play.">
+                        <button id="teams-enable" type="button" class="btn btn-success">
+                            <i id="teams-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable
                         </button>
-                        <button id="public-teams-disable" type="button" class="btn btn-danger">
-                            <i id="public-teams-disable-icon" class="fa fa-fw fa-square-o"></i>
+                        <button id="teams-disable" type="button" class="btn btn-danger">
+                            <i id="teams-disable-icon" class="fa fa-fw fa-square-o"></i>
                             Disable
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label" for="max-team-size">Max Team Size</label>
-                <div class="controls">
-                    <input required id="max-team-size" type="text" name="max_team_size" value="{{ config.max_team_size }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Max Team Size"
-                        data-content="Limit number of players that can be on any one team" />
+            <div id="team-grouping" class="control-section">
+                <div class="control-group">
+                    <label class="control-label" for="public-teams">
+                        Public Team Creation
+                    </label>
+                    <div class="controls">
+                        <input id="public-teams" name="public_teams" type="hidden" value="{{ str(config.public_teams).lower() }}" />
+                        <div id="public-teams-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Public Teams"
+                            data-content="Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.">
+                            <button id="public-teams-enable" type="button" class="btn btn-success">
+                                <i id="public-teams-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                Enable
+                            </button>
+                            <button id="public-teams-disable" type="button" class="btn btn-danger">
+                                <i id="public-teams-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="max-team-size">Max Team Size</label>
+                    <div class="controls">
+                        <input required id="max-team-size" type="text" name="max_team_size" value="{{ config.max_team_size }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Max Team Size"
+                            data-content="Limit number of players that can be on any one team" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="max_pastebin_size">Pastebin Character limit</label>
+                    <div class="controls">
+                        <input required id="max-pastebin-size" type="text" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Max PasteBin Size"
+                            data-content="This is the the limit of characters allowed for a pastebin post." />
+                    </div>
                 </div>
             </div>
+            <hr />
             <div class="control-group">
-                <label class="control-label" for="min-user-password-length">Minimum User Password Length</label>
+                <label class="control-label" for="banking">
+                    <i class="fa fa-bar-chart-o"></i>
+                    Bank Scoring
+                </label>
                 <div class="controls">
-                    <input required id="min-user-password-length" type="text" name="min_user_password_length" value="{{ config.min_user_password_length }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Min user password length"
-                        data-content="Restrict players user password to this length" />
+                    <input id="banking" name="banking" type="hidden" value="{{ str(config.banking).lower() }}" />
+                    <div id="banking-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Bank Scoring"
+                        data-content="Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.">
+                        <button id="banking-enable" type="button" class="btn btn-success">
+                            <i id="banking-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="banking-disable" type="button" class="btn btn-danger">
+                            <i id="banking-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="control-group">
+            <div id="bank-grouping" class="control-group control-section">
                 <label class="control-label" for="max-password-length">Bank Password Length</label>
                 <div class="controls">
                     <input required id="max-password-length" type="text" name="max_password_length" value="{{ config.max_password_length }}"
@@ -126,7 +205,7 @@
                     </div>
                 </div>
             </div>
-            <div class="control-group">
+            <div id="bot-grouping" class="control-group control-section">
                 <label class="control-label" for="bot_reward">Bot Reward</label>
                 <div class="controls">
                     <input required id="bot-reward" type="text" name="bot_reward" value="{{ config.bot_reward }}"
@@ -158,34 +237,28 @@
                     </div>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label" for="password-upgrade-cost">Password Upgrade Cost</label>
-                <div class="controls">
-                    <input required id="password-upgrade-cost" type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Password Upgrade Cost"
-                        data-content="This is the amount a player must pay to upgrade their bank password's hashing algorithm; each subsequent purchase is also increased by this amount." />
+            <div id="blackmarket-grouping" class="control-section">
+                <div class="control-group">
+                    <label class="control-label" for="password-upgrade-cost">Password Upgrade Cost</label>
+                    <div class="controls">
+                        <input required id="password-upgrade-cost" type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Password Upgrade Cost"
+                            data-content="This is the amount a player must pay to upgrade their bank password's hashing algorithm; each subsequent purchase is also increased by this amount." />
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="bribe-cost">Bribe Price</label>
-                <div class="controls">
-                    <input required id="bribe-cost" type="text" name="bribe_cost" value="{{ config.bribe_cost }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Bribe Price"
-                        data-content="This is the amount a player must pay to 'SWAT' another player's account.  Subsequent SWATs of the same player are also increased by this amount each time." />
+                <div class="control-group">
+                    <label class="control-label" for="bribe-cost">Bribe Price</label>
+                    <div class="controls">
+                        <input required id="bribe-cost" type="text" name="bribe_cost" value="{{ config.bribe_cost }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Bribe Amount"
+                            data-content="This is the amount a player must pay to 'SWAT' another player's account.  Subsequent SWATs of the same player are also increased by this amount each time." />
+                    </div>
                 </div>
             </div>
             <hr />
-            <div class="control-group">
-                <label class="control-label" for="max_pastebin_size">Pastebin Character limit</label>
-                <div class="controls">
-                    <input required id="max-pastebin-size" type="text" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Max PasteBin Size"
-                        data-content="This is the the limit of characters allowed for a pastebin post." />
-                </div>
-            </div>
+           
             <div class="control-group">
                 <div class="controls">
                     <button class="btn btn-primary" type="submit">

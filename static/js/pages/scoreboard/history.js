@@ -1,3 +1,13 @@
+var title_val, scale_val, symbol_val;
+function setGraphTitle(title) {
+    title_val = title;
+}
+function setGraphScale(scale) {
+    scale_val = scale;
+}
+function setGraphSymbol(symbol) {
+    symbol_val = symbol;
+}
 function drawBotGraph(state) {
     var chart = new Highcharts.Chart({
         chart: {
@@ -63,7 +73,7 @@ function drawMoneyGraph(state) {
             zoomType: 'x',
         },
         title: {
-                text: 'Bank Account Balance',
+                text: title_val,
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -83,7 +93,7 @@ function drawMoneyGraph(state) {
         },
         yAxis: {
             title: {
-                text: 'Money',
+                text: scale_val,
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 14px "Trebuchet MS", Verdana, sans-serif',
@@ -94,7 +104,7 @@ function drawMoneyGraph(state) {
         tooltip: {
             enabled: true,
             formatter: function() {
-                return '<strong>' + htmlEncode(this.series.name) + '</strong><br /> $' + htmlEncode(this.y);
+                return '<strong>' + htmlEncode(this.series.name) + '</strong><br /> ' + htmlEncode(symbol_val) + htmlEncode(this.y);
             }
         },
         plotOptions: {
@@ -358,22 +368,16 @@ $(document).ready(function() {
     };
 
     $("#flags-history-button").click(function() {
-        $("#history-icon").removeClass();
-        $("#history-icon").addClass("fa fa-fw fa-flag");
         chart = drawFlagGraph(flagState);
         liveUpdateCallback = liveFlagUpdate;
     });
 
     $("#money-history-button").click(function() {
-        $("#history-icon").removeClass();
-        $("#history-icon").addClass("fa fa-fw fa-dollar");
         chart = drawMoneyGraph(moneyState);
         liveUpdateCallback = liveMoneyUpdate;
     });
 
     $("#bots-history-button").click(function() {
-        $("#history-icon").removeClass();
-        $("#history-icon").addClass("fa fa-fw fa-android");
         chart = drawBotGraph(botState);
         liveUpdateCallback = liveBotUpdate;
     });

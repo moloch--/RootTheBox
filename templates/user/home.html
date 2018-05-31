@@ -7,6 +7,7 @@
 {% end %}
 
 {% block content %}
+{% from tornado.options import options %}
 <div class="row-fluid">
     <div class="span5">
         <div class="row">
@@ -17,14 +18,15 @@
                 </center>
                 <hr>
                 {% if user.team is not None %}
-                <strong>Team:</strong> {{ user.team.name }} <br />
+                <strong>{% if options.teams %}Team{% else %}Player{% end %}:</strong> {{ user.team.name }} <br />
                 <strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
-                <strong>Bank Account:</strong> ${{ user.team.money }} <br />
+                <strong>{% if options.banking %}Bank Account{% else %}Score{% end %}:</strong> {% if options.banking %}${% end %}{{ user.team.money }} <br />
                 {% from tornado.options import options %}
                 {% if options.use_bots %}
                 <strong>Active Bots:</strong> {{ user.team.bot_count }} <br />
                 {% end %}
                 <strong>Flags Captured:</strong> {{ len(user.team.flags) }} <br />
+                <strong>Hints Taken:</strong> {{ len(user.team.hints) }} <br />
                 {% else %}
                 <strong>You are not on a team</strong>
                 {% end %}

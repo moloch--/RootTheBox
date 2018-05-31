@@ -203,7 +203,7 @@
                             {% end %}
                             <li>
                                 <a href="/teams">
-                                    Teams
+                                    {% if options.teams %}Teams{% else %}Players{% end %}
                                 </a>
                             </li>
                         </ul>
@@ -220,6 +220,12 @@
                             <a href="/user/settings">
                                 <i class="fa fa-fw fa-gears"></i>
                                 Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/about">
+                                <i class="fa fa-fw fa-info-circle"></i>
+                                &nbsp;About
                             </a>
                         </li>
                         <li class="divider"></li>

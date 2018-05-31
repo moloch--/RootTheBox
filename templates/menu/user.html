@@ -72,6 +72,13 @@
                       </a>
                         <ul class="dropdown-menu">
                             <li>
+                                <a href="https://gchq.github.io/CyberChef/" target="_blank">
+                                    <i class="fa fa-fw fa-link"></i>
+                                    CyberChef
+                                </a>
+                            </li>
+                            {% if options.teams %}
+                            <li>
                                 <a href="/user/share/files">
                                     <i class="fa fa-fw fa-files-o"></i>
                                     Team File Sharing
@@ -83,6 +90,7 @@
                                     Team PasteBin
                               </a>
                             </li>
+                            {% end %}
                         </ul>
                     </li>
                     {% if options.use_black_market %}
@@ -156,7 +164,7 @@
                             {% end %}
                             <li>
                                 <a href="/teams">
-                                    Teams
+                                    {% if options.teams %}Teams{% else %}Players{% end %}
                                 </a>
                             </li>
                         </ul>

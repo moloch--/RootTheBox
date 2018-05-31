@@ -300,6 +300,12 @@ define("game_name",
        help="the name of the current game",
        type=game_type)
 
+define("ctf_logo",
+       default="/static/images/rtb2.png",
+       group="game",
+       help="the image displayed on the home page",
+       type=game_type)
+
 define("restrict_registration",
        default=False,
        group="game",
@@ -310,6 +316,18 @@ define("public_teams",
        default=True,
        group="game",
        help="allow anyone to create a new team",
+       type=bool)
+
+define("hints_taken",
+       default=False,
+       group="game",
+       help="display number of hints taken on scoreboard",
+       type=bool)
+
+define("teams",
+       default=True,
+       group="game",
+       help="turn off teams - individal playstyle",
        type=bool)
 
 define("max_team_size",
@@ -323,6 +341,12 @@ define("min_user_password_length",
        group="game",
        help="min user password length",
        type=int)
+
+define("banking",
+       default=True,
+       group="game",
+       help="turn off bank scoring - point scoreboard",
+       type=bool)
 
 define("max_password_length",
        default=7,

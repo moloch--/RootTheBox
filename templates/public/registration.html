@@ -42,8 +42,19 @@
                             data-content="Your handle must be 3-16 alpha-numeric characters" />
                     </div>
                 </div>
-
+                <div class="control-group">
+                    <label class="control-label" for="playername">
+                        Player's Name
+                    </label>
+                    <div class="controls">
+                        <input required id="playername" name="playername" maxlength="24" placeholder="Real Name" type="text"
+                            rel="popover" pattern="^[a-zA-Z0-9 ]{3,24}$"
+                            data-original-title="Player's Name Selection"
+                            data-content="Optional: This is your real name, visible in the player details.  Your name can be 3-24 alpha-numeric characters" />
+                    </div>
+                </div>
                 <hr>
+                {% if options.teams %}
                 <h5>Join a Team</h5>
                     <div class="control-group">
                         <label class="control-label" for="team">
@@ -72,17 +83,20 @@
                                     data-content="Choose a name for your new team![3-24 Characters]" >
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label" for="motto">Motto</label>
-                            <div class="controls">
-                                <input id="motto" name="motto" maxlength="32" type="text" placeholder="Team Motto"
-                                    rel="popover"
-                                    data-original-title="Team Motto"
-                                    data-content="What's your team's motto? [Max: 32 Characters]">
-                            </div>
-                        </div>
                     {% end %}
-                    <hr>
+                {% end %}
+                {% if options.public_teams or not options.teams %}
+                <div class="control-group">
+                    <label class="control-label" for="motto">Motto</label>
+                    <div class="controls">
+                        <input id="motto" name="motto" maxlength="32" type="text" placeholder="{% if options.teams %}Team {% end %}Motto"
+                            rel="popover"
+                            data-original-title="{% if options.teams %}Team {% end %}Motto"
+                            data-content="Optional: What's your {% if options.teams %}team's {% end %}motto? [Max: 32 Characters]">
+                    </div>
+                </div>
+                {% end %}
+                <hr>
                 <div class="control-group">
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">
@@ -103,6 +117,7 @@
                             data-content="Enter the same password as before" />
                     </div>
                 </div>
+                {% if options.banking %}
                 <div class="control-group">
                     <label class="control-label" for="bpass1">Bank Account Password</label>
                     <div class="controls">
@@ -113,6 +128,7 @@
                             data-content="Used to secure your (in-game) bank account. [Max: {{ options.max_password_length }} characters].  Please do NOT enter your real bank account password." />
                     </div>
                 </div>
+                {% end %}
                 {% if options.restrict_registration %}
                     <div class="control-group">
                         <label class="control-label" for="token">Registration Token</label>

@@ -73,12 +73,12 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="reward">Reward</label>
+                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
                         <div class="controls">
-                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="$ Reward"
+                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
                                    rel="popover"
-                                   data-original-title="Reward"
-                                   data-content="This is the amount of money rewarded for capturing the flag.">
+                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
+                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
                         </div>
                     </div>
                     <div class="control-group">

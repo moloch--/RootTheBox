@@ -8,6 +8,7 @@
 
 {% block modals %}
 {% from models.Corporation import Corporation %}
+{% from tornado.options import options %}
 {% from models.Box import Box %}
     <!-- Edit Corporation -->
     <div id="edit-corporation-modal" class="modal hide fade" style="display: none;">
@@ -175,7 +176,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-value">Value</label>
                     <div class="controls">
-                        <input id="flag-value" name="value" type="text" placeholder="($) Reward Value" />
+                        <input id="flag-value" name="value" type="text" placeholder="{% if options.banking %}($) {% end %}Reward Value" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -231,9 +232,9 @@
                 {% raw xsrf_form_html() %}
                 <input id="hint-uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="hint-price">Price</label>
+                    <label class="control-label" for="hint-price">{% if options.banking %}Price{% else %}Cost{% end %}</label>
                     <div class="controls">
-                        <input id="hint-price" name="price" type="text" placeholder="$" />
+                        <input id="hint-price" name="price" type="text" placeholder="{% if options.banking %}${% end %}" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -496,7 +497,7 @@
                                                         <td>{{ flag.name }}</td>
                                                         <td>{{ flag.description }}</td>
                                                         <td>{{ flag.token }}</td>
-                                                        <td>${{ flag.value }}</td>
+                                                        <td>{% if options.banking %}${% end %}{{ flag.value }}</td>
                                                         <td>
                                                             <a id="flag-attachment-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#flag-attachment-button" data-uuid="{{ flag.uuid }}">
                                                                 <i class="fa fa-fw"></i>
@@ -540,7 +541,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Price</th>
+                                                    <th>{% if options.banking %}Price{% else %}Cost{% end %}</th>
                                                     <th>Description</th>
                                                     <th><!-- Edit Button --></th>
                                                     <th><!-- Delete Button --></th>
@@ -550,7 +551,7 @@
                                                 {% for index, hint in enumerate(box.hints) %}
                                                     <tr>
                                                         <td>{{ index + 1 }}</td>
-                                                        <td>${{ hint.price }}</td>
+                                                        <td>{% if options.banking %}${% end %}{{ hint.price }}</td>
                                                         <td>{{ hint.description }}</td>
                                                         <td>
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">

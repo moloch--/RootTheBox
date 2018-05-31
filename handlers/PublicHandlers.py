@@ -194,7 +194,14 @@ class RegistrationHandler(BaseHandler):
 
     def create_team(self):
         ''' Create a new team '''
-        if self.config.public_teams:
+        if not self.config.teams:
+            team = Team()
+            team.name = self.get_argument('handle', '')
+            team.motto = self.get_argument('motto', '')
+            level_0 = GameLevel.all()[0]
+            team.game_levels.append(level_0)
+            return team
+        elif self.config.public_teams:
             if Team.by_name(self.get_argument('team_name', '')) is not None:
                 raise ValidationError("This team name is already registered")
             team = Team()

@@ -8,13 +8,14 @@
 
 {% block modals %}
 {% from models.Team import Team %}
+{% from tornado.options import options %}
     <!-- Edit Team -->
     <div id="edit-team-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-fw fa-pencil"></i>
-                Edit Team
+                {% if options.teams %}Edit Team{% else %}Edit Player{% end %}
             </h3>
         </div>
         <div class="modal-body">
@@ -22,19 +23,19 @@
                 {% raw xsrf_form_html() %}
                 <input id="team-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="team-name">Team Name</label>
+                    <label class="control-label" for="team-name">{% if options.teams %}Team{% else %}Player{% end %} Name</label>
                     <div class="controls">
                         <input required id="team-name" name="name" type="text" placeholder="Team Name">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team-motto">Team Motto</label>
+                    <label class="control-label" for="team-motto">{% if options.teams %}Team{% else %}Player{% end %} Motto</label>
                     <div class="controls">
                         <input required id="team-motto" name="motto" type="text" placeholder="Team Motto">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team-money">Bank Account</label>
+                    <label class="control-label" for="team-money">{% if options.banking %}Bank Account{% else %}Score{% end %}</label>
                     <div class="controls">
                         <input required id="team-money" name="money" type="text" placeholder="Bank Account">
                     </div>
@@ -79,18 +80,21 @@
                         </select>
                     </div>
                 </div>
+                {% if options.banking %}
                 <div class="control-group">
                     <label class="control-label" for="bank-password">Bank Password</label>
                     <div class="controls">
                         <input id="bank-password" name="bank_password" type="password" placeholder="New Bank Password">
                     </div>
                 </div>
+                {% end %}
                 <div class="control-group">
                     <label class="control-label" for="user-password">Account Password</label>
                     <div class="controls">
                         <input id="user-password" name="password" type="password" placeholder="New Password">
                     </div>
                 </div>
+                {% if options.teams %}
                 <div class="control-group">
                     <label class="control-label" for="user-team-uuid">Team</label>
                     <div class="controls">
@@ -102,6 +106,7 @@
                         </select>
                     </div>
                 </div>
+                {% end %}
             </form>
         </div>
         <div class="modal-footer">
@@ -167,11 +172,11 @@
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
                     <h4 style="display:inline;">
-                        ${{ team.money }}
+                        {% if options.banking %}${% end %}{{ team.money }}
                     </h4>
                     <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}" style="float:right;">
                         <i class="fa fa-fw fa-pencil"></i>
-                        Edit Team
+                        {% if options.teams %}Edit Team{% else %}Edit Player{% end %}
                     </a>
                     <hr />
                     <table class="table table-striped">

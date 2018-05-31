@@ -68,7 +68,7 @@ $(document).ready(function() {
             backgroundColor:'transparent'
         },
         title: {
-            text: '<strong>Bank Account</strong>',
+            text: '<strong>' + $("#bankname").text() + '</strong>',
             style: {
                 color: '#FFFFFF',
                 font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -78,7 +78,7 @@ $(document).ready(function() {
         tooltip: {
             enabled: true,
             formatter: function() {
-                return '$' + htmlEncode(this.point.y) + '<br /><strong>' +
+                return $("#banksymbol").text() + htmlEncode(this.point.y) + '<br /><strong>' +
                        htmlEncode(this.point.percentage.toFixed(2)) + '%</strong>';
             }
         },

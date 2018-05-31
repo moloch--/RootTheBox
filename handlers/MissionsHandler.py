@@ -40,8 +40,10 @@ class FirstLoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         reward = self.config.bot_reward
+        usebots = self.config.use_bots
+        banking = self.config.banking
         self.add_content_policy('script', "'unsafe-eval'")
-        self.render('missions/firstlogin.html', reward=reward, user=user)
+        self.render('missions/firstlogin.html', reward=reward, user=user, bots=usebots, bank=banking)
 
 
 class BoxHandler(BaseHandler):
