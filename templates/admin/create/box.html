@@ -65,28 +65,31 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="operatingsystem">Operating System</label>
+                <label class="control-label" for="operating_system">System Type</label>
                 <div class="controls">
                     <input id="operating_system" name="operating_system" type="hidden" value="?" />
                     <div id="operating-system" class="btn-group" data-toggle="buttons-radio"
                             rel="popover"
-                            data-original-title="Operating System"
-                            data-content="What type of operating system is this?">
-                        <button id="os-button" class="btn active" type="button" data-os="?">
-                            <i class="fa fa-question"></i>
-                            Unknown
-                        </button>
-                        <button id="os-button" class="btn" type="button" data-os="linux">
+                            data-original-title="System Type"
+                            data-content="What type of system is this?">
+                        <button id="os-button1" class="btn osbutton" type="button" data-os="linux">
                             <i class="fa fa-linux"></i>
                             Linux
                         </button>
-                        <button id="os-button" class="btn" type="button" data-os="windows">
+                        <button id="os-button2" class="btn osbutton" type="button" data-os="windows">
                             <i class="fa fa-windows"></i>
                             Windows
                         </button>
-                        <button id="os-button" class="btn" type="button" data-os="apple">
+                        <button id="os-button2" class="btn osbutton" type="button" data-os="apple">
                             <i class="fa fa-apple"></i>
                             OSX
+                        </button>
+                        <button id="os-button3" class="btn osbutton active" type="button" data-os="?">
+                            <i class="fa fa-desktop"></i>
+                            Unknown
+                        </button>
+                        <button id="os-button4" class="btn osbutton" type="button" data-os="none">
+                            None
                         </button>
                     </div>
                 </div>
@@ -125,7 +128,7 @@
             <div class="control-group">
                 <label class="control-label" for="difficulty">Difficulty</label>
                 <div class="controls">
-                    <input required id="difficulty" name="difficulty" maxlength="16" type="text" placeholder="Difficulty"
+                    <input id="difficulty" name="difficulty" maxlength="16" type="text" placeholder="Difficulty"
                         rel="popover"
                         data-original-title="Box Difficulty"
                         data-content="What's the difficulty of the box? [Max: 16 Characters]">

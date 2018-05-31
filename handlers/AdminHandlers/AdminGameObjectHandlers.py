@@ -139,6 +139,7 @@ class AdminCreateHandler(BaseHandler):
                 box.description = self.get_argument('description', '')
                 box.autoformat = self.get_argument('autoformat', '') == 'true'
                 box.difficulty = self.get_argument('difficulty', '')
+                box.operating_system = self.get_argument('operating_system', '?')
                 self.dbsession.add(box)
                 self.dbsession.commit()
                 if hasattr(self.request, 'files') and 'avatar' in self.request.files:

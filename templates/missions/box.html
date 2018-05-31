@@ -93,8 +93,8 @@
                 <i class="fa fa-linux"></i>
             {% elif box.operating_system.lower() == 'apple' %}
                 <i class="fa fa-apple"></i>
-            {% else %}
-                <i class="fa fa-question"></i>
+            {% elif box.operating_system.lower() == '?' %}
+                <i class="fa fa-desktop"></i>
             {% end %}
             {{ box.corporation.name }} - {{ box.name }}
         </h1>
@@ -103,7 +103,7 @@
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">ERROR</h4>
+                    <h4 class="alert-heading">Incorrect</h4>
                     {{ error }}
                 </div>
             {% end %}
@@ -122,6 +122,19 @@
         </div>
         <br />
         <br />
+        {% set flagcount=0 %}
+        {% for index, flag in enumerate(box.flags) %}
+            {% if flag in team.flags %}
+                {% set flagcount += 1 %}
+            {% end %}
+        {% end %}
+        {% if flagcount != 0 and len(box.flags) != 0 %}
+        <div class="progress">
+            <div class="bar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;">
+                {{ flagcount }} / {{ len(box.flags) }}
+            </div>
+        </div>
+        {% end %}
         <div class="well">
             <table class="table table-hover">
                 <caption><h4> - Flags - </h4></caption>

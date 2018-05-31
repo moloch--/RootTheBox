@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
     /* Button callbacks */
-    $("button[id^=os-button]").click(function() {
-        $("#operating-system").val($(this).data("os"));
+    $(".osbutton").click(function() {
+        $("#operating_system").val($(this).data("os"));
     });
 
     $("#autoformat-enable").click(function() {
