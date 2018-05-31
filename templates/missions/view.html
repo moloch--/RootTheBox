@@ -72,11 +72,28 @@
                                                         <i class="fa fa-linux"></i>
                                                     {% elif box.operating_system.lower() == 'apple' %}
                                                         <i class="fa fa-apple"></i>
-                                                    {% else %}
-                                                        <i class="fa fa-question"></i>
+                                                    {% elif box.operating_system.lower() == '?' %}
+                                                        <i class="fa fa-desktop"></i>
                                                     {% end %}
                                                     {{ box.corporation.name }} - {{ box.name }}
                                                 </h5>
+                                                {% set flagcount=0 %}
+                                                {% for index, flag in enumerate(box.flags) %}
+                                                    {% if flag in team.flags %}
+                                                        {% set flagcount += 1 %}
+                                                    {% end %}
+                                                {% end %}
+                                                {% if flagcount != 0 and len(box.flags) != 0 %}
+                                                    <div class="progress">
+                                                        <div class="bar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;">
+                                                            {{ flagcount }} / {{ len(box.flags) }}
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="progress">
+                                                        <div class="bar" style="width: 0%;"></div>
+                                                    </div>
+                                                {% end %}
                                                 <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                                             </a>
                                         </center>
@@ -93,11 +110,28 @@
                                                             <i class="fa fa-linux"></i>
                                                         {% elif box1.operating_system.lower() == 'apple' %}
                                                             <i class="fa fa-apple"></i>
-                                                        {% else %}
-                                                            <i class="fa fa-question"></i>
+                                                        {% elif box1.operating_system.lower() == '?' %}
+                                                            <i class="fa fa-desktop"></i>
                                                         {% end %}
                                                         {{ box1.corporation.name }} - {{ box1.name }}
                                                     </h5>
+                                                    {% set flagcount=0 %}
+                                                    {% for index, flag in enumerate(box1.flags) %}
+                                                        {% if flag in team.flags %}
+                                                            {% set flagcount += 1 %}
+                                                        {% end %}
+                                                    {% end %}
+                                                    {% if flagcount != 0 and len(box1.flags) != 0 %}
+                                                        <div class="progress">
+                                                            <div class="bar" style="width: {{ ( flagcount /  float(len(box1.flags)) ) * 100.0 }}%;">
+                                                                {{ flagcount }} / {{ len(box1.flags) }}
+                                                            </div>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="progress">
+                                                            <div class="bar" style="width: 0%;"></div>
+                                                        </div>
+                                                    {% end %}
                                                     <img src="/avatars/{{ box1.avatar }}" class="img-polaroid" />
                                                 </a>
                                             </center>
@@ -115,11 +149,28 @@
                                                             <i class="fa fa-linux"></i>
                                                         {% elif box2.operating_system.lower() == 'apple' %}
                                                             <i class="fa fa-apple"></i>
-                                                        {% else %}
-                                                            <i class="fa fa-question"></i>
+                                                        {% elif box2.operating_system.lower() == '?' %}
+                                                            <i class="fa fa-desktop"></i>
                                                         {% end %}
                                                         {{ box2.corporation.name }} - {{ box2.name }}
                                                     </h5>
+                                                    {% set flagcount=0 %}
+                                                    {% for index, flag in enumerate(box2.flags) %}
+                                                        {% if flag in team.flags %}
+                                                            {% set flagcount += 1 %}
+                                                        {% end %}
+                                                    {% end %}
+                                                    {% if flagcount != 0 and len(box2.flags) != 0 %}
+                                                        <div class="progress">
+                                                            <div class="bar" style="width: {{ ( flagcount /  float(len(box2.flags)) ) * 100.0 }}%;">
+                                                                {{ flagcount }} / {{ len(box2.flags) }}
+                                                            </div>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="progress">
+                                                            <div class="bar" style="width: 0%;"></div>
+                                                        </div>
+                                                    {% end %}
                                                     <img src="/avatars/{{ box2.avatar }}" class="img-polaroid" />
                                                 </a>
                                             </center>
