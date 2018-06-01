@@ -160,8 +160,12 @@ class Box(DatabaseObject):
                     index += step
             else:
                 ls.append("  No information on file.")
-            ls.append("\n  Operating System: %s\n" % self.operating_system)
-            ls.append("  Reported Difficulty: %s\n" % self.difficulty)
+            if self.operating_system != "none":
+                ls.append("\n  Operating System: %s\n" % self.operating_system)
+            if self.difficulty != "Unknown":
+                ls.append("  Reported Difficulty: %s\n" % self.difficulty)
+            if not str(ls[-1]).endswith("\n"):
+                ls[-1] = ls[-1] + "\n"
             return unicode("\n".join(ls))
         else:
             return self._description
