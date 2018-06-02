@@ -71,7 +71,7 @@
                                                 <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
                                             {% end %}
                                             <div class="summarycolumn" style="display: table-cell;">
-                                                <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="Level #{{ level.number }} &ndash; {% if len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
+                                                <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}Level #{{ level.number }} &ndash; {% end %}{% if len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
                                                     {% if len(team.level_flags(level.number)) != 0 %}
                                                         <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
                                                     {% else %}
@@ -90,7 +90,7 @@
                                         <th>#</th>
                                         <th>Flag</th>
                                         <th>Box</th>
-                                        <th>Game Level</th>
+                                        {% if len(GameLevel.all()) > 1 %}<th>Game Level</th>{% end %}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -99,7 +99,7 @@
                                             <td>{{ f_index + 1 }}</td>
                                             <td>{{ flag.name }}</td>
                                             <td>{{ flag.box.name }}</td>
-                                            <td>{{ flag.game_level.number }}</td>
+                                            {% if len(GameLevel.all()) > 1 %}<td>{{ flag.game_level.number }}</td>{% end %}
                                         </tr>
                                     {% end %}
                                 </tbody>
