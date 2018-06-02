@@ -110,8 +110,9 @@ class EventManager(object):
             self.push_team(team_id)
 
     def push_team(self, team_id):
-        for user_id in self.auth_connections[team_id]:
-            self.push_user(team_id, user_id)
+        if team_id in self.auth_connections:
+            for user_id in self.auth_connections[team_id]:
+                self.push_user(team_id, user_id)
 
     def push_user(self, team_id, user_id):
         ''' Push all unread notifications to open user websockets '''
@@ -188,7 +189,7 @@ class EventManager(object):
     # [ Team Events ] ------------------------------------------------------
     def user_joined_team(self, user):            
         ''' Callback when a user joins a team'''
-        if options.team:
+        if options.teams:
             message = "%s has joined the %s team" % (
                 user.handle, user.team.name,
             )

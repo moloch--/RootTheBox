@@ -7,6 +7,7 @@
 {% end %}
 
 {% block modals %}
+{% from tornado.options import options %}
 {% from models.GameLevel import GameLevel %}
     <!-- Edit Level -->
     <div id="edit-game-level-modal" class="modal hide fade" style="display: none; ">
@@ -28,9 +29,9 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="game_level-buyout">Buyout</label>
+                    <label class="control-label" for="game_level-buyout">{% if options.banking %}Buyout{% else %}Cost{% end %}</label>
                     <div class="controls">
-                        <input required id="game_level-buyout" name="buyout" pattern="[0-9]+" placeholder="Buyout ($)" type="text" />
+                        <input required id="game_level-buyout" name="buyout" pattern="[0-9]+" placeholder="{% if options.banking %}Buyout ($){% else %}Cost{% end %}" type="text" />
                     </div>
                 </div>
             </form>
@@ -122,7 +123,7 @@
         {% for index, level in enumerate(GameLevel.all()) %}
             <div class="well">
                 <h2 style="display:inline;">
-                    Level #{{ level.number }} - ${{ level.buyout }}&nbsp;&nbsp;&nbsp;
+                    Level #{{ level.number }} - {% if options.banking %}${% end %}{{ level.buyout }}&nbsp;&nbsp;&nbsp;
                 </h2>
                 <a id="edit-game-level-button{{ index }}" class="btn btn-small" data-toggle="modal" href="#edit-game-level-modal" data-uuid="{{ level.uuid }}">
                     <i class="fa fa-pencil"></i>

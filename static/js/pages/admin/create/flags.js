@@ -10,14 +10,14 @@ $(document).ready(function() {
     $("#case-button").popover({placement:'right', trigger:'hover'});
 
     $("#case-enable").click(function() {
-        $("#case-sensitve").val("true");
+        $("#case-sensitve").val(1);
         $("#case-enable-icon").removeClass("fa-square-o");
         $("#case-enable-icon").addClass("fa-check-square-o");
         $("#case-disable-icon").removeClass("fa-check-square-o");
         $("#case-disable-icon").addClass("fa-square-o");
     });
     $("#case-disable").click(function() {
-        $("#case-sensitive").val("false");
+        $("#case-sensitive").val(0);
         $("#case-disable-icon").removeClass("fa-square-o");
         $("#case-disable-icon").addClass("fa-check-square-o");
         $("#case-enable-icon").removeClass("fa-check-square-o");

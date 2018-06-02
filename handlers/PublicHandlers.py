@@ -175,9 +175,11 @@ class RegistrationHandler(BaseHandler):
         if self.get_argument('pass1', '') != self.get_argument('pass2', ''):
             raise ValidationError("Passwords do not match")
         user = User()
+        print self.request.arguments
         user.handle = self.get_argument('handle', '')
         user.password = self.get_argument('pass1', '')
         user.bank_password = self.get_argument('bpass', '')
+        user._name = self.get_argument('playername', '')
         team.members.append(user)
         self.dbsession.add(user)
         self.dbsession.add(team)

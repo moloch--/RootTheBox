@@ -70,6 +70,12 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label" for="user-handle">Handle</label>
+                    <div class="controls">
+                      <input id="user-handle" name="handle" type="text" placeholder="Handle">
+                    </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="user-hash-algorithm">Hash Algorithm</label>
                     <div class="controls">
                         <select id="user-hash-algorithm" name="hash_algorithm">
@@ -184,6 +190,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Handle</th>
+                                <th>Name</th>
                                 <th>Last Login</th>
                                 <th>Hash Algorithm</th>
                                 <th>Password Hash</th>
@@ -201,6 +208,7 @@
                                 {% end %}
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ user.handle }}</td>
+                                    <td>{%if user.name %}{{user.name}}{% else %}Unknown{% end %}</td>
                                     {% if 0 < user.logins %}
                                         <td>{{ user.last_login }}</td>
                                     {% else %}
@@ -216,7 +224,7 @@
                                     {% else %}
                                         <td>{{ user.bank_password }}</td>
                                     {% end %}
-                                    <td>
+                                    <td style="width: 1px; white-space: nowrap;">
                                         {% if user.locked %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
                                                 <i class="fa fa-fw fa-unlock"></i>
@@ -229,13 +237,13 @@
                                             </a>
                                         {% end %}
                                     </td>
-                                    <td>
+                                    <td style="width: 1px; white-space: nowrap;">
                                         <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}" data-hash-algorithm="{{ user.algorithm }}" data-team-uuid="{{ user.team.uuid }}">
                                             <i class="fa fa-fw fa-pencil"></i>
-                                            Edit
+                                            Edit Account
                                         </a>
                                     </td>
-                                    <td>
+                                    <td style="width: 1px; white-space: nowrap;">
                                         <a id="delete-user-button-{{ user.uuid }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-user-modal" data-uuid="{{ user.uuid }}">
                                             <i class="fa fa-fw fa-times-circle-o"></i>
                                             Delete

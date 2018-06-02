@@ -3,12 +3,13 @@ function text_animation(term) {
     var flag = $('#flag').val();
     var reward = $('#reward').val();
     var msg = $('#capture-message').val();
+    var banking = $('#banking').val();
     intro_frames = [
         "  I have received the '" + flag + "' information.",
         "  ",
         "  " + msg.toString(),
         "  ",
-        "  I have transfered $" + reward + " to your team's account.",
+        "  I have transfered " + banking + reward + " to your team's account.",
         " ",
         " Good hunting,\n    -Morris",
     ];

@@ -64,6 +64,7 @@ class Flag(DatabaseObject):
     _token = Column(Unicode(256), nullable=False)
     _description = Column(Unicode(1024), nullable=False)
     _capture_message = Column(Unicode(512))
+    _case_sensitive = Column(Integer, nullable=True)
     _value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
 
@@ -111,8 +112,10 @@ class Flag(DatabaseObject):
             FLAG_REGEX: cls._create_flag_regex,
             FLAG_FILE: cls._create_flag_file,
         }
-        if cls.by_name(name) is not None:
-            raise ValidationError('Flag name already exists in database')
+        #TODO Don't understand why this is here - name is not unqiue value
+        # and you could simply name questions per box, like "Question 1" - ElJefe 6/1/2018
+        #if cls.by_name(name) is not None:
+            #raise ValidationError('Flag name already exists in database')
         assert box is not None and isinstance(box, Box)
         new_flag = creators[_type](box, name, raw_token, description, value)
         new_flag._type = _type
@@ -176,8 +179,9 @@ class Flag(DatabaseObject):
     def name(self, value):
         if not 3 <= len(value) <= 16:
             raise ValidationError("Flag name must be 3 - 16 characters")
-        if self.by_name(value) is not None:
-            raise ValidationError("Flag name must be unique")
+        #TODO Don't understand why this is here - name is not unqiue value - ElJefe 6/1/2018
+        #if self.by_name(value) is not None:
+            #raise ValidationError("Flag name must be unique")
         self._name = unicode(value)
 
     @property
@@ -231,7 +235,10 @@ class Flag(DatabaseObject):
 
     def capture(self, submission):
         if self._type == FLAG_STATIC:
-            return self.token == submission
+            if self._case_sensitive == 0:
+                return str(self.token).lower().strip() == str(submission).lower().strip()
+            else:
+                return str(self.token).strip() == str(submission).strip()
         elif self._type == FLAG_REGEX:
             pattern = re.compile(self.token)
             return pattern.match(submission) is not None

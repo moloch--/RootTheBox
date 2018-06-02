@@ -71,6 +71,7 @@ class User(DatabaseObject):
     last_login = Column(DateTime)
     logins = Column(Integer, default=0)
     _handle = Column(Unicode(16), unique=True, nullable=False)
+    _name = Column(Unicode(64), unique=False, nullable=True)
     _password = Column('password', String(64))
     _bank_password = Column('bank_password', String(128))
 
@@ -191,6 +192,10 @@ class User(DatabaseObject):
     @property
     def handle(self):
         return self._handle
+
+    @property
+    def name(self):
+        return self._name
 
     @handle.setter
     def handle(self, new_handle):

@@ -39,6 +39,31 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="box_uuid">Box</label>
+                        <div class="controls">
+                            <select id="box-uuid" name="box_uuid"
+                                    rel="popover"
+                                    data-original-title="Box"
+                                    data-content="This is the box the flag is located on.">
+                                <option value=""></option>
+                                {% for box in Box.all() %}
+                                <option value="{{ box.uuid }}">
+                                    {{ box.name }} ({{ box.corporation.name }})
+                                </option>
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                        <div class="controls">
+                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                                   rel="popover"
+                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
+                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="token">Flag File</label>
                         <div class="controls">
                             <input id="token" name="flag" type="file">
@@ -62,31 +87,6 @@
                                     data-original-title="Capture Message"
                                     data-content="This is the message displayed to the user once inputed." >
                             </textarea>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
-                        <div class="controls">
-                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
-                                   rel="popover"
-                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
-                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="box_uuid">Box</label>
-                        <div class="controls">
-                            <select id="box-uuid" name="box_uuid"
-                                    rel="popover"
-                                    data-original-title="Box"
-                                    data-content="This is the box the flag is located on.">
-                                <option value=""></option>
-                                {% for box in Box.all() %}
-                                <option value="{{ box.uuid }}">
-                                    {{ box.name }} ({{ box.corporation.name }})
-                                </option>
-                                {% end %}
-                            </select>
                         </div>
                     </div>
                     <input type="hidden" name="is_file" value="true">

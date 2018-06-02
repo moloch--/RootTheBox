@@ -39,9 +39,53 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="box_uuid">Box</label>
+                        <div class="controls">
+                            <select id="box-uuid" name="box_uuid"
+                                    rel="popover"
+                                    data-original-title="Box"
+                                    data-content="This is the box the flag is located on.">
+                                <option value=""></option>
+                                {% for box in Box.all() %}
+                                <option value="{{ box.uuid }}">
+                                    {{ box.name }} ({{ box.corporation.name }})
+                                </option>
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                        <div class="controls">
+                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                                   rel="popover"
+                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
+                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="token">Token</label>
                         <div class="controls">
                             <input required id="token" name="token" type="text" placeholder="Static Token" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="case-sensitive">Case-Sensitive</label>
+                        <div class="controls">
+                            <input id="case-sensitive" name="case-sensitive" type="hidden" value=1 />
+                            <div id="case-button" class="btn-group" data-toggle="buttons-radio"
+                                rel="popover"
+                                data-original-title="Case-Sensitive"
+                                data-content="Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.">
+                                <button id="case-enable" type="button" class="btn btn-success">
+                                    <i id="case-enable-icon" class="fa fa-fw fa-check-square-o"></i>
+                                    Enable
+                                </button>
+                                <button id="case-disable" type="button" class="btn btn-danger">
+                                    <i id="case-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                    Disable
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="control-group">
@@ -64,31 +108,7 @@
                             </textarea>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
-                        <div class="controls">
-                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
-                                   rel="popover"
-                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
-                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="box_uuid">Box</label>
-                        <div class="controls">
-                            <select id="box-uuid" name="box_uuid"
-                                    rel="popover"
-                                    data-original-title="Box"
-                                    data-content="This is the box the flag is located on.">
-                                <option value=""></option>
-                                {% for box in Box.all() %}
-                                <option value="{{ box.uuid }}">
-                                    {{ box.name }} ({{ box.corporation.name }})
-                                </option>
-                                {% end %}
-                            </select>
-                        </div>
-                    </div>
+   
                     <div class="control-group">
                         <div class="controls">
                             <button class="btn btn-primary" type="submit">Create Flag</button>
@@ -101,7 +121,7 @@
                     <blockquote>
                         <small>
                             <strong>Tokens:</strong>
-                            In this case the "flag" is a static string. The user must submit the an <i>exact</i> to capture the flag. All matches are case-sensitive (and whitespace).
+                            In this case, the "flag" is a static string. The user must submit the <i>exact</i> token to capture the flag.  Whitespace at the beginning and end are stripped.
                         </small>
                     </blockquote>
                 </p>

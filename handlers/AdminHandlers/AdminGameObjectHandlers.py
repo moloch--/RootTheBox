@@ -34,6 +34,8 @@ from handlers.BaseHandlers import BaseHandler
 from models.Box import Box
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
+from models.FlagAttachment import FlagAttachment
+from models.MarketItem import MarketItem
 from models.Hint import Hint
 from models.Team import Team
 from models.IpAddress import IpAddress
@@ -92,7 +94,6 @@ class AdminCreateHandler(BaseHandler):
         ''' Admins can create teams manually '''
         try:
             name = self.get_argument('team_name', '')
-            motto = self.get_argument('motto', '')
             if Team.by_name(name) is not None:
                 raise ValidationError("Team already exists")
             team = Team()
@@ -229,6 +230,7 @@ class AdminCreateHandler(BaseHandler):
         flag = Flag.create_flag(
             flag_type, box, name, token, description, reward)
         flag.capture_message = self.get_argument('capture_message', '')
+        flag._case_sensitive = self.get_argument('case-sensitive', 1)
         self.add_attachments(flag)
         self.dbsession.add(flag)
         self.dbsession.commit()
