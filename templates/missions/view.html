@@ -117,9 +117,9 @@
                                                             {% set flagcount += 1 %}
                                                         {% end %}
                                                     {% end %}
-                                                    <div class="progress" style="height: 8px; margin-bottom: 8px; margin-right: -10px; background-color: #424242;">
+                                                    <div class="progress" style="height: 8px; margin-bottom: 8px; margin-right: -10px; background-color: #424242;" title="{% if len(box1.flags) != 0 %}{{ flagcount }} / {{ len(box1.flags) }}{% else %}0 / 0{% end %}">
                                                         {% if flagcount != 0 and len(box1.flags) != 0 %}
-                                                                <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box1.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box1.flags) }}"></div>
+                                                                <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box1.flags)) ) * 100.0 }}%;"></div>
                                                         {% else %}
                                                                 <div class="bar minibar" style="width: 0%;"></div>
                                                         {% end %}
