@@ -1,9 +1,13 @@
 {% extends "../main.html" %}
 
+{% block header %}
+<script src="/static/js/pages/missions/view.js"></script>
+{% end %}
 {% block title %}Teams{% end %}
 
 {% block content %}
 {% from models.Team import Team %}
+{% from models.GameLevel import GameLevel %}
 {% from tornado.options import options %}
 <div class="row-fluid">
     <div class="span2" />
@@ -59,6 +63,26 @@
                 <div class="row">
                     <div class="container">
                         <hr />
+                        <div style="height: 8px; padding: 0px; margin-top: -8px; margin-bottom: 8px;">
+                                <div style="width: 100%; display: table;">
+                                    <div style="display: table-row; ">
+                                        {% for index, level in enumerate(GameLevel.all()) %}
+                                            {% if index> 0 %}
+                                                <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
+                                            {% end %}
+                                            <div class="summarycolumn" style="display: table-cell;">
+                                                <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;">
+                                                    {% if len(team.level_flags(level.number)) != 0 %}
+                                                        <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="Level #{{ level.number }} &ndash; {{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%"></div>
+                                                    {% else %}
+                                                        <div class="bar minibar" style="width: 0%;"></div>
+                                                    {% end %}
+                                                </div>
+                                            </div>
+                                        {% end %}
+                                    </div>
+                                </div>
+                        </div>
                         {% if len(team.flags) %}
                             <table class="table table-striped">
                                 <thead>

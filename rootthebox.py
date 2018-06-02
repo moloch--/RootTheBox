@@ -411,7 +411,7 @@ define("default_theme",
        help="the default css theme")
 
 define("rank_by",
-       default="flags",
+       default="money",
        group="game",
        help="rank teams by (flags or money)")
 

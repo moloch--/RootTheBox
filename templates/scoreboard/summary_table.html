@@ -1,28 +1,58 @@
 {% from libs.BotManager import BotManager %}
 {% from tornado.options import options %}
 {% for index, team in enumerate(teams) %}
-    <tr>
-        <td>
+{% from models.GameLevel import GameLevel %}
+    <tr style="padding-top: 5px;">
+        <td class="summarycolumn" style="text-align: center; vertical-align: middle; font-size: x-large; width: 1px; white-space: nowrap; padding: 0px 20px 0px 10px;">
             {% if index == 0 %}
                 <i class="fa fa-trophy"></i>
             {% else %}
                 {{ index + 1 }}
             {% end %}
         </td>
-        <td>{{ team.name }}</td>
-        <td>{{ len(team.flags) }}</td>
+        
+        <td class="summarycolumn" colspan="3">
+            <div style="width: 100%; display: table;">
+                <div style="display: table-row;">
+                    <div class="summarycolumn" style="display: table-cell; font-size: large;">{{ team.name }}</div>
+                    <!-- <div class="summarycolumn" style="display: table-cell;">{{ team.levels[-1].number }} </div> -->
+                    {% if options.hints_taken %}
+                    <div class="summarycolumn" style="display: table-cell; width: 1px; white-space: nowrap; vertical-align: bottom; font-size: small;">{{ len(team.hints) }} Hints Taken</div>
+                    {% end %}
+                </div>
+            </div>
+                <div style="height: 8px; padding: 5px 0px;">
+                    <div style="width: 100%; display: table;">
+                        <div style="display: table-row; ">
+                            {% for index, level in enumerate(GameLevel.all()) %}
+                                {% if index> 0 %}
+                                    <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
+                                {% end %}
+                                <div class="summarycolumn" style="display: table-cell;">
+                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;">
+                                        {% if len(team.level_flags(level.number)) != 0 %}
+                                            <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="Level #{{ level.number }} &ndash; {{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%"></div>
+                                        {% else %}
+                                            <div class="bar minibar" style="width: 0%;"></div>
+                                        {% end %}
+                                    </div>
+                                </div>
+                            {% end %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
         {% if options.use_bots %}
-            <td>{{ BotManager.instance().count_by_team(team) }}<br /></td>
+            <td class="summarycolumn" style="display: table-cell; font-size: large; white-space: nowrap; vertical-align: middle; width: 40px; text-align: center;">{{ BotManager.instance().count_by_team(team) }}</td>
         {% end %}
-        <td>{{ team.levels[-1].number }} </td>
-        {% if options.hints_taken %}
-            <td>{{ len(team.hints) }}</td>
-        {% end %}
-        <td>{% if options.banking %}${% end %}{{ team.money }}</td>
-        <td>
+        <td class="summarycolumn" style="{% if options.banking %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %}white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.flags) }}</div></td>
+        <td class="summarycolumn" style="{% if not options.banking %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %} vertical-align: middle; width: 100px;">{% if options.banking %}${% end %}{{ team.money }}</td>
+        <td class="summarycolumn" style="width: 1px; white-space: nowrap; vertical-align: middle;">
             <a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.uuid }}">
                 Details &raquo;
             </a>
         </td>
     </tr>
 {% end %}
+<script src="/static/js/pages/missions/view.js"></script>

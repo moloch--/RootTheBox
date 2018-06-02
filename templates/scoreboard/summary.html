@@ -3,6 +3,7 @@
 {% block header %}
 <script src="/static/js/libs/highcharts-all.js"></script>
 <script src="/static/js/pages/scoreboard/summary.js"></script>
+<link href="/static/css/pages/user/summary.css" rel="stylesheet" />
 {% end %}
 
 {% block title %}Scoreboard{% end %}
@@ -33,7 +34,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th style="text-align: center;">#&nbsp;&nbsp;&nbsp;</th>
                     <th>
                         {% if options.teams %}
                             Team
@@ -41,14 +42,11 @@
                             Player
                         {% end %}
                     </th>
-                    <th>Flags Captured</th>
+                    <th></th><th></th>
                     {% if options.use_bots %}
-                        <th>Botnet</th>
+                        <th style="text-align: center;">Bots</th>
                     {% end %}
-                    <th>Game Level</th>
-                    {% if options.hints_taken %}
-                        <th>Hints</th>
-                    {% end %}
+                    <th style="text-align: center;">Flags</th>
                     <th id="bankname">
                         {% if options.banking %}
                             Bank Account
