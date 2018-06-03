@@ -1,0 +1,113 @@
+{% extends "../../main.html" %}
+
+{% block title %}Create Flag{% end %}
+
+{% block header %}
+<script src="/static/js/pages/admin/create/flags.js"></script>
+{% end %}
+
+{% block content %}
+{% from models.Box import Box %}
+{% from tornado.options import options %}
+<div class="container">
+    <h1>
+        <i class="fa fa-flag"></i>
+        Create Datetime Flag
+    </h1>
+    <br />
+    {% if errors is not None and len(errors) != 0 %}
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
+        </div>
+        {% end %}
+    {% end %}
+    <div class="well">
+        <div class="row">
+            <div class="span4">
+                <form class="form-horizontal" action="/admin/create/flag/datetime" method="post">
+                    {% raw xsrf_form_html() %}
+                    <div class="control-group">
+                        <label class="control-label" for="flag_name">Flag Name</label>
+                        <div class="controls">
+                            <input autofocus required id="flag-name" maxlength="16" name="flag_name" type="text" placeholder="Flag Name"
+                                    rel="popover"
+                                    data-original-title="Flag Name"
+                                    data-content="This is what you want the flag to be displayed as." />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="box_uuid">Box</label>
+                        <div class="controls">
+                            <select id="box-uuid" name="box_uuid"
+                                    rel="popover"
+                                    data-original-title="Box"
+                                    data-content="This is the box the flag is located on.">
+                                <option value=""></option>
+                                {% for box in Box.all() %}
+                                <option value="{{ box.uuid }}">
+                                    {{ box.name }} ({{ box.corporation.name }})
+                                </option>
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                        <div class="controls">
+                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                                   rel="popover"
+                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
+                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="token">Token</label>
+                        <div class="controls">
+                            <input required id="token" name="token" type="text" placeholder="Datetime Token" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="description">Description</label>
+                        <div class="controls">
+                            <textarea required id="description" name="description" type="text" placeholder="Description"
+                                    rel="popover"
+                                    data-original-title="Description"
+                                    data-content="This is the description.">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="capture-message">Capture Message</label>
+                        <div class="controls">
+                            <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)"
+                                    rel="popover"
+                                    data-original-title="Capture Message"
+                                    data-content="This is the message displayed to the user once inputed." >
+                            </textarea>
+                        </div>
+                    </div>
+   
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" type="submit">Create Flag</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="offset3 span4">
+                <p>
+                    <blockquote>
+                        <small>
+                            <strong>Tokens:</strong>
+                            In this case, the "flag" is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, and padding.
+                        </small>
+                    </blockquote>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% end %}

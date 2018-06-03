@@ -18,7 +18,7 @@
             <i class="fa fa-globe"></i>
             Incoming Transmission
         </h3>
-        <input id="banking" type="hidden" value="{ % if options.banking %}${% end %}" />
+        <input id="banking" type="hidden" value="{% if options.banking %}${% end %}" />
         <input id="flag" type="hidden" value="{{ flag.name }}" />
         <input id="capture-message" type="hidden" value="{{ flag.capture_message }}" />
         <input id="reward" type="hidden" value="{{ reward }}" />

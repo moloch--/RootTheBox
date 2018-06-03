@@ -40,7 +40,7 @@ from models.Hint import Hint
 from models.Team import Team
 from models.IpAddress import IpAddress
 from models.User import ADMIN_PERMISSION
-from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC
+from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import *
 
@@ -61,6 +61,7 @@ class AdminCreateHandler(BaseHandler):
             'flag/regex': 'admin/create/flag-regex.html',
             'flag/file': 'admin/create/flag-file.html',
             'flag/static': 'admin/create/flag-static.html',
+            'flag/datetime': 'admin/create/flag-datetime.html',
             'game_level': 'admin/create/game_level.html',
             'hint': 'admin/create/hint.html',
             'team': 'admin/create/team.html',
@@ -81,6 +82,7 @@ class AdminCreateHandler(BaseHandler):
             'flag/file': self.create_flag_file,
             'flag/regex': self.create_flag_regex,
             'flag/static': self.create_flag_static,
+            'flag/datetime': self.create_flag_datetime,
             'game_level': self.create_game_level,
             'hint': self.create_hint,
             'team': self.create_team,
@@ -173,6 +175,13 @@ class AdminCreateHandler(BaseHandler):
             self._mkflag(FLAG_FILE, is_file=True)
         except ValidationError as error:
             self.render('admin/create/flag-file.html', errors=[str(error)])
+
+    def create_flag_datetime(self):
+        ''' Create a datetime flag '''
+        try:
+            self._mkflag(FLAG_DATETIME)
+        except ValidationError as error:
+            self.render('admin/create/flag-datetime.html', errors=[str(error)])
 
     def create_game_level(self):
         '''

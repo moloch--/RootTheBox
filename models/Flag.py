@@ -33,21 +33,23 @@ from models.Box import Box
 from models.FlagAttachment import FlagAttachment  # Fix object mapper
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
-
+from tornado.options import options
 
 ### Constants
 FLAG_STATIC = u'static'
 FLAG_REGEX = u'regex'
 FLAG_FILE = u'file'
+FLAG_DATETIME = u'datetime'
 
 
 class Flag(DatabaseObject):
 
     '''
     Flags that can be captured by players and what not. This object comes in
-    three flavors:
+    these flavors:
         -static
         -regex
+        -datetime
         -file
 
     Depending on the cls._type value. For more information see the wiki.
@@ -72,7 +74,7 @@ class Flag(DatabaseObject):
                                     backref=backref("flag", lazy="select")
                                     )
 
-    FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC]
+    FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME]
 
     @classmethod
     def all(cls):
@@ -111,6 +113,7 @@ class Flag(DatabaseObject):
             FLAG_STATIC: cls._create_flag_static,
             FLAG_REGEX: cls._create_flag_regex,
             FLAG_FILE: cls._create_flag_file,
+            FLAG_DATETIME: cls._create_flag_datetime,
         }
         #TODO Don't understand why this is here - name is not unqiue value
         # and you could simply name questions per box, like "Question 1" - ElJefe 6/1/2018
@@ -125,7 +128,7 @@ class Flag(DatabaseObject):
     def _create_flag_file(cls, box,  name, raw_token, description, value):
         ''' Check flag file specific parameters '''
         token = cls.digest(raw_token)
-        if cls.by_token(token) is not None:
+        if not options.debug and cls.by_token(token) is not None:
             raise ValidationError('Flag token already exists in database')
         return cls(box_id=box.id,
                    name=name,
@@ -141,7 +144,7 @@ class Flag(DatabaseObject):
             re.compile(raw_token)
         except:
             raise ValidationError('Flag token is not a valid regex')
-        if cls.by_token(raw_token) is not None:
+        if not options.debug and cls.by_token(raw_token) is not None:
             raise ValidationError('Flag token already exists in database')
         return cls(box_id=box.id,
                    name=name,
@@ -153,6 +156,18 @@ class Flag(DatabaseObject):
     @classmethod
     def _create_flag_static(cls, box,  name, raw_token, description, value):
         ''' Check flag static specific parameters '''
+        if not options.debug and cls.by_token(raw_token) is not None:
+            raise ValidationError('Flag token already exists in database')
+        return cls(box_id=box.id,
+                   name=name,
+                   token=raw_token,
+                   description=description,
+                   value=value
+                   )
+
+    @classmethod
+    def _create_flag_datetime(cls, box,  name, raw_token, description, value):
+        ''' Check flag datetime specific parameters '''
         if cls.by_token(raw_token) is not None:
             raise ValidationError('Flag token already exists in database')
         return cls(box_id=box.id,
@@ -244,6 +259,12 @@ class Flag(DatabaseObject):
             return pattern.match(submission) is not None
         elif self._type == FLAG_FILE:
             return self.token == self.digest(submission)
+        elif self._type == FLAG_DATETIME:
+            from dateutil.parser import parse
+            try:
+                return parse(self.token) == parse(submission)
+            except:
+                return False
         else:
             raise ValueError('Invalid flag type, cannot capture')
 
