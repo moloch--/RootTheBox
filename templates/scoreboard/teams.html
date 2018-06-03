@@ -20,12 +20,14 @@
             </center>
             <br />
             {% for team in Team.all() %}
+                {% if len(team.members) > 0 %}
                 <li>
                     <a href="#{{ team.uuid }}">
                         <i class="icon-chevron-right"></i>
                         &nbsp;&nbsp;{{ team.name }}
                     </a>
                 </li>
+                {% end %}
             {% end %}
         </ul>
     </div>
@@ -36,6 +38,7 @@
         </h1>
         <br />
         {% for index, team in enumerate(Team.ranks()) %}
+            {% if len(team.members) > 0 %}
             <div id="{{ team.uuid }}" class="container" align="middle">
                 <h2 style="display:inline;">
                     {% if index == 0 %}
@@ -112,6 +115,7 @@
                     </div>
                 </div>
             </div>
+            {% end %}
         {% end %}
     </div>
 </div>

@@ -175,6 +175,7 @@
                 <p class="well"><strong>No Users</strong></p>
             {% end %}
             {% for team_index, team in enumerate(Team.all()) %}
+                {% if options.teams or len(team.members) > 0 %}
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
                     <h4 style="display:inline;">
@@ -254,6 +255,7 @@
                         </tbody>
                     </table>
                 </div>
+                {% end %}
             {% end %}
         </div>
     </div>

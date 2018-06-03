@@ -61,11 +61,12 @@ class Snapshot(DatabaseObject):
     def to_dict(self):
         data = {}
         for team in self.teams:
-            data[unicode(team.name)] = {
-                'bots': team.bots,
-                'money': team.money,
-                'game_levels': [str(level) for level in team.game_levels],
-                'flags': [flag.name for flag in team.flags],
-            }
+            if len(team.members) > 0:
+                data[unicode(team.name)] = {
+                    'bots': team.bots,
+                    'money': team.money,
+                    'game_levels': [str(level) for level in team.game_levels],
+                    'flags': [flag.name for flag in team.flags],
+                }
         unix_time = self.created - UNIX_EPOCH
         return {'timestamp': unix_time.total_seconds(), 'scoreboard': data}

@@ -1,7 +1,8 @@
 {% from libs.BotManager import BotManager %}
 {% from tornado.options import options %}
-{% for index, team in enumerate(teams) %}
 {% from models.GameLevel import GameLevel %}
+{% for index, team in enumerate(teams) %}
+    {% if len(team.members) > 0 %}
     <tr style="padding-top: 5px;">
         <td class="summarycolumn" style="text-align: center; vertical-align: middle; font-size: x-large; width: 1px; white-space: nowrap; padding: 0px 20px 0px 10px;">
             {% if index == 0 %}
@@ -54,5 +55,6 @@
             </a>
         </td>
     </tr>
+    {% end %}
 {% end %}
 <script src="/static/js/pages/missions/view.js"></script>

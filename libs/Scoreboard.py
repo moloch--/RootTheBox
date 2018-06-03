@@ -38,11 +38,12 @@ class Scoreboard(object):
         ''' Returns the current game state '''
         game_state = {}
         for team in Team.all():
-            game_state[team.name] = {
-                'money': team.money,
-                'flags': [str(flag) for flag in team.flags],
-                'game_levels': [str(lvl) for lvl in team.game_levels],
-            }
+            if len(team.members) > 0:
+                game_state[team.name] = {
+                    'money': team.money,
+                    'flags': [str(flag) for flag in team.flags],
+                    'game_levels': [str(lvl) for lvl in team.game_levels],
+                }
         return json.dumps(game_state)
 
 
@@ -51,26 +52,27 @@ def score_bots():
     logging.info("Scoring botnets, please wait ...")
     bot_manager = BotManager.instance()
     for team in Team.all():
-        bots = bot_manager.by_team(team.name)
-        reward = 0
-        for bot in bots:
-            try:
-                reward += options.bot_reward
-                bot.write_message({
-                    'opcode': 'status',
-                    'message': 'Collected $%d reward' % options.bot_reward
-                })
-            except:
-                logging.info(
-                    "Bot at %s failed to respond to score ping" % bot.remote_ip
-                )
-        if 0 < len(bots):
-            logging.info("%s was awarded $%d for controlling %s bot(s)" % (
-                team.name, reward, len(bots),
-            ))
-            bot_manager.add_rewards(team.name, options.bot_reward)
-            bot_manager.notify_monitors(team.name)
-            team.money += reward
-            dbsession.add(team)
-            dbsession.flush()
+        if len(team.members) > 0:
+            bots = bot_manager.by_team(team.name)
+            reward = 0
+            for bot in bots:
+                try:
+                    reward += options.bot_reward
+                    bot.write_message({
+                        'opcode': 'status',
+                        'message': 'Collected $%d reward' % options.bot_reward
+                    })
+                except:
+                    logging.info(
+                        "Bot at %s failed to respond to score ping" % bot.remote_ip
+                    )
+            if 0 < len(bots):
+                logging.info("%s was awarded $%d for controlling %s bot(s)" % (
+                    team.name, reward, len(bots),
+                ))
+                bot_manager.add_rewards(team.name, options.bot_reward)
+                bot_manager.notify_monitors(team.name)
+                team.money += reward
+                dbsession.add(team)
+                dbsession.flush()
     dbsession.commit()
