@@ -337,13 +337,13 @@ define("max_team_size",
        type=int)
 
 define("min_user_password_length",
-       default=16,
+       default=12,
        group="game",
        help="min user password length",
        type=int)
 
 define("banking",
-       default=True,
+       default=False,
        group="game",
        help="turn off bank scoring - point scoreboard",
        type=bool)
@@ -355,7 +355,7 @@ define("max_password_length",
        type=int)
 
 define("use_bots",
-       default=True,
+       default=False,
        group="game",
        help="enable the use of botnets",
        type=bool)
@@ -372,7 +372,7 @@ define("bot_reward",
        type=int)
 
 define("use_black_market",
-       default=True,
+       default=False,
        group="game",
        help="enable the use of the black market",
        type=bool)
@@ -409,6 +409,31 @@ define("flag_value_decrease",
        default=10,
        group="game",
        help="decrease flag reward by this percent per capture",
+       type=int)
+
+define("penalize_flag_value",
+       default=False,
+       group="game",
+       help="penalize score for incorrect capture attempts",
+       type=bool)
+
+define("flag_penalty_cost",
+       default=20,
+       group="game",
+       help="penalty as a percentage of flag value",
+       type=int)
+
+define("flag_start_penalty",
+       default=2,
+       group="game",
+       help="when to start - 1 = incorrect first attempt, 2 = second attempt, etc",
+       type=int)
+
+
+define("flag_stop_penalty",
+       default=5,
+       group="game",
+       help="when to stop - 4 = incorrect forth attempt, 5 = fifth attempt, etc",
        type=int)
 
 define("default_theme",

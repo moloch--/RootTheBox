@@ -219,19 +219,19 @@ class Team(DatabaseObject):
     def __cmp__(self, other):
         ''' Compare based on the config option rank_by '''
         if options.rank_by.lower() != 'money':
-            ''' flags ▲, money ▲, hints ▼'''
+            ''' flags ▲, money ▲, hints ▼ '''
             this, that = len(self.flags), len(other.flags)
             if this == that:
                 this, that = self.money, other.money
             if this == that:
                 this, that = len(other.hints), len(self.hints)
         else:
-            ''' money ▲, hints ▼, flags ▼ '''
+            ''' money ▲, hints ▼, flags ▲ '''
             this, that = self.money, other.money
             if this == that:
                 this, that = len(other.hints), len(self.hints)
             if this == that:
-                this, that = len(other.flags), len(self.flags)
+                this, that = len(self.flags), len(other.flags)
         if this < that:
             return 1
         elif this == that:

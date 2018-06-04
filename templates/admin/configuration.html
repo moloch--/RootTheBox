@@ -65,6 +65,21 @@
                     </div>
                 </div>
             </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="rank_by">Scoreboard Rank By</label>
+                <div class="controls">
+                    <select id="rank_by" name="rank_by" 
+                        rel="popover"
+                        data-original-title="Rank By"
+                        data-content="This selection determines the method by which the scoreboard is primarily ranked.<br/><br/>When the primary ranking is equal, other values are used bases on this selection:<br/><br/>1. points/money ▲, hints ▼, flags ▲<br/>2. flags ▲, points/money ▲, hints ▼">
+                        <option id="moneyname" value="money" {% if config.rank_by == "money" %}selected{% end %}>
+                            {% if config.banking %}Money{% else %}Points{% end %}
+                        </option>
+                        <option value="flags" {% if config.rank_by == "flags" %}selected{% end %}>Flags</option>
+                    </select>
+                </div>
+            </div>
             <div class="control-group">
                 <label class="control-label" for="hints-taken">
                     Display Hints Taken
@@ -86,20 +101,6 @@
                     </div>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label" for="rank_by">Rank By</label>
-                <div class="controls">
-                    <select id="rank_by" name="rank_by" 
-                        rel="popover"
-                        data-original-title="Rank By"
-                        data-content="This selection determines the method by which the scoreboard is primarily ranked.<br/><br/>When the primary ranking is equal, other values are used bases on this selection:<br/><br/>1. money/score ▲, hints ▼, flags ▼<br/>2. flags ▲, money ▲, hints ▼">
-                        <option id="moneyname" value="money" {% if config.rank_by == "money" %}selected{% end %}>
-                            {% if config.banking %}Money{% else %}Score{% end %}
-                        </option>
-                        <option value="flags" {% if config.rank_by == "flags" %}selected{% end %}>Flags</option>
-                    </select>
-                </div>
-            </div>
             <hr />
             <div class="control-group">
                 <label class="control-label" for="teams">
@@ -111,7 +112,7 @@
                     <div id="teams-button" class="btn-group" data-toggle="buttons-radio"
                         rel="popover"
                         data-original-title="Team Play"
-                        data-content="Enabling this feature will set the game and scoreboard up for team play.  If this option is disabled, the game is set up for individal play.">
+                        data-content="Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individal competitive play.">
                         <button id="teams-enable" type="button" class="btn btn-success">
                             <i id="teams-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable
@@ -194,6 +195,58 @@
                         rel="popover" pattern="\d*"
                         data-original-title="Flag Decrease Value"
                         data-content="Decrease flag reward by this percent per capture." />
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="penalize_flag_value">
+                    <i class="fa fa-minus-circle"></i>
+                    Incorrect Penalty
+                </label>
+                <div class="controls">
+                    <input id="penalize_flag_value" name="penalize_flag_value" type="hidden" value="{{ str(config.penalize_flag_value).lower() }}" />
+                    <div id="penalty-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Incorrect Penalty"
+                        data-content="Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.<br/><br/>If this option is disabled, there is no cost for submitting incorrect flags.">
+                        <button id="penalty-enable" type="button" class="btn btn-success">
+                            <i id="penalty-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="penalty-disable" type="button" class="btn btn-danger">
+                            <i id="penalty-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="penalty-grouping">
+                <div class="control-group control-section">
+                    <label class="control-label" for="flag_start_penalty">Flag Penalty Start</label>
+                    <div class="controls">
+                        <input class="penaltyval" required id="flag_start_penalty" type="text" name="flag_start_penalty" value="{{ config.flag_start_penalty }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Flag Penalty Start"
+                            data-content="" />
+                    </div>
+                </div>
+                <div class="control-group control-section">
+                        <label class="control-label" for="flag_stop_penalty">Flag Penalty Stop</label>
+                        <div class="controls">
+                            <input class="penaltyval" required id="flag_stop_penalty" type="text" name="flag_stop_penalty" value="{{ config.flag_stop_penalty }}"
+                                rel="popover" pattern="\d*"
+                                data-original-title="Flag Penalty Stop"
+                                data-content="" />
+                    </div>
+                </div>
+                <div class="control-group control-section">
+                    <label class="control-label" for="flag_penalty_cost">Flag Penalty Cost</label>
+                    <div class="controls">
+                        <input class="penaltyval" required id="flag_penalty_cost" type="text" name="flag_penalty_cost" value="{{ config.flag_penalty_cost }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Flag Penalty Cost"
+                            data-content="" />
+                    </div>
                 </div>
             </div>
             <hr />
