@@ -60,7 +60,8 @@ class BoxHandler(BaseHandler):
             self.render('missions/box.html',
                         box=box,
                         team=user.team,
-                        errors=[])
+                        errors=[],
+                        success=[])
         else:
             self.render('public/404.html')
 
@@ -82,9 +83,20 @@ class FlagSubmissionHandler(BaseHandler):
             old_reward = flag.value
             if self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
-                self.render('missions/captured.html',
-                            flag=flag,
-                            reward=old_reward)
+                if self.config.secure_communique_dialog:
+                    self.render('missions/captured.html',
+                                flag=flag,
+                                reward=old_reward)
+                else:
+                    if self.config.teams:
+                        teamval = "team's "
+                    else:
+                        teamval = ""
+                    if self.config.banking:
+                        reward_dialog = "$" + str(old_reward) + " has been added to your " + teamval + "account."
+                    else:
+                        reward_dialog = str(old_reward) + " points added to your " + teamval + "score."
+                    self.render_page(flag, success=[reward_dialog])
             else:
                 self.render_page(flag, errors=["Invalid flag submission"])
         else:
@@ -122,14 +134,15 @@ class FlagSubmissionHandler(BaseHandler):
                 user.team.game_levels.append(next_level)
                 self.dbsession.add(user.team)
 
-    def render_page(self, flag, errors=[]):
+    def render_page(self, flag, errors=[], success=[]):
         ''' Wrapper to .render() to avoid duplicate code '''
         user = self.get_current_user()
         box = Box.by_id(flag.box_id)
         self.render('missions/box.html',
                     box=box,
                     team=user.team,
-                    errors=errors)
+                    errors=errors,
+                    success=success)
 
 
 class PurchaseHintHandler(BaseHandler):
@@ -161,13 +174,14 @@ class PurchaseHintHandler(BaseHandler):
             self.dbsession.add(team)
             self.dbsession.commit()
 
-    def render_page(self, box, errors=[]):
+    def render_page(self, box, errors=[], success=[]):
         ''' Wrapper to .render() to avoid duplicate code '''
         user = self.get_current_user()
         self.render('missions/box.html',
                     box=box,
                     team=user.team,
-                    errors=errors)
+                    errors=errors,
+                    success=success)
 
 
 class MissionsHandler(BaseHandler):
@@ -178,7 +192,7 @@ class MissionsHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Render missions view '''
         user = self.get_current_user()
-        self.render("missions/view.html", team=user.team, errors=None)
+        self.render("missions/view.html", team=user.team, errors=None, success=None)
 
     @authenticated
     def post(self, *args, **kwargs):
@@ -207,9 +221,10 @@ class MissionsHandler(BaseHandler):
             else:
                 self.render("missions/view.html",
                             team=user.team,
-                            errors=["You do not have enough money to unlock this level"])
+                            errors=["You do not have enough money to unlock this level"],
+                            success=None)
         else:
             self.render("missions/view.html",
                         team=user.team,
-                        errors=["Level does not exist"]
-                        )
+                        errors=["Level does not exist"],
+                        success=None)

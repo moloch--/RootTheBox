@@ -393,6 +393,12 @@ define("whitelist_box_ips",
        help="whitelist box ip addresses (for botnets)",
        type=bool)
 
+define("secure_communique_dialog",
+       default=True,
+       group="game",
+       help="secure communique dialog screen after capture success",
+       type=bool)
+
 define("dynamic_flag_value",
        default=True,
        group="game",

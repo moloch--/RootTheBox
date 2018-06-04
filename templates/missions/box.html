@@ -22,7 +22,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-token">Flag</label>
                     <div class="controls">
-                        <input autofocus required id="flag-token" name="token" type="text" placeholder="Flag" />
+                        <input autofocus required id="flag-token" name="token" type="text" placeholder="Flag" autocomplete="off" />
                     </div>
                 </div>
             </form>
@@ -105,6 +105,15 @@
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
                     <h4 class="alert-heading">Incorrect</h4>
                     {{ error }}
+                </div>
+            {% end %}
+        {% end %}
+        {% if success is not None and len(success) != 0 %}
+            {% for msg in success %}
+                <div class="alert alert-success">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">Success!</h4>
+                    {{ msg }}
                 </div>
             {% end %}
         {% end %}

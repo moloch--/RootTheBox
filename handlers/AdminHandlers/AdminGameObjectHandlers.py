@@ -101,7 +101,7 @@ class AdminCreateHandler(BaseHandler):
             team = Team()
             team.name = self.get_argument('team_name', '')
             team.motto = self.get_argument('motto', '')
-            if not options.banking:
+            if not self.config.banking:
                 team.money = 0
             level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)

@@ -37,7 +37,6 @@ from models.GameLevel import GameLevel
 from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from datetime import datetime
-from tornado.options import options
 
 
 class HomePageHandler(BaseHandler):
@@ -200,7 +199,7 @@ class RegistrationHandler(BaseHandler):
             team = Team()
             team.name = self.get_argument('handle', '')
             team.motto = self.get_argument('motto', '')
-            if not options.banking:
+            if not self.config.banking:
                 team.money = 0
             level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)
@@ -211,7 +210,7 @@ class RegistrationHandler(BaseHandler):
             team = Team()
             team.name = self.get_argument('team_name', '')
             team.motto = self.get_argument('motto', '')
-            if not options.banking:
+            if not self.config.banking:
                 team.money = 0
             level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)
