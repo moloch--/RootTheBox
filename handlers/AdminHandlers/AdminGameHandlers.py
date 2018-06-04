@@ -309,6 +309,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.rank_by = str(self.get_argument('rank_by', 'money'))
         self.config.teams = self.get_bool('teams', True)
         self.config.public_teams = self.get_bool('public_teams')
+        self.config.dynamic_flag_value = self.get_bool('dynamic_flag_value', False)
         self.config.max_team_size = self.get_int('max_team_size')
         self.config.min_user_password_length = self.get_int('min_user_password_length', '16')
         self.config.banking = self.get_bool('banking', True)

@@ -400,7 +400,7 @@ define("secure_communique_dialog",
        type=bool)
 
 define("dynamic_flag_value",
-       default=True,
+       default=False,
        group="game",
        help="decrease reward for flags based on captures",
        type=bool)

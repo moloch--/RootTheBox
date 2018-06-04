@@ -87,9 +87,12 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="rank_by">Rank Scoreboard By</label>
+                <label class="control-label" for="rank_by">Rank By</label>
                 <div class="controls">
-                    <select id="rank_by" name="rank_by">
+                    <select id="rank_by" name="rank_by" 
+                        rel="popover"
+                        data-original-title="Rank By"
+                        data-content="This selection determines the method by which the scoreboard is primarily ranked.<br/><br/>When the primary ranking is equal, other values are used bases on this selection:<br/><br/>1. money/score ▲, hints ▼, flags ▼<br/>2. flags ▲, money ▲, hints ▼">
                         <option id="moneyname" value="money" {% if config.rank_by == "money" %}selected{% end %}>
                             {% if config.banking %}Money{% else %}Score{% end %}
                         </option>
@@ -163,15 +166,47 @@
             </div>
             <hr />
             <div class="control-group">
-                <label class="control-label" for="banking">
+                <label class="control-label" for="dynamic_flag_value">
                     <i class="fa fa-bar-chart-o"></i>
-                    Bank Scoring
+                    Dynamic Scoring
+                </label>
+                <div class="controls">
+                    <input id="dynamic_flag_value" name="dynamic_flag_value" type="hidden" value="{{ str(config.dynamic_flag_value).lower() }}" />
+                    <div id="dynamic_flag-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Dynamic Scoring"
+                        data-content="Enabling this feature will decrease the reward for flags based on captures.  If this option is disabled, the flag value remains consistant as other players capture it.">
+                        <button id="dynamic_flag-enable" type="button" class="btn btn-success">
+                            <i id="dynamic_flag-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="dynamic_flag-disable" type="button" class="btn btn-danger">
+                            <i id="dynamic_flag-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="dynamic_flag-grouping" class="control-group control-section">
+                <label class="control-label" for="flag_value_decrease">Flag Decrease Value</label>
+                <div class="controls">
+                    <input required id="flag_value_decrease" type="text" name="flag_value_decrease" value="{{ config.flag_value_decrease }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Flag Decrease Value"
+                        data-content="Decrease flag reward by this percent per capture." />
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="banking">
+                    <i class="fa fa-dollar"></i>
+                    Banking System
                 </label>
                 <div class="controls">
                     <input id="banking" name="banking" type="hidden" value="{{ str(config.banking).lower() }}" />
                     <div id="banking-button" class="btn-group" data-toggle="buttons-radio"
                         rel="popover"
-                        data-original-title="Bank Scoring"
+                        data-original-title="Banking System"
                         data-content="Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.">
                         <button id="banking-enable" type="button" class="btn btn-success">
                             <i id="banking-enable-icon" class="fa fa-fw fa-square-o"></i>

@@ -19,6 +19,10 @@ $(document).ready(function() {
         $("#bank-grouping").hide();
         $("#max-password-length").prop('disabled', true);
     }
+    if ($("#dynamic_flag_value").val() == "false") {
+        $("#dynamic_flag-grouping").hide();
+        $("#flag_value_decrease").prop('disabled', true);
+    }
 
     /* Set initial state for buttons */
     if ($("#restrict-registration").val() === "true") {
@@ -51,6 +55,14 @@ $(document).ready(function() {
     } else {
         $("#public-teams-disable-icon").removeClass("fa-square-o");
         $("#public-teams-disable-icon").addClass("fa-check-square-o");
+    }
+
+    if ($("#dynamic_flag_value").val() === "true") {
+        $("#dynamic_flag-enable-icon").removeClass("fa-square-o");
+        $("#dynamic_flag-enable-icon").addClass("fa-check-square-o");
+    } else {
+        $("#dynamic_flag-disable-icon").removeClass("fa-square-o");
+        $("#dynamic_flag-disable-icon").addClass("fa-check-square-o");
     }
 
     if ($("#banking").val() === "true") {
@@ -209,6 +221,25 @@ $(document).ready(function() {
         $('#blackmarket-grouping').slideUp();
     });
 
+    $("#dynamic_flag-enable").click(function() {
+        $("#dynamic_flag_value").val("true");
+        $("#dynamic_flag-enable-icon").removeClass("fa-square-o");
+        $("#dynamic_flag-enable-icon").addClass("fa-check-square-o");
+        $("#dynamic_flag-disable-icon").removeClass("fa-check-square-o");
+        $("#dynamic_flag-disable-icon").addClass("fa-square-o");
+        $('#flag_value_decrease').prop('disabled', false);
+        $('#dynamic_flag-grouping').slideDown();
+    });
+    $("#dynamic_flag-disable").click(function() {
+        $("#dynamic_flag_value").val("false");
+        $("#dynamic_flag-disable-icon").removeClass("fa-square-o");
+        $("#dynamic_flag-disable-icon").addClass("fa-check-square-o");
+        $("#dynamic_flag-enable-icon").removeClass("fa-check-square-o");
+        $("#dynamic_flag-enable-icon").addClass("fa-square-o");
+        $('#flag_value_decrease').prop('disabled', true);
+        $('#dynamic_flag-grouping').slideUp();
+    });
+
     /* Enable popovers */
     $("#game-name").popover({placement:'right', trigger:'hover'});
     $("#restrict-registration-button").popover({placement:'right', trigger:'hover'});
@@ -217,7 +248,10 @@ $(document).ready(function() {
     $("#teams-button").popover({placement:'right', trigger:'hover'});
     $("#max-team-size").popover({placement:'right', trigger:'hover'});
     $("#min-user-password-length").popover({placement:'right', trigger:'hover'});
+    $("#dynamic_flag-button").popover({placement:'right', trigger:'hover'});
+    $("#flag_value_decrease").popover({placement:'right', trigger:'hover'});
     $("#banking-button").popover({placement:'right', trigger:'hover'});
+    $("#rank_by").popover({placement:'right', trigger:'hover'});
     $("#max-password-length").popover({placement:'right', trigger:'hover'});
     $("#use-bots-button").popover({placement:'right', trigger:'hover'});
     $("#bot-reward").popover({placement:'right', trigger:'hover'});
