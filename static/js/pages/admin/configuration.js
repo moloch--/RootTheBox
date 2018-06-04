@@ -148,6 +148,7 @@ $(document).ready(function() {
 
     $("#banking-enable").click(function() {
         $("#banking").val("true");
+        $("#moneyname").text("Money");
         $("#banking-enable-icon").removeClass("fa-square-o");
         $("#banking-enable-icon").addClass("fa-check-square-o");
         $("#banking-disable-icon").removeClass("fa-check-square-o");
@@ -157,6 +158,7 @@ $(document).ready(function() {
     });
     $("#banking-disable").click(function() {
         $("#banking").val("false");
+        $("#moneyname").text("Score");
         $("#banking-disable-icon").removeClass("fa-square-o");
         $("#banking-disable-icon").addClass("fa-check-square-o");
         $("#banking-enable-icon").removeClass("fa-check-square-o");

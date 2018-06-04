@@ -306,6 +306,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.game_name = self.get_argument('game_name', 'Root the Box')
         self.config.restrict_registration = self.get_bool('restrict_registration', False)
         self.config.hints_taken = self.get_bool('hints_taken', False)
+        self.config.rank_by = str(self.get_argument('rank_by', 'money'))
         self.config.teams = self.get_bool('teams', True)
         self.config.public_teams = self.get_bool('public_teams')
         self.config.max_team_size = self.get_int('max_team_size')

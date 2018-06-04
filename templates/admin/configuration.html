@@ -66,26 +66,37 @@
                 </div>
             </div>
             <div class="control-group">
-                    <label class="control-label" for="hints-taken">
-                        Display Hints Taken
-                    </label>
-                    <div class="controls">
-                        <input id="hints-taken" name="hints_taken" type="hidden" value="{{ str(config.hints_taken).lower() }}" />
-                        <div id="hints-taken-button" class="btn-group" data-toggle="buttons-radio"
-                            rel="popover"
-                            data-original-title="Display Hints Taken"
-                            data-content="Enabling this feature will display the number of hints taken on the scoreboad by a team or player.  Usefull when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.">
-                            <button id="hints-taken-enable" type="button" class="btn btn-success">
-                                <i id="hints-taken-enable-icon" class="fa fa-fw fa-square-o"></i>
-                                Enable
-                            </button>
-                            <button id="hints-taken-disable" type="button" class="btn btn-danger">
-                                <i id="hints-taken-disable-icon" class="fa fa-fw fa-square-o"></i>
-                                Disable
-                            </button>
-                        </div>
+                <label class="control-label" for="hints-taken">
+                    Display Hints Taken
+                </label>
+                <div class="controls">
+                    <input id="hints-taken" name="hints_taken" type="hidden" value="{{ str(config.hints_taken).lower() }}" />
+                    <div id="hints-taken-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Display Hints Taken"
+                        data-content="Enabling this feature will display the number of hints taken on the scoreboad by a team or player.  Usefull when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.">
+                        <button id="hints-taken-enable" type="button" class="btn btn-success">
+                            <i id="hints-taken-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="hints-taken-disable" type="button" class="btn btn-danger">
+                            <i id="hints-taken-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
                     </div>
                 </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="rank_by">Rank Scoreboard By</label>
+                <div class="controls">
+                    <select id="rank_by" name="rank_by">
+                        <option id="moneyname" value="money" {% if config.rank_by == "money" %}selected{% end %}>
+                            {% if config.banking %}Money{% else %}Score{% end %}
+                        </option>
+                        <option value="flags" {% if config.rank_by == "flags" %}selected{% end %}>Flags</option>
+                    </select>
+                </div>
+            </div>
             <hr />
             <div class="control-group">
                 <label class="control-label" for="teams">
