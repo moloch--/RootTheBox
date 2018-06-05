@@ -23,3 +23,4 @@ pip3 install defusedxml --upgrade
 pip3 install netaddr --upgrade
 pip3 install nose --upgrade
 pip3 install future --upgrade
+pip3 install python-resize-image --upgrade

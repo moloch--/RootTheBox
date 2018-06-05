@@ -22,6 +22,7 @@ Created on Mar 11, 2012
 
 import os
 import imghdr
+import StringIO
 import xml.etree.cElementTree as ET
 
 from os import urandom
@@ -39,6 +40,8 @@ from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image
 from libs.ValidationError import ValidationError
+from PIL import Image
+from resizeimage import resizeimage
 
 
 class Box(DatabaseObject):
@@ -203,8 +206,9 @@ class Box(DatabaseObject):
                 if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
                     os.unlink(options.avatar_dir + '/' + self._avatar)
                 file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
-                with open(file_path, 'wb') as fp:
-                    fp.write(image_data)
+                image = Image.open(StringIO.StringIO(image_data))
+                cover = resizeimage.resize_cover(image, [500, 250])
+                cover.save(file_path, image.format)
                 self._avatar = self.uuid + '.' + ext
             else:
                 raise ValidationError(
