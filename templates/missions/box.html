@@ -7,6 +7,7 @@
 {% end %}
 
 {% block modals %}
+{% from models.Penalty import Penalty %}
 {% from tornado.options import options %}
     <!-- Submit text flag -->
     <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
@@ -152,6 +153,7 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Description</th>
+                        <th>Attempts</th>
                         <th>{% if options.banking %}Reward{% else %}Points{% end %}</th>
                         <th><!-- Submit --></th>
                     </tr>
@@ -167,6 +169,7 @@
                             <td>{{ box.flags.index(flag) +1 }}</td>
                             <td>{{ flag.name }}</td>
                             <td>{{ flag.description }}</td>
+                            <td>{% if flag in team.flags %}{{ Penalty.by_count(flag, team) + 1 }}{% else %}{{ Penalty.by_count(flag, team) }}{% end %}</td>
                             <td>{% if options.banking %}${% end %}{{ flag.value }}</td>
                             {% if flag in team.flags %}
                                 <td><!-- Button --></td>

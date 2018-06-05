@@ -108,6 +108,6 @@ class Theme(DatabaseObject):
             for _file in self.files:
                 yield _file
         except:
-            files = relationship("ThemeFile")
+            self.files = relationship("ThemeFile")
             for _file in self.files:
                 yield _file

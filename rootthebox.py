@@ -163,12 +163,6 @@ define("session_age",
        help="max session age (seconds)",
        type=int)
 
-define("session_regeneration_interval",
-       default=int(60 * 60),
-       group="server",
-       help="regenerate session time frame (seconds)",
-       type=int)
-
 define("x_headers",
        default=False,
        group="server",

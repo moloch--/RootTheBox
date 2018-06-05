@@ -14,9 +14,7 @@ import logging
 import collections
 
 from datetime import datetime, timedelta
-
-ID_SIZE = 16  # Size in bytes
-DURATION = 30  # Minutes
+from tornado.options import options
 
 
 class BaseSession(collections.MutableMapping):
@@ -41,6 +39,9 @@ class BaseSession(collections.MutableMapping):
     of the already available classes and documentation to aformentioned
     functions.
     '''
+
+    id_size = 16  # Size in bytes
+    duration = options.session_age  # Minutes
 
     def __init__(self, session_id=None, data=None, expires=None,
                  ip_address=None,  **kwargs):
@@ -84,15 +85,15 @@ class BaseSession(collections.MutableMapping):
     def __len__(self):
         return len(self.data.keys())
 
-    def _generate_session_id(cls):
-        return os.urandom(ID_SIZE).encode('hex')
+    def _generate_session_id(self):
+        return os.urandom(self.id_size).encode('hex')
 
     def is_expired(self):
         '''Check if the session has expired.'''
         return datetime.utcnow() > self.expires
 
     def _expires_at(self):
-        return datetime.utcnow() + timedelta(minutes=DURATION)
+        return datetime.utcnow() + timedelta(minutes=self.duration)
 
     def refresh(self):
         self.expires = self._expires_at()

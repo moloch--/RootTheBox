@@ -30,6 +30,7 @@ from models.GameLevel import GameLevel
 from models.Flag import Flag
 from models.Box import Box
 from models.Hint import Hint
+from models.Penalty import Penalty
 from libs.SecurityDecorators import authenticated
 from handlers.BaseHandlers import BaseHandler
 
@@ -81,6 +82,10 @@ class FlagSubmissionHandler(BaseHandler):
             else:
                 submission = self.get_argument('token', '')
             old_reward = flag.value
+            if self.config.teams:
+                teamval = "team's "
+            else:
+                teamval = ""
             if self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
                 if self.config.secure_communique_dialog:
@@ -88,19 +93,54 @@ class FlagSubmissionHandler(BaseHandler):
                                 flag=flag,
                                 reward=old_reward)
                 else:
-                    if self.config.teams:
-                        teamval = "team's "
-                    else:
-                        teamval = ""
                     if self.config.banking:
                         reward_dialog = "$" + str(old_reward) + " has been added to your " + teamval + "account."
                     else:
                         reward_dialog = str(old_reward) + " points added to your " + teamval + "score."
                     self.render_page(flag, success=[reward_dialog])
             else:
-                self.render_page(flag, errors=["Invalid flag submission"])
+                penalty = self.failed_capture(flag, submission)
+                penalty_dialog = "Sorry - Try Again"
+                if penalty:
+                    if self.config.banking:
+                        penalty_dialog = "$" + str(penalty) + " has been deducted from your " + teamval + "account."
+                    else:
+                        if penalty == 1:
+                            point = " point has"
+                        else:
+                            point = " points have"
+                        penalty_dialog = str(penalty) + point + " been deducted from your " + teamval + "score."
+                self.render_page(flag, errors=[penalty_dialog])
         else:
             self.render('public/404.html')
+
+    def failed_capture(self, flag, submission):
+        user = self.get_current_user()
+        if submission is not None and flag not in user.team.flags:
+            if flag.is_file:
+                submission = Flag.digest(submission)
+            Penalty.create_attempt(
+                team=user.team,
+                flag=flag,
+                submission=submission,
+            )
+            if not self.config.penalize_flag_value:
+                return False
+            attempts = Penalty.by_count(flag, user.team)
+            if attempts < self.config.flag_start_penalty:
+                return False
+            if attempts >= self.config.flag_stop_penalty:
+                return False
+            penalty = int(flag.value * self.config.flag_penalty_cost * .01)
+            logging.info("%s (%s) capture failed '%s' - lost %s" % (
+                user.handle, user.team.name, flag.name, penalty
+            ))
+            user.team.money -= penalty
+            self.dbsession.add(user.team)
+            self.dbsession.flush()
+            self.dbsession.commit()
+            return penalty
+        return False
 
     def attempt_capture(self, flag, submission):
         ''' Compares a user provided token to the token in the db '''
