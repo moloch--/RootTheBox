@@ -124,9 +124,10 @@
                     <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                 </div>
                 <div class="span8">
-                    <pre> *********************** BEGIN SECURE COMMUNIQUE ***********************
-{{ box.description }}
-&nbsp;***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************</pre>
+                    <pre class="well" style="color: unset;">{% if options.secure_communique_dialog %} *********************** BEGIN SECURE COMMUNIQUE ***********************{% else %} ***************************** DESCRIPTION *****************************{% end %}
+                        {{ box.description }}
+                        
+                        {% if options.secure_communique_dialog %}&nbsp;***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}&nbsp;***********************************************************************{% end %}</pre>
                 </div>
             </div>
         </div>
