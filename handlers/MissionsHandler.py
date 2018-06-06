@@ -99,18 +99,25 @@ class FlagSubmissionHandler(BaseHandler):
                         reward_dialog = str(old_reward) + " points added to your " + teamval + "score."
                     self.render_page(flag, success=[reward_dialog])
             else:
-                penalty = self.failed_capture(flag, submission)
-                penalty_dialog = "Sorry - Try Again"
-                if penalty:
-                    if self.config.banking:
-                        penalty_dialog = "$" + str(penalty) + " has been deducted from your " + teamval + "account."
-                    else:
-                        if penalty == 1:
-                            point = " point has"
+                if Penalty.by_token_count(flag, user.team, submission) > 0:
+                    penalty = self.failed_capture(flag, submission)
+                    penalty_dialog = "Sorry - Try Again"
+                    if penalty:
+                        if self.config.banking:
+                            penalty_dialog = "$" + str(penalty) + " has been deducted from your " + teamval + "account."
                         else:
-                            point = " points have"
-                        penalty_dialog = str(penalty) + point + " been deducted from your " + teamval + "score."
-                self.render_page(flag, errors=[penalty_dialog])
+                            if penalty == 1:
+                                point = " point has"
+                            else:
+                                point = " points have"
+                            penalty_dialog = str(penalty) + point + " been deducted from your " + teamval + "score."
+                    self.render_page(flag, errors=[penalty_dialog])
+                else:
+                    if self.config.teams:
+                        teamdup = " by your team.  Try Again"
+                    else:
+                        teamdup = " by you.  Try Again"
+                    self.render_page(flag, errors=["Duplicate submission - this answer has already been attempted" + teamdup])
         else:
             self.render('public/404.html')
 

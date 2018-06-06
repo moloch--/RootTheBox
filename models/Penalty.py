@@ -69,6 +69,11 @@ class Penalty(DatabaseObject):
         return dbsession.query(cls).filter(and_(cls.flag_id==flag.id, cls.team_id==team.id)).count()
 
     @classmethod
+    def by_token_count(cls, flag, team, submission):
+        ''' Return count for existing team token '''
+        return dbsession.query(cls).filter(and_(cls.flag_id==flag.id, cls.team_id==team.id, cls._token==submission)).count()
+
+    @classmethod
     def create_attempt(cls, team=None, flag=None, submission=None):
         attempt = cls._create(team, flag, submission)
         dbsession.add(attempt)
