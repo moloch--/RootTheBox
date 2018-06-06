@@ -58,7 +58,7 @@ class LoginHandler(BaseHandler):
         if self.session is not None:
             self.redirect('/user')
         else:
-            self.render('public/login.html', errors=None)
+            self.render('public/login.html', info=None, errors=None)
 
     @blacklist_ips
     def post(self, *args, **kwargs):
@@ -69,16 +69,16 @@ class LoginHandler(BaseHandler):
             if not user.locked:
                 if self.game_started(user):
                     self.successful_login(user)
-                    if user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
+                    if self.config.secure_communique_dialog and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
                         self.redirect('/user/missions/firstlogin')
                     else:
                         self.redirect('/user')
                 else:
                     self.render('public/login.html',
-                                errors=["The game has not started yet"])
+                                errors=None, info=["The game has not started yet"])
             else:
                 self.render('public/login.html',
-                            errors=["Your account has been locked"])
+                            info=None, errors=["Your account has been locked"])
         else:
             self.failed_login()
 
@@ -133,7 +133,7 @@ class LoginHandler(BaseHandler):
             except:
                 logging.exception("Error while attempting to ban ip address")
         self.render('public/login.html',
-                    errors=["Bad username and/or password, try again"])
+                    info=None, errors=["Bad username and/or password, try again"])
 
 
 class RegistrationHandler(BaseHandler):

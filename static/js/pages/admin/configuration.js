@@ -93,7 +93,14 @@ $(document).ready(function() {
         $("#use-black-market-disable-icon").removeClass("fa-square-o");
         $("#use-black-market-disable-icon").addClass("fa-check-square-o");
     }
-
+    
+    if ($("#secure_communique_dialog").val() === "true") {
+        $("#story-enable-icon").removeClass("fa-square-o");
+        $("#story-enable-icon").addClass("fa-check-square-o");
+    } else {
+        $("#story-disable-icon").removeClass("fa-square-o");
+        $("#story-disable-icon").addClass("fa-check-square-o");
+    }
 
     if ($("#penalize_flag_value").val() === "true") {
         $("#penalty-enable-icon").removeClass("fa-square-o");
@@ -240,6 +247,21 @@ $(document).ready(function() {
         $('#dynamic_flag-grouping').slideUp();
     });
 
+    $("#story-enable").click(function() {
+        $("#secure_communique_dialog").val("true");
+        $("#story-enable-icon").removeClass("fa-square-o");
+        $("#story-enable-icon").addClass("fa-check-square-o");
+        $("#story-disable-icon").removeClass("fa-check-square-o");
+        $("#story-disable-icon").addClass("fa-square-o");
+    });
+    $("#story-disable").click(function() {
+        $("#secure_communique_dialog").val("false");
+        $("#story-disable-icon").removeClass("fa-square-o");
+        $("#story-disable-icon").addClass("fa-check-square-o");
+        $("#story-enable-icon").removeClass("fa-check-square-o");
+        $("#story-enable-icon").addClass("fa-square-o");
+    });
+
     $("#penalty-enable").click(function() {
         $("#penalize_flag_value").val("true");
         $("#penalty-enable-icon").removeClass("fa-square-o");
@@ -276,6 +298,7 @@ $(document).ready(function() {
     $("#flag_penalty_cost").popover({placement:'right', trigger:'hover'});
     $("#flag_stop_penalty").popover({placement:'right', trigger:'hover'});
     $("#banking-button").popover({placement:'right', trigger:'hover'});
+    $("#story-button").popover({placement:'right', trigger:'hover'});
     $("#rank_by").popover({placement:'right', trigger:'hover'});
     $("#max-password-length").popover({placement:'right', trigger:'hover'});
     $("#use-bots-button").popover({placement:'right', trigger:'hover'});

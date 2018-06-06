@@ -22,6 +22,15 @@
                 </div>
             {% end %}
         {% end %}
+        {% if info is not None and len(info) != 0 %}
+            {% for item in info %}
+                <div class="alert alert-info" >
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">Information</h4>
+                    {{ item }}
+                </div>
+            {% end %}
+        {% end %}
         {% raw xsrf_form_html() %}
         <input name="account" type="text" class="input-block-level" placeholder="Handle" autofocus>
         <input name="password" type="password" class="input-block-level" placeholder="Password" autocomplete="off">

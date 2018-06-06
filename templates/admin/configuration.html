@@ -251,6 +251,29 @@
             </div>
             <hr />
             <div class="control-group">
+                <label class="control-label" for="secure_communique_dialog">
+                    <i class="fa fa-video-camera"></i>
+                    Story Mode
+                </label>
+                <div class="controls">
+                    <input id="secure_communique_dialog" name="secure_communique_dialog" type="hidden" value="{{ str(config.secure_communique_dialog).lower() }}" />
+                    <div id="story-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Story Mode"
+                        data-content="Enabling this feature will set the game to follow the storyline of Morris, an employeer that sends 'secure communique' and assigns missions. Designed primarily for use with the Banking System.<br/><br/>Disabling this option will skip the storyline and keep you on the box screen for instant capture success messages.">
+                        <button id="story-enable" type="button" class="btn btn-success">
+                            <i id="story-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="story-disable" type="button" class="btn btn-danger">
+                            <i id="story-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
                 <label class="control-label" for="banking">
                     <i class="fa fa-dollar"></i>
                     Banking System
