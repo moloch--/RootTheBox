@@ -225,7 +225,7 @@
                                     {% else %}
                                         <td>{{ user.bank_password }}</td>
                                     {% end %}
-                                    <td style="width: 1px; white-space: nowrap;">
+                                    <td class="shortcolumn">
                                         {% if user.locked %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
                                                 <i class="fa fa-fw fa-unlock"></i>
@@ -238,13 +238,13 @@
                                             </a>
                                         {% end %}
                                     </td>
-                                    <td style="width: 1px; white-space: nowrap;">
+                                    <td class="shortcolumn">
                                         <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}" data-hash-algorithm="{{ user.algorithm }}" data-team-uuid="{{ user.team.uuid }}">
                                             <i class="fa fa-fw fa-pencil"></i>
                                             Edit Account
                                         </a>
                                     </td>
-                                    <td style="width: 1px; white-space: nowrap;">
+                                    <td class="shortcolumn">
                                         <a id="delete-user-button-{{ user.uuid }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-user-modal" data-uuid="{{ user.uuid }}">
                                             <i class="fa fa-fw fa-times-circle-o"></i>
                                             Delete

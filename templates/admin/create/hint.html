@@ -3,11 +3,12 @@
 {% block title %}Create Hint{% end %}
 
 {% block content %}
+{% from tornado.options import options %}
 {% from models.Box import Box %}
 <div class="container">
     <h1>
         <i class="fa fa-ambulance"></i>
-        Create Hint
+        Create Hint{% if box %} &ndash; {{box.name}}{% end %}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
@@ -20,38 +21,73 @@
         {% end %}
     {% end %}
     <div class="well">
-        <form class="form-horizontal" action="/admin/create/hint" method="post">
-            {% raw xsrf_form_html() %}
-            <div class="control-group">
-                <label class="control-label" for="price">Price</label>
-                <div class="controls">
-                    <input autofocus required id="price" name="price" type="text" pattern="[0-9]+" placeholder="$ Price">
-                </div>
+            <div class="row">
+                <div class="span4">
+                <form class="form-horizontal" action="/admin/create/hint" method="post">
+                    {% raw xsrf_form_html() %}
+                    <div class="control-group">
+                        <label class="control-label" for="price">Cost</label>
+                        <div class="controls">
+                            <input autofocus required id="price" name="price" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}$ Price{% else %}Points{% end %}">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="description">Description</label>
+                        <div class="controls">
+                            <textarea required id="description" name="description" type="text" placeholder="Short Hint">
+                            </textarea>
+                        </div>
+                    </div>
+                    {% if not box %}
+                        <div class="control-group">
+                            <label class="control-label" for="box_uuid">Box</label>
+                            <div class="controls">
+                                <select name="box_uuid">
+                                    <option value=""></option>
+                                    {% for thebox in Box.all() %}
+                                        <option value="{{ thebox.uuid }}">{{ thebox.name }}</opiton>
+                                    {% end %}
+                                </select>
+                            </div>
+                        </div>
+                    {% else %}
+                        <input id="box_uuid" name="box_uuid" value="{{ box.uuid }}" type="hidden" />
+                    {% end %}
+                    {% if box %}
+                        <div class="control-group">
+                            <label class="control-label" for="flag_uuid">Flag</label>
+                            <div class="controls">
+                                <select name="flag_uuid">
+                                    <option value=""></option>
+                                    {% for flag in box.flags %}
+                                        <option value="{{ flag.uuid }}">{{ flag.name }}</opiton>
+                                    {% end %}
+                                </select>
+                            </div>
+                        </div>
+                    {% end %}
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" type="submit">Create Hint</button>
+                        </div>
+                    </div>
+                    
+                </form>
             </div>
-            <div class="control-group">
-                <label class="control-label" for="description">Description</label>
-                <div class="controls">
-                    <textarea required id="description" name="description" type="text" placeholder="Short Hint">
-                    </textarea>
-                </div>
+            
+            <div class="offset3 span4">
+                {% if box %}
+                <p>
+                    <blockquote>
+                        <small>
+                            <strong>Box Hints:</strong>
+                            If the flag selection is left empty, the hint will be considered a Box Hint.
+                        </small>
+                    </blockquote>
+                </p>
+                {% end %}
             </div>
-            <div class="control-group">
-                <label class="control-label" for="box_uuid">Box</label>
-                <div class="controls">
-                    <select name="box_uuid">
-                        <option value=""></option>
-                        {% for box in Box.all() %}
-                        <option value="{{ box.uuid }}">{{ box.name }}</opiton>
-                            {% end %}
-                    </select>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn btn-primary" type="submit">Create Hint</button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 {% end %}

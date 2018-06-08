@@ -27,6 +27,8 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer, String
 from libs.ValidationError import ValidationError
 from models.BaseModels import DatabaseObject
+from models.Flag import Flag
+from models.Box import Box
 from models import dbsession
 
 
@@ -43,6 +45,7 @@ class Hint(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+    flag_id = Column(Integer, ForeignKey('flag.id'), nullable=False)
     _price = Column(Integer, nullable=False)
     _description = Column(Unicode(256), nullable=False)
 
@@ -64,6 +67,10 @@ class Hint(DatabaseObject):
     @classmethod
     def by_box_id(cls, _id):
         return dbsession.query(cls).filter_by(box_id=_id).all()
+
+    @classmethod
+    def by_flag_id(cls, _id):
+        return dbsession.query(cls).filter_by(flag_id=_id).all()
 
     @property
     def price(self):
@@ -90,10 +97,18 @@ class Hint(DatabaseObject):
         hint_elem = ET.SubElement(parent, "hint")
         ET.SubElement(hint_elem, "price").text = str(self.price)
         ET.SubElement(hint_elem, "description").text = self._description
+        ET.SubElement(hint_elem, "flag_uuid").text = str(Flag.by_id(self.flag_id)) 
 
     def to_dict(self):
+        flag = Flag.by_id(self.flag_id)
+        if flag:
+            flag_uuid = flag.uuid
+        else:
+            flag_uuid = ""
         return {
             'price': str(self.price),
             'description': self.description,
+            'flag_uuid': flag_uuid,
             'uuid': self.uuid,
+            'flaglist': Box.flaglist(self.box_id)
         }

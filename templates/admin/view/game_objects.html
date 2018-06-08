@@ -10,6 +10,7 @@
 {% from models.Corporation import Corporation %}
 {% from tornado.options import options %}
 {% from models.Box import Box %}
+{% from models.Flag import Flag %}
     <!-- Edit Corporation -->
     <div id="edit-corporation-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -243,6 +244,12 @@
                         <input id="hint-description" name="description" type="text" placeholder="Description" />
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="hint-flag_uuid">Flag</label>
+                    <div class="controls">
+                        <select id="hint-flag_uuid" name="hint-flag_uuid"></select>
+                    </div>
+                </div>
             </form>
         </div>
         <div class="modal-footer">
@@ -449,7 +456,7 @@
                                                             <td>{{ ip.address }}</td>
                                                             <td>{{ ip.version }}</td>
                                                             <td>{% if ip.visable %} Yes {% else %} No {% end %}</td>
-                                                            <td>
+                                                            <td class="shortcolumn">
                                                                 <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
                                                                     <i class="fa fa-fw fa-times-circle-o"></i>
                                                                     Delete
@@ -484,8 +491,8 @@
                                                     <th>Description</th>
                                                     <th>Token</th>
                                                     <th>Value</th>
-                                                    <th>Attachments</th>
                                                     <th>Type</th>
+                                                    <th style="text-align: center;"><i class="fa fa-paperclip" title="Attachments"></i></th>
                                                     <th><!-- Edit Button --></th>
                                                     <th><!-- Delete Button --></th>
                                                 </tr>
@@ -493,25 +500,25 @@
                                             <tbody>
                                                 {% for index, flag in enumerate(box.flags) %}
                                                     <tr>
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>{{ flag.name }}</td>
+                                                        <td class="shortcolumn">{{ index + 1 }}</td>
+                                                        <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
                                                         <td>{{ flag.description }}</td>
-                                                        <td>{{ flag.token }}</td>
-                                                        <td>{% if options.banking %}${% end %}{{ flag.value }}</td>
-                                                        <td>
+                                                        <td class="shortcolumn">{{ flag.token }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
+                                                        <td class="shortcolumn">{{ str(flag._type) }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">
                                                             <a id="flag-attachment-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#flag-attachment-button" data-uuid="{{ flag.uuid }}">
                                                                 <i class="fa fa-fw"></i>
                                                                 {{ len(flag.flag_attachments) }}
                                                             </a>
                                                         </td>
-                                                        <td>{{ str(flag._type) }}</td>
-                                                        <td>
+                                                        <td class="shortcolumn">
                                                             <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
                                                                 Edit Flag
                                                             </a>
                                                         </td>
-                                                        <td>
+                                                        <td class="shortcolumn">
                                                             <a id="delete-flag-button-{{ flag.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-flag-modal" data-uuid="{{ flag.uuid }}">
                                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                                                 Delete
@@ -531,12 +538,61 @@
                                         <i class="fa fa-ambulance"></i>
                                         Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;
                                     </h4>
-                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/hint">
+                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/hint?box={{box.uuid}}">
                                         <i class="fa fa-plus"></i>
                                         Add Hint
                                     </a>
                                     <hr>
                                     {% if len(box.hints) != 0 %}
+                                        {% set boxhints = [] %}
+                                        {% set flaghints = [] %}
+                                        {% for index, hint in enumerate(box.hints) %}
+                                            {% if hint.flag_id %}
+                                                {% set flaghints.append(hint) %}
+                                            {% else %}
+                                                {% set boxhints.append(hint) %}
+                                            {% end %}
+                                        {% end %}
+                                       
+                                        {% if len(flaghints) > 0 %}
+                                        <h5>Flag Hints</h5>
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>{% if options.banking %}Price{% else %}Cost{% end %}</th>
+                                                    <th>Flag</th>
+                                                    <th>Description</th>
+                                                    <th><!-- Edit Button --></th>
+                                                    <th><!-- Delete Button --></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for index, hint in enumerate(flaghints) %}
+                                                    <tr>
+                                                        <td class="shortcolumn">{{ index + 1 }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
+                                                        <td class="shortcolumn" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
+                                                        <td>{{ hint.description }}</td>
+                                                        <td class="shortcolumn">
+                                                            <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
+                                                                <i class="fa fa-fw fa-pencil"></i>
+                                                                Edit Hint
+                                                            </a>
+                                                        </td>
+                                                        <td class="shortcolumn">
+                                                            <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                                <i class="fa fa-fw fa-times-circle-o"></i>
+                                                                Delete
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                        {% end %}
+                                        {% if len(boxhints) > 0 %}
+                                        <h5>Box Hints</h5>
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
@@ -548,18 +604,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for index, hint in enumerate(box.hints) %}
+                                                {% for index, hint in enumerate(boxhints) %}
                                                     <tr>
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>{% if options.banking %}${% end %}{{ hint.price }}</td>
+                                                        <td class="shortcolumn">{{ index + 1 }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
                                                         <td>{{ hint.description }}</td>
-                                                        <td>
+                                                        <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
                                                                 Edit Hint
                                                             </a>
                                                         </td>
-                                                        <td>
+                                                        <td class="shortcolumn">
                                                             <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
                                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                                                 Delete
@@ -569,8 +625,9 @@
                                                 {% end %}
                                             </tbody>
                                         </table>
+                                        {% end %}
                                     {% else %}
-                                        <strong>No hints on this box yet, <a href="/admin/create/hint">add some</a></strong>
+                                        <strong>No hints on this box yet, <a href="/admin/create/hint?box={{box.uuid}}">add some</a></strong>
                                     {% end %}
                                 </div><!-- End Hints -->
                             </div>

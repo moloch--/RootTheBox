@@ -67,7 +67,11 @@ class AdminCreateHandler(BaseHandler):
             'team': 'admin/create/team.html',
         }
         if len(args) and args[0] in game_objects:
-            self.render(game_objects[args[0]], errors=None)
+            if args[0] == "hint":
+                box = Box.by_uuid(self.get_argument("box", ""))
+                self.render(game_objects[args[0]], box=box, errors=None)
+            else:
+                self.render(game_objects[args[0]], errors=None)
         else:
             self.render("public/404.html")
 
@@ -219,6 +223,11 @@ class AdminCreateHandler(BaseHandler):
             hint = Hint(box_id=box.id)
             hint.price = self.get_argument('price', '')
             hint.description = self.get_argument('description', '')
+            flag = Flag.by_uuid(self.get_argument('flag_uuid', ''))
+            if flag:
+                hint.flag_id = flag.id
+            else:
+                hint.flag_id = None
             self.dbsession.add(hint)
             self.dbsession.commit()
             self.redirect('/admin/view/game_objects')
@@ -512,6 +521,12 @@ class AdminEditHandler(BaseHandler):
                 hint.price = price
             description = self.get_argument('description', '')
             hint.description = description
+            flag = Flag.by_uuid(self.get_argument('hint-flag_uuid', ''))
+            if flag:
+                flag_id = flag.id
+            else:
+                flag_id = None
+            hint.flag_id = flag_id
             self.dbsession.add(hint)
             self.dbsession.commit()
             self.redirect('/admin/view/game_objects')

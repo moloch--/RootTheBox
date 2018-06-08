@@ -127,6 +127,14 @@ class Box(DatabaseObject):
 
         return ip.box if ip is not None else None
 
+    @classmethod
+    def flaglist(self, box_id):
+        flags = self.by_id(box_id).flags
+        flaglist = {}
+        for flag in flags:
+            flaglist[flag.uuid] = flag.name
+        return flaglist
+
     @property
     def name(self):
         return self._name

@@ -21,21 +21,27 @@ $(document).ready(function() {
     $("a[id^=purchase-hint-button]").click(function() { 
         $("#purchase-hint-uuid").val($(this).data("uuid"));
         var price = $(this).data("price");
-        if (price === "0") {
-            var bank = $("#hintbanking").val();
-            if (bank == 'true') {
-                $("#purchase-hint-text").text("Would you like to purchase this hint for $"+price+"?");
-            } else {
-                $("#purchase-hint-text").text("Would you like to take this hint for -"+price+" points?");
-            }
-        } else {
-            //If the cost is 0, then skip the dialog and just give the hint
-            $("#purchase-hint-form").submit();
-        }
+        hintdialog(price);
     });
-
+    $("a[id^=purchase-flag-hint-button]").click(function() {
+        //index is different on flags
+        $("#purchase-hint-uuid").val($(this).data("uuid"));
+        var price = $(this).data("price");
+        hintdialog(price);
+    });
     $("#purchase-hint-submit").click(function() {
         $("#purchase-hint-form").submit();
     });
+
+    function hintdialog(price) {
+        var bank = $("#hintbanking").val();
+        if (price === "0") {
+            $("#purchase-hint-text").text("This hint is free.  Would you like to take it?");
+        } else if (bank == 'true') {
+            $("#purchase-hint-text").text("Would you like to purchase this hint for $"+price+"?");
+        } else {
+            $("#purchase-hint-text").text("Would you like to take this hint for a deduction of "+price+" points?");
+        }
+    }
 
 });

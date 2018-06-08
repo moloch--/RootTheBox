@@ -11,3 +11,7 @@ footer {
 .footernav {
     padding: 5px 20px;
 }
+.shortcolumn{
+    width: 1px;
+    white-space: nowrap;
+}

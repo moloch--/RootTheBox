@@ -4,7 +4,7 @@
 {% for index, team in enumerate(teams) %}
     {% if len(team.members) > 0 %}
     <tr style="padding-top: 5px;">
-        <td class="summarycolumn" style="text-align: center; vertical-align: middle; font-size: x-large; width: 1px; white-space: nowrap; padding: 0px 20px 0px 10px;">
+        <td class="summarycolumn shortcolumn" style="text-align: center; vertical-align: middle; font-size: x-large; padding: 0px 20px 0px 10px;">
             {% if index == 0 %}
                 <i class="fa fa-trophy"></i>
             {% else %}
@@ -18,7 +18,7 @@
                     <div class="summarycolumn" style="display: table-cell; font-size: large;">{{ team.name }}</div>
                     <!-- <div class="summarycolumn" style="display: table-cell;">{{ team.levels[-1].number }} </div> -->
                     {% if options.hints_taken %}
-                    <div class="summarycolumn" style="display: table-cell; width: 1px; white-space: nowrap; vertical-align: bottom; font-size: small;">{{ len(team.hints) }} Hints Taken</div>
+                    <div class="summarycolumn shortcolumn" style="display: table-cell; vertical-align: bottom; font-size: small;">{{ len(team.hints) }} Hints Taken</div>
                     {% end %}
                 </div>
             </div>
@@ -49,7 +49,7 @@
         {% end %}
         <td class="summarycolumn" style="{% if options.banking %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %}white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.flags) }}</div></td>
         <td class="summarycolumn" style="{% if not options.banking %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %} vertical-align: middle; width: 100px;">{% if options.banking %}${% end %}{{ team.money }}</td>
-        <td class="summarycolumn" style="width: 1px; white-space: nowrap; vertical-align: middle;">
+        <td class="summarycolumn shortcolumn" style="vertical-align: middle;">
             <a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.uuid }}">
                 Details &raquo;
             </a>

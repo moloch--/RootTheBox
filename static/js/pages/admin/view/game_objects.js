@@ -3,7 +3,22 @@ function getDetails(obj, uuid) {
     data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}
     $.post('/admin/ajax/objects', data, function(response) {
         $.each(response, function(key, value) {
-            $("#" + obj + "-" + key).val(value);
+            if (key !== "flaglist" && key !== "flag_uuid") {
+                $("#" + obj + "-" + key).val(value);
+            } else if (key === "flaglist") {
+                $('#hint-flag_uuid').empty();
+                $('#hint-flag_uuid').append($('<option/>', { 
+                    value: "",
+                    text : ""
+                }));
+                $.each(value, function (key, uuid) {
+                    $('#hint-flag_uuid').append($('<option/>', { 
+                        value: key,
+                        text : uuid
+                    }));
+                });
+                $('#hint-flag_uuid option[value=' + response["flag_uuid"] + ']').prop('selected',true);   
+            }
         });
     }, 'json');
 }
