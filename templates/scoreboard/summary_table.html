@@ -47,8 +47,8 @@
         {% if options.use_bots %}
             <td class="summarycolumn" style="display: table-cell; font-size: large; white-space: nowrap; vertical-align: middle; width: 40px; text-align: center;">{{ BotManager.instance().count_by_team(team) }}</td>
         {% end %}
-        <td class="summarycolumn" style="{% if options.banking %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %}white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.flags) }}</div></td>
-        <td class="summarycolumn" style="{% if not options.banking %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %} vertical-align: middle; width: 100px;">{% if options.banking %}${% end %}{{ team.money }}</td>
+        <td class="summarycolumn" style="{% if not options.rank_by == "money" %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %}white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.flags) }}</div></td>
+        <td class="summarycolumn" style="{% if options.rank_by == "money" %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %} vertical-align: middle; width: 100px;">{% if options.banking %}${% end %}{{ team.money }}</td>
         <td class="summarycolumn shortcolumn" style="vertical-align: middle;">
             <a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.uuid }}">
                 Details &raquo;

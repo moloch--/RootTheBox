@@ -3,13 +3,15 @@
 {% block title %}Home{% end %}
 
 {% block header %}
+<script src="/static/js/pages/missions/view.js"></script>
 <link href="/static/css/pages/user/home.css" rel="stylesheet" />
 {% end %}
 
 {% block content %}
+{% from models.GameLevel import GameLevel %}
 {% from tornado.options import options %}
 <div class="row-fluid">
-    <div class="span5">
+    <div class="span6">
         <div class="row">
             <div class="span11 offset1 well">
                 <h2>Welcome {{ user.handle }}</h2>
@@ -18,22 +20,109 @@
                 </center>
                 <hr>
                 {% if user.team is not None %}
-                <strong>{% if options.teams %}Team{% else %}Player{% end %}:</strong> {{ user.team.name }} <br />
-                <strong>Current Level:</strong> {{ user.team.levels[-1].number }} <br />
-                <strong>{% if options.banking %}Bank Account{% else %}Score{% end %}:</strong> {% if options.banking %}${% end %}{{ user.team.money }} <br />
-                {% from tornado.options import options %}
-                {% if options.use_bots %}
-                <strong>Active Bots:</strong> {{ user.team.bot_count }} <br />
-                {% end %}
-                <strong>Flags Captured:</strong> {{ len(user.team.flags) }} <br />
-                <strong>Hints Taken:</strong> {{ len(user.team.hints) }} <br />
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th><h5 style="display: inline;">{% if options.teams %}Team{% else %}Player{% end %}</h5></th>
+                                <th style="text-align: center;"><h5 style="display: inline;">Current Level</h5></th>
+                                {% if options.use_bots %}
+                                    <th style="text-align: center;"><h5 style="display: inline;">Active Bots</h5></th>
+                                {% end %}
+                                <th style="text-align: center;"><h5 style="display: inline;">Hints Taken</h5></th>
+                                <th style="text-align: center;"><h5 style="display: inline;">Flags Captured</h5></th>
+                                <th style="text-align: right;"><h5 style="display: inline;">{% if options.banking %}Bank Account{% else %}Score{% end %}</h5></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ user.team.name }}</td>
+                                <td style="text-align: center;">{{ user.team.levels[-1].number }}</td>
+                                {% if options.use_bots %}
+                                    <td style="text-align: center;">{{ user.team.bot_count }}</td>
+                                {% end %}
+                                <td style="text-align: center;">{{ len(user.team.hints) }}</td>
+                                <td style="text-align: center;">{{ len(user.team.flags) }}</td>
+                                <td style="text-align: right;">{% if options.banking %}${% end %}{{ user.team.money }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 {% else %}
-                <strong>You are not on a team</strong>
+                    <strong>You are not on a team</strong>
                 {% end %}
             </div>
         </div>
+        <div class="row">
+            <div class="span11 offset1 well">
+                <h2>Mission Progress</h2>
+                <hr style="margin-bottom: 8px;">
+                {% set team = user.team %}
+                {% for index, level in enumerate(GameLevel.all()) %}
+                
+                    {% if len(GameLevel.all()) > 1 %}
+                    <h3 style="display:inline;">
+                        {% if level in team.game_levels %}
+                            <i class="fa fa-unlock-alt"></i>
+                        {% else %}
+                            <i class="fa fa-lock"></i>
+                        {% end %}
+                        Level #{{ level.number }}&nbsp;&nbsp;&nbsp;
+                    </h3>{% end %}
+                    {% if len(team.level_flags(level.number)) != 0 %}
+                        <div class="progress" style="height: 8px; margin-bottom: 15px; background-color: #424242;">
+                            <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
+                            </div>
+                        </div>
+                    {% end %}
+                    {% if level in team.game_levels %}
+                        <hr style="margin: 5px 0;">
+                        {% for box in level.boxes %}
+                        <div class="row" style="margin-left: 16px;">
+                            <div class="span4">
+                                <a href="/user/missions/boxes?uuid={{ box.uuid }}">
+                                    <h5 style="display: inline;">
+                                        {% if box.operating_system.lower() == 'windows' %}
+                                        <i class="fa fa-windows"></i>
+                                        {% elif box.operating_system.lower() == 'linux' %}
+                                        <i class="fa fa-linux"></i>
+                                        {% elif box.operating_system.lower() == 'apple' %}
+                                        <i class="fa fa-apple"></i>
+                                        {% elif box.operating_system.lower() == '?' %}
+                                        <i class="fa fa-desktop"></i>
+                                        {% else %}
+                                        <i class="fa fa-th"></i>
+                                        {% end %} {{ box.corporation.name }} - {{ box.name }}
+                                    </h5>
+                                </a>
+                            </div>
+                            {% set flagcount=0 %} 
+                            {% for index, flag in enumerate(box.flags) %} 
+                            {% if flag in team.flags %} 
+                            {% set flagcount += 1 %}
+                            {% end %} 
+                            {% end %}
+                            <div class="span8" style="padding-top: 4px;">
+                                <table style="width: 100%; margin: 0 3px;"><tr>
+                                {% for index, flag in enumerate(box.flags) %} 
+                                    <td style="padding: 0 3px;">
+                                        <div class="progress" style="height: 8px; background-color: #424242;" title="{{ flag.name }}">
+                                            <div class="bar minibar" style="width: {% if flag in team.flags %}100{% else %}0{% end %}%;"></div>
+                                        </div>
+                                    </td>
+                                {% end %}
+                                </tr></table>
+                            </div>
+                        </div>
+                        {% end %}
+                        <br/>
+                    {% else %}
+                        <hr style="margin: 5px 0;">
+                    {% end %}
+            {% end %}
+            </div>
+        </div>
     </div>
-    <div class="span5 offset1 well">
+    
+    <div class="span5 well">
         <h2 id="notifications-title">
             <i class="fa fa-envelope-o"></i>
             Notifications
@@ -44,22 +133,103 @@
             </a>
         </h4>
         <hr>
-        {% for notify in user.notifications[-5:] %}
-        <div class="row">
-            <div class="span1 offset1">
-                {% if notify.icon_url is not None %}
-                    <img src="{{ notify.icon_url }}" />
-                {% end %}
+        {% for index, notify in enumerate(user.notifications[-4:]) %}
+            <div class="row">
+                <div class="span1 offset1">
+                    {% if notify.icon_url is not None %}
+                        <img src="{{ notify.icon_url }}" />
+                    {% end %}
+                </div>
+                <div class="span7">
+                    <p>
+                        <strong>{{ notify.title }}</strong>
+                        {{ notify.created.strftime("%I:%M%p") }}
+                        <br />{{ notify.message }}
+                    </p>
+                </div>
             </div>
-            <div class="span7">
-                <p>
-                    <strong>{{ notify.title }}</strong>
-                    {{ notify.created.strftime("%I:%M%p") }}
-                    <br />{{ notify.message }}
-                </p>
+            {% if index < len(user.notifications[-4:]) - 1 %}
+                <hr>
+            {% else %}
+                <div style="margin: 8px;"><!-- spacing --> </div>
+            {% end %}
+        {% end %}
+    </div>
+    <div class="span5 well">
+        <h2>
+            <i class="fa fa-trophy"></i>
+            Game Information
+        </h2>
+        <hr>
+                
+        <div class="row">
+            <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                <i class="fa fa-sitemap" style="font-size: 180%;"></i>
+            </div>
+            <div class="span7" style="width: 82%;">
+                    Welcome to the computer wargame where hackers can practice and learn.  
+                    Each {% if options.teams %}team{% else %}player{% end %} will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck and let the games begin!  
             </div>
         </div>
-        <hr>
+        <br/>
+        {% if options.dynamic_flag_value %}
+        <div class="row">
+            <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                <i class="fa fa-bar-chart-o" style="font-size: 180%"></i>
+            </div>
+            <div class="span7" style="width: 82%;">
+               This game is set up to use dyanmic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!
+            </div>
+        </div>
+        <br/>
+        {% end %}
+        {% if options.penalize_flag_value %}
+        <div class="row">
+            <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                <i class="fa fa-minus-circle" style="font-size: 180%;"></i>
+            </div>
+            <div class="span7" style="width: 82%;">
+                Failure has a cost. Be carefule as penalties are applied when incorrect answers are submitted.  
+                The dedecution is {{ options.flag_penalty_cost }}% of the flag's value. It will start on the {% set n = options.flag_start_penalty %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}} 
+                attempt and continue until the {% set n = options.flag_stop_penalty - 1 %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}}. No further pentalty thereafter.  
+                <!-- Max loss is {{ (options.flag_stop_penalty - options.flag_start_penalty) * options.flag_penalty_cost }}% of the flag's value. -->
+            </div>
+        </div>
+        <br/>
+        {% end %}
+        {% if options.banking %}
+        <div class="row">
+            <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                <i class="fa fa-dollar" style="font-size: 180%;"></i>
+            </div>
+            <div class="span7" style="width: 82%;">
+                It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.
+            </div>
+        </div>
+        <br/>
+        {% end %}
+        {% if options.use_black_market %}
+        <div class="row">
+            <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                <i class="fa fa-shopping-cart" style="font-size: 180%;"></i>
+            </div>
+            <div class="span7" style="width: 82%;">
+                The black market is open and you know a guy. Download a target's source code or "SWAT" other players by bribing the (in-game) police.
+                Player's "bank account passwords" are also available, allowing you to crack each other's passwords and steal the money.
+            </div>
+        </div>
+        <br/>
+        {% end %}
+        {% if options.use_black_market %}
+        <div class="row">
+            <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                <i class="fa fa-android" style="font-size: 180%;"></i>
+            </div>
+            <div class="span7" style="width: 82%;">
+                Time to create a "botnet". By uploading a small bot program to target machines, you can be periodically rewarded with {% if options.banking %}(in-game) money{% else %}points{% end %} for each bot in your botnet; the larger the botnet the larger the reward.
+            </div>
+        </div>
+        <br/>
         {% end %}
     </div>
 </div>

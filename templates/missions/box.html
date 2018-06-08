@@ -96,6 +96,8 @@
                 <i class="fa fa-apple"></i>
             {% elif box.operating_system.lower() == '?' %}
                 <i class="fa fa-desktop"></i>
+            {% else %}
+                <i class="fa fa-th"></i>
             {% end %}
             {{ box.corporation.name }} - {{ box.name }}
         </h1>

@@ -38,7 +38,7 @@
             <div class="control-group">
                 <label class="control-label" for="min-user-password-length">Minimum User Password Length</label>
                 <div class="controls">
-                    <input required id="min-user-password-length" type="text" name="min_user_password_length" value="{{ config.min_user_password_length }}"
+                    <input required id="min-user-password-length" type="number" name="min_user_password_length" value="{{ config.min_user_password_length }}"
                         rel="popover" pattern="\d*"
                         data-original-title="Min user password length"
                         data-content="Restrict players user password to this length" />
@@ -149,7 +149,7 @@
                 <div class="control-group">
                     <label class="control-label" for="max-team-size">Max Team Size</label>
                     <div class="controls">
-                        <input required id="max-team-size" type="text" name="max_team_size" value="{{ config.max_team_size }}"
+                        <input required id="max-team-size" type="number" name="max_team_size" value="{{ config.max_team_size }}"
                             rel="popover" pattern="\d*"
                             data-original-title="Max Team Size"
                             data-content="Limit number of players that can be on any one team" />
@@ -158,7 +158,7 @@
                 <div class="control-group">
                     <label class="control-label" for="max_pastebin_size">Pastebin Character limit</label>
                     <div class="controls">
-                        <input required id="max-pastebin-size" type="text" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
+                        <input required id="max-pastebin-size" type="number" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
                             rel="popover" pattern="\d*"
                             data-original-title="Max PasteBin Size"
                             data-content="This is the the limit of characters allowed for a pastebin post." />
@@ -191,7 +191,7 @@
             <div id="dynamic_flag-grouping" class="control-group control-section">
                 <label class="control-label" for="flag_value_decrease">Flag Decrease Value</label>
                 <div class="controls">
-                    <input required id="flag_value_decrease" type="text" name="flag_value_decrease" value="{{ config.flag_value_decrease }}"
+                    <input required id="flag_value_decrease" type="number" min="0" max="100" name="flag_value_decrease" value="{{ config.flag_value_decrease }}"
                         rel="popover" pattern="\d*"
                         data-original-title="Flag Decrease Value"
                         data-content="Decrease flag reward by this percent per capture." />
@@ -224,7 +224,7 @@
                 <div class="control-group control-section">
                     <label class="control-label" for="flag_start_penalty">Flag Penalty Start</label>
                     <div class="controls">
-                        <input class="penaltyval" required id="flag_start_penalty" type="text" name="flag_start_penalty" value="{{ config.flag_start_penalty }}"
+                        <input class="penaltyval" required id="flag_start_penalty" type="number" min="1" name="flag_start_penalty" value="{{ config.flag_start_penalty }}"
                             rel="popover" pattern="\d*"
                             data-original-title="Flag Penalty Start"
                             data-content="" />
@@ -233,7 +233,7 @@
                 <div class="control-group control-section">
                         <label class="control-label" for="flag_stop_penalty">Flag Penalty Stop</label>
                         <div class="controls">
-                            <input class="penaltyval" required id="flag_stop_penalty" type="text" name="flag_stop_penalty" value="{{ config.flag_stop_penalty }}"
+                            <input class="penaltyval" required id="flag_stop_penalty" type="number" min="1" name="flag_stop_penalty" value="{{ config.flag_stop_penalty }}"
                                 rel="popover" pattern="\d*"
                                 data-original-title="Flag Penalty Stop"
                                 data-content="" />
@@ -242,7 +242,7 @@
                 <div class="control-group control-section">
                     <label class="control-label" for="flag_penalty_cost">Flag Penalty Cost</label>
                     <div class="controls">
-                        <input class="penaltyval" required id="flag_penalty_cost" type="text" name="flag_penalty_cost" value="{{ config.flag_penalty_cost }}"
+                        <input class="penaltyval" required id="flag_penalty_cost" type="number" min="0" max="500" name="flag_penalty_cost" value="{{ config.flag_penalty_cost }}"
                             rel="popover" pattern="\d*"
                             data-original-title="Flag Penalty Cost"
                             data-content="" />
@@ -339,7 +339,7 @@
             <hr />
             <div class="control-group">
                 <label class="control-label" for="market">
-                    <i class="fa fa-shopping-cart"></i>
+                    <i class="fa fa-shopping-cartfa-key"></i>
                     Black Market
                 </label>
                 <div class="controls">
