@@ -3,6 +3,7 @@
 {% block title %}Missions{% end %}
 
 {% block header %}
+<script src="/static/js/pages/missions/view.js"></script>
 <script src="/static/js/pages/missions/box.js"></script>
 {% end %}
 
@@ -154,9 +155,8 @@
             {% end %}
         {% end %}
         {% if flagcount != 0 and len(box.flags) != 0 %}
-        <div class="progress">
-            <div class="bar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;">
-                {{ flagcount }} / {{ len(box.flags) }}
+        <div class="progress" style="height: 8px;; background-color: #424242;">
+            <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box.flags) }}">
             </div>
         </div>
         {% end %}
@@ -209,7 +209,7 @@
                                 <td class="shortcolumn"><!-- Button --></td>
                             {% else %}         
                                 <td class="shortcolumn">
-                                    <a id="capture-file-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="{% if flag.is_file %}#capture-file-flag-modal{% else %}#capture-text-flag-modal{% end %}" data-uuid="{{ flag.uuid }}">
+                                    <a id="capture-{% if flag.is_file %}file{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="{% if flag.is_file %}#capture-file-flag-modal{% else %}#capture-text-flag-modal{% end %}" data-uuid="{{ flag.uuid }}">
                                         <i class="fa fa-flag"></i>
                                         Submit
                                     </a>

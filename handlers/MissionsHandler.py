@@ -93,11 +93,21 @@ class FlagSubmissionHandler(BaseHandler):
                                 flag=flag,
                                 reward=old_reward)
                 else:
+                    reward_dialog = flag.name + " answered correctly. "
                     if self.config.banking:
-                        reward_dialog = "$" + str(old_reward) + " has been added to your " + teamval + "account."
+                        reward_dialog += "$" + str(old_reward) + " has been added to your " + teamval + "account."
                     else:
-                        reward_dialog = str(old_reward) + " points added to your " + teamval + "score."
-                    self.render_page(flag, success=[reward_dialog])
+                        reward_dialog += str(old_reward) + " points added to your " + teamval + "score."
+                    success = [reward_dialog]
+                    boxcomplete = True
+                    box = flag.box
+                    for boxflag in box.flags:
+                        if not boxflag in user.team.flags:
+                            boxcomplete = False
+                            break
+                    if boxcomplete:
+                        success.append("Congratulations! You have completed " + box.name + ".")
+                    self.render_page(flag, success=success)
             else:
                 if Penalty.by_token_count(flag, user.team, submission) > 0:
                     penalty = self.failed_capture(flag, submission)
