@@ -128,7 +128,7 @@ class Box(DatabaseObject):
         return ip.box if ip is not None else None
 
     @classmethod
-    def flaglist(self, box_id):
+    def flaglist(self, box_id=None):
         flags = self.by_id(box_id).flags
         flaglist = {}
         for flag in flags:
@@ -284,6 +284,7 @@ class Box(DatabaseObject):
             'description': self._description,
             'difficulty': self.difficulty,
             'game_level': game_level.uuid,
+            'flaglist': self.flaglist(self.id)
         }
 
     def __repr__(self):

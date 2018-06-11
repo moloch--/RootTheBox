@@ -80,6 +80,13 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                        <div class="controls">
+                            <select id="edit-flag-lock" name="lock_uuid"></select>
+                        </div>
+                    </div>
+                    {% if options.secure_communique_dialog %}
+                    <div class="control-group">
                         <label class="control-label" for="capture-message">Capture Message</label>
                         <div class="controls">
                             <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)"
@@ -89,7 +96,7 @@
                             </textarea>
                         </div>
                     </div>
-   
+                    {% end %}
                     <div class="control-group">
                         <div class="controls">
                             <button class="btn btn-primary" type="submit">Create Flag</button>

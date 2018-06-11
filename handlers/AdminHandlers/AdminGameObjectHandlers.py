@@ -252,6 +252,11 @@ class AdminCreateHandler(BaseHandler):
             flag_type, box, name, token, description, reward)
         flag.capture_message = self.get_argument('capture_message', '')
         flag._case_sensitive = self.get_argument('case-sensitive', 1)
+        lock = Flag.by_uuid(self.get_argument('lock_uuid', ''))
+        if lock:
+            flag.lock_id = lock.id
+        else:
+            flag.lock_id = None
         self.add_attachments(flag)
         self.dbsession.add(flag)
         self.dbsession.commit()
@@ -430,6 +435,12 @@ class AdminEditHandler(BaseHandler):
             # Value
             flag.value = self.get_argument('value', '')
             flag.capture_message = self.get_argument('capture_message', '')
+            # Dependency Lock
+            lock = Flag.by_uuid(self.get_argument('lock_uuid', ''))
+            if lock:
+                flag.lock_id = lock.id
+            else:
+                flag.lock_id = None
             box = Box.by_uuid(self.get_argument('box_uuid', ''))
             if box is not None and flag not in box.flags:
                 logging.info("Updated %s's box %d -> %d" % (

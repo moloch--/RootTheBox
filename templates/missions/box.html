@@ -9,6 +9,8 @@
 
 {% block modals %}
 {% from models.Penalty import Penalty %}
+{% from models.Flag import Flag %}
+{% from models.Flag import FLAG_FILE %}
 {% from tornado.options import options %}
     <!-- Submit text flag -->
     <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
@@ -165,6 +167,7 @@
                 <caption><h4> - Flags - </h4></caption>
                 <thead>
                     <tr>
+                        <th style="width: 6px; padding: 0px; margin: 0px;"><!-- success bar --></th>
                         <th>#</th>
                         <th>Name</th>
                         <th>Description</th>
@@ -174,68 +177,82 @@
                         <th><!-- Submit --></th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% from models.Flag import FLAG_FILE %}
-                    {% for index, flag in enumerate(box.flags) %}
+                {% for index, flag in enumerate(box.flags) %}
+                    <tbody class="flagbody">
+                        <tr>
                         {% if flag in team.flags %}
-                            <tr class="success">
+                            <td class="successcol" style="background: green; margin: 0px; padding: 0px; width: 6px;"></td>
                         {% else %}
-                            <tr>
+                            <td style="margin: 0px; padding: 0px;"></td>
                         {% end %}
                             <td class="shortcolumn">{{ box.flags.index(flag) +1 }}</td>
                             <td class="shortcolumn" style="padding-right: 20px;">{{ flag.name }}</td>
-                            <td>{{ flag.description }}</td>
-                            <td class="shortcolumn" style="text-align: center;">{% if flag in team.flags %}{{ Penalty.by_count(flag, team) + 1 }}{% else %}{{ Penalty.by_count(flag, team) }}{% end %}</td>
-                            <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
-                            <td class="shortcolumn"{% if not flag in team.flags %} style="padding-right: 10px;"{% end %}>
-                                {% if not flag in team.flags %}
-                                    {% set i = 1 %}
-                                    {% for hint in flaghints %}
-                                        {% if hint.flag_id == flag.id %}
-                                            {% if not hint in team.hints %}
-                                                <a id="purchase-flag-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
-                                                    Hint #{{i}}
-                                                </a>
-                                                {% set i += 1 %}
-                                                {% break %}
-                                            {% else %}
-                                                {% set i += 1 %}
+                            {% if flag.lock_id and not Flag.by_id(flag.lock_id) in team.flags %}
+                                <td class="descriptioncol"><i class="fa fa-lock"></i> Locked by {{ Flag.by_id(flag.lock_id).name }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            {% else %}
+                                <td class="descriptioncol">{{ flag.description }}</td>
+                                <td class="shortcolumn" style="text-align: center;">{% if flag in team.flags %}{{ Penalty.by_count(flag, team) + 1 }}{% else %}{{ Penalty.by_count(flag, team) }}{% end %}</td>
+                                <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
+                                <td class="shortcolumn"{% if not flag in team.flags %} style="padding-right: 10px;"{% end %}>
+                                    {% if not flag in team.flags %}
+                                        {% set i = 1 %}
+                                        {% for hint in flaghints %}
+                                            {% if hint.flag_id == flag.id %}
+                                                {% if not hint in team.hints %}
+                                                    <a id="purchase-flag-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
+                                                        Hint #{{i}}
+                                                    </a>
+                                                    {% set i += 1 %}
+                                                    {% break %}
+                                                {% else %}
+                                                    {% set i += 1 %}
+                                                {% end %}
                                             {% end %}
                                         {% end %}
                                     {% end %}
-                                {% end %}
-                            </td>
-                            {% if flag in team.flags %}
-                                <td class="shortcolumn"><!-- Button --></td>
-                            {% else %}         
-                                <td class="shortcolumn">
-                                    <a id="capture-{% if flag.is_file %}file{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="{% if flag.is_file %}#capture-file-flag-modal{% else %}#capture-text-flag-modal{% end %}" data-uuid="{{ flag.uuid }}">
-                                        <i class="fa fa-flag"></i>
-                                        Submit
-                                    </a>
                                 </td>
+                                
+                                {% if flag in team.flags %}
+                                    <td class="shortcolumn successtext" style="text-align: right;"><i class="fa fa-check-circle"></i></td>
+                                {% else %}         
+                                    <td class="shortcolumn">
+                                        <a id="capture-{% if flag.is_file %}file{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="{% if flag.is_file %}#capture-file-flag-modal{% else %}#capture-text-flag-modal{% end %}" data-uuid="{{ flag.uuid }}">
+                                            <i class="fa fa-flag"></i>
+                                            Submit
+                                        </a>
+                                    </td>
+                                {% end %}
                             {% end %}
-                            </tr>
+                        </tr>
                         {% if len(flaghints) > 0 %}
                             {% set i = 1 %}
                             {% for hint in flaghints %}
                                 {% if hint.flag_id == flag.id %}
                                     {% if flag in team.flags or hint in team.hints %}
                                         <tr>
-                                            <td></td>
-                                            <td style="text-align: right;"><i class="fa fa-arrow-circle-up"></i><h5 style="display:inline;"> Hint #{{i}}:</h5></td>
-                                            <td colspan="1">{{ hint.description }}</td>
+                                            {% if flag in team.flags %}
+                                            <td class="successcol" style="background: green; margin: 0px; padding: 0px; border-top: 1px solid green;"></td>
+                                            <td style="border-top: 0px;"></td>
+                                            {% else %}
+                                            <td colspan="2" style="border-top: 0px;"></td>
+                                            {% end %}
+                                            <td style="text-align: right; border-top: 0px;"><i class="fa fa-arrow-circle-up"></i><h5 style="display:inline;"> Hint #{{i}}:</h5></td>
+                                            <td colspan="1" class="descriptioncol">{{ hint.description }}</td>
                                             <td class="shortcolumn" style="text-align: center;"><i>{% if hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% else %}Captured{% end %}</i></td>
                                             <td class="shortcolumn" style="text-align: center;">{% if hint in team.hints or flagcount != len(box.flags) %}-{{ hint.price }}{% else %}0{% end %}</td>
-                                            <td colspan="2"></td>
+                                            <td colspan="2" style="border-top: 0px;"></td>
                                         </tr>
                                     {% end %}
                                     {% set i += 1 %}
                                 {% end %}
                             {% end %}
                         {% end %}
-                    {% end %}
-                </tbody>
+                    </tbody> 
+                {% end %}
             </table>
         </div>
         {% if len(box.visable_ips) != 0 %}
@@ -286,7 +303,7 @@
                                     <td class="shortcolumn">{{ index + 1 }}</td>
                                     {% if hint in team.hints or flagcount == len(box.flags) %}
                                         <td class="shortcolumn"><i>{% if hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% else %}Completed {{box.name}}{% end %}</i></td>
-                                        <td>{{ hint.description }}</td>
+                                        <td class="descriptioncol">{{ hint.description }}</td>
                                     {% else %}
                                         <td class="shortcolumn" style="text-align: center; padding-right: 20px;">{% if options.banking %}${% end %}{% if hint in team.hints or flagcount != len(box.flags) %}{{ hint.price }}{% else %}0{% end %}</td>
                                         <td>Hint not yet taken</td>

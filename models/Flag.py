@@ -61,6 +61,7 @@ class Flag(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+    lock_id = Column(Integer, ForeignKey('flag.id'), nullable=True)
 
     _name = Column(Unicode(64), nullable=False)
     _token = Column(Unicode(256), nullable=False)
@@ -285,6 +286,10 @@ class Flag(DatabaseObject):
     def to_dict(self):
         ''' Returns public data as a dict '''
         box = Box.by_id(self.box_id)
+        if self.lock_id:
+            lock_uuid = Flag.by_id(self.lock_id).uuid
+        else:
+            lock_uuid = ''
         return {
             'name': self.name,
             'uuid': self.uuid,
@@ -293,6 +298,7 @@ class Flag(DatabaseObject):
             'value': self.value,
             'box': box.uuid,
             'token': self.token,
+            'lock_uuid': lock_uuid
         }
 
     def __repr__(self):

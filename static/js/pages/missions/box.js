@@ -43,5 +43,18 @@ $(document).ready(function() {
             $("#purchase-hint-text").text("Would you like to take this hint for a deduction of "+price+" points?");
         }
     }
-
+    $('td').on('mouseenter mouseleave', function(e) {
+        //Allows the hover background to include the flag hints
+        var tbody = $(this).closest("tbody");
+        if (tbody.hasClass("flagbody")) {
+            if ($(this).hasClass("successcol")) {
+                tbody.css('background-color', $(this).next().css('background-color'));
+            } else {
+                tbody.css('background-color', $(this).css('background-color'));
+            }
+        }
+    });
+    $('tbody').on('mouseleave', function(e) {
+        $(this).css('background-color','');
+    });
 });

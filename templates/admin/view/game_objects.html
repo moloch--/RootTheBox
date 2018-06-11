@@ -150,34 +150,9 @@
                 {% raw xsrf_form_html() %}
                 <input id="flag-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="flag-name">Name</label>
+                    <label class="control-label" for="flag-name">Flag Name</label>
                     <div class="controls">
                         <input id="flag-name" name="name" type="text" placeholder="Flag Name" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-token">Token</label>
-                    <div class="controls">
-                        <input id="flag-token" name="token" type="text" placeholder="Token Value" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-description">Description</label>
-                    <div class="controls">
-                        <input id="flag-description" name="description" type="text" placeholder="Description" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-capture_message">Capture Message</label>
-                    <div class="controls">
-                        <textarea id="flag-capture_message" name="capture_message" placeholder="(Optional)">
-                        </textarea>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-value">Value</label>
-                    <div class="controls">
-                        <input id="flag-value" name="value" type="text" placeholder="{% if options.banking %}($) {% end %}Reward Value" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -190,6 +165,39 @@
                         </select>
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="flag-value">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                    <div class="controls">
+                        <input id="flag-value" name="value" type="text" placeholder="{% if options.banking %}($) {% end %}Reward Value" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="flag-token">Token</label>
+                    <div class="controls">
+                        <input id="flag-token" name="token" type="text" placeholder="Token Value" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="flag-description">Description</label>
+                    <div class="controls">
+                        <textarea id="flag-description" name="description" type="text" placeholder="Description"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                    <div class="controls">
+                        <select id="edit-flag-lock" name="lock_uuid"></select>
+                    </div>
+                </div>
+                {% if options.secure_communique_dialog %}
+                <div class="control-group">
+                    <label class="control-label" for="flag-capture_message">Capture Message</label>
+                    <div class="controls">
+                        <textarea id="flag-capture_message" name="capture_message" placeholder="(Optional)">
+                        </textarea>
+                    </div>
+                </div>
+                {% end %}
             </form>
         </div>
         <div class="modal-footer">
@@ -241,7 +249,7 @@
                 <div class="control-group">
                     <label class="control-label" for="hint-description">Description</label>
                     <div class="controls">
-                        <input id="hint-description" name="description" type="text" placeholder="Description" />
+                        <textarea id="hint-description" name="description" type="text" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -487,6 +495,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
+                                                    <th><!-- Flag Lock --></th>
                                                     <th>Name</th>
                                                     <th>Description</th>
                                                     <th>Token</th>
@@ -501,8 +510,9 @@
                                                 {% for index, flag in enumerate(box.flags) %}
                                                     <tr>
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
+                                                        <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
-                                                        <td>{{ flag.description }}</td>
+                                                        <td class="descriptioncol">{{ flag.description }}</td>
                                                         <td class="shortcolumn">{{ flag.token }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
                                                         <td class="shortcolumn">{{ str(flag._type) }}</td>
@@ -573,7 +583,7 @@
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
-                                                        <td>{{ hint.description }}</td>
+                                                        <td class="descriptioncol">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
@@ -608,7 +618,7 @@
                                                     <tr>
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
-                                                        <td>{{ hint.description }}</td>
+                                                        <td class="descriptioncol">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>

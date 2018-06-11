@@ -3,22 +3,47 @@ function getDetails(obj, uuid) {
     data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}
     $.post('/admin/ajax/objects', data, function(response) {
         $.each(response, function(key, value) {
-            if (key !== "flaglist" && key !== "flag_uuid") {
-                $("#" + obj + "-" + key).val(value);
-            } else if (key === "flaglist") {
-                $('#hint-flag_uuid').empty();
-                $('#hint-flag_uuid').append($('<option/>', { 
-                    value: "",
-                    text : ""
-                }));
-                $.each(value, function (key, uuid) {
+            if (obj === "hint") {
+                if (key === "flaglist") {
+                    $('#hint-flag_uuid').empty();
                     $('#hint-flag_uuid').append($('<option/>', { 
-                        value: key,
-                        text : uuid
+                        value: "",
+                        text : ""
                     }));
-                });
-                $('#hint-flag_uuid option[value=' + response["flag_uuid"] + ']').prop('selected',true);   
+                    $.each(value, function (uuid, name) {
+                        $('#hint-flag_uuid').append($('<option/>', { 
+                            value: uuid,
+                            text : name
+                        }));
+                    });
+                    $('#hint-flag_uuid option[value=' + response["flag_uuid"] + ']').prop('selected',true);   
+                } else if (key !== "flag_uuid") {
+                    $("#" + obj + "-" + key).val(value);
+                }
+            } else if (obj === "flag" && key === "lock_uuid") {
+                $('#edit-flag-lock option[value=' + value + ']').prop('selected',true);
+            } else {
+                $("#" + obj + "-" + key).val(value);    
             }
+        });
+    }, 'json');
+}
+
+function getBoxFlags(box_uuid, flag_uuid) {
+    data = {'uuid': box_uuid, 'obj': 'box', '_xsrf': getCookie("_xsrf")}
+    $.post('/admin/ajax/objects', data, function(response) { 
+        $('#edit-flag-lock').empty();
+        $('#edit-flag-lock').append($('<option/>', { 
+            value: "",
+            text : ""
+        }));
+        $.each(response["flaglist"], function(uuid, name) {    
+            if (uuid !== flag_uuid) {
+                $('#edit-flag-lock').append($('<option/>', { 
+                    value: uuid,
+                    text : name
+                }));
+            } 
         });
     }, 'json');
 }
@@ -80,6 +105,7 @@ $(document).ready(function() {
 
     /* Flag */
     $("a[id^=edit-flag-button]").click(function() {
+        getBoxFlags($(this).data("box-uuid"), $(this).data("uuid"));
         getDetails("flag", $(this).data("uuid"));
         $("#edit-flag-box").val($(this).data("box-uuid"));
     });

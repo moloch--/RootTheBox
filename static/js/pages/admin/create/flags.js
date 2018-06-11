@@ -1,3 +1,22 @@
+function getBoxFlags(box_uuid, flag_uuid) {
+    data = {'uuid': box_uuid, 'obj': 'box', '_xsrf': getCookie("_xsrf")}
+    $.post('/admin/ajax/objects', data, function(response) { 
+        $('#edit-flag-lock').empty();
+        $('#edit-flag-lock').append($('<option/>', { 
+            value: "",
+            text : ""
+        }));
+        $.each(response["flaglist"], function(uuid, name) {    
+            if (uuid !== flag_uuid) {
+                $('#edit-flag-lock').append($('<option/>', { 
+                    value: uuid,
+                    text : name
+                }));
+            } 
+        });
+    }, 'json');
+}
+
 $(document).ready(function() {
 
     /* Popovers */
@@ -22,5 +41,8 @@ $(document).ready(function() {
         $("#case-disable-icon").addClass("fa-check-square-o");
         $("#case-enable-icon").removeClass("fa-check-square-o");
         $("#case-enable-icon").addClass("fa-square-o");
+    });
+    $("#box-uuid").change(function() {
+        getBoxFlags($("#box-uuid  option:selected").val(), '');
     });
 });

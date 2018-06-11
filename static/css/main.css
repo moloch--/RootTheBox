@@ -15,3 +15,10 @@ footer {
     width: 1px;
     white-space: nowrap;
 }
+.descriptioncol{
+    white-space: pre-wrap;
+}
+.successtext {
+    font-size: 275%;
+    color: green;
+}

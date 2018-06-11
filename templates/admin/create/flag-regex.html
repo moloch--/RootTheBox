@@ -32,7 +32,7 @@
                     <div class="control-group">
                         <label class="control-label" for="flag_name">Flag Name</label>
                         <div class="controls">
-                            <input autofocus required id="flag-name" name="flag_name" maxlength=16" type="text" placeholder="Flag Name"
+                            <input autofocus required id="flag-name" name="flag_name" maxlength=16 type="text" placeholder="Flag Name"
                                     rel="popover"
                                     data-original-title="Flag Name"
                                     data-content="This is what you want the flag to be displayed as." />
@@ -88,6 +88,13 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                        <div class="controls">
+                            <select id="edit-flag-lock" name="lock_uuid"></select>
+                        </div>
+                    </div>
+                    {% if options.secure_communique_dialog %}
+                    <div class="control-group">
                         <label class="control-label" for="capture-message">Capture Message</label>
                         <div class="controls">
                             <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)"
@@ -97,6 +104,7 @@
                             </textarea>
                         </div>
                     </div>
+                    {% end %}
                     <div class="control-group">
                         <div class="controls">
                             <button class="btn btn-primary" type="submit">Create Flag</button>
