@@ -102,7 +102,7 @@
             {% else %}
                 <i class="fa fa-th"></i>
             {% end %}
-            {{ box.corporation.name }} - {{ box.name }}
+            {% if box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
             <a style="float:right;"  class="btn" href="/user/missions">Return to Missions</a>
         </h1>
         <br />

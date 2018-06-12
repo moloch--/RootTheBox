@@ -59,12 +59,13 @@
                         <i class="fa fa-lock"></i>
                     {% end %}
                     Level #{{ level.number }}&nbsp;&nbsp;&nbsp;
-                </h3>{% end %}
-                {% if len(team.level_flags(level.number)) != 0 %}
+                </h3>
+                {% if level in team.game_levels %}
                     <div class="progress" style="height: 10px; background-color: #424242;">
                         <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
                         </div>
                     </div>
+                {% end %}
                 {% end %}
                 {% if level in team.game_levels %}
                     <hr>
@@ -93,7 +94,7 @@
                                                 {% else %}
                                                     <i class="fa fa-th"></i>
                                                 {% end %}
-                                                {{ box.corporation.name }} - {{ box.name }}
+                                                {% if box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
                                             </h5>
                                             {% set flagcount=0 %}
                                             {% for index, flag in enumerate(box.flags) %}
@@ -129,7 +130,7 @@
                                                     {% else %}
                                                         <i class="fa fa-th"></i>
                                                     {% end %}
-                                                    {{ box1.corporation.name }} - {{ box1.name }}
+                                                    {% if box.corporation.name != "" %}{{ box1.corporation.name }} - {% end %}{{ box1.name }}
                                                 </h5>
                                                 {% set flagcount=0 %}
                                                 {% for index, flag in enumerate(box1.flags) %}
@@ -166,7 +167,7 @@
                                                     {% else %}
                                                         <i class="fa fa-th"></i>
                                                     {% end %}
-                                                    {{ box2.corporation.name }} - {{ box2.name }}
+                                                    {% if box.corporation.name != "" %}{{ box2.corporation.name }} - {% end %}{{ box2.name }}
                                                 </h5>
                                                 {% set flagcount=0 %}
                                                 {% for index, flag in enumerate(box2.flags) %}
