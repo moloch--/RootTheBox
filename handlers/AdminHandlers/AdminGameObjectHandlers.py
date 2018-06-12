@@ -197,7 +197,15 @@ class AdminCreateHandler(BaseHandler):
         try:
             new_level = GameLevel()
             new_level.number = self.get_argument('level_number', '')
-            new_level.buyout = self.get_argument('buyout', '')
+            new_level.buyout = self.get_argument('buyout', 0)
+            new_level._type = self.get_argument('type', 'buyout')
+            new_level._reward = self.get_argument('reward', 0)
+            if new_level._type == "progress":
+                new_level.buyout = min(new_level.buyout, 100)
+            elif new_level._type == "none":
+                new_level.buyout = 0
+            if new_level._type != "none" and new_level.buyout == 0:
+                new_level._type = "none"
             self.dbsession.add(new_level)
             self.dbsession.flush()
             game_levels = sorted(GameLevel.all())
@@ -484,7 +492,15 @@ class AdminEditHandler(BaseHandler):
                 raise ValidationError("Game level does not exist")
             if int(self.get_argument('number', level.number)) != level.number:
                 level.number = self.get_argument('number')
-            level.buyout = self.get_argument('buyout', '1')
+            level.buyout = self.get_argument('buyout', 1)
+            level._type = self.get_argument('type', 'buyout')
+            level._reward = self.get_argument('reward', 0)
+            if level._type == "progress":
+                level.buyout = min(level.buyout, 100)
+            elif level._type == "none":
+                level.buyout = 0
+            if level._type != "none" and level.buyout == 0:
+                level._type = "none"
             self.dbsession.add(level)
             self.dbsession.flush()
             # Fix the linked-list

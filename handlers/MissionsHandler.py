@@ -62,7 +62,8 @@ class BoxHandler(BaseHandler):
                         box=box,
                         team=user.team,
                         errors=[],
-                        success=[])
+                        success=[],
+                        info=[])
         else:
             self.render('public/404.html')
 
@@ -74,7 +75,9 @@ class FlagSubmissionHandler(BaseHandler):
         ''' Check validity of flag submissions '''
         flag = Flag.by_uuid(self.get_argument('uuid', ''))
         user = self.get_current_user()
-        if flag is not None and flag.game_level in user.team.game_levels:
+        if flag and flag in user.team.flags:
+            self.render_page(flag)
+        elif flag is not None and flag.game_level in user.team.game_levels:
             submission = ''
             if flag.is_file:
                 if hasattr(self.request, 'files') and 'flag' in self.request.files:
@@ -82,10 +85,7 @@ class FlagSubmissionHandler(BaseHandler):
             else:
                 submission = self.get_argument('token', '')
             old_reward = flag.value
-            if self.config.teams:
-                teamval = "team's "
-            else:
-                teamval = ""
+
             if self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
                 if self.config.secure_communique_dialog:
@@ -93,23 +93,14 @@ class FlagSubmissionHandler(BaseHandler):
                                 flag=flag,
                                 reward=old_reward)
                 else:
-                    reward_dialog = flag.name + " answered correctly. "
-                    if self.config.banking:
-                        reward_dialog += "$" + str(old_reward) + " has been added to your " + teamval + "account."
-                    else:
-                        reward_dialog += str(old_reward) + " points added to your " + teamval + "score."
-                    success = [reward_dialog]
-                    boxcomplete = True
-                    box = flag.box
-                    for boxflag in box.flags:
-                        if not boxflag in user.team.flags:
-                            boxcomplete = False
-                            break
-                    if boxcomplete:
-                        success.append("Congratulations! You have completed " + box.name + ".")
+                    success = self.success_capture(flag)
                     self.render_page(flag, success=success)
             else:
-                if Penalty.by_token_count(flag, user.team, submission) > 0:
+                if Penalty.by_token_count(flag, user.team, submission) == 0:
+                    if self.config.teams:
+                        teamval = "team's "
+                    else:
+                        teamval = ""
                     penalty = self.failed_capture(flag, submission)
                     penalty_dialog = "Sorry - Try Again"
                     if penalty:
@@ -127,9 +118,63 @@ class FlagSubmissionHandler(BaseHandler):
                         teamdup = " by your team.  Try Again"
                     else:
                         teamdup = " by you.  Try Again"
-                    self.render_page(flag, errors=["Duplicate submission - this answer has already been attempted" + teamdup])
+                    self.render_page(flag, info=["Duplicate submission - this answer has already been attempted" + teamdup])
         else:
             self.render('public/404.html')
+
+    def success_capture(self, flag):
+        if self.config.teams:
+            teamval = "team's "
+        else:
+            teamval = ""
+        user = self.get_current_user()
+        old_reward = flag.value
+        reward_dialog = flag.name + " answered correctly. "
+        if self.config.banking:
+            reward_dialog += "$" + str(old_reward) + " has been added to your " + teamval + "account."
+        else:
+            reward_dialog += str(old_reward) + " points added to your " + teamval + "score."
+        success = [reward_dialog]
+
+        # Check for Box Completion
+        boxcomplete = True
+        box = flag.box
+        for boxflag in box.flags:
+            if not boxflag in user.team.flags:
+                boxcomplete = False
+                break
+        if boxcomplete:
+            success.append("Congratulations! You have completed " + box.name + ".")
+
+        # Check for Level Completion
+        level = GameLevel.by_id(box.game_level_id)
+        level_progress = len(user.team.level_flags(level.number)) /  float(len(level.flags))
+        if level_progress == 1.0 and level not in user.team.game_levels:
+            reward_dialog = ""
+            if level._reward > 0:
+                user.team.money += level._reward
+                self.dbsession.add(user.team)
+                self.dbsession.flush()
+                self.dbsession.commit()
+                if self.config.banking:
+                    reward_dialog += "$" + str(level._reward) + " has been added to your " + teamval + "account."
+                else:
+                    reward_dialog += str(level._reward) + " points added to your " + teamval + "score."
+            success.append("Congratulations! You have completed Level " + str(level.number) + ". " + reward_dialog)
+
+        # Unlock next level if based on Game Progress
+        next_level = GameLevel.by_id(level.next_level_id)
+        if next_level._type == "progress" and level_progress * 100 >= next_level.buyout and next_level not in user.team.game_levels:
+            logging.info("%s (%s) unlocked level #%d" % (
+                    user.handle, user.team.name, next_level.number
+                ))
+            user.team.game_levels.append(next_level)
+            self.dbsession.add(user.team)
+            self.dbsession.commit()
+            self.event_manager.level_unlocked(user, next_level)
+            success.append("Congratulations! You have unlocked Level " + str(next_level.number))
+        
+        return success
 
     def failed_capture(self, flag, submission):
         user = self.get_current_user()
@@ -191,7 +236,7 @@ class FlagSubmissionHandler(BaseHandler):
                 user.team.game_levels.append(next_level)
                 self.dbsession.add(user.team)
 
-    def render_page(self, flag, errors=[], success=[]):
+    def render_page(self, flag, errors=[], success=[], info=[]):
         ''' Wrapper to .render() to avoid duplicate code '''
         user = self.get_current_user()
         box = Box.by_id(flag.box_id)
@@ -199,7 +244,8 @@ class FlagSubmissionHandler(BaseHandler):
                     box=box,
                     team=user.team,
                     errors=errors,
-                    success=success)
+                    success=success,
+                    info=info)
 
 
 class PurchaseHintHandler(BaseHandler):

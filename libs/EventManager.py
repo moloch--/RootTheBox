@@ -29,6 +29,7 @@ from libs.Scoreboard import Scoreboard
 from models import dbsession
 from models.User import User
 from models.Flag import Flag
+from models.GameLevel import GameLevel
 from models.PasteBin import PasteBin
 from models.Notification import Notification, \
     SUCCESS, INFO, WARNING, ERROR
@@ -153,8 +154,8 @@ class EventManager(object):
     # [ Broadcast Events ] -------------------------------------------------
     def flag_captured(self, user, flag):
         ''' Callback for when a flag is captured '''
-        message = "%s has captured the '%s' flag" % (
-            user.team.name, flag.name
+        message = "%s has captured the '%s' flag in %s (Lvl %s)" % (
+            user.team.name, flag.name, flag.box.name, GameLevel.by_id(flag.box.game_level_id).number
         )
         Notification.create_broadcast("Flag Capture", message)
         self.io_loop.add_callback(self.push_broadcast)

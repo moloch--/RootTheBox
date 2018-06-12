@@ -61,7 +61,7 @@ class Flag(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    lock_id = Column(Integer, ForeignKey('flag.id'), nullable=True)
+    lock_id = Column(Integer, ForeignKey('flag.id', ondelete="SET NULL"), nullable=True)
 
     _name = Column(Unicode(64), nullable=False)
     _token = Column(Unicode(256), nullable=False)

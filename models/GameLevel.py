@@ -24,7 +24,7 @@ import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey, asc
-from sqlalchemy.types import Integer, String
+from sqlalchemy.types import Unicode, Integer, String
 from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
 from models import dbsession
@@ -44,6 +44,8 @@ class GameLevel(DatabaseObject):
     next_level_id = Column(Integer, ForeignKey('game_level.id'))
     _number = Column(Integer, unique=True, nullable=False)
     _buyout = Column(Integer, nullable=False)
+    _type = Column(Unicode(16), nullable=False, default=u'buyout')
+    _reward = Column(Integer, nullable=False, default=0)
 
     boxes = relationship("Box",
                          backref=backref("game_level", lazy="select"),
@@ -73,6 +75,11 @@ class GameLevel(DatabaseObject):
     def by_number(cls, number):
         ''' Returns a the object with number of number '''
         return dbsession.query(cls).filter_by(_number=abs(int(number))).first()
+
+    @classmethod
+    def last_level(cls, number):
+        ''' Returns the prior level '''
+        return dbsession.query(cls).filter_by(next_level_id=int(number)).first()
 
     @property
     def number(self):
@@ -118,13 +125,23 @@ class GameLevel(DatabaseObject):
         level_elem = ET.SubElement(parent, "gamelevel")
         ET.SubElement(level_elem, "number").text = str(self.number)
         ET.SubElement(level_elem, "buyout").text = str(self.buyout)
+        ET.SubElement(level_elem, "type").text = str(self._type)
+        ET.SubElement(level_elem, "reward").text = str(self._reward)
 
     def to_dict(self):
         ''' Return public data as dict '''
+        last = GameLevel.last_level(self.id)
+        if last:
+            last_level = last.number
+        else:
+            last_level = ""
         return {
             'uuid': self.uuid,
             'number': self.number,
             'buyout': self.buyout,
+            'type': self._type,
+            'reward': self._reward,
+            'last_level': last_level
         }
 
     def __str__(self):

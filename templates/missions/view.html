@@ -7,6 +7,7 @@
 {% end %}
 
 {% block modals %}
+{% from tornado.options import options %}
     <div id="unlock-game-level-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -48,9 +49,10 @@
             {% end %}
         {% end %}
         {% for index, level in enumerate(GameLevel.all()) %}
+            {% if len(level.boxes) > 0 %}
             <div class="well">
                 {% if len(GameLevel.all()) > 1 %}
-                <h3 style="display:inline;">
+                <h3 style="display:inline; vertical-align: middle;">
                     {% if level in team.game_levels %}
                         <i class="fa fa-unlock-alt"></i>
                     {% else %}
@@ -67,7 +69,14 @@
                 {% if level in team.game_levels %}
                     <hr>
                     <div class="container">
-                        {% for box in level.boxes[::3] %}
+                        {% set boxes = [] %}
+                        {% for box in level.boxes %}
+                            <!-- Only show boxes that have flags -->
+                            {% if len(box.flags) > 0 %}
+                                {% set boxes.append(box) %}
+                            {% end %}
+                        {% end %}
+                        {% for box in boxes[::3] %}
                             <div class="row">
                                 <div class="span3">
                                     <center>
@@ -103,8 +112,8 @@
                                         </a>
                                     </center>
                                 </div>
-                                {% if level.boxes.index(box) + 1 < len(level.boxes) %}
-                                    {% set box1 = level.boxes[level.boxes.index(box) + 1] %}
+                                {% if boxes.index(box) + 1 < len(boxes) %}
+                                    {% set box1 = boxes[boxes.index(box) + 1] %}
                                     <div class="span3 offset1">
                                         <center>
                                             <a href="/user/missions/boxes?uuid={{ box1.uuid }}">
@@ -140,8 +149,8 @@
                                         </center>
                                     </div>
                                 {% end %}
-                                {% if level.boxes.index(box) + 2 < len(level.boxes) %}
-                                    {% set box2 = level.boxes[level.boxes.index(box) + 2] %}
+                                {% if boxes.index(box) + 2 < len(boxes) %}
+                                    {% set box2 = boxes[boxes.index(box) + 2] %}
                                     <div class="span3 offset1">
                                         <center>
                                             <a href="/user/missions/boxes?uuid={{ box2.uuid }}">
@@ -182,12 +191,14 @@
                         {% end %}
                     </div>
                 {% else %}
-                    <a id="unlock-game-level-button{{ index }}" class="btn" data-toggle="modal" href="#unlock-game-level-modal" data-uuid="{{ level.uuid }}" data-buyout="{{ level.buyout }}">
+                    {% if level._type == "buyout" %}
+                    <a id="unlock-game-level-button{{ index }}" class="btn" data-toggle="modal" href="#unlock-game-level-modal" data-uuid="{{ level.uuid }}" data-banking="{{ str(options.banking).lower() }}" data-buyout="{{ level.buyout }}">
                         <i class="fa fa-unlock"></i>
                         Unlock
                     </a>
+                    {% end %}
                     <hr>
-                    <br />
+
                     <strong>
                         You do not have access to this level yet.
                     </strong>
@@ -195,6 +206,7 @@
                     <br />
                 {% end %}
             </div>
+            {% end %}
         {% end %}
     </div>
 {% end %}

@@ -183,21 +183,22 @@ class BaseHandler(RequestHandler):
 
     def write_error(self, status_code, **kwargs):
         ''' Write our custom error pages '''
-        if not self.config.debug:
-            trace = "".join(traceback.format_exception(*kwargs["exc_info"]))
-            logging.error("Request from %s resulted in an error code %d:\n%s" % (
-                self.request.remote_ip, status_code, trace
-            ))
-            if status_code in [403]:
-                # This should only get called when the _xsrf check fails,
-                # all other '403' cases we just send a redirect to /403
-                self.render('public/403.html', locked=False, xsrf=True)
-            else:
+        trace = "".join(traceback.format_exception(*kwargs["exc_info"]))
+        logging.error("Request from %s resulted in an error code %d:\n%s" % (
+            self.request.remote_ip, status_code, trace
+        ))
+        if status_code in [403]:
+            # This should only get called when the _xsrf check fails,
+            # all other '403' cases we just send a redirect to /403
+            #self.render('public/403.html', locked=False, xsrf=True)
+            self.redirect('/logout')  #just log them out
+        else:
+            if not self.config.debug:
                 # Never tell the user we got a 500
                 self.render('public/404.html')
-        else:
-            # If debug mode is enabled, just call Tornado's write_error()
-            super(BaseHandler, self).write_error(status_code, **kwargs)
+            else:
+                # If debug mode is enabled, just call Tornado's write_error()
+                super(BaseHandler, self).write_error(status_code, **kwargs)
 
     def get(self, *args, **kwargs):
         ''' Placeholder, incase child class does not impl this method '''

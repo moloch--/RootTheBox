@@ -103,6 +103,7 @@
                 <i class="fa fa-th"></i>
             {% end %}
             {{ box.corporation.name }} - {{ box.name }}
+            <a style="float:right;"  class="btn" href="/user/missions">Return to Missions</a>
         </h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
@@ -119,6 +120,15 @@
                 <div class="alert alert-success">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
                     <h4 class="alert-heading">Success!</h4>
+                    {{ msg }}
+                </div>
+            {% end %}
+        {% end %}
+        {% if info is not None and len(info) != 0 %}
+            {% for msg in info %}
+                <div class="alert alert-info">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">Information</h4>
                     {{ msg }}
                 </div>
             {% end %}
@@ -242,8 +252,8 @@
                                             {% end %}
                                             <td style="text-align: right; border-top: 0px;"><i class="fa fa-arrow-circle-up"></i><h5 style="display:inline;"> Hint #{{i}}:</h5></td>
                                             <td colspan="1" class="descriptioncol">{{ hint.description }}</td>
-                                            <td class="shortcolumn" style="text-align: center;"><i>{% if hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% else %}Captured{% end %}</i></td>
-                                            <td class="shortcolumn" style="text-align: center;">{% if hint in team.hints or flagcount != len(box.flags) %}-{{ hint.price }}{% else %}0{% end %}</td>
+                                            <td class="shortcolumn" style="text-align: center;"><i>{% if hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% end %}</i></td>
+                                            <td class="shortcolumn" style="text-align: center;">{% if hint in team.hints %}-{{ hint.price }}{% end %}</td>
                                             <td colspan="2" style="border-top: 0px;"></td>
                                         </tr>
                                     {% end %}

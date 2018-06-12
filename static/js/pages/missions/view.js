@@ -2,8 +2,15 @@ $(document).ready(function() {
 
     $("a[id^=unlock-game-level-button]").click(function() {
         var buyout = $(this).data("buyout");
+        var banking = $(this).data("banking");
         $("#unlock-game-level-uuid").val($(this).data("uuid"));
-        $("#description").text("Would you like to unlock this level for $"+buyout+"?");
+        var description = "Would you like to unlock this level for ";
+        if (banking) {
+            description += "$" + buyout + "?";
+        } else {
+            description += buyout + " point(s)";
+        }
+        $("#description").text(description);
     });
 
     $("#unlock-game-level-submit").click(function() {

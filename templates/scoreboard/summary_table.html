@@ -1,6 +1,8 @@
 {% from libs.BotManager import BotManager %}
 {% from tornado.options import options %}
 {% from models.GameLevel import GameLevel %}
+{% from models.Hint import Hint %}
+{% set hintcount = len(Hint.all()) %}
 {% for index, team in enumerate(teams) %}
     {% if len(team.members) > 0 %}
     <tr style="padding-top: 5px;">
@@ -17,7 +19,7 @@
                 <div style="display: table-row;">
                     <div class="summarycolumn" style="display: table-cell; font-size: large;">{{ team.name }}</div>
                     <!-- <div class="summarycolumn" style="display: table-cell;">{{ team.levels[-1].number }} </div> -->
-                    {% if options.hints_taken %}
+                    {% if options.hints_taken and hintcount > 0 %}
                     <div class="summarycolumn shortcolumn" style="display: table-cell; vertical-align: bottom; font-size: small;">{{ len(team.hints) }} Hints Taken</div>
                     {% end %}
                 </div>

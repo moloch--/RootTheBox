@@ -48,7 +48,8 @@
                         #{{ index + 1 }} - {{ team.name }}
                     {% end %}
                 </h2>
-                <h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4><br>
+                {% if team.motto != "" %}<h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>{% end %}
+                <br>
                 <img src="/avatars/{{ team.avatar }}" class="img-polaroid" align="middle" />
                 <!--<hr /> -->
                 {% if options.teams %}

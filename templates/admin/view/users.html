@@ -69,14 +69,9 @@
                       <input id="user-handle" name="handle" type="text" placeholder="Handle">
                     </div>
                 </div>
+                {% if options.banking %}
                 <div class="control-group">
-                    <label class="control-label" for="user-handle">Handle</label>
-                    <div class="controls">
-                      <input id="user-handle" name="handle" type="text" placeholder="Handle">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="user-hash-algorithm">Hash Algorithm</label>
+                    <label class="control-label" for="user-hash-algorithm">Bank Hash Algorithm</label>
                     <div class="controls">
                         <select id="user-hash-algorithm" name="hash_algorithm">
                             <option value="md5">MD5</option>
@@ -86,7 +81,6 @@
                         </select>
                     </div>
                 </div>
-                {% if options.banking %}
                 <div class="control-group">
                     <label class="control-label" for="bank-password">Bank Password</label>
                     <div class="controls">
@@ -193,8 +187,10 @@
                                 <th>Handle</th>
                                 <th>Name</th>
                                 <th>Last Login</th>
-                                <th>Hash Algorithm</th>
-                                <th>Password Hash</th>
+                                {% if options.banking %}
+                                    <th>Bank Hash Algorithm</th>
+                                    <th>Password Hash</th>
+                                {% end %}
                                 <th><!-- Lock Button --></th>
                                 <th><!-- Edit Button --></th>
                                 <th><!-- Delete Button --></th>
@@ -215,15 +211,17 @@
                                     {% else %}
                                         <td>Never</td>
                                     {% end %}
-                                    <td>{{ user.algorithm }}</td>
-                                    {% if 40 < len(user.bank_password) %}
-                                        <td>
-                                            <a id="reveal-hash-button-{{ user.uuid }}" data-bank-hash="{{ user.bank_password }}">
-                                                {{ user.bank_password[:40] }}...
-                                            </a>
-                                        </td>
-                                    {% else %}
-                                        <td>{{ user.bank_password }}</td>
+                                    {% if options.banking %}
+                                        <td>{{ user.algorithm }}</td>
+                                        {% if 40 < len(user.bank_password) %}
+                                            <td>
+                                                <a id="reveal-hash-button-{{ user.uuid }}" data-bank-hash="{{ user.bank_password }}">
+                                                    {{ user.bank_password[:40] }}...
+                                                </a>
+                                            </td>
+                                        {% else %}
+                                            <td>{{ user.bank_password }}</td>
+                                        {% end %}
                                     {% end %}
                                     <td class="shortcolumn">
                                         {% if user.locked %}
