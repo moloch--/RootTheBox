@@ -150,10 +150,13 @@ class AdminCreateHandler(BaseHandler):
                 box.autoformat = self.get_argument('autoformat', '') == 'true'
                 box.difficulty = self.get_argument('difficulty', '')
                 box.operating_system = self.get_argument('operating_system', '?')
-                self.dbsession.add(box)
-                self.dbsession.commit()
-                if hasattr(self.request, 'files') and 'avatar' in self.request.files:
+                # Avatar
+                avatar_select = self.get_argument('box_avatar_select', '')
+                if avatar_select and len(avatar_select) > 0:
+                    box._avatar = avatar_select
+                elif hasattr(self.request, 'files') and 'avatar' in self.request.files:
                     box.avatar = self.request.files['avatar'][0]['body']
+                self.dbsession.add(box)
                 self.dbsession.commit()
                 self.redirect('/admin/view/game_objects')
         except ValidationError as error:
@@ -408,7 +411,10 @@ class AdminEditHandler(BaseHandler):
                 ))
                 box.difficulty = difficulty
             # Avatar
-            if 'avatar' in self.request.files:
+            avatar_select = self.get_argument('box_avatar_select', '')
+            if avatar_select and len(avatar_select) > 0:
+                box._avatar = avatar_select
+            elif 'avatar' in self.request.files:
                 box.avatar = self.request.files['avatar'][0]['body']
 
             self.dbsession.add(box)

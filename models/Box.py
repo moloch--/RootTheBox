@@ -38,7 +38,7 @@ from models.GameLevel import GameLevel
 from models.Corporation import Corporation
 from models.SourceCode import SourceCode
 from tornado.options import options
-from libs.XSSImageCheck import is_xss_image
+from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
 from PIL import Image
 from resizeimage import resizeimage
@@ -202,7 +202,12 @@ class Box(DatabaseObject):
         if self._avatar is not None:
             return self._avatar
         else:
-            return "default_avatar.jpeg"
+            avatar = get_new_avatar('box')
+            if not avatar.startswith("default_"):
+                self._avatar = avatar
+                dbsession.add(self)
+                dbsession.commit()
+            return avatar
 
     @avatar.setter
     def avatar(self, image_data):
@@ -211,13 +216,13 @@ class Box(DatabaseObject):
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp'] and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
-                    os.unlink(options.avatar_dir + '/' + self._avatar)
-                file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
+                    os.unlink(options.avatar_dir + '/upload/' + self._avatar)
+                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
                 image = Image.open(StringIO.StringIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
-                self._avatar = self.uuid + '.' + ext
+                self._avatar = 'upload/' + self.uuid + '.' + ext
             else:
                 raise ValidationError(
                     "Invalid image format, avatar must be: .png .jpeg .gif or .bmp")

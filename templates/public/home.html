@@ -6,14 +6,7 @@
 {% from tornado.options import options %}
     <div class="container">
         <div class="well" style="background-image: url({{options.ctf_logo}}); background-position: center; background-repeat: no-repeat; background-size:contain; width:850px; height:600px; margin-top: 10px;">
-            <h2>A Game of Hackers</h2>
-            <a class="btn btn-primary btn-large btn-space" href="/login">
-                Login &raquo;
-            </a><br>
-            <br>
-            <a class="btn btn-primary btn-large" href="/registration">
-                Register &raquo;
-            </a>
+            <h2>{{options.ctf_tagline}}</h2>
         </div>
     </div>
 {% end %}

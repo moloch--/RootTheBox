@@ -154,9 +154,14 @@ class EventManager(object):
     # [ Broadcast Events ] -------------------------------------------------
     def flag_captured(self, user, flag):
         ''' Callback for when a flag is captured '''
-        message = "%s has captured the '%s' flag in %s (Lvl %s)" % (
-            user.team.name, flag.name, flag.box.name, GameLevel.by_id(flag.box.game_level_id).number
-        )
+        if len(GameLevel.all()) > 1:
+            message = "%s has captured the '%s' flag in %s (Lvl %s)" % (
+                user.team.name, flag.name, flag.box.name, GameLevel.by_id(flag.box.game_level_id).number
+            )
+        else:
+            message = "%s has captured the '%s' flag in %s" % (
+                user.team.name, flag.name, flag.box.name
+            )
         Notification.create_broadcast("Flag Capture", message)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)

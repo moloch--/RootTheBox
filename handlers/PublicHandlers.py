@@ -37,7 +37,7 @@ from models.GameLevel import GameLevel
 from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from datetime import datetime
-
+from tornado.options import options
 
 class HomePageHandler(BaseHandler):
 
@@ -46,7 +46,10 @@ class HomePageHandler(BaseHandler):
         if self.session is not None:
             self.redirect('/user')
         else:
-            self.render("public/home.html")
+            try:
+                self.render("public/home.html")
+            except:
+                self.redirect("public/home.html")
 
 
 class LoginHandler(BaseHandler):
@@ -179,10 +182,25 @@ class RegistrationHandler(BaseHandler):
         user.password = self.get_argument('pass1', '')
         user.bank_password = self.get_argument('bpass', '')
         user._name = self.get_argument('playername', '')
-        team.members.append(user)
         self.dbsession.add(user)
         self.dbsession.add(team)
         self.dbsession.commit()
+
+         # Avatar
+        avatar_select = self.get_argument('user_avatar_select', '')
+        if avatar_select and len(avatar_select) > 0:
+            user._avatar = avatar_select
+        elif hasattr(self.request, 'files') and 'avatar' in self.request.files:
+            user.avatar = self.request.files['avatar'][0]['body']
+        team.members.append(user)
+        if not options.teams:
+            if avatar_select and len(avatar_select) > 0:
+                team._avatar = avatar_select
+            elif hasattr(self.request, 'files') and 'avatar' in self.request.files:
+                team.avatar = self.request.files['avatar'][0]['body']  
+        self.dbsession.add(user)
+        self.dbsession.add(team)
+        self.dbsession.commit()  
         self.event_manager.user_joined_team(user)
         return user
 

@@ -11,8 +11,54 @@ http://jklmnn.de/imagejs/
 
 '''
 
+import os
 from string import printable
+from tornado.options import options
+from random import randint
 
+MAX_AVATAR_SIZE = 1024 * 1024
+MIN_AVATAR_SIZE = 64
+IMG_FORMATS = ['png', 'jpeg', 'jpg', 'gif', 'bmp']
 
 def is_xss_image(data):
     return all([char in printable for char in data[:16]])
+
+def get_new_avatar(dir, forceteam=False):
+    avatar = default_avatar(dir)
+    avatars = filter_avatars(dir)
+    if len(avatars) == 0:
+        return avatar
+    if dir == 'team' or forceteam:
+        from models.Team import Team
+        cmplist = Team.all()
+    elif dir == 'user':
+        from models.User import User
+        cmplist = User.all()
+    else:
+        from models.Box import Box
+        cmplist = Box.all()
+    dblist = []
+    for item in cmplist:
+        if item._avatar:
+            dblist.append(item._avatar)
+    for image in avatars:
+        if not image in dblist:
+            return image
+    return avatars[randint(0, len(avatars)-1)]
+
+def default_avatar(dir):
+    if dir == 'team':
+        avatar = "default_team.jpg"
+    elif dir == 'user':
+        avatar = "default_user.jpg"
+    else:
+        avatar = "default_box.jpg"
+    return avatar
+
+def filter_avatars(dir):
+    avatars = os.listdir(options.avatar_dir + "/" + dir)
+    avatarlist = []
+    for avatar in avatars:
+        if avatar.lower().endswith(tuple(IMG_FORMATS)):
+            avatarlist.append(dir + "/" + avatar)
+    return avatarlist

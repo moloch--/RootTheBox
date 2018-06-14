@@ -4,13 +4,53 @@
 
 {% block header %}
 <script src="/static/js/pages/admin/view/game_objects.js"></script>
+<script src="/static/js/pages/scoreboard/teams.js"></script>
 {% end %}
 
 {% block modals %}
 {% from models.Corporation import Corporation %}
 {% from tornado.options import options %}
+{% from libs.XSSImageCheck import filter_avatars %}
 {% from models.Box import Box %}
 {% from models.Flag import Flag %}
+    {% set avatars = filter_avatars("box") %}
+    <!-- Select Avatars -->
+    <div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+        <div class="modal-header">
+            <button id="avatarclose" type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>Change Avatar</h3>
+        </div>
+        <div class="modal-body">
+                {% raw xsrf_form_html() %}
+                    {% for avatar in avatars[::3] %}
+                        <div class="row">
+                            <div class="span3">
+                                <center>
+                                    <a href="#" class="boxavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                                </center>
+                            </div>
+                            {% if avatars.index(avatar) + 1 < len(avatars) %}
+                                {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                                <div class="span3">
+                                    <center>
+                                        <a href="#" class="boxavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                            {% if avatars.index(avatar) + 2 < len(avatars) %}
+                                {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                                <div class="span3">
+                                    <center>
+                                        <a href="#" class="boxavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                        </div>
+                        <br/>
+                    {% end %}
+                
+        </div>
+    </div>
     <!-- Edit Corporation -->
     <div id="edit-corporation-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -82,7 +122,7 @@
                     <div class="controls">
                         <select id="edit-box-corporation" name="corporation_uuid">
                             {% for corporation in Corporation.all() %}
-                                <option value="{{ corporation.uuid }}">{{ corporation.name }}</option>
+                                <option value="{{ corporation.uuid }}">{% if corporation.name != "" %}{{ corporation.name }}{% else %}(No name){% end %}</option>
                             {% end %}
                         </select>
                     </div>
@@ -102,7 +142,11 @@
                 <div class="control-group">
                     <label class="control-label" for="box_avatar">Avatar</label>
                     <div class="controls">
-                        <input id="box-avatar" name="avatar" type="file" style="color:white;" />
+                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                        <input id="box-avatar" name="avatar" type="file" style="display: none;"/>
+                        <input id="box_avatar_select" name="box_avatar_select" type="hidden" />
+                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal"> Choose Avatar </a>{% end %}
+                        <div id="avatarfilename" style="padding: 5px;"></div>
                     </div>
                 </div>
             </form>
@@ -361,18 +405,36 @@
     <div class="row-fluid">
         <div class="span2" />
             <ul class="nav nav-tabs nav-stacked affix well">
+                {% if len(Corporation.all()) > 1 %}
+                    <center>
+                        <strong>
+                            <i class="fa fa-building-o"></i>
+                            Corporations
+                        </strong>
+                    </center>
+                    <br />
+                    {% for corporation in Corporation.all() %}
+                        <li>
+                            <a href="#{{ corporation.uuid }}">
+                                <i class="icon-chevron-right"></i>
+                                &nbsp;&nbsp;{{ corporation.name }}
+                            </a>
+                        </li>
+                    {% end %}
+                <br/>
+                {% end %}
                 <center>
                     <strong>
                         <i class="fa fa-building-o"></i>
-                        Corporations
+                        Boxes
                     </strong>
                 </center>
                 <br />
-                {% for corporation in Corporation.all() %}
+                {% for box in Box.all() %}
                     <li>
-                        <a href="#{{ corporation.uuid }}">
+                        <a href="#{{ box.uuid }}">
                             <i class="icon-chevron-right"></i>
-                            &nbsp;&nbsp;{{ corporation.name }}
+                            &nbsp;&nbsp;{{ box.name }}
                         </a>
                     </li>
                 {% end %}
@@ -411,7 +473,7 @@
                     <br />
                     {% if len(corporation.boxes) != 0 %}
                         {% for box in corporation.boxes %}
-                            <div class="well">
+                            <div id="{{ box.uuid }}" class="well">
                                 <h3 style="display:inline;">
                                     <i class="fa fa-desktop"></i>
                                     {{ box.name }}&nbsp;&nbsp;

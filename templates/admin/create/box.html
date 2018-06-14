@@ -6,9 +6,52 @@
 <script src="/static/js/pages/admin/create/box.js"></script>
 {% end %}
 
-{% block content %}
+{% block modals %}
 {% from models.GameLevel import GameLevel %}
 {% from models.Corporation import Corporation %}
+{% from libs.XSSImageCheck import filter_avatars %}
+{% set avatars = filter_avatars("box") %}
+<!-- Select Avatars -->
+<div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Change Avatar</h3>
+    </div>
+    <div class="modal-body">
+            {% raw xsrf_form_html() %}
+            <a id="avatarclose" href="#" class="btn" data-dismiss="modal" style="display: none;">Close</a>
+                {% for avatar in avatars[::3] %}
+                    <div class="row">
+                        <div class="span3">
+                            <center>
+                                <a href="#" class="boxavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                            </center>
+                        </div>
+                        {% if avatars.index(avatar) + 1 < len(avatars) %}
+                            {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                            <div class="span3">
+                                <center>
+                                    <a href="#" class="boxavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                                </center>
+                            </div>
+                        {% end %}
+                        {% if avatars.index(avatar) + 2 < len(avatars) %}
+                            {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                            <div class="span3">
+                                <center>
+                                    <a href="#" class="boxavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                                </center>
+                            </div>
+                        {% end %}
+                    </div>
+                    <br/>
+                {% end %}
+            
+    </div>
+</div>
+{% end %}
+{% block content %}
+
 <div class="container">
     <h1>
         <i class="fa fa-desktop"></i>
@@ -59,7 +102,7 @@
                             data-content="Corporation box belongs too?">
                         <option value=""></option>
                         {% for corp in Corporation.all() %}
-                        <option value="{{ corp.uuid }}">{{ corp.name }}</option>
+                        <option value="{{ corp.uuid }}">{% if corp.name != "" %}{{ corp.name }}{% else %}(No name){% end %}</option>
                         {% end %}
                     </select>
                 </div>
@@ -136,9 +179,13 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
+                <label class="control-label" for="avatar">Avatar</label>
                 <div class="controls">
-                    <input id="avatar" name="avatar" type="file">
+                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                        <input id="box-avatar" name="avatar" type="file" style="display: none;"/>
+                        <input id="box_avatar_select" name="box_avatar_select" type="hidden" />
+                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal"> Choose Avatar </a>{% end %}
+                        <div id="avatarfilename" style="padding: 5px;"></div>
                 </div>
             </div>
             <div class="control-group">

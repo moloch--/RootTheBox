@@ -17,7 +17,12 @@
             <div class="span11 offset1 well">
                 <h2>Welcome {{ user.handle }}</h2>
                 <center>
+                    {% if options.teams %}
                     <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+                    {% else %}
+                    
+                    <img src="/avatars/{{ user.team.avatar }}" class="img-polaroid" />
+                    {% end %}
                 </center>
                 <hr>
                 {% if user.team is not None %}
@@ -174,8 +179,8 @@
                 <i class="fa fa-sitemap" style="font-size: 180%;"></i>
             </div>
             <div class="span7 msgdescription">
-                    Welcome to the computer wargame where hackers can practice and learn.  
-                    Each {% if options.teams %}team{% else %}player{% end %} will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck and let the games begin!  
+                    Welcome to the computer wargame where security professionals can practice and learn.  
+                    Each {% if options.teams %}team{% else %}player{% end %} will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!  
             </div>
         </div>
         <br/>

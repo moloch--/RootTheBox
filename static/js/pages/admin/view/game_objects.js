@@ -139,4 +139,20 @@ $(document).ready(function() {
         $("#delete-hint-form").submit();
     });
 
+    /* Avatar */
+    $(".boxavatarimg").click(function() {
+        var filename = $(this).attr('value');
+        $("#box_avatar_select").val(filename);
+        $("#avatarfilename").text("File: " + filename.replace("box/",""));
+        $("#avatarclose").click();
+    });
+    $("#box-avatar").change(function(){
+        $("#avatarfilename").text("File: " + $(this).val());
+        $("#box_avatar_select").val("");
+    });
+
+    $("#uploadbutton").click(function(){
+        $("#box-avatar").click(); 
+    });
+
 });

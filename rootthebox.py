@@ -297,7 +297,13 @@ define("game_name",
 define("ctf_logo",
        default="/static/images/rtb2.png",
        group="game",
-       help="the image displayed on the home page",
+       help="the image displayed on the welcome page",
+       type=game_type)
+
+define("ctf_tagline",
+       default="A Game of Hackers",
+       group="game",
+       help="the tagline displayed on the welcome page",
        type=game_type)
 
 define("restrict_registration",
