@@ -266,7 +266,6 @@
             </table>
         </div>
         {% if len(box.visable_ips) != 0 %}
-            <br />
             <div class="well">
                 <table class="table table-hover">
                     <caption><h4> - Known IP Addresses - </h4></caption>
@@ -294,7 +293,6 @@
         {% if len(box.hints) != 0 %}
             <input id="hintbanking" value="str(config.banking).lower()" type="hidden" />
             {% if len(boxhints) > 0 %}
-                <br />
                 <div class="well">
                     <table class="table table-hover">
                         <caption><h4> - {{ box.name }} Hints - </h4></caption>
@@ -329,7 +327,6 @@
                     </table>
                 </div>
             {% end %}
-            <br />
         {% end %}
     </div>
 {% end %}

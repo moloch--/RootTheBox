@@ -94,9 +94,9 @@
                         Handle
                     </label>
                     <div class="controls">
-                        <input required id="handle" name="handle" maxlength="16" placeholder="Player Name" type="text"
+                        <input required id="handle" name="handle" maxlength="16" placeholder="Player Alias" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,16}$"
-                            data-original-title="Player Name Alias"
+                            data-original-title="Player Alias"
                             data-content="Your handle must be 3-16 alpha-numeric characters" />
                     </div>
                 </div>
@@ -105,10 +105,10 @@
                         Player's Name
                     </label>
                     <div class="controls">
-                        <input {% if options.require_personal_info %}required {% end %}id="playername" name="playername" maxlength="64" placeholder="Real Name" type="text"
+                        <input required id="playername" name="playername" maxlength="64" placeholder="Name" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,64}$"
-                            data-original-title="Player's Name Selection"
-                            data-content="{% if not options.require_personal_info %}Optional: {% end %}This is your real name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters" />
+                            data-original-title="Player's Name"
+                            data-content="Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters" />
                     </div>
                 </div>
                 <hr style="margin-right: 400px;">

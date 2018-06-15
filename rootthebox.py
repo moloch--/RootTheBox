@@ -429,7 +429,6 @@ define("flag_start_penalty",
        help="when to start - 1 = incorrect first attempt, 2 = second attempt, etc",
        type=int)
 
-
 define("flag_stop_penalty",
        default=5,
        group="game",
@@ -450,12 +449,6 @@ define("max_pastebin_size",
        default=4096,
        group="game",
        help="Pastebin Character limit")
-
-define("require_personal_info",
-       default=False,
-       group="game",
-       help="require player to put in real name, maybe email in future",
-       type=bool)
 
 # I/O Loop Settings
 define("history_snapshot_interval",

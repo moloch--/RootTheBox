@@ -7,6 +7,7 @@
 {% end %}
 
 {% block modals %}
+{% from tornado.options import options %}
 <!-- Hidden Edit Form -->
 <div id="edit-market-item-modal" class="modal hide fade" style="display: none; ">
     <div class="modal-header">
@@ -22,7 +23,7 @@
             {% raw xsrf_form_html() %}
             <input type="hidden" id="edit-market-item-uuid" name="item_uuid" value="" />
             <div class="control-group">
-                <label class="control-label" for="price">Item Price</label>
+                <label class="control-label" for="price">Item Cost</label>
                 <div class="controls">
                     <input required pattern="[0-9]+" id="edit-market-item-price" name="price" type="text" placeholder="Item Price ($)">
                 </div>
@@ -62,17 +63,17 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Price</th>
+                    <th style="text-align: center; padding-right: 20px;">{% if options.banking %}Price{% else %}Points{% end %}</th>
                     <th><!-- Button --></th>
                 </tr>
             </thead>
             <tbody>
                 {% for index, item in enumerate(MarketItem.all()) %}
                     <tr>
-                        <td>{{ index + 1 }}</td>
+                        <td class="shortcolumn">{{ index + 1 }}</td>
                         <td>{{ item.name }}</td>
-                        <td>${{ item.price }}</td>
-                        <td>
+                        <td class="shortcolumn" style="text-align: center; padding-right: 20px;">{% if options.banking %}${% end %}{{ item.price }}</td>
+                        <td class="shortcolumn">
                             <a id="edit-market-item-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#edit-market-item-modal" data-uuid="{{ item.uuid }}" data-price="{{ item.price }}">
                                 <i class="fa fa-pencil"></i>
                                 Edit
