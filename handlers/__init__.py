@@ -156,6 +156,7 @@ urls = [
     (r'/admin/view/(.*)', AdminViewHandler),
     (r'/admin/delete/(.*)', AdminDeleteHandler),
     (r'/admin/ajax/objects(.*)', AdminAjaxGameObjectDataHandler),
+    (r'/admin/tokentest/(.*)', AdminTestTokenHandler),
 
     (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
     (r'/admin/upgrades/swat(.*)', AdminSwatHandler),

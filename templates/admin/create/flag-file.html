@@ -29,6 +29,7 @@
             <div class="span4">
                 <form class="form-horizontal" action="/admin/create/flag/file" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
+                    <input id="flagtype" type="hidden" value="file" />
                     <div class="control-group">
                         <label class="control-label" for="flag_name">Flag Name</label>
                         <div class="controls">
@@ -48,7 +49,7 @@
                                 <option value=""></option>
                                 {% for box in Box.all() %}
                                 <option value="{{ box.uuid }}">
-                                    {{ box.name }} ({{ box.corporation.name }})
+                                    {{ box.name }}{% if box.corporation.name != "" %} ({{ box.corporation.name }}){% end %}
                                 </option>
                                 {% end %}
                             </select>

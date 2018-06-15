@@ -29,6 +29,7 @@ CRUD for game objects:
 '''
 
 import logging
+import re
 
 from handlers.BaseHandlers import BaseHandler
 from models.Box import Box
@@ -262,7 +263,7 @@ class AdminCreateHandler(BaseHandler):
         flag = Flag.create_flag(
             flag_type, box, name, token, description, reward)
         flag.capture_message = self.get_argument('capture_message', '')
-        flag._case_sensitive = self.get_argument('case-sensitive', 1)
+        flag.case_sensitive = self.get_argument('case-sensitive', 1)
         lock = Flag.by_uuid(self.get_argument('lock_uuid', ''))
         if lock:
             flag.lock_id = lock.id
@@ -449,6 +450,7 @@ class AdminEditHandler(BaseHandler):
             # Value
             flag.value = self.get_argument('value', '')
             flag.capture_message = self.get_argument('capture_message', '')
+            flag.case_sensitive = self.get_argument('case-sensitive', 1)
             # Dependency Lock
             lock = Flag.by_uuid(self.get_argument('lock_uuid', ''))
             if lock:
@@ -723,4 +725,39 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                 self.write({'Error': 'Invalid uuid.'})
         else:
             self.write({'Error': 'Invalid object type.'})
+        self.finish()
+
+
+class AdminTestTokenHandler(BaseHandler):
+
+    ''' Handles token test '''
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        token = self.get_argument('token', '')
+        submission = self.get_argument('submission', '')
+        flagtype = self.get_argument('flagtype', 'static')
+        case = int(self.get_argument('case', 1))
+        if flagtype == FLAG_STATIC:
+            if case == 0:
+                test = str(token).lower().strip() == str(submission).lower().strip()
+            else:
+                test = str(token).strip() == str(submission).strip()
+        elif flagtype == FLAG_REGEX:
+            pattern = re.compile(token)
+            test = pattern.match(submission) is not None
+        elif flagtype == FLAG_DATETIME:
+            from dateutil.parser import parse
+            try:
+                test = parse(token) == parse(submission)
+            except:
+                test = False
+        else:
+            self.write({'Error': 'Invalid flag type, cannot capture'})
+        if test is not None:
+            self.write({'Success': test})
+        else:
+            self.write({'Error': 'Invalid submission.'})
         self.finish()

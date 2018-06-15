@@ -17,6 +17,33 @@ function getBoxFlags(box_uuid, flag_uuid) {
     }, 'json');
 }
 
+function testToken() {
+    submission = $("#test-token").val();
+    token = $("#token").val();
+    if (submission !== "" && token !== "") {
+        flagtype = $("#flagtype").val();
+        casesensitive = $("#case-sensitive").val();
+        data = {'token': token, 'submission': submission, 'flagtype': flagtype, 'case': casesensitive, '_xsrf': getCookie("_xsrf")}
+        $.post('/admin/tokentest/', data, function(response) { 
+            if ("Success" in response) {
+                if (response["Success"] === true) {
+                    $("#testtrue").show();
+                    $("#testfalse").hide();
+                } else {
+                    $("#testtrue").hide();
+                    $("#testfalse").show();
+                }
+            } else {
+                $("#testtrue").hide();
+                $("#testfalse").hide();
+            }
+        }, 'json');
+    } else {
+        $("#testtrue").hide();
+        $("#testfalse").hide();
+    }
+}
+
 $(document).ready(function() {
 
     /* Popovers */
@@ -29,11 +56,12 @@ $(document).ready(function() {
     $("#case-button").popover({placement:'right', trigger:'hover'});
 
     $("#case-enable").click(function() {
-        $("#case-sensitve").val(1);
+        $("#case-sensitive").val(1);
         $("#case-enable-icon").removeClass("fa-square-o");
         $("#case-enable-icon").addClass("fa-check-square-o");
         $("#case-disable-icon").removeClass("fa-check-square-o");
         $("#case-disable-icon").addClass("fa-square-o");
+        testToken();
     });
     $("#case-disable").click(function() {
         $("#case-sensitive").val(0);
@@ -41,8 +69,15 @@ $(document).ready(function() {
         $("#case-disable-icon").addClass("fa-check-square-o");
         $("#case-enable-icon").removeClass("fa-check-square-o");
         $("#case-enable-icon").addClass("fa-square-o");
+        testToken();
     });
     $("#box-uuid").change(function() {
         getBoxFlags($("#box-uuid  option:selected").val(), '');
+    });
+    $("#test-token").change(function() {
+        testToken();
+    });
+    $("#token").change(function() {
+        testToken();
     });
 });

@@ -221,6 +221,38 @@
                         <input id="flag-token" name="token" type="text" placeholder="Token Value" />
                     </div>
                 </div>
+                <div id="casegroup" class="control-group">
+                    <label class="control-label" for="case-sensitive">Case-Sensitive</label>
+                    <div class="controls">
+                        <input id="flag-case-sensitive" name="case-sensitive" type="hidden" value=1 />
+                        <div id="case-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Case-Sensitive"
+                            data-content="Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.">
+                            <button id="case-enable" type="button" class="btn btn-success">
+                                <i id="case-enable-icon" class="fa fa-fw fa-check-square-o"></i>
+                                Enable
+                            </button>
+                            <button id="case-disable" type="button" class="btn btn-danger">
+                                <i id="case-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="test_token">Test Flag</label>
+                    <div class="controls" style="position:relative;">
+                        <span style="position: absolute; left: 230px; top: 3px; font-size: 175%;">
+                            <i id="testtrue" class="fa fa-check" style="color: green; display: none;"></i>
+                            <i id="testfalse" class="fa fa-times" style="color: red; display: none;"></i>
+                        </span>
+                            <input id="test-token" name="test_token" type="text" placeholder="Enter a Matching Flag" autocomplete="off"
+                                rel="popover"
+                                data-original-title="Token"
+                                data-content="This is a test flag/string the user could input for credit." />
+                    </div>
+                </div>
                 <div class="control-group">
                     <label class="control-label" for="flag-description">Description</label>
                     <div class="controls">
@@ -585,7 +617,7 @@
                                                             </a>
                                                         </td>
                                                         <td class="shortcolumn">
-                                                            <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
+                                                            <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-flagtype="{{ str(flag._type) }}" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
                                                                 Edit Flag
                                                             </a>

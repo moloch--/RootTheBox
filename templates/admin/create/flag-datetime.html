@@ -29,6 +29,7 @@
             <div class="span4">
                 <form class="form-horizontal" action="/admin/create/flag/datetime" method="post">
                     {% raw xsrf_form_html() %}
+                    <input id="flagtype" type="hidden" value="datetime" />
                     <div class="control-group">
                         <label class="control-label" for="flag_name">Flag Name</label>
                         <div class="controls">
@@ -48,7 +49,7 @@
                                 <option value=""></option>
                                 {% for box in Box.all() %}
                                 <option value="{{ box.uuid }}">
-                                    {{ box.name }} ({{ box.corporation.name }})
+                                    {{ box.name }}{% if box.corporation.name != "" %} ({{ box.corporation.name }}){% end %}
                                 </option>
                                 {% end %}
                             </select>
@@ -67,6 +68,19 @@
                         <label class="control-label" for="token">Token</label>
                         <div class="controls">
                             <input required id="token" name="token" type="text" placeholder="Datetime Token" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="test_token">Test Flag</label>
+                        <div class="controls" style="position:relative;">
+                            <span style="position: absolute; left: 230px; top: 3px; font-size: 175%;">
+                                <i id="testtrue" class="fa fa-check" style="color: green; display: none;"></i>
+                                <i id="testfalse" class="fa fa-times" style="color: red; display: none;"></i>
+                            </span>
+                                <input id="test-token" name="test_token" type="text" placeholder="Enter a Matching Flag" autocomplete="off"
+                                    rel="popover"
+                                    data-original-title="Token"
+                                    data-content="This is a test flag/string the user could input for credit." />
                         </div>
                     </div>
                     <div class="control-group">

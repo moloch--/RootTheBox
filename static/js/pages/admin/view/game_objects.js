@@ -26,6 +26,12 @@ function getDetails(obj, uuid) {
                 $("#" + obj + "-" + key).val(value);    
             }
         });
+        if (response["case-sensitive"] === 0) {
+            $("#case-disable-icon").removeClass("fa-square-o");
+            $("#case-disable-icon").addClass("fa-check-square-o");
+            $("#case-enable-icon").removeClass("fa-check-square-o");
+            $("#case-enable-icon").addClass("fa-square-o");
+        }
     }, 'json');
 }
 
@@ -46,6 +52,33 @@ function getBoxFlags(box_uuid, flag_uuid) {
             } 
         });
     }, 'json');
+}
+
+function testToken() {
+    submission = $("#test-token").val();
+    token = $("#flag-token").val();
+    if (submission !== "" && token !== "") {
+        flagtype = $("#flagtype").val();
+        casesensitive = $("#flag-case-sensitive").val();
+        data = {'token': token, 'submission': submission, 'flagtype': flagtype, 'case': casesensitive, '_xsrf': getCookie("_xsrf")}
+        $.post('/admin/tokentest/', data, function(response) { 
+            if ("Success" in response) {
+                if (response["Success"] === true) {
+                    $("#testtrue").show();
+                    $("#testfalse").hide();
+                } else {
+                    $("#testtrue").hide();
+                    $("#testfalse").show();
+                }
+            } else {
+                $("#testtrue").hide();
+                $("#testfalse").hide();
+            }
+        }, 'json');
+    } else {
+        $("#testtrue").hide();
+        $("#testfalse").hide();
+    }
 }
 
 /* Add click events */
@@ -107,7 +140,15 @@ $(document).ready(function() {
     $("a[id^=edit-flag-button]").click(function() {
         getBoxFlags($(this).data("box-uuid"), $(this).data("uuid"));
         getDetails("flag", $(this).data("uuid"));
+        $("#test-token").val("");
+        $("#testtrue").hide();
+        $("#testfalse").hide();
         $("#edit-flag-box").val($(this).data("box-uuid"));
+        if ($(this).data("flagtype") === "static") {
+            $("#casegroup").show();
+        } else {
+            $("#casegroup").hide();
+        }
     });
 
     $("#edit-flag-submit").click(function() {
@@ -120,6 +161,23 @@ $(document).ready(function() {
 
     $("#delete-flag-submit").click(function() {
         $("#delete-flag-form").submit();
+    });
+
+    $("#case-enable").click(function() {
+        $("#flag-case-sensitive").val(1);
+        $("#case-enable-icon").removeClass("fa-square-o");
+        $("#case-enable-icon").addClass("fa-check-square-o");
+        $("#case-disable-icon").removeClass("fa-check-square-o");
+        $("#case-disable-icon").addClass("fa-square-o");
+        testToken();
+    });
+    $("#case-disable").click(function() {
+        $("#flag-case-sensitive").val(0);
+        $("#case-disable-icon").removeClass("fa-square-o");
+        $("#case-disable-icon").addClass("fa-check-square-o");
+        $("#case-enable-icon").removeClass("fa-check-square-o");
+        $("#case-enable-icon").addClass("fa-square-o");
+        testToken();
     });
 
     /* Hint */
@@ -154,5 +212,10 @@ $(document).ready(function() {
     $("#uploadbutton").click(function(){
         $("#box-avatar").click(); 
     });
-
+    $("#test-token").change(function() {
+        testToken();
+    });
+    $("#flag-token").change(function() {
+        testToken();
+    });
 });

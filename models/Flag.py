@@ -195,7 +195,7 @@ class Flag(DatabaseObject):
     def name(self, value):
         if not 3 <= len(value) <= 16:
             raise ValidationError("Flag name must be 3 - 16 characters")
-        #TODO Don't understand why this is here - name is not unqiue value - ElJefe 6/1/2018
+        #TODO Perhaps same name with the same box - ElJefe 6/1/2018
         #if self.by_name(value) is not None:
             #raise ValidationError("Flag name must be unique")
         self._name = unicode(value)
@@ -233,6 +233,14 @@ class Flag(DatabaseObject):
     @token.setter
     def token(self, value):
         self._token = unicode(value)
+
+    @property
+    def case_sensitive(self):
+        return self._case_sensitive
+
+    @case_sensitive.setter
+    def case_sensitive(self, value):
+        self._case_sensitive = unicode(value)
 
     @property
     def value(self):
@@ -278,6 +286,7 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
+        ET.SubElement(flag_elem, "case_sensitive").text = self.case_sensitive
         attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
         attachements_elem.set("count", str(len(self.flag_attachments)))
         for attachement in self.flag_attachments:
@@ -290,6 +299,9 @@ class Flag(DatabaseObject):
             lock_uuid = Flag.by_id(self.lock_id).uuid
         else:
             lock_uuid = ''
+        case_sensitive = self.case_sensitive
+        if case_sensitive != 0:
+            case_sensitive = 1
         return {
             'name': self.name,
             'uuid': self.uuid,
@@ -298,7 +310,8 @@ class Flag(DatabaseObject):
             'value': self.value,
             'box': box.uuid,
             'token': self.token,
-            'lock_uuid': lock_uuid
+            'lock_uuid': lock_uuid,
+            'case-sensitive': case_sensitive
         }
 
     def __repr__(self):
