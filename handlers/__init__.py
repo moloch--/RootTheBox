@@ -50,6 +50,7 @@ from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
 from handlers.FileUploadHandlers import *
 from handlers.NotificationHandlers import *
+from handlers.MaterialsHandler import *
 from handlers.StaticFileHandler import StaticFileHandler
 from tornado.options import options
 
@@ -145,6 +146,11 @@ urls = [
         StaticFileHandler, {'path': 'static/'}),
     (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))',
         StaticFileHandler, {'path': 'files/avatars/'}),
+    (r'/materials/(.*)',
+        StaticFileHandler, {'path': 'files/game_materials/'}),
+
+    # Game Materials
+    (r'/materials', MaterialsHandler),
 
     # Admin Handlers
     (r'/admin/game', AdminGameHandler),

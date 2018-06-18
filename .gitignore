@@ -4,16 +4,14 @@
 # File uploads and what not
 files/avatars/*-*
 files/avatars/user/*-*
-!files/avatars/user/README.md
+
 files/avatars/team/*-*
-!files/avatars/team/README.md
 files/avatars/box/*-*
-!files/avatars/box/README.md
 files/avatars/upload/*-*
-!files/avatars/upload/README.md
 files/icons/*-*
 files/shares/*-*
 files/source_code_market/*-*
+files/game_materials/*
 files/*.db
 files/*.cfg
 
@@ -64,3 +62,6 @@ __pycache__
 
 # Backups
 *.bak
+
+# Readme
+!*README.md

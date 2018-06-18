@@ -218,6 +218,11 @@ define("source_code_market_dir",
        group="application",
        help="the directory to store souce code market files")
 
+define("game_materials_dir",
+       default="./files/game_materials",
+       group="application",
+       help="the directory to store applications, docs, and other materials for the game")
+
 # ReCAPTCHA
 define("use_recaptcha",
        default=True,

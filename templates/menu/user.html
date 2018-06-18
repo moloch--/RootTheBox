@@ -1,4 +1,5 @@
 {% from tornado.options import options %}
+{% from handlers.MaterialsHandler import has_materials %}
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
@@ -77,6 +78,14 @@
                                     CyberChef
                                 </a>
                             </li>
+                            {% if has_materials() %}
+                            <li>
+                                <a href="/materials" target="_blank">
+                                    <i class="fa fa-fw fa-files-o"></i>
+                                    Game Materials
+                                </a>
+                            </li>
+                            {% end %}
                             {% if options.teams %}
                             <li>
                                 <a href="/user/share/files">

@@ -49,4 +49,4 @@ ALTER TABLE `rootthebox`.`game_level`
 ADD COLUMN `_type` VARCHAR(10) NOT NULL DEFAULT 'buyout' AFTER `_buyout`;
 
 ALTER TABLE `rootthebox`.`game_level` 
-ADD COLUMN `_reward` int(11) NOT NULL DEFAULT '0',
+ADD COLUMN `_reward` int(11) NOT NULL DEFAULT '0';
