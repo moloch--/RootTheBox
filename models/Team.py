@@ -55,7 +55,7 @@ class Team(DatabaseObject):
     _avatar = Column(String(64))
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
-    money = Column(Integer, default=500, nullable=False)
+    money = Column(Integer, default=options.starting_team_money, nullable=False)
 
     members = relationship("User",
                            backref=backref("team", lazy="select")

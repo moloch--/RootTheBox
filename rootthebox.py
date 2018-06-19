@@ -392,6 +392,11 @@ define("bribe_cost",
        group="game",
        help="the base bribe cost to swat another player")
 
+define("starting_team_money",
+       default=500,
+       group="game",
+       help="the starting money for a new team when using banking")
+
 define("whitelist_box_ips",
        default=False,
        group="game",
