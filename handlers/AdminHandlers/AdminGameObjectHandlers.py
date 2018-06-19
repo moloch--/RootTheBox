@@ -797,6 +797,8 @@ class AdminTestTokenHandler(BaseHandler):
             else:
                 test = str(token).strip() == str(submission).strip()
         elif flagtype == FLAG_REGEX:
+            if not token.startswith("^(") and not token.endswith(")$"):
+                token = "^(" + token + ")$"
             pattern = re.compile(token)
             test = pattern.match(submission) is not None
         elif flagtype == FLAG_DATETIME:

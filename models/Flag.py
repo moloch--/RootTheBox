@@ -264,6 +264,8 @@ class Flag(DatabaseObject):
             else:
                 return str(self.token).strip() == str(submission).strip()
         elif self._type == FLAG_REGEX:
+            if not self.token.startswith("^(") and not self.token.endswith(")$"):
+                self.token = "^(" + self.token + ")$"
             pattern = re.compile(self.token)
             return pattern.match(submission) is not None
         elif self._type == FLAG_FILE:
