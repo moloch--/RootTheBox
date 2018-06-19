@@ -60,7 +60,7 @@ class MaterialsHandler(BaseHandler):
         d = {'text': os.path.basename(path)}
         if os.path.isdir(path):
             d['type'] = "directory"
-            d['children'] = [self.path_to_dict(os.path.join(path,x)) for x in os.listdir(path)]
+            d['children'] = [self.path_to_dict(os.path.join(path,x)) for x in os.listdir(path) if x != "README.md"]
         else:
             d['type'] = "file"
             d['a_attr'] = { "href" : "/materials/%s" % os.path.basename(path), "onclick":"window.location='/materials/%s'" % os.path.basename(path)}
