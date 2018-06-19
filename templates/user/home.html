@@ -3,12 +3,21 @@
 {% block title %}Home{% end %}
 
 {% block header %}
+{% from models.Category import Category %}
+{% autoescape None %}
+<script>
+    var categories = '{{ Category.list() }}'
+</script>
+<script src="/static/js/libs/highcharts-all.js"></script>
 <script src="/static/js/pages/missions/view.js"></script>
+<script src="/static/js/pages/user/home.js"></script>
 <link href="/static/css/pages/user/home.css" rel="stylesheet" />
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
 {% end %}
 
 {% block content %}
 {% from models.GameLevel import GameLevel %}
+
 {% from models.Hint import Hint %}
 {% from tornado.options import options %}
 <div class="row-fluid">
@@ -134,6 +143,18 @@
             {% end %}
             </div>
         </div>
+        {% if len(Category.all()) > 0 %}
+        <div class="row">
+            <div class="span11 offset1 well">
+                <h2>Skill Progress</h2>
+                <hr style="margin-bottom: 8px;">
+                {% set team = user.team %}
+                <div id="spider_skills" style="height:400px; max-width: 550px;">
+                    <!-- Spider Chart Here -->
+                </div>
+            </div>
+        </div>
+        {% end %}
     </div>
     
     <div class="span5 well">

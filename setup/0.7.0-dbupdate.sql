@@ -43,10 +43,31 @@ CREATE TABLE `penalty` (
   KEY `flag_id` (`flag_id`),
   CONSTRAINT `penalty_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`),
   CONSTRAINT `penalty_ibfk_2` FOREIGN KEY (`flag_id`) REFERENCES `flag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 ALTER TABLE `rootthebox`.`game_level` 
 ADD COLUMN `_type` VARCHAR(10) NOT NULL DEFAULT 'buyout' AFTER `_buyout`;
 
 ALTER TABLE `rootthebox`.`game_level` 
 ADD COLUMN `_reward` int(11) NOT NULL DEFAULT '0';
+
+CREATE TABLE `category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime DEFAULT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `_category` varchar(24) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  UNIQUE KEY `_category` (`_category`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+ALTER TABLE `rootthebox`.`box` 
+ADD COLUMN `category_id` INT(11) NULL DEFAULT NULL AFTER `corporation_id`,
+ADD INDEX `category_id` (`category_id` ASC);
+ALTER TABLE `rootthebox`.`box` 
+ADD CONSTRAINT `box_ibfk_3`
+  FOREIGN KEY (`category_id`)
+  REFERENCES `rootthebox`.`category` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+

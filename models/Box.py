@@ -36,6 +36,7 @@ from models.Relationships import team_to_box
 from models.IpAddress import IpAddress
 from models.GameLevel import GameLevel
 from models.Corporation import Corporation
+from models.Category import Category
 from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image, get_new_avatar
@@ -56,6 +57,10 @@ class Box(DatabaseObject):
 
     corporation_id = Column(Integer, ForeignKey('corporation.id'),
                             nullable=False
+                            )
+
+    category_id = Column(Integer, ForeignKey('category.id'),
+                            nullable=True
                             )
 
     _name = Column(Unicode(32), unique=True, nullable=False)
@@ -112,6 +117,11 @@ class Box(DatabaseObject):
     def by_name(cls, name):
         ''' Return the box object whose name is "name" '''
         return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+
+    @classmethod
+    def by_category(cls, _cat_id):
+        ''' Return the box object whose category is "_cat_id" '''
+        return dbsession.query(cls).filter_by(category_id=int(_cat_id)).all()
 
     @classmethod
     def by_garbage(cls, _garbage):
@@ -282,10 +292,16 @@ class Box(DatabaseObject):
         ''' Returns editable data as a dictionary '''
         corp = Corporation.by_id(self.corporation_id)
         game_level = GameLevel.by_id(self.game_level_id)
+        cat = Category.by_id(self.category_id)
+        if cat:
+            category = cat.uuid
+        else:
+            category = ""
         return {
             'name': self.name,
             'uuid': self.uuid,
             'corporation': corp.uuid,
+            'category': category,
             'description': self._description,
             'difficulty': self.difficulty,
             'game_level': game_level.uuid,
@@ -293,7 +309,7 @@ class Box(DatabaseObject):
         }
 
     def __repr__(self):
-        return u'<Box - name: %s>' % (self.box_name,)
+        return u'<Box - name: %s>' % (self.name,)
 
     def __str__(self):
-        return self.box_name
+        return self.name.encode('ascii', 'ignore')

@@ -34,6 +34,7 @@ import re
 from handlers.BaseHandlers import BaseHandler
 from models.Box import Box
 from models.Corporation import Corporation
+from models.Category import Category
 from models.GameLevel import GameLevel
 from models.FlagAttachment import FlagAttachment
 from models.MarketItem import MarketItem
@@ -66,6 +67,7 @@ class AdminCreateHandler(BaseHandler):
             'game_level': 'admin/create/game_level.html',
             'hint': 'admin/create/hint.html',
             'team': 'admin/create/team.html',
+            'category': 'admin/create/category.html',
         }
         if len(args) and args[0] in game_objects:
             if args[0] == "hint":
@@ -91,6 +93,7 @@ class AdminCreateHandler(BaseHandler):
             'game_level': self.create_game_level,
             'hint': self.create_hint,
             'team': self.create_team,
+            'category': self.create_category,
         }
         if len(args) and args[0] in game_objects:
             game_objects[args[0]]()
@@ -131,6 +134,21 @@ class AdminCreateHandler(BaseHandler):
         except ValidationError as error:
             self.render("admin/create/corporation.html", errors=[str(error), ])
 
+    def create_category(self):
+        ''' Add a new category to the database '''
+        try:
+            category = self.get_argument('category', '')
+            if Category.by_category(category) is not None:
+                raise ValidationError("Category already exists")
+            else:
+                new_category = Category()
+                new_category.category = category
+                self.dbsession.add(new_category)
+                self.dbsession.commit()
+                self.redirect('/admin/view/categories')
+        except ValidationError as error:
+            self.render("admin/create/category.html", errors=[str(error), ])
+
     def create_box(self):
         ''' Create a box object '''
         try:
@@ -151,6 +169,11 @@ class AdminCreateHandler(BaseHandler):
                 box.autoformat = self.get_argument('autoformat', '') == 'true'
                 box.difficulty = self.get_argument('difficulty', '')
                 box.operating_system = self.get_argument('operating_system', '?')
+                cat = Category.by_uuid(self.get_argument('category_uuid', ''))
+                if cat is not None:
+                    box.category_id = cat.id
+                else:
+                    box.category_id = None
                 # Avatar
                 avatar_select = self.get_argument('box_avatar_select', '')
                 if avatar_select and len(avatar_select) > 0:
@@ -300,6 +323,7 @@ class AdminViewHandler(BaseHandler):
             'game_objects': "admin/view/game_objects.html",
             'game_levels': "admin/view/game_levels.html",
             'market_objects': 'admin/view/market_objects.html',
+            'categories': 'admin/view/categories.html'
         }
         if len(args) and args[0] in uri:
             self.render(uri[args[0]], errors=None)
@@ -326,6 +350,7 @@ class AdminEditHandler(BaseHandler):
             'box_level': 'game_levels',
             'hint': 'game_objects',
             'market_item': 'market_objects',
+            'category': 'categories',
         }
         if len(args) and args[0] in uri:
             self.redirect('/admin/view/%s' % uri[args[0]])
@@ -346,6 +371,7 @@ class AdminEditHandler(BaseHandler):
             'box_level': self.box_level,
             'hint': self.edit_hint,
             'market_item': self.edit_market_item,
+            'category': self.edit_category,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -369,6 +395,24 @@ class AdminEditHandler(BaseHandler):
             self.redirect('/admin/view/game_objects')
         except ValidationError as error:
             self.render("admin/view/game_objects.html", errors=[str(error), ])
+
+    def edit_category(self):
+        ''' Updates category object in the database '''
+        try:
+            cat = Category.by_uuid(self.get_argument('uuid', ''))
+            if cat is None:
+                raise ValidationError("Category does not exist")
+            category = self.get_argument('category', '')
+            if category != cat.category:
+                logging.info("Updated category name %s -> %s" % (
+                    cat.category, category
+                ))
+                cat.category = category
+                self.dbsession.add(cat)
+                self.dbsession.commit()
+            self.redirect('/admin/view/categories')
+        except ValidationError as error:
+            self.render("admin/view/categories.html", errors=[str(error), ])
 
     def edit_boxes(self):
         '''
@@ -397,6 +441,13 @@ class AdminEditHandler(BaseHandler):
                 box.corporation_id = corp.id
             elif corp is None:
                 raise ValidationError("Corporation does not exist")
+            # Category
+            cat = Category.by_uuid(self.get_argument('category_uuid'))
+            if cat is not None and cat.id != box.category_id:
+                logging.info("Updated %s's category %s -> %s" % (
+                    box.name, box.category_id, cat.id,
+                ))
+                box.category_id = cat.id
             # Description
             description = self.get_argument('description', '')
             if description != box._description:

@@ -9,6 +9,7 @@
 
 {% block modals %}
 {% from models.Corporation import Corporation %}
+{% from models.Category import Category %}
 {% from tornado.options import options %}
 {% from libs.XSSImageCheck import filter_avatars %}
 {% from models.Box import Box %}
@@ -123,6 +124,17 @@
                         <select id="edit-box-corporation" name="corporation_uuid">
                             {% for corporation in Corporation.all() %}
                                 <option value="{{ corporation.uuid }}">{% if corporation.name != "" %}{{ corporation.name }}{% else %}(No name){% end %}</option>
+                            {% end %}
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="box_catetory">Category</label>
+                    <div class="controls">
+                        <select id="edit-box-category" name="category_uuid">
+                            <option value=""></option>
+                            {% for category in Category.all() %}
+                                <option value="{{ category.uuid }}">{{ category.category }}</option>
                             {% end %}
                         </select>
                     </div>

@@ -8,6 +8,7 @@
 
 {% block modals %}
 {% from models.GameLevel import GameLevel %}
+{% from models.Category import Category %}
 {% from models.Corporation import Corporation %}
 {% from libs.XSSImageCheck import filter_avatars %}
 {% set avatars = filter_avatars("box") %}
@@ -86,7 +87,6 @@
                            rel="popover"
                            data-original-title="Game Level"
                            data-content="Level to put box in?">
-                        <option value=""></option>
                         {% for level in GameLevel.all() %}
                         <option value="{{ level.number }}">{{ level.number }}</option>
                         {% end %}
@@ -100,9 +100,22 @@
                             rel="popover"
                             data-original-title="Corporation"
                             data-content="Corporation box belongs too?">
-                        <option value=""></option>
                         {% for corp in Corporation.all() %}
                         <option value="{{ corp.uuid }}">{% if corp.name != "" %}{{ corp.name }}{% else %}(No name){% end %}</option>
+                        {% end %}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="category">Category</label>
+                <div class="controls">
+                    <select id="category" name="category_uuid"
+                            rel="popover"
+                            data-original-title="Category"
+                            data-content="Category box belongs too?">
+                        <option value=""></option>
+                        {% for category in Category.all() %}
+                        <option value="{{ category.uuid }}">{{ category.category }}</option>
                         {% end %}
                     </select>
                 </div>

@@ -20,6 +20,14 @@ function getDetails(obj, uuid) {
                 } else if (key !== "flag_uuid") {
                     $("#" + obj + "-" + key).val(value);
                 }
+            } else if (obj === "box" && key === "category") {
+                if (value.length > 0) {
+                    $('#edit-box-category option[value=' + value + ']').prop('selected',true);
+                } else {
+                    $('#edit-box-category option[value=""]').prop('selected',true);
+                }
+            } else if (obj === "box" && key === "corporation") {
+                $('#edit-box-corporation option[value=' + value + ']').prop('selected',true);
             } else if (obj === "flag" && key === "lock_uuid") {
                 $('#edit-flag-lock option[value=' + value + ']').prop('selected',true);
             } else {

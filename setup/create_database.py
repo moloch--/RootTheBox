@@ -46,6 +46,7 @@ from models.Flag import Flag
 from models.Penalty import Penalty
 from models.FlagAttachment import FlagAttachment
 from models.Notification import Notification
+from models.Category import Category
 from models.Corporation import Corporation
 from models.GameLevel import GameLevel
 from models.Theme import Theme, ThemeFile

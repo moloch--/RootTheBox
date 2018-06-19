@@ -1,38 +1,38 @@
 {% extends "../../main.html" %}
 
-{% block title %}Market Objects{% end %}
+{% block title %}Categories{% end %}
 
 {% block header %}
-<script src="/static/js/pages/admin/view/market_objects.js"></script>
+<script src="/static/js/pages/admin/view/categories.js"></script>
 {% end %}
 
 {% block modals %}
 {% from tornado.options import options %}
 <!-- Hidden Edit Form -->
-<div id="edit-market-item-modal" class="modal hide fade" style="display: none; ">
+<div id="edit-category-item-modal" class="modal hide fade" style="display: none; ">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3>
             <i class="fa fa-pencil"></i>
-            Edit Market Item
+            Edit Category
         </h3>
     </div>
     <div class="modal-body">
         <br />
-        <form id="edit-market-item-form" class="form-horizontal" action="/admin/edit/market_item" method="post">
+        <form id="edit-category-item-form" class="form-horizontal" action="/admin/edit/category" method="post">
             {% raw xsrf_form_html() %}
-            <input type="hidden" id="edit-market-item-uuid" name="item_uuid" value="" />
+            <input type="hidden" id="edit-category-item-uuid" name="uuid" value="" />
             <div class="control-group">
-                <label class="control-label" for="price">Item Cost</label>
+                <label class="control-label" for="category">Category Name</label>
                 <div class="controls">
-                    <input required pattern="[0-9]+" id="edit-market-item-price" name="price" type="text" placeholder="Item Price ($)">
+                    <input autofocus id="edit-category-item-name" name="category" maxlength='24' minlength="3" type="text" placeholder="Category" />
                 </div>
             </div>
         </form>
     </div>
     <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <button id="edit-market-item-submit" type="button" class="btn btn-primary">
+        <button id="edit-category-item-submit" type="button" class="btn btn-primary">
             <i class="fa fa-save"></i>
             Save
         </button>
@@ -41,11 +41,11 @@
 {% end %}
 
 {% block content %}
-{% from models.MarketItem import MarketItem %}
+{% from models.Category import Category %}
 <div class="container">
     <h2>
-        <i class="fa fa-shopping-cart"></i>
-        Manage Black Market
+        <i class="fa fa-th-large"></i>
+        Manage Categories
     </h2>
     <br />
     {% if errors is not None and len(errors) != 0 %}
@@ -62,19 +62,17 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th style="text-align: center; padding-right: 20px;">{% if options.banking %}Price{% else %}Points{% end %}</th>
+                    <th>Category Name</th>
                     <th><!-- Button --></th>
                 </tr>
             </thead>
             <tbody>
-                {% for index, item in enumerate(MarketItem.all()) %}
+                {% for index, item in enumerate(Category.all()) %}
                     <tr>
-                        <td class="shortcolumn">{{ index + 1 }}</td>
-                        <td>{{ item.name }}</td>
-                        <td class="shortcolumn" style="text-align: center; padding-right: 20px;">{% if options.banking %}${% end %}{{ item.price }}</td>
-                        <td class="shortcolumn">
-                            <a id="edit-market-item-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#edit-market-item-modal" data-uuid="{{ item.uuid }}" data-price="{{ item.price }}">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ item.category }}</td>
+                        <td>
+                            <a id="edit-category-item-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#edit-category-item-modal" data-uuid="{{ item.uuid }}" data-name="{{ item.category }}">
                                 <i class="fa fa-pencil"></i>
                                 Edit
                             </a>
