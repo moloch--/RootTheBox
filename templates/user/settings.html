@@ -190,6 +190,24 @@
                     <img src="/avatars/default_user.jpg" class="img-polaroid" />
                 {% end %}
             </div>
+            {% elif user.team is not None %}
+                <div class="span3 well">
+                    <form action="/user/settings/motto" method="post">
+                        {% raw xsrf_form_html() %}
+                        <legend>Change Motto</legend>
+                        <div class="control-group" style="margin-top: 0px; margin-bottom: 40px;">
+                            <label class="control-label" for="motto">Motto</label>
+                            <div class="controls">
+                                <input id="motto" name="motto" maxlength="32" type="text" placeholder="Motto" value="{{ user.team.motto }}" />
+                            </div>
+                        </div>
+                        <div class="control-group" style="float: right;">
+                            <div class="controls">
+                                <button class="btn btn-primary" type="submit"> Change Motto </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             {% end %}
             <div class="span3 well">
                 <form action="/user/settings/theme" method="post">

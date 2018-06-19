@@ -72,6 +72,7 @@ class SettingsHandler(BaseHandler):
             'password': self.post_password,
             'bank_password': self.post_bankpassword,
             'theme': self.post_theme,
+            'motto': self.post_motto,
         }
         if len(args) == 1 and args[0] in post_functions:
             post_functions[args[0]]()
@@ -162,6 +163,17 @@ class SettingsHandler(BaseHandler):
             self.render_page()
         else:
             self.render_page(errors=["Theme does not exist."])
+
+    def post_motto(self, *args, **kwargs):
+        ''' Change team motto '''
+        user = self.get_current_user()
+        if not user.team:
+            self.render_page(errors=["Not assigned to a team"])
+        else:
+            user.team.motto = self.get_argument('motto', '')
+        self.dbsession.add(user)
+        self.dbsession.commit()
+        self.render_page()
 
     def post_password(self, *args, **kwargs):
         ''' Called on POST request for password change '''
