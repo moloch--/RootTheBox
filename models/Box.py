@@ -179,8 +179,14 @@ class Box(DatabaseObject):
                 while index < len(text):
                     ls.append("  " + text[index: index + step])
                     index += step
+            if len(ls) == 1:
+                if 0 < len(Category.by_id(self.category_id)):
+                    ls.append("  Category: %s\n" % Category.by_id(self.category_id).category)
+                else:
+                    ls.append("  No information on file.")
             else:
-                ls.append("  No information on file.")
+                if 0 < len(Category.by_id(self.category_id)):
+                    ls.append("\n  Category: %s\n" % Category.by_id(self.category_id).category)
             if self.operating_system != "none":
                 ls.append("\n  Operating System: %s\n" % self.operating_system)
             if self.difficulty != "Unknown":

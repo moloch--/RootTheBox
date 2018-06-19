@@ -313,7 +313,8 @@ class Flag(DatabaseObject):
             'box': box.uuid,
             'token': self.token,
             'lock_uuid': lock_uuid,
-            'case-sensitive': case_sensitive
+            'case-sensitive': case_sensitive,
+            'flagtype': self.type
         }
 
     def __repr__(self):

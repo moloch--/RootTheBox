@@ -205,6 +205,7 @@
             <form id="edit-flag-form" class="form-horizontal" method="post" action="/admin/edit/flag">
                 {% raw xsrf_form_html() %}
                 <input id="flag-uuid" name="uuid" type="hidden" />
+                <input id="flag-flagtype" name="flagtype" type="hidden" />
                 <div class="control-group">
                     <label class="control-label" for="flag-name">Flag Name</label>
                     <div class="controls">

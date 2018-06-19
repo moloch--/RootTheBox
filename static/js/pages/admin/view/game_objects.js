@@ -29,7 +29,11 @@ function getDetails(obj, uuid) {
             } else if (obj === "box" && key === "corporation") {
                 $('#edit-box-corporation option[value=' + value + ']').prop('selected',true);
             } else if (obj === "flag" && key === "lock_uuid") {
-                $('#edit-flag-lock option[value=' + value + ']').prop('selected',true);
+                if (value.length > 0) {
+                    $('#edit-flag-lock option[value=' + value + ']').prop('selected',true);
+                } else {
+                    $('#edit-flag-lock option[value=""]').prop('selected',true);
+                }
             } else {
                 $("#" + obj + "-" + key).val(value);    
             }
@@ -66,7 +70,7 @@ function testToken() {
     submission = $("#test-token").val();
     token = $("#flag-token").val();
     if (submission !== "" && token !== "") {
-        flagtype = $("#flagtype").val();
+        flagtype = $("#flag-flagtype").val();
         casesensitive = $("#flag-case-sensitive").val();
         data = {'token': token, 'submission': submission, 'flagtype': flagtype, 'case': casesensitive, '_xsrf': getCookie("_xsrf")}
         $.post('/admin/tokentest/', data, function(response) { 
