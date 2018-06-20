@@ -651,6 +651,7 @@ class AdminDeleteHandler(BaseHandler):
             'box': self.del_box,
             'corporation': self.del_corp,
             'game_level': self.del_game_level,
+            'category': self.del_category,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -713,6 +714,19 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render('admin/view/game_objects.html',
                         errors=["Corporation does not exist in database."]
+                        )
+
+    def del_category(self):
+        ''' Delete a category '''
+        cat = Category.by_uuid(self.get_argument('uuid', ''))
+        if cat is not None:
+            logging.info("Delete category: %s" % cat.category)
+            self.dbsession.delete(cat)
+            self.dbsession.commit()
+            self.redirect('/admin/view/categories')
+        else:
+            self.render('admin/view/categories.html',
+                        errors=["Category does not exist in database."]
                         )
 
     def del_box(self):
@@ -799,7 +813,10 @@ class AdminTestTokenHandler(BaseHandler):
         elif flagtype == FLAG_REGEX:
             if not token.startswith("^(") and not token.endswith(")$"):
                 token = "^(" + token + ")$"
-            pattern = re.compile(token)
+            if case == 0:
+                pattern = re.compile(token, re.IGNORECASE)
+            else:
+                pattern = re.compile(token)
             test = pattern.match(submission) is not None
         elif flagtype == FLAG_DATETIME:
             from dateutil.parser import parse

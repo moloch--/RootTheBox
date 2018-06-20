@@ -44,8 +44,7 @@ class Category(DatabaseObject):
     _category = Column(Unicode(24), unique=True, nullable=False)
 
     boxes = relationship("Box",
-                         backref=backref("category", lazy="select"),
-                         cascade="all,delete,delete-orphan"
+                         backref=backref("category", lazy="select")
                          )
 
     @classmethod

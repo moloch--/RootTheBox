@@ -204,23 +204,27 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/scoreboard">
-                                  Summary
+                                    <i class="fa fa-fw fa-list"></i>
+                                    Summary
                               </a>
                             </li>
                             <li>
                                 <a href="/scoreboard/history">
-                                  History
+                                    <i class="fa fa-fw fa-calendar"></i>
+                                    History
                               </a>
                             </li>
                             {% if options.use_black_market %}
                             <li>
                                 <a href="/scoreboard/wall_of_sheep">
+                                    <i class="fa fa-fw fa-key"></i>
                                     Wall of Sheep
                                 </a>
                             </li>
                             {% end %}
                             <li>
                                 <a href="/teams">
+                                    <i class="fa fa-fw fa-users"></i>
                                     {% if options.teams %}Teams{% else %}Players{% end %}
                                 </a>
                             </li>

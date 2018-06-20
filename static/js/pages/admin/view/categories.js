@@ -10,4 +10,12 @@ $(document).ready(function() {
         $("#edit-category-item-form").submit();
     });
 
+    $("a[id^=delete-category-button]").click(function() {
+        $("#delete-category-uuid").val($(this).data("uuid"));
+    });
+
+    $("#delete-category-submit").click(function() {
+        $("#delete-category-form").submit();
+    });
+
 });

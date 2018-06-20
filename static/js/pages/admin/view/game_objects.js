@@ -156,7 +156,7 @@ $(document).ready(function() {
         $("#testtrue").hide();
         $("#testfalse").hide();
         $("#edit-flag-box").val($(this).data("box-uuid"));
-        if ($(this).data("flagtype") === "static") {
+        if ($(this).data("flagtype") === "static" || $(this).data("flagtype") === "regex") {
             $("#casegroup").show();
         } else {
             $("#casegroup").hide();

@@ -266,7 +266,10 @@ class Flag(DatabaseObject):
         elif self._type == FLAG_REGEX:
             if not self.token.startswith("^(") and not self.token.endswith(")$"):
                 self.token = "^(" + self.token + ")$"
-            pattern = re.compile(self.token)
+            if self._case_sensitive == 0:
+                pattern = re.compile(self.token, re.IGNORECASE)
+            else:
+                pattern = re.compile(self.token)
             return pattern.match(submission) is not None
         elif self._type == FLAG_FILE:
             return self.token == self.digest(submission)

@@ -65,6 +65,25 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="case-sensitive">Case-Sensitive</label>
+                        <div class="controls">
+                            <input id="case-sensitive" name="case-sensitive" type="hidden" value=1 />
+                            <div id="case-button" class="btn-group" data-toggle="buttons-radio"
+                                rel="popover"
+                                data-original-title="Case-Sensitive"
+                                data-content="Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.">
+                                <button id="case-enable" type="button" class="btn btn-success">
+                                    <i id="case-enable-icon" class="fa fa-fw fa-check-square-o"></i>
+                                    Enable
+                                </button>
+                                <button id="case-disable" type="button" class="btn btn-danger">
+                                    <i id="case-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                    Disable
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="token">Regular Expression</label>
                         <div class="controls">
                             <input required id="token" name="token" type="text" placeholder="Regex Pattern" autocomplete="off">
