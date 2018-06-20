@@ -4,10 +4,9 @@
 
 {% block header %}
 <script src="/static/js/pages/file_upload/material_files.js"></script>
+<script src="/static/js/libs/jstree.js"></script>
 <link rel="stylesheet" href="/static/css/jstree.css" />
-<script src="/static/js/jstree.js"></script>
 {% end %}
-
 
 {% block content %}
     <div class="container">
@@ -26,10 +25,8 @@
           {% end %}
         {% end %}
         <div class="well">
-            {% autoescape None %} 
             <div id="container">
             </div>
         </div>
     </div>
-    
 {% end %}

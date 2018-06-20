@@ -31,25 +31,7 @@ class MaterialsHandler(BaseHandler):
     
     @authenticated
     def get(self, *args, **kwargs):
-        r=['<ul class="jqueryFileTree" style="display: none;">']
-        try:
-            r=['<ul class="jqueryFileTree" style="display: none;">']
-            d=options.game_materials_dir
-            for f in os.listdir(d):
-                ff=os.path.join(d,f)
-                if os.path.isdir(ff):
-                    r.append('<li class="directory collapsed"><a rel="%s/">%s</a></li>' % (ff,f))
-                else:
-                    if f == "README.md":
-                        continue
-                    e=os.path.splitext(f)[1][1:] # get .ext and remove dot
-                    r.append('<li class="file ext_%s"><a rel="%s">%s</a></li>' % (e,ff,f))
-            r.append('</ul>')
-        except Exception,e:
-            r.append('Could not load directory: %s' % str(e))
-        r.append('</ul>')
-        dirlisting = ''.join(r)
-        self.render('file_upload/material_files.html', tree=json.dumps([self.path_to_dict(d)]), errors=None)
+        self.render('file_upload/material_files.html', errors=None)
 
     @authenticated
     def post(self, *args, **kwargs):
@@ -62,8 +44,9 @@ class MaterialsHandler(BaseHandler):
             d['type'] = "directory"
             d['children'] = [self.path_to_dict(os.path.join(path,x)) for x in os.listdir(path) if x != "README.md"]
         else:
+            downloadpath = path.replace(options.game_materials_dir, "/materials")
             d['type'] = "file"
-            d['a_attr'] = { "href" : "/materials/%s" % os.path.basename(path), "onclick":"window.location='/materials/%s'" % os.path.basename(path)}
+            d['a_attr'] = { "href" : "%s" % downloadpath, "onclick":"window.location='%s'" % downloadpath}
             e=os.path.splitext(path)[1][1:] # get .ext and remove dot
             d['icon'] = "file ext_%s" % (e)
         return d

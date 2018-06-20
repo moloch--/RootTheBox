@@ -129,10 +129,10 @@ class ScoreboardAjaxHandler(BaseHandler):
                 catbox = Box.by_category(cat.id)
                 if (len(catbox) > 0):
                     catlist[int(cat.id)] = 0
-                    for box in catbox:
-                        for flag in box.flags:
-                            if flag in team.flags:
-                                catlist[int(cat.id)] += 1
+            for flag in team.flags:
+                box = flag.box
+                if box and box.category_id is not None:
+                    catlist[int(box.category_id)] += 1
             skillvalues = []
             for val in catlist:
                 skillvalues.append(catlist[val])
