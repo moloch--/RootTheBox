@@ -19,6 +19,7 @@ pip3 install pbkdf2 --upgrade
 pip3 install PyMySQL --upgrade
 pip3 install sqlalchemy --upgrade
 pip3 install python3-memcached --upgrade
+pip3 install python-dateutil --upgrade
 pip3 install defusedxml --upgrade
 pip3 install netaddr --upgrade
 pip3 install nose --upgrade
