@@ -206,7 +206,7 @@ class Flag(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value)[:256]
+        self._description = unicode(value)[:1024]
 
     @property
     def capture_message(self):
