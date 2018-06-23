@@ -22,6 +22,7 @@ Created on Mar 12, 2012
 
 import re
 import hashlib
+import json
 import xml.etree.cElementTree as ET
 
 from uuid import uuid4
@@ -31,15 +32,18 @@ from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.Box import Box
 from models.FlagAttachment import FlagAttachment  # Fix object mapper
+from models.FlagChoice import FlagChoice
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
 from tornado.options import options
+from dateutil.parser import parse
 
 ### Constants
 FLAG_STATIC = u'static'
 FLAG_REGEX = u'regex'
 FLAG_FILE = u'file'
 FLAG_DATETIME = u'datetime'
+FLAG_CHOICE = u'choice'
 
 
 class Flag(DatabaseObject):
@@ -115,6 +119,7 @@ class Flag(DatabaseObject):
             FLAG_REGEX: cls._create_flag_regex,
             FLAG_FILE: cls._create_flag_file,
             FLAG_DATETIME: cls._create_flag_datetime,
+            FLAG_CHOICE: cls._create_flag_choice,
         }
         #TODO Don't understand why this is here - name is not unqiue value
         # and you could simply name questions per box, like "Question 1" - ElJefe 6/1/2018
@@ -126,7 +131,7 @@ class Flag(DatabaseObject):
         return new_flag
 
     @classmethod
-    def _create_flag_file(cls, box,  name, raw_token, description, value):
+    def _create_flag_file(cls, box, name, raw_token, description, value):
         ''' Check flag file specific parameters '''
         token = cls.digest(raw_token)
         if not options.debug and cls.by_token(token) is not None:
@@ -139,7 +144,7 @@ class Flag(DatabaseObject):
                    )
 
     @classmethod
-    def _create_flag_regex(cls, box,  name, raw_token, description, value):
+    def _create_flag_regex(cls, box, name, raw_token, description, value):
         ''' Check flag regex specific parameters '''
         try:
             re.compile(raw_token)
@@ -155,7 +160,7 @@ class Flag(DatabaseObject):
                    )
 
     @classmethod
-    def _create_flag_static(cls, box,  name, raw_token, description, value):
+    def _create_flag_static(cls, box, name, raw_token, description, value):
         ''' Check flag static specific parameters '''
         if not options.debug and cls.by_token(raw_token) is not None:
             raise ValidationError('Flag token already exists in database')
@@ -167,9 +172,25 @@ class Flag(DatabaseObject):
                    )
 
     @classmethod
-    def _create_flag_datetime(cls, box,  name, raw_token, description, value):
+    def _create_flag_datetime(cls, box, name, raw_token, description, value):
         ''' Check flag datetime specific parameters '''
-        if cls.by_token(raw_token) is not None:
+        try:
+            parse(raw_token)
+        except:
+            raise ValidationError('Flag token is not a valid datetime')
+        if not options.debug and  cls.by_token(raw_token) is not None:
+            raise ValidationError('Flag token already exists in database')
+        return cls(box_id=box.id,
+                   name=name,
+                   token=raw_token,
+                   description=description,
+                   value=value
+                   )
+
+    @classmethod
+    def _create_flag_choice(cls, box, name, raw_token, description, value):
+        ''' Check flag choice specific parameters '''
+        if not options.debug and  raw_token is not None:
             raise ValidationError('Flag token already exists in database')
         return cls(box_id=box.id,
                    name=name,
@@ -257,6 +278,26 @@ class Flag(DatabaseObject):
     def is_file(self):
         return self._type == FLAG_FILE
 
+    def choices(self):
+        #inlucdes the choice uuid - needed for editing choice
+        choices = []
+        if self._type == FLAG_CHOICE:
+            choicelist = FlagChoice.by_flag_id(self.id)
+            if choicelist is not None and len(choicelist) > 0:
+                for flagchoice in choicelist:
+                    choices.append(flagchoice.to_dict())
+        return json.dumps(choices)
+
+    def choicelist(self):
+        #excludes the choice uuid
+        choices = []
+        if self._type == FLAG_CHOICE:
+            choicelist = FlagChoice.by_flag_id(self.id)
+            if choicelist is not None and len(choicelist) > 0:
+                for flagchoice in choicelist:
+                    choices.append(flagchoice.choice)
+        return json.dumps(choices)
+
     def capture(self, submission):
         if self._type == FLAG_STATIC:
             if self._case_sensitive == 0:
@@ -273,8 +314,9 @@ class Flag(DatabaseObject):
             return pattern.match(submission) is not None
         elif self._type == FLAG_FILE:
             return self.token == self.digest(submission)
+        elif self._type == FLAG_CHOICE:
+            return self.token == submission
         elif self._type == FLAG_DATETIME:
-            from dateutil.parser import parse
             try:
                 return parse(self.token) == parse(submission)
             except:
@@ -317,7 +359,8 @@ class Flag(DatabaseObject):
             'token': self.token,
             'lock_uuid': lock_uuid,
             'case-sensitive': case_sensitive,
-            'flagtype': self.type
+            'flagtype': self.type,
+            'choices': self.choices()
         }
 
     def __repr__(self):

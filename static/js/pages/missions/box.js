@@ -17,6 +17,20 @@ $(document).ready(function() {
         $("#capture-text-flag-form").submit();
     });
 
+    $("a[id^=capture-choice-flag-button]").click(function() {
+        $("#capture-choice-flag-uuid").val($(this).data("uuid"));
+        $("#choiceinput").empty();
+        var choices = $(this).data("choices");
+        for (choice in choices) {
+            $("#choiceinput").append('<div><input required name="multichoice" type="radio" style="margin-top: 0;" value="' + choices[choice] + '" />&nbsp;&nbsp;' + choices[choice] + "</div><br/>");
+        }
+    });
+
+    $("#capture-choice-flag-submit").click(function() {
+        $("#choice-flag-token").val($('input[name=multichoice]:checked').val());
+        $("#capture-choice-flag-form").submit();
+    });
+
     /* Hints */
     $("a[id^=purchase-hint-button]").click(function() { 
         $("#purchase-hint-uuid").val($(this).data("uuid"));

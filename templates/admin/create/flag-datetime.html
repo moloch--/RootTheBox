@@ -58,16 +58,26 @@
                     <div class="control-group">
                         <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
                         <div class="controls">
-                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                            <input required id="reward" name="reward" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
                                    rel="popover"
                                    data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
                                    data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="description">Description</label>
+                        <div class="controls">
+                            <textarea required id="description" name="description" type="text" placeholder="Description"
+                                    rel="popover"
+                                    data-original-title="Description"
+                                    data-content="This is the description.">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="token">Token</label>
                         <div class="controls">
-                            <input required id="token" name="token" type="text" placeholder="Datetime Token" autocomplete="off">
+                            <input required id="token" name="token" maxlength="256" type="text" placeholder="Datetime Token" autocomplete="off">
                         </div>
                     </div>
                     <div class="control-group">
@@ -81,16 +91,6 @@
                                     rel="popover"
                                     data-original-title="Token"
                                     data-content="This is a test flag/string the user could input for credit." />
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="description">Description</label>
-                        <div class="controls">
-                            <textarea required id="description" name="description" type="text" placeholder="Description"
-                                    rel="popover"
-                                    data-original-title="Description"
-                                    data-content="This is the description.">
-                            </textarea>
                         </div>
                     </div>
                     <div class="control-group">

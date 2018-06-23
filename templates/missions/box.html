@@ -11,6 +11,8 @@
 {% from models.Penalty import Penalty %}
 {% from models.Flag import Flag %}
 {% from models.Flag import FLAG_FILE %}
+{% from models.Flag import FLAG_CHOICE %}
+{% from models.FlagChoice import FlagChoice %}
 {% from tornado.options import options %}
     <!-- Submit text flag -->
     <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
@@ -38,6 +40,28 @@
             </button>
         </div>
     </div>
+    <!-- Submit multiple choice flag -->
+    <div id="capture-choice-flag-modal" class="modal hide fade" style="display: none;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3>Submit Flag</h3>
+            </div>
+            <div class="modal-body">
+                <form id="capture-choice-flag-form" class="form-horizontal" method="post" action="/user/missions/capture">
+                    {% raw xsrf_form_html() %}
+                    <input id="capture-choice-flag-uuid" name="uuid" value="" type="hidden" />
+                    <input id="choice-flag-token" name="token" type="hidden" />
+                    <br/>
+                    <div id="choiceinput" style="margin-left: 50px;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal">Close</a>
+                <button id="capture-choice-flag-submit" class="btn btn-primary" type="button">
+                    Submit
+                </button>
+            </div>
+        </div>
     <!-- Submit file flag -->
     <div id="capture-file-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -204,7 +228,9 @@
                                 <td></td>
                                 <td></td>
                             {% else %}
-                                <td class="descriptioncol">{{ flag.description }}</td>
+                                <td class="descriptioncol">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
+                                        {% set choices = FlagChoice.by_flag_id(flag.id) %}
+                                        {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
                                 <td class="shortcolumn" style="text-align: center;">{% if flag in team.flags %}{{ Penalty.by_count(flag, team) + 1 }}{% else %}{{ Penalty.by_count(flag, team) }}{% end %}</td>
                                 <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
                                 <td class="shortcolumn"{% if not flag in team.flags %} style="padding-right: 10px;"{% end %}>
@@ -230,7 +256,8 @@
                                     <td class="shortcolumn successtext" style="text-align: right;"><i class="fa fa-check-circle"></i></td>
                                 {% else %}         
                                     <td class="shortcolumn">
-                                        <a id="capture-{% if flag.is_file %}file{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="{% if flag.is_file %}#capture-file-flag-modal{% else %}#capture-text-flag-modal{% end %}" data-uuid="{{ flag.uuid }}">
+                                        <a id="capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{% end %}-flag-modal" 
+                                        data-uuid="{{ flag.uuid }}" data-choices='{{ str(flag.choicelist()) }}'>
                                             <i class="fa fa-flag"></i>
                                             Submit
                                         </a>

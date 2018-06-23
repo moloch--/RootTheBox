@@ -71,3 +71,14 @@ ADD CONSTRAINT `box_ibfk_3`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
+CREATE TABLE `flag_choice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime DEFAULT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `flag_id` int(11) NOT NULL,
+  `_choice` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `flag_id` (`flag_id`),
+  CONSTRAINT `flag_choice_ibfk_1` FOREIGN KEY (`flag_id`) REFERENCES `flag` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

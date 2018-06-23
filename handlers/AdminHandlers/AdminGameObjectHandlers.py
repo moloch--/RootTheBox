@@ -30,6 +30,7 @@ CRUD for game objects:
 
 import logging
 import re
+import json
 
 from handlers.BaseHandlers import BaseHandler
 from models.Box import Box
@@ -37,12 +38,13 @@ from models.Corporation import Corporation
 from models.Category import Category
 from models.GameLevel import GameLevel
 from models.FlagAttachment import FlagAttachment
+from models.FlagChoice import FlagChoice
 from models.MarketItem import MarketItem
 from models.Hint import Hint
 from models.Team import Team
 from models.IpAddress import IpAddress
 from models.User import ADMIN_PERMISSION
-from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME
+from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME, FLAG_CHOICE
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import *
 
@@ -64,6 +66,7 @@ class AdminCreateHandler(BaseHandler):
             'flag/file': 'admin/create/flag-file.html',
             'flag/static': 'admin/create/flag-static.html',
             'flag/datetime': 'admin/create/flag-datetime.html',
+            'flag/choice': 'admin/create/flag-choice.html',
             'game_level': 'admin/create/game_level.html',
             'hint': 'admin/create/hint.html',
             'team': 'admin/create/team.html',
@@ -90,6 +93,7 @@ class AdminCreateHandler(BaseHandler):
             'flag/regex': self.create_flag_regex,
             'flag/static': self.create_flag_static,
             'flag/datetime': self.create_flag_datetime,
+            'flag/choice': self.create_flag_choice,
             'game_level': self.create_game_level,
             'hint': self.create_hint,
             'team': self.create_team,
@@ -207,6 +211,13 @@ class AdminCreateHandler(BaseHandler):
         except ValidationError as error:
             self.render('admin/create/flag-file.html', errors=[str(error)])
 
+    def create_flag_choice(self):
+        ''' Create a multiple choice flag '''
+        try:
+            self._mkflag(FLAG_CHOICE)
+        except ValidationError as error:
+            self.render('admin/create/flag-choice.html', errors=[str(error)])
+
     def create_flag_datetime(self):
         ''' Create a datetime flag '''
         try:
@@ -295,6 +306,11 @@ class AdminCreateHandler(BaseHandler):
         self.add_attachments(flag)
         self.dbsession.add(flag)
         self.dbsession.commit()
+        choices = self.get_argument('choices', None)
+        if choices is not None:
+            choicelist = choices.split(',')
+            for item in choicelist:
+                FlagChoice.create_choice(flag, item)
         self.redirect('/admin/view/game_objects')
 
     def add_attachments(self, flag):
@@ -518,9 +534,37 @@ class AdminEditHandler(BaseHandler):
                 raise ValidationError("Box does not exist")
             self.dbsession.add(flag)
             self.dbsession.commit()
+            if flag.type == FLAG_CHOICE:
+                self.edit_choices(flag, self.request.arguments)
             self.redirect("/admin/view/game_objects")
         except ValidationError as error:
             self.render("admin/view/game_objects.html", errors=["%s" % error])
+
+    def edit_choices(self, flag, arguments):
+        ''' Edit flag multiple choice items '''
+        choiceitems = {}
+        currentchoices = json.loads(flag.choices())
+        for item in arguments:
+            if item.startswith("choice"):
+                if arguments[item][0] != "":
+                    uuidsplit = item.split("uuid-")
+                    if len(uuidsplit) > 1:
+                        choiceitems[uuidsplit[1]] = arguments[item][0]
+                    else:
+                        # add choice
+                        FlagChoice.create_choice(flag, arguments[item][0])
+        for choice in currentchoices:
+            if not choice['uuid'] in choiceitems:
+                # delete choice
+                flagchoice = FlagChoice.by_uuid(choice['uuid'])
+                self.dbsession.delete(flagchoice)
+        for choice in choiceitems:
+            flagchoice = FlagChoice.by_uuid(choice)
+            if choiceitems[choice] != flagchoice.choice:
+                # update choice
+                flagchoice.choice = choiceitems[choice]
+                self.dbsession.add(flagchoice)
+        self.dbsession.commit()
 
     def edit_ip(self):
         ''' Add ip addresses to a box (sorta edits the box object) '''

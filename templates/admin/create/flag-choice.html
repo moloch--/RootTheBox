@@ -12,7 +12,7 @@
 <div class="container">
     <h1>
         <i class="fa fa-flag"></i>
-        Create File Flag
+        Create Multiple Choice Flag
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
@@ -27,13 +27,14 @@
     <div class="well">
         <div class="row">
             <div class="span4">
-                <form class="form-horizontal" action="/admin/create/flag/file" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal" action="/admin/create/flag/choice" method="post">
                     {% raw xsrf_form_html() %}
-                    <input id="flagtype" type="hidden" value="file" />
+                    <input id="flagtype" type="hidden" value="choice" />
+                    <input id="choices" type="hidden" name="choices" />
                     <div class="control-group">
                         <label class="control-label" for="flag_name">Flag Name</label>
                         <div class="controls">
-                            <input autofocus required id="flag-name" name="flag_name" maxlength="16" type="text" placeholder="Flag Name"
+                            <input autofocus required id="flag-name" maxlength="16" name="flag_name" type="text" placeholder="Flag Name"
                                     rel="popover"
                                     data-original-title="Flag Name"
                                     data-content="This is what you want the flag to be displayed as." />
@@ -74,10 +75,16 @@
                             </textarea>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="token">Flag File</label>
+                    <div class="control-group" style="margin-bottom: 10px;">
+                        <label class="control-label" for="token" style="margin-left: -20px;">Multiple Choice</label>
                         <div class="controls">
-                            <input id="token" name="flag" type="file">
+                                <div class="input-group control-group after-add-more" style="position: relative; margin-bottom: 10px;">
+                                    <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" required /><input type="text" name="addmore[]" maxlength="256" class="form-control" placeholder="Enter Choice">
+                                    <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
+                                        <button class="btn btn-success add-more" type="button"style="padding: 4px 10px 0px; vertical-align: middle;"><i class="fa fa-plus" style="font-size: 160%;"></i></button>
+                                    </div>
+                                </div>
+                            <input required id="token" name="token" type="hidden" placeholder="Multiple Choice Token" autocomplete="off">
                         </div>
                     </div>
                     <div class="control-group">
@@ -90,7 +97,7 @@
                     <div class="control-group">
                         <label class="control-label" for="capture-message">Capture Message</label>
                         <div class="controls">
-                            <textarea id="capture-message" name="capture_message" placeholder="(Optional)"
+                            <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)"
                                     rel="popover"
                                     data-original-title="Capture Message"
                                     data-content="This is the message displayed to the user once inputed." >
@@ -98,19 +105,28 @@
                         </div>
                     </div>
                     {% end %}
-                    <input type="hidden" name="is_file" value="true">
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary" type="submit">Create Flag</button>
+                            <button id="createflag" class="btn btn-primary" type="submit">Create Flag</button>
                         </div>
                     </div>
                 </form>
+            </div>
+            <!-- Copy Fields -->
+            <div class="copy hide">
+                <div class="choice-control-group input-group" style="margin-bottom: 10px; position: relative;">
+                    <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" /><input type="text" name="addmore[]" maxlength="256" class="form-control" placeholder="Enter Choice">
+                    <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
+                        <button class="btn btn-danger remove" type="button" style="padding: 3px 10px 1px; vertical-align: middle;"><i class="fa fa-times" style="font-size: 160%;"></i></button>
+                    </div>
+                </div>
             </div>
             <div class="offset3 span4">
                 <p>
                     <blockquote>
                         <small>
-                            <strong>Tokens:</strong>These "flags" are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.
+                            <strong>Tokens:</strong>
+                            In this case, the "flag" is a multiple choice question where the selected option is the token.
                         </small>
                     </blockquote>
                 </p>

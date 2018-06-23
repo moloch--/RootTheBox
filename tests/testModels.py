@@ -12,7 +12,7 @@ from models.User import User
 from models.Corporation import Corporation
 from models.Box import Box
 from models.GameLevel import GameLevel
-from models.Flag import Flag, FLAG_STATIC, FLAG_REGEX, FLAG_FILE
+from models.Flag import Flag, FLAG_STATIC, FLAG_REGEX, FLAG_FILE, FLAG_DATETIME, FLAG_CHOICE
 from tests.Helpers import *
 
 
@@ -166,9 +166,28 @@ class TestFlag(unittest.TestCase):
             description="A file test token",
             value=300,
         )
+        self.choice_flag = Flag.create_flag(
+            _type=FLAG_CHOICE,
+            box=self.box,
+            name="Choice Flag",
+            raw_token="fdata",
+            description="A choice test token",
+            value=400,
+        )
+        self.datetime_flag = Flag.create_flag(
+            _type=FLAG_DATETIME,
+            box=self.box,
+            name="Datetime Flag",
+            raw_token="2018-06-22 18:00:00",
+            description="A datetime test token",
+            value=500,
+        )
+        
         dbsession.add(self.static_flag)
         dbsession.add(self.regex_flag)
         dbsession.add(self.file_flag)
+        dbsession.add(self.choice_flag)
+        dbsession.add(self.datetime_flag)
         dbsession.commit()
 
     def tearDown(self):
@@ -193,3 +212,11 @@ class TestFlag(unittest.TestCase):
     def test_file_capture(self):
         assert self.file_flag.capture("fdata")
         assert not self.file_flag.capture("other")
+
+    def test_choice_capture(self):
+        assert self.file_flag.capture("fdata")
+        assert not self.file_flag.capture("other")
+
+    def test_datetime_capture(self):
+        assert self.datetime_flag.capture("2018-06-22 18:00:00")
+        assert not self.datetime_flag.capture("2018-06-21 16:00:00")

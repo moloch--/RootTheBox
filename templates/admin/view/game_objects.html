@@ -14,6 +14,8 @@
 {% from libs.XSSImageCheck import filter_avatars %}
 {% from models.Box import Box %}
 {% from models.Flag import Flag %}
+{% from models.Flag import FLAG_CHOICE %}
+{% from models.FlagChoice import FlagChoice %}
     {% set avatars = filter_avatars("box") %}
     <!-- Select Avatars -->
     <div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
@@ -225,7 +227,13 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-value">{% if options.banking %}Reward{% else %}Points{% end %}</label>
                     <div class="controls">
-                        <input id="flag-value" name="value" type="text" placeholder="{% if options.banking %}($) {% end %}Reward Value" />
+                        <input id="flag-value" name="value" type="number" placeholder="{% if options.banking %}($) {% end %}Reward Value" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="flag-description">Description</label>
+                    <div class="controls">
+                        <textarea id="flag-description" name="description" type="text" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div id="casegroup" class="control-group">
@@ -247,13 +255,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="control-group">
+                <div id="flagtokengroup" class="control-group">
                     <label class="control-label" for="flag-token">Token</label>
                     <div class="controls">
-                        <input id="flag-token" name="token" type="text" placeholder="Token Value" />
+                        <input id="flag-token" name="token" type="text" maxlength="256" placeholder="Token Value" />
                     </div>
                 </div>
-                <div class="control-group">
+                <div id="testflaggroup" class="control-group">
                     <label class="control-label" for="test_token">Test Flag</label>
                     <div class="controls" style="position:relative;">
                         <span style="position: absolute; left: 230px; top: 3px; font-size: 175%;">
@@ -266,10 +274,24 @@
                                 data-content="This is a test flag/string the user could input for credit." />
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-description">Description</label>
+                <div id="choicegroup" class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label" for="token" style="margin-left: -20px;">Multiple Choice</label>
                     <div class="controls">
-                        <textarea id="flag-description" name="description" type="text" placeholder="Description"></textarea>
+                        <div class="input-group control-group after-add-more" style="position: relative; margin-bottom: 10px;">
+                            <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" required /><input type="text" name="choice" maxlength="256" class="form-control" placeholder="Enter Choice">
+                            <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
+                                <button class="btn btn-success add-more" type="button"style="padding: 4px 10px 0px; vertical-align: middle;"><i class="fa fa-plus" style="font-size: 160%;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Copy Fields -->
+                <div class="copy hide">
+                    <div class="choice-control-group input-group" style="margin-bottom: 10px; position: relative;">
+                        <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" /><input type="text" name="choice" maxlength="256" class="form-control" placeholder="Enter Choice">
+                        <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
+                            <button class="btn btn-danger remove" type="button" style="padding: 3px 10px 1px; vertical-align: middle;"><i class="fa fa-times" style="font-size: 160%;"></i></button>
+                        </div>
                     </div>
                 </div>
                 <div class="control-group">
@@ -338,7 +360,7 @@
                 <div class="control-group">
                     <label class="control-label" for="hint-description">Description</label>
                     <div class="controls">
-                        <textarea id="hint-description" name="description" type="text" placeholder="Description"></textarea>
+                        <textarea id="hint-description" name="description" type="text" maxlength="256" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -619,10 +641,12 @@
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
-                                                        <td class="descriptioncol">{{ flag.description }}</td>
-                                                        <td class="shortcolumn">{{ flag.token }}</td>
+                                                        <td class="descriptioncol">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
+                                                            {% set choices = FlagChoice.by_flag_id(flag.id) %}
+                                                            {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
+                                                        <td class="shortcolumn" style="max-width: 40%;">{{ flag.token }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
-                                                        <td class="shortcolumn">{{ str(flag._type) }}</td>
+                                                        <td class="shortcolumn">{{ str(flag.type) }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">
                                                             <a id="flag-attachment-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#flag-attachment-button" data-uuid="{{ flag.uuid }}">
                                                                 <i class="fa fa-fw"></i>

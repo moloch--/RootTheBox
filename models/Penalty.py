@@ -21,7 +21,6 @@ Created on Jun 5, 2018
 
 import logging
 
-from uuid import uuid4
 from urlparse import urlparse
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_

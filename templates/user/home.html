@@ -143,7 +143,8 @@
             {% end %}
             </div>
         </div>
-        {% if len(Category.all()) > 0 %}
+        {% if len(Category.all()) > 2 %}
+        <!-- Only looks good if there are at least 3 categories -->
         <div class="row">
             <div class="span11 offset1 well">
                 <h2>Skill Progress</h2>

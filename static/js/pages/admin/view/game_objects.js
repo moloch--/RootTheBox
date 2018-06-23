@@ -34,6 +34,37 @@ function getDetails(obj, uuid) {
                 } else {
                     $('#edit-flag-lock option[value=""]').prop('selected',true);
                 }
+            } else if (obj === "flag" && key === "choices") {
+                var token = response["token"];
+                var choices = $.parseJSON(value);
+                var appendarea = $(".after-add-more");
+                appendarea.nextAll().remove();
+                if (choices.length > 0) {
+                    for (var i=0; i < choices.length; i++){
+                        var html = $(".copy").html();
+                        if (i === 0) {
+                            var item = appendarea;
+                        } else {
+                            var newadd = appendarea.after(html);
+                            var item = $(newadd.next());
+                        }
+                        var textbox = item.find("input[name^=choice]");
+                        $(textbox).val(choices[i].choice);
+                        $(textbox).prop("name", "choice-uuid-" + choices[i].uuid + "");
+                        $(textbox).prop("uuid", choices[i].uuid);
+                        if (token === choices[i].choice) {
+                            var radio = item.find("input[name=multichoice]");
+                            radio.prop("checked", true);
+                        }
+                    }
+                    $('input[name=multichoice]').click(function(){
+                        $("#flag-token").val($(this).next('input').val());
+                    });
+                    $('input[name^=choice]').change(function(){
+                        console.log($('input[name=multichoice]:checked').next('input').val());
+                        $("#flag-token").val($('input[name=multichoice]:checked').next('input').val());
+                    });
+                }  
             } else {
                 $("#" + obj + "-" + key).val(value);    
             }
@@ -161,6 +192,15 @@ $(document).ready(function() {
         } else {
             $("#casegroup").hide();
         }
+        if ($(this).data("flagtype") === "choice") {
+            $("#testflaggroup").hide();
+            $("#flagtokengroup").hide();
+            $("#choicegroup").show();
+        } else {
+            $("#testflaggroup").show();
+            $("#flattokengroup").show();
+            $("#choicegroup").hide();
+        }
     });
 
     $("#edit-flag-submit").click(function() {
@@ -190,6 +230,14 @@ $(document).ready(function() {
         $("#case-enable-icon").removeClass("fa-check-square-o");
         $("#case-enable-icon").addClass("fa-square-o");
         testToken();
+    });
+    $(".add-more").click(function(){ 
+        var html = $(".copy").html();
+        $(".after-add-more").siblings(":last").after(html);
+    });
+
+    $("body").on("click",".remove",function(){ 
+        $(this).parents(".choice-control-group").remove();
     });
 
     /* Hint */
