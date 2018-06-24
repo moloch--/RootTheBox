@@ -78,7 +78,7 @@
             </legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
             <form class="form-horizontal" action="/registration" method="post" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
-                {% set avatarimg = get_new_avatar('user', not options.teams) %}
+                {% set avatarimg = get_new_avatar("user", not options.teams) %}
                 <div class="control-group" style="float: right; position: absolute; right: 30px; top: 40px;">
                     <img id="avatarimage" src="/avatars/{{avatarimg}}" class="img-polaroid" style="width: 350px; height: 175px;"/>
                     <div class="controls" style="margin-top: 15px; margin-left: 0px;">
