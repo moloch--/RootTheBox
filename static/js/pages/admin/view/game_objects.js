@@ -44,8 +44,11 @@ function getDetails(obj, uuid) {
                         var html = $(".copy").html();
                         if (i === 0) {
                             var item = appendarea;
-                        } else {
+                        } else if (i == 1) { 
                             var newadd = appendarea.after(html);
+                            var item = $(newadd.next());
+                        } else {
+                            var newadd = appendarea.siblings(":last").after(html);
                             var item = $(newadd.next());
                         }
                         var textbox = item.find("input[name^=choice]");
@@ -61,7 +64,6 @@ function getDetails(obj, uuid) {
                         $("#flag-token").val($(this).next('input').val());
                     });
                     $('input[name^=choice]').change(function(){
-                        console.log($('input[name=multichoice]:checked').next('input').val());
                         $("#flag-token").val($('input[name=multichoice]:checked').next('input').val());
                     });
                 }  

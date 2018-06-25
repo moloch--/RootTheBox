@@ -178,7 +178,7 @@ class Flag(DatabaseObject):
             parse(raw_token)
         except:
             raise ValidationError('Flag token is not a valid datetime')
-        if not options.debug and  cls.by_token(raw_token) is not None:
+        if not options.debug and cls.by_token(raw_token) is not None:
             raise ValidationError('Flag token already exists in database')
         return cls(box_id=box.id,
                    name=name,
@@ -190,7 +190,7 @@ class Flag(DatabaseObject):
     @classmethod
     def _create_flag_choice(cls, box, name, raw_token, description, value):
         ''' Check flag choice specific parameters '''
-        if not options.debug and  raw_token is not None:
+        if not options.debug and cls.by_token(raw_token) is not None:
             raise ValidationError('Flag token already exists in database')
         return cls(box_id=box.id,
                    name=name,

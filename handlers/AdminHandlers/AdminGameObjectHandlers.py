@@ -306,10 +306,9 @@ class AdminCreateHandler(BaseHandler):
         self.add_attachments(flag)
         self.dbsession.add(flag)
         self.dbsession.commit()
-        choices = self.get_argument('choices', None)
+        choices = self.get_arguments('addmore[]', strip=True)
         if choices is not None:
-            choicelist = choices.split(',')
-            for item in choicelist:
+            for item in choices:
                 FlagChoice.create_choice(flag, item)
         self.redirect('/admin/view/game_objects')
 

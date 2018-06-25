@@ -44,18 +44,6 @@ function testToken() {
     }
 }
 
-function buildChoice() {
-    $("#token").val($('input[name=multichoice]:checked').next('input').val());
-    var choicevals = $('input[name^=addmore');
-    var choices = [];
-    for (var i = 0; i < choicevals.length; i++) {
-        if ($(choicevals[i]).val() !== "") {
-            choices.push($(choicevals[i]).val());
-        }
-    }
-    $("#choices").val(choices);
-}
-
 $(document).ready(function() {
 
     /* Popovers */
@@ -109,7 +97,7 @@ $(document).ready(function() {
 
     $("form").submit(function(){
         if ($("#flagtype").val() === "choice") {
-            buildChoice();
+            $("#token").val($('input[name=multichoice]:checked').next('input').val());
         }
     });
 });
