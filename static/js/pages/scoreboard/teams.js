@@ -72,5 +72,6 @@
     };
   
       $(document).ready($.proxy(anchorScrolls, 'init'));
+      $(document).ready($.proxy(window, 'delegateAnchors'));
   })(window.document, window.history, window.location);
   

@@ -644,7 +644,7 @@
                                                         <td class="descriptioncol">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
                                                             {% set choices = FlagChoice.by_flag_id(flag.id) %}
                                                             {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
-                                                        <td class="shortcolumn" style="max-width: 40%;">{{ flag.token }}</td>
+                                                        <td style="width: 200px;">{{ flag.token }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
                                                         <td class="shortcolumn">{{ str(flag.type) }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">

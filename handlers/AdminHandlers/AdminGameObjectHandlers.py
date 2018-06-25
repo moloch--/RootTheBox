@@ -186,7 +186,7 @@ class AdminCreateHandler(BaseHandler):
                     box.avatar = self.request.files['avatar'][0]['body']
                 self.dbsession.add(box)
                 self.dbsession.commit()
-                self.redirect('/admin/view/game_objects')
+                self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render('admin/create/box.html', errors=[str(error), ])
 
@@ -276,7 +276,7 @@ class AdminCreateHandler(BaseHandler):
                 hint.flag_id = None
             self.dbsession.add(hint)
             self.dbsession.commit()
-            self.redirect('/admin/view/game_objects')
+            self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render('admin/create/hint.html', errors=[str(error), ])
 
@@ -310,7 +310,7 @@ class AdminCreateHandler(BaseHandler):
         if choices is not None:
             for item in choices:
                 FlagChoice.create_choice(flag, item)
-        self.redirect('/admin/view/game_objects')
+        self.redirect("/admin/view/game_objects#%s" % box.uuid)
 
     def add_attachments(self, flag):
         ''' Add uploaded files as attachments to flags '''
@@ -486,7 +486,7 @@ class AdminEditHandler(BaseHandler):
 
             self.dbsession.add(box)
             self.dbsession.commit()
-            self.redirect("/admin/view/game_objects")
+            self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render("admin/view/game_objects.html", errors=[str(error), ])
 
@@ -535,7 +535,7 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.commit()
             if flag.type == FLAG_CHOICE:
                 self.edit_choices(flag, self.request.arguments)
-            self.redirect("/admin/view/game_objects")
+            self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render("admin/view/game_objects.html", errors=["%s" % error])
 
@@ -582,7 +582,7 @@ class AdminEditHandler(BaseHandler):
                 self.dbsession.add(ip)
                 self.dbsession.add(box)
                 self.dbsession.commit()
-                self.redirect('/admin/view/game_objects')
+                self.redirect("/admin/view/game_objects#%s" % box.uuid)
             else:
                 raise ValidationError("IP address is already in use")
         except ValidationError as error:
@@ -658,9 +658,10 @@ class AdminEditHandler(BaseHandler):
             else:
                 flag_id = None
             hint.flag_id = flag_id
+            box = Box.by_id(flag.box_id)
             self.dbsession.add(hint)
             self.dbsession.commit()
-            self.redirect('/admin/view/game_objects')
+            self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render("admin/view/game_objects.html", errors=[str(error), ])
 
