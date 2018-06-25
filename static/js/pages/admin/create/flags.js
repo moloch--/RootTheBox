@@ -95,7 +95,12 @@ $(document).ready(function() {
 
     $(".add-more").click(function(){ 
         var html = $(".copy").html();
-        $(".after-add-more").siblings(":last").after(html);
+        var siblings = $(".after-add-more").siblings(":last");
+        if (siblings.length > 0) {
+            siblings.after(html);
+        } else {
+            $(".after-add-more").after(html);
+        }
     });
 
     $("body").on("click",".remove",function(){ 
