@@ -551,8 +551,10 @@ class AdminEditHandler(BaseHandler):
                     if len(uuidsplit) > 1:
                         choiceitems[uuidsplit[1]] = arguments[item][0]
                     else:
-                        # add choice
-                        FlagChoice.create_choice(flag, arguments[item][0])
+                        for flagoption in arguments[item]:
+                            if flagoption != "":
+                                # add choice
+                                FlagChoice.create_choice(flag, flagoption)
         for choice in currentchoices:
             if not choice['uuid'] in choiceitems:
                 # delete choice
