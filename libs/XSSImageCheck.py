@@ -62,3 +62,20 @@ def filter_avatars(dir):
         if avatar.lower().endswith(tuple(IMG_FORMATS)):
             avatarlist.append(dir + "/" + avatar)
     return avatarlist
+
+def existing_avatars(dir):
+    avatars = []
+    print dir
+    if dir == "team":
+        from models.Team import Team
+        teams = Team.all()
+        for team in teams:
+            if team.avatar is not None and len(team.members) > 0:
+                avatars.append(team.avatar)
+    else:
+        from models.User import User
+        users = User.all()
+        for user in users:
+            if user.avatar is not None:
+                avatars.append(user.avatar)
+    return avatars

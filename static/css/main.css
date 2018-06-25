@@ -22,3 +22,16 @@ footer {
     font-size: 275%;
     color: green;
 }
+.avatarused {
+    color: white; 
+    font-size: 23pt; 
+    position: absolute; 
+    top: -11px; 
+    right: -5px;
+}
+.avatarused-top {
+    font-size: 16pt; 
+    position: absolute; 
+    top: -6px; 
+    right: -1px;
+}

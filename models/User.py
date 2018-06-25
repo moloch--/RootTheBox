@@ -238,6 +238,8 @@ class User(DatabaseObject):
         else:
             if self.has_permission(ADMIN_PERMISSION):
                 avatar = default_avatar('user')
+            elif not options.teams:
+                avatar = default_avatar('user')
             else:
                 avatar = get_new_avatar('user')
                 if not avatar.startswith("default_"):

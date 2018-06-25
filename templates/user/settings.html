@@ -8,6 +8,7 @@
 
 {% block modals %}
 {% from libs.XSSImageCheck import filter_avatars %}
+{% from libs.XSSImageCheck import existing_avatars %}
 {% from models.Theme import Theme %}
 {% from tornado.options import options %}
     <!-- Change Avatar -->
@@ -17,6 +18,7 @@
         {% set dir = "user" %}
     {% end %}
     {% set avatars = filter_avatars(dir) %}
+    {% set existing = existing_avatars("team") %}
     <div id="change-team-avatar-modal" class="modal hide fade" style="display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -42,26 +44,30 @@
                    
                 {% if len(avatars) > 0 %}
                 <div style="border-top: solid 1px rgb(92, 92, 92); margin-top: 20px; margin-bottom: 20px;"></div>
+                <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> indicates use by another {% if options.teams %}team{% else %}player{% end %}</span>
                 <label class="control-label" for="team_avatar">Or Choose Existing</label>
                     {% for avatar in avatars[::3] %}
                         <div class="row">
-                            <div class="span3">
+                            <div class="span3" style="position: relative;">
                                 <center>
+                                    {% if avatar in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
                                     <a href="#" class="teamavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
                                 </center>
                             </div>
                             {% if avatars.index(avatar) + 1 < len(avatars) %}
                                 {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
-                                <div class="span3">
+                                <div class="span3" style="position: relative;">
                                     <center>
+                                        {% if avatar1 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
                                         <a href="#" class="teamavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
                                     </center>
                                 </div>
                             {% end %}
                             {% if avatars.index(avatar) + 2 < len(avatars) %}
                                 {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
-                                <div class="span3">
+                                <div class="span3" style="position: relative;">
                                     <center>
+                                        {% if avatar2 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
                                         <a href="#" class="teamavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
                                     </center>
                                 </div>
@@ -73,8 +79,8 @@
             </form>
         </div>
     </div>
-    {% set dir = "user" %}
-    {% set avatars = filter_avatars(dir) %}
+    {% set avatars = filter_avatars("user") %}
+    {% set existing = existing_avatars("user") %}
     <div id="change-user-avatar-modal" class="modal hide fade" style="display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -100,26 +106,30 @@
                     
                 {% if len(avatars) > 0 %}
                 <div style="border-top: solid 1px rgb(92, 92, 92); margin-top: 20px; margin-bottom: 20px;"></div>
+                <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> indicates use by another player</span>
                 <label class="control-label" for="user_avatar">Or Choose Existing</label>
                     {% for avatar in avatars[::3] %}
                         <div class="row">
-                            <div class="span3">
+                            <div class="span3" style="position: relative;">
                                 <center>
+                                    {% if avatar in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
                                     <a href="#" class="useravatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
                                 </center>
                             </div>
                             {% if avatars.index(avatar) + 1 < len(avatars) %}
                                 {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
-                                <div class="span3">
+                                <div class="span3" style="position: relative;">
                                     <center>
+                                        {% if avatar1 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
                                         <a href="#" class="useravatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
                                     </center>
                                 </div>
                             {% end %}
                             {% if avatars.index(avatar) + 2 < len(avatars) %}
                                 {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
-                                <div class="span3">
+                                <div class="span3" style="position: relative;">
                                     <center>
+                                        {% if avatar2 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
                                         <a href="#" class="useravatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
                                     </center>
                                 </div>
