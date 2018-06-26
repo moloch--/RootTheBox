@@ -82,3 +82,7 @@ CREATE TABLE `flag_choice` (
   KEY `flag_id` (`flag_id`),
   CONSTRAINT `flag_choice_ibfk_1` FOREIGN KEY (`flag_id`) REFERENCES `flag` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `rootthebox`.`hint` 
+CHANGE COLUMN `_description` `_description` VARCHAR(512) NOT NULL ;
+
