@@ -75,6 +75,7 @@
                     <select id="rank_by" name="rank_by" 
                         rel="popover"
                         data-original-title="Rank By"
+                        data-html="true"
                         data-content="This selection determines the method by which the scoreboard is primarily ranked.<br/><br/>When the primary ranking is equal, other values are used bases on this selection:<br/><br/>1. points/money ▲, hints ▼, flags ▲<br/>2. flags ▲, points/money ▲, hints ▼">
                         <option id="moneyname" value="money" {% if config.rank_by == "money" %}selected{% end %}>
                             {% if config.banking %}Money{% else %}Points{% end %}
@@ -256,6 +257,7 @@
                         <input class="penaltyval" required id="flag_start_penalty" type="number" min="1" name="flag_start_penalty" value="{{ config.flag_start_penalty }}"
                             rel="popover" pattern="\d*"
                             data-original-title="Flag Penalty Start"
+                            data-html="true"
                             data-content="" />
                     </div>
                 </div>
@@ -265,6 +267,7 @@
                             <input class="penaltyval" required id="flag_stop_penalty" type="number" min="1" name="flag_stop_penalty" value="{{ config.flag_stop_penalty }}"
                                 rel="popover" pattern="\d*"
                                 data-original-title="Flag Penalty Stop"
+                                data-html="true"
                                 data-content="" />
                     </div>
                 </div>
@@ -274,6 +277,7 @@
                         <input class="penaltyval" required id="flag_penalty_cost" type="number" min="0" max="500" name="flag_penalty_cost" value="{{ config.flag_penalty_cost }}"
                             rel="popover" pattern="\d*"
                             data-original-title="Flag Penalty Cost"
+                            data-html="true"
                             data-content="" />
                     </div>
                 </div>
