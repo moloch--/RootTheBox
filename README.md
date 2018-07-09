@@ -14,6 +14,8 @@ Features
 * [Team based botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
 * Real-time scoreboard graphs using websockets
 * Real-time status updates using websockets
+* Flag Types - Static, Regex, Datetime, Multiple Choice, File
+* Options for Penalties, Hints, Level Bonuses, Dynamic Scoring, and more
 * Built-in team based file/text sharing
 * A wall of sheep displaying cracked passwords
 * Unlocks and upgrades as users capture flags
@@ -29,6 +31,11 @@ Platform Requirements
 * [Python 2.7.x](https://www.python.org/) or [Pypy 2.x](http://pypy.org/)
 * Install scripts are for [Ubuntu](http://www.ubuntu.com/) (or [Debian](https://www.debian.org/)) but the application should work on any Linux, BSD, or OSX system.
 * Internet Explorer is *NOT* supported, any compatability with IE is purely coincidental. Please use the latest release of [Firefox](https://www.mozilla.org/en-US/), [Chrome](https://www.google.com/chrome/), [Opera](http://www.opera.com/), or any other browser that supports open standards.
+
+Avatar Packs
+-------------------
+* [Marvel User Pack](https://drive.google.com/open?id=100my3UEBXAFDHAAsl-5By5TPk6JrZ1LO}) (pw: rootthebox)
+* [Assorted Team Pack](https://drive.google.com/open?id=1aeAeAuNulJVd2w5ADhBlmP1WqdpzDpjz) (pw: rootthebox)
 
 Questions? Problems?
 -------------------------------
