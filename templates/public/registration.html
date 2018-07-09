@@ -168,7 +168,7 @@
                 <div class="control-group">
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">
-                        <input required id="pass1" name="pass1"  placeholder="Password" type="password"
+                        <input required id="pass1" name="pass1" minlength="{{ options.min_user_password_length }}"  placeholder="Password" type="password"
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Password"
@@ -178,7 +178,7 @@
                 <div class="control-group">
                     <label class="control-label" for="pass2">Confirm Account Password</label>
                     <div class="controls">
-                        <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password"
+                        <input required id="pass2" name="pass2" minlength="{{ options.min_user_password_length }}"  placeholder="Confirm Password" type="password"
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Confirm Password"

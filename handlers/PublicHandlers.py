@@ -155,8 +155,7 @@ class RegistrationHandler(BaseHandler):
         try:
             if self.config.restrict_registration:
                 self.check_regtoken()
-            team = self.get_team()
-            user = self.create_user(team)
+            user = self.create_user()
             self.render('public/successful_reg.html', account=user.handle)
         except ValidationError as error:
             self.render('public/registration.html', errors=[str(error)])
@@ -171,7 +170,7 @@ class RegistrationHandler(BaseHandler):
         else:
             raise ValidationError("Invalid registration token")
 
-    def create_user(self, team):
+    def create_user(self):
         ''' Add user to the database '''
         if User.by_handle(self.get_argument('handle', '')) is not None:
             raise ValidationError("This hacker name is already registered")
@@ -182,6 +181,7 @@ class RegistrationHandler(BaseHandler):
         user.password = self.get_argument('pass1', '')
         user.bank_password = self.get_argument('bpass', '')
         user._name = self.get_argument('playername', '')
+        team = self.get_team()
         self.dbsession.add(user)
         self.dbsession.add(team)
         self.dbsession.commit()
