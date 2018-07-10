@@ -32,8 +32,8 @@
                                     <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
                                 {% end %}
                                 <div class="summarycolumn" style="display: table-cell;">
-                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}Level #{{ level.number }} &ndash; {% end %}{% if len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
-                                        {% if len(team.level_flags(level.number)) != 0 %}
+                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}Level #{{ level.number }} &ndash; {% end %}{% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
+                                        {% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}
                                             <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
                                         {% else %}
                                             <div class="bar minibar" style="width: 0%;"></div>

@@ -65,7 +65,6 @@ def filter_avatars(dir):
 
 def existing_avatars(dir):
     avatars = []
-    print dir
     if dir == "team":
         from models.Team import Team
         teams = Team.all()
