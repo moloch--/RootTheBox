@@ -198,7 +198,7 @@ function updateFlagState(flagState, update) {
             /* Add to existing series' data array */
             flagState[seriesIndex].data.push([timestamp, flagCount]);
         } else {
-            console.log("Create flag series: " + teamName);
+            //console.log("Create flag series: " + teamName);
             newSeries = {
                 name: teamName,
                 data: [
@@ -214,7 +214,7 @@ function updateFlagState(flagState, update) {
 function liveFlagUpdate(chart, update) {
     timestamp = update['timestamp'] * 1000;
     for (var teamName in update['scoreboard']) {
-        console.log("Updating: " + teamName);
+        //console.log("Updating: " + teamName);
         flagCount = update['scoreboard'][teamName]['flags'].length;
         index = getSeriesIndexByName(chart.series, teamName);
         if (index !== undefined) {
@@ -242,7 +242,7 @@ function updateMoneyState(moneyState, update) {
             /* Add to existing series' data array */
             moneyState[seriesIndex].data.push([timestamp, money]);
         } else {
-            console.log("Create money series: " + teamName);
+            //console.log("Create money series: " + teamName);
             newSeries = {
                 name: teamName,
                 data: [
@@ -285,7 +285,7 @@ function updateBotState(botState, update) {
             /* Add to existing series' data array */
             botState[seriesIndex].data.push([timestamp, bots]);
         } else {
-            console.log("Create bot series: " + teamName);
+            //console.log("Create bot series: " + teamName);
             newSeries = {
                 name: teamName,
                 data: [
@@ -325,9 +325,9 @@ function initializeState(updater, state, updates) {
     }
 }
 
-$(document).ready(function() {
-
-    window.history_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_history");
+function initializeSocket(length) {
+    $("body").css("cursor", "progress");
+    window.history_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_history?length=" + length);
     var chart = undefined;
     var flagState = []; // List of Highchart series
     var moneyState = [];
@@ -346,7 +346,7 @@ $(document).ready(function() {
 
     history_ws.onmessage = function (evt) {
         msg = jQuery.parseJSON(evt.data);
-        console.log(msg);
+        //console.log(msg);
         if ('error' in msg) {
             console.log("ERROR: " + msg.toString());
         } else if ('history' in msg) {
@@ -365,21 +365,29 @@ $(document).ready(function() {
             /* Update the live chart */
             liveUpdateCallback(chart, msg['update']);
         }
+        $("body").css("cursor", "default");
     };
-
+    $("#flags-history-button").off();
     $("#flags-history-button").click(function() {
         chart = drawFlagGraph(flagState);
         liveUpdateCallback = liveFlagUpdate;
     });
-
+    $("#money-history-button").off();
     $("#money-history-button").click(function() {
         chart = drawMoneyGraph(moneyState);
         liveUpdateCallback = liveMoneyUpdate;
     });
-
+    $("#bots-history-button").off();
     $("#bots-history-button").click(function() {
         chart = drawBotGraph(botState);
         liveUpdateCallback = liveBotUpdate;
     });
+    
+}
 
+$(document).ready(function() {
+    initializeSocket(29);
+    $("#datapoints").change(function(){
+        initializeSocket(this.value);
+    });
 });

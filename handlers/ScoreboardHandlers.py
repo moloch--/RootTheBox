@@ -159,7 +159,8 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
     def open(self):
         ''' When we receive a new websocket connect '''
         self.connections.add(self)
-        self.write_message(self.get_history())
+        history_length = int(self.get_argument('length', 29))
+        self.write_message(self.get_history(history_length))
 
     def on_message(self, message):
         ''' We ignore messages if there are more than 1 every 5 seconds '''
