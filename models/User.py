@@ -236,9 +236,9 @@ class User(DatabaseObject):
         if self._avatar is not None:
             return self._avatar
         else:
-            if self.has_permission(ADMIN_PERMISSION):
+            if not options.teams:
                 avatar = default_avatar('user')
-            elif not options.teams:
+            elif self.has_permission(ADMIN_PERMISSION):
                 avatar = default_avatar('user')
             else:
                 avatar = get_new_avatar('user')
@@ -339,6 +339,7 @@ class User(DatabaseObject):
             'handle': self.handle,
             'hash_algorithm': self.algorithm,
             'team_uuid': self.team.uuid,
+            'avatar': self.avatar,
         }
 
     def to_xml(self, parent):

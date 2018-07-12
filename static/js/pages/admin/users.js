@@ -6,13 +6,27 @@ function getCookie(name) {
 
 function getDetails(obj, uuid) {
     $("#edit-" + obj + "-uuid").val(uuid);
-    data = {'uuid': uuid, '_xsrf': getCookie("_xsrf")}
+
+    data = {'uuid': uuid, '_xsrf': getCookie("_xsrf")};
     $.post('/admin/ajax/' + obj, data, function(response) {
         $.each(response, function(key, value) {
             // console.log("#" + obj + "-" + key + " => " + value);
             $("#" + obj + "-" + key).val(value);
+            if (key === "avatar") {
+                $("#" + obj + "-avatarimg").attr("src", "/avatars/" + value);
+            }
         });
     }, 'json');
+}
+
+function readURL(input, type) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#' + type + '-avatarimg').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 
 $(document).ready(function() {
@@ -55,4 +69,36 @@ $(document).ready(function() {
         alert($(this).data("bank-hash"));
     });
 
+    $(".teamavatarimg").click(function() {
+        var image = $(this).attr('value');
+        $("#team-avatarimg").attr('src', "/avatars/" + image);
+        $("#team-file-avatar").val("");
+        $("#team-avatar").val(image);
+        $("#team-avatar-form").click();
+    });
+
+    $(".useravatarimg").click(function() {
+        var image = $(this).attr('value');
+        $("#user-avatarimg").attr('src', "/avatars/" + image);
+        $("#user-file-avatar").val("");
+        $("#user-avatar").val(image);
+        $("#user-avatar-form").click();
+    });
+    $("#user-file-avatar").change(function(){
+        $("#user-avatar").val("");
+        readURL(this, "user");
+    });
+
+    $("#team-file-avatar").change(function(){
+        $("#team-avatar").val("");
+        readURL(this, "team");
+    });
+
+    $("#useruploadbutton").click(function(){
+        $("#user-file-avatar").click();
+    });
+
+    $("#teamuploadbutton").click(function(){
+        $("#team-file-avatar").click();
+    });
 });

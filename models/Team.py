@@ -204,6 +204,7 @@ class Team(DatabaseObject):
             'name': self.name,
             'motto': self.motto,
             'money': self.money,
+            'avatar': self.avatar,
         }
 
     def to_xml(self, parent):
