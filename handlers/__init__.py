@@ -51,6 +51,7 @@ from handlers.ScoreboardHandlers import *
 from handlers.FileUploadHandlers import *
 from handlers.NotificationHandlers import *
 from handlers.MaterialsHandler import *
+from handlers.ChefHandler import *
 from handlers.StaticFileHandler import StaticFileHandler
 from tornado.options import options
 
@@ -151,6 +152,7 @@ urls = [
 
     # Game Materials
     (r'/materials', MaterialsHandler),
+    (r'/cyberchef', ChefHandler),
 
     # Admin Handlers
     (r'/admin/game', AdminGameHandler),
