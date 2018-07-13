@@ -119,7 +119,8 @@ class AdminCreateHandler(BaseHandler):
             team.game_levels.append(level_0)
             self.dbsession.add(team)
             self.dbsession.commit()
-             # Avatar
+
+            # Avatar
             avatar_select = self.get_argument('team_avatar_select', '')
             if avatar_select and len(avatar_select) > 0:
                 team._avatar = avatar_select
