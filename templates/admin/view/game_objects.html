@@ -24,34 +24,33 @@
             <h3>Change Avatar</h3>
         </div>
         <div class="modal-body">
-                {% raw xsrf_form_html() %}
-                    {% for avatar in avatars[::3] %}
-                        <div class="row">
-                            <div class="span3">
-                                <center>
-                                    <a href="#" class="boxavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
-                                </center>
-                            </div>
-                            {% if avatars.index(avatar) + 1 < len(avatars) %}
-                                {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
-                                <div class="span3">
-                                    <center>
-                                        <a href="#" class="boxavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
-                                    </center>
-                                </div>
-                            {% end %}
-                            {% if avatars.index(avatar) + 2 < len(avatars) %}
-                                {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
-                                <div class="span3">
-                                    <center>
-                                        <a href="#" class="boxavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
-                                    </center>
-                                </div>
-                            {% end %}
+            {% raw xsrf_form_html() %}
+            {% for avatar in avatars[::3] %}
+                <div class="row">
+                    <div class="span3">
+                        <center>
+                            <a href="#" class="boxavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                        </center>
+                    </div>
+                    {% if avatars.index(avatar) + 1 < len(avatars) %}
+                        {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                        <div class="span3">
+                            <center>
+                                <a href="#" class="boxavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                            </center>
                         </div>
-                        <br/>
                     {% end %}
-                
+                    {% if avatars.index(avatar) + 2 < len(avatars) %}
+                        {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                        <div class="span3">
+                            <center>
+                                <a href="#" class="boxavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                            </center>
+                        </div>
+                    {% end %}
+                </div>
+                <br/>
+            {% end %}
         </div>
     </div>
     <!-- Edit Corporation -->
