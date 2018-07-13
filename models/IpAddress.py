@@ -67,8 +67,8 @@ class IpAddress(DatabaseObject):
 
     @classmethod
     def ipformat(self, value):
-        if value:
-            ipformat = value
+        ipformat = value
+        if ipformat:
             if ipformat.count(":") == 1:
                 #ip v4 with port
                 ipformat = ipformat.split(":")[0]
