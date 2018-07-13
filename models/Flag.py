@@ -79,6 +79,10 @@ class Flag(DatabaseObject):
                                     backref=backref("flag", lazy="select")
                                     )
 
+    flag_choice = relationship("FlagChoice",
+                                    backref=backref("flag", lazy="select")
+                                    )
+
     FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME]
 
     @classmethod
@@ -323,11 +327,17 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
-        ET.SubElement(flag_elem, "case_sensitive").text = self.case_sensitive
+        if self.lock_id:
+            ET.SubElement(flag_elem, "depends_on").text = str(Flag.by_id(self.lock_id))
+        ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
         attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
         attachements_elem.set("count", str(len(self.flag_attachments)))
         for attachement in self.flag_attachments:
             attachement.to_xml(attachements_elem)
+        choice_elem = ET.SubElement(flag_elem, "flag_choices")
+        choice_elem.set("count", str(len(self.flag_choice)))
+        for choice in self.flag_choice:
+            ET.SubElement(choice_elem, "choice").text = choice.choice
 
     def to_dict(self):
         ''' Returns public data as a dict '''

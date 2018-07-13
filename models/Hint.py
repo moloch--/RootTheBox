@@ -97,6 +97,7 @@ class Hint(DatabaseObject):
         hint_elem = ET.SubElement(parent, "hint")
         ET.SubElement(hint_elem, "price").text = str(self.price)
         ET.SubElement(hint_elem, "description").text = self._description
+        ET.SubElement(hint_elem, "box_uuid").text = str(Box.by_id(self.box_id)) 
         ET.SubElement(hint_elem, "flag_uuid").text = str(Flag.by_id(self.flag_id)) 
 
     def to_dict(self):
