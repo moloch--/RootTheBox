@@ -17,6 +17,7 @@
 pip3 install tornado==4.5.3 --upgrade
 pip3 install pbkdf2 --upgrade
 pip3 install PyMySQL --upgrade
+pip3 install mysqlclient --upgrade
 pip3 install sqlalchemy --upgrade
 pip3 install python3-memcached --upgrade
 pip3 install python-dateutil --upgrade
