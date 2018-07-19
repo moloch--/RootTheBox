@@ -11,7 +11,6 @@ $(document).ready(function() {
             backgroundColor:'transparent',
             polar: true,
             type: 'line',
-            marginBottom: -20,
             marginTop: 55
         },
         title: {
@@ -57,6 +56,6 @@ $(document).ready(function() {
     skill_chart.xAxis[0].setCategories($.parseJSON(categories));
     /* Update Graph */
     $.get("/scoreboard/ajax/skills", function(skillvalues) {
-         skill_chart.series[0].setData($.parseJSON(skillvalues), true);
+        skill_chart.series[0].setData($.parseJSON(skillvalues), true);
     });
 });
