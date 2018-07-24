@@ -55,6 +55,7 @@ class Flag(DatabaseObject):
         -regex
         -datetime
         -file
+        -choice
 
     Depending on the cls._type value. For more information see the wiki.
     '''
@@ -83,7 +84,7 @@ class Flag(DatabaseObject):
                                     backref=backref("flag", lazy="select")
                                     )
 
-    FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME]
+    FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME, FLAG_CHOICE]
 
     @classmethod
     def all(cls):
@@ -255,7 +256,10 @@ class Flag(DatabaseObject):
 
     @case_sensitive.setter
     def case_sensitive(self, value):
-        self._case_sensitive = unicode(value)
+        if value is None:
+            self._case_sensitive = 0
+        else:
+            self._case_sensitive = value
 
     @property
     def value(self):
@@ -267,6 +271,20 @@ class Flag(DatabaseObject):
             self._value = abs(int(value))
         except ValueError:
             raise ValidationError("Reward value must be an integer")
+
+    @property
+    def get_lock_id(self):
+        return self.lock_id
+
+    @get_lock_id.setter
+    def set_lock_id(self, value):
+        try:
+            if value is None:
+                self.lock_id = value
+            else:
+                self.lock_id = abs(int(value))
+        except ValueError:
+            self.lock_id = None
 
     @property
     def is_file(self):
@@ -327,8 +345,9 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
-        if self.lock_id:
-            ET.SubElement(flag_elem, "depends_on").text = str(Flag.by_id(self.lock_id))
+        lock_flag = Flag.by_id(self.lock_id)
+        if lock_flag:
+            ET.SubElement(flag_elem, "depends_on").text = lock_flag.name
         ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
         attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
         attachements_elem.set("count", str(len(self.flag_attachments)))
@@ -338,6 +357,13 @@ class Flag(DatabaseObject):
         choice_elem.set("count", str(len(self.flag_choice)))
         for choice in self.flag_choice:
             ET.SubElement(choice_elem, "choice").text = choice.choice
+        from models.Hint import Hint
+        hints = Hint.by_flag_id(self.id)
+        hints_elem = ET.SubElement(flag_elem, "hints")
+        hints_elem.set("count", str(len(hints)))
+        for hint in hints:
+            if not hint.flag_id is None:
+                hint.to_xml(hints_elem)
 
     def to_dict(self):
         ''' Returns public data as a dict '''

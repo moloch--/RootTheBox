@@ -107,6 +107,30 @@ class GameLevel(DatabaseObject):
             raise ValidationError("Buyout value must be an integer")
 
     @property
+    def reward(self):
+        return self._reward
+
+    @reward.setter
+    def reward(self, value):
+        try:
+            self._reward = abs(int(value))
+        except ValueError:
+            raise ValidationError("Reward value must be an integer")
+
+    @property
+    def type(self):
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        if value is None:
+            return
+        try:
+            self._type = str(value)
+        except ValueError:
+            raise ValidationError("type value must be an string")
+
+    @property
     def flags(self):
         ''' Return all flags for the level '''
         _flags = []

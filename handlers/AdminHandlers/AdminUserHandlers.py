@@ -245,7 +245,7 @@ class AdminAjaxUserHandler(BaseHandler):
             uri[args[0]]()
 
     def team_details(self):
-        print self.get_argument('uuid', '')
+        print(self.get_argument('uuid', ''))
         team = Team.by_uuid(self.get_argument('uuid', ''))
         if team is not None:
             self.write(team.to_dict())
@@ -254,7 +254,7 @@ class AdminAjaxUserHandler(BaseHandler):
 
     def user_details(self):
         user = User.by_uuid(self.get_argument('uuid', ''))
-        print user
+        print(user)
         if user is not None:
             self.write(user.to_dict())
         else:

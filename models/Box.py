@@ -199,16 +199,20 @@ class Box(DatabaseObject):
 
     @description.setter
     def description(self, value):
+        if value is None:
+            return ""
         if 1025 < len(value):
             raise ValidationError("Description cannot be greater than 1024 characters")
         self._description = unicode(value)
 
     @property
     def difficulty(self):
-        return self._difficulty if len(self._difficulty) else u"Unknown"
+        return self._difficulty if self._difficulty and len(self._difficulty) else u"Unknown"
 
     @difficulty.setter
     def difficulty(self, value):
+        if value is None:
+            return
         if 17 < len(value):
             raise ValidationError("Difficulty cannot be greater than 16 characters")
         self._difficulty = unicode(value)
@@ -285,7 +289,8 @@ class Box(DatabaseObject):
         hints_elem = ET.SubElement(box_elem, "hints")
         hints_elem.set("count", str(len(self.hints)))
         for hint in self.hints:
-            hint.to_xml(hints_elem)
+            if not hint.flag_id is None:
+                hint.to_xml(hints_elem)
         ips_elem = ET.SubElement(box_elem, "ipaddresses")
         ips_elem.set("count", str(len(self.ip_addresses)))
         for ip in self.ip_addresses:

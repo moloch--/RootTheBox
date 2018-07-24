@@ -45,7 +45,7 @@ class Hint(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    flag_id = Column(Integer, ForeignKey('flag.id'), nullable=False)
+    flag_id = Column(Integer, ForeignKey('flag.id'), nullable=True)
     _price = Column(Integer, nullable=False)
     _description = Column(Unicode(512), nullable=False)
 
@@ -97,8 +97,6 @@ class Hint(DatabaseObject):
         hint_elem = ET.SubElement(parent, "hint")
         ET.SubElement(hint_elem, "price").text = str(self.price)
         ET.SubElement(hint_elem, "description").text = self._description
-        ET.SubElement(hint_elem, "box_uuid").text = str(Box.by_id(self.box_id)) 
-        ET.SubElement(hint_elem, "flag_uuid").text = str(Flag.by_id(self.flag_id)) 
 
     def to_dict(self):
         flag = Flag.by_id(self.flag_id)

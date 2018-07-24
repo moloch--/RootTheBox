@@ -27,6 +27,6 @@ Guidelines for writing code in this file:
     - All functions should check authentication/IP address/permission
 '''
 
-from AdminGameHandlers import *
-from AdminGameObjectHandlers import *
-from AdminUserHandlers import *
+from .AdminGameHandlers import *
+from .AdminGameObjectHandlers import *
+from .AdminUserHandlers import *

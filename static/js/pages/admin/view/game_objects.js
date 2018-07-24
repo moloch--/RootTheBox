@@ -16,8 +16,11 @@ function getDetails(obj, uuid) {
                             text : name
                         }));
                     });
-                    $('#hint-flag_uuid option[value=' + response["flag_uuid"] + ']').prop('selected',true);   
+                    if (response["flag_uuid"] !== "") {
+                        $('#hint-flag_uuid option[value=' + response["flag_uuid"] + ']').prop('selected',true);  
+                    }
                 } else if (key !== "flag_uuid") {
+
                     $("#" + obj + "-" + key).val(value);
                 }
             } else if (obj === "box" && key === "category") {
