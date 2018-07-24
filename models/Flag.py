@@ -345,9 +345,8 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
-        lock_flag = Flag.by_id(self.lock_id)
-        if lock_flag:
-            ET.SubElement(flag_elem, "depends_on").text = lock_flag.name
+        if self.lock_id:
+            ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
         ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
         attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
         attachements_elem.set("count", str(len(self.flag_attachments)))

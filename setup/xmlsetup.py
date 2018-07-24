@@ -51,6 +51,20 @@ def get_child_text(elem, tag_name):
         return None
 
 
+def create_categories(categories):
+    ''' Create Category objects based on XML data '''
+    logging.info("Found %s categories" % categories.get('count'))
+    for index, cat_elem in enumerate(categories.getchildren()):
+        try:
+            category = Category()
+            category.category = get_child_text(cat_elem, 'category')
+            dbsession.add(category)
+        except:
+            logging.exception("Failed to import category #%d" % (index + 1))
+    dbsession.flush()
+    dbsession.commit()
+
+
 def create_levels(levels):
     ''' Create GameLevel objects based on XML data '''
     logging.info("Found %s game level(s)" % levels.get('count'))
@@ -164,6 +178,9 @@ def create_boxes(parent, corporation):
                 box.operating_system = get_child_text(box_elem, 'operatingsystem')
                 box.avatar = get_child_text(box_elem, 'avatar').decode('base64')
                 box.garbage = get_child_text(box_elem, 'garbage')
+                category = get_child_text(box_elem, 'category')
+                if category:
+                    box.category_id = Category.by_category(category).id
                 dbsession.add(box)
                 dbsession.flush()
                 create_flags(get_child_by_tag(box_elem, 'flags'), box)
@@ -199,6 +216,8 @@ def _xml_file_import(filename):
         xml_root = tree.getroot()
         levels = get_child_by_tag(xml_root, "gamelevels")
         create_levels(levels)
+        categories = get_child_by_tag(xml_root, "categories")
+        create_categories(categories)
         corporations = get_child_by_tag(xml_root, "corporations")
         create_corps(corporations)
         logging.debug("Done processing: %s" % filename)

@@ -101,10 +101,6 @@ class Category(DatabaseObject):
         ''' Add to XML dom '''
         corp_elem = ET.SubElement(parent, "category")
         ET.SubElement(corp_elem, "category").text = self.category
-        boxes_elem = ET.SubElement(corp_elem, "boxes")
-        boxes_elem.set("count", str(len(self.boxes)))
-        for box in self.boxes:
-            box.to_xml(boxes_elem)
 
     def __len__(self):
         return len(self.boxes)

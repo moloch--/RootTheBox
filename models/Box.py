@@ -282,6 +282,8 @@ class Box(DatabaseObject):
         ET.SubElement(box_elem, "description").text = self._description
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = self.garbage
+        if self.category_id:
+            ET.SubElement(box_elem, "category").text = Category.by_id(self.category_id).category
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", str(len(self.flags)))
         for flag in self.flags:

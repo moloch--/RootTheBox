@@ -34,6 +34,7 @@ from models.GameLevel import GameLevel
 from models.User import ADMIN_PERMISSION
 from models.SourceCode import SourceCode
 from models.Corporation import Corporation
+from models.Category import Category
 from models.RegistrationToken import RegistrationToken
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
@@ -407,6 +408,10 @@ class AdminExportHandler(BaseHandler):
         levels_elem.set("count", str(GameLevel.count()))
         for level in GameLevel.all()[1:]:
             level.to_xml(levels_elem)
+        category_elem = ET.SubElement(root, "categories")
+        category_elem.set("count", str(Category.count()))
+        for category in Category.all():
+            category.to_xml(category_elem)
         corps_elem = ET.SubElement(root, "corporations")
         corps_elem.set("count", str(Corporation.count()))
         for corp in Corporation.all():
