@@ -50,6 +50,8 @@ from handlers.PastebinHandlers import *
 from handlers.ScoreboardHandlers import *
 from handlers.FileUploadHandlers import *
 from handlers.NotificationHandlers import *
+from handlers.MaterialsHandler import *
+from handlers.ChefHandler import *
 from handlers.StaticFileHandler import StaticFileHandler
 from tornado.options import options
 
@@ -141,10 +143,16 @@ urls = [
     (r'/connect/notifications/updates', NotifySocketHandler),
 
     # Static Handlers - StaticFileHandler.py
-    (r'/static/(.*\.(jpg|png|css|js|ico|swf|flv|eot|svg|ttf|woff|otf))',
+    (r'/static/(.*\.(jpg|png|gif|css|js|ico|mp3|eot|svg|ttf|woff|otf))',
         StaticFileHandler, {'path': 'static/'}),
     (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))',
         StaticFileHandler, {'path': 'files/avatars/'}),
+    (r'/materials/(.*)',
+        StaticFileHandler, {'path': 'files/game_materials/'}),
+
+    # Game Materials
+    (r'/materials', MaterialsHandler),
+    (r'/cyberchef', ChefHandler),
 
     # Admin Handlers
     (r'/admin/game', AdminGameHandler),
@@ -156,6 +164,7 @@ urls = [
     (r'/admin/view/(.*)', AdminViewHandler),
     (r'/admin/delete/(.*)', AdminDeleteHandler),
     (r'/admin/ajax/objects(.*)', AdminAjaxGameObjectDataHandler),
+    (r'/admin/tokentest/(.*)', AdminTestTokenHandler),
 
     (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
     (r'/admin/upgrades/swat(.*)', AdminSwatHandler),

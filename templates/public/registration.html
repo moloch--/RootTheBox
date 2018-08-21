@@ -6,9 +6,67 @@
     <script src="/static/js/pages/public/registration.js"></script>
 {% end %}
 
-{% block content %}
+{% block modals %}
+{% from libs.XSSImageCheck import get_new_avatar %}
 {% from tornado.options import options %}
+{% from libs.XSSImageCheck import filter_avatars %}
+{% from libs.XSSImageCheck import existing_avatars %}
 {% from models.Team import Team %}
+    <!-- Change Avatar -->
+    {% if options.teams %}
+        {% set dir = "user" %}
+    {% else %}
+        {% set dir = "team" %}
+    {% end %}
+    {% set avatars = filter_avatars("user") %}
+    {% set existing = existing_avatars(dir) %}
+    <div id="change-user-avatar-modal" class="modal hide fade" style="display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+    <div class="modal-header">
+        <button id="avatarclose" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Change Avatar</h3>
+    </div>
+    <div class="modal-body">
+        {% raw xsrf_form_html() %}
+        {% if len(avatars) > 0 %}
+        <div style="border-top: solid 1px rgb(92, 92, 92); margin-top: 20px; margin-bottom: 20px;"></div>
+        <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> indicates use by another player</span>
+        <label class="control-label" for="user_avatar">Or Choose Existing</label>
+            {% for avatar in avatars[::3] %}
+                <div class="row">
+                    <div class="span3" style="position: relative;">
+                        <center>
+                            {% if avatar in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                            <a href="#" class="useravatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                        </center>
+                    </div>
+                    {% if avatars.index(avatar) + 1 < len(avatars) %}
+                        {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                        <div class="span3" style="position: relative;">
+                            <center>
+                                {% if avatar1 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                <a href="#" class="useravatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                            </center>
+                        </div>
+                    {% end %}
+                    {% if avatars.index(avatar) + 2 < len(avatars) %}
+                        {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                        <div class="span3" style="position: relative;">
+                            <center>
+                                {% if avatar2 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                <a href="#" class="useravatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                            </center>
+                        </div>
+                    {% end %}
+                </div>
+                <br/>
+            {% end %}
+        {% end %}
+    
+    </div>
+</div>
+{% end %}
+
+{% block content %}
     <div class="container">
         <h1>
             <i class="fa fa-pencil"></i>
@@ -24,26 +82,47 @@
                 </div>
             {% end %}
         {% end %}
-        <div class="well">
+        <div class="well" style="position: relative;">
             <legend>
                 Welcome to the Scene
             </legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
             <form class="form-horizontal" action="/registration" method="post" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
+                {% set avatarimg = get_new_avatar("user", not options.teams) %}
+                <div class="control-group" style="float: right; position: absolute; right: 30px; top: 40px;">
+                    <img id="avatarimage" src="/avatars/{{avatarimg}}" class="img-polaroid" style="width: 350px; height: 175px; object-fit: cover"/>
+                    <div class="controls" style="margin-top: 15px; margin-left: 0px;">
+                        <input id="user_avatar_select" name="user_avatar_select" type="hidden" value="{{avatarimg}}" />
+                        {% if len(avatars) > 0 %}<a data-toggle="modal" class="btn btn-primary" href="#change-user-avatar-modal"> Select New Avatar </a>&nbsp;&nbsp;{% end %}
+                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>&nbsp;&nbsp;(w500 x h250)
+                        <input id="user-avatar" name="avatar" type="file" style="display: none;"/>
+                     </div>
+                </div>
                 <div class="control-group">
                     <label class="control-label" for="handle">
                         <i class="fa fa-user"></i>
                         Handle
                     </label>
                     <div class="controls">
-                        <input required id="handle" name="handle" maxlength="16" placeholder="Hacker Name" type="text"
+                        <input required id="handle" name="handle" maxlength="16" placeholder="Player Alias" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,16}$"
-                            data-original-title="Hacker Name Selection"
+                            data-original-title="Player Alias"
                             data-content="Your handle must be 3-16 alpha-numeric characters" />
                     </div>
                 </div>
-
-                <hr>
+                <div class="control-group">
+                    <label class="control-label" for="playername">
+                        Player's Name
+                    </label>
+                    <div class="controls">
+                        <input required id="playername" name="playername" maxlength="64" placeholder="Name" type="text"
+                            rel="popover" pattern="^[a-zA-Z0-9 ]{3,64}$"
+                            data-original-title="Player's Name"
+                            data-content="Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters" />
+                    </div>
+                </div>
+                <hr style="margin-right: 400px;">
+                {% if options.teams %}
                 <h5>Join a Team</h5>
                     <div class="control-group">
                         <label class="control-label" for="team">
@@ -72,21 +151,24 @@
                                     data-content="Choose a name for your new team![3-24 Characters]" >
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label" for="motto">Motto</label>
-                            <div class="controls">
-                                <input id="motto" name="motto" maxlength="32" type="text" placeholder="Team Motto"
-                                    rel="popover"
-                                    data-original-title="Team Motto"
-                                    data-content="What's your team's motto? [Max: 32 Characters]">
-                            </div>
-                        </div>
                     {% end %}
-                    <hr>
+                {% end %}
+                {% if options.public_teams or not options.teams %}
+                <div class="control-group">
+                    <label class="control-label" for="motto">Motto</label>
+                    <div class="controls">
+                        <input id="motto" name="motto" maxlength="32" type="text" placeholder="{% if options.teams %}Team {% end %}Motto"
+                            rel="popover"
+                            data-original-title="{% if options.teams %}Team {% end %}Motto"
+                            data-content="Optional: What's your {% if options.teams %}team's {% end %}motto? [Max: 32 Characters]">
+                    </div>
+                </div>
+                {% end %}
+                <hr style="margin-right: 400px;">
                 <div class="control-group">
                     <label class="control-label" for="pass1">Account Password</label>
                     <div class="controls">
-                        <input required id="pass1" name="pass1"  placeholder="Password" type="password"
+                        <input required id="pass1" name="pass1" minlength="{{ options.min_user_password_length }}"  placeholder="Password" type="password"
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Password"
@@ -96,13 +178,14 @@
                 <div class="control-group">
                     <label class="control-label" for="pass2">Confirm Account Password</label>
                     <div class="controls">
-                        <input required id="pass2" name="pass2" placeholder="Confirm Password" type="password"
+                        <input required id="pass2" name="pass2" minlength="{{ options.min_user_password_length }}"  placeholder="Confirm Password" type="password"
                             autocomplete="off"
                             rel="popover"
                             data-original-title="Confirm Password"
                             data-content="Enter the same password as before" />
                     </div>
                 </div>
+                {% if options.banking %}
                 <div class="control-group">
                     <label class="control-label" for="bpass1">Bank Account Password</label>
                     <div class="controls">
@@ -113,6 +196,7 @@
                             data-content="Used to secure your (in-game) bank account. [Max: {{ options.max_password_length }} characters].  Please do NOT enter your real bank account password." />
                     </div>
                 </div>
+                {% end %}
                 {% if options.restrict_registration %}
                     <div class="control-group">
                         <label class="control-label" for="token">Registration Token</label>

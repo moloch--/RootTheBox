@@ -41,7 +41,7 @@ class IpAddress(DatabaseObject):
                   )
 
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
-    _address = Column(String(40), unique=True)
+    _address = Column(String(80))
     _ip_address = None
     visable = Column(Boolean, default=True)
 
@@ -65,15 +65,30 @@ class IpAddress(DatabaseObject):
         ''' Return and object based on an address '''
         return dbsession.query(cls).filter_by(_address=address).first()
 
+    @classmethod
+    def ipformat(self, value):
+        ipformat = value
+        if ipformat:
+            if ipformat.count(":") == 1:
+                #ip v4 with port
+                ipformat = ipformat.split(":")[0]
+            elif "]:" in ipformat:
+                #ip v6 with port
+                ipformat = ipformat.split("]:")[0]
+            #ip v6 enclosing
+            ipformat = ipformat.replace("[", "").replace("]", "")
+            if "/" in ipformat:
+                #remove any file info
+                ipformat = ipformat.split("/")[0]
+        return ipformat
+
     @property
     def address(self):
-        if self._ip_address is None:
-            self._ip_address = IPAddress(self._address)
-        return self._ip_address.format()
+        return self._address
 
     @address.setter
     def address(self, value):
-        ip = IPAddress(value)
+        ip = IPAddress(self.ipformat(value))
         if ip.is_loopback():
             raise ValidationError("You cannot use a loopback address")
         if ip.is_multicast():
@@ -83,13 +98,13 @@ class IpAddress(DatabaseObject):
     @property
     def version(self):
         if self._ip_address is None:
-            self._ip_address = IPAddress(self._address)
+            self._ip_address = IPAddress(self.ipformat(self._address))
         return self._ip_address.version
 
     @property
     def is_private(self):
         if self._ip_address is None:
-            self._ip_address = IPAddress(self._address)
+            self._ip_address = IPAddress(self.ipformat(self._address))
         return self._ip_address.is_private()
 
     def to_xml(self, parent):

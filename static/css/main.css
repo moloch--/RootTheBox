@@ -2,3 +2,36 @@ body {
     padding-top: 60px;
     padding-bottom: 40px;
 }
+footer {
+    font-size: 75%;
+    position: fixed;
+    bottom: -30px;
+    width: 100%;
+}
+.footernav {
+    padding: 5px 20px;
+}
+.shortcolumn{
+    width: 1px;
+    white-space: nowrap;
+}
+.descriptioncol{
+    white-space: pre-wrap;
+}
+.successtext {
+    font-size: 275%;
+    color: green;
+}
+.avatarused {
+    color: white; 
+    font-size: 23pt; 
+    position: absolute; 
+    top: -11px; 
+    right: -5px;
+}
+.avatarused-top {
+    font-size: 16pt; 
+    position: absolute; 
+    top: -6px; 
+    right: -1px;
+}

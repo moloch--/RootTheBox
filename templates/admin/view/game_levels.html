@@ -7,6 +7,7 @@
 {% end %}
 
 {% block modals %}
+{% from tornado.options import options %}
 {% from models.GameLevel import GameLevel %}
     <!-- Edit Level -->
     <div id="edit-game-level-modal" class="modal hide fade" style="display: none; ">
@@ -21,16 +22,33 @@
             <form class="form-horizontal" id="edit-game-level-form" method="post" action="/admin/edit/game_level">
                 {% raw xsrf_form_html() %}
                 <input id="game_level-uuid" name="uuid" type="hidden" />
+                <input id="game_level-last_level" name="last_level" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="game_level-number">Current Level</label>
+                    <label class="control-label" for="game_level-number">Game Level</label>
                     <div class="controls">
-                        <input required id="game_level-number" name="number" pattern="[0-9]+" placeholder="Level Number" type="text" />
+                        <input required id="game_level-number" name="number" pattern="[0-9]+" placeholder="Level Number" type="number" min=0 />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="game_level-buyout">Buyout</label>
+                    <label class="control-label" for="game_level-reward">Completion Reward</label>
                     <div class="controls">
-                        <input required id="game_level-buyout" name="buyout" pattern="[0-9]+" placeholder="Buyout ($)" type="text" />
+                        <input id="game_level-reward" name="reward" pattern="[0-9]+" placeholder="Reward" type="number" min=0 />
+                    </div>
+                </div>
+                <div id="gametype" class="control-group">
+                    <label class="control-label" for="game_level-type">Unlock Level</label>
+                    <div class="controls">
+                        <select id="game_level-type" name="type">
+                            <option value="none">No Lock</option>
+                            <option value="buyout">Purchase Unlock</option>
+                            <option value="progress">Game Progress</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="buyoutcost" class="control-group">
+                    <label id="buyoutlabel" class="control-label" for="game_level-buyout">Unlock Cost</label>
+                    <div class="controls">
+                        <input id="game_level-buyout" name="buyout" pattern="[0-9]+" placeholder="" type="number" min=0 />
                     </div>
                 </div>
             </form>
@@ -122,16 +140,27 @@
         {% for index, level in enumerate(GameLevel.all()) %}
             <div class="well">
                 <h2 style="display:inline;">
-                    Level #{{ level.number }} - ${{ level.buyout }}&nbsp;&nbsp;&nbsp;
+                    Level #{{ level.number }}
                 </h2>
-                <a id="edit-game-level-button{{ index }}" class="btn btn-small" data-toggle="modal" href="#edit-game-level-modal" data-uuid="{{ level.uuid }}">
-                    <i class="fa fa-pencil"></i>
-                    Edit Game Level
-                </a>
-                <a id="delete-game-level-button{{ index }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-game-level-modal" data-uuid="{{ level.uuid }}">
+                <a id="delete-game-level-button{{ index }}" style="float: right; margin-top: 5px; margin-right: 10px;" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-game-level-modal" data-uuid="{{ level.uuid }}">
                     <i class="fa fa-times-circle-o"></i>
                     Delete Game Level
                 </a>
+                <a id="edit-game-level-button{{ index }}" style="float: right; margin-top: 5px; margin-right: 10px;" class="btn btn-small" data-toggle="modal" href="#edit-game-level-modal" data-uuid="{{ level.uuid }}">
+                    <i class="fa fa-pencil"></i>
+                    Edit Game Level
+                </a>
+                <div style="padding-left: 3px; margin-bottom: -10px;">
+                    {% if level._type == "none" or level.buyout == 0 %}
+                        <i class="fa fa-unlock-alt"></i> No Lock
+                    {% elif level._type == "buyout" %}
+                        <i class="fa fa-lock"></i> Unlocks for {% if options.banking %}${% end %}{{ level.buyout }}{% if not options.banking %} point(s){% end %}
+                    {% else %}
+                        {% set last = GameLevel.last_level(level.id) %}
+                        <i class="fa fa-lock"></i> Unlocks after {{ level.buyout }}% completion of Level {% if last %}{{ last.number }}{% end %}
+                    {% end %}
+                    <span style="float: right; padding-right: 15px;"><strong>Reward: {{ level._reward }}</strong></span>
+                </div>
                 <hr />
                 {% if len(level.boxes) != 0 %}
                     <table class="table table-striped">
@@ -139,17 +168,17 @@
                             <tr>
                                 <th>#</th>
                                 <th>Box Name</th>
-                                <th>Number of Flags</th>
+                                <th class="shortcolumn">Number of Flags</th>
                                 <th><!-- Switch Level --></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for index, box in enumerate(level.boxes) %}
                                 <tr>
-                                    <td>{{ index + 1 }}</td>
+                                    <td class="shortcolumn">{{ index + 1 }}</td>
                                     <td>{{ box.name }}</td>
-                                    <td>{{ len(box.flags) }}</td>
-                                    <td>
+                                    <td class="shortcolumn" style="text-align: center;">{{ len(box.flags) }}</td>
+                                    <td class="shortcolumn" style="margin-right: 10px;">
                                           <a id="switch-level-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#switch-level-modal" data-level-uuid="{{ level.uuid }}" data-box-uuid="{{ box.uuid }}">
                                             <i class="fa fa-arrows-v"></i>
                                             Switch Level

@@ -4,11 +4,55 @@
 
 {% block header %}
 <script src="/static/js/pages/admin/view/game_objects.js"></script>
+<script src="/static/js/pages/scoreboard/teams.js"></script>
 {% end %}
 
 {% block modals %}
 {% from models.Corporation import Corporation %}
+{% from models.Category import Category %}
+{% from tornado.options import options %}
+{% from libs.XSSImageCheck import filter_avatars %}
 {% from models.Box import Box %}
+{% from models.Flag import Flag %}
+{% from models.Flag import FLAG_CHOICE %}
+{% from models.FlagChoice import FlagChoice %}
+    {% set avatars = filter_avatars("box") %}
+    <!-- Select Avatars -->
+    <div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+        <div class="modal-header">
+            <button id="avatarclose" type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>Change Avatar</h3>
+        </div>
+        <div class="modal-body">
+            {% raw xsrf_form_html() %}
+            {% for avatar in avatars[::3] %}
+                <div class="row">
+                    <div class="span3">
+                        <center>
+                            <a href="#" class="boxavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                        </center>
+                    </div>
+                    {% if avatars.index(avatar) + 1 < len(avatars) %}
+                        {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                        <div class="span3">
+                            <center>
+                                <a href="#" class="boxavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                            </center>
+                        </div>
+                    {% end %}
+                    {% if avatars.index(avatar) + 2 < len(avatars) %}
+                        {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                        <div class="span3">
+                            <center>
+                                <a href="#" class="boxavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                            </center>
+                        </div>
+                    {% end %}
+                </div>
+                <br/>
+            {% end %}
+        </div>
+    </div>
     <!-- Edit Corporation -->
     <div id="edit-corporation-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -80,7 +124,18 @@
                     <div class="controls">
                         <select id="edit-box-corporation" name="corporation_uuid">
                             {% for corporation in Corporation.all() %}
-                                <option value="{{ corporation.uuid }}">{{ corporation.name }}</option>
+                                <option value="{{ corporation.uuid }}">{% if corporation.name != "" %}{{ corporation.name }}{% else %}(No name){% end %}</option>
+                            {% end %}
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="box_catetory">Category</label>
+                    <div class="controls">
+                        <select id="edit-box-category" name="category_uuid">
+                            <option value=""></option>
+                            {% for category in Category.all() %}
+                                <option value="{{ category.uuid }}">{{ category.category }}</option>
                             {% end %}
                         </select>
                     </div>
@@ -100,7 +155,11 @@
                 <div class="control-group">
                     <label class="control-label" for="box_avatar">Avatar</label>
                     <div class="controls">
-                        <input id="box-avatar" name="avatar" type="file" style="color:white;" />
+                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                        <input id="box-avatar" name="avatar" type="file" style="display: none;"/>
+                        <input id="box_avatar_select" name="box_avatar_select" type="hidden" />
+                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal"> Choose Avatar </a>{% end %}
+                        <div id="avatarfilename" style="padding: 5px;"></div>
                     </div>
                 </div>
             </form>
@@ -147,35 +206,11 @@
             <form id="edit-flag-form" class="form-horizontal" method="post" action="/admin/edit/flag">
                 {% raw xsrf_form_html() %}
                 <input id="flag-uuid" name="uuid" type="hidden" />
+                <input id="flag-flagtype" name="flagtype" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="flag-name">Name</label>
+                    <label class="control-label" for="flag-name">Flag Name</label>
                     <div class="controls">
                         <input id="flag-name" name="name" type="text" placeholder="Flag Name" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-token">Token</label>
-                    <div class="controls">
-                        <input id="flag-token" name="token" type="text" placeholder="Token Value" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-description">Description</label>
-                    <div class="controls">
-                        <input id="flag-description" name="description" type="text" placeholder="Description" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-capture_message">Capture Message</label>
-                    <div class="controls">
-                        <textarea id="flag-capture_message" name="capture_message" placeholder="(Optional)">
-                        </textarea>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="flag-value">Value</label>
-                    <div class="controls">
-                        <input id="flag-value" name="value" type="text" placeholder="($) Reward Value" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -188,6 +223,91 @@
                         </select>
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="flag-value">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                    <div class="controls">
+                        <input id="flag-value" name="value" type="number" placeholder="{% if options.banking %}($) {% end %}Reward Value" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="flag-description">Description</label>
+                    <div class="controls">
+                        <textarea id="flag-description" name="description" type="text" placeholder="Description"></textarea>
+                    </div>
+                </div>
+                <div id="casegroup" class="control-group">
+                    <label class="control-label" for="case-sensitive">Case-Sensitive</label>
+                    <div class="controls">
+                        <input id="flag-case-sensitive" name="case-sensitive" type="hidden" value=1 />
+                        <div id="case-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Case-Sensitive"
+                            data-content="Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.">
+                            <button id="case-enable" type="button" class="btn btn-success">
+                                <i id="case-enable-icon" class="fa fa-fw fa-check-square-o"></i>
+                                Enable
+                            </button>
+                            <button id="case-disable" type="button" class="btn btn-danger">
+                                <i id="case-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="flagtokengroup" class="control-group">
+                    <label class="control-label" for="flag-token">Token</label>
+                    <div class="controls">
+                        <input id="flag-token" name="token" type="text" maxlength="256" placeholder="Token Value" />
+                    </div>
+                </div>
+                <div id="testflaggroup" class="control-group">
+                    <label class="control-label" for="test_token">Test Flag</label>
+                    <div class="controls" style="position:relative;">
+                        <span style="position: absolute; left: 230px; top: 3px; font-size: 175%;">
+                            <i id="testtrue" class="fa fa-check" style="color: green; display: none;"></i>
+                            <i id="testfalse" class="fa fa-times" style="color: red; display: none;"></i>
+                        </span>
+                            <input id="test-token" name="test_token" type="text" placeholder="Enter a Matching Flag" autocomplete="off"
+                                rel="popover"
+                                data-original-title="Token"
+                                data-content="This is a test flag/string the user could input for credit." />
+                    </div>
+                </div>
+                <div id="choicegroup" class="control-group" style="margin-bottom: 10px;">
+                    <label class="control-label" for="token" style="margin-left: -20px;">Multiple Choice</label>
+                    <div class="controls">
+                        <div class="input-group control-group after-add-more" style="position: relative; margin-bottom: 10px;">
+                            <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" required /><input type="text" name="choice" maxlength="256" class="form-control" placeholder="Enter Choice">
+                            <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
+                                <button class="btn btn-success add-more" type="button"style="padding: 4px 10px 0px; vertical-align: middle;"><i class="fa fa-plus" style="font-size: 160%;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Copy Fields -->
+                <div class="copy hide">
+                    <div class="choice-control-group input-group" style="margin-bottom: 10px; position: relative;">
+                        <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" /><input type="text" name="choice" maxlength="256" class="form-control" placeholder="Enter Choice">
+                        <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
+                            <button class="btn btn-danger remove" type="button" style="padding: 3px 10px 1px; vertical-align: middle;"><i class="fa fa-times" style="font-size: 160%;"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                    <div class="controls">
+                        <select id="edit-flag-lock" name="lock_uuid"></select>
+                    </div>
+                </div>
+                {% if options.secure_communique_dialog %}
+                <div class="control-group">
+                    <label class="control-label" for="flag-capture_message">Capture Message</label>
+                    <div class="controls">
+                        <textarea id="flag-capture_message" name="capture_message" placeholder="(Optional)">
+                        </textarea>
+                    </div>
+                </div>
+                {% end %}
             </form>
         </div>
         <div class="modal-footer">
@@ -231,15 +351,21 @@
                 {% raw xsrf_form_html() %}
                 <input id="hint-uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="hint-price">Price</label>
+                    <label class="control-label" for="hint-price">{% if options.banking %}Price{% else %}Cost{% end %}</label>
                     <div class="controls">
-                        <input id="hint-price" name="price" type="text" placeholder="$" />
+                        <input id="hint-price" name="price" type="text" placeholder="{% if options.banking %}${% end %}" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="hint-description">Description</label>
                     <div class="controls">
-                        <input id="hint-description" name="description" type="text" placeholder="Description" />
+                        <textarea id="hint-description" name="description" type="text" maxlength="512" placeholder="Description"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="hint-flag_uuid">Flag</label>
+                    <div class="controls">
+                        <select id="hint-flag_uuid" name="hint-flag_uuid"></select>
                     </div>
                 </div>
             </form>
@@ -345,18 +471,36 @@
     <div class="row-fluid">
         <div class="span2" />
             <ul class="nav nav-tabs nav-stacked affix well">
+                {% if len(Corporation.all()) > 1 %}
+                    <center>
+                        <strong>
+                            <i class="fa fa-building-o"></i>
+                            Corporations
+                        </strong>
+                    </center>
+                    <br />
+                    {% for corporation in Corporation.all() %}
+                        <li>
+                            <a href="#{{ corporation.uuid }}">
+                                <i class="icon-chevron-right"></i>
+                                &nbsp;&nbsp;{{ corporation.name }}
+                            </a>
+                        </li>
+                    {% end %}
+                <br/>
+                {% end %}
                 <center>
                     <strong>
                         <i class="fa fa-building-o"></i>
-                        Corporations
+                        Boxes
                     </strong>
                 </center>
                 <br />
-                {% for corporation in Corporation.all() %}
+                {% for box in Box.all() %}
                     <li>
-                        <a href="#{{ corporation.uuid }}">
+                        <a href="#{{ box.uuid }}">
                             <i class="icon-chevron-right"></i>
-                            &nbsp;&nbsp;{{ corporation.name }}
+                            &nbsp;&nbsp;{{ box.name }}
                         </a>
                     </li>
                 {% end %}
@@ -395,7 +539,7 @@
                     <br />
                     {% if len(corporation.boxes) != 0 %}
                         {% for box in corporation.boxes %}
-                            <div class="well">
+                            <div id="{{ box.uuid }}" class="well">
                                 <h3 style="display:inline;">
                                     <i class="fa fa-desktop"></i>
                                     {{ box.name }}&nbsp;&nbsp;
@@ -448,7 +592,7 @@
                                                             <td>{{ ip.address }}</td>
                                                             <td>{{ ip.version }}</td>
                                                             <td>{% if ip.visable %} Yes {% else %} No {% end %}</td>
-                                                            <td>
+                                                            <td class="shortcolumn">
                                                                 <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
                                                                     <i class="fa fa-fw fa-times-circle-o"></i>
                                                                     Delete
@@ -479,12 +623,13 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
+                                                    <th><!-- Flag Lock --></th>
                                                     <th>Name</th>
                                                     <th>Description</th>
                                                     <th>Token</th>
                                                     <th>Value</th>
-                                                    <th>Attachments</th>
                                                     <th>Type</th>
+                                                    <th style="text-align: center;"><i class="fa fa-paperclip" title="Attachments"></i></th>
                                                     <th><!-- Edit Button --></th>
                                                     <th><!-- Delete Button --></th>
                                                 </tr>
@@ -492,25 +637,28 @@
                                             <tbody>
                                                 {% for index, flag in enumerate(box.flags) %}
                                                     <tr>
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>{{ flag.name }}</td>
-                                                        <td>{{ flag.description }}</td>
-                                                        <td>{{ flag.token }}</td>
-                                                        <td>${{ flag.value }}</td>
-                                                        <td>
+                                                        <td class="shortcolumn">{{ index + 1 }}</td>
+                                                        <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
+                                                        <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
+                                                        <td class="descriptioncol">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
+                                                            {% set choices = FlagChoice.by_flag_id(flag.id) %}
+                                                            {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
+                                                        <td style="width: 200px;">{{ flag.token }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
+                                                        <td class="shortcolumn">{{ str(flag.type) }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">
                                                             <a id="flag-attachment-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#flag-attachment-button" data-uuid="{{ flag.uuid }}">
                                                                 <i class="fa fa-fw"></i>
                                                                 {{ len(flag.flag_attachments) }}
                                                             </a>
                                                         </td>
-                                                        <td>{{ str(flag._type) }}</td>
-                                                        <td>
-                                                            <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
+                                                        <td class="shortcolumn">
+                                                            <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-flagtype="{{ str(flag._type) }}" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
                                                                 Edit Flag
                                                             </a>
                                                         </td>
-                                                        <td>
+                                                        <td class="shortcolumn">
                                                             <a id="delete-flag-button-{{ flag.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-flag-modal" data-uuid="{{ flag.uuid }}">
                                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                                                 Delete
@@ -527,38 +675,52 @@
                                 <br />
                                 <div>
                                     <h4 style="display:inline;">
-                                        <i class="fa fa-ambulance"></i>
+                                        <i class="fa fa-medkit"></i>
                                         Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;
                                     </h4>
-                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/hint">
+                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/hint?box={{box.uuid}}">
                                         <i class="fa fa-plus"></i>
                                         Add Hint
                                     </a>
                                     <hr>
                                     {% if len(box.hints) != 0 %}
+                                        {% set boxhints = [] %}
+                                        {% set flaghints = [] %}
+                                        {% for index, hint in enumerate(box.hints) %}
+                                            {% if hint.flag_id %}
+                                                {% set flaghints.append(hint) %}
+                                            {% else %}
+                                                {% set boxhints.append(hint) %}
+                                            {% end %}
+                                        {% end %}
+                                       
+                                        {% if len(flaghints) > 0 %}
+                                        <h5>Flag Hints</h5>
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Price</th>
+                                                    <th>{% if options.banking %}Price{% else %}Cost{% end %}</th>
+                                                    <th>Flag</th>
                                                     <th>Description</th>
                                                     <th><!-- Edit Button --></th>
                                                     <th><!-- Delete Button --></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for index, hint in enumerate(box.hints) %}
+                                                {% for index, hint in enumerate(flaghints) %}
                                                     <tr>
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>${{ hint.price }}</td>
-                                                        <td>{{ hint.description }}</td>
-                                                        <td>
+                                                        <td class="shortcolumn">{{ index + 1 }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
+                                                        <td class="shortcolumn" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
+                                                        <td class="descriptioncol">{{ hint.description }}</td>
+                                                        <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
                                                                 Edit Hint
                                                             </a>
                                                         </td>
-                                                        <td>
+                                                        <td class="shortcolumn">
                                                             <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
                                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                                                 Delete
@@ -568,8 +730,44 @@
                                                 {% end %}
                                             </tbody>
                                         </table>
+                                        {% end %}
+                                        {% if len(boxhints) > 0 %}
+                                        <h5>Box Hints</h5>
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>{% if options.banking %}Price{% else %}Cost{% end %}</th>
+                                                    <th>Description</th>
+                                                    <th><!-- Edit Button --></th>
+                                                    <th><!-- Delete Button --></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for index, hint in enumerate(boxhints) %}
+                                                    <tr>
+                                                        <td class="shortcolumn">{{ index + 1 }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
+                                                        <td class="descriptioncol">{{ hint.description }}</td>
+                                                        <td class="shortcolumn">
+                                                            <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
+                                                                <i class="fa fa-fw fa-pencil"></i>
+                                                                Edit Hint
+                                                            </a>
+                                                        </td>
+                                                        <td class="shortcolumn">
+                                                            <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                                <i class="fa fa-fw fa-times-circle-o"></i>
+                                                                Delete
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                        {% end %}
                                     {% else %}
-                                        <strong>No hints on this box yet, <a href="/admin/create/hint">add some</a></strong>
+                                        <strong>No hints on this box yet, <a href="/admin/create/hint?box={{box.uuid}}">add some</a></strong>
                                     {% end %}
                                 </div><!-- End Hints -->
                             </div>

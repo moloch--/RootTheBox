@@ -41,7 +41,28 @@ def get_child_by_tag(elem, tag_name):
 
 def get_child_text(elem, tag_name):
     ''' Shorthand access to .text data '''
-    return get_child_by_tag(elem, tag_name).text
+    try:
+        text = get_child_by_tag(elem, tag_name).text
+        if text == 'None':
+            return None
+        else:
+            return text
+    except:
+        return None
+
+
+def create_categories(categories):
+    ''' Create Category objects based on XML data '''
+    logging.info("Found %s categories" % categories.get('count'))
+    for index, cat_elem in enumerate(categories.getchildren()):
+        try:
+            category = Category()
+            category.category = get_child_text(cat_elem, 'category')
+            dbsession.add(category)
+        except:
+            logging.exception("Failed to import category #%d" % (index + 1))
+    dbsession.flush()
+    dbsession.commit()
 
 
 def create_levels(levels):
@@ -49,18 +70,25 @@ def create_levels(levels):
     logging.info("Found %s game level(s)" % levels.get('count'))
     for index, level_elem in enumerate(levels.getchildren()):
         # GameLevel 0 is created automatically by the bootstrap
-        if get_child_text(level_elem, 'number') != '0':
-            try:
-                number = get_child_text(level_elem, 'number')
-                if GameLevel.by_number(number) is None:
+        try:
+            number = get_child_text(level_elem, 'number')
+
+            if number == '0' or GameLevel.by_number(number) is None:
+                if number != '0':
                     game_level = GameLevel()
-                    game_level.number = number
-                    game_level.buyout = get_child_text(level_elem, 'buyout')
-                    dbsession.add(game_level)
                 else:
-                    logging.info("GameLevel %d already exists, skipping" % number)
-            except:
-                logging.exception("Failed to import game level #%d" % (index + 1))
+                    game_level = GameLevel.by_id(0)
+                    if game_level is None:
+                        game_level = GameLevel()
+                game_level.number = number
+                game_level.type = get_child_text(level_elem, 'type')
+                game_level.reward = get_child_text(level_elem, 'reward')
+                game_level.buyout = get_child_text(level_elem, 'buyout')
+                dbsession.add(game_level)
+            else:
+                logging.info("GameLevel %d already exists, skipping" % int(number))
+        except:
+            logging.exception("Failed to import game level #%d" % (index + 1))
     dbsession.flush()
     game_levels = GameLevel.all()
     for index, game_level in enumerate(game_levels):
@@ -71,12 +99,15 @@ def create_levels(levels):
     dbsession.commit()
 
 
-def create_hints(parent, box):
+def create_hints(parent, box, flag=None):
     ''' Create flag objects for a box '''
     logging.info("Found %s hint(s)" % parent.get('count'))
     for index, hint_elem in enumerate(parent.getchildren()):
         try:
-            hint = Hint(box_id=box.id)
+            flag_id = None
+            if flag:
+                flag_id = flag.id
+            hint = Hint(box_id=box.id, flag_id=flag_id)
             hint.price = get_child_text(hint_elem, 'price')
             hint.description = get_child_text(hint_elem, 'description')
             dbsession.add(hint)
@@ -87,6 +118,7 @@ def create_hints(parent, box):
 def create_flags(parent, box):
     ''' Create flag objects for a box '''
     logging.info("Found %s flag(s)" % parent.get('count'))
+    flag_dependency = []
     for index, flag_elem in enumerate(parent.getchildren()):
         try:
             name = get_child_text(flag_elem, 'name')
@@ -94,12 +126,38 @@ def create_flags(parent, box):
             flag.name = name
             flag.token = get_child_text(flag_elem, 'token')
             flag.value = get_child_text(flag_elem, 'value')
+            flag.case_sensitive = get_child_text(flag_elem, 'case_sensitive')
             flag.description = get_child_text(flag_elem, 'description')
             flag.capture_message = get_child_text(flag_elem, 'capture_message')
             flag.type = flag_elem.get('type')
             dbsession.add(flag)
+            dbsession.flush()
+            depend = get_child_text(flag_elem, 'depends_on')
+            if depend:
+                flag_dependency.append({"flag": flag, "name": depend})
+            if flag.type == "choice":
+                create_choices(get_child_by_tag(flag_elem, 'flag_choices'), flag)
+            create_hints(get_child_by_tag(flag_elem, 'hints'), box, flag)
         except:
             logging.exception("Failed to import flag #%d" % (index + 1))
+    if len(flag_dependency) > 0:
+        for item in flag_dependency:
+            for flag in box.flags:
+                if item["name"] == flag.name:
+                    item["flag"].lock_id = flag.id
+                    continue
+
+
+def create_choices(parent, flag):
+    ''' Create multiple choice flag objects '''
+    logging.info("Found %s choice(s)" % parent.get('count'))
+    for index, choice_elem in enumerate(parent.getchildren()):
+        try:
+            choice = FlagChoice(flag_id=flag.id)
+            choice.choice = choice_elem.text
+            dbsession.add(choice)
+        except:
+            logging.exception("Failed to import choice #%d in flag" % (index + 1))
 
 
 def create_boxes(parent, corporation):
@@ -120,6 +178,9 @@ def create_boxes(parent, corporation):
                 box.operating_system = get_child_text(box_elem, 'operatingsystem')
                 box.avatar = get_child_text(box_elem, 'avatar').decode('base64')
                 box.garbage = get_child_text(box_elem, 'garbage')
+                category = get_child_text(box_elem, 'category')
+                if category:
+                    box.category_id = Category.by_category(category).id
                 dbsession.add(box)
                 dbsession.flush()
                 create_flags(get_child_by_tag(box_elem, 'flags'), box)
@@ -137,8 +198,11 @@ def create_corps(corps):
         try:
             corporation = Corporation()
             corporation.name = get_child_text(corp_elem, 'name')
-            dbsession.add(corporation)
-            dbsession.flush()
+            if Corporation.by_name(corporation.name) is None:
+                dbsession.add(corporation)
+                dbsession.flush()
+            else:
+                corporation = Corporation.by_name(corporation.name)
             create_boxes(get_child_by_tag(corp_elem, 'boxes'), corporation)
         except:
             logging.exception("Faild to create corporation #%d" % (index + 1))
@@ -152,6 +216,8 @@ def _xml_file_import(filename):
         xml_root = tree.getroot()
         levels = get_child_by_tag(xml_root, "gamelevels")
         create_levels(levels)
+        categories = get_child_by_tag(xml_root, "categories")
+        create_categories(categories)
         corporations = get_child_by_tag(xml_root, "corporations")
         create_corps(corporations)
         logging.debug("Done processing: %s" % filename)

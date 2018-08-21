@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
     /* Button callbacks */
-    $("button[id^=os-button]").click(function() {
-        $("#operating-system").val($(this).data("os"));
+    $(".osbutton").click(function() {
+        $("#operating_system").val($(this).data("os"));
     });
 
     $("#autoformat-enable").click(function() {
@@ -28,4 +28,20 @@ $(document).ready(function() {
     $("#description").popover({placement:'right', trigger:'hover'});
     $("#autoformat-button").popover({placement:'right', trigger:'hover'});
     $("#difficulty").popover({placement:'right', trigger:'hover'});
+
+    /* Avatar */
+    $(".boxavatarimg").click(function() {
+        var filename = $(this).attr('value');
+        $("#box_avatar_select").val(filename);
+        $("#avatarfilename").text("File: " + filename.replace("box/",""));
+        $("#avatarclose").click();
     });
+    $("#box-avatar").change(function(){
+        $("#avatarfilename").text("File: " + $(this).val());
+        $("#box_avatar_select").val("");
+    });
+
+    $("#uploadbutton").click(function(){
+        $("#box-avatar").click(); 
+    });
+});

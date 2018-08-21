@@ -1,0 +1,137 @@
+{% extends "../../main.html" %}
+
+{% block title %}Create Flag{% end %}
+
+{% block header %}
+<script src="/static/js/pages/admin/create/flags.js"></script>
+{% end %}
+
+{% block content %}
+{% from models.Box import Box %}
+{% from tornado.options import options %}
+<div class="container">
+    <h1>
+        <i class="fa fa-flag"></i>
+        Create Multiple Choice Flag
+    </h1>
+    <br />
+    {% if errors is not None and len(errors) != 0 %}
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
+        </div>
+        {% end %}
+    {% end %}
+    <div class="well">
+        <div class="row">
+            <div class="span4">
+                <form class="form-horizontal" action="/admin/create/flag/choice" method="post">
+                    {% raw xsrf_form_html() %}
+                    <input id="flagtype" type="hidden" value="choice" />
+                    <input id="choices" type="hidden" name="choices" />
+                    <div class="control-group">
+                        <label class="control-label" for="flag_name">Flag Name</label>
+                        <div class="controls">
+                            <input autofocus required id="flag-name" maxlength="16" name="flag_name" type="text" placeholder="Flag Name"
+                                    rel="popover"
+                                    data-original-title="Flag Name"
+                                    data-content="This is what you want the flag to be displayed as." />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="box_uuid">Box</label>
+                        <div class="controls">
+                            <select id="box-uuid" name="box_uuid"
+                                    rel="popover"
+                                    data-original-title="Box"
+                                    data-content="This is the box the flag is located on.">
+                                <option value=""></option>
+                                {% for box in Box.all() %}
+                                <option value="{{ box.uuid }}">
+                                    {{ box.name }}{% if box.corporation.name != "" %} ({{ box.corporation.name }}){% end %}
+                                </option>
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                        <div class="controls">
+                            <input required id="reward" name="reward" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                                   rel="popover"
+                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
+                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="description">Description</label>
+                        <div class="controls">
+                            <textarea required id="description" name="description" type="text" placeholder="Description"
+                                    rel="popover"
+                                    data-original-title="Description"
+                                    data-content="This is the description.">
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="control-group" style="margin-bottom: 10px;">
+                        <label class="control-label" for="token" style="margin-left: -20px;">Multiple Choice</label>
+                        <div class="controls">
+                                <div class="input-group control-group after-add-more" style="position: relative; margin-bottom: 10px;">
+                                    <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" required /><input type="text" name="addmore[]" maxlength="256" class="form-control" placeholder="Enter Choice">
+                                    <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
+                                        <button class="btn btn-success add-more" type="button"style="padding: 4px 10px 0px; vertical-align: middle;"><i class="fa fa-plus" style="font-size: 160%;"></i></button>
+                                    </div>
+                                </div>
+                            <input required id="token" name="token" type="hidden" placeholder="Multiple Choice Token" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                        <div class="controls">
+                            <select id="edit-flag-lock" name="lock_uuid"></select>
+                        </div>
+                    </div>
+                    {% if options.secure_communique_dialog %}
+                    <div class="control-group">
+                        <label class="control-label" for="capture-message">Capture Message</label>
+                        <div class="controls">
+                            <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)"
+                                    rel="popover"
+                                    data-original-title="Capture Message"
+                                    data-content="This is the message displayed to the user once inputed." >
+                            </textarea>
+                        </div>
+                    </div>
+                    {% end %}
+                    <div class="control-group">
+                        <div class="controls">
+                            <button id="createflag" class="btn btn-primary" type="submit">Create Flag</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Copy Fields -->
+            <div class="copy hide">
+                <div class="choice-control-group input-group" style="margin-bottom: 10px; position: relative;">
+                    <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" /><input type="text" name="addmore[]" maxlength="256" class="form-control" placeholder="Enter Choice">
+                    <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
+                        <button class="btn btn-danger remove" type="button" style="padding: 3px 10px 1px; vertical-align: middle;"><i class="fa fa-times" style="font-size: 160%;"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="offset3 span4">
+                <p>
+                    <blockquote>
+                        <small>
+                            <strong>Tokens:</strong>
+                            In this case, the "flag" is a multiple choice question where the selected option is the token.
+                        </small>
+                    </blockquote>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% end %}

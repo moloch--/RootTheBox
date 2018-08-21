@@ -37,7 +37,7 @@ from models.GameLevel import GameLevel
 from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from datetime import datetime
-
+from tornado.options import options
 
 class HomePageHandler(BaseHandler):
 
@@ -46,7 +46,10 @@ class HomePageHandler(BaseHandler):
         if self.session is not None:
             self.redirect('/user')
         else:
-            self.render("public/home.html")
+            try:
+                self.render("public/home.html")
+            except:
+                self.redirect("public/home.html")
 
 
 class LoginHandler(BaseHandler):
@@ -58,7 +61,7 @@ class LoginHandler(BaseHandler):
         if self.session is not None:
             self.redirect('/user')
         else:
-            self.render('public/login.html', errors=None)
+            self.render('public/login.html', info=None, errors=None)
 
     @blacklist_ips
     def post(self, *args, **kwargs):
@@ -69,16 +72,16 @@ class LoginHandler(BaseHandler):
             if not user.locked:
                 if self.game_started(user):
                     self.successful_login(user)
-                    if user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
+                    if self.config.secure_communique_dialog and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
                         self.redirect('/user/missions/firstlogin')
                     else:
                         self.redirect('/user')
                 else:
                     self.render('public/login.html',
-                                errors=["The game has not started yet"])
+                                errors=None, info=["The game has not started yet"])
             else:
                 self.render('public/login.html',
-                            errors=["Your account has been locked"])
+                            info=None, errors=["Your account has been locked"])
         else:
             self.failed_login()
 
@@ -133,7 +136,7 @@ class LoginHandler(BaseHandler):
             except:
                 logging.exception("Error while attempting to ban ip address")
         self.render('public/login.html',
-                    errors=["Bad username and/or password, try again"])
+                    info=None, errors=["Bad username and/or password, try again"])
 
 
 class RegistrationHandler(BaseHandler):
@@ -152,8 +155,7 @@ class RegistrationHandler(BaseHandler):
         try:
             if self.config.restrict_registration:
                 self.check_regtoken()
-            team = self.get_team()
-            user = self.create_user(team)
+            user = self.create_user()
             self.render('public/successful_reg.html', account=user.handle)
         except ValidationError as error:
             self.render('public/registration.html', errors=[str(error)])
@@ -168,7 +170,7 @@ class RegistrationHandler(BaseHandler):
         else:
             raise ValidationError("Invalid registration token")
 
-    def create_user(self, team):
+    def create_user(self):
         ''' Add user to the database '''
         if User.by_handle(self.get_argument('handle', '')) is not None:
             raise ValidationError("This hacker name is already registered")
@@ -178,10 +180,27 @@ class RegistrationHandler(BaseHandler):
         user.handle = self.get_argument('handle', '')
         user.password = self.get_argument('pass1', '')
         user.bank_password = self.get_argument('bpass', '')
-        team.members.append(user)
+        user._name = self.get_argument('playername', '')
+        team = self.get_team()
         self.dbsession.add(user)
         self.dbsession.add(team)
         self.dbsession.commit()
+
+         # Avatar
+        avatar_select = self.get_argument('user_avatar_select', '')
+        if avatar_select and len(avatar_select) > 0:
+            user._avatar = avatar_select
+        elif hasattr(self.request, 'files') and 'avatar' in self.request.files:
+            user.avatar = self.request.files['avatar'][0]['body']
+        team.members.append(user)
+        if not options.teams:
+            if avatar_select and len(avatar_select) > 0:
+                team._avatar = avatar_select
+            elif hasattr(self.request, 'files') and 'avatar' in self.request.files:
+                team.avatar = self.request.files['avatar'][0]['body']  
+        self.dbsession.add(user)
+        self.dbsession.add(team)
+        self.dbsession.commit()  
         self.event_manager.user_joined_team(user)
         return user
 
@@ -194,12 +213,23 @@ class RegistrationHandler(BaseHandler):
 
     def create_team(self):
         ''' Create a new team '''
-        if self.config.public_teams:
+        if not self.config.teams:
+            team = Team()
+            team.name = self.get_argument('handle', '')
+            team.motto = self.get_argument('motto', '')
+            if not self.config.banking:
+                team.money = 0
+            level_0 = GameLevel.all()[0]
+            team.game_levels.append(level_0)
+            return team
+        elif self.config.public_teams:
             if Team.by_name(self.get_argument('team_name', '')) is not None:
                 raise ValidationError("This team name is already registered")
             team = Team()
             team.name = self.get_argument('team_name', '')
             team.motto = self.get_argument('motto', '')
+            if not self.config.banking:
+                team.money = 0
             level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)
             return team

@@ -34,6 +34,7 @@ from models.GameLevel import GameLevel
 from models.User import ADMIN_PERMISSION
 from models.SourceCode import SourceCode
 from models.Corporation import Corporation
+from models.Category import Category
 from models.RegistrationToken import RegistrationToken
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
@@ -305,9 +306,20 @@ class AdminConfigurationHandler(BaseHandler):
         '''
         self.config.game_name = self.get_argument('game_name', 'Root the Box')
         self.config.restrict_registration = self.get_bool('restrict_registration', False)
+        self.config.hints_taken = self.get_bool('hints_taken', False)
+        self.config.secure_communique_dialog = self.get_bool('secure_communique_dialog', True)
+        self.config.rank_by = str(self.get_argument('rank_by', 'money'))
+        self.config.teams = self.get_bool('teams', True)
         self.config.public_teams = self.get_bool('public_teams')
+        self.config.dynamic_flag_value = self.get_bool('dynamic_flag_value', False)
+        self.config.flag_value_decrease = self.get_int('flag_value_decrease')
+        self.config.penalize_flag_value = self.get_bool('penalize_flag_value', False)
+        self.config.flag_penalty_cost = self.get_int('flag_penalty_cost')
+        self.config.flag_stop_penalty = self.get_int('flag_stop_penalty')
+        self.config.flag_start_penalty = self.get_int('flag_start_penalty')
         self.config.max_team_size = self.get_int('max_team_size')
         self.config.min_user_password_length = self.get_int('min_user_password_length', '16')
+        self.config.banking = self.get_bool('banking', True)
         self.config.max_password_length = self.get_int('max_password_length', '7')
         self.config_bots()
         self.config.bot_reward = self.get_int('bot_reward', 50)
@@ -396,6 +408,10 @@ class AdminExportHandler(BaseHandler):
         levels_elem.set("count", str(GameLevel.count()))
         for level in GameLevel.all()[1:]:
             level.to_xml(levels_elem)
+        category_elem = ET.SubElement(root, "categories")
+        category_elem.set("count", str(Category.count()))
+        for category in Category.all():
+            category.to_xml(category_elem)
         corps_elem = ET.SubElement(root, "corporations")
         corps_elem.set("count", str(Corporation.count()))
         for corp in Corporation.all():

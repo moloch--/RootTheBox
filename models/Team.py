@@ -24,6 +24,8 @@ import xml.etree.cElementTree as ET
 
 import os
 import imghdr
+import StringIO
+                
 from uuid import uuid4
 from sqlalchemy import Column
 from sqlalchemy.orm import relationship, backref
@@ -34,13 +36,13 @@ from models.Relationships import team_to_box, team_to_item, \
     team_to_flag, team_to_game_level, team_to_source_code, \
     team_to_hint
 from libs.BotManager import BotManager
+from libs.XSSImageCheck import is_xss_image, get_new_avatar
+from libs.XSSImageCheck import MAX_AVATAR_SIZE, MIN_AVATAR_SIZE, IMG_FORMATS
 from libs.ValidationError import ValidationError
 from tornado.options import options
-from libs.XSSImageCheck import is_xss_image
-
-MAX_AVATAR_SIZE = 1024 * 1024
-MIN_AVATAR_SIZE = 64
-IMG_FORMATS = ['png', 'jpeg', 'gif', 'bmp']
+from PIL import Image
+from resizeimage import resizeimage
+from random import randint
 
 class Team(DatabaseObject):
 
@@ -53,7 +55,7 @@ class Team(DatabaseObject):
     _avatar = Column(String(64))
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
-    money = Column(Integer, default=500, nullable=False)
+    money = Column(Integer, default=options.starting_team_money, nullable=False)
 
     members = relationship("User",
                            backref=backref("team", lazy="select")
@@ -145,19 +147,28 @@ class Team(DatabaseObject):
         if self._avatar is not None:
             return self._avatar
         else:
-            return "default_avatar.jpeg"
+            if options.teams:
+                avatar = get_new_avatar('team')
+            else:
+                avatar = get_new_avatar('user', True)
+            if not avatar.startswith("default_"):
+                self._avatar = avatar
+                dbsession.add(self)
+                dbsession.commit()
+            return avatar
 
     @avatar.setter
     def avatar(self, image_data):
         if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
             ext = imghdr.what("", h=image_data)
             if ext in IMG_FORMATS and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
-                    os.unlink(options.avatar_dir + '/' + self._avatar)
-                file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
-                with open(file_path, 'wb') as fp:
-                    fp.write(image_data)
-                self._avatar = self.uuid + '.' + ext
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
+                    os.unlink(options.avatar_dir + '/upload/' + self._avatar)
+                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                image = Image.open(StringIO.StringIO(image_data))
+                cover = resizeimage.resize_cover(image, [500, 250])
+                cover.save(file_path, image.format)
+                self._avatar = 'upload/' + self.uuid + '.' + ext
             else:
                 raise ValidationError("Invalid image format, avatar must be: %s" % (
                     ' '.join(IMG_FORMATS)
@@ -193,6 +204,7 @@ class Team(DatabaseObject):
             'name': self.name,
             'motto': self.motto,
             'money': self.money,
+            'avatar': self.avatar,
         }
 
     def to_xml(self, parent):
@@ -219,9 +231,19 @@ class Team(DatabaseObject):
     def __cmp__(self, other):
         ''' Compare based on the config option rank_by '''
         if options.rank_by.lower() != 'money':
+            ''' flags ▲, money ▲, hints ▼ '''
             this, that = len(self.flags), len(other.flags)
+            if this == that:
+                this, that = self.money, other.money
+            if this == that:
+                this, that = len(other.hints), len(self.hints)
         else:
+            ''' money ▲, hints ▼, flags ▲ '''
             this, that = self.money, other.money
+            if this == that:
+                this, that = len(other.hints), len(self.hints)
+            if this == that:
+                this, that = len(self.flags), len(other.flags)
         if this < that:
             return 1
         elif this == that:

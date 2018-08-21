@@ -3,10 +3,17 @@
 {% block title %}Missions{% end %}
 
 {% block header %}
+<script src="/static/js/pages/missions/view.js"></script>
 <script src="/static/js/pages/missions/box.js"></script>
 {% end %}
 
 {% block modals %}
+{% from models.Penalty import Penalty %}
+{% from models.Flag import Flag %}
+{% from models.Flag import FLAG_FILE %}
+{% from models.Flag import FLAG_CHOICE %}
+{% from models.FlagChoice import FlagChoice %}
+{% from tornado.options import options %}
     <!-- Submit text flag -->
     <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -21,7 +28,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-token">Flag</label>
                     <div class="controls">
-                        <input autofocus required id="flag-token" name="token" type="text" placeholder="Flag" />
+                        <input autofocus required id="flag-token" name="token" type="text" placeholder="Flag" autocomplete="off" />
                     </div>
                 </div>
             </form>
@@ -33,6 +40,28 @@
             </button>
         </div>
     </div>
+    <!-- Submit multiple choice flag -->
+    <div id="capture-choice-flag-modal" class="modal hide fade" style="display: none;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3>Submit Flag</h3>
+            </div>
+            <div class="modal-body">
+                <form id="capture-choice-flag-form" class="form-horizontal" method="post" action="/user/missions/capture">
+                    {% raw xsrf_form_html() %}
+                    <input id="capture-choice-flag-uuid" name="uuid" value="" type="hidden" />
+                    <input id="choice-flag-token" name="token" type="hidden" />
+                    <br/>
+                    <div id="choiceinput" style="margin-left: 50px;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal">Close</a>
+                <button id="capture-choice-flag-submit" class="btn btn-primary" type="button">
+                    Submit
+                </button>
+            </div>
+        </div>
     <!-- Submit file flag -->
     <div id="capture-file-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -59,10 +88,11 @@
             </button>
         </div>
     </div>
+    
     <div id="purchase-hint-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Purchase Hint</h3>
+            <h3>{% if options.banking %}Purchase{% else %}Take{% end %} Hint</h3>
         </div>
         <div class="modal-body">
             <br />
@@ -75,7 +105,7 @@
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <button id="purchase-hint-submit" class="btn btn-primary" type="button">
-                Buy
+                {% if options.banking %}Buy{% else %}Yes{% end %}
             </button>
         </div>
     </div>
@@ -91,18 +121,39 @@
                 <i class="fa fa-linux"></i>
             {% elif box.operating_system.lower() == 'apple' %}
                 <i class="fa fa-apple"></i>
+            {% elif box.operating_system.lower() == '?' %}
+                <i class="fa fa-desktop"></i>
             {% else %}
-                <i class="fa fa-question"></i>
+                <i class="fa fa-th"></i>
             {% end %}
-            {{ box.corporation.name }} - {{ box.name }}
+            {% if box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
+            <a style="float:right;"  class="btn" href="/user/missions">Return to Missions</a>
         </h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">ERROR</h4>
+                    <h4 class="alert-heading">Incorrect</h4>
                     {{ error }}
+                </div>
+            {% end %}
+        {% end %}
+        {% if success is not None and len(success) != 0 %}
+            {% for msg in success %}
+                <div class="alert alert-success">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">Success!</h4>
+                    {{ msg }}
+                </div>
+            {% end %}
+        {% end %}
+        {% if info is not None and len(info) != 0 %}
+            {% for msg in info %}
+                <div class="alert alert-info">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">Information</h4>
+                    {{ msg }}
                 </div>
             {% end %}
         {% end %}
@@ -112,51 +163,101 @@
                     <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                 </div>
                 <div class="span8">
-                    <pre> *********************** BEGIN SECURE COMMUNIQUE ***********************
-{{ box.description }}
-&nbsp;***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************</pre>
+                    <pre class="well" style="color: unset;">{% if options.secure_communique_dialog %} *********************** BEGIN SECURE COMMUNIQUE ***********************{% else %} ***************************** DESCRIPTION *****************************{% end %}
+                        {{ box.description }}
+                        
+                        {% if options.secure_communique_dialog %}&nbsp;***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}&nbsp;***********************************************************************{% end %}</pre>
                 </div>
             </div>
         </div>
         <br />
         <br />
+        {% set flagcount=0 %}
+        {% for index, flag in enumerate(box.flags) %}
+            {% if flag in team.flags %}
+                {% set flagcount += 1 %}
+            {% end %}
+        {% end %}
+        {% set boxhints = [] %}
+        {% set flaghints = [] %}
+        {% if len(box.hints) != 0 %}
+            <input id="hintbanking" value="str(config.banking).lower()" type="hidden" />
+            {% for index, hint in enumerate(box.hints) %}
+                {% if hint.flag_id %}
+                    {% set flaghints.append(hint) %}
+                {% else %}
+                    {% set boxhints.append(hint) %}
+                {% end %}
+            {% end %}
+        {% end %}
+        {% if flagcount != 0 and len(box.flags) != 0 %}
+        <div class="progress" style="height: 8px;; background-color: #424242;">
+            <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box.flags) }}">
+            </div>
+        </div>
+        {% end %}
         <div class="well">
             <table class="table table-hover">
                 <caption><h4> - Flags - </h4></caption>
                 <thead>
                     <tr>
+                        <th style="width: 6px; padding: 0px; margin: 0px;"><!-- success bar --></th>
                         <th>#</th>
                         <th>Name</th>
                         <th>Description</th>
-                        <th>Reward</th>
+                        <th>Attempts</th>
+                        <th>{% if options.banking %}Reward{% else %}Points{% end %}</th>
+                        <th><!-- Hints --></th>
                         <th><!-- Submit --></th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% from models.Flag import FLAG_FILE %}
-                    {% for index, flag in enumerate(box.flags) %}
+                {% for index, flag in enumerate(box.flags) %}
+                    <tbody class="flagbody">
+                        <tr>
                         {% if flag in team.flags %}
-                            <tr class="success">
+                            <td class="successcol" style="background: green; margin: 0px; padding: 0px; width: 6px;"></td>
                         {% else %}
-                            <tr>
+                            <td style="margin: 0px; padding: 0px;"></td>
                         {% end %}
-                            <td>{{ box.flags.index(flag) +1 }}</td>
-                            <td>{{ flag.name }}</td>
-                            <td>{{ flag.description }}</td>
-                            <td>${{ flag.value }}</td>
-                            {% if flag in team.flags %}
-                                <td><!-- Button --></td>
+                            <td class="shortcolumn">{{ box.flags.index(flag) +1 }}</td>
+                            <td class="shortcolumn" style="padding-right: 20px;">{{ flag.name }}</td>
+                            {% if flag.lock_id and not Flag.by_id(flag.lock_id) in team.flags %}
+                                <td class="descriptioncol"><i class="fa fa-lock"></i> Locked by {{ Flag.by_id(flag.lock_id).name }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             {% else %}
-                                {% if flag.is_file %}
-                                    <td>
-                                        <a id="capture-file-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-file-flag-modal" data-uuid="{{ flag.uuid }}">
-                                            <i class="fa fa-flag"></i>
-                                            Submit
-                                        </a>
-                                    </td>
-                                {% else %}
-                                    <td>
-                                        <a id="capture-text-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-text-flag-modal" data-uuid="{{ flag.uuid }}">
+                                <td class="descriptioncol">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
+                                        {% set choices = FlagChoice.by_flag_id(flag.id) %}
+                                        {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
+                                <td class="shortcolumn" style="text-align: center;">{% if flag in team.flags %}{{ Penalty.by_count(flag, team) + 1 }}{% else %}{{ Penalty.by_count(flag, team) }}{% end %}</td>
+                                <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
+                                <td class="shortcolumn"{% if not flag in team.flags %} style="padding-right: 10px;"{% end %}>
+                                    {% if not flag in team.flags %}
+                                        {% set i = 1 %}
+                                        {% for hint in flaghints %}
+                                            {% if hint.flag_id == flag.id %}
+                                                {% if not hint in team.hints %}
+                                                    <a id="purchase-flag-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
+                                                        Hint #{{i}}
+                                                    </a>
+                                                    {% set i += 1 %}
+                                                    {% break %}
+                                                {% else %}
+                                                    {% set i += 1 %}
+                                                {% end %}
+                                            {% end %}
+                                        {% end %}
+                                    {% end %}
+                                </td>
+                                
+                                {% if flag in team.flags %}
+                                    <td class="shortcolumn successtext" style="text-align: right;"><i class="fa fa-check-circle"></i></td>
+                                {% else %}         
+                                    <td class="shortcolumn">
+                                        <a id="capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{% end %}-flag-modal" 
+                                        data-uuid="{{ flag.uuid }}" data-choices='{{ str(flag.choicelist()) }}'>
                                             <i class="fa fa-flag"></i>
                                             Submit
                                         </a>
@@ -164,12 +265,34 @@
                                 {% end %}
                             {% end %}
                         </tr>
-                    {% end %}
-                </tbody>
+                        {% if len(flaghints) > 0 %}
+                            {% set i = 1 %}
+                            {% for hint in flaghints %}
+                                {% if hint.flag_id == flag.id %}
+                                    {% if flag in team.flags or hint in team.hints %}
+                                        <tr>
+                                            {% if flag in team.flags %}
+                                            <td class="successcol" style="background: green; margin: 0px; padding: 0px; border-top: 1px solid green;"></td>
+                                            <td style="border-top: 0px;"></td>
+                                            {% else %}
+                                            <td colspan="2" style="border-top: 0px;"></td>
+                                            {% end %}
+                                            <td style="text-align: right; border-top: 0px;"><i class="fa fa-arrow-circle-up"></i><h5 style="display:inline;"> Hint #{{i}}:</h5></td>
+                                            <td colspan="1" class="descriptioncol">{{ hint.description }}</td>
+                                            <td class="shortcolumn" style="text-align: center;"><i>{% if hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% end %}</i></td>
+                                            <td class="shortcolumn" style="text-align: center;">{% if hint in team.hints %}-{{ hint.price }}{% end %}</td>
+                                            <td colspan="2" style="border-top: 0px;"></td>
+                                        </tr>
+                                    {% end %}
+                                    {% set i += 1 %}
+                                {% end %}
+                            {% end %}
+                        {% end %}
+                    </tbody> 
+                {% end %}
             </table>
         </div>
         {% if len(box.visable_ips) != 0 %}
-            <br />
             <div class="well">
                 <table class="table table-hover">
                     <caption><h4> - Known IP Addresses - </h4></caption>
@@ -195,38 +318,42 @@
             </div>
         {% end %}
         {% if len(box.hints) != 0 %}
-            <br />
-            <div class="well">
-                <table class="table table-hover">
-                    <caption><h4> - Hints - </h4></caption>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Price</th>
-                            <th><!-- Purchse/View Button --></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for index, hint in enumerate(box.hints) %}
+            <input id="hintbanking" value="str(config.banking).lower()" type="hidden" />
+            {% if len(boxhints) > 0 %}
+                <div class="well">
+                    <table class="table table-hover">
+                        <caption><h4> - {{ box.name }} Hints - </h4></caption>
+                        <thead>
                             <tr>
-                                <td>{{ index + 1 }}</td>
-                                {% if hint in team.hints %}
-                                    <td><i>Purchased</i></td>
-                                    <td>{{ hint.description }}</td>
-                                {% else %}
-                                    <td>${{ hint.price }}</td>
-                                    <td>
-                                        <a id="purchase-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
-                                            Purchase
-                                        </a>
-                                    </td>
-                                {% end %}
+                                <th>#</th>
+                                <th style="text-align: center; padding-right: 20px;">{% if options.banking %}Price{% else %}Cost{%end%}</th>
+                                <th>Description</th>
+                                <th><!-- Purchse/View Button --></th>
                             </tr>
-                        {% end %}
-                    </tbody>
-                </table>
-            </div>
-            <br />
+                        </thead>
+                        <tbody>
+                            
+                            {% for index, hint in enumerate(boxhints) %}
+                                <tr>
+                                    <td class="shortcolumn">{{ index + 1 }}</td>
+                                    {% if hint in team.hints or flagcount == len(box.flags) %}
+                                        <td class="shortcolumn"><i>{% if hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% else %}Completed {{box.name}}{% end %}</i></td>
+                                        <td class="descriptioncol">{{ hint.description }}</td>
+                                    {% else %}
+                                        <td class="shortcolumn" style="text-align: center; padding-right: 20px;">{% if options.banking %}${% end %}{% if hint in team.hints or flagcount != len(box.flags) %}{{ hint.price }}{% else %}0{% end %}</td>
+                                        <td>Hint not yet taken</td>
+                                        <td class="shortcolumn">
+                                            <a id="purchase-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
+                                                {% if options.banking %}Purchase{% else %}Take Hint{% end %}
+                                            </a>
+                                        </td>
+                                    {% end %}
+                                </tr>
+                            {% end %}
+                        </tbody>
+                    </table>
+                </div>
+            {% end %}
         {% end %}
     </div>
 {% end %}

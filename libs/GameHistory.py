@@ -110,16 +110,17 @@ class GameHistory(object):
         bot_manager = BotManager.instance()
         #self.dbsession = DBSession()
         for team in Team.all():
-            snapshot_team = SnapshotTeam(
-                team_id=team.id,
-                money=team.money,
-                bots=bot_manager.count_by_team(team)
-            )
-            snapshot_team.game_levels = team.game_levels
-            snapshot_team.flags = team.flags
-            self.dbsession.add(snapshot_team)
-            self.dbsession.flush()
-            snapshot.teams.append(snapshot_team)
+            if len(team.members) > 0:
+                snapshot_team = SnapshotTeam(
+                    team_id=team.id,
+                    money=team.money,
+                    bots=bot_manager.count_by_team(team)
+                )
+                snapshot_team.game_levels = team.game_levels
+                snapshot_team.flags = team.flags
+                self.dbsession.add(snapshot_team)
+                self.dbsession.flush()
+                snapshot.teams.append(snapshot_team)
         self.dbsession.add(snapshot)
         self.dbsession.commit()
         return snapshot

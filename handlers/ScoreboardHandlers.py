@@ -33,6 +33,8 @@ from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
 from models.Team import Team
+from models.Box import Box
+from models.Category import Category
 from models.WallOfSheep import WallOfSheep
 from datetime import datetime, timedelta
 
@@ -78,6 +80,7 @@ class ScoreboardAjaxHandler(BaseHandler):
         uri = {
             'summary': self.summary_table,
             'team': self.team_details,
+            'skills': self.team_skills,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -110,6 +113,34 @@ class ScoreboardAjaxHandler(BaseHandler):
             self.write({'error': 'Team does not exist'})
         self.finish()
 
+    def team_skills(self):
+        ''' Returns team details in JSON form '''
+        uuid = self.get_argument('uuid', '')
+        if uuid == '':
+            user = self.get_current_user()
+            if user:
+                team = user.team
+        else:
+            team = Team.by_uuid(uuid)
+        if team is not None:
+            categories = Category.all()
+            catlist = {}
+            for cat in categories:
+                catbox = Box.by_category(cat.id)
+                if (len(catbox) > 0):
+                    catlist[int(cat.id)] = 0
+            for flag in team.flags:
+                box = flag.box
+                if box and box.category_id is not None:
+                    catlist[int(box.category_id)] += 1
+            skillvalues = []
+            for val in catlist:
+                skillvalues.append(catlist[val])
+            self.write(str(skillvalues))
+        else:
+            self.write({'error': 'Team does not exist'})
+        self.finish()
+
 
 class ScoreboardHistoryHandler(BaseHandler):
 
@@ -128,7 +159,8 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
     def open(self):
         ''' When we receive a new websocket connect '''
         self.connections.add(self)
-        self.write_message(self.get_history())
+        history_length = int(self.get_argument('length', 29))
+        self.write_message(self.get_history(history_length))
 
     def on_message(self, message):
         ''' We ignore messages if there are more than 1 every 5 seconds '''

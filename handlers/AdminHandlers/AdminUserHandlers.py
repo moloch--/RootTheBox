@@ -29,7 +29,7 @@ from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
-
+from tornado.options import options
 
 class AdminManageUsersHandler(BaseHandler):
 
@@ -64,6 +64,13 @@ class AdminEditUsersHandler(BaseHandler):
             team.name = self.get_argument('name', team.name)
             team.motto = self.get_argument('motto', team.motto)
             team.money = self.get_argument('money', team.money)
+            if hasattr(self.request, 'files') and 'avatarfile' in self.request.files:
+                team.avatar = self.request.files['avatarfile'][0]['body']
+            else:
+                avatar = self.get_argument('avatar', team.avatar)
+                if team.avatar != avatar and avatar != "":
+                    #allow for default without setting
+                    team._avatar = avatar
             self.dbsession.add(team)
             self.dbsession.commit()
             self.redirect('/admin/users')
@@ -87,22 +94,29 @@ class AdminEditUsersHandler(BaseHandler):
                     user.handle = handle
                 else:
                     raise ValidationError("Handle is already in use")
-            hash_algorithm = self.get_argument('hash_algorithm', '')
-            if hash_algorithm != user.algorithm:
-                if hash_algorithm in user.algorithms:
-                    if 0 < len(self.get_argument('bank_password', '')):
-                        logging.info("Updated %s's hashing algorithm %s -> %s" % (
-                            user.handle, user.algorithm, hash_algorithm,
-                        ))
-                        user.algorithm = hash_algorithm
+            if options.banking:
+                hash_algorithm = self.get_argument('hash_algorithm', '')
+                if hash_algorithm != user.algorithm:
+                    if hash_algorithm in user.algorithms:
+                        if 0 < len(self.get_argument('bank_password', '')):
+                            logging.info("Updated %s's hashing algorithm %s -> %s" % (
+                                user.handle, user.algorithm, hash_algorithm,
+                            ))
+                            user.algorithm = hash_algorithm
+                        else:
+                            raise ValidationError(
+                                "You must provide a new bank password when updating the hashing algorithm")
                     else:
-                        raise ValidationError(
-                            "You must provide a new bank password when updating the hashing algorithm")
-                else:
-                    raise ValidationError("Not a valid hash algorithm")
+                        raise ValidationError("Not a valid hash algorithm")
+                if len(self.get_argument('bank_password', '')):
+                    user.bank_password = self.get_argument('bank_password', '')
             user.password = self.get_argument('password', '')
-            if len(self.get_argument('bank_password', '')):
-                user.bank_password = self.get_argument('bank_password', '')
+            if hasattr(self.request, 'files') and 'avatarfile' in self.request.files:
+                user.avatar = self.request.files['avatarfile'][0]['body']
+            else:
+                avatar = self.get_argument('avatar', user.avatar)
+                #allow for default without setting
+                user._avatar = avatar
             team = Team.by_uuid(self.get_argument('team_uuid', ''))
             if team is not None:
                 if user not in team.members:
@@ -110,7 +124,7 @@ class AdminEditUsersHandler(BaseHandler):
                         user.handle, user.team_id, team.name
                     ))
                     user.team_id = team.id
-            else:
+            elif options.teams:
                 raise ValidationError("Team does not exist in database")
             self.dbsession.add(user)
             self.dbsession.commit()
@@ -231,7 +245,7 @@ class AdminAjaxUserHandler(BaseHandler):
             uri[args[0]]()
 
     def team_details(self):
-        print self.get_argument('uuid', '')
+        print(self.get_argument('uuid', ''))
         team = Team.by_uuid(self.get_argument('uuid', ''))
         if team is not None:
             self.write(team.to_dict())
@@ -240,7 +254,7 @@ class AdminAjaxUserHandler(BaseHandler):
 
     def user_details(self):
         user = User.by_uuid(self.get_argument('uuid', ''))
-        print user
+        print(user)
         if user is not None:
             self.write(user.to_dict())
         else:

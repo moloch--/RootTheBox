@@ -8,8 +8,37 @@ function getDetails(obj, uuid) {
     $("#edit-" + obj + "-uuid").val(uuid);
     data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}
     $.post('/admin/ajax/objects', data, function(response) {
-        $.each(response, function(key, value) {
-            $("#" + obj + "-" + key).val(value);
+        if (response["number"] === 0) {
+            $("#gametype").hide();
+            $("#buyoutcost").hide();
+            response["type"] = "none"
+            $("#game_level-type option[value=none]").prop('selected',true);
+            $("#game_level-buyout").val(0);
+        } else {
+            $("#gametype").show();
+            $("#buyoutcost").show();
+        }
+        if (response["type"] === "none") {
+            $("#buyoutcost").hide();    
+        } else if (response["type"] == "buyout") {
+            if (response["buyout"] === 0) {
+                response["type"] = "none"
+                $("#buyoutcost").hide();
+            } else {
+                $("#buyoutlabel").text("Unlock Cost");
+                $("#game_level-buyout").attr('max', '');
+            }
+        } else {
+            $("#buyoutlabel").text("% Complete of Level " + response["last_level"]);
+            $("#game_level-buyout").attr('max', 100);
+        }
+
+        $.each(response, function(key, value) {  
+           if (key === "type") {
+                $("#" + obj + "-" + key + ' option[value=' + value + ']').prop('selected',true);
+            } else {
+                $("#" + obj + "-" + key).val(value);
+            }
         });
     }, 'json');
 }
@@ -44,4 +73,17 @@ $(document).ready(function() {
         $("#switch-level-form").submit();
     });
 
+    $("#game_level-type").change(function() {
+         if (this.value === "none") {
+            $("#buyoutcost").hide(); 
+         } else if (this.value === "buyout") {
+            $("#buyoutlabel").text("Unlock Cost");
+            $("#game_level-buyout").attr('max', '');
+            $("#buyoutcost").show();
+         } else if (this.value === "progress") {
+            $("#buyoutlabel").text("% Complete of Level " + $("#game_level-last_level").val());  
+            $("#game_level-buyout").attr('max', 100);
+            $("#buyoutcost").show();
+         }
+    });
 });

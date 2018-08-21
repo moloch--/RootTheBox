@@ -1,18 +1,14 @@
 {% extends "../main.html" %}
 
-{% block title %}Root the Box{% end %}
+{% block title %}
+    {% from tornado.options import options %}
+    {{ options.game_name }}
+{% end %}
 
 {% block content %}
     <div class="container">
-        <div class="well" style="background-image: url(/static/images/rtb2.png); background-size:contain; background-size:100%; width:842px;height:596px;">
-            <h2>A Game of Hackers</h2>
-            <a class="btn btn-primary btn-large btn-space" href="/login">
-                Login &raquo;
-            </a><br>
-            <br>
-            <a class="btn btn-primary btn-large" href="/registration">
-                Register &raquo;
-            </a>
+        <div class="well" style="background-image: url({{options.ctf_logo}}); background-position: center; background-repeat: no-repeat; background-size:contain; width:850px; height:600px; margin-top: 10px;">
+            <h2>{{options.ctf_tagline}}</h2>
         </div>
     </div>
 {% end %}

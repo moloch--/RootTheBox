@@ -104,5 +104,10 @@ class Theme(DatabaseObject):
         self._name = self._filter_string(value, ".")
 
     def __iter__(self):
-        for _file in self.files:
-            yield _file
+        try:
+            for _file in self.files:
+                yield _file
+        except:
+            self.files = relationship("ThemeFile")
+            for _file in self.files:
+                yield _file

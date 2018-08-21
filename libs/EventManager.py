@@ -23,11 +23,13 @@ import logging
 
 from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketClosedError
+from tornado.options import options
 from libs.Singleton import Singleton
 from libs.Scoreboard import Scoreboard
 from models import dbsession
 from models.User import User
 from models.Flag import Flag
+from models.GameLevel import GameLevel
 from models.PasteBin import PasteBin
 from models.Notification import Notification, \
     SUCCESS, INFO, WARNING, ERROR
@@ -109,8 +111,9 @@ class EventManager(object):
             self.push_team(team_id)
 
     def push_team(self, team_id):
-        for user_id in self.auth_connections[team_id]:
-            self.push_user(team_id, user_id)
+        if team_id in self.auth_connections:
+            for user_id in self.auth_connections[team_id]:
+                self.push_user(team_id, user_id)
 
     def push_user(self, team_id, user_id):
         ''' Push all unread notifications to open user websockets '''
@@ -151,9 +154,14 @@ class EventManager(object):
     # [ Broadcast Events ] -------------------------------------------------
     def flag_captured(self, user, flag):
         ''' Callback for when a flag is captured '''
-        message = "%s has captured the '%s' flag" % (
-            user.team.name, flag.name
-        )
+        if len(GameLevel.all()) > 1:
+            message = "%s has captured the '%s' flag in %s (Lvl %s)" % (
+                user.team.name, flag.name, flag.box.name, GameLevel.by_id(flag.box.game_level_id).number
+            )
+        else:
+            message = "%s has captured the '%s' flag in %s" % (
+                user.team.name, flag.name, flag.box.name
+            )
         Notification.create_broadcast("Flag Capture", message)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
@@ -185,12 +193,18 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     # [ Team Events ] ------------------------------------------------------
-    def user_joined_team(self, user):
+    def user_joined_team(self, user):            
         ''' Callback when a user joins a team'''
-        message = "%s has joined the %s team" % (
-            user.handle, user.team.name,
-        )
-        Notification.create_team(user.team, "New Team Member", message, INFO)
+        if options.teams:
+            message = "%s has joined the %s team" % (
+                user.handle, user.team.name,
+            )
+            Notification.create_team(user.team, "New Team Member", message, INFO)
+        else:
+            message = "%s has joined the game" % (
+                user.handle,
+            )
+            Notification.create_team(user.team, "New Player", message, INFO) 
         self.io_loop.add_callback(self.push_team, user.team.id)
 
     def team_file_shared(self, user, file_upload):

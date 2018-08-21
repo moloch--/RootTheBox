@@ -27,6 +27,8 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer, String
 from libs.ValidationError import ValidationError
 from models.BaseModels import DatabaseObject
+from models.Flag import Flag
+from models.Box import Box
 from models import dbsession
 
 
@@ -43,8 +45,9 @@ class Hint(DatabaseObject):
                   default=lambda: str(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+    flag_id = Column(Integer, ForeignKey('flag.id'), nullable=True)
     _price = Column(Integer, nullable=False)
-    _description = Column(Unicode(256), nullable=False)
+    _description = Column(Unicode(512), nullable=False)
 
     @classmethod
     def all(cls):
@@ -65,6 +68,10 @@ class Hint(DatabaseObject):
     def by_box_id(cls, _id):
         return dbsession.query(cls).filter_by(box_id=_id).all()
 
+    @classmethod
+    def by_flag_id(cls, _id):
+        return dbsession.query(cls).filter_by(flag_id=_id).all()
+
     @property
     def price(self):
         return self._price
@@ -82,8 +89,8 @@ class Hint(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        if not 0 < len(value) < 256:
-            raise ValueError("Hint description must be 1 - 256 characters")
+        if not 0 < len(value) < 512:
+            raise ValidationError("Hint description must be 1 - 512 characters")
         self._description = unicode(value)
 
     def to_xml(self, parent):
@@ -92,8 +99,15 @@ class Hint(DatabaseObject):
         ET.SubElement(hint_elem, "description").text = self._description
 
     def to_dict(self):
+        flag = Flag.by_id(self.flag_id)
+        if flag:
+            flag_uuid = flag.uuid
+        else:
+            flag_uuid = ""
         return {
             'price': str(self.price),
             'description': self.description,
+            'flag_uuid': flag_uuid,
             'uuid': self.uuid,
+            'flaglist': Box.flaglist(self.box_id)
         }

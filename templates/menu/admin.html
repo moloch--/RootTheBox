@@ -48,6 +48,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="/admin/create/category">
+                                    <i class="fa fa-fw fa-th-large"></i>
+                                    New Category
+                                </a>
+                            </li>
+                            <li>
                                 <a href="/admin/create/box">
                                     <i class="fa fa-fw fa-desktop"></i>
                                     New Box
@@ -72,9 +78,21 @@
                                         </a>
                                     </li>
                                     <li>
+                                        <a href="/admin/create/flag/datetime">
+                                            <i class="fa fa-fw fa-flag-o"></i>
+                                            Datetime Flag
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="/admin/create/flag/file">
                                             <i class="fa fa-fw fa-flag-o"></i>
                                             File Flag
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/create/flag/choice">
+                                            <i class="fa fa-fw fa-flag-o"></i>
+                                            Multiple Choice Flag
                                         </a>
                                     </li>
                                 </ul>
@@ -98,6 +116,12 @@
                                 <a href="/admin/view/game_objects">
                                     <i class="fa fa-fw fa-bullseye"></i>
                                     Flags / Boxes / Corp.
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/view/categories">
+                                    <i class="fa fa-fw fa-th-large"></i>
+                                    Categories
                                 </a>
                             </li>
                             <li>
@@ -186,24 +210,28 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/scoreboard">
-                                  Summary
+                                    <i class="fa fa-fw fa-list"></i>
+                                    Summary
                               </a>
                             </li>
                             <li>
                                 <a href="/scoreboard/history">
-                                  History
+                                    <i class="fa fa-fw fa-calendar"></i>
+                                    History
                               </a>
                             </li>
                             {% if options.use_black_market %}
                             <li>
                                 <a href="/scoreboard/wall_of_sheep">
+                                    <i class="fa fa-fw fa-key"></i>
                                     Wall of Sheep
                                 </a>
                             </li>
                             {% end %}
                             <li>
                                 <a href="/teams">
-                                    Teams
+                                    <i class="fa fa-fw fa-users"></i>
+                                    {% if options.teams %}Teams{% else %}Players{% end %}
                                 </a>
                             </li>
                         </ul>
@@ -220,6 +248,12 @@
                             <a href="/user/settings">
                                 <i class="fa fa-fw fa-gears"></i>
                                 Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/about">
+                                <i class="fa fa-fw fa-info-circle"></i>
+                                &nbsp;About
                             </a>
                         </li>
                         <li class="divider"></li>

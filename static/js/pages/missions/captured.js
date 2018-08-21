@@ -3,15 +3,20 @@ function text_animation(term) {
     var flag = $('#flag').val();
     var reward = $('#reward').val();
     var msg = $('#capture-message').val();
+    var banking = $('#banking').val();
     intro_frames = [
         "  I have received the '" + flag + "' information.",
-        "  ",
-        "  " + msg.toString(),
-        "  ",
-        "  I have transfered $" + reward + " to your team's account.",
-        " ",
-        " Good hunting,\n    -Morris",
+        "  "
     ];
+    if (msg.toString() !== "") {
+        intro_frames.push("  " + msg.toString(), "  ");
+    }
+    if (banking === "$") {
+        intro_frames.push("  I have transfered $" + reward + " to your account.", " ");
+    } else {
+        intro_frames.push("  I have added " + reward + " points to your score.", " ");
+    }
+    intro_frames.push(" Good hunting,\n    -Morris");
     term.echo("[[b;;]*************** BEGIN SECURE COMMUNIQUE ****************]\n");
 
     function display(term, index) {

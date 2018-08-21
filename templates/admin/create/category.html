@@ -1,0 +1,44 @@
+{% extends "../../main.html" %}
+
+{% block title %}Create Category{% end %}
+
+{% block header %}
+    <script src="/static/js/pages/admin/create/category.js"></script>
+{% end %}
+
+{% block content %}
+<div class="container">
+    <h1>
+        <i class="fa fa-th-large"></i>
+        Create Category
+    </h1>
+    <br />{% if errors is not None and len(errors) != 0 %}
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <h4 class="alert-heading">ERROR</h4>
+            {{ error }}
+        </div>
+        {% end %}
+    {% end %}
+    <div class="well">
+        <form class="form-horizontal" action="/admin/create/category" method="post">
+            {% raw xsrf_form_html() %}
+            <div class="control-group">
+                <label class="control-label" for="category">Category Name</label>
+                <div class="controls">
+                    <input autofocus id="category" name="category" maxlength='24' minlength="3" type="text" placeholder="Category"
+                           rel="popover"
+                           data-original-title="Category"
+                           data-content="Add a Category for Boxes.  [3-24 Characters]">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-primary" type="submit">Create Category</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% end %}

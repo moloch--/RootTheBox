@@ -6,9 +6,52 @@
 <script src="/static/js/pages/admin/create/box.js"></script>
 {% end %}
 
-{% block content %}
+{% block modals %}
 {% from models.GameLevel import GameLevel %}
+{% from models.Category import Category %}
 {% from models.Corporation import Corporation %}
+{% from libs.XSSImageCheck import filter_avatars %}
+{% set avatars = filter_avatars("box") %}
+<!-- Select Avatars -->
+<div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Change Avatar</h3>
+    </div>
+    <div class="modal-body">
+        {% raw xsrf_form_html() %}
+        <a id="avatarclose" href="#" class="btn" data-dismiss="modal" style="display: none;">Close</a>
+        {% for avatar in avatars[::3] %}
+            <div class="row">
+                <div class="span3">
+                    <center>
+                        <a href="#" class="boxavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                    </center>
+                </div>
+                {% if avatars.index(avatar) + 1 < len(avatars) %}
+                    {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                    <div class="span3">
+                        <center>
+                            <a href="#" class="boxavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                        </center>
+                    </div>
+                {% end %}
+                {% if avatars.index(avatar) + 2 < len(avatars) %}
+                    {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                    <div class="span3">
+                        <center>
+                            <a href="#" class="boxavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                        </center>
+                    </div>
+                {% end %}
+            </div>
+            <br/>
+        {% end %}
+    </div>
+</div>
+{% end %}
+{% block content %}
+
 <div class="container">
     <h1>
         <i class="fa fa-desktop"></i>
@@ -43,7 +86,6 @@
                            rel="popover"
                            data-original-title="Game Level"
                            data-content="Level to put box in?">
-                        <option value=""></option>
                         {% for level in GameLevel.all() %}
                         <option value="{{ level.number }}">{{ level.number }}</option>
                         {% end %}
@@ -57,36 +99,53 @@
                             rel="popover"
                             data-original-title="Corporation"
                             data-content="Corporation box belongs too?">
-                        <option value=""></option>
                         {% for corp in Corporation.all() %}
-                        <option value="{{ corp.uuid }}">{{ corp.name }}</option>
+                        <option value="{{ corp.uuid }}">{% if corp.name != "" %}{{ corp.name }}{% else %}(No name){% end %}</option>
                         {% end %}
                     </select>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="operatingsystem">Operating System</label>
+                <label class="control-label" for="category">Category</label>
+                <div class="controls">
+                    <select id="category" name="category_uuid"
+                            rel="popover"
+                            data-original-title="Category"
+                            data-content="Category box belongs too?">
+                        <option value=""></option>
+                        {% for category in Category.all() %}
+                        <option value="{{ category.uuid }}">{{ category.category }}</option>
+                        {% end %}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="operating_system">System Type</label>
                 <div class="controls">
                     <input id="operating_system" name="operating_system" type="hidden" value="?" />
                     <div id="operating-system" class="btn-group" data-toggle="buttons-radio"
                             rel="popover"
-                            data-original-title="Operating System"
-                            data-content="What type of operating system is this?">
-                        <button id="os-button" class="btn active" type="button" data-os="?">
-                            <i class="fa fa-question"></i>
-                            Unknown
-                        </button>
-                        <button id="os-button" class="btn" type="button" data-os="linux">
+                            data-original-title="System Type"
+                            data-content="What type of system is this?">
+                        <button id="os-button1" class="btn osbutton" type="button" data-os="linux">
                             <i class="fa fa-linux"></i>
                             Linux
                         </button>
-                        <button id="os-button" class="btn" type="button" data-os="windows">
+                        <button id="os-button2" class="btn osbutton" type="button" data-os="windows">
                             <i class="fa fa-windows"></i>
                             Windows
                         </button>
-                        <button id="os-button" class="btn" type="button" data-os="apple">
+                        <button id="os-button2" class="btn osbutton" type="button" data-os="apple">
                             <i class="fa fa-apple"></i>
                             OSX
+                        </button>
+                        <button id="os-button3" class="btn osbutton active" type="button" data-os="?">
+                            <i class="fa fa-desktop"></i>
+                            Unknown
+                        </button>
+                        <button id="os-button4" class="btn osbutton" type="button" data-os="none">
+                            <i class="fa fa-th"></i>
+                            None
                         </button>
                     </div>
                 </div>
@@ -94,7 +153,7 @@
             <div class="control-group">
                 <label class="control-label" for="description">Description</label>
                 <div class="controls">
-                    <textarea required id="description" name="description" maxlength="1024" placeholder="Description"
+                    <textarea id="description" name="description" maxlength="1024" placeholder="Description"
                               rel="popover"
                               data-original-title="Description"
                               data-content="A brief description of the box [Max: 1024 Characters]">
@@ -125,16 +184,20 @@
             <div class="control-group">
                 <label class="control-label" for="difficulty">Difficulty</label>
                 <div class="controls">
-                    <input required id="difficulty" name="difficulty" maxlength="16" type="text" placeholder="Difficulty"
+                    <input id="difficulty" name="difficulty" maxlength="16" type="text" placeholder="Difficulty"
                         rel="popover"
                         data-original-title="Box Difficulty"
                         data-content="What's the difficulty of the box? [Max: 16 Characters]">
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
+                <label class="control-label" for="avatar">Avatar</label>
                 <div class="controls">
-                    <input id="avatar" name="avatar" type="file">
+                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                        <input id="box-avatar" name="avatar" type="file" style="display: none;"/>
+                        <input id="box_avatar_select" name="box_avatar_select" type="hidden" />
+                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal"> Choose Avatar </a>{% end %}
+                        <div id="avatarfilename" style="padding: 5px;"></div>
                 </div>
             </div>
             <div class="control-group">

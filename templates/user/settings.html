@@ -2,8 +2,147 @@
 
 {% block title %}Settings{% end %}
 
-{% block content %}
+{% block header %}
+<script src="/static/js/pages/user/settings.js"></script>
+{% end %}
+
+{% block modals %}
+{% from libs.XSSImageCheck import filter_avatars %}
+{% from libs.XSSImageCheck import existing_avatars %}
 {% from models.Theme import Theme %}
+{% from tornado.options import options %}
+    <!-- Change Avatar -->
+    {% if options.teams %}
+        {% set dir = "team" %}
+    {% else %}
+        {% set dir = "user" %}
+    {% end %}
+    {% set avatars = filter_avatars(dir) %}
+    {% set existing = existing_avatars("team") %}
+    <div id="change-team-avatar-modal" class="modal hide fade" style="display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>Change {% if options.teams %}Team {% end %}Avatar</h3>
+        </div>
+        <div class="modal-body">
+            <form action="/user/settings/team_avatar" method="post" enctype="multipart/form-data">
+                {% raw xsrf_form_html() %}
+                <div class="modal-footer" style="float: right;">
+                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                    <button id="team-avatar-form" class="btn btn-primary" type="submit">
+                        Submit
+                    </button>
+                </div>
+                <div class="control-group" style="vertical-align: middle;">
+                    <label class="control-label" for="team_avatar">Upload Avatar File - w500 x h250</label>
+                    <div class="controls" style="display: inline;">
+                        <input type="file" name="team_avatar" id="team_avatar" style="color:white;" />
+                        <input type="hidden" name="team_avatar_select" id="team_avatar_select" />
+                    </div>
+
+                </div>
+                   
+                {% if len(avatars) > 0 %}
+                <div style="border-top: solid 1px rgb(92, 92, 92); margin-top: 20px; margin-bottom: 20px;"></div>
+                <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> indicates use by another {% if options.teams %}team{% else %}player{% end %}</span>
+                <label class="control-label" for="team_avatar">Or Choose Existing</label>
+                    {% for avatar in avatars[::3] %}
+                        <div class="row">
+                            <div class="span3" style="position: relative;">
+                                <center>
+                                    {% if avatar in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                    <a href="#" class="teamavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                                </center>
+                            </div>
+                            {% if avatars.index(avatar) + 1 < len(avatars) %}
+                                {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                                <div class="span3" style="position: relative;">
+                                    <center>
+                                        {% if avatar1 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                        <a href="#" class="teamavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                            {% if avatars.index(avatar) + 2 < len(avatars) %}
+                                {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                                <div class="span3" style="position: relative;">
+                                    <center>
+                                        {% if avatar2 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                        <a href="#" class="teamavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                        </div>
+                        <br/>
+                    {% end %}
+                {% end %}
+            </form>
+        </div>
+    </div>
+    {% set avatars = filter_avatars("user") %}
+    {% set existing = existing_avatars("user") %}
+    <div id="change-user-avatar-modal" class="modal hide fade" style="display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>Change {% if options.teams %}Player {% end %}Avatar</h3>
+        </div>
+        <div class="modal-body">
+            <form action="/user/settings/user_avatar" method="post" enctype="multipart/form-data">
+                {% raw xsrf_form_html() %}
+                <div class="modal-footer" style="float: right;">
+                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                    <button id="user-avatar-form" class="btn btn-primary" type="submit">
+                        Submit
+                    </button>
+                </div>
+                <div class="control-group" style="vertical-align: middle;">
+                    <label class="control-label" for="user_avatar">Upload Avatar File - w500 x h250</label>
+                    <div class="controls" style="display: inline;">
+                        <input type="file" name="user_avatar" id="user_avatar" style="color:white;" />
+                        <input type="hidden" name="user_avatar_select" id="user_avatar_select" />
+                    </div>
+
+                </div>
+                    
+                {% if len(avatars) > 0 %}
+                <div style="border-top: solid 1px rgb(92, 92, 92); margin-top: 20px; margin-bottom: 20px;"></div>
+                <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> indicates use by another player</span>
+                <label class="control-label" for="user_avatar">Or Choose Existing</label>
+                    {% for avatar in avatars[::3] %}
+                        <div class="row">
+                            <div class="span3" style="position: relative;">
+                                <center>
+                                    {% if avatar in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                    <a href="#" class="useravatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                                </center>
+                            </div>
+                            {% if avatars.index(avatar) + 1 < len(avatars) %}
+                                {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                                <div class="span3" style="position: relative;">
+                                    <center>
+                                        {% if avatar1 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                        <a href="#" class="useravatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                            {% if avatars.index(avatar) + 2 < len(avatars) %}
+                                {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                                <div class="span3" style="position: relative;">
+                                    <center>
+                                        {% if avatar2 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                        <a href="#" class="useravatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                        </div>
+                        <br/>
+                    {% end %}
+                {% end %}
+            </form>
+        </div>
+    </div>
+{% end %}
+{% block content %}
     <div class="container">
         <h1>
             <i class="fa fa-gears"></i>
@@ -28,51 +167,63 @@
                 </div>
             {% end %}
         {% end %}
+       
         <div class="row">
-            <div class="span3 well">
-                <form action="/user/settings/team_avatar" method="post" enctype="multipart/form-data">
-                    {% raw xsrf_form_html() %}
-                    <legend>Change Team Avatar</legend>
-                    <div class="control-group">
-                        <label class="control-label" for="team_avatar">Avatar File h250 x w500 (Max 1Mb)</label>
-                        <div class="controls">
-                            <input type="file" name="team_avatar" id="team_avatar" style="color:white;" />
-                        </div>
+            {% if user.team is not None %}
+            <div class="span3 well" style="width: 260px; padding-bottom: 23px; padding-right: 28px; ">
+                <div class="control-group" style="float:right; margin-right: -8px;">
+                    <div class="controls">
+                        <a data-toggle="modal" class="btn btn-primary" href="#change-team-avatar-modal"> Change </a>
                     </div>
-                    <br />
-                    <div class="control-group">
-                        <div class="controls">
-                            <button class="btn btn-primary" type="submit"> Change Avatar </button>
-                        </div>
-                    </div>
-                </form>
+                </div>
+                <legend>{% if options.teams %}Team {% end %}Avatar</legend>
+                {% if user.team %}
+                    <img src="/avatars/{{ user.team.avatar }}" class="img-polaroid" />
+                {% else %}
+                    <img src="/avatars/default_team.jpg" class="img-polaroid" /> 
+                {% end %}
             </div>
+            {% end %}
+            
+            {% if options.teams or user.team is None %}
+            <div class="span3 well" style="width: 260px; padding-bottom: 23px; padding-right: 28px; ">
 
-
-        <div class="row">
-            <div class="span3 well">
-                <form action="/user/settings/avatar" method="post" enctype="multipart/form-data">
-                    {% raw xsrf_form_html() %}
-                    <legend>Change Avatar</legend>
-                    <div class="control-group">
-                        <label class="control-label" for="avatar">Avatar File h250 x w500 (Max 1Mb)</label>
-                        <div class="controls">
-                            <input type="file" name="avatar" id="avatar" style="color:white;" />
-                        </div>
+                <div class="control-group" style="float:right; margin-right: -8px;">
+                    <div class="controls">
+                        <a data-toggle="modal" class="btn btn-primary" href="#change-user-avatar-modal"> Change </a>
                     </div>
-                    <br />
-                    <div class="control-group">
-                        <div class="controls">
-                            <button class="btn btn-primary" type="submit"> Change Avatar </button>
-                        </div>
-                    </div>
-                </form>
+                </div>
+                <legend>Avatar</legend>
+                {% if user.avatar %}
+                    <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+                {% else %}
+                    <img src="/avatars/default_user.jpg" class="img-polaroid" />
+                {% end %}
             </div>
-            <div class="span4 well">
+            {% elif user.team is not None %}
+                <div class="span3 well">
+                    <form action="/user/settings/motto" method="post">
+                        {% raw xsrf_form_html() %}
+                        <legend>Change Motto</legend>
+                        <div class="control-group" style="margin-top: 0px; margin-bottom: 40px;">
+                            <label class="control-label" for="motto">Motto</label>
+                            <div class="controls">
+                                <input id="motto" name="motto" maxlength="32" type="text" placeholder="Motto" value="{{ user.team.motto }}" />
+                            </div>
+                        </div>
+                        <div class="control-group" style="float: right;">
+                            <div class="controls">
+                                <button class="btn btn-primary" type="submit"> Change Motto </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            {% end %}
+            <div class="span3 well">
                 <form action="/user/settings/theme" method="post">
                     {% raw xsrf_form_html() %}
                     <legend>Change Theme</legend>
-                    <div class="control-group">
+                    <div class="control-group" style="margin-top: 0px; margin-bottom: 40px;">
                         <label class="control-label" for="theme_uuid">Select a Theme</label>
                         <div class="controls">
                             <select name="theme_uuid">
@@ -85,7 +236,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="control-group">
+                    <div class="control-group" style="float: right;">
                         <div class="controls">
                             <button class="btn btn-primary" type="submit"> Change Theme </button>
                         </div>
@@ -93,7 +244,8 @@
                 </form>
             </div>
         </div>
-        <div class="row">
+        
+        <div class="row" style="margin-left: 0px; margin-right: 20px;">
             <div class="well">
                 <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">
                     {% raw xsrf_form_html() %}
@@ -127,8 +279,9 @@
                 </form>
             </div>
         </div>
-        <div class="row-fluid">
-            <div class="well">
+        {% if options.banking %}
+        <div class="row-fluid" style="margin-left: 0px;">
+            <div class="well" style="margin-right: 20px;">
                 <form class="form-horizontal" action="/user/settings/bank_password" method="post" autocomplete="off">
                     {% raw xsrf_form_html() %}
                     <div class="row-fluid">
@@ -156,7 +309,7 @@
                         </div>
                         {% module Recaptcha() %}
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-left: 0px;">
                         <div class="control-group">
                             <div class="controls">
                                 <button class="btn btn-primary" type="submit">
@@ -168,6 +321,7 @@
                 </form>
             </div>
         </div>
+        {% end %}
     </div>
 </div>
 {% end %}

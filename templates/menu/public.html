@@ -48,7 +48,7 @@
                             </li>
                             <li>
                                 <a href="/teams">
-                                  Teams
+                                    {% if options.teams %}Teams{% else %}Players{% end %}
                               </a>
                             </li>
                             {% if options.use_black_market %}

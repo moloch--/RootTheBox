@@ -4,6 +4,7 @@
 
 {% block header %}
 <script src="/static/js/pages/admin/configuration.js"></script>
+<link href="/static/css/pages/admin/configuration.css" rel="stylesheet" />
 {% end %}
 
 {% block content %}
@@ -35,7 +36,17 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="min-user-password-length">Minimum User Password Length</label>
+                <div class="controls">
+                    <input required id="min-user-password-length" type="number" name="min_user_password_length" value="{{ config.min_user_password_length }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Min user password length"
+                        data-content="Restrict players user password to this length" />
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="restrict-registartion">
+                    <i class="fa fa-key"></i>
                     Registration Tokens
                 </label>
                 <div class="controls">
@@ -55,84 +66,252 @@
                     </div>
                 </div>
             </div>
+            <hr />
             <div class="control-group">
-                <label class="control-label" for="public-teams">
-                    Public Teams
+                <label class="control-label" for="rank_by">
+                    <i class="fa fa-arrow-circle-up"></i>
+                    Scoreboard Rank By</label>
+                <div class="controls">
+                    <select id="rank_by" name="rank_by" 
+                        rel="popover"
+                        data-original-title="Rank By"
+                        data-html="true"
+                        data-content="This selection determines the method by which the scoreboard is primarily ranked.<br/><br/>When the primary ranking is equal, other values are used bases on this selection:<br/><br/>1. points/money ▲, hints ▼, flags ▲<br/>2. flags ▲, points/money ▲, hints ▼">
+                        <option id="moneyname" value="money" {% if config.rank_by == "money" %}selected{% end %}>
+                            {% if config.banking %}Money{% else %}Points{% end %}
+                        </option>
+                        <option value="flags" {% if config.rank_by == "flags" %}selected{% end %}>Flags</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="hints-taken">
+                    <i class="fa fa-medkit"></i>
+                    Display Hints Taken
                 </label>
                 <div class="controls">
-                    <input id="public-teams" name="public_teams" type="hidden" value="{{ str(config.public_teams).lower() }}" />
-                    <div id="public-teams-button" class="btn-group" data-toggle="buttons-radio"
+                    <input id="hints-taken" name="hints_taken" type="hidden" value="{{ str(config.hints_taken).lower() }}" />
+                    <div id="hints-taken-button" class="btn-group" data-toggle="buttons-radio"
                         rel="popover"
-                        data-original-title="Public Teams"
-                        data-content="Enabling this feature will allow players to create their own teams during registration.  If this option is disabled the admin must create teams for players to join.">
-                        <button id="public-teams-enable" type="button" class="btn btn-success">
-                            <i id="public-teams-enable-icon" class="fa fa-fw fa-square-o"></i>
+                        data-original-title="Display Hints Taken"
+                        data-content="Enabling this feature will display the number of hints taken on the scoreboad by a team or player.  Usefull when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.">
+                        <button id="hints-taken-enable" type="button" class="btn btn-success">
+                            <i id="hints-taken-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable
                         </button>
-                        <button id="public-teams-disable" type="button" class="btn btn-danger">
-                            <i id="public-teams-disable-icon" class="fa fa-fw fa-square-o"></i>
+                        <button id="hints-taken-disable" type="button" class="btn btn-danger">
+                            <i id="hints-taken-disable-icon" class="fa fa-fw fa-square-o"></i>
                             Disable
                         </button>
                     </div>
                 </div>
             </div>
+            <hr />
             <div class="control-group">
-                <label class="control-label" for="max-team-size">Max Team Size</label>
+                <label class="control-label" for="teams">
+                    <i class="fa fa-group"></i>
+                    Team Play
+                </label>
                 <div class="controls">
-                    <input required id="max-team-size" type="text" name="max_team_size" value="{{ config.max_team_size }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Max Team Size"
-                        data-content="Limit number of players that can be on any one team" />
+                    <input id="teams" name="teams" type="hidden" value="{{ str(config.teams).lower() }}" />
+                    <div id="teams-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Team Play"
+                        data-content="Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individal competitive play.">
+                        <button id="teams-enable" type="button" class="btn btn-success">
+                            <i id="teams-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="teams-disable" type="button" class="btn btn-danger">
+                            <i id="teams-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label" for="min-user-password-length">Minimum User Password Length</label>
-                <div class="controls">
-                    <input required id="min-user-password-length" type="text" name="min_user_password_length" value="{{ config.min_user_password_length }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Min user password length"
-                        data-content="Restrict players user password to this length" />
+            <div id="team-grouping" class="control-section">
+                <div class="control-group">
+                    <label class="control-label" for="public-teams">
+                        Public Team Creation
+                    </label>
+                    <div class="controls">
+                        <input id="public-teams" name="public_teams" type="hidden" value="{{ str(config.public_teams).lower() }}" />
+                        <div id="public-teams-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Public Teams"
+                            data-content="Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.">
+                            <button id="public-teams-enable" type="button" class="btn btn-success">
+                                <i id="public-teams-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                Enable
+                            </button>
+                            <button id="public-teams-disable" type="button" class="btn btn-danger">
+                                <i id="public-teams-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="max-team-size">Max Team Size</label>
+                    <div class="controls">
+                        <input required id="max-team-size" type="number" name="max_team_size" value="{{ config.max_team_size }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Max Team Size"
+                            data-content="Limit number of players that can be on any one team" />
+                    </div>
+                </div>               
+                <div class="control-group">
+                    <label class="control-label" for="max_pastebin_size">Pastebin Character limit</label>
+                    <div class="controls">
+                        <input required id="max-pastebin-size" type="number" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Max PasteBin Size"
+                            data-content="This is the the limit of characters allowed for a pastebin post." />
+                    </div>
                 </div>
             </div>
+            <hr />
             <div class="control-group">
+                <label class="control-label" for="secure_communique_dialog">
+                    <i class="fa fa-video-camera"></i>
+                    Story Mode
+                </label>
+                <div class="controls">
+                    <input id="secure_communique_dialog" name="secure_communique_dialog" type="hidden" value="{{ str(config.secure_communique_dialog).lower() }}" />
+                    <div id="story-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Story Mode"
+                        data-html="true"
+                        data-content="Enabling this feature will set the game to follow the storyline of Morris, an employeer that sends &apos;secure communique&apos; and assigns missions. Designed primarily for use with the Banking System.<br/><br/>Disabling this option will skip the storyline and keep you on the box screen for instant capture success messages.">
+                        <button id="story-enable" type="button" class="btn btn-success">
+                            <i id="story-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="story-disable" type="button" class="btn btn-danger">
+                            <i id="story-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="dynamic_flag_value">
+                    <i class="fa fa-bar-chart-o"></i>
+                    Dynamic Scoring
+                </label>
+                <div class="controls">
+                    <input id="dynamic_flag_value" name="dynamic_flag_value" type="hidden" value="{{ str(config.dynamic_flag_value).lower() }}" />
+                    <div id="dynamic_flag-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Dynamic Scoring"
+                        data-content="Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistant as other players capture it.">
+                        <button id="dynamic_flag-enable" type="button" class="btn btn-success">
+                            <i id="dynamic_flag-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="dynamic_flag-disable" type="button" class="btn btn-danger">
+                            <i id="dynamic_flag-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="dynamic_flag-grouping" class="control-group control-section">
+                <label class="control-label" for="flag_value_decrease">Flag Decrease Value</label>
+                <div class="controls">
+                    <input required id="flag_value_decrease" type="number" min="0" max="100" name="flag_value_decrease" value="{{ config.flag_value_decrease }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Flag Decrease Value"
+                        data-content="Decrease flag reward by this percent per capture." />
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="penalize_flag_value">
+                    <i class="fa fa-minus-circle"></i>
+                    Incorrect Penalty
+                </label>
+                <div class="controls">
+                    <input id="penalize_flag_value" name="penalize_flag_value" type="hidden" value="{{ str(config.penalize_flag_value).lower() }}" />
+                    <div id="penalty-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Incorrect Penalty"
+                        data-html="true"
+                        data-content="Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.<br/><br/>If this option is disabled, there is no cost for submitting incorrect flags.">
+                        <button id="penalty-enable" type="button" class="btn btn-success">
+                            <i id="penalty-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="penalty-disable" type="button" class="btn btn-danger">
+                            <i id="penalty-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="penalty-grouping">
+                <div class="control-group control-section">
+                    <label class="control-label" for="flag_start_penalty">Flag Penalty Start</label>
+                    <div class="controls">
+                        <input class="penaltyval" required id="flag_start_penalty" type="number" min="1" name="flag_start_penalty" value="{{ config.flag_start_penalty }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Flag Penalty Start"
+                            data-html="true"
+                            data-content="" />
+                    </div>
+                </div>
+                <div class="control-group control-section">
+                        <label class="control-label" for="flag_stop_penalty">Flag Penalty Stop</label>
+                        <div class="controls">
+                            <input class="penaltyval" required id="flag_stop_penalty" type="number" min="1" name="flag_stop_penalty" value="{{ config.flag_stop_penalty }}"
+                                rel="popover" pattern="\d*"
+                                data-original-title="Flag Penalty Stop"
+                                data-html="true"
+                                data-content="" />
+                    </div>
+                </div>
+                <div class="control-group control-section">
+                    <label class="control-label" for="flag_penalty_cost">Flag Penalty Cost</label>
+                    <div class="controls">
+                        <input class="penaltyval" required id="flag_penalty_cost" type="number" min="0" max="500" name="flag_penalty_cost" value="{{ config.flag_penalty_cost }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Flag Penalty Cost"
+                            data-html="true"
+                            data-content="" />
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="banking">
+                    <i class="fa fa-dollar"></i>
+                    Banking System
+                </label>
+                <div class="controls">
+                    <input id="banking" name="banking" type="hidden" value="{{ str(config.banking).lower() }}" />
+                    <div id="banking-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Banking System"
+                        data-content="Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.">
+                        <button id="banking-enable" type="button" class="btn btn-success">
+                            <i id="banking-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="banking-disable" type="button" class="btn btn-danger">
+                            <i id="banking-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="bank-grouping" class="control-group control-section">
                 <label class="control-label" for="max-password-length">Bank Password Length</label>
                 <div class="controls">
                     <input required id="max-password-length" type="text" name="max_password_length" value="{{ config.max_password_length }}"
                         rel="popover" pattern="\d*"
                         data-original-title="Bank Password Length"
                         data-content="Restrict player's bank password to this length" />
-                </div>
-            </div>
-            <hr />
-            <div class="control-group">
-                <label class="control-label" for="bots">
-                    <i class="fa fa-android"></i>
-                    Botnets
-                </label>
-                <div class="controls">
-                    <input id="use-bots" name="use_bots" type="hidden" value="{{ str(config.use_bots).lower() }}" />
-                    <div id="use-bots-button" class="btn-group" data-toggle="buttons-radio"
-                        rel="popover"
-                        data-original-title="Botnets"
-                        data-content="Enabling this setting activates the 'botnet' features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.">
-                        <button id="use-bots-enable" type="button" class="btn btn-success">
-                            <i id="use-bots-enable-icon" class="fa fa-fw fa-square-o"></i>
-                            Enable
-                        </button>
-                        <button id="use-bots-disable" type="button" class="btn btn-danger">
-                            <i id="use-bots-disable-icon" class="fa fa-fw fa-square-o"></i>
-                            Disable
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="bot_reward">Bot Reward</label>
-                <div class="controls">
-                    <input required id="bot-reward" type="text" name="bot_reward" value="{{ config.bot_reward }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Bot Reward"
-                        data-content="This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually; the default is 5 minutes." />
                 </div>
             </div>
             <hr />
@@ -158,34 +337,59 @@
                     </div>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label" for="password-upgrade-cost">Password Upgrade Cost</label>
-                <div class="controls">
-                    <input required id="password-upgrade-cost" type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Password Upgrade Cost"
-                        data-content="This is the amount a player must pay to upgrade their bank password's hashing algorithm; each subsequent purchase is also increased by this amount." />
+            <div id="blackmarket-grouping" class="control-section">
+                <div class="control-group">
+                    <label class="control-label" for="password-upgrade-cost">Password Upgrade Cost</label>
+                    <div class="controls">
+                        <input required id="password-upgrade-cost" type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Password Upgrade Cost"
+                            data-content="This is the amount a player must pay to upgrade their bank password's hashing algorithm; each subsequent purchase is also increased by this amount." />
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="bribe-cost">Bribe Price</label>
-                <div class="controls">
-                    <input required id="bribe-cost" type="text" name="bribe_cost" value="{{ config.bribe_cost }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Bribe Price"
-                        data-content="This is the amount a player must pay to 'SWAT' another player's account.  Subsequent SWATs of the same player are also increased by this amount each time." />
+                <div class="control-group">
+                    <label class="control-label" for="bribe-cost">Bribe Price</label>
+                    <div class="controls">
+                        <input required id="bribe-cost" type="text" name="bribe_cost" value="{{ config.bribe_cost }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Bribe Amount"
+                            data-content="This is the amount a player must pay to 'SWAT' another player's account.  Subsequent SWATs of the same player are also increased by this amount each time." />
+                    </div>
                 </div>
             </div>
             <hr />
             <div class="control-group">
-                <label class="control-label" for="max_pastebin_size">Pastebin Character limit</label>
+                <label class="control-label" for="bots">
+                    <i class="fa fa-android"></i>
+                    Botnets
+                </label>
                 <div class="controls">
-                    <input required id="max-pastebin-size" type="text" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Max PasteBin Size"
-                        data-content="This is the the limit of characters allowed for a pastebin post." />
+                    <input id="use-bots" name="use_bots" type="hidden" value="{{ str(config.use_bots).lower() }}" />
+                    <div id="use-bots-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Botnets"
+                        data-content="Enabling this setting activates the 'botnet' features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.">
+                        <button id="use-bots-enable" type="button" class="btn btn-success">
+                            <i id="use-bots-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="use-bots-disable" type="button" class="btn btn-danger">
+                            <i id="use-bots-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
                 </div>
             </div>
+            <div id="bot-grouping" class="control-group control-section">
+                <label class="control-label" for="bot_reward">Bot Reward</label>
+                <div class="controls">
+                    <input required id="bot-reward" type="text" name="bot_reward" value="{{ config.bot_reward }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Bot Reward"
+                        data-content="This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually; the default is 5 minutes." />
+                </div>
+            </div>
+            <hr />
             <div class="control-group">
                 <div class="controls">
                     <button class="btn btn-primary" type="submit">

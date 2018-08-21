@@ -163,12 +163,6 @@ define("session_age",
        help="max session age (seconds)",
        type=int)
 
-define("session_regeneration_interval",
-       default=int(60 * 60),
-       group="server",
-       help="regenerate session time frame (seconds)",
-       type=int)
-
 define("x_headers",
        default=False,
        group="server",
@@ -223,6 +217,11 @@ define("source_code_market_dir",
        default="./files/source_code_market",
        group="application",
        help="the directory to store souce code market files")
+
+define("game_materials_dir",
+       default="./files/game_materials",
+       group="application",
+       help="the directory to store applications, docs, and other materials for the game")
 
 # ReCAPTCHA
 define("use_recaptcha",
@@ -300,6 +299,18 @@ define("game_name",
        help="the name of the current game",
        type=game_type)
 
+define("ctf_logo",
+       default="/static/images/rtb2.png",
+       group="game",
+       help="the image displayed on the welcome page",
+       type=game_type)
+
+define("ctf_tagline",
+       default="A Game of Hackers",
+       group="game",
+       help="the tagline displayed on the welcome page",
+       type=game_type)
+
 define("restrict_registration",
        default=False,
        group="game",
@@ -312,6 +323,18 @@ define("public_teams",
        help="allow anyone to create a new team",
        type=bool)
 
+define("hints_taken",
+       default=False,
+       group="game",
+       help="display number of hints taken on scoreboard",
+       type=bool)
+
+define("teams",
+       default=True,
+       group="game",
+       help="turn off teams - individal playstyle",
+       type=bool)
+
 define("max_team_size",
        default=4,
        group="game",
@@ -319,10 +342,16 @@ define("max_team_size",
        type=int)
 
 define("min_user_password_length",
-       default=16,
+       default=12,
        group="game",
        help="min user password length",
        type=int)
+
+define("banking",
+       default=False,
+       group="game",
+       help="turn off bank scoring - point scoreboard",
+       type=bool)
 
 define("max_password_length",
        default=7,
@@ -331,7 +360,7 @@ define("max_password_length",
        type=int)
 
 define("use_bots",
-       default=True,
+       default=False,
        group="game",
        help="enable the use of botnets",
        type=bool)
@@ -348,7 +377,7 @@ define("bot_reward",
        type=int)
 
 define("use_black_market",
-       default=True,
+       default=False,
        group="game",
        help="enable the use of the black market",
        type=bool)
@@ -363,14 +392,25 @@ define("bribe_cost",
        group="game",
        help="the base bribe cost to swat another player")
 
+define("starting_team_money",
+       default=500,
+       group="game",
+       help="the starting money for a new team when using banking")
+
 define("whitelist_box_ips",
        default=False,
        group="game",
        help="whitelist box ip addresses (for botnets)",
        type=bool)
 
-define("dynamic_flag_value",
+define("secure_communique_dialog",
        default=True,
+       group="game",
+       help="secure communique dialog screen after capture success",
+       type=bool)
+
+define("dynamic_flag_value",
+       default=False,
        group="game",
        help="decrease reward for flags based on captures",
        type=bool)
@@ -381,13 +421,37 @@ define("flag_value_decrease",
        help="decrease flag reward by this percent per capture",
        type=int)
 
+define("penalize_flag_value",
+       default=False,
+       group="game",
+       help="penalize score for incorrect capture attempts",
+       type=bool)
+
+define("flag_penalty_cost",
+       default=20,
+       group="game",
+       help="penalty as a percentage of flag value",
+       type=int)
+
+define("flag_start_penalty",
+       default=2,
+       group="game",
+       help="when to start - 1 = incorrect first attempt, 2 = second attempt, etc",
+       type=int)
+
+define("flag_stop_penalty",
+       default=5,
+       group="game",
+       help="when to stop - 4 = incorrect forth attempt, 5 = fifth attempt, etc",
+       type=int)
+
 define("default_theme",
        default="Cyborg",
        group="game",
        help="the default css theme")
 
 define("rank_by",
-       default="flags",
+       default="money",
        group="game",
        help="rank teams by (flags or money)")
 

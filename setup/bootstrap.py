@@ -42,7 +42,7 @@ if options.setup.lower().startswith('dev'):
     admin_handle = u'admin'
     password = 'nimda123'
 else:
-    admin_handle = unicode(raw_input(PROMPT + "Admin username: "))
+    admin_handle = unicode(raw_input(PROMPT + "RootTheBox Admin Username: "))
     sys.stdout.write(PROMPT+"New Admin ")
     sys.stdout.flush()
     password1 = getpass.getpass()

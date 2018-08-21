@@ -22,6 +22,7 @@ Created on Mar 11, 2012
 
 import os
 import imghdr
+import StringIO
 import xml.etree.cElementTree as ET
 
 from os import urandom
@@ -35,10 +36,13 @@ from models.Relationships import team_to_box
 from models.IpAddress import IpAddress
 from models.GameLevel import GameLevel
 from models.Corporation import Corporation
+from models.Category import Category
 from models.SourceCode import SourceCode
 from tornado.options import options
-from libs.XSSImageCheck import is_xss_image
+from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
+from PIL import Image
+from resizeimage import resizeimage
 
 
 class Box(DatabaseObject):
@@ -53,6 +57,10 @@ class Box(DatabaseObject):
 
     corporation_id = Column(Integer, ForeignKey('corporation.id'),
                             nullable=False
+                            )
+
+    category_id = Column(Integer, ForeignKey('category.id'),
+                            nullable=True
                             )
 
     _name = Column(Unicode(32), unique=True, nullable=False)
@@ -111,6 +119,11 @@ class Box(DatabaseObject):
         return dbsession.query(cls).filter_by(_name=unicode(name)).first()
 
     @classmethod
+    def by_category(cls, _cat_id):
+        ''' Return the box object whose category is "_cat_id" '''
+        return dbsession.query(cls).filter_by(category_id=int(_cat_id)).all()
+
+    @classmethod
     def by_garbage(cls, _garbage):
         return dbsession.query(cls).filter_by(garbage=_garbage).first()
 
@@ -123,6 +136,14 @@ class Box(DatabaseObject):
         ip = IpAddress.by_address(ip_addr)
 
         return ip.box if ip is not None else None
+
+    @classmethod
+    def flaglist(self, box_id=None):
+        flags = self.by_id(box_id).flags
+        flaglist = {}
+        for flag in flags:
+            flaglist[flag.uuid] = flag.name
+        return flaglist
 
     @property
     def name(self):
@@ -158,26 +179,40 @@ class Box(DatabaseObject):
                 while index < len(text):
                     ls.append("  " + text[index: index + step])
                     index += step
+            if len(ls) == 1:
+                if 0 < len(Category.by_id(self.category_id)):
+                    ls.append("  Category: %s\n" % Category.by_id(self.category_id).category)
+                else:
+                    ls.append("  No information on file.")
             else:
-                ls.append("  No information on file.")
-            ls.append("\n  Operating System: %s\n" % self.operating_system)
-            ls.append("  Reported Difficulty: %s\n" % self.difficulty)
+                if 0 < len(Category.by_id(self.category_id)):
+                    ls.append("\n  Category: %s\n" % Category.by_id(self.category_id).category)
+            if self.operating_system != "none":
+                ls.append("\n  Operating System: %s\n" % self.operating_system)
+            if self.difficulty != "Unknown":
+                ls.append("  Reported Difficulty: %s\n" % self.difficulty)
+            if not str(ls[-1]).endswith("\n"):
+                ls[-1] = ls[-1] + "\n"
             return unicode("\n".join(ls))
         else:
             return self._description
 
     @description.setter
     def description(self, value):
+        if value is None:
+            return ""
         if 1025 < len(value):
             raise ValidationError("Description cannot be greater than 1024 characters")
         self._description = unicode(value)
 
     @property
     def difficulty(self):
-        return self._difficulty if len(self._difficulty) else u"Unknown"
+        return self._difficulty if self._difficulty and len(self._difficulty) else u"Unknown"
 
     @difficulty.setter
     def difficulty(self, value):
+        if value is None:
+            return
         if 17 < len(value):
             raise ValidationError("Difficulty cannot be greater than 16 characters")
         self._difficulty = unicode(value)
@@ -187,7 +222,12 @@ class Box(DatabaseObject):
         if self._avatar is not None:
             return self._avatar
         else:
-            return "default_avatar.jpeg"
+            avatar = get_new_avatar('box')
+            if not avatar.startswith("default_"):
+                self._avatar = avatar
+                dbsession.add(self)
+                dbsession.commit()
+            return avatar
 
     @avatar.setter
     def avatar(self, image_data):
@@ -196,12 +236,13 @@ class Box(DatabaseObject):
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp'] and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
-                    os.unlink(options.avatar_dir + '/' + self._avatar)
-                file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
-                with open(file_path, 'wb') as fp:
-                    fp.write(image_data)
-                self._avatar = self.uuid + '.' + ext
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
+                    os.unlink(options.avatar_dir + '/upload/' + self._avatar)
+                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                image = Image.open(StringIO.StringIO(image_data))
+                cover = resizeimage.resize_cover(image, [500, 250])
+                cover.save(file_path, image.format)
+                self._avatar = 'upload/' + self.uuid + '.' + ext
             else:
                 raise ValidationError(
                     "Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
@@ -241,6 +282,8 @@ class Box(DatabaseObject):
         ET.SubElement(box_elem, "description").text = self._description
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = self.garbage
+        if self.category_id:
+            ET.SubElement(box_elem, "category").text = Category.by_id(self.category_id).category
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", str(len(self.flags)))
         for flag in self.flags:
@@ -248,7 +291,8 @@ class Box(DatabaseObject):
         hints_elem = ET.SubElement(box_elem, "hints")
         hints_elem.set("count", str(len(self.hints)))
         for hint in self.hints:
-            hint.to_xml(hints_elem)
+            if not hint.flag_id is None:
+                hint.to_xml(hints_elem)
         ips_elem = ET.SubElement(box_elem, "ipaddresses")
         ips_elem.set("count", str(len(self.ip_addresses)))
         for ip in self.ip_addresses:
@@ -261,17 +305,24 @@ class Box(DatabaseObject):
         ''' Returns editable data as a dictionary '''
         corp = Corporation.by_id(self.corporation_id)
         game_level = GameLevel.by_id(self.game_level_id)
+        cat = Category.by_id(self.category_id)
+        if cat:
+            category = cat.uuid
+        else:
+            category = ""
         return {
             'name': self.name,
             'uuid': self.uuid,
             'corporation': corp.uuid,
+            'category': category,
             'description': self._description,
             'difficulty': self.difficulty,
             'game_level': game_level.uuid,
+            'flaglist': self.flaglist(self.id)
         }
 
     def __repr__(self):
-        return u'<Box - name: %s>' % (self.box_name,)
+        return u'<Box - name: %s>' % (self.name,)
 
     def __str__(self):
-        return self.box_name
+        return self.name.encode('ascii', 'ignore')

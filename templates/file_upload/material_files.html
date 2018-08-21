@@ -1,0 +1,32 @@
+{% extends "../main.html" %}
+
+{% block title %}Game Materials{% end %}
+
+{% block header %}
+<script src="/static/js/pages/file_upload/material_files.js"></script>
+<script src="/static/js/libs/jstree.js"></script>
+<link rel="stylesheet" href="/static/css/jstree.css" />
+{% end %}
+
+{% block content %}
+    <div class="container">
+        <h1>
+            <i class="fa fa-files-o"></i>
+            Game Materials
+        </h1>
+        <br />
+        {% if errors != None and len(errors) != 0 %}
+          {% for error in errors %}
+              <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">ERROR</h4>
+                {{ error }}
+              </div>
+          {% end %}
+        {% end %}
+        <div class="well">
+            <div id="container">
+            </div>
+        </div>
+    </div>
+{% end %}

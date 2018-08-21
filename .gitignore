@@ -3,9 +3,15 @@
 
 # File uploads and what not
 files/avatars/*-*
+files/avatars/user/*-*
+
+files/avatars/team/*-*
+files/avatars/box/*-*
+files/avatars/upload/*-*
 files/icons/*-*
 files/shares/*-*
 files/source_code_market/*-*
+files/game_materials/*
 files/*.db
 files/*.cfg
 
@@ -56,3 +62,6 @@ __pycache__
 
 # Backups
 *.bak
+
+# Readme
+!*README.md

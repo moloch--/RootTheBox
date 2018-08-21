@@ -8,35 +8,141 @@
 
 {% block modals %}
 {% from models.Team import Team %}
+{% from libs.XSSImageCheck import filter_avatars %}
+{% from libs.XSSImageCheck import existing_avatars %}
+{% from tornado.options import options %}
+    <!-- Change Avatar -->
+    {% if options.teams %}
+        {% set dir = "team" %}
+    {% else %}
+        {% set dir = "user" %}
+    {% end %}
+    {% set avatars = filter_avatars(dir) %}
+    {% set existing = existing_avatars("team") %}
+    <div id="change-team-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+        <div class="modal-header">
+            <button id="team-avatar-form" type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>Change {% if options.teams %}Team {% end %}Avatar</h3>
+        </div>
+        <div class="modal-body">
+            <form action="/user/settings/team_avatar" method="post" enctype="multipart/form-data">
+                {% raw xsrf_form_html() %}
+                    {% for avatar in avatars[::3] %}
+                        <div class="row">
+                            <div class="span3" style="position: relative;">
+                                <center>
+                                    {% if avatar in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                    <a href="#" class="teamavatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                                </center>
+                            </div>
+                            {% if avatars.index(avatar) + 1 < len(avatars) %}
+                                {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                                <div class="span3" style="position: relative;">
+                                    <center>
+                                        {% if avatar1 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                        <a href="#" class="teamavatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                            {% if avatars.index(avatar) + 2 < len(avatars) %}
+                                {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                                <div class="span3" style="position: relative;">
+                                    <center>
+                                        {% if avatar2 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                        <a href="#" class="teamavatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                        </div>
+                        <br/>
+                    {% end %}
+            </form>
+        </div>
+    </div>
+    {% set avatars = filter_avatars("user") %}
+    {% set existing = existing_avatars("user") %}
+    <div id="change-user-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
+        <div class="modal-header">
+            <button id="user-avatar-form" type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>Change {% if options.teams %}Player {% end %}Avatar</h3>
+        </div>
+        <div class="modal-body">
+            <form action="/user/settings/user_avatar" method="post" enctype="multipart/form-data">
+                {% raw xsrf_form_html() %}
+                {% for avatar in avatars[::3] %}
+                        <div class="row">
+                            <div class="span3" style="position: relative;">
+                                <center>
+                                    {% if avatar in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                    <a href="#" class="useravatarimg" value="{{avatar}}"><img src="/avatars/{{avatar}}"  class="img-polaroid" style="width: 200px;"></a>
+                                </center>
+                            </div>
+                            {% if avatars.index(avatar) + 1 < len(avatars) %}
+                                {% set avatar1 = avatars[avatars.index(avatar) + 1] %}
+                                <div class="span3" style="position: relative;">
+                                    <center>
+                                        {% if avatar1 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                        <a href="#" class="useravatarimg" value="{{avatar1}}"><img src="/avatars/{{avatar1}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                            {% if avatars.index(avatar) + 2 < len(avatars) %}
+                                {% set avatar2 = avatars[avatars.index(avatar) + 2] %}
+                                <div class="span3" style="position: relative;">
+                                    <center>
+                                        {% if avatar2 in existing %}<i class="fa fa-certificate avatarused"></i><i class="fa fa-certificate avatarused-top"></i>{% end %}
+                                        <a href="#" class="useravatarimg" value="{{avatar2}}"><img src="/avatars/{{avatar2}}"  class="img-polaroid" style="width: 200px;"></a>
+                                    </center>
+                                </div>
+                            {% end %}
+                        </div>
+                        <br/>
+                    {% end %}
+               
+            </form>
+        </div>
+    </div>
     <!-- Edit Team -->
     <div id="edit-team-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-fw fa-pencil"></i>
-                Edit Team
+                {% if options.teams %}Edit Team{% else %}Edit Player{% end %}
             </h3>
         </div>
         <div class="modal-body">
-            <form id="edit-team-form" class="form-horizontal" method="post" action="/admin/users/edit/team">
+            <form id="edit-team-form" class="form-horizontal" method="post" action="/admin/users/edit/team" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <input id="team-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="team-name">Team Name</label>
+                    <label class="control-label" for="team-name">{% if options.teams %}Team{% else %}Player{% end %} Name</label>
                     <div class="controls">
                         <input required id="team-name" name="name" type="text" placeholder="Team Name">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team-motto">Team Motto</label>
+                    <label class="control-label" for="team-motto">{% if options.teams %}Team{% else %}Player{% end %} Motto</label>
                     <div class="controls">
                         <input required id="team-motto" name="motto" type="text" placeholder="Team Motto">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team-money">Bank Account</label>
+                    <label class="control-label" for="team-money">{% if options.banking %}Bank Account{% else %}Score{% end %}</label>
                     <div class="controls">
                         <input required id="team-money" name="money" type="text" placeholder="Bank Account">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                            <input id="team-avatar" name="avatar" type="hidden" value="" />
+                            (w500 x h250)<br/>
+                            {% if len(avatars) > 0 %}<a data-toggle="modal" class="btn btn-primary" href="#change-team-avatar-modal"> Select New Avatar </a><br/><br/>{% end %}
+                            <a id="teamuploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                            <input id="team-file-avatar" name="avatarfile" type="file" style="display: none;"/>
+                    </label>
+                    <div class="controls">
+                            <img id="team-avatarimg" src="" class="img-polaroid" style="width: 210px; height: 105px; object-fit: cover"/>
                     </div>
                 </div>
             </form>
@@ -59,7 +165,7 @@
             </h3>
         </div>
         <div class="modal-body">
-            <form id="edit-user-form" class="form-horizontal" method="post" action="/admin/users/edit/user">
+            <form id="edit-user-form" class="form-horizontal" method="post" action="/admin/users/edit/user" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <input id="user-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
@@ -68,8 +174,9 @@
                       <input id="user-handle" name="handle" type="text" placeholder="Handle">
                     </div>
                 </div>
+                {% if options.banking %}
                 <div class="control-group">
-                    <label class="control-label" for="user-hash-algorithm">Hash Algorithm</label>
+                    <label class="control-label" for="user-hash-algorithm">Bank Hash Algorithm</label>
                     <div class="controls">
                         <select id="user-hash-algorithm" name="hash_algorithm">
                             <option value="md5">MD5</option>
@@ -85,12 +192,14 @@
                         <input id="bank-password" name="bank_password" type="password" placeholder="New Bank Password">
                     </div>
                 </div>
+                {% end %}
                 <div class="control-group">
                     <label class="control-label" for="user-password">Account Password</label>
                     <div class="controls">
                         <input id="user-password" name="password" type="password" placeholder="New Password">
                     </div>
                 </div>
+                {% if options.teams %}
                 <div class="control-group">
                     <label class="control-label" for="user-team-uuid">Team</label>
                     <div class="controls">
@@ -102,6 +211,21 @@
                         </select>
                     </div>
                 </div>
+                {% end %}
+                {% if options.teams %}
+                <div class="control-group">
+                    <label class="control-label">
+                            <input id="user-avatar" name="avatar" type="hidden" value="" />
+                            (w500 x h250)<br/>
+                            {% if len(avatars) > 0 %}<a data-toggle="modal" class="btn btn-primary" href="#change-user-avatar-modal"> Select New Avatar </a><br/><br/>{% end %}
+                            <a id="useruploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                            <input id="user-file-avatar" name="avatarfile" type="file" style="display: none;"/>
+                    </label>
+                    <div class="controls">
+                            <img id="user-avatarimg" src="" class="img-polaroid" style="width: 210px; height: 105px; object-fit: cover"/>
+                    </div>
+                </div>
+                {% end %}
             </form>
         </div>
         <div class="modal-footer">
@@ -164,14 +288,15 @@
                 <p class="well"><strong>No Users</strong></p>
             {% end %}
             {% for team_index, team in enumerate(Team.all()) %}
+                {% if options.teams or len(team.members) > 0 %}
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
                     <h4 style="display:inline;">
-                        ${{ team.money }}
+                        {% if options.banking %}${% end %}{{ team.money }}
                     </h4>
                     <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}" style="float:right;">
                         <i class="fa fa-fw fa-pencil"></i>
-                        Edit Team
+                        {% if options.teams %}Edit Team{% else %}Edit Player{% end %}
                     </a>
                     <hr />
                     <table class="table table-striped">
@@ -179,9 +304,12 @@
                             <tr>
                                 <th>#</th>
                                 <th>Handle</th>
+                                <th>Name</th>
                                 <th>Last Login</th>
-                                <th>Hash Algorithm</th>
-                                <th>Password Hash</th>
+                                {% if options.banking %}
+                                    <th>Bank Hash Algorithm</th>
+                                    <th>Password Hash</th>
+                                {% end %}
                                 <th><!-- Lock Button --></th>
                                 <th><!-- Edit Button --></th>
                                 <th><!-- Delete Button --></th>
@@ -196,22 +324,25 @@
                                 {% end %}
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ user.handle }}</td>
+                                    <td>{%if user.name %}{{user.name}}{% else %}Unknown{% end %}</td>
                                     {% if 0 < user.logins %}
                                         <td>{{ user.last_login }}</td>
                                     {% else %}
                                         <td>Never</td>
                                     {% end %}
-                                    <td>{{ user.algorithm }}</td>
-                                    {% if 40 < len(user.bank_password) %}
-                                        <td>
-                                            <a id="reveal-hash-button-{{ user.uuid }}" data-bank-hash="{{ user.bank_password }}">
-                                                {{ user.bank_password[:40] }}...
-                                            </a>
-                                        </td>
-                                    {% else %}
-                                        <td>{{ user.bank_password }}</td>
+                                    {% if options.banking %}
+                                        <td>{{ user.algorithm }}</td>
+                                        {% if 40 < len(user.bank_password) %}
+                                            <td>
+                                                <a id="reveal-hash-button-{{ user.uuid }}" data-bank-hash="{{ user.bank_password }}">
+                                                    {{ user.bank_password[:40] }}...
+                                                </a>
+                                            </td>
+                                        {% else %}
+                                            <td>{{ user.bank_password }}</td>
+                                        {% end %}
                                     {% end %}
-                                    <td>
+                                    <td class="shortcolumn">
                                         {% if user.locked %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
                                                 <i class="fa fa-fw fa-unlock"></i>
@@ -224,13 +355,13 @@
                                             </a>
                                         {% end %}
                                     </td>
-                                    <td>
+                                    <td class="shortcolumn">
                                         <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}" data-hash-algorithm="{{ user.algorithm }}" data-team-uuid="{{ user.team.uuid }}">
                                             <i class="fa fa-fw fa-pencil"></i>
-                                            Edit
+                                            Edit Account
                                         </a>
                                     </td>
-                                    <td>
+                                    <td class="shortcolumn">
                                         <a id="delete-user-button-{{ user.uuid }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-user-modal" data-uuid="{{ user.uuid }}">
                                             <i class="fa fa-fw fa-times-circle-o"></i>
                                             Delete
@@ -241,6 +372,7 @@
                         </tbody>
                     </table>
                 </div>
+                {% end %}
             {% end %}
         </div>
     </div>

@@ -27,6 +27,9 @@ indiviudal user, such as handle/account/password/etc
 
 import os
 import imghdr
+import string
+import random
+import StringIO
 import xml.etree.cElementTree as ET
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
@@ -38,20 +41,19 @@ from models import dbsession
 from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
-from libs.XSSImageCheck import is_xss_image
+from libs.XSSImageCheck import MAX_AVATAR_SIZE, MIN_AVATAR_SIZE, IMG_FORMATS
+from libs.XSSImageCheck import is_xss_image, get_new_avatar, default_avatar
 from libs.ValidationError import ValidationError
 from string import printable
 from tornado.options import options
-
+from PIL import Image
+from resizeimage import resizeimage
 
 
 # Constants
 ADMIN_PERMISSION = u'admin'
 DEFAULT_HASH_ALGORITHM = 'md5'
 ITERATE = 0x2bad  # 11181
-IMG_FORMATS = ['png', 'jpeg', 'gif', 'bmp']
-MAX_AVATAR_SIZE = 1024 * 1024
-MIN_AVATAR_SIZE = 64
 
 class User(DatabaseObject):
 
@@ -69,6 +71,7 @@ class User(DatabaseObject):
     last_login = Column(DateTime)
     logins = Column(Integer, default=0)
     _handle = Column(Unicode(16), unique=True, nullable=False)
+    _name = Column(Unicode(64), unique=False, nullable=True)
     _password = Column('password', String(64))
     _bank_password = Column('bank_password', String(128))
 
@@ -161,7 +164,7 @@ class User(DatabaseObject):
     @password.setter
     def password(self, value):
         _password = filter(lambda char: char in printable[:-6], value)
-        if len(_password) >= options.min_user_password_length:
+        if len(_password) >= int(options.min_user_password_length):
             self._password = self._hash_password(value)
         else:
             raise ValidationError("Invalid password length (min %d chars)" % (
@@ -174,7 +177,11 @@ class User(DatabaseObject):
 
     @bank_password.setter
     def bank_password(self, value):
-        _password = filter(lambda char: char in printable[:-6], value)
+        if not options.banking:
+            #random password
+            _password = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(options.max_password_length))
+        else:
+            _password = filter(lambda char: char in printable[:-6], value)
         if 0 < len(_password) <= options.max_password_length:
             self._bank_password = self._hash_bank_password(self.algorithm, _password)
         else:
@@ -185,6 +192,10 @@ class User(DatabaseObject):
     @property
     def handle(self):
         return self._handle
+
+    @property
+    def name(self):
+        return self._name
 
     @handle.setter
     def handle(self, new_handle):
@@ -225,19 +236,30 @@ class User(DatabaseObject):
         if self._avatar is not None:
             return self._avatar
         else:
-            return "default_avatar.jpeg"
+            if not options.teams:
+                avatar = default_avatar('user')
+            elif self.has_permission(ADMIN_PERMISSION):
+                avatar = default_avatar('user')
+            else:
+                avatar = get_new_avatar('user')
+                if not avatar.startswith("default_"):
+                    self._avatar = avatar
+                    dbsession.add(self)
+                    dbsession.commit()
+            return avatar
 
     @avatar.setter
     def avatar(self, image_data):
         if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
             ext = imghdr.what("", h=image_data)
             if ext in IMG_FORMATS and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(options.avatar_dir + '/' + self._avatar):
-                    os.unlink(options.avatar_dir + '/' + self._avatar)
-                file_path = str(options.avatar_dir + '/' + self.uuid + '.' + ext)
-                with open(file_path, 'wb') as fp:
-                    fp.write(image_data)
-                self._avatar = self.uuid + '.' + ext
+                if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
+                    os.unlink(options.avatar_dir + '/upload/' + self._avatar)
+                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                image = Image.open(StringIO.StringIO(image_data))
+                cover = resizeimage.resize_cover(image, [500, 250])
+                cover.save(file_path, image.format)
+                self._avatar = 'upload/' + self.uuid + '.' + ext
             else:
                 raise ValidationError("Invalid image format, avatar must be: %s" % (
                     ' '.join(IMG_FORMATS)
@@ -317,6 +339,7 @@ class User(DatabaseObject):
             'handle': self.handle,
             'hash_algorithm': self.algorithm,
             'team_uuid': self.team.uuid,
+            'avatar': self.avatar,
         }
 
     def to_xml(self, parent):

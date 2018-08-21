@@ -33,6 +33,7 @@ from models.Theme import Theme
 from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
+from libs.XSSImageCheck import IMG_FORMATS
 from BaseHandlers import BaseHandler
 from tornado.options import options
 
@@ -71,6 +72,7 @@ class SettingsHandler(BaseHandler):
             'password': self.post_password,
             'bank_password': self.post_bankpassword,
             'theme': self.post_theme,
+            'motto': self.post_motto,
         }
         if len(args) == 1 and args[0] in post_functions:
             post_functions[args[0]]()
@@ -79,6 +81,7 @@ class SettingsHandler(BaseHandler):
 
     def render_page(self, errors=[], success=[]):
         ''' Small wrap for self.render to cut down on lenghty params '''
+        user = self.get_current_user()
         self.add_content_policy('script', "'unsafe-eval'")
         current_theme = Theme.by_id(self.session["theme_id"])
         self.add_content_policy('script', 'www.google.com')
@@ -86,14 +89,22 @@ class SettingsHandler(BaseHandler):
         self.render("user/settings.html",
                     errors=errors,
                     success=success,
-                    current_theme=current_theme)
+                    current_theme=current_theme,
+                    user=user)
 
     def post_avatar(self, *args, **kwargs):
         '''
         Saves avatar - Reads file header an only allows approved formats
         '''
         user = self.get_current_user()
-        if hasattr(self.request, 'files') and 'avatar' in self.request.files:
+        if self.get_argument("user_avatar_select"):
+            avatar = self.get_argument("user_avatar_select")
+            if avatar.lower().endswith(tuple(IMG_FORMATS)):
+                user._avatar = avatar
+                self.dbsession.add(user)
+                self.dbsession.commit()
+                self.render_page(success=["Updated avatar"])
+        elif hasattr(self.request, 'files') and 'avatar' in self.request.files:
             try:
                 user.avatar = self.request.files['avatar'][0]['body']
                 self.dbsession.add(user)
@@ -109,7 +120,19 @@ class SettingsHandler(BaseHandler):
         Saves team avatar - Reads file header an only allows approved formats
         '''
         user = self.get_current_user()
-        if hasattr(self.request, 'files') and 'team_avatar' in self.request.files:
+        if not user.team:
+            self.render_page(errors=["Not assigned to a team"])
+        elif self.get_argument("team_avatar_select"):
+            avatar = self.get_argument("team_avatar_select")
+            if avatar.lower().endswith(tuple(IMG_FORMATS)):
+                user.team._avatar = avatar
+                self.dbsession.add(user)
+                self.dbsession.commit()
+                if self.config.teams:
+                    self.render_page(success=["Updated team avatar"])
+                else:
+                    self.render_page(success=["Updated avatar"])
+        elif hasattr(self.request, 'files') and 'team_avatar' in self.request.files:
             try:
                 if user.team is None:
                    self.render_page(errors=["You do not belong to a team!"])
@@ -117,7 +140,10 @@ class SettingsHandler(BaseHandler):
                     user.team.avatar = self.request.files['team_avatar'][0]['body']
                     self.dbsession.add(user)
                     self.dbsession.commit()
-                    self.render_page(success=["Updated team avatar"])
+                    if self.config.teams:
+                        self.render_page(success=["Updated team avatar"])
+                    else:
+                        self.render_page(success=["Updated avatar"])
             except ValidationError as error:
                 self.render_page(errors=[str(error), ])
         else:
@@ -137,6 +163,17 @@ class SettingsHandler(BaseHandler):
             self.render_page()
         else:
             self.render_page(errors=["Theme does not exist."])
+
+    def post_motto(self, *args, **kwargs):
+        ''' Change team motto '''
+        user = self.get_current_user()
+        if not user.team:
+            self.render_page(errors=["Not assigned to a team"])
+        else:
+            user.team.motto = self.get_argument('motto', '')
+        self.dbsession.add(user)
+        self.dbsession.commit()
+        self.render_page()
 
     def post_password(self, *args, **kwargs):
         ''' Called on POST request for password change '''

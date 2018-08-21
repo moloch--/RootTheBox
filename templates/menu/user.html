@@ -1,4 +1,5 @@
 {% from tornado.options import options %}
+{% from handlers.MaterialsHandler import has_materials %}
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
@@ -72,6 +73,21 @@
                       </a>
                         <ul class="dropdown-menu">
                             <li>
+                                <a href="/cyberchef" target="_blank">
+                                    <i class="fa fa-fw fa-link"></i>
+                                    CyberChef
+                                </a>
+                            </li>
+                            {% if has_materials() %}
+                            <li>
+                                <a href="/materials" target="_blank">
+                                    <i class="fa fa-fw fa-files-o"></i>
+                                    Game Materials
+                                </a>
+                            </li>
+                            {% end %}
+                            {% if options.teams %}
+                            <li>
                                 <a href="/user/share/files">
                                     <i class="fa fa-fw fa-files-o"></i>
                                     Team File Sharing
@@ -83,6 +99,7 @@
                                     Team PasteBin
                               </a>
                             </li>
+                            {% end %}
                         </ul>
                     </li>
                     {% if options.use_black_market %}
@@ -139,24 +156,28 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/scoreboard">
-                                  Summary
+                                    <i class="fa fa-fw fa-list"></i>
+                                    Summary
                               </a>
                             </li>
                             <li>
                                 <a href="/scoreboard/history">
-                                  History
+                                    <i class="fa fa-fw fa-calendar"></i>
+                                    History
                               </a>
                             </li>
                             {% if options.use_black_market %}
                             <li>
                                 <a href="/scoreboard/wall_of_sheep">
+                                    <i class="fa fa-fw fa-key"></i>
                                     Wall of Sheep
                                 </a>
                             </li>
                             {% end %}
                             <li>
                                 <a href="/teams">
-                                    Teams
+                                    <i class="fa fa-fw fa-users"></i>
+                                    {% if options.teams %}Teams{% else %}Players{% end %}
                                 </a>
                             </li>
                         </ul>

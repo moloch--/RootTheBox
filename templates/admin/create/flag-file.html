@@ -8,6 +8,7 @@
 
 {% block content %}
 {% from models.Box import Box %}
+{% from tornado.options import options %}
 <div class="container">
     <h1>
         <i class="fa fa-flag"></i>
@@ -28,6 +29,7 @@
             <div class="span4">
                 <form class="form-horizontal" action="/admin/create/flag/file" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
+                    <input id="flagtype" type="hidden" value="file" />
                     <div class="control-group">
                         <label class="control-label" for="flag_name">Flag Name</label>
                         <div class="controls">
@@ -38,9 +40,28 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="token">Flag File</label>
+                        <label class="control-label" for="box_uuid">Box</label>
                         <div class="controls">
-                            <input id="token" name="flag" type="file">
+                            <select id="box-uuid" name="box_uuid"
+                                    rel="popover"
+                                    data-original-title="Box"
+                                    data-content="This is the box the flag is located on.">
+                                <option value=""></option>
+                                {% for box in Box.all() %}
+                                <option value="{{ box.uuid }}">
+                                    {{ box.name }}{% if box.corporation.name != "" %} ({{ box.corporation.name }}){% end %}
+                                </option>
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                        <div class="controls">
+                            <input required id="reward" name="reward" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                                   rel="popover"
+                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
+                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
                         </div>
                     </div>
                     <div class="control-group">
@@ -54,6 +75,19 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="token">Flag File</label>
+                        <div class="controls">
+                            <input id="token" name="flag" type="file">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                        <div class="controls">
+                            <select id="edit-flag-lock" name="lock_uuid"></select>
+                        </div>
+                    </div>
+                    {% if options.secure_communique_dialog %}
+                    <div class="control-group">
                         <label class="control-label" for="capture-message">Capture Message</label>
                         <div class="controls">
                             <textarea id="capture-message" name="capture_message" placeholder="(Optional)"
@@ -63,31 +97,7 @@
                             </textarea>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="reward">Reward</label>
-                        <div class="controls">
-                            <input required id="reward" name="reward" type="text" pattern="[0-9]+" placeholder="$ Reward"
-                                   rel="popover"
-                                   data-original-title="Reward"
-                                   data-content="This is the amount of money rewarded for capturing the flag.">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="box_uuid">Box</label>
-                        <div class="controls">
-                            <select id="box-uuid" name="box_uuid"
-                                    rel="popover"
-                                    data-original-title="Box"
-                                    data-content="This is the box the flag is located on.">
-                                <option value=""></option>
-                                {% for box in Box.all() %}
-                                <option value="{{ box.uuid }}">
-                                    {{ box.name }} ({{ box.corporation.name }})
-                                </option>
-                                {% end %}
-                            </select>
-                        </div>
-                    </div>
+                    {% end %}
                     <input type="hidden" name="is_file" value="true">
                     <div class="control-group">
                         <div class="controls">
