@@ -2,14 +2,14 @@
 
 A Game of Hackers
 -------------------
-Root the Box is a real-time scoring engine for a computer wargames where hackers can practice and learn. The application can be easily configured and modified for any hacker CTF game. Root the Box attempts to engage novice and experienced players alike by combining a fun game-like environment, with realistic challenges that convey knowledge applicable to the real-world, such as penetration testing, incident response, digital forensics and threat hunting. 
+Root the Box is a real-time scoring engine for computer wargames where hackers can practice and learn. The application can be easily configured and modified for any CTF game. Root the Box attempts to engage novice and experienced players alike by combining a fun game-like environment, with realistic challenges that convey knowledge applicable to the real-world, such as penetration testing, incident response, digital forensics and threat hunting. 
 
 Just as in traditional CTF games, each team or player targets challenges of varying difficulty and sophistication, attempting to collect flags. Root the Box brings additional options to the game.  It can be configured to allow the creation of "Botnets" by uploading a small bot program to target machines, which grant periodic rewards with (in-game) money for each bot in the botnet; the larger the botnet the larger the reward.  Money can be used to unlock new levels, buy hints to flags, download a target's source code, or even "SWAT" other players by bribing the (in-game) police.  Player's "bank account passwords" can also be publically displayed by the scoring engine, allowing players to crack each other's passwords and steal each other's money.
 
 Features
 -------------
 * [Distributed under the Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-* [Botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
+* [In-Game Botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
 * Team Play or Individual Play
 * Real-time scoreboard graphs using websockets
 * Real-time status updates using websockets
