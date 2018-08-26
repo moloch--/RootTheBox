@@ -2,8 +2,10 @@
     <div class="navbar-inner">
         <a class="brand">PasteBin</a>
         <ul class="nav">
+            {% if not nocreate %}
             <li><a id="create-paste" href="#">Create</a></li>
-            <li><a id="delete-paste" data-uuid="{{ paste.uuid }}">Delete</a></li>
+            {% end %}
+            <li><a id="delete-paste" style="cursor: pointer;" data-uuid="{{ paste.uuid }}">Delete</a></li>
         </ul>
     </div>
 </div>
@@ -11,9 +13,11 @@
     <div class="span12 well animated fadeIn">
         {% if paste is not None %}
             <h3>{{ paste.name }} - {{ paste.created.strftime("%I:%M%p") }}</h3>
-<pre>
-{{ paste.contents }}
-</pre>
+            <div class="navbar-inverse">
+                <pre class="navbar-inner" style="color: unset; min-height: unset;">
+                {{ paste.contents }}
+                </pre>
+            </div>
         {% end %}
     </div>
 </div><!--/row-->

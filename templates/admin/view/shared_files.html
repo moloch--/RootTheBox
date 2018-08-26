@@ -1,0 +1,108 @@
+{% extends "../../main.html" %}
+
+{% block title %}Shared Files{% end %}
+
+{% block header %}
+<script src="/static/js/pages/file_upload/shared_files.js"></script>
+{% end %}
+
+{% block modals %}
+    <div id="delete-file-upload-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>
+                <i class="fa fa-times-circle-o"></i>
+                Delete File Upload
+            </h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            Are you sure you want to delete this file? <br />
+        </p>
+        <form id="delete-file-upload-form" method="post" action="/user/shares/delete">
+            {% raw xsrf_form_html() %}
+            <input id="delete-file-upload-uuid" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="delete-file-upload-submit" type="button" class="btn btn-danger">
+                <i class="fa fa-times-circle-o"></i>
+                Delete
+            </button>
+        </div>
+    </div>
+{% end %}
+
+{% block content %}
+{% from models.Team import Team %}
+    <div class="container">
+        <h1>
+            <i class="fa fa-files-o"></i>
+            File Sharing
+        </h1>
+        <br />
+        {% if errors != None and len(errors) != 0 %}
+          {% for error in errors %}
+              <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">ERROR</h4>
+                {{ error }}
+              </div>
+          {% end %}
+        {% end %}
+        <div class="row">
+            <div class="well">
+                {% set teams = Team.all() %}
+                {% set index = 0 %}
+                {% for team in teams %}
+                    {% set shares = team.files %}
+                    <h4>
+                        {{ team.name }}
+                    </h4>  
+                    <div id="accordion">
+                        {% if not len(shares) %}
+                            <strong>There are currently no shared files.</strong>
+                        {% else %}
+                            <div class="accordion" id="accordion2">
+                                {% for share in shares %}
+                                    <div class="accordion-group">
+                                        <div class="accordion-heading">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{ index }}">
+                                                <strong>{{ share.file_name }}</strong>
+                                                &nbsp;&nbsp;&nbsp;{{ share.content_type }}
+                                            </a>
+                                        </div>
+                                        <div id="collapse{{ index }}" class="accordion-body collapse">
+                                            <div class="accordion-inner">
+                                                <strong>Created: </strong> {{ share.created }}</strong>
+                                                <br />
+                                                <strong>File Size: </strong> {{ share.byte_size }} bytes
+                                                <br />
+                                                <p>
+                                                    <strong>Description:</strong>
+                                                    {{ share.description }}
+                                                </p>
+                                                <br />
+                                                <button id="file-upload-download{{ index }}" class="btn" data-uuid="{{ share.uuid }}" type="button">
+                                                    <i class="fa fa-download"></i>
+                                                    Download {{ share.file_name }}
+                                                </button>
+                                                <button id="delete-file-upload-button{{ index }}" class="btn btn-danger" href="#delete-file-upload-modal" data-toggle="modal"
+                                                    data-uuid="{{ share.uuid }}" style="float:right;">
+                                                    <i class="fa fa-trash-o"></i>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% set index += 1 %}
+                                {% end %}
+                            </div>
+                        {% end %}
+                    </div>
+                {% end %}
+            </div>
+        </div>
+    </div>
+{% end %}

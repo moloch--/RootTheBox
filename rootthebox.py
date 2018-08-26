@@ -341,6 +341,12 @@ define("max_team_size",
        help="max number of players on any one team",
        type=int)
 
+define("team_sharing",
+       default=True,
+       group="game",
+       help="team sharing - pastebin and file share",
+       type=bool)
+
 define("min_user_password_length",
        default=12,
        group="game",

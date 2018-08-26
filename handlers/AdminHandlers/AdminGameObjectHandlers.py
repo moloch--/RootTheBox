@@ -347,7 +347,9 @@ class AdminViewHandler(BaseHandler):
             'game_objects': "admin/view/game_objects.html",
             'game_levels': "admin/view/game_levels.html",
             'market_objects': 'admin/view/market_objects.html',
-            'categories': 'admin/view/categories.html'
+            'categories': 'admin/view/categories.html',
+            'pastebin': 'admin/view/pastebin.html',
+            'fileshare': 'admin/view/shared_files.html'
         }
         if len(args) and args[0] in uri:
             self.render(uri[args[0]], errors=None)

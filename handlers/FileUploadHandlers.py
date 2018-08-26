@@ -30,6 +30,7 @@ from models.FileUpload import FileUpload
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from BaseHandlers import BaseHandler
+from models.User import ADMIN_PERMISSION
 
 
 MAX_UPLOADS = 5
@@ -91,7 +92,7 @@ class FileDownloadHandler(BaseHandler):
         ''' Get a file and send it to the user '''
         user = self.get_current_user()
         shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
-        if shared_file is not None and shared_file in user.team.files:
+        if user.has_permission(ADMIN_PERMISSION) or (shared_file is not None and shared_file in user.team.files):
             self.set_header('Content-Type', shared_file.content_type)
             self.set_header('Content-Length', shared_file.byte_size)
             self.set_header('Content-Disposition', 'attachment; filename=%s' % (
@@ -109,6 +110,13 @@ class FileDeleteHandler(BaseHandler):
     def post(self, *args, **kwargs):
         user = self.get_current_user()
         shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
+        if user.has_permission(ADMIN_PERMISSION):
+            logging.info("%s deleted a shared file %s" % (
+                user.handle, shared_file.uuid))
+            shared_file.delete_data()
+            self.dbsession.delete(shared_file)
+            self.dbsession.commit()
+            self.redirect('/admin/view/fileshare')
         if shared_file is not None and shared_file in user.team.files:
             logging.info("%s deleted a shared file %s" % (
                 user.handle, shared_file.uuid))

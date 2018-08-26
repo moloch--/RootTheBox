@@ -27,6 +27,7 @@ This file contains handlers related to the pastebin functionality
 from handlers.BaseHandlers import BaseHandler
 from models.PasteBin import PasteBin
 from libs.SecurityDecorators import authenticated
+from models.User import ADMIN_PERMISSION
 
 
 class PasteHandler(BaseHandler):
@@ -77,13 +78,15 @@ class DisplayPasteHandler(BaseHandler):
         paste_uuid = self.get_argument("paste_uuid")
         user = self.get_current_user()
         paste = PasteBin.by_uuid(paste_uuid)
-        if paste is None or paste not in user.team.pastes:
+        if user.has_permission(ADMIN_PERMISSION):
+            self.render("pastebin/display.html", errors=None, paste=paste, nocreate=True)
+        elif paste is None or paste not in user.team.pastes:
             self.render("pastebin/display.html",
                         errors=["Paste does not exist."],
-                        paste=None
+                        paste=None, nocreate=None
                         )
         else:
-            self.render("pastebin/display.html", errors=None, paste=paste)
+            self.render("pastebin/display.html", errors=None, paste=paste, nocreate=False)
 
 
 class DeletePasteHandler(BaseHandler):
@@ -95,6 +98,11 @@ class DeletePasteHandler(BaseHandler):
         ''' AJAX // Delete a paste object from the database '''
         paste = PasteBin.by_uuid(self.get_argument("uuid", ""))
         user = self.get_current_user()
+        if user.has_permission(ADMIN_PERMISSION):
+            self.dbsession.delete(paste)
+            self.dbsession.commit()
+            self.redirect("/admin/view/pastebin")
+            return
         if paste is not None and paste in user.team.pastes:
             self.dbsession.delete(paste)
             self.dbsession.commit()

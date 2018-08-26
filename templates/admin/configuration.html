@@ -9,22 +9,29 @@
 
 {% block content %}
 <div class="container">
-    <h1>
-        <i class="fa fa-gear"></i>
-        Configuration
-    </h1>
-    <br />
-    {% if errors is not None and len(errors) != 0 %}
-        {% for error in errors %}
-        <div class="alert alert-error">
-            <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
-            {{ error }}
+    <form class="form-horizontal" action="/admin/configuration" method="post">
+        <div class="control-group" style="float: right; padding-top: 20px;">
+                <div class="controls">
+                    <button class="btn btn-primary" type="submit">
+                        Update Configuration
+                    </button>
+                </div>
         </div>
+        <h1>
+            <i class="fa fa-gear"></i>
+            Configuration
+        </h1>
+        <br />
+        {% if errors is not None and len(errors) != 0 %}
+            {% for error in errors %}
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <h4 class="alert-heading">ERROR</h4>
+                {{ error }}
+            </div>
+            {% end %}
         {% end %}
-    {% end %}
-    <div class="well">
-        <form class="form-horizontal" action="/admin/configuration" method="post">
+        <div class="well">
             {% raw xsrf_form_html() %}
             <div class="control-group">
                 <label class="control-label" for="game-name">Game Name</label>
@@ -38,7 +45,7 @@
             <div class="control-group">
                 <label class="control-label" for="min-user-password-length">Minimum User Password Length</label>
                 <div class="controls">
-                    <input required id="min-user-password-length" type="number" name="min_user_password_length" value="{{ config.min_user_password_length }}"
+                    <input required id="min-user-password-length" type="number" max="64" name="min_user_password_length" value="{{ config.min_user_password_length }}"
                         rel="popover" pattern="\d*"
                         data-original-title="Min user password length"
                         data-content="Restrict players user password to this length" />
@@ -152,6 +159,38 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label" for="team-sharing">
+                        Team Sharing
+                    </label>
+                    <div class="controls">
+                        <input id="team-sharing" name="team_sharing" type="hidden" value="{{ str(config.team_sharing).lower() }}" />
+                        <div id="team-sharing-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Team Sharing"
+                            data-content="Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.">
+                            <button id="team-sharing-enable" type="button" class="btn btn-success">
+                                <i id="team-sharing-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                Enable
+                            </button>
+                            <button id="team-sharing-disable" type="button" class="btn btn-danger">
+                                <i id="team-sharing-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="teamshare-grouping" class="control-section">
+                    <div class="control-group">
+                        <label class="control-label" for="max_pastebin_size">Pastebin Character limit</label>
+                        <div class="controls">
+                            <input required id="max-pastebin-size" max="4096" type="number" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
+                                rel="popover" pattern="\d*"
+                                data-original-title="Max PasteBin Size"
+                                data-content="This is the the limit of characters allowed for a pastebin post." />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="max-team-size">Max Team Size</label>
                     <div class="controls">
                         <input required id="max-team-size" type="number" name="max_team_size" value="{{ config.max_team_size }}"
@@ -160,15 +199,6 @@
                             data-content="Limit number of players that can be on any one team" />
                     </div>
                 </div>               
-                <div class="control-group">
-                    <label class="control-label" for="max_pastebin_size">Pastebin Character limit</label>
-                    <div class="controls">
-                        <input required id="max-pastebin-size" type="number" name="max_pastebin_size" value="{{ config.max_pastebin_size }}"
-                            rel="popover" pattern="\d*"
-                            data-original-title="Max PasteBin Size"
-                            data-content="This is the the limit of characters allowed for a pastebin post." />
-                    </div>
-                </div>
             </div>
             <hr />
             <div class="control-group">
@@ -308,7 +338,7 @@
             <div id="bank-grouping" class="control-group control-section">
                 <label class="control-label" for="max-password-length">Bank Password Length</label>
                 <div class="controls">
-                    <input required id="max-password-length" type="text" name="max_password_length" value="{{ config.max_password_length }}"
+                    <input required id="max-password-length" type="number" max="128" name="max_password_length" value="{{ config.max_password_length }}"
                         rel="popover" pattern="\d*"
                         data-original-title="Bank Password Length"
                         data-content="Restrict player's bank password to this length" />
@@ -390,14 +420,7 @@
                 </div>
             </div>
             <hr />
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn btn-primary" type="submit">
-                        Update Configuration
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 {% end %}

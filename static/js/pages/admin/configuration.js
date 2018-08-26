@@ -1,4 +1,3 @@
-
 function penalty_cost_update() {
     var max_cost = ($("#flag_stop_penalty").val() - $("#flag_start_penalty").val()) * $("#flag_penalty_cost").val();
     $("#flag_start_penalty").attr('data-content', "When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.<br/><br/>1 = deduct on & after 1st attempt<br/>2 = deduct on & after 2nd attempt<br/>and so on ...<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost.<br/><strong>Current Max Penalty: " + max_cost + "%</strong>");
@@ -27,6 +26,9 @@ $(document).ready(function() {
     }
     if ($("#penalize_flag_value").val() == "false") {
         $("#penalty-grouping").hide();
+    }
+    if ($("#team-sharing").val() == "false") {
+        $("#teamshare-grouping").hide();
     }
 
     /* Set initial state for buttons */
@@ -60,6 +62,14 @@ $(document).ready(function() {
     } else {
         $("#public-teams-disable-icon").removeClass("fa-square-o");
         $("#public-teams-disable-icon").addClass("fa-check-square-o");
+    }
+
+    if ($("#team-sharing").val() === "true") {
+        $("#team-sharing-enable-icon").removeClass("fa-square-o");
+        $("#team-sharing-enable-icon").addClass("fa-check-square-o");
+    } else {
+        $("#team-sharing-disable-icon").removeClass("fa-square-o");
+        $("#team-sharing-disable-icon").addClass("fa-check-square-o");
     }
 
     if ($("#dynamic_flag_value").val() === "true") {
@@ -175,6 +185,25 @@ $(document).ready(function() {
         $("#public-teams-enable-icon").addClass("fa-square-o");
     });
 
+
+    $("#team-sharing-enable").click(function() {
+        $("#team-sharing").val("true");
+        $("#team-sharing-enable-icon").removeClass("fa-square-o");
+        $("#team-sharing-enable-icon").addClass("fa-check-square-o");
+        $("#team-sharing-disable-icon").removeClass("fa-check-square-o");
+        $("#team-sharing-disable-icon").addClass("fa-square-o");
+        $("#teamshare-grouping").slideDown();
+    });
+    $("#team-sharing-disable").click(function() {
+        $("#team-sharing").val("false");
+        $("#team-sharing-disable-icon").removeClass("fa-square-o");
+        $("#team-sharing-disable-icon").addClass("fa-check-square-o");
+        $("#team-sharing-enable-icon").removeClass("fa-check-square-o");
+        $("#team-sharing-enable-icon").addClass("fa-square-o");
+        $("#teamshare-grouping").slideUp();
+    });
+
+
     $("#banking-enable").click(function() {
         $("#banking").val("true");
         $("#moneyname").text("Money");
@@ -287,6 +316,7 @@ $(document).ready(function() {
     $("#game-name").popover({placement:'right', trigger:'hover'});
     $("#restrict-registration-button").popover({placement:'right', trigger:'hover'});
     $("#public-teams-button").popover({placement:'right', trigger:'hover'});
+    $("#team-sharing-button").popover({placement:'right', trigger:'hover'});
     $("#hints-taken-button").popover({placement:'right', trigger:'hover'});
     $("#teams-button").popover({placement:'right', trigger:'hover'});
     $("#max-team-size").popover({placement:'right', trigger:'hover'});

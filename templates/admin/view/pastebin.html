@@ -1,0 +1,46 @@
+{% extends "../../main.html" %}
+
+{% block title %}PasteBin{% end %}
+
+{% block header %}
+<script src="/static/js/pages/pastebin.js"></script>
+{% end %}
+
+{% block content %}
+{% from tornado.options import options %}
+{% from models.Team import Team %}
+    <form id="delete-paste-form" method="post" action="/user/share/pastebin/delete" >
+        {% raw xsrf_form_html() %}
+        <input id="delete-paste-uuid" name="uuid" type="hidden" value="" />
+    </form>
+    <div class="row-fluid">
+        <div class="span3">
+          {% set teams = Team.all() %}
+          {% for team in teams %}
+            <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                    <h4>{{ team.name }}</h4>
+                    {% if team.pastes != 0 %}
+                        {% for index, paste in enumerate(team.pastes) %}
+                            <li>
+                                <a id="view-paste{{ index }}" data-uuid="{{ paste.uuid }}" href="#">
+                                    {{ paste.name }}
+                                </a>
+                            </li>
+                        {% end %}
+                    {% else %}
+                        <li><a href="#">EMPTY</a></li>
+                    {% end %}
+                </ul>
+            </div><!--/.well -->
+          {% end %}
+        </div><!--/span-->
+        <div id="display-paste" class="span9">
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner">
+                    <a class="brand">PasteBin</a>
+                </div>
+            </div>
+        </div><!--/span-->
+    </div>
+{% end %}
