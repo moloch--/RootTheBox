@@ -1,11 +1,12 @@
+{% block header %}
+<link href="/static/css/menu.css" rel="stylesheet" />
+{% end %}
 {% from tornado.options import options %}
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+            <a class="btn btncollapse" data-toggle="collapse" data-target=".nav-collapse">
+                    <i class="fa fa-bars"></i>
             </a>
             <a class="brand" href="/">
                 {% if options.debug %}

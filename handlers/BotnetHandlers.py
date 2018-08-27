@@ -294,7 +294,6 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
                 self.team_name = ''.join(user.team.name)
                 self.bot_manager.add_monitor(self)
                 bots = self.bot_manager.get_bots(self.team_name)
-            print(bots)
             self.update(bots)
         else:
             logging.debug("[Web Socket] Denied web monitor socket to %s" % self.request.remote_ip)
