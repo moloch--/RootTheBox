@@ -178,6 +178,7 @@ urls = [
     (r'/admin/configuration', AdminConfigurationHandler),
     (r'/admin/export/(.*)', AdminExportHandler),
     (r'/admin/import/xml', AdminImportXmlHandler),
+    (r'/admin/reset', AdminResetHandler),
 
     # Error handlers - ErrorHandlers.py
     (r'/403', UnauthorizedHandler),

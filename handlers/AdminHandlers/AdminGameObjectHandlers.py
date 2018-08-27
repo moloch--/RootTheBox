@@ -115,7 +115,9 @@ class AdminCreateHandler(BaseHandler):
             team.motto = self.get_argument('motto', '')
             if not self.config.banking:
                 team.money = 0
-            level_0 = GameLevel.all()[0]
+            level_0 = GameLevel.by_number(0)
+            if not level_0:
+                level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)
             self.dbsession.add(team)
             self.dbsession.commit()

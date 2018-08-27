@@ -54,3 +54,8 @@ class SnapshotTeam(DatabaseObject):
         return dbsession.query(Team._name).filter_by(
             id=self.team_id
         ).first()[0]
+
+    @classmethod
+    def all(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).all()

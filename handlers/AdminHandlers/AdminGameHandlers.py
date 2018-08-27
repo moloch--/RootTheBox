@@ -32,16 +32,24 @@ from models.Box import Box
 from models.Swat import Swat
 from models.GameLevel import GameLevel
 from models.User import ADMIN_PERMISSION
+from models.Team import Team
+from models.Penalty import Penalty
+from models.Snapshot import Snapshot
+from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Corporation import Corporation
 from models.Category import Category
+from models.Notification import Notification
 from models.RegistrationToken import RegistrationToken
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
 from libs.ConfigHelpers import save_config
+from libs.GameHistory import GameHistory
 from handlers.BaseHandlers import BaseHandler
 from string import printable
 from setup.xmlsetup import import_xml
+from tornado.options import options
+
 
 class AdminGameHandler(BaseHandler):
 
@@ -457,3 +465,70 @@ class AdminImportXmlHandler(BaseHandler):
         tmp_file.write(data)
         tmp_file.close()
         return tmp_file.name
+
+
+class AdminResetHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        ''' Reset Game Information '''
+        self.render('admin/reset.html', success=None, errors=None)
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        '''
+        Reset the Game
+        '''
+        errors = []
+        success = None
+        try:
+            teams = Team.all()
+            for team in teams:
+                if options.banking:
+                    team.money = options.starting_team_money
+                else:
+                    team.money = 0
+                team.flags = []
+                team.hints = []
+                team.boxes = []
+                team.items = []
+                team.purchased_source_code = []
+                level_0 = GameLevel.by_number(0)
+                if not level_0:
+                    level_0 = GameLevel.all()[0]
+                team.game_levels = [level_0]
+                self.dbsession.add(team)
+            self.dbsession.commit()
+            self.dbsession.flush()
+            for team in teams:
+                for paste in team.pastes:
+                    self.dbsession.delete(paste)
+                for shared_file in team.files:
+                    shared_file.delete_data()
+                    self.dbsession.delete(shared_file)
+            self.dbsession.commit()
+            self.dbsession.flush()
+            Penalty.clear()
+            Notification.clear()
+            snapshot = Snapshot.all()
+            for snap in snapshot:
+                self.dbsession.delete(snap)
+            self.dbsession.commit()
+            snapshot_team = SnapshotTeam.all()
+            for snap in snapshot_team:
+                self.dbsession.delete(snap)
+            self.dbsession.commit()
+            game_history = GameHistory.instance()
+            game_history.take_snapshot() # Take starting snapshot
+            success = "Successfully Reset Game"
+            self.render('admin/reset.html', success=success, errors=errors)
+        except BaseException as e:
+            errors.append("Failed to Reset Game")
+            logging.error(str(e))
+            self.render('admin/reset.html',
+                        success=None,
+                        errors=errors)

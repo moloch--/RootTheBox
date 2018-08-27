@@ -51,12 +51,15 @@ class GameHistory(object):
     def _load(self):
         ''' Moves snapshots from db into the cache '''
         logging.info("Loading game history from database ...")
-        if Snapshot.by_id(1) is None:
-            self.__now__()  # Take starting snapshot
-        self.epoch = Snapshot.by_id(1).created
+        snaps = Snapshot.all()
+        if len(snaps) > 0:
+            snap = snaps[0]
+        else:
+            snap = self.__now__()  # Take starting snapshot
+        self.epoch = snap.created
         try:
             max_index = len(self)
-            start_index = 1 if len(self) <= 10 else max_index - 9
+            start_index = snap.id if len(self) <= (snap.id + 9) else max_index - 9
             for index in range(start_index, max_index + 1):
                 snapshot = Snapshot.by_id(index)
                 if self.cache.get(snapshot.key) is None:

@@ -46,10 +46,7 @@ class HomePageHandler(BaseHandler):
         if self.session is not None:
             self.redirect('/user')
         else:
-            try:
-                self.render("public/home.html")
-            except:
-                self.redirect("public/home.html")
+            self.render("public/home.html")
 
 
 class LoginHandler(BaseHandler):
@@ -219,7 +216,9 @@ class RegistrationHandler(BaseHandler):
             team.motto = self.get_argument('motto', '')
             if not self.config.banking:
                 team.money = 0
-            level_0 = GameLevel.all()[0]
+            level_0 = GameLevel.by_number(0)
+            if not level_0:
+                level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)
             return team
         elif self.config.public_teams:
@@ -230,7 +229,9 @@ class RegistrationHandler(BaseHandler):
             team.motto = self.get_argument('motto', '')
             if not self.config.banking:
                 team.money = 0
-            level_0 = GameLevel.all()[0]
+            level_0 = GameLevel.by_number(0)
+            if not level_0:
+                level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)
             return team
         else:

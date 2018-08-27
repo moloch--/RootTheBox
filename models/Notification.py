@@ -53,6 +53,11 @@ class Notification(DatabaseObject):
         return dbsession.query(cls).filter_by(user_id=None).all()
 
     @classmethod
+    def clear(cls):
+        ''' Deletes all objects in the database '''
+        return dbsession.query(cls).delete()
+
+    @classmethod
     def by_id(cls, _id):
         ''' Returns a the object with id of _id '''
         return dbsession.query(cls).filter_by(id=_id).first()
