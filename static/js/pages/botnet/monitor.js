@@ -18,6 +18,7 @@ $(document).ready(function() {
                         $('#box-table').append(
                             "<tr>" +
                                 "<td> " + (index + 1).toString() + "</td>" +
+                                "<td class='teamname'> " + escapeHtml(bots[index]['team_name']) + "</td>" +
                                 "<td> " + escapeHtml(bots[index]['box_name']) + "</td>" +
                                 "<td> " + escapeHtml(bots[index]['remote_ip']) + "</td>" +
                                 "<td>$" + escapeHtml(bots[index]['total_reward']) + "</td>" +
@@ -36,3 +37,20 @@ $(document).ready(function() {
         }
     };
 });
+
+var entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+  };
+
+  function escapeHtml (string) {
+    return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap (s) {
+      return entityMap[s];
+    });
+  }

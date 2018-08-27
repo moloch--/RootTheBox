@@ -254,7 +254,8 @@ class BotWebMonitorHandler(BaseHandler):
     @authenticated
     @use_bots
     def get(self, *args, **kwargs):
-        self.render('botnet/monitor.html')
+        user = self.get_current_user()
+        self.render('botnet/monitor.html', teamname=user.has_permission(ADMIN_PERMISSION))
 
 
 class BotWebMonitorSocketHandler(BaseWebSocketHandler):
@@ -279,14 +280,21 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
 
     def open(self):
         ''' Only open sockets from authenticated clients '''
-        if self.session is not None and 'team_id' in self.session:
-            user = self.get_current_user()
+        user = self.get_current_user()
+        if self.session is not None and ('team_id' in self.session or user.has_permission(ADMIN_PERMISSION)):
             logging.debug("[Web Socket] Opened web monitor socket with %s" % user.handle)
             self.uuid = unicode(uuid4())
             self.bot_manager = BotManager.instance()
-            self.team_name = ''.join(user.team.name)
-            self.bot_manager.add_monitor(self)
-            bots = self.bot_manager.get_bots(self.team_name)
+            
+            if user.has_permission(ADMIN_PERMISSION):
+                self.team_name = user.name
+                self.bot_manager.add_monitor(self)
+                bots = self.bot_manager.get_all_bots()
+            else:
+                self.team_name = ''.join(user.team.name)
+                self.bot_manager.add_monitor(self)
+                bots = self.bot_manager.get_bots(self.team_name)
+            print(bots)
             self.update(bots)
         else:
             logging.debug("[Web Socket] Denied web monitor socket to %s" % self.request.remote_ip)

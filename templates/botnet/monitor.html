@@ -1,8 +1,18 @@
 {% extends "../main.html" %}
 
 {% block title %}Botnet C &amp; C{% end %}
-
+{% block header %}
+<script src="/static/js/pages/botnet/monitor.js"></script>
+    {% if not teamname %}
+    <style>
+        .teamname {
+            display: none;
+        }
+    </style>
+    {% end %}
+{% end %}
 {% block content %}
+{% from tornado.options import options %}
     <!-- Visable -->
     <div class="container">
         <h1>
@@ -21,6 +31,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th class='teamname'>{% if options.teams %}Team{% else %}Player{% end %}</th>
                         <th>Box Name</th>
                         <th>IP Address</th>
                         <th>Income</th>

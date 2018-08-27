@@ -88,6 +88,7 @@ class Bot(BotDatabaseObject):
 
     def to_dict(self):
         return {
+            'team_name': self.team_name,
             'last_ping': str(self.last_ping),
             'total_reward': self.total_reward,
             'box_name': self.box_name,
@@ -204,6 +205,11 @@ class BotManager(object):
     def get_bots(self, team):
         ''' Get info on boxes for a team '''
         bots = self.botdb.query(Bot).filter_by(team_name=unicode(team)).all()
+        return [bot.to_dict() for bot in bots]
+
+    def get_all_bots(self):
+        ''' Get info on all bots'''
+        bots = self.botdb.query(Bot).all()
         return [bot.to_dict() for bot in bots]
 
     def add_rewards(self, team, reward):
