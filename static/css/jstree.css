@@ -512,7 +512,7 @@
   background-position: 0 0;
 }
 .jstree-default > .jstree-container-ul .jstree-loading > .jstree-ocl {
-  background: url("images/ber.gif") center center no-repeat;
+  background: url("images/throbber.gif") center center no-repeat;
 }
 .jstree-default .jstree-file {
   background: url("images/32px.png") -100px -68px no-repeat;
@@ -696,7 +696,7 @@
   background-position: 0 0;
 }
 .jstree-default-small > .jstree-container-ul .jstree-loading > .jstree-ocl {
-  background: url("images/ber.gif") center center no-repeat;
+  background: url("images/throbber.gif") center center no-repeat;
 }
 .jstree-default-small .jstree-file {
   background: url("images/32px.png") -103px -71px no-repeat;
