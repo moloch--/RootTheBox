@@ -171,7 +171,13 @@
                 <div class="control-group">
                     <label class="control-label" for="user-handle">Handle</label>
                     <div class="controls">
-                      <input id="user-handle" name="handle" type="text" placeholder="Handle">
+                      <input id="user-handle" name="handle" type="text" maxlength="16" minlength="3" placeholder="Handle">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="user-name">Name</label>
+                    <div class="controls">
+                      <input id="user-name" name="name" type="text" maxlength="64" placeholder="Name">
                     </div>
                 </div>
                 {% if options.banking %}

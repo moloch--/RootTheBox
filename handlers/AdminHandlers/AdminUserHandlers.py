@@ -94,6 +94,12 @@ class AdminEditUsersHandler(BaseHandler):
                     user.handle = handle
                 else:
                     raise ValidationError("Handle is already in use")
+            name = self.get_argument('name', '')
+            if user.name != name:
+                logging.info("Updated user Name %s -> %s" % (
+                        user.name, name
+                    ))
+                user.name = name
             if options.banking:
                 hash_algorithm = self.get_argument('hash_algorithm', '')
                 if hash_algorithm != user.algorithm:
@@ -110,7 +116,9 @@ class AdminEditUsersHandler(BaseHandler):
                         raise ValidationError("Not a valid hash algorithm")
                 if len(self.get_argument('bank_password', '')):
                     user.bank_password = self.get_argument('bank_password', '')
-            user.password = self.get_argument('password', '')
+            password = self.get_argument('password', '')
+            if password and password.length > 0:
+                user.password = password
             if hasattr(self.request, 'files') and 'avatarfile' in self.request.files:
                 user.avatar = self.request.files['avatarfile'][0]['body']
             else:
@@ -245,7 +253,7 @@ class AdminAjaxUserHandler(BaseHandler):
             uri[args[0]]()
 
     def team_details(self):
-        print(self.get_argument('uuid', ''))
+        #print(self.get_argument('uuid', ''))
         team = Team.by_uuid(self.get_argument('uuid', ''))
         if team is not None:
             self.write(team.to_dict())
@@ -254,7 +262,7 @@ class AdminAjaxUserHandler(BaseHandler):
 
     def user_details(self):
         user = User.by_uuid(self.get_argument('uuid', ''))
-        print(user)
+        #print(user)
         if user is not None:
             self.write(user.to_dict())
         else:

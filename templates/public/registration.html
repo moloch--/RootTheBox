@@ -104,7 +104,7 @@
                         Handle
                     </label>
                     <div class="controls">
-                        <input required id="handle" name="handle" maxlength="16" placeholder="Player Alias" type="text"
+                        <input required id="handle" name="handle" maxlength="16" minlength="3" placeholder="Player Alias" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,16}$"
                             data-original-title="Player Alias"
                             data-content="Your handle must be 3-16 alpha-numeric characters" />
@@ -115,7 +115,7 @@
                         Player's Name
                     </label>
                     <div class="controls">
-                        <input required id="playername" name="playername" maxlength="64" placeholder="Name" type="text"
+                        <input required id="playername" name="playername" maxlength="64" minlength="3" placeholder="Name" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,64}$"
                             data-original-title="Player's Name"
                             data-content="Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters" />
@@ -145,7 +145,7 @@
                         <div class="control-group">
                             <label class="control-label" for="team_name">Team Name</label>
                             <div class="controls">
-                                <input id="team-name" name="team_name" maxlength="24" type="text" placeholder="Team Name"
+                                <input id="team-name" name="team_name" maxlength="24" minlength="3" type="text" placeholder="Team Name"
                                     rel="popover"
                                     data-original-title="New Team Name"
                                     data-content="Choose a name for your new team![3-24 Characters]" >
