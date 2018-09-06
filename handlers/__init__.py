@@ -232,7 +232,7 @@ app = Application(
     debug=options.debug,
 
     # Flag used to start the game
-    game_started=False,
+    game_started=options.autostart_game,
 
     # Callback functions
     score_bots_callback=PeriodicCallback(
@@ -260,6 +260,11 @@ def start_server():
         logging.warn("%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (
             bold + R, W
         ))
+    if options.autostart_game:
+        logging.info("The game is about to begin, good hunting!")
+        app.settings['history_callback'].start()
+        if options.use_bots:
+            app.settings['score_bots_callback'].start()
     # Setup server object
     if options.ssl:
         server = HTTPServer(app,

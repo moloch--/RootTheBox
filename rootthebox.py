@@ -41,7 +41,7 @@ current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 def start():
     ''' Starts the application '''
     from handlers import start_server
-    print(INFO + '%s : Starting application ...' % current_time())
+    logging.info(INFO + '%s : Starting application ...' % current_time())
     start_server()
 
 
@@ -196,6 +196,12 @@ define("debug",
        default=False,
        group="application",
        help="start the application in debugging mode",
+       type=bool)
+
+define("autostart_game",
+       default=False,
+       group="application",
+       help="start the game automatically",
        type=bool)
 
 define("avatar_dir",
