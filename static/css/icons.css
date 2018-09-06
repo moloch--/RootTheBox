@@ -1,0 +1,238 @@
+.jstree-default-dark {
+    background: unset !important;
+}
+  
+.directory {
+    background: url(icons/directory.png)
+}
+
+.directory-locked {
+    background: url(icons/directory-lock.png);
+}
+
+.file {
+    background-image: url(icons/file.png) !important;
+    background-position: center center !important;
+    background-size: auto !important;
+}
+
+.file-locked {
+    background-image: url(icons/file-lock.png) !important;
+}
+
+
+.ext_3gp {
+    background-image: url(icons/film.png) !important;
+}
+
+.ext_afp,
+.ext_afpa,
+.ext_asp,
+.ext_aspx {
+    background-image: url(icons/code.png) !important;
+}
+
+.ext_avi {
+    background-image: url(icons/film.png) !important;
+}
+
+.ext_bat {
+    background-image: url(icons/application.png) !important;
+}
+
+.ext_bmp {
+    background-image: url(icons/picture.png) !important;
+}
+
+.ext_c,
+.ext_cfm,
+.ext_cgi {
+    background-image: url(icons/code.png) !important;
+}
+
+.ext_com {
+    background-image: url(icons/application.png) !important;
+}
+
+.ext_cpp {
+    background-image: url(icons/code.png) !important;
+}
+
+.ext_css {
+    background-image: url(icons/css.png) !important;
+}
+
+.ext_doc {
+    background-image: url(icons/doc.png) !important;
+}
+
+.ext_e01 {
+    background-image: url(icons/hdd.png) !important;
+}
+
+.ext_exe {
+    background-image: url(icons/application.png) !important;
+}
+
+.ext_gif {
+    background-image: url(icons/picture.png) !important;
+}
+
+.ext_fla {
+    background-image: url(icons/flash.png) !important;
+}
+
+.ext_h {
+    background-image: url(icons/code.png) !important;
+}
+
+.ext_htm,
+.ext_html {
+    background-image: url(icons/html.png) !important;
+}
+
+.ext_iso {
+    background-image: url(icons/cd.png) !important;
+}
+
+.ext_jar {
+    background-image: url(icons/java.png) !important;
+}
+
+.ext_jpeg,
+.ext_jpg {
+    background-image: url(icons/picture.png) !important;
+}
+
+.ext_js {
+    background-image: url(icons/script.png) !important;
+}
+
+.ext_lasso {
+    background-image: url(icons/code.png) !important;
+}
+
+.ext_log {
+    background-image: url(icons/txt.png) !important;
+}
+
+.ext_m4p {
+    background-image: url(icons/music.png) !important;
+}
+
+.ext_mov {
+    background-image: url(icons/film.png) !important;
+}
+
+.ext_mp3 {
+    background-image: url(icons/music.png) !important;
+}
+
+.ext_mp4,
+.ext_mpeg,
+.ext_mpg {
+    background-image: url(icons/film.png) !important;
+}
+
+.ext_msi {
+    background-image: url(icons/application.png) !important;
+}
+
+.ext_ogg {
+    background-image: url(icons/music.png) !important;
+}
+
+.ext_ogv {
+    background-image: url(icons/film.png) !important;
+}
+
+.ext_pcap {
+    background-image: url(icons/pcap.png) !important;
+}
+
+.ext_pcx {
+    background-image: url(icons/picture.png) !important;
+}
+
+.ext_pdf {
+    background-image: url(icons/pdf.png) !important;
+}
+
+.ext_php {
+    background-image: url(icons/php.png) !important;
+}
+
+.ext_png {
+    background-image: url(icons/picture.png) !important;
+}
+
+.ext_ppt {
+    background-image: url(icons/ppt.png) !important;
+}
+
+.ext_psd {
+    background-image: url(icons/psd.png) !important;
+}
+
+.ext_pl,
+.ext_py {
+    background-image: url(icons/script.png) !important;
+}
+
+.ext_rb,
+.ext_rbx,
+.ext_rhtml {
+    background-image: url(icons/ruby.png) !important;
+}
+
+.ext_rpm {
+    background-image: url(icons/linux.png) !important;
+}
+
+.ext_ruby {
+    background-image: url(icons/ruby.png) !important;
+}
+
+.ext_sql {
+    background-image: url(icons/db.png) !important;
+}
+
+.ext_swf {
+    background-image: url(icons/flash.png) !important;
+}
+
+.ext_tif,
+.ext_tiff {
+    background-image: url(icons/picture.png) !important;
+}
+
+.ext_txt {
+    background-image: url(icons/txt.png) !important;
+}
+
+.ext_vb {
+    background-image: url(icons/code.png) !important;
+}
+
+.ext_wav {
+    background-image: url(icons/music.png) !important;
+}
+
+.ext_webm,
+.ext_wmv {
+    background-image: url(icons/film.png) !important;
+}
+
+.ext_xls {
+    background-image: url(icons/xls.png) !important;
+}
+
+.ext_xml {
+    background-image: url(icons/code.png) !important;
+}
+
+.ext_zip,
+.ext_tar,
+.ext_rar {
+    background-image: url(icons/zip.png) !important;
+}

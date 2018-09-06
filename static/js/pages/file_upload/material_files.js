@@ -3,6 +3,7 @@ $(document).ready(function() {
     $.post('/materials', data, function(response) {
         $('#container').jstree({
             'core' : {
+              'themes' : { name : 'default-dark' },
               'data' : $.parseJSON(response)["children"]
             }
         });
