@@ -1,5 +1,8 @@
 $(document).ready(function() {
+    barcolor();
+});
 
+function barcolor() {
     $("a[id^=unlock-game-level-button]").click(function() {
         var buyout = $(this).data("buyout");
         var banking = $(this).data("banking");
@@ -26,4 +29,4 @@ $(document).ready(function() {
             $(this).css('background-image', 'linear-gradient(to bottom,#eeee00,#b3b300)');
         }
     });
-});
+}

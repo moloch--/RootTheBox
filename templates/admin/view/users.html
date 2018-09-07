@@ -304,6 +304,7 @@
                         <i class="fa fa-fw fa-pencil"></i>
                         {% if options.teams %}Edit Team{% else %}Edit Player{% end %}
                     </a>
+                    {% if options.teams %}<div style="margin-bottom: -10px;">&nbsp;<strong>Team Code:</strong> {{ team.code }}</div>{% end %}
                     <hr />
                     <table class="table table-striped">
                         <thead>

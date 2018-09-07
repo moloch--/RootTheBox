@@ -3,6 +3,7 @@
 {% block header %}
 <script src="/static/js/libs/highcharts-all.js"></script>
 <script src="/static/js/pages/scoreboard/summary.js"></script>
+<script src="/static/js/pages/missions/view.js"></script>
 <link href="/static/css/pages/user/summary.css" rel="stylesheet" />
 {% end %}
 
@@ -30,7 +31,7 @@
     </div>
 </div>
 <div class="row-fluid">
-    <div class="well span10 offset1">
+    <div class="well {% if options.teams and options.show_mvp %}span7{% else %}span10{% end %} offset1">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -62,5 +63,28 @@
             </tbody>
         </table>
     </div>
+    {% if options.teams and options.show_mvp %}
+    <div class="well span3">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        MVP
+                    </th>
+                    <th style="text-align: center;">
+                        {% if options.banking %}
+                            Money
+                        {% else %}
+                            Points
+                        {% end %}
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="mvp_table">
+                <!-- AJAX -->
+            </tbody>
+        </table>
+    </div>
+    {% end %}
 </div>
 {% end %}

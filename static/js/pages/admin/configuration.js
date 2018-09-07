@@ -64,6 +64,14 @@ $(document).ready(function() {
         $("#public-teams-disable-icon").addClass("fa-check-square-o");
     }
 
+    if ($("#show-mvp").val() === "true") {
+        $("#show-mvp-enable-icon").removeClass("fa-square-o");
+        $("#show-mvp-enable-icon").addClass("fa-check-square-o");
+    } else {
+        $("#show-mvp-disable-icon").removeClass("fa-square-o");
+        $("#show-mvp-disable-icon").addClass("fa-check-square-o");
+    }
+
     if ($("#team-sharing").val() === "true") {
         $("#team-sharing-enable-icon").removeClass("fa-square-o");
         $("#team-sharing-enable-icon").addClass("fa-check-square-o");
@@ -185,6 +193,20 @@ $(document).ready(function() {
         $("#public-teams-enable-icon").addClass("fa-square-o");
     });
 
+    $("#show-mvp-enable").click(function() {
+        $("#show-mvp").val("true");
+        $("#show-mvp-enable-icon").removeClass("fa-square-o");
+        $("#show-mvp-enable-icon").addClass("fa-check-square-o");
+        $("#show-mvp-disable-icon").removeClass("fa-check-square-o");
+        $("#show-mvp-disable-icon").addClass("fa-square-o");
+    });
+    $("#show-mvp-disable").click(function() {
+        $("#show-mvp").val("false");
+        $("#show-mvp-disable-icon").removeClass("fa-square-o");
+        $("#show-mvp-disable-icon").addClass("fa-check-square-o");
+        $("#show-mvp-enable-icon").removeClass("fa-check-square-o");
+        $("#show-mvp-enable-icon").addClass("fa-square-o");
+    });
 
     $("#team-sharing-enable").click(function() {
         $("#team-sharing").val("true");
@@ -316,6 +338,7 @@ $(document).ready(function() {
     $("#game-name").popover({placement:'right', trigger:'hover'});
     $("#restrict-registration-button").popover({placement:'right', trigger:'hover'});
     $("#public-teams-button").popover({placement:'right', trigger:'hover'});
+    $("#show-mvp-button").popover({placement:'right', trigger:'hover'});
     $("#team-sharing-button").popover({placement:'right', trigger:'hover'});
     $("#hints-taken-button").popover({placement:'right', trigger:'hover'});
     $("#teams-button").popover({placement:'right', trigger:'hover'});

@@ -189,13 +189,29 @@
             {% end %}
         {% end %}
     </div>
+    {% if options.teams %}
+    <div class="span5 well">
+        <h2>
+            <i class="fa fa-group"></i>
+            Team Information
+        </h2>
+        <hr>      
+        <div class="row">
+            <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                <i class="fa fa-key" style="font-size: 180%;"></i>
+            </div>
+            <div class="span7 msgdescription">
+                    {{ team.code }}<br>Share your team code to allow other players to join {{ team.name }}.
+            </div>
+        </div>
+    </div>
+    {% end %}
     <div class="span5 well">
         <h2>
             <i class="fa fa-trophy"></i>
             Game Information
         </h2>
         <hr>
-                
         <div class="row">
             <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
                 <i class="fa fa-sitemap" style="font-size: 180%;"></i>

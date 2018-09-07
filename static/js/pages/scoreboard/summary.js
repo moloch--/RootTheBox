@@ -127,12 +127,19 @@ $(document).ready(function() {
         });
         flag_chart.series[0].setData(flag_ls, true);
 
-        /* Update Table */
+        /* Update Summary Table */
         $.get("/scoreboard/ajax/summary", function(table) {
             $("#summary_table").html(table);
             $("a[id^=team-details-button]").click(function() {
                 window.location = "/teams#" + $(this).data("uuid");
             });
+            barcolor();
         });
+        if ($("#mvp_table").length > 0) {
+            /* Update MVP Table */
+            $.get("/scoreboard/ajax/mvp", function(table) {
+                $("#mvp_table").html(table);
+            });
+        }
     };
 });

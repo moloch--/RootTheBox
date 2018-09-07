@@ -53,6 +53,7 @@ class Team(DatabaseObject):
     _name = Column(Unicode(24), unique=True, nullable=False)
     _motto = Column(Unicode(32))
     _avatar = Column(String(64))
+    _code = Column('code', String(32), unique=True, default=lambda: str(uuid4().hex))
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
     money = Column(Integer, default=options.starting_team_money, nullable=False)
@@ -141,6 +142,10 @@ class Team(DatabaseObject):
             raise ValidationError("Motto must be less than 32 characters")
         else:
             self._motto = unicode(value)
+
+    @property
+    def code(self):
+        return self._code
 
     @property
     def avatar(self):

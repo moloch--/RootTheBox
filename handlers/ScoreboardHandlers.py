@@ -33,6 +33,7 @@ from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
 from models.Team import Team
+from models.User import User
 from models.Box import Box
 from models.Category import Category
 from models.WallOfSheep import WallOfSheep
@@ -81,6 +82,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             'summary': self.summary_table,
             'team': self.team_details,
             'skills': self.team_skills,
+            'mvp': self.mvp_table
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -90,6 +92,10 @@ class ScoreboardAjaxHandler(BaseHandler):
     def summary_table(self):
         ''' Render the "leaderboard" snippit '''
         self.render('scoreboard/summary_table.html', teams=Team.ranks())
+        
+    def mvp_table(self):
+        ''' Render the "leaderboard" snippit '''
+        self.render('scoreboard/mvp_table.html', users=User.ranks())
 
     def team_details(self):
         ''' Returns team details in JSON form '''

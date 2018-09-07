@@ -319,6 +319,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.rank_by = str(self.get_argument('rank_by', 'money'))
         self.config.teams = self.get_bool('teams', True)
         self.config.public_teams = self.get_bool('public_teams')
+        self.config.show_mvp = self.get_bool('show_mvp')
         self.config.team_sharing = self.get_bool('team_sharing')
         self.config.dynamic_flag_value = self.get_bool('dynamic_flag_value', False)
         self.config.flag_value_decrease = self.get_int('flag_value_decrease')
@@ -486,6 +487,9 @@ class AdminResetHandler(BaseHandler):
         errors = []
         success = None
         try:
+            users = User.all()
+            for user in users:
+                user.money = 0
             teams = Team.all()
             for team in teams:
                 if options.banking:

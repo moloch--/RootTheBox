@@ -159,6 +159,27 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label" for="show-mvp">
+                        MVP Scoreboard
+                    </label>
+                    <div class="controls">
+                        <input id="show-mvp" name="show_mvp" type="hidden" value="{{ str(config.show_mvp).lower() }}" />
+                        <div id="show-mvp-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Show MVP"
+                            data-content="Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.">
+                            <button id="show-mvp-enable" type="button" class="btn btn-success">
+                                <i id="show-mvp-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                Enable
+                            </button>
+                            <button id="show-mvp-disable" type="button" class="btn btn-danger">
+                                <i id="show-mvp-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="team-sharing">
                         Team Sharing
                     </label>

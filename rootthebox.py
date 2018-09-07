@@ -329,6 +329,12 @@ define("public_teams",
        help="allow anyone to create a new team",
        type=bool)
 
+define("show_mvp",
+       default=True,
+       group="game",
+       help="display the mvp list on scoreboard",
+       type=bool)
+
 define("hints_taken",
        default=False,
        group="game",

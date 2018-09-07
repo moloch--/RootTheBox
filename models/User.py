@@ -34,7 +34,7 @@ import xml.etree.cElementTree as ET
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
 from pbkdf2 import PBKDF2
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
 from models import dbsession
@@ -74,6 +74,7 @@ class User(DatabaseObject):
     _name = Column(Unicode(64), unique=False, nullable=True)
     _password = Column('password', String(64))
     _bank_password = Column('bank_password', String(128))
+    money = Column(Integer, default=0, nullable=False)
 
     theme_id = Column(Integer, ForeignKey('theme.id'),
                       default=3,
@@ -156,6 +157,11 @@ class User(DatabaseObject):
     @classmethod
     def _hash_password(cls, password):
         return PBKDF2.crypt(password, iterations=ITERATE)
+
+    @classmethod
+    def ranks(cls):
+        ''' Returns a list of all objects in the database '''
+        return dbsession.query(cls).order_by(desc(cls.money)).all()
 
     @property
     def password(self):

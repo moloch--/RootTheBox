@@ -198,6 +198,7 @@ class FlagSubmissionHandler(BaseHandler):
                 user.handle, user.team.name, flag.name, penalty
             ))
             user.team.money -= penalty
+            user.money -= penalty
             self.dbsession.add(user.team)
             self.dbsession.flush()
             self.dbsession.commit()
@@ -214,6 +215,7 @@ class FlagSubmissionHandler(BaseHandler):
             if flag.capture(submission):
                 user.team.flags.append(flag)
                 user.team.money += flag.value
+                user.money += flag.value
                 self.dbsession.add(user.team)
                 if self.config.dynamic_flag_value:
                     depreciation = float(1.0 / self.config.flag_value_decrease)

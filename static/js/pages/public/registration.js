@@ -15,6 +15,7 @@ $(document).ready(function() {
     $("#pass2").popover({placement:'right', trigger:'focus'});
     $("#bpass").popover({placement:'right', trigger:'focus'});
     $("#team-name").popover({placement:'right', trigger:'focus'});
+    $("#team-code").popover({placement:'right', trigger:'focus'});
     $("#motto").popover({placement:'right', trigger:'focus'});
     $("#regtoken").popover({placement:'right', trigger:'focus'});
 

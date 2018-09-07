@@ -86,3 +86,11 @@ CREATE TABLE `flag_choice` (
 ALTER TABLE `rootthebox`.`hint` 
 CHANGE COLUMN `_description` `_description` VARCHAR(512) NOT NULL ;
 
+ALTER TABLE `rootthebox`.`team` 
+ADD COLUMN `code` VARCHAR(32) NULL DEFAULT NULL AFTER `money`;
+
+ALTER TABLE `rootthebox`.`user` 
+ADD COLUMN `money` INT(11) NOT NULL DEFAULT 0 AFTER `algorithm`;
+
+
+
