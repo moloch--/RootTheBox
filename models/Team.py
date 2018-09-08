@@ -53,7 +53,7 @@ class Team(DatabaseObject):
     _name = Column(Unicode(24), unique=True, nullable=False)
     _motto = Column(Unicode(32))
     _avatar = Column(String(64))
-    _code = Column('code', String(32), unique=True, default=lambda: str(uuid4().hex))
+    _code = Column('code', String(16), unique=True, default=lambda: str(uuid4().hex)[:16])
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
     money = Column(Integer, default=options.starting_team_money, nullable=False)
