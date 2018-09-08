@@ -88,7 +88,7 @@ $(document).ready(function() {
     window.notifier_ws = new WebSocket(wsUrl() + "/connect/notifications/updates");
     notifier_ws.onmessage = function(evt) {
         var notification = $.parseJSON(evt.data);
-        console.log("[Notifier] " + evt.data);
+        //console.log("[Notifier] " + evt.data);
         if ('update' in notification) {
             if (window.history_ws !== undefined) {
                 window.history_ws.send('update');
