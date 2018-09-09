@@ -1,3 +1,7 @@
+/* SQL updates to an existing RTB instance */
+
+/* 0.7.0 -> 2.0 */
+
 ALTER TABLE `rootthebox`.`flag` 
 ADD COLUMN `_case_sensitive` TINYINT(1) NULL DEFAULT 1 AFTER `_type`;
 ALTER TABLE `rootthebox`.`flag` 
@@ -86,11 +90,12 @@ CREATE TABLE `flag_choice` (
 ALTER TABLE `rootthebox`.`hint` 
 CHANGE COLUMN `_description` `_description` VARCHAR(512) NOT NULL ;
 
+/* 2.0 -> 2.1 */
+
 ALTER TABLE `rootthebox`.`team` 
 ADD COLUMN `code` VARCHAR(16) NULL DEFAULT NULL AFTER `money`;
 
 ALTER TABLE `rootthebox`.`user` 
 ADD COLUMN `money` INT(11) NOT NULL DEFAULT 0 AFTER `algorithm`;
-
 
 

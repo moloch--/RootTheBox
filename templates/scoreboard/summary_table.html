@@ -24,14 +24,22 @@
                     {% end %}
                 </div>
             </div>
-                <div style="height: 8px; padding: 5px 0px;">
+                <div style="height: 8px; padding: 7px 0px;">
                     <div style="width: 100%; display: table;">
                         <div style="display: table-row; ">
-                            {% for index, level in enumerate(GameLevel.all()) %}
+                            {% set gamelevels = GameLevel.all() %}
+                            {% for index, level in enumerate(gamelevels) %}
                                 {% if index> 0 %}
                                     <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
                                 {% end %}
                                 <div class="summarycolumn" style="display: table-cell;">
+                                    {% if len(gamelevels) > 1 %}
+                                        {% if level in team.game_levels %}
+                                            <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
+                                        {% else %}
+                                            <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
+                                        {% end %}
+                                    {% end %}
                                     <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}Level #{{ level.number }} &ndash; {% end %}{% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
                                         {% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}
                                             <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
