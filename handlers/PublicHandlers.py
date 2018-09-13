@@ -214,11 +214,14 @@ class RegistrationHandler(BaseHandler):
     def create_team(self):
         ''' Create a new team '''
         if not self.config.teams:
-            team = Team()
-            team.name = self.get_argument('handle', '')
-            team.motto = self.get_argument('motto', '')
+            team = Team.by_name(self.get_argument('handle', ''))
+            if team is None:
+                team = Team()
+                team.name = self.get_argument('handle', '')
+                team.motto = self.get_argument('motto', '')
             if not self.config.banking:
                 team.money = 0
+            team.game_levels = []
             level_0 = GameLevel.by_number(0)
             if not level_0:
                 level_0 = GameLevel.all()[0]
