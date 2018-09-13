@@ -26,7 +26,7 @@ This file contains handlers related to the "Black Market" functionality
 
 import logging
 
-from BaseHandlers import BaseHandler
+from .BaseHandlers import BaseHandler
 from models.MarketItem import MarketItem
 from models.Team import Team
 from libs.SecurityDecorators import authenticated, use_black_market

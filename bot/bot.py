@@ -39,9 +39,14 @@ import logging
 import argparse
 import platform
 import traceback
-import ConfigParser
-
-from urlparse import urlparse
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from datetime import datetime
 from hashlib import sha512, sha1
 

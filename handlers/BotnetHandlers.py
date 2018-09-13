@@ -31,7 +31,7 @@ from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from models import Box, Team, User
 from models.User import ADMIN_PERMISSION
-from BaseHandlers import BaseHandler, BaseWebSocketHandler
+from .BaseHandlers import BaseHandler, BaseWebSocketHandler
 from libs.SecurityDecorators import *
 from tornado.options import options
 

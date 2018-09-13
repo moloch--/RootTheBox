@@ -34,7 +34,10 @@ from models.User import User
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
 from libs.EventManager import EventManager
-from urlparse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from tornado.web import RequestHandler
 from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketHandler

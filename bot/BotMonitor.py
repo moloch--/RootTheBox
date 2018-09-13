@@ -48,7 +48,10 @@ import argparse
 import platform
 import threading
 
-from urlparse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from datetime import datetime
 
 try:

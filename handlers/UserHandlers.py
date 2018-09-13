@@ -34,7 +34,7 @@ from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from libs.XSSImageCheck import IMG_FORMATS
-from BaseHandlers import BaseHandler
+from .BaseHandlers import BaseHandler
 from tornado.options import options
 
 

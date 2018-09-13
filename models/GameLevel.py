@@ -176,6 +176,18 @@ class GameLevel(DatabaseObject):
             return -1
         else:
             return 1
+    def __eq__(self, other):
+        return self.__cmp__(other) == 0
+    def __ne__(self, other):
+        return self.__cmp__(other) != 0
+    def __gt__(self, other):
+        return self.__cmp__(other) > 0
+    def __lt__(self, other):
+        return self.__cmp__(other) < 0
+    def __ge__(self, other):
+        return self.__cmp__(other) >= 0
+    def __le__(self, other):
+        return self.__cmp__(other) <= 0
 
     def __repr__(self):
         return "<GameLevel number: %d, buyout: %d, next: id(%s)>" % (

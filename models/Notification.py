@@ -22,7 +22,10 @@ Created on Mar 12, 2012
 import logging
 
 from uuid import uuid4
-from urlparse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, String, Integer, Boolean

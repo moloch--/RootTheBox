@@ -29,7 +29,7 @@ import logging
 from models.FileUpload import FileUpload
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
-from BaseHandlers import BaseHandler
+from .BaseHandlers import BaseHandler
 from models.User import ADMIN_PERMISSION
 
 

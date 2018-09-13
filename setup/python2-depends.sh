@@ -14,7 +14,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-pip2 install tornado==4.5.3 --upgrade
+pip2 install tornado --upgrade
 pip2 install pbkdf2 --upgrade
 pip2 install mysql-python --upgrade
 pip2 install mysqlclient --upgrade

@@ -109,6 +109,18 @@ class WallOfSheep(DatabaseObject):
     def __cmp__(self, other):
         ''' Used for sorting '''
         return len(self) - len(other)
+    def __eq__(self, other):
+        return self.__cmp__(other) == 0
+    def __ne__(self, other):
+        return self.__cmp__(other) != 0
+    def __gt__(self, other):
+        return self.__cmp__(other) > 0
+    def __lt__(self, other):
+        return self.__cmp__(other) < 0
+    def __ge__(self, other):
+        return self.__cmp__(other) >= 0
+    def __le__(self, other):
+        return self.__cmp__(other) <= 0
 
     def __repr__(self):
         return '<WallOfSheep - preimage: %s, victim_id: %d>' % (

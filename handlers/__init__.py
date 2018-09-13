@@ -237,14 +237,12 @@ app = Application(
     # Callback functions
     score_bots_callback=PeriodicCallback(
         score_bots,
-        options.bot_reward_interval,
-        io_loop=io_loop
+        options.bot_reward_interval
     ),
 
     history_callback=PeriodicCallback(
         game_history.take_snapshot,
-        options.history_snapshot_interval,
-        io_loop=io_loop
+        options.history_snapshot_interval
     ),
 
     # Application version

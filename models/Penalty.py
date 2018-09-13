@@ -21,7 +21,6 @@ Created on Jun 5, 2018
 
 import logging
 
-from urlparse import urlparse
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, String, Integer, Boolean
