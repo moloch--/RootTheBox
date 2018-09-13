@@ -328,7 +328,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.flag_stop_penalty = self.get_int('flag_stop_penalty')
         self.config.flag_start_penalty = self.get_int('flag_start_penalty')
         self.config.max_team_size = self.get_int('max_team_size')
-        self.config.min_user_password_length = self.get_int('min_user_password_length', '16')
+        self.config.min_user_password_length = self.get_int('min_user_password_length', '12')
         self.config.banking = self.get_bool('banking', True)
         self.config.max_password_length = self.get_int('max_password_length', '7')
         self.config_bots()

@@ -117,7 +117,7 @@ class AdminEditUsersHandler(BaseHandler):
                 if len(self.get_argument('bank_password', '')):
                     user.bank_password = self.get_argument('bank_password', '')
             password = self.get_argument('password', '')
-            if password and password.length > 0:
+            if password and len(password) > 0:
                 user.password = password
             if hasattr(self.request, 'files') and 'avatarfile' in self.request.files:
                 user.avatar = self.request.files['avatarfile'][0]['body']

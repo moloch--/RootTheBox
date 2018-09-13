@@ -262,13 +262,13 @@
                     <label class="control-label" for="new_password">New Password</label>
                     <div class="control-group">
                         <div class="controls">
-                            <input required type="password" name="new_password" id="new_password" placeholder="New Password" />
+                            <input required type="password" name="new_password" id="new_password" placeholder="New Password" minlength="{{ options.min_user_password_length }}" />
                         </div>
                     </div>
                     <label class="control-label" for="new_password2">Confirm New Password</label>
                     <div class="control-group">
                         <div class="controls">
-                            <input required type="password" name="new_password2" id="new_password2" placeholder="Confirm Password" />
+                            <input required type="password" name="new_password2" id="new_password2" placeholder="Confirm Password" minlength="{{ options.min_user_password_length }}" />
                         </div>
                     </div>
                     <div class="control-group">
