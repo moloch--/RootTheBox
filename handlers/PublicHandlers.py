@@ -218,10 +218,19 @@ class RegistrationHandler(BaseHandler):
             if team is None:
                 team = Team()
                 team.name = self.get_argument('handle', '')
-                team.motto = self.get_argument('motto', '')
-            if not self.config.banking:
+            else:
+                logging.info("Team %s already exists - Player Mode: reset team." % team.name)
+                team.flags = []
+                team.hints = []
+                team.boxes = []
+                team.items = []
+                team.game_levels = []
+                team.purchased_source_code = []
+            team.motto = self.get_argument('motto', '')
+            if self.config.banking:
+                team.money = self.config.starting_team_money
+            else:
                 team.money = 0
-            team.game_levels = []
             level_0 = GameLevel.by_number(0)
             if not level_0:
                 level_0 = GameLevel.all()[0]
