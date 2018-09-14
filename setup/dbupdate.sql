@@ -98,71 +98,8 @@ ADD COLUMN `code` VARCHAR(16) NULL DEFAULT NULL AFTER `money`;
 ALTER TABLE `rootthebox`.`user` 
 ADD COLUMN `money` INT(11) NOT NULL DEFAULT 0 AFTER `algorithm`;
 
-
-
-
-ALTER TABLE `rootthebox`.`snapshot_team` 
-DROP FOREIGN KEY `snapshot_team_ibfk_1`;
-ALTER TABLE `rootthebox`.`snapshot_team` 
-ADD CONSTRAINT `snapshot_team_ibfk_1`
-  FOREIGN KEY (`team_id`)
-  REFERENCES `rootthebox`.`team` (`id`)
-  ON DELETE CASCADE
-  ON UPDATE RESTRICT;
-
-ALTER TABLE `rootthebox`.`snapshot_team_to_game_level` 
-DROP FOREIGN KEY `snapshot_team_to_game_level_ibfk_1`,
-DROP FOREIGN KEY `snapshot_team_to_game_level_ibfk_2`;
-ALTER TABLE `rootthebox`.`snapshot_team_to_game_level` 
-ADD CONSTRAINT `snapshot_team_to_game_level_ibfk_1`
-  FOREIGN KEY (`snapshot_team_id`)
-  REFERENCES `rootthebox`.`snapshot_team` (`id`)
-  ON DELETE CASCADE
-  ON UPDATE RESTRICT,
-ADD CONSTRAINT `snapshot_team_to_game_level_ibfk_2`
-  FOREIGN KEY (`gam_level_id`)
-  REFERENCES `rootthebox`.`game_level` (`id`)
-  ON DELETE NO ACTION;
-
-ALTER TABLE `rootthebox`.`snapshot_to_snapshot_team` 
-DROP FOREIGN KEY `snapshot_to_snapshot_team_ibfk_2`;
-ALTER TABLE `rootthebox`.`snapshot_to_snapshot_team` 
-ADD CONSTRAINT `snapshot_to_snapshot_team_ibfk_2`
-  FOREIGN KEY (`snapshot_team_id`)
-  REFERENCES `rootthebox`.`snapshot_team` (`id`)
-  ON DELETE CASCADE;
-
-ALTER TABLE `rootthebox`.`team_to_game_level` 
-DROP FOREIGN KEY `team_to_game_level_ibfk_2`;
-ALTER TABLE `rootthebox`.`team_to_game_level` 
-ADD CONSTRAINT `team_to_game_level_ibfk_2`
-  FOREIGN KEY (`game_level_id`)
-  REFERENCES `rootthebox`.`game_level` (`id`)
-  ON DELETE NO ACTION;
-
-ALTER TABLE `rootthebox`.`team_to_game_level` 
-DROP FOREIGN KEY `team_to_game_level_ibfk_1`;
-ALTER TABLE `rootthebox`.`team_to_game_level` 
-ADD CONSTRAINT `team_to_game_level_ibfk_1`
-  FOREIGN KEY (`team_id`)
-  REFERENCES `rootthebox`.`team` (`id`)
-  ON DELETE CASCADE
-  ON UPDATE RESTRICT;
-
-ALTER TABLE `rootthebox`.`user` 
-DROP FOREIGN KEY `user_ibfk_1`;
-ALTER TABLE `rootthebox`.`user` 
-ADD CONSTRAINT `user_ibfk_1`
-  FOREIGN KEY (`team_id`)
-  REFERENCES `rootthebox`.`team` (`id`)
-  ON DELETE SET NULL
-  ON UPDATE RESTRICT;
-
-
-
 ALTER TABLE `rootthebox`.`game_level` 
 ADD COLUMN `_name` VARCHAR(32) NULL DEFAULT NULL AFTER `_reward`;
-
 
 
 

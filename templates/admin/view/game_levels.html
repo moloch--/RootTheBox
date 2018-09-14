@@ -148,6 +148,7 @@
                 <h2 style="display:inline;">
                     {{ level.name }}
                 </h2>
+                {% if level._name %}<h4 style="display:inline;">(Level #{{ level.number }})</h4>{% end %}
                 <a id="delete-game-level-button{{ index }}" style="float: right; margin-top: 5px; margin-right: 10px;" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-game-level-modal" data-uuid="{{ level.uuid }}">
                     <i class="fa fa-times-circle-o"></i>
                     Delete Game Level
