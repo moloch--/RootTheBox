@@ -29,6 +29,12 @@ function getDetails(obj, uuid) {
                 } else {
                     $('#edit-box-category option[value=""]').prop('selected',true);
                 }
+            } else if (obj === "box" && key === "operating_system") {
+                if (value === "?") {
+                    $("#type_unknown").prop('selected',true);
+                } else if (value.length > 0) {
+                    $('#edit-box-operating_system option[value=' + value + ']').prop('selected',true);
+                }
             } else if (obj === "box" && key === "corporation") {
                 $('#edit-box-corporation option[value=' + value + ']').prop('selected',true);
             } else if (obj === "flag" && key === "lock_uuid") {

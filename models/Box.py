@@ -315,6 +315,7 @@ class Box(DatabaseObject):
             'uuid': self.uuid,
             'corporation': corp.uuid,
             'category': category,
+            'operating_system': self.operating_system,
             'description': self._description,
             'difficulty': self.difficulty,
             'game_level': game_level.uuid,

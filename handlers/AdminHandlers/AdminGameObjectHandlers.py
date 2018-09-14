@@ -477,6 +477,13 @@ class AdminEditHandler(BaseHandler):
                     box.name, box.category_id, cat.id,
                 ))
                 box.category_id = cat.id
+            # System Type
+            ostype = self.get_argument('operating_system')
+            if ostype is not None and ostype != box.operating_system:
+                logging.info("Updated %s's system type %s -> %s" % (
+                    box.name, box.operating_system, ostype,
+                ))
+                box.operating_system = ostype
             # Description
             description = self.get_argument('description', '')
             if description != box._description:

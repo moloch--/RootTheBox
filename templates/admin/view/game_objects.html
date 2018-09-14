@@ -141,6 +141,28 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label" for="edit-box-operating_system">System Type</label>
+                    <div class="controls">
+                        <select id="edit-box-operating_system" name="operating_system">
+                            <option value="linux">
+                                Linux
+                            </option>
+                            <option value="windows">
+                                Windows
+                            </option>
+                            <option value="apple">
+                                OSX
+                            </option>
+                            <option id="type_unknown" value="?">
+                                Unknown
+                            </option>
+                            <option value="none">
+                                None
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="box_description">Description</label>
                     <div class="controls">
                         <textarea id="box-description" name="description" placeholder="Description" ></textarea>
@@ -541,7 +563,17 @@
                         {% for box in corporation.boxes %}
                             <div id="{{ box.uuid }}" class="well">
                                 <h3 style="display:inline;">
-                                    <i class="fa fa-desktop"></i>
+                                    {% if box.operating_system.lower() == 'windows' %}
+                                        <i class="fa fa-windows"></i>
+                                    {% elif box.operating_system.lower() == 'linux' %}
+                                        <i class="fa fa-linux"></i>
+                                    {% elif box.operating_system.lower() == 'apple' %}
+                                        <i class="fa fa-apple"></i>
+                                    {% elif box.operating_system.lower() == '?' %}
+                                        <i class="fa fa-desktop"></i>
+                                    {% else %}
+                                        <i class="fa fa-th"></i>
+                                    {% end %}
                                     {{ box.name }}&nbsp;&nbsp;
                                 </h3>
                                     <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
