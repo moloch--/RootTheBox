@@ -427,6 +427,12 @@ define("secure_communique_dialog",
        help="secure communique dialog screen after capture success",
        type=bool)
 
+define("hide_scoreboard",
+       default=False,
+       group="game",
+       help="for non-competitive games, hide the scoreboard menu",
+       type=bool)
+
 define("dynamic_flag_value",
        default=False,
        group="game",
