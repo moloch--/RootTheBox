@@ -40,7 +40,7 @@
                                             <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
                                         {% end %}
                                     {% end %}
-                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}Level #{{ level.number }} &ndash; {% end %}{% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
+                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}{{ level.name }} &ndash; {% end %}{% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
                                         {% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}
                                             <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
                                         {% else %}

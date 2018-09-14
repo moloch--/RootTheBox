@@ -87,7 +87,7 @@
                            data-original-title="Game Level"
                            data-content="Level to put box in?">
                         {% for level in GameLevel.all() %}
-                        <option value="{{ level.number }}">{{ level.number }}</option>
+                        <option value="{{ level.number }}">{{ level.name }}</option>
                         {% end %}
                     </select>
                 </div>

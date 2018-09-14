@@ -85,7 +85,7 @@
                             {% else %}
                                 <i class="fa fa-lock"></i>
                             {% end %}
-                            Level #{{ level.number }}&nbsp;&nbsp;&nbsp;
+                            {{ level.name }}&nbsp;&nbsp;&nbsp;
                         </h3>{% end %}
                         {% if len(team.level_flags(level.number)) != 0 %}
                             <div class="progress" style="height: 8px; margin-bottom: 15px; background-color: #424242;">

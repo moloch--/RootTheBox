@@ -160,19 +160,19 @@ class FlagSubmissionHandler(BaseHandler):
                     reward_dialog += "$" + str(level._reward) + " has been added to your " + teamval + "account."
                 else:
                     reward_dialog += str(level._reward) + " points added to your " + teamval + "score."
-            success.append("Congratulations! You have completed Level " + str(level.number) + ". " + reward_dialog)
+            success.append("Congratulations! You have completed " + str(level.name) + ". " + reward_dialog)
 
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
         if next_level._type == "progress" and level_progress * 100 >= next_level.buyout and next_level not in user.team.game_levels:
-            logging.info("%s (%s) unlocked level #%d" % (
-                    user.handle, user.team.name, next_level.number
+            logging.info("%s (%s) unlocked %d" % (
+                    user.handle, user.team.name, next_level.name
                 ))
             user.team.game_levels.append(next_level)
             self.dbsession.add(user.team)
             self.dbsession.commit()
             self.event_manager.level_unlocked(user, next_level)
-            success.append("Congratulations! You have unlocked Level " + str(next_level.number))
+            success.append("Congratulations! You have unlocked " + str(next_level.name))
         
         return success
 
@@ -315,8 +315,8 @@ class MissionsHandler(BaseHandler):
         level = GameLevel.by_uuid(self.get_argument('uuid', ''))
         if level is not None and user is not None:
             if level.buyout <= user.team.money:
-                logging.info("%s (%s) payed buyout for level #%d" % (
-                    user.handle, user.team.name, level.number
+                logging.info("%s (%s) payed buyout for %d" % (
+                    user.handle, user.team.name, level.name
                 ))
                 user.team.game_levels.append(level)
                 user.team.money -= level.buyout

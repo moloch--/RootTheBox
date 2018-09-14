@@ -36,6 +36,15 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="game_level-name">Level Name</label>
+                <div class="controls">
+                    <input id="game_level-name" name="name" placeholder="Level Name" maxlength=32  
+                        rel="popover"
+                        data-original-title="Level Name"
+                        data-content="(Optional) Defaults to Level #" />
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="game_level-reward">Completion Reward</label>
                 <div class="controls">
                     <input id="game_level-reward" name="reward" pattern="[0-9]+" value=0 placeholder="Reward" type="number" min=0  

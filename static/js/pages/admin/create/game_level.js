@@ -5,6 +5,7 @@ $(document).ready(function() {
     $("#buyout").popover({placement:'right', trigger:'focus'});
     $("#game_level-reward").popover({placement:'right', trigger:'focus'});
     $("#game_level-type").popover({placement:'right', trigger:'focus'});
+    $("#game_level-name").popover({placement:'right', trigger:'focus'});
     
     $("#game_level-type").change(function() {
         if (this.value === "none") {

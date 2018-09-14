@@ -247,6 +247,7 @@ class AdminCreateHandler(BaseHandler):
             new_level = GameLevel()
             new_level.number = self.get_argument('level_number', '')
             new_level.buyout = self.get_argument('buyout', 0)
+            new_level.name = self.get_argument('name', None)
             new_level._type = self.get_argument('type', 'buyout')
             new_level._reward = self.get_argument('reward', 0)
             if new_level._type == "progress":
@@ -612,6 +613,7 @@ class AdminEditHandler(BaseHandler):
             level.buyout = self.get_argument('buyout', 1)
             level._type = self.get_argument('type', 'buyout')
             level._reward = self.get_argument('reward', 0)
+            level.name = self.get_argument('name', None)
             if level._type == "progress":
                 level.buyout = min(level.buyout, 100)
             elif level._type == "none":

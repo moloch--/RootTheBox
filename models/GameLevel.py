@@ -46,6 +46,7 @@ class GameLevel(DatabaseObject):
     _buyout = Column(Integer, nullable=False)
     _type = Column(Unicode(16), nullable=False, default=u'buyout')
     _reward = Column(Integer, nullable=False, default=0)
+    _name = Column(Unicode(32), nullable=True)
 
     boxes = relationship("Box",
                          backref=backref("game_level", lazy="select"),
@@ -118,6 +119,20 @@ class GameLevel(DatabaseObject):
             raise ValidationError("Reward value must be an integer")
 
     @property
+    def name(self):
+        if self._name:
+            return self._name
+        else:
+            return "Level #" + str(self.number)
+
+    @name.setter
+    def name(self, value):
+        if len(value) <= 32:
+            self._name = value
+        else:
+            raise ValidationError("Max name length is 32") 
+
+    @property
     def type(self):
         return self._type
 
@@ -151,6 +166,7 @@ class GameLevel(DatabaseObject):
         ET.SubElement(level_elem, "buyout").text = str(self.buyout)
         ET.SubElement(level_elem, "type").text = str(self._type)
         ET.SubElement(level_elem, "reward").text = str(self._reward)
+        ET.SubElement(level_elem, "name").text = str(self._name)
 
     def to_dict(self):
         ''' Return public data as dict '''
@@ -162,6 +178,7 @@ class GameLevel(DatabaseObject):
         return {
             'uuid': self.uuid,
             'number': self.number,
+            'name': self._name,
             'buyout': self.buyout,
             'type': self._type,
             'reward': self._reward,
