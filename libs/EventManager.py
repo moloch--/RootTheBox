@@ -162,7 +162,7 @@ class EventManager(object):
             message = "%s has captured the '%s' flag in %s" % (
                 user.team.name, flag.name, flag.box.name
             )
-        Notification.create_broadcast("Flag Capture", message)
+        Notification.create_broadcast("Flag Capture", message, team=user.team)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
@@ -171,7 +171,7 @@ class EventManager(object):
         message = "%s unlocked level #%d." % (
             user.team.name, level.number
         )
-        Notification.create_broadcast("Level Unlocked", message)
+        Notification.create_broadcast("Level Unlocked", message, team=user.team)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 

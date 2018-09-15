@@ -32,6 +32,8 @@ from sqlalchemy.types import Unicode, String, Integer, Boolean
 from models import dbsession
 from models.User import User
 from models.BaseModels import DatabaseObject
+from tornado.options import options
+
 
 ### Constants ###
 SUCCESS = u"/static/images/success.png"
@@ -93,10 +95,11 @@ class Notification(DatabaseObject):
         dbsession.commit()
 
     @classmethod
-    def create_broadcast(cls, title, message, icon=None):
+    def create_broadcast(cls, title, message, icon=None, team=None):
         for user in User.all_users():
-            notification = cls._create(user, title, message, icon)
-            dbsession.add(notification)
+            if options.global_notification or (not team or not user.team) or team == user.team:
+                notification = cls._create(user, title, message, icon)
+                dbsession.add(notification)
         dbsession.commit()
 
     @classmethod

@@ -73,6 +73,28 @@
                     </div>
                 </div>
             </div>
+            <div class="control-group">
+                    <label class="control-label" for="global-notifications">
+                        <i class="fa fa-list-alt"></i>
+                        Global Notifications
+                    </label>
+                    <div class="controls">
+                        <input id="global-notifications" name="global_notification" type="hidden" value="{{ str(config.global_notification).lower() }}" />
+                        <div id="global-notifications-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="Global Notifications"
+                            data-content="Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.">
+                            <button id="global-notifications-enable" type="button" class="btn btn-success">
+                                <i id="global-notifications-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                Enable
+                            </button>
+                            <button id="global-notifications-disable" type="button" class="btn btn-danger">
+                                <i id="global-notifications-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                </div>
             <hr />
             <div class="control-group">
                 <label class="control-label" for="rank_by">

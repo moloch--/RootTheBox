@@ -40,6 +40,14 @@ $(document).ready(function() {
         $("#restrict-registration-disable-icon").addClass("fa-check-square-o");
     }
 
+    if ($("#global-notifications").val() === "true") {
+        $("#global-notifications-enable-icon").removeClass("fa-square-o");
+        $("#global-notifications-enable-icon").addClass("fa-check-square-o");
+    } else {
+        $("#global-notifications-disable-icon").removeClass("fa-square-o");
+        $("#global-notifications-disable-icon").addClass("fa-check-square-o");
+    }
+
     if ($("#hints-taken").val() === "true") {
         $("#hints-taken-enable-icon").removeClass("fa-square-o");
         $("#hints-taken-enable-icon").addClass("fa-check-square-o");
@@ -330,6 +338,24 @@ $(document).ready(function() {
         $('#penalty-grouping').slideUp();
     });
 
+    $("#global-notifications-enable").click(function() {
+        $("#global-notifications").val("true");
+        $("#global-notifications-enable-icon").removeClass("fa-square-o");
+        $("#global-notifications-enable-icon").addClass("fa-check-square-o");
+        $("#global-notifications-disable-icon").removeClass("fa-check-square-o");
+        $("#global-notifications-disable-icon").addClass("fa-square-o");
+        $('#global-notifications-grouping').slideDown();
+    });
+    $("#global-notifications-disable").click(function() {
+        $("#global-notifications").val("false");
+        $("#global-notifications-disable-icon").removeClass("fa-square-o");
+        $("#global-notifications-disable-icon").addClass("fa-check-square-o");
+        $("#global-notifications-enable-icon").removeClass("fa-check-square-o");
+        $("#global-notifications-enable-icon").addClass("fa-square-o");
+        $('#global-notifications-grouping').slideUp();
+    });
+
+
     $( ".penaltyval" ).change(function() {
         penalty_cost_update();
     });
@@ -337,6 +363,7 @@ $(document).ready(function() {
     /* Enable popovers */
     $("#game-name").popover({placement:'right', trigger:'hover'});
     $("#restrict-registration-button").popover({placement:'right', trigger:'hover'});
+    $("#global-notifications-button").popover({placement:'right', trigger:'hover'});
     $("#public-teams-button").popover({placement:'right', trigger:'hover'});
     $("#show-mvp-button").popover({placement:'right', trigger:'hover'});
     $("#team-sharing-button").popover({placement:'right', trigger:'hover'});

@@ -341,6 +341,12 @@ define("hints_taken",
        help="display number of hints taken on scoreboard",
        type=bool)
 
+define("global_notification",
+       default=True,
+       group="game",
+       help="notify all players of flag captures and level unlocks",
+       type=bool)
+
 define("teams",
        default=True,
        group="game",
