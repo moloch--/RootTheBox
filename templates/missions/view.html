@@ -109,7 +109,9 @@
                                                         <div class="bar minibar" style="width: 0%;"></div>
                                                 {% end %}
                                             </div>
+                                            {% if box.avatar != "none" %}
                                             <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
+                                            {% end %}
                                         </a>
                                     </center>
                                 </div>
@@ -145,7 +147,9 @@
                                                             <div class="bar minibar" style="width: 0%;"></div>
                                                     {% end %}
                                                 </div>
+                                                {% if box1.avatar != "none" %}
                                                 <img src="/avatars/{{ box1.avatar }}" class="img-polaroid" />
+                                                {% end %}
                                             </a>
                                         </center>
                                     </div>
@@ -182,7 +186,9 @@
                                                             <div class="bar minibar" style="width: 0%;"></div>
                                                     {% end %}
                                                 </div>
+                                                {% if box2.avatar != "none" %}
                                                 <img src="/avatars/{{ box2.avatar }}" class="img-polaroid" />
+                                                {% end %}
                                             </a>
                                         </center>
                                     </div>

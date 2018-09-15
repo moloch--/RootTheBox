@@ -44,4 +44,8 @@ $(document).ready(function() {
     $("#uploadbutton").click(function(){
         $("#box-avatar").click(); 
     });
+    $("#removeavatar").click(function(){
+        $("#avatarfilename").text("File: None");
+        $("#box_avatar_select").val("none");
+    });
 });

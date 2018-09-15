@@ -284,7 +284,16 @@ $(document).ready(function() {
         $("#avatarfilename").text("File: " + $(this).val());
         $("#box_avatar_select").val("");
     });
-
+    $("#removeavatar").click(function(){
+        $("#avatarfilename").text("File: None");
+        $("#box_avatar_select").val("none");
+    });
+    $("#change_avatar_button").click(function(){
+        $("#edit-box-modal").hide(); 
+    });
+    $("#avatarclose").click(function(){
+        $("#edit-box-modal").show(); 
+    });
     $("#uploadbutton").click(function(){
         $("#box-avatar").click(); 
     });

@@ -177,10 +177,11 @@
                 <div class="control-group">
                     <label class="control-label" for="box_avatar">Avatar</label>
                     <div class="controls">
-                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload</a>
                         <input id="box-avatar" name="avatar" type="file" style="display: none;"/>
                         <input id="box_avatar_select" name="box_avatar_select" type="hidden" />
-                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal"> Choose Avatar </a>{% end %}
+                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a id="change_avatar_button" data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal">Choose</a>{% end %}
+                        &nbsp;&nbsp;<a id="removeavatar" class="btn btn-primary" href="#">None</a>
                         <div id="avatarfilename" style="padding: 5px;"></div>
                     </div>
                 </div>
@@ -591,11 +592,13 @@
                                 <br />
                                 <br />
                                 <div class="row-fluid">
-                                    <div class="span4">
-                                        <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
-                                        <br /><br />
-                                    </div>
-                                    <div class="span8">
+                                    {% if box.avatar != "none" %}
+                                        <div class="span4">
+                                            <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
+                                            <br /><br />
+                                        </div>
+                                    {% end %}
+                                    <div class='{% if box.avatar != "none" %}span8{% else %}span12{% end %}'>
                                         <h4 style="display:inline;">
                                             <i class="fa fa-fw fa-globe"></i>
                                             IP Address&nbsp;&nbsp;

@@ -159,14 +159,16 @@
         {% end %}
         <div class="container">
             <div class="row">
+                {% if box.avatar != "none" %}
                 <div class="span4">
                     <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                 </div>
-                <div class="span8">
-                    <pre class="well" style="color: unset;">{% if options.secure_communique_dialog %} *********************** BEGIN SECURE COMMUNIQUE ***********************{% else %} ***************************** DESCRIPTION *****************************{% end %}
+                {% end %}
+                <div class='{% if box.avatar != "none" %}span8{% else %}span12{% end %}'>
+                    <pre class="well" style="color: unset;">&nbsp;{% if box.avatar == "none" %}********************{% end %}{% if options.secure_communique_dialog %}*********************** BEGIN SECURE COMMUNIQUE ***********************{% else %}***************************** DESCRIPTION *****************************{% end %}{% if box.avatar == "none" %}********************{% end %}
                         {{ box.description }}
                         
-                        {% if options.secure_communique_dialog %}&nbsp;***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}&nbsp;***********************************************************************{% end %}</pre>
+                        &nbsp;{% if box.avatar == "none" %}********************{% end %}{% if options.secure_communique_dialog %}***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}***********************************************************************{% end %}{% if box.avatar == "none" %}********************{% end %}</pre>
                 </div>
             </div>
         </div>
