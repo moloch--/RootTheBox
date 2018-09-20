@@ -162,7 +162,7 @@ class EventManager(object):
             message = "%s has captured the '%s' flag in %s" % (
                 user.team.name, flag.name, flag.box.name
             )
-        Notification.create_broadcast("Flag Capture", message, SUCCESS, team=user.team)
+        Notification.create_broadcast(user.team, "Flag Capture", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
@@ -176,7 +176,7 @@ class EventManager(object):
             message = "%s was penalized on the '%s' flag in %s" % (
                 user.team.name, flag.name, flag.box.name
             )
-        Notification.create_broadcast("Flag Penalty", message, WARNING, team=user.team, global_broadcast=False)
+        Notification.create_team(user.team, "Flag Penalty", message, WARNING)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
@@ -186,7 +186,7 @@ class EventManager(object):
         message = "%s unlocked level #%d." % (
             user.team.name, level.number
         )
-        Notification.create_broadcast("Level Unlocked", message, SUCCESS, team=user.team)
+        Notification.create_broadcast(user.team, "Level Unlocked", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
@@ -203,7 +203,7 @@ class EventManager(object):
         message = "%s called the SWAT team on %s." % (
             user.handle, target.handle
         )
-        evt_id = Notification.create_broadcast("Player Arrested!", message, INFO)
+        Notification.create_broadcast(user.team, "Player Arrested!", message, INFO)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
@@ -235,7 +235,7 @@ class EventManager(object):
         message = "%s posted '%s' to the team paste bin" % (
             user.handle, paste_bin.name
         )
-        evt_id = Notification.create_team(user.team, "Text Share", message, INFO)
+        Notification.create_team(user.team, "Text Share", message, INFO)
         self.io_loop.add_callback(self.push_team, user.team.id)
 
     # [ Misc Events ] ------------------------------------------------------
@@ -251,6 +251,6 @@ class EventManager(object):
         message = "%s hacked %s's bank account and stole $%d" % (
             cracker.handle, victim.team.name, value,
         )
-        Notification.create_broadcast("Password Cracked", message, SUCCESS)
+        Notification.create_broadcast(cracker.team, "Password Cracked", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)

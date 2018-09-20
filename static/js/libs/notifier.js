@@ -4,7 +4,7 @@ $(document).ready(function() {
         defaultTimeOut: 12500,
         position: ["top", "right"],
         notificationStyles: {
-            padding: "16px 24px",
+            padding: "16px 20px",
             margin: "0 0 6px 0",
             backgroundColor: "#000",
             opacity: 0.8,
@@ -43,20 +43,22 @@ $(document).ready(function() {
         timeOut = timeOut || config.defaultTimeOut;
 
         if (iconUrl) {
+            var iconContainer = $("<div/>").css({
+                float: 'left',
+                padding: '0 10px 5px 0'
+            });
             var iconElement = $("<img/>", {
                 src: iconUrl,
                 css: {
-                    width: 36,
-                    height: 36,
-                    display: "inline-block",
+                    width: 30,
+                    height: 30,
                     verticalAlign: "middle"
                 }
             });
-            notificationElement.append(iconElement);
+            notificationElement.append(iconContainer.append(iconElement));
         }
 
         var textElement = $("<div/>").css({
-            display: 'inline-block',
             verticalAlign: 'middle',
             padding: '0 12px'
         });

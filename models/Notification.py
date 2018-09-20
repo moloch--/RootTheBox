@@ -100,12 +100,14 @@ class Notification(DatabaseObject):
         dbsession.commit()
 
     @classmethod
-    def create_broadcast(cls, title, message, icon=None, team=None, global_broadcast=options.global_notification):
-        for user in User.all_users():
-            if global_broadcast or not team or (user.team and team == user.team):
+    def create_broadcast(cls, team, title, message, icon=None):
+        if not options.global_notification and team:
+            cls.create_team(team, title, message, icon)
+        else:
+            for user in User.all_users():
                 notification = cls._create(user, title, message, icon)
                 dbsession.add(notification)
-        dbsession.commit()
+            dbsession.commit()
 
     @classmethod
     def _create(cls, user, title, message, icon=None):
