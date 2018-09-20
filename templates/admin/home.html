@@ -7,6 +7,8 @@
 {% end %}
 
 {% block content %}
+{% from models.Notification import Notification %}
+<div class="row-fluid">
     <div class="row">
         <div class="offset1">
             <h1>
@@ -16,133 +18,173 @@
             <br />
         </div>
     </div>
-    <div class="row">
-        <div class="well span3 offset1">
-            <h3>Game Control</h3>
-            <hr />
-            <form id="start-game-form" action="/admin/game" method="post">
-                {% raw xsrf_form_html() %}
-                <input id="start-game" name="start_game" type="hidden" />
-            </form>
-            <form id="ban-ip-form" action="/admin/ban/add" method="post">
-                {% raw xsrf_form_html() %}
-                <input id="ban-ip" name="ip" type="hidden" />
-            </form>
-            <form id="clear-ip-form" action="/admin/ban/clear" method="post">
-                {% raw xsrf_form_html() %}
-                <input id="clear-ip" name="ip" type="hidden" />
-            </form>
-            <div style="margin-left:auto; margin-right:auto; text-align:center;">
-                <br />
-                {% if not handler.application.settings['game_started'] %}
-                    <button id="start-game-button" class="btn btn-success btn-large" type="button">
-                        <i class="fa fa-fw fa-play"></i>
-                        Start the Game
-                    </button>
-                {% else %}
-                    <button id="stop-game-button" class="btn btn-danger btn-large" type="button">
-                        <i class="fa fa-fw fa-stop"></i>
-                        Stop the Game
-                    </button>
-                {% end %}
-            </div>
-            <br />
-            <br />
-        </div>
-        <div class="well span10">
-            <h3>Failed Logins</h3>
-            <hr />
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>IP Address</th>
-                        <th>Failed Logins</th>
-                        <th><!-- Blacklist Button --></th>
-                        <th><!-- Clear Button --></th>
-                    </tr>
-                </thead>
-                <tbody id="ip-table">
-                    {% set failed_logins = handler.application.settings['failed_logins'] %}
-                    {% for index, ip in enumerate(sorted(failed_logins, key=failed_logins.get)) %}
-                        <tr>
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ ip }}</td>
-                            <td>{{ failed_logins[ip] }}</td>
-                            <td>
-                                <a id="ban-ip-button" class="btn btn-danger btn-small" data-ip="{{ ip }}" type="button">
-                                    <i class="fa fa-fw fa-ban"></i>
-                                    Ban IP Address
-                                </a>
-                            </td>
-                            <td>
-                                <a id="clear-ip-button" class="btn btn-warning btn-small" data-ip="{{ ip }}" type="button">
-                                    <i class="fa fa-fw fa-eraser"></i>
-                                    Clear
-                                </a>
-                            </td>
-                        </tr>
+    <div class="span3">
+        <div class="row">
+            <div class="span11 offset1 well">
+                <h3>Game Control</h3>
+                <hr />
+                <form id="start-game-form" action="/admin/game" method="post">
+                    {% raw xsrf_form_html() %}
+                    <input id="start-game" name="start_game" type="hidden" />
+                </form>
+                <form id="ban-ip-form" action="/admin/ban/add" method="post">
+                    {% raw xsrf_form_html() %}
+                    <input id="ban-ip" name="ip" type="hidden" />
+                </form>
+                <form id="clear-ip-form" action="/admin/ban/clear" method="post">
+                    {% raw xsrf_form_html() %}
+                    <input id="clear-ip" name="ip" type="hidden" />
+                </form>
+                <div style="margin-left:auto; margin-right:auto; text-align:center;">
+                    <br />
+                    {% if not handler.application.settings['game_started'] %}
+                        <button id="start-game-button" class="btn btn-success btn-large" type="button">
+                            <i class="fa fa-fw fa-play"></i>
+                            Start the Game
+                        </button>
+                    {% else %}
+                        <button id="stop-game-button" class="btn btn-danger btn-large" type="button">
+                            <i class="fa fa-fw fa-stop"></i>
+                            Stop the Game
+                        </button>
                     {% end %}
-                </tbody>
-            </table>
+                </div>
+                <br />
+                <br />
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="well span3 offset1">
-            <h3>Automatic Ban</h3>
-            <hr />
-            <form action="/admin/ban/config" method="post">
-                {% raw xsrf_form_html() %}
-                <div class="control-group">
-                    <div class="controls">
-                        <input id="automatic-ban" name="automatic_ban" type="hidden" value="{{ str(handler.application.settings['automatic_ban']).lower() }}" />
-                        <div id="automatic-ban-button" class="btn-group" data-toggle="buttons-radio">
-                            <button id="automatic-ban-enable" type="button" class="btn btn-success">
-                                <i id="automatic-ban-enable-icon" class="fa fa-fw fa-square-o"></i>
-                                Enable
-                            </button>
-                            <button id="automatic-ban-disable" type="button" class="btn btn-danger">
-                                <i id="automatic-ban-disable-icon" class="fa fa-fw fa-square-o"></i>
-                                Disable
+        <div class="row">
+            <div class="span11 offset1 well">
+                <h3>Automatic Ban</h3>
+                <hr />
+                <form action="/admin/ban/config" method="post">
+                    {% raw xsrf_form_html() %}
+                    <div class="control-group">
+                        <div class="controls">
+                            <input id="automatic-ban" name="automatic_ban" type="hidden" value="{{ str(handler.application.settings['automatic_ban']).lower() }}" />
+                            <div id="automatic-ban-button" class="btn-group" data-toggle="buttons-radio">
+                                <button id="automatic-ban-enable" type="button" class="btn btn-success">
+                                    <i id="automatic-ban-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                    Enable
+                                </button>
+                                <button id="automatic-ban-disable" type="button" class="btn btn-danger">
+                                    <i id="automatic-ban-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                    Disable
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="threshold-size">Threshold</label>
+                        <div class="controls">
+                            <input id="threshold-size" type="text" name="threshold_size" value="{{ handler.application.settings['blacklist_threshold'] }}" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fa fa-save"></i>
+                                Save
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="threshold-size">Threshold</label>
-                    <div class="controls">
-                        <input id="threshold-size" type="text" name="threshold_size" value="{{ handler.application.settings['blacklist_threshold'] }}" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fa fa-save"></i>
-                            Save
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="well span10">
-            <h3>Banned IPs</h3>
-            <hr />
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>IP Address</th>
-                    </tr>
-                </thead>
-                <tbody id="ip-table">
-                    {% for index, ip in enumerate(handler.application.settings['blacklisted_ips']) %}
-                        <tr>
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ ip }}</td>
-                        </tr>
-                    {% end %}
-                </tbody>
-            </table>
+                </form>
+            </div>
+            
         </div>
     </div>
+    <div class="span8 well">
+        <h3 id="notifications-title">
+            <i class="fa fa-envelope"></i>
+            Notifications
+        </h3>
+        <h4 id="notifications">
+            <a href="/admin/view/notifications">
+                See All &raquo;
+            </a>
+        </h4>
+        <hr style="margin-bottom: 16px; margin-top: 16px;">
+        {% for index, notify in enumerate(reversed(list(Notification.admin()[-5:]))) %}
+            <div class="row">
+                <div class="span1">
+                    {% if notify.icon_url is not None %}
+                        <img src="{{ notify.icon_url }}" style="width: 40%; float: right; vertical-align: middle;" />
+                    {% end %}
+                </div>
+                <div class="span11 msgdescription"  style="margin-left: 5px;">
+                    <p>
+                        <strong>{{ notify.title }}</strong>
+                        {{ notify.created.strftime("%I:%M%p") }}:&nbsp;&nbsp;{{ notify.message }}
+                    </p>
+                </div>
+            </div>
+            {% if index < len(user.notifications[-5:]) - 1 %}
+                <hr style="margin-top: 6px; margin-bottom: 16px;">
+            {% end %}
+        {% end %}
+    </div>
+    <div class="well span8">
+        <h3>
+            <i class="fa fa-warning"></i>
+            Failed Logins
+        </h3>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>IP Address</th>
+                    <th>Failed Logins</th>
+                    <th><!-- Blacklist Button --></th>
+                    <th><!-- Clear Button --></th>
+                </tr>
+            </thead>
+            <tbody id="ip-table">
+                {% set failed_logins = handler.application.settings['failed_logins'] %}
+                {% for index, ip in enumerate(sorted(failed_logins, key=failed_logins.get)) %}
+                    <tr>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ ip }}</td>
+                        <td>{{ failed_logins[ip] }}</td>
+                        <td>
+                            <a id="ban-ip-button" class="btn btn-danger btn-small" data-ip="{{ ip }}" type="button">
+                                <i class="fa fa-fw fa-ban"></i>
+                                Ban IP Address
+                            </a>
+                        </td>
+                        <td>
+                            <a id="clear-ip-button" class="btn btn-warning btn-small" data-ip="{{ ip }}" type="button">
+                                <i class="fa fa-fw fa-eraser"></i>
+                                Clear
+                            </a>
+                        </td>
+                    </tr>
+                {% end %}
+            </tbody>
+        </table>
+    </div>
+    <div class="well span8">
+        <h3>
+            <i class="fa fa-shield"></i>
+            Banned IPs
+        </h3>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody id="ip-table">
+                {% for index, ip in enumerate(handler.application.settings['blacklisted_ips']) %}
+                    <tr>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ ip }}</td>
+                    </tr>
+                {% end %}
+            </tbody>
+        </table>
+    </div>  
+</div>
 {% end %}

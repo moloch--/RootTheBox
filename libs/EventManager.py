@@ -162,16 +162,31 @@ class EventManager(object):
             message = "%s has captured the '%s' flag in %s" % (
                 user.team.name, flag.name, flag.box.name
             )
-        Notification.create_broadcast("Flag Capture", message, team=user.team)
+        Notification.create_broadcast("Flag Capture", message, SUCCESS, team=user.team)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
+
+    def flag_penalty(self, user, flag):
+        ''' Callback for when a flag is captured '''
+        if len(GameLevel.all()) > 1:
+            message = "%s was penalized on the '%s' flag in %s (Lvl %s)" % (
+                user.team.name, flag.name, flag.box.name, GameLevel.by_id(flag.box.game_level_id).number
+            )
+        else:
+            message = "%s was penalized on the '%s' flag in %s" % (
+                user.team.name, flag.name, flag.box.name
+            )
+        Notification.create_broadcast("Flag Penalty", message, WARNING, team=user.team, global_broadcast=False)
+        self.io_loop.add_callback(self.push_broadcast)
+        self.io_loop.add_callback(self.push_scoreboard)
+
 
     def level_unlocked(self, user, level):
         ''' Callback for when a team unlocks a new level '''
         message = "%s unlocked level #%d." % (
             user.team.name, level.number
         )
-        Notification.create_broadcast("Level Unlocked", message, team=user.team)
+        Notification.create_broadcast("Level Unlocked", message, SUCCESS, team=user.team)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
@@ -188,7 +203,7 @@ class EventManager(object):
         message = "%s called the SWAT team on %s." % (
             user.handle, target.handle
         )
-        evt_id = Notification.create_broadcast("Player Arrested!", message)
+        evt_id = Notification.create_broadcast("Player Arrested!", message, INFO)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 

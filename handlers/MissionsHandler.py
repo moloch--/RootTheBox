@@ -201,6 +201,7 @@ class FlagSubmissionHandler(BaseHandler):
             user.money -= penalty
             self.dbsession.add(user.team)
             self.dbsession.flush()
+            self.event_manager.flag_penalty(user, flag)
             self.dbsession.commit()
             return penalty
         return False

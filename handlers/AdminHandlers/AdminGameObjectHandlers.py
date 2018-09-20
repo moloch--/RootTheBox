@@ -354,7 +354,8 @@ class AdminViewHandler(BaseHandler):
             'categories': 'admin/view/categories.html',
             'pastebin': 'admin/view/pastebin.html',
             'fileshare': 'admin/view/shared_files.html',
-            'statistics': 'admin/view/statistics.html'
+            'statistics': 'admin/view/statistics.html',
+            'notifications': 'admin/view/notifications.html'
         }
         if len(args) and args[0] in uri:
             self.render(uri[args[0]], errors=None)

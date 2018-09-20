@@ -58,6 +58,11 @@ class Notification(DatabaseObject):
         return dbsession.query(cls).filter_by(user_id=None).all()
 
     @classmethod
+    def admin(cls):
+        ''' Returns a list of unique notifications in the database '''
+        return dbsession.query(cls.created, cls.icon_url, cls.message, cls.title).distinct()
+
+    @classmethod
     def clear(cls):
         ''' Deletes all objects in the database '''
         return dbsession.query(cls).delete()
@@ -95,9 +100,9 @@ class Notification(DatabaseObject):
         dbsession.commit()
 
     @classmethod
-    def create_broadcast(cls, title, message, icon=None, team=None):
+    def create_broadcast(cls, title, message, icon=None, team=None, global_broadcast=options.global_notification):
         for user in User.all_users():
-            if options.global_notification or (not team or not user.team) or team == user.team:
+            if global_broadcast or not team or (user.team and team == user.team):
                 notification = cls._create(user, title, message, icon)
                 dbsession.add(notification)
         dbsession.commit()
