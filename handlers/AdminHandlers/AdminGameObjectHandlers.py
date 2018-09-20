@@ -42,6 +42,7 @@ from models.FlagChoice import FlagChoice
 from models.MarketItem import MarketItem
 from models.Hint import Hint
 from models.Team import Team
+from models.Penalty import Penalty
 from models.IpAddress import IpAddress
 from models.User import ADMIN_PERMISSION
 from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME, FLAG_CHOICE
@@ -352,7 +353,8 @@ class AdminViewHandler(BaseHandler):
             'market_objects': 'admin/view/market_objects.html',
             'categories': 'admin/view/categories.html',
             'pastebin': 'admin/view/pastebin.html',
-            'fileshare': 'admin/view/shared_files.html'
+            'fileshare': 'admin/view/shared_files.html',
+            'statistics': 'admin/view/statistics.html'
         }
         if len(args) and args[0] in uri:
             self.render(uri[args[0]], errors=None)
@@ -854,6 +856,41 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
             obj = game_objects[obj_name].by_uuid(uuid)
             if obj is not None:
                 self.write(obj.to_dict())
+            else:
+                self.write({'Error': 'Invalid uuid.'})
+        elif obj_name == "stats":
+            flag = Flag.by_uuid(uuid)
+            if flag is not None:
+                if options.banking:
+                    flaginfo = [{"name": flag.name, "token": flag.token, "price": "$" + str(flag.value)}]
+                else:
+                    flaginfo = [{"name": flag.name, "token": flag.token, "price": str(flag.value) + " points"}]
+                captures = []
+                for item in Flag.captures(flag.id):
+                    team = Team.by_id(item[0])
+                    if team:
+                        captures.append({"name": team.name})
+                attempts = []
+                for item in Penalty.by_flag_id(flag.id):
+                    team = Team.by_id(item.team_id)
+                    if team:
+                        attempts.append({"name": team.name, "token": item.token})
+                hints = []
+                for item in Hint.taken_by_flag(flag.id):
+                    team = Team.by_id(item.team_id)
+                    hint = Hint.by_id(item.hint_id)
+                    if team:
+                        if options.banking:
+                            hints.append({"name": team.name, "price": "$" + str(hint.price)})
+                        else:
+                            hints.append({"name": team.name, "price": str(hint.price) + " points"})
+                obj = {
+                    "flag": flaginfo,
+                    "captures": captures, 
+                    "attempts": attempts, 
+                    "hints": hints,
+                    }
+                self.write(obj)
             else:
                 self.write({'Error': 'Invalid uuid.'})
         else:

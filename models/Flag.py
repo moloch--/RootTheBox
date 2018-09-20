@@ -28,6 +28,7 @@ import xml.etree.cElementTree as ET
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
+from models.Relationships import team_to_flag
 from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.Box import Box
@@ -115,6 +116,10 @@ class Flag(DatabaseObject):
     def by_type(cls, _type):
         ''' Return and object based on a token '''
         return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
+
+    @classmethod
+    def captures(cls, _id):
+        return dbsession.query(team_to_flag).filter_by(flag_id=_id).all()
 
     @classmethod
     def create_flag(cls, _type, box, name, raw_token, description, value):

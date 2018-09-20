@@ -82,6 +82,10 @@ class Penalty(DatabaseObject):
         dbsession.add(attempt)
         dbsession.commit()
 
+    @property
+    def token(self):
+        return self._token
+
     @classmethod
     def _create(cls, team, flag, submission):
         ''' Create a attempt and save it to the database '''

@@ -27,6 +27,7 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, Integer, String
 from libs.ValidationError import ValidationError
 from models.BaseModels import DatabaseObject
+from models.Relationships import team_to_hint
 from models.Flag import Flag
 from models.Box import Box
 from models import dbsession
@@ -71,6 +72,14 @@ class Hint(DatabaseObject):
     @classmethod
     def by_flag_id(cls, _id):
         return dbsession.query(cls).filter_by(flag_id=_id).all()
+
+    @classmethod
+    def taken_by_flag(cls, _id):
+        return dbsession.query(cls, team_to_hint).filter_by(flag_id=_id).join(team_to_hint).all()
+
+    @classmethod
+    def taken_by_box(cls, _id):
+        return dbsession.query(cls, team_to_hint).filter_by(box_id=_id, flag_id=None).join(team_to_hint).all()
 
     @property
     def price(self):
