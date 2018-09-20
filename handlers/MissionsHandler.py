@@ -88,7 +88,7 @@ class FlagSubmissionHandler(BaseHandler):
 
             if self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
-                if self.config.secure_communique_dialog:
+                if self.config.story_mode:
                     self.render('missions/captured.html',
                                 flag=flag,
                                 reward=old_reward)

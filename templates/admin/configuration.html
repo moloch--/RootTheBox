@@ -245,17 +245,17 @@
             </div>
             <hr />
             <div class="control-group">
-                <label class="control-label" for="secure_communique_dialog">
+                <label class="control-label" for="story_mode">
                     <i class="fa fa-video-camera"></i>
                     Story Mode
                 </label>
                 <div class="controls">
-                    <input id="secure_communique_dialog" name="secure_communique_dialog" type="hidden" value="{{ str(config.secure_communique_dialog).lower() }}" />
+                    <input id="story_mode" name="story_mode" type="hidden" value="{{ str(config.story_mode).lower() }}" />
                     <div id="story-button" class="btn-group" data-toggle="buttons-radio"
                         rel="popover"
                         data-original-title="Story Mode"
                         data-html="true"
-                        data-content="Enabling this feature will set the game to follow the storyline of Morris, an employeer that sends &apos;secure communique&apos; and assigns missions. Designed primarily for use with the Banking System.<br/><br/>Disabling this option will skip the storyline and keep you on the box screen for instant capture success messages.">
+                        data-content="Enabling this feature will set the game to follow the storyline of Morris, an employeer that sends &apos;secure communique&apos; and assigns missions. Designed primarily for use with the Banking System.<br/><br/>Disabling this option will skip the storyline and give the player an instant capture message.">
                         <button id="story-enable" type="button" class="btn btn-success">
                             <i id="story-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable

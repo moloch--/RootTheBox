@@ -8,7 +8,7 @@ function text_animation(term) {
         "  I have received the '" + flag + "' information.",
         "  "
     ];
-    if (msg.toString() !== "") {
+    if (msg.toString() !== "" && msg.toString() !== "None") {
         intro_frames.push("  " + msg.toString(), "  ");
     }
     if (banking === "$") {

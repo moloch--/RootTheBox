@@ -120,7 +120,7 @@ $(document).ready(function() {
         $("#use-black-market-disable-icon").addClass("fa-check-square-o");
     }
     
-    if ($("#secure_communique_dialog").val() === "true") {
+    if ($("#story_mode").val() === "true") {
         $("#story-enable-icon").removeClass("fa-square-o");
         $("#story-enable-icon").addClass("fa-check-square-o");
     } else {
@@ -307,14 +307,14 @@ $(document).ready(function() {
     });
 
     $("#story-enable").click(function() {
-        $("#secure_communique_dialog").val("true");
+        $("#story_mode").val("true");
         $("#story-enable-icon").removeClass("fa-square-o");
         $("#story-enable-icon").addClass("fa-check-square-o");
         $("#story-disable-icon").removeClass("fa-check-square-o");
         $("#story-disable-icon").addClass("fa-square-o");
     });
     $("#story-disable").click(function() {
-        $("#secure_communique_dialog").val("false");
+        $("#story_mode").val("false");
         $("#story-disable-icon").removeClass("fa-square-o");
         $("#story-disable-icon").addClass("fa-check-square-o");
         $("#story-enable-icon").removeClass("fa-check-square-o");

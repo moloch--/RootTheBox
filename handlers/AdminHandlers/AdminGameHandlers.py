@@ -316,7 +316,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.restrict_registration = self.get_bool('restrict_registration', False)
         self.config.global_notification = self.get_bool('global_notification', True)
         self.config.hints_taken = self.get_bool('hints_taken', False)
-        self.config.secure_communique_dialog = self.get_bool('secure_communique_dialog', True)
+        self.config.story_mode = self.get_bool('story_mode', False)
         self.config.rank_by = str(self.get_argument('rank_by', 'money'))
         self.config.teams = self.get_bool('teams', True)
         self.config.public_teams = self.get_bool('public_teams')

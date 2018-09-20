@@ -427,10 +427,10 @@ define("whitelist_box_ips",
        help="whitelist box ip addresses (for botnets)",
        type=bool)
 
-define("secure_communique_dialog",
-       default=True,
+define("story_mode",
+       default=False,
        group="game",
-       help="secure communique dialog screen after capture success",
+       help="Morris story with secure communique dialog screen after capture success",
        type=bool)
 
 define("hide_scoreboard",

@@ -322,7 +322,7 @@
                         <select id="edit-flag-lock" name="lock_uuid"></select>
                     </div>
                 </div>
-                {% if options.secure_communique_dialog %}
+                {% if options.story_mode %}
                 <div class="control-group">
                     <label class="control-label" for="flag-capture_message">Capture Message</label>
                     <div class="controls">
@@ -488,11 +488,9 @@
 {% end %}
 
 {% block content %}
-{% from models.Corporation import Corporation %}
-{% from models.Box import Box %}
     <!-- Start Visable -->
     <div class="row-fluid">
-        <div class="span2" />
+        <div class="span2">
             <ul class="nav nav-tabs nav-stacked affix well">
                 {% if len(Corporation.all()) > 1 %}
                     <center>
@@ -514,7 +512,7 @@
                 {% end %}
                 <center>
                     <strong>
-                        <i class="fa fa-building-o"></i>
+                        <i class="fa fa-th"></i>
                         Boxes
                     </strong>
                 </center>
@@ -589,7 +587,8 @@
                                         <i class="fa fa-fw fa-trash-o"></i>
                                         {{ box.name }} Garbage File
                                     </a>
-                                <br />
+                                    
+                                <br />{% if box.category %}{{ box.category }}<br />{% end %}
                                 <br />
                                 <div class="row-fluid">
                                     {% if box.avatar != "none" %}

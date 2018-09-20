@@ -165,10 +165,10 @@
                 </div>
                 {% end %}
                 <div class='{% if box.avatar != "none" %}span8{% else %}span12{% end %}'>
-                    <pre class="well" style="color: unset;">&nbsp;{% if box.avatar == "none" %}********************{% end %}{% if options.secure_communique_dialog %}*********************** BEGIN SECURE COMMUNIQUE ***********************{% else %}***************************** DESCRIPTION *****************************{% end %}{% if box.avatar == "none" %}********************{% end %}
+                    <pre class="well" style="color: unset;">&nbsp;{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}*********************** BEGIN SECURE COMMUNIQUE ***********************{% else %}***************************** DESCRIPTION *****************************{% end %}{% if box.avatar == "none" %}********************{% end %}
                         {{ box.description }}
                         
-                        &nbsp;{% if box.avatar == "none" %}********************{% end %}{% if options.secure_communique_dialog %}***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}***********************************************************************{% end %}{% if box.avatar == "none" %}********************{% end %}</pre>
+                        &nbsp;{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}***********************************************************************{% end %}{% if box.avatar == "none" %}********************{% end %}</pre>
                 </div>
             </div>
         </div>

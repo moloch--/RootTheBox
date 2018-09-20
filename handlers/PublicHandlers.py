@@ -69,7 +69,7 @@ class LoginHandler(BaseHandler):
             if not user.locked:
                 if self.game_started(user):
                     self.successful_login(user)
-                    if self.config.secure_communique_dialog and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
+                    if self.config.story_mode and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
                         self.redirect('/user/missions/firstlogin')
                     else:
                         self.redirect('/user')
