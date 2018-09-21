@@ -1,8 +1,17 @@
 function penalty_cost_update() {
-    var max_cost = ($("#flag_stop_penalty").val() - $("#flag_start_penalty").val()) * $("#flag_penalty_cost").val();
-    $("#flag_start_penalty").attr('data-content', "When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.<br/><br/>1 = deduct on & after 1st attempt<br/>2 = deduct on & after 2nd attempt<br/>and so on ...<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost.<br/><strong>Current Max Penalty: " + max_cost + "%</strong>");
-    $("#flag_stop_penalty").attr('data-content', "When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.<br/><br/>4 = stop on & after 4th attempt<br/>5 = stop on & after 5th attempt<br/>and so on ...<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost.<br/><strong>Current Max Penalty: " + max_cost + "%</strong>");
-    $("#flag_penalty_cost").attr('data-content', "Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost.<br/><strong>Current Max Penalty: " + max_cost + "%</strong>");
+    var stop_penalty = parseInt($("#flag_stop_penalty").val());
+    var start_penalty = parseInt($("#flag_start_penalty").val());
+    if (stop_penalty <= start_penalty) {
+        $("#flag_stop_penalty").val(start_penalty + 1);
+        stop_penalty = parseInt($("#flag_stop_penalty").val());
+    }
+    var max_cost = (stop_penalty - start_penalty) * parseInt($("#flag_penalty_cost").val());
+    $("#current_max_penalty").text("Maximum Penalty: " + max_cost + "% of Flag Value");
+    var penalty_attempt = "s " + start_penalty + " through " + (stop_penalty - 1);
+    if (start_penalty == (stop_penalty - 1)) {
+        penalty_attempt = " " + start_penalty;
+    }
+    $("#penalty_description").text("Apply penalty on attempt" + penalty_attempt);
 }
 
 $(document).ready(function() {
@@ -355,8 +364,7 @@ $(document).ready(function() {
         $('#global-notifications-grouping').slideUp();
     });
 
-
-    $( ".penaltyval" ).change(function() {
+    $(".penaltyval").change(function() {
         penalty_cost_update();
     });
 

@@ -331,7 +331,7 @@
                             rel="popover" pattern="\d*"
                             data-original-title="Flag Penalty Start"
                             data-html="true"
-                            data-content="" />
+                            data-content="When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.<br/><br/>1 = deduct on & after 1st attempt<br/>2 = deduct on & after 2nd attempt<br/>and so on ...<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost." />
                     </div>
                 </div>
                 <div class="control-group control-section">
@@ -341,7 +341,7 @@
                                 rel="popover" pattern="\d*"
                                 data-original-title="Flag Penalty Stop"
                                 data-html="true"
-                                data-content="" />
+                                data-content="When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.<br/><br/>4 = stop on & after 4th attempt<br/>5 = stop on & after 5th attempt<br/>and so on ...<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost." />
                     </div>
                 </div>
                 <div class="control-group control-section">
@@ -349,10 +349,14 @@
                     <div class="controls">
                         <input class="penaltyval" required id="flag_penalty_cost" type="number" min="0" max="500" name="flag_penalty_cost" value="{{ config.flag_penalty_cost }}"
                             rel="popover" pattern="\d*"
-                            data-original-title="Flag Penalty Cost"
+                            data-original-title="Flag Penalty % Cost"
                             data-html="true"
-                            data-content="" />
+                            data-content="Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost." />
                     </div>
+                </div>
+                <div class="control-group control-section">
+                    <div class="controls" id="penalty_description"></div>
+                    <div class="controls" id="current_max_penalty" style="font-weight: bold;"></div>
                 </div>
             </div>
             <hr />
