@@ -8,12 +8,12 @@ function getDetails(obj, uuid) {
                 var table = ""
                 if (value.length > 0) {
                     for (i=0; i < value.length; i++) {
-                        table += "<tr><td style='text-align: center;'>" + value[i].name + "</td>";
+                        table += "<tr><td style='text-align: center; width: 33%;'>" + value[i].name + "</td>";
                         if (value[i].token !== undefined) {
-                            table += "<td style='text-align: center;'>" + value[i].token + "</td>";
+                            table += "<td style='text-align: center; width: 33%;'>" + value[i].token + "</td>";
                         }
                         if (value[i].price !== undefined) {
-                            table += "<td style='text-align: center;'>" + value[i].price + "</td>";
+                            table += "<td style='text-align: center; width: 33%;'>" + value[i].price + "</td>";
                         }
                         table += "</tr>"
                     }
