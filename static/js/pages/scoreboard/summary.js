@@ -142,4 +142,13 @@ $(document).ready(function() {
             });
         }
     };
+
+    $("#graphtext").click(function(){
+        $("#pie_graphs").toggle();
+        if ($("#pie_graphs").is(":visible")) {
+            $("#graphtext").html('<i class="fa fa-caret-down graphtoggle"></i>&nbsp;&nbsp;Graphs');
+        } else {
+            $("#graphtext").html('<i class="fa fa-caret-up graphtoggle"></i>&nbsp;&nbsp;Graphs');
+        }
+    });
 });

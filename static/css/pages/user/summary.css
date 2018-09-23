@@ -1,3 +1,12 @@
 .summarycolumn {
   padding-bottom: 0px !important;
 }
+.graphhr {
+  text-align:right !important;
+  margin: -10px 0 2px !important;
+  padding-right: 4px !important;
+}
+.graphtoggle {
+  font-size: large; 
+  vertical-align: middle;
+}
