@@ -63,6 +63,11 @@ class AdminGameHandler(BaseHandler):
             self.start_game()
         else:
             self.stop_game()
+        suspend_reg = self.get_argument('suspend_registration')
+        if suspend_reg == 'true':
+            self.application.settings['suspend_registration'] = True
+        elif suspend_reg == 'false':
+            self.application.settings['suspend_registration'] = False
         self.redirect('/user')
 
     def start_game(self):
@@ -80,6 +85,7 @@ class AdminGameHandler(BaseHandler):
         if self.application.settings['game_started']:
             logging.info("The game is stopping ...")
             self.application.settings['game_started'] = False
+            self.application.settings['suspend_registration'] = False
             if self.application.settings['history_callback']._running:
                 self.application.settings['history_callback'].stop()
             if self.application.settings['score_bots_callback']._running:

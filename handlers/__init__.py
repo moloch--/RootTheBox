@@ -231,8 +231,9 @@ app = Application(
     # Debug mode
     debug=options.debug,
 
-    # Flag used to start the game
+    # Flags used to run the game
     game_started=options.autostart_game,
+    suspend_registration=False,
 
     # Callback functions
     score_bots_callback=PeriodicCallback(

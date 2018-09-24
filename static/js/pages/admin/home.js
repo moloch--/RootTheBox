@@ -10,6 +10,18 @@ $(document).ready(function() {
         $("#start-game-form").submit();
     });
 
+    $("#suspend-registration-button").click(function() {
+        $("#start-game").val("true");
+        $("#suspend-registration").val("true");
+        $("#start-game-form").submit();
+    });
+
+    $("#resume-registration-button").click(function() {
+        $("#start-game").val("true");
+        $("#suspend-registration").val("false");
+        $("#start-game-form").submit();
+    });
+
     if ($("#automatic-ban").val() === "true") {
         $("#automatic-ban-enable-icon").removeClass("fa-square-o");
         $("#automatic-ban-enable-icon").addClass("fa-check-square-o");

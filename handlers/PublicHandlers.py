@@ -145,15 +145,18 @@ class RegistrationHandler(BaseHandler):
         if self.session is not None:
             self.redirect('/user')
         else:
-            self.render("public/registration.html", errors=None)
+            self.render("public/registration.html", errors=None, suspend=self.application.settings['suspend_registration'])
 
     def post(self, *args, **kwargs):
         ''' Attempts to create an account, with shitty form validation '''
         try:
-            if self.config.restrict_registration:
-                self.check_regtoken()
-            user = self.create_user()
-            self.render('public/successful_reg.html', account=user.handle)
+            if self.application.settings['suspend_registration']:
+                self.render('public/registration.html', errors=["The game is not accepting new players at this time."])
+            else:
+                if self.config.restrict_registration:
+                    self.check_regtoken()
+                user = self.create_user()
+                self.render('public/successful_reg.html', account=user.handle)
         except ValidationError as error:
             self.render('public/registration.html', errors=[str(error)])
 
