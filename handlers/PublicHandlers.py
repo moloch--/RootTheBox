@@ -151,14 +151,14 @@ class RegistrationHandler(BaseHandler):
         ''' Attempts to create an account, with shitty form validation '''
         try:
             if self.application.settings['suspend_registration']:
-                self.render('public/registration.html', errors=["The game is not accepting new players at this time."])
+                self.render('public/registration.html', errors=["The game is not accepting new players at this time."], suspend=self.application.settings['suspend_registration'])
             else:
                 if self.config.restrict_registration:
                     self.check_regtoken()
                 user = self.create_user()
                 self.render('public/successful_reg.html', account=user.handle)
         except ValidationError as error:
-            self.render('public/registration.html', errors=[str(error)])
+            self.render('public/registration.html', errors=[str(error)], suspend=self.application.settings['suspend_registration'])
 
     def check_regtoken(self):
         regtoken = self.get_argument('token', '')
