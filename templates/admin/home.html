@@ -7,6 +7,38 @@
 <link href="/static/css/pages/admin/home.css" rel="stylesheet" />
 {% end %}
 
+{% block modals %}
+ <!-- Set Countdown Timer -->
+ <div id="timer-modal" class="modal hide fade" style="display: none; ">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>
+            <i class="fa fa-fw fa-clock-o"></i>
+            Set Countdown Timer
+        </h3>
+    </div>
+    <div class="modal-body">
+    <form id="timer-form" method="post" action="/admin/game">
+    {% raw xsrf_form_html() %}
+    <div style="margin-left: 50px; vertical-align: middle;">
+        <p>
+            Set the game countdown timer:
+        </p><p><input id="timer-minutes" name="freeze_scoreboard" style="width: 50px;" type="number" value="30" /> Minutes</p>
+    </div>
+        
+        
+    </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <button id="timer-submit" class="btn btn-primary" type="button">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+        </button>
+    </div>
+</div>
+{% end %}
+
 {% block content %}
 {% from models.Notification import Notification %}
 <div class="row-fluid">
@@ -28,6 +60,7 @@
                     {% raw xsrf_form_html() %}
                     <input id="start-game" name="start_game" type="hidden" />
                     <input id="suspend-registration" name="suspend_registration" type="hidden" />
+                    <input id="freeze-scoreboard" name="freeze_scoreboard" type="hidden" />
                 </form>
                 <form id="ban-ip-form" action="/admin/ban/add" method="post">
                     {% raw xsrf_form_html() %}
@@ -63,6 +96,20 @@
                         <h4 class="game_button_text">Resume Registration</h4>
                     {% end %}
                 </div>
+                <div class="game_button_area">
+                    {% if not handler.application.settings['freeze_scoreboard'] %}
+                        <button id="freeze-scoreboard-button" class="btn btn-warning game_button" data-toggle="modal" href="#timer-modal" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
+                            <i class="fa fa-fw fa-pause"></i>
+                        </button>
+                        <h4 class="game_button_text">Pause Scoreboard</h4>
+                    {% else %}
+                        <button id="resume-scoreboard-button" class="btn btn-success game_button" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
+                            <i class="fa fa-fw fa-play"></i>
+                        </button>
+                        <h4 class="game_button_text">Resume Scoreboard</h4>
+                    {% end %}
+                </div>
+
             </div>
         </div>
         <div class="row">

@@ -26,6 +26,7 @@ import os
 import logging
 import defusedxml.minidom
 import xml.etree.cElementTree as ET
+import time
 
 from tempfile import NamedTemporaryFile
 from models.Box import Box
@@ -59,15 +60,28 @@ class AdminGameHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        if self.get_argument('start_game') == 'true':
-            self.start_game()
-        else:
-            self.stop_game()
-        suspend_reg = self.get_argument('suspend_registration')
+        start_game = self.get_argument('start_game', None)
+        suspend_reg = self.get_argument('suspend_registration', 'false')
+        freeze_score = self.get_argument('freeze_scoreboard', 'false')
+        if start_game:
+            if self.get_argument('start_game') == 'true':
+                self.start_game()
+            else:
+                self.stop_game()
         if suspend_reg == 'true':
             self.application.settings['suspend_registration'] = True
         elif suspend_reg == 'false':
             self.application.settings['suspend_registration'] = False
+        if freeze_score == 'false':
+            self.application.settings['freeze_scoreboard'] = False
+            if self.application.settings['temp_global_notifications'] is not None:
+                options.global_notification = self.application.settings['temp_global_notifications']
+                self.application.settings['temp_global_notifications'] = None
+        elif freeze_score:
+            diff = 60 * int(freeze_score)
+            self.application.settings['freeze_scoreboard'] = time.time() + diff
+            self.application.settings['temp_global_notifications'] = options.global_notification
+            options.global_notification = False
         self.redirect('/user')
 
     def start_game(self):
@@ -86,6 +100,7 @@ class AdminGameHandler(BaseHandler):
             logging.info("The game is stopping ...")
             self.application.settings['game_started'] = False
             self.application.settings['suspend_registration'] = False
+            self.application.settings['freeze_scoreboard'] = False
             if self.application.settings['history_callback']._running:
                 self.application.settings['history_callback'].stop()
             if self.application.settings['score_bots_callback']._running:

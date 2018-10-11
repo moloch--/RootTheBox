@@ -71,7 +71,7 @@ class ScoreboardHandler(BaseHandler):
     ''' Main summary page '''
 
     def get(self, *args, **kargs):
-        self.render('scoreboard/summary.html')
+        self.render('scoreboard/summary.html', timer=self.timer())
 
 
 class ScoreboardAjaxHandler(BaseHandler):
@@ -82,7 +82,8 @@ class ScoreboardAjaxHandler(BaseHandler):
             'summary': self.summary_table,
             'team': self.team_details,
             'skills': self.team_skills,
-            'mvp': self.mvp_table
+            'mvp': self.mvp_table,
+            'timer': self.timediff,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -96,6 +97,13 @@ class ScoreboardAjaxHandler(BaseHandler):
     def mvp_table(self):
         ''' Render the "leaderboard" snippit '''
         self.render('scoreboard/mvp_table.html', users=User.ranks())
+
+    def timediff(self):
+        timer = self.timer()
+        if timer:
+            self.write(timer)
+        else:
+            self.finish()
 
     def team_details(self):
         ''' Returns team details in JSON form '''
@@ -151,7 +159,7 @@ class ScoreboardAjaxHandler(BaseHandler):
 class ScoreboardHistoryHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        self.render('scoreboard/history.html')
+        self.render('scoreboard/history.html', timer=self.timer())
 
 
 class ScoreboardHistorySocketHandler(WebSocketHandler):
@@ -205,4 +213,6 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
 class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        self.render('scoreboard/teams.html')
+        self.render('scoreboard/teams.html', timer=self.timer())
+
+

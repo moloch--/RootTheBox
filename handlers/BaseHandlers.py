@@ -28,6 +28,7 @@ from these base classes.
 import logging
 import memcache
 import traceback
+import datetime, time
 
 from models import dbsession
 from models.User import User
@@ -238,6 +239,18 @@ class BaseHandler(RequestHandler):
     def on_finish(self, *args, **kwargs):
         ''' Called after a response is sent to the client '''
         self.dbsession.close()
+
+    def timer(self):
+        timer = None
+        if self.application.settings['freeze_scoreboard']:
+            timerdiff = self.application.settings['freeze_scoreboard'] - time.time()
+            if timerdiff < 0:
+                timerdiff = 0
+            timer = str(timerdiff)
+            #timersplit = str(datetime.timedelta(seconds=timerdiff)).split(".")
+            #timer = timersplit[0]
+        print(timer)
+        return timer
 
 
 class BaseWebSocketHandler(WebSocketHandler):

@@ -234,6 +234,7 @@ app = Application(
     # Flags used to run the game
     game_started=options.autostart_game,
     suspend_registration=False,
+    freeze_scoreboard=False,
 
     # Callback functions
     score_bots_callback=PeriodicCallback(

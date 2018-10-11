@@ -83,7 +83,7 @@
             {% end %}
         {% end %}
         <div class="well" style="position: relative;">
-            {% if not suspend %}
+        {% if not suspend %}
             <legend>
                 Welcome to the Scene
             </legend><!-- http://www.youtube.com/watch?v=xIs_5nfJKu4&list=PLC2FCB2871C396459 -->
@@ -227,9 +227,9 @@
                     </div>
                 </div>
             </form>
-            {% else %}
-                <h4 style="text-align: center;"><i class="fa fa-group"></i>&nbsp;&nbsp;The game is not accepting new players at this time.</h4>
-            {% end %}
+        {% else %}
+            <h4 style="text-align: center;"><i class="fa fa-group"></i>&nbsp;&nbsp;The game is not accepting new players at this time.</h4>
+        {% end %}
         </div>
     </div>
 {% end %}

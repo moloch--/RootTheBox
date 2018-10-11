@@ -22,6 +22,12 @@ $(document).ready(function() {
         $("#start-game-form").submit();
     });
 
+    $("#resume-scoreboard-button").click(function() {
+        $("#start-game").val("true");
+        $("#freeze-scoreboard").val("false");
+        $("#start-game-form").submit();
+    });
+
     if ($("#automatic-ban").val() === "true") {
         $("#automatic-ban-enable-icon").removeClass("fa-square-o");
         $("#automatic-ban-enable-icon").addClass("fa-check-square-o");
@@ -39,6 +45,11 @@ $(document).ready(function() {
     $("#clear-ip-button").click(function() {
         $("#clear-ip").val($(this).data("ip"));
         $("#clear-ip-form").submit();
+    });
+
+    $("#timer-submit").click(function() {
+        $("#timer-form").submit();
+
     });
 
     /* Enable/disable buttons */

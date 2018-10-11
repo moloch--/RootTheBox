@@ -11,6 +11,7 @@
 {% from models.GameLevel import GameLevel %}
 {% from tornado.options import options %}
 <div class="row-fluid">
+    {% if not timer %}
     <div class="span2" />
         <ul class="nav nav-tabs nav-stacked affix well">
             <center>
@@ -32,6 +33,7 @@
             {% end %}
         </ul>
     </div>
+
     <div class="span10">
         <h1>
             <i class="fa fa-group"></i>
@@ -129,5 +131,8 @@
             {% end %}
         {% end %}
     </div>
+    {% else %}
+        <h1 id="timercount" style="padding-top: 100px; color: red; text-align: center;"></h1>
+    {% end %}
 </div>
 {% end %}
