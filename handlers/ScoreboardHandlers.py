@@ -55,7 +55,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
     def on_message(self, message):
         ''' We ignore messages if there are more than 1 every 5 seconds '''
-        if self.last_message - datetime.now() > timedelta(seconds=5):
+        if datetime.now() - self.last_message > timedelta(seconds=5):
             self.last_message = datetime.now()
             self.write_message(Scoreboard.now())
 
@@ -178,7 +178,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 
     def on_message(self, message):
         ''' We ignore messages if there are more than 1 every 5 seconds '''
-        if self.last_message - datetime.now() > timedelta(seconds=5):
+        if datetime.now() - self.last_message > timedelta(seconds=5):
             self.last_message = datetime.now()
             self.write_message(self.game_history[:-1])
 
