@@ -119,7 +119,7 @@ $(document).ready(function() {
         window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
 
         scoreboard_ws.onmessage = function(event) {
-            console.log(event.data);
+
             game_data = jQuery.parseJSON(event.data);
 
             /* Update Money */

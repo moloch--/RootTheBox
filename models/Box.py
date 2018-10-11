@@ -188,7 +188,7 @@ class Box(DatabaseObject):
                 if self.category_id:
                     ls.append("\n  Category: %s\n" % Category.by_id(self.category_id).category)
             if self.operating_system != "none":
-                ls.append("\n  Operating System: %s\n" % self.operating_system)
+                ls.append("  Operating System: %s\n" % self.operating_system)
             if self.difficulty != "Unknown":
                 ls.append("  Reported Difficulty: %s\n" % self.difficulty)
             if not str(ls[-1]).endswith("\n"):
