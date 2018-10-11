@@ -10,6 +10,7 @@
        */
       init: function() {
         this.scrollToCurrent();
+        $(window).on('load', $.proxy(this, 'scrollToCurrent'));
         $(window).on('hashchange', $.proxy(this, 'scrollToCurrent'));
         $('body').on('click', 'a', $.proxy(this, 'delegateAnchors'));
       },
@@ -77,11 +78,24 @@
   
   
 $(document).ready(function() {
+  window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/pause_score");
+        
   if ($("#timercount").length > 0) {
-    $.get("/scoreboard/ajax/timer", function(distance) {
-      distance = distance * 1000;
-      setTimer(distance);
-    });
+      $.get("/scoreboard/ajax/timer", function(distance) {
+          distance = distance * 1000;
+          setTimer(distance);
+      });
+      scoreboard_ws.onmessage = function(event) {
+          if (event.data !== "pause") {
+              location.reload();
+          }
+      }
+  } else {
+      scoreboard_ws.onmessage = function(event) {
+          if (event.data === "pause") {
+              location.reload();
+          }
+      }
   }
 });
 

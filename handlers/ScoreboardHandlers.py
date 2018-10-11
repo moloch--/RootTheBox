@@ -51,11 +51,16 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
     def open(self):
         ''' When we receive a new websocket connect '''
         self.connections.add(self)
-        self.write_message(Scoreboard.now())
+        if self.application.settings['freeze_scoreboard']:
+            self.write_message("pause")
+        else:
+            self.write_message(Scoreboard.now())
 
     def on_message(self, message):
-        ''' We ignore messages if there are more than 1 every 5 seconds '''
-        if datetime.now() - self.last_message > timedelta(seconds=5):
+        ''' We ignore messages if there are more than 1 every 3 seconds '''
+        if self.application.settings['freeze_scoreboard']:
+            self.write_message("pause")
+        elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
             self.write_message(Scoreboard.now())
 
@@ -177,8 +182,10 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
         self.write_message(self.get_history(history_length))
 
     def on_message(self, message):
-        ''' We ignore messages if there are more than 1 every 5 seconds '''
-        if datetime.now() - self.last_message > timedelta(seconds=5):
+        ''' We ignore messages if there are more than 1 every 3 seconds '''
+        if self.application.settings['freeze_scoreboard']:
+            self.write_message("pause")
+        elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
             self.write_message(self.game_history[:-1])
 
@@ -210,9 +217,36 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
                     flock=sheep)
 
 
+class ScoreboardPauseHandler(WebSocketHandler):
+
+    connections = set()
+
+    def open(self):
+        ''' When we receive a new websocket connect '''
+        self.connections.add(self)
+        if self.application.settings['freeze_scoreboard']:
+            self.write_message("pause")
+        else:
+            self.write_message("play")
+
+    def on_message(self, message):
+        if self.application.settings['freeze_scoreboard']:
+            self.write_message("pause")
+        else:
+            self.write_message("play")
+
+    def on_close(self):
+        ''' Lost connection to client '''
+        try:
+            self.connections.remove(self)
+        except KeyError:
+            logging.warn("[Web Socket] Connection has already been closed.")
+
+
 class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         self.render('scoreboard/teams.html', timer=self.timer())
+
 
 

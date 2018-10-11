@@ -77,11 +77,15 @@ class AdminGameHandler(BaseHandler):
             if self.application.settings['temp_global_notifications'] is not None:
                 options.global_notification = self.application.settings['temp_global_notifications']
                 self.application.settings['temp_global_notifications'] = None
+            self.event_manager.push_scoreboard()
+
         elif freeze_score:
             diff = 60 * int(freeze_score)
             self.application.settings['freeze_scoreboard'] = time.time() + diff
             self.application.settings['temp_global_notifications'] = options.global_notification
             options.global_notification = False
+            self.event_manager.push_scoreboard()
+
         self.redirect('/user')
 
     def start_game(self):

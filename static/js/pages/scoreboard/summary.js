@@ -110,45 +110,54 @@ $(document).ready(function() {
 
 /* Update code */
 $(document).ready(function() {
+    
     if ($("#timercount").length > 0) {
         $.get("/scoreboard/ajax/timer", function(distance) {
             distance = distance * 1000;
             setTimer(distance);
         });
+        window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/pause_score");
+        scoreboard_ws.onmessage = function(event) {
+            if (event.data !== "pause") {
+                location.reload();
+            }
+        }
     } else {
         window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
-
         scoreboard_ws.onmessage = function(event) {
+            if (event.data === "pause") {
+                location.reload();
+            } else {
+                game_data = jQuery.parseJSON(event.data);
 
-            game_data = jQuery.parseJSON(event.data);
-
-            /* Update Money */
-            var money_ls = [];
-            $.each(game_data, function(index, item) {
-                money_ls.push([index.toString(), item.money]);
-            });
-            money_chart.series[0].setData(money_ls, true);
-
-            /* Update Flags */
-            var flag_ls = [];
-            $.each(game_data, function(index, item) {
-                flag_ls.push([index.toString(), item.flags.length]);
-            });
-            flag_chart.series[0].setData(flag_ls, true);
-
-            /* Update Summary Table */
-            $.get("/scoreboard/ajax/summary", function(table) {
-                $("#summary_table").html(table);
-                $("a[id^=team-details-button]").click(function() {
-                    window.location = "/teams#" + $(this).data("uuid");
+                /* Update Money */
+                var money_ls = [];
+                $.each(game_data, function(index, item) {
+                    money_ls.push([index.toString(), item.money]);
                 });
-                barcolor();
-            });
-            if ($("#mvp_table").length > 0) {
-                /* Update MVP Table */
-                $.get("/scoreboard/ajax/mvp", function(table) {
-                    $("#mvp_table").html(table);
+                money_chart.series[0].setData(money_ls, true);
+    
+                /* Update Flags */
+                var flag_ls = [];
+                $.each(game_data, function(index, item) {
+                    flag_ls.push([index.toString(), item.flags.length]);
                 });
+                flag_chart.series[0].setData(flag_ls, true);
+    
+                /* Update Summary Table */
+                $.get("/scoreboard/ajax/summary", function(table) {
+                    $("#summary_table").html(table);
+                    $("a[id^=team-details-button]").click(function() {
+                        window.location = "/teams#" + $(this).data("uuid");
+                    });
+                    barcolor();
+                });
+                if ($("#mvp_table").length > 0) {
+                    /* Update MVP Table */
+                    $.get("/scoreboard/ajax/mvp", function(table) {
+                        $("#mvp_table").html(table);
+                    });
+                }
             }
         };
 

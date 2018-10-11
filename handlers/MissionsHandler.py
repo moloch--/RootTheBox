@@ -277,6 +277,8 @@ class PurchaseHintHandler(BaseHandler):
         if hint not in team.hints:
             team.money -= abs(hint.price)
             team.hints.append(hint)
+            user = self.get_current_user()
+            self.event_manager.hint_taken(user, hint)
             self.dbsession.add(team)
             self.dbsession.commit()
 

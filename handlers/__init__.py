@@ -84,6 +84,7 @@ urls = [
     (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
     (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
     (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
+    (r'/scoreboard/wsocket/pause_score', ScoreboardPauseHandler),
     (r'/teams', TeamsHandler),
 
     # FileUploadHandlers - FileUploadHandlers.py
@@ -235,6 +236,8 @@ app = Application(
     game_started=options.autostart_game,
     suspend_registration=False,
     freeze_scoreboard=False,
+    temp_global_notifications=None,
+
 
     # Callback functions
     score_bots_callback=PeriodicCallback(

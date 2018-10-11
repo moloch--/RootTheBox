@@ -247,9 +247,6 @@ class BaseHandler(RequestHandler):
             if timerdiff < 0:
                 timerdiff = 0
             timer = str(timerdiff)
-            #timersplit = str(datetime.timedelta(seconds=timerdiff)).split(".")
-            #timer = timersplit[0]
-        print(timer)
         return timer
 
 

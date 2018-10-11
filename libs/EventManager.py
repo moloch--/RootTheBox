@@ -166,6 +166,20 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
+    def hint_taken(self, user, hint):
+        ''' Callback for when a hint is taken '''
+        if len(GameLevel.all()) > 1:
+            message = "%s has taken a hint for %s (Lvl %s)" % (
+                user.team.name, hint.box.name, GameLevel.by_id(hint.box.game_level_id).number
+            )
+        else:
+            message = "%s has taken a hint for %s" % (
+                user.team.name, hint.box.name
+            )
+        Notification.create_team(user.team, "Hint Taken", message, INFO)
+        self.io_loop.add_callback(self.push_team, user.team.id)
+        self.io_loop.add_callback(self.push_scoreboard)
+
     def flag_penalty(self, user, flag):
         ''' Callback for when a flag is captured '''
         if len(GameLevel.all()) > 1:
@@ -177,7 +191,7 @@ class EventManager(object):
                 user.team.name, flag.name, flag.box.name
             )
         Notification.create_team(user.team, "Flag Penalty", message, WARNING)
-        self.io_loop.add_callback(self.push_broadcast)
+        self.io_loop.add_callback(self.push_team, user.team.id)
         self.io_loop.add_callback(self.push_scoreboard)
 
 

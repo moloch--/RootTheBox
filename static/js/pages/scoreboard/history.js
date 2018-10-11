@@ -257,7 +257,7 @@ function updateMoneyState(moneyState, update) {
 function liveMoneyUpdate(chart, update) {
     timestamp = update['timestamp'] * 1000;
     for (var teamName in update['scoreboard']) {
-        console.log("Updating: " + teamName);
+        //console.log("Updating: " + teamName);
         money = update['scoreboard'][teamName]['money'];
         index = getSeriesIndexByName(chart.series, teamName);
         if (index !== undefined) {
@@ -300,7 +300,7 @@ function updateBotState(botState, update) {
 function liveBotUpdate(chart, update) {
     timestamp = update['timestamp'] * 1000;
     for (var teamName in update['scoreboard']) {
-        console.log("Updating: " + teamName);
+        //console.log("Updating: " + teamName);
         bots = update['scoreboard'][teamName]['bots'];
         index = getSeriesIndexByName(chart.series, teamName);
         if (index !== undefined) {
@@ -345,27 +345,31 @@ function initializeSocket(length) {
     }
 
     history_ws.onmessage = function (evt) {
-        msg = jQuery.parseJSON(evt.data);
-        //console.log(msg);
-        if ('error' in msg) {
-            console.log("ERROR: " + msg.toString());
-        } else if ('history' in msg) {
-            /* Default graph is flags, init that first */
-            initializeState(updateFlagState, flagState, msg['history']);
-            chart = drawFlagGraph(flagState);
-            liveUpdateCallback = liveFlagUpdate;
-            /* Init other states */
-            initializeState(updateMoneyState, moneyState, msg['history']);
-            initializeState(updateBotState, botState, msg['history']);
-        } else if ('update' in msg) {
-            /* Update graph states */
-            updateFlagState(flagState, msg['update']);
-            updateMoneyState(moneyState, msg['update']);
-            updateBotState(botState, msg['update']);
-            /* Update the live chart */
-            liveUpdateCallback(chart, msg['update']);
+        if (evt.data === "pause") {
+            location.reload();
+        } else {
+            msg = jQuery.parseJSON(evt.data);
+            //console.log(msg);
+            if ('error' in msg) {
+                console.log("ERROR: " + msg.toString());
+            } else if ('history' in msg) {
+                /* Default graph is flags, init that first */
+                initializeState(updateFlagState, flagState, msg['history']);
+                chart = drawFlagGraph(flagState);
+                liveUpdateCallback = liveFlagUpdate;
+                /* Init other states */
+                initializeState(updateMoneyState, moneyState, msg['history']);
+                initializeState(updateBotState, botState, msg['history']);
+            } else if ('update' in msg) {
+                /* Update graph states */
+                updateFlagState(flagState, msg['update']);
+                updateMoneyState(moneyState, msg['update']);
+                updateBotState(botState, msg['update']);
+                /* Update the live chart */
+                liveUpdateCallback(chart, msg['update']);
+            }
+            $("body").css("cursor", "default");
         }
-        $("body").css("cursor", "default");
     };
     $("#flags-history-button").off();
     $("#flags-history-button").click(function() {
@@ -391,6 +395,12 @@ $(document).ready(function() {
             distance = distance * 1000;
             setTimer(distance);
         });
+        window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/pause_score");
+        scoreboard_ws.onmessage = function(event) {
+            if (event.data !== "pause") {
+                location.reload();
+            }
+        }
     } else {
         initializeSocket(29);
         $("#datapoints").change(function(){
