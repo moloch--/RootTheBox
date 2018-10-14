@@ -4,7 +4,7 @@
 
 {% block header %}
 <script src="/static/js/pages/admin/view/game_objects.js"></script>
-<script src="/static/js/pages/scoreboard/teams.js"></script>
+<script src="/static/js/pages/anchor.js"></script>
 {% end %}
 
 {% block modals %}
@@ -104,10 +104,11 @@
         </div>
     </div>
     <!-- Edit Box -->
-    <div id="edit-box-modal" class="modal hide fade" style="display: none; ">
+    <div id="edit-box-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3><i class="fa fa-fw fa-pencil"></i> Edit Box</h3>
+            <div style="padding-left: 5px;">Note: Files or documents for the challenge can be placed in the Game Materials.</div>
         </div>
         <div class="modal-body">
             <form id="edit-box-form" class="form-horizontal" method="post" action="/admin/edit/box" enctype="multipart/form-data">
@@ -224,6 +225,7 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3><i class="fa fa-fw fa-pencil"></i> Edit Flag</h3>
+            <div style="padding-left: 5px;">Note: Files or documents for the challenge can be placed in the Game Materials.</div>
         </div>
         <div class="modal-body">
             <form id="edit-flag-form" class="form-horizontal" method="post" action="/admin/edit/flag">
@@ -578,6 +580,10 @@
                                     <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
                                         <i class="fa fa-pencil"></i>
                                         Edit Box
+                                    </a>
+                                    <a class="btn btn-small"  data-toggle="modal" href="/user/missions/boxes?uuid={{ box.uuid }}">
+                                        <i class="fa fa-fw fa-eye"></i>
+                                        View Box
                                     </a>
                                     <a id="delete-box-button-{{ box.uuid }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-box-modal" data-uuid="{{ box.uuid }}">
                                         <i class="fa fa-times-circle-o"></i>

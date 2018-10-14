@@ -480,6 +480,11 @@ class AdminEditHandler(BaseHandler):
                     box.name, box.category_id, cat.id,
                 ))
                 box.category_id = cat.id
+            elif cat is None and cat != box.category_id:
+                logging.info("Updated %s's category %s -> None" % (
+                    box.name, box.category_id,
+                ))
+                box.category_id = None
             # System Type
             ostype = self.get_argument('operating_system')
             if ostype is not None and ostype != box.operating_system:
