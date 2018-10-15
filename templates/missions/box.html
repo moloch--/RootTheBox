@@ -183,6 +183,8 @@
         </div>
         <br />
         <br />
+        {% set boxhints = [] %}
+        {% set flaghints = [] %}
         {% if team %}
             {% set flagcount=0 %}
             {% for index, flag in enumerate(box.flags) %}
@@ -190,8 +192,6 @@
                     {% set flagcount += 1 %}
                 {% end %}
             {% end %}
-            {% set boxhints = [] %}
-            {% set flaghints = [] %}
             {% if len(box.hints) != 0 %}
                 <input id="hintbanking" value="str(config.banking).lower()" type="hidden" />
                 {% for index, hint in enumerate(box.hints) %}
