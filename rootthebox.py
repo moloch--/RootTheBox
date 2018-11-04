@@ -481,7 +481,7 @@ define("default_theme",
        help="the default css theme")
 
 define("allow_user_to_change_theme",
-       default="true",
+       default=True,
        group="game",
        type=bool,
        help="Is the user allowed to change theme")
