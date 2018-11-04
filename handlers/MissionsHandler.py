@@ -249,7 +249,7 @@ class FlagSubmissionHandler(BaseHandler):
                 self.dbsession.add(user.team)
 
     def render_page_by_flag(self, flag, errors=[], success=[], info=[]):
-        self.render_page_by_box_id(flag.box_id)
+        self.render_page_by_box_id(flag.box_id, errors, success, info)
 
     def render_page_by_box_id(self, box_id, errors=[], success=[], info=[]):
         box = Box.by_id(box_id)
