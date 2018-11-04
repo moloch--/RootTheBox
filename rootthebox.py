@@ -189,7 +189,7 @@ define("admin_ips",
        multiple=True,
        default=['127.0.0.1', '::1'],
        group="server",
-       help="whitelist of ip addresses that can access the admin ui")
+       help="whitelist of ip addresses that can access the admin ui (use empty list to allow all ip addresses)")
 
 # Application Settings
 define("debug",
