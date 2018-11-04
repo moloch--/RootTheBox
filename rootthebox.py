@@ -480,6 +480,12 @@ define("default_theme",
        group="game",
        help="the default css theme")
 
+define("allow_user_to_change_theme",
+       default="true",
+       group="game",
+       type=bool,
+       help="Is the user allowed to change theme")
+
 define("rank_by",
        default="money",
        group="game",
