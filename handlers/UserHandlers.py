@@ -67,7 +67,7 @@ class SettingsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
         post_functions = {
-            'avatar': self.post_avatar,
+            'user_avatar': self.post_avatar,
             'team_avatar': self.post_team_avatar,
             'password': self.post_password,
             'bank_password': self.post_bankpassword,
