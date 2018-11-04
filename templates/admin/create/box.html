@@ -183,6 +183,31 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="flag_submission_type">
+                    Flag Submission Type
+                </label>
+                <div class="controls">
+                    <input id="flag_submission_type" name="flag_submission_type" type="hidden" value="CLASSIC" />
+                    <div id="flag-submission-type-button" class="btn-group" data-toggle="buttons-radio"
+                         rel="popover"
+                         data-original-title="Flag Submission Type"
+                         data-content="How should the flag submission box be displayed?">
+                        <button id="flag-submission-type-classic" type="button" class="btn btn-primary"
+                                data-toggle="tooltip"
+                                title="Classic: list all flags and allow user to submit each">
+                            <i id="flag-submission-type-classic-icon" class="fa fa-fw fa-check-square-o"></i>
+                            Classic
+                        </button>
+                        <button id="flag-submission-type-single-box" type="button" class="btn btn-primary"
+                                data-toggle="tooltip"
+                                title="Use a single submission box for all *static* flags. Matching flag will be detected automatically. No penalties will be applied">
+                            <i id="flag-submission-type-single-box-icon" class="fa fa-fw fa-square-o"></i>
+                            Single Box
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="difficulty">Difficulty</label>
                 <div class="controls">
                     <input id="difficulty" name="difficulty" maxlength="16" type="text" placeholder="Difficulty"

@@ -29,6 +29,7 @@ import defusedxml.cElementTree as ET
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *
 from models import dbsession
+from models.Box import FlagsSubmissionType
 
 
 def get_child_by_tag(elem, tag_name):
@@ -39,16 +40,16 @@ def get_child_by_tag(elem, tag_name):
     return tags[0] if 0 < len(tags) else None
 
 
-def get_child_text(elem, tag_name):
+def get_child_text(elem, tag_name, default = ''):
     ''' Shorthand access to .text data '''
     try:
         text = get_child_by_tag(elem, tag_name).text
-        if text == 'None':
-            return None
+        if text == 'None' or text is None:
+            return default
         else:
             return text
     except:
-        return None
+        return default
 
 
 def create_categories(categories):
@@ -175,6 +176,9 @@ def create_boxes(parent, corporation):
                 box.name = name
                 box.game_level_id = game_level.id
                 box.difficulty = get_child_text(box_elem, 'difficulty')
+                box.flag_submission_type = FlagsSubmissionType[get_child_text(box_elem, 'flag_submission_type')] \
+                    if get_child_text(box_elem, 'flag_submission_type') is not None else FlagsSubmissionType.CLASSIC
+
                 box.description = get_child_text(box_elem, 'description')
                 box.operating_system = get_child_text(box_elem, 'operatingsystem')
                 box.avatar = get_child_text(box_elem, 'avatar').decode('base64')
@@ -188,8 +192,8 @@ def create_boxes(parent, corporation):
                 create_hints(get_child_by_tag(box_elem, 'hints'), box)
             else:
                 logging.info("Box with name %s already exists, skipping" % name)
-        except:
-            logging.exception("Failed to import box %d" % (index + 1))
+        except BaseException as e:
+            logging.exception("Failed to import box %d (%s)" % (index + 1, e))
 
 
 def create_corps(corps):
@@ -198,15 +202,15 @@ def create_corps(corps):
     for index, corp_elem in enumerate(corps):
         try:
             corporation = Corporation()
-            corporation.name = get_child_text(corp_elem, 'name')
+            corporation.name = get_child_text(corp_elem, 'name','')
             if Corporation.by_name(corporation.name) is None:
                 dbsession.add(corporation)
                 dbsession.flush()
             else:
                 corporation = Corporation.by_name(corporation.name)
             create_boxes(get_child_by_tag(corp_elem, 'boxes'), corporation)
-        except:
-            logging.exception("Faild to create corporation #%d" % (index + 1))
+        except BaseException as e:
+            logging.exception("Faild to create corporation #%d (%s)" % (index + 1, e))
 
 
 def _xml_file_import(filename):

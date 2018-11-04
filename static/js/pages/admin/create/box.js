@@ -1,5 +1,9 @@
 $(document).ready(function() {
 
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
     /* Button callbacks */
     $(".osbutton").click(function() {
         $("#operating_system").val($(this).data("os"));
@@ -18,6 +22,21 @@ $(document).ready(function() {
         $("#autoformat-disable-icon").addClass("fa-check-square-o");
         $("#autoformat-enable-icon").removeClass("fa-check-square-o");
         $("#autoformat-enable-icon").addClass("fa-square-o");
+    });
+
+    $("#flag-submission-type-classic").click(function() {
+        $("#flag_submission_type").val("CLASSIC");
+        $("#flag-submission-type-classic-icon").removeClass("fa-square-o");
+        $("#flag-submission-type-classic-icon").addClass("fa-check-square-o");
+        $("#flag-submission-type-single-boxe-icon").removeClass("fa-check-square-o");
+        $("#flag-submission-type-single-box-icon").addClass("fa-square-o");
+    });
+    $("#flag-submission-type-single-box").click(function() {
+        $("#flag_submission_type").val("SINGLE_SUBMISSION_BOX");
+        $("#flag-submission-type-classic-icon").removeClass("fa-check-square-o");
+        $("#flag-submission-type-classic-icon").addClass("fa-square-o");
+        $("#flag-submission-type-single-box-icon").removeClass("fa-square-o");
+        $("#flag-submission-type-single-box-icon").addClass("fa-check-square-o");
     });
 
     /* Popovers */
