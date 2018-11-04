@@ -31,7 +31,8 @@ class AppTheme(UIModule):
 
     def render(self, *args, **kwargs):
         ''' Includes different CSS themes based on user prefs '''
-        if self.handler.session is not None:
+
+        if options.allow_user_to_change_theme and (self.handler.session is not None):
             return self.render_string("theme/theme.html",
                                       theme_files=self.handler.session['theme']
                                       )

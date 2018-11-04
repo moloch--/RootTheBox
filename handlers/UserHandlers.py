@@ -151,6 +151,9 @@ class SettingsHandler(BaseHandler):
 
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
+        if not options.allow_user_to_change_theme:
+            self.render_page(errors=["Users are not allowed to change themes"])
+            return
         theme = Theme.by_uuid(self.get_argument('theme_uuid', ''))
         if theme is not None:
             self.session['theme_id'] = theme.id
