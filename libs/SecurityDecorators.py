@@ -59,7 +59,7 @@ def restrict_ip_address(method):
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        if self.request.remote_ip in self.application.settings['admin_ips']:
+        if len(self.application.settings['admin_ips']) == 0 or self.request.remote_ip in self.application.settings['admin_ips']:
             return method(self, *args, **kwargs)
         else:
             logging.warn("Attempted unauthorized access from %s to %s" % (
