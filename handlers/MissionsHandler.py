@@ -165,7 +165,7 @@ class FlagSubmissionHandler(BaseHandler):
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
         if next_level._type == "progress" and level_progress * 100 >= next_level.buyout and next_level not in user.team.game_levels:
-            logging.info("%s (%s) unlocked %d" % (
+            logging.info("%s (%s) unlocked %s" % (
                     user.handle, user.team.name, next_level.name
                 ))
             user.team.game_levels.append(next_level)
