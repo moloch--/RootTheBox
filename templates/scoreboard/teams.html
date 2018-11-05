@@ -76,25 +76,27 @@
                                     <div style="display: table-row; ">
                                         {% set gamelevels = GameLevel.all() %}
                                         {% for index, level in enumerate(gamelevels) %}
-                                            {% if index> 0 %}
-                                                <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
-                                            {% end %}
-                                            <div class="summarycolumn" style="display: table-cell;">
-                                                {% if len(gamelevels) > 1 %}
-                                                    {% if level.type == 'none' or level in team.game_levels %}
-                                                        <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
-                                                    {% else %}
-                                                        <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
-                                                    {% end %}
+                                            {% if len(level.boxes) > 0 %}
+                                                {% if index> 0 %}
+                                                    <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
                                                 {% end %}
-                                                <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}{{ level.name }} &ndash; {% end %}{% if len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
-                                                    {% if len(team.level_flags(level.number)) != 0 %}
-                                                        <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
-                                                    {% else %}
-                                                        <div class="bar minibar" style="width: 0%;"></div>
+                                                <div class="summarycolumn" style="display: table-cell;">
+                                                    {% if len(gamelevels) > 1 %}
+                                                        {% if level.type == 'none' or level in team.game_levels %}
+                                                            <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
+                                                        {% else %}
+                                                            <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
+                                                        {% end %}
                                                     {% end %}
+                                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}{{ level.name }} &ndash; {% end %}{% if len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
+                                                        {% if len(team.level_flags(level.number)) != 0 %}
+                                                            <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
+                                                        {% else %}
+                                                            <div class="bar minibar" style="width: 0%;"></div>
+                                                        {% end %}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            {% end %}
                                         {% end %}
                                     </div>
                                 </div>
