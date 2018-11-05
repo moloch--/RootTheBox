@@ -1,21 +1,21 @@
 # >_ Root the Box
-Root the Box is a real-time scoring engine for computer wargames where hackers can practice and learn. The application can be easily configured and modified for any CTF game. Root the Box attempts to engage novice and experienced players alike by combining a fun game-like environment, with realistic challenges that convey knowledge applicable to the real-world, such as penetration testing, incident response, digital forensics and threat hunting. 
+Root the Box is a real-time capture the flag (CTF) scoring engine for computer wargames where hackers can practice and learn. The application can be easily configured and modified for any CTF style game. The platform allows you to engage novice and experienced players alike by combining a fun game-like environment with realistic challenges that convey knowledge applicable to the real-world, such as penetration testing, incident response, digital forensics and threat hunting.
 
-Just as in traditional CTF games, each team or player targets challenges of varying difficulty and sophistication, attempting to collect flags. Root the Box brings additional options to the game.  It can be configured to allow the creation of "Botnets" by uploading a small bot program to target machines, which grant periodic rewards with (in-game) money for each bot in the botnet; the larger the botnet the larger the reward.  Money can be used to unlock new levels, buy hints to flags, download a target's source code, or even "SWAT" other players by bribing the (in-game) police.  Player's "bank account passwords" can also be publically displayed by the scoring engine, allowing players to crack each other's passwords and steal each other's money.
+Like traditional CTF games, each team or player can target challenges of varying difficulty and sophistication, attempting to collect flags. But Root the Box brings additional options to the game.  It has built-in support for "botnets", allowing players to upload a small bot program to target machines that grant periodic rewards for each bot in the botnet.  You have the option to use a banking system, where (in-game) money can be used to unlock new levels, buy hints to flags, download a target's source code, or even "SWAT" other players.  Password hashes for player bank accounts can also be publically displayed, allowing competitors to crack them and steal each other's money.
 
 ![example](static/images/example.png)
 
 Features
 -------------
 * [Distributed under the Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-* [In-Game Botnets](https://github.com/moloch--/RootTheBox/wiki/Features)
 * Team Play or Individual Play
 * Real-time scoreboard graphs using websockets
 * Real-time status updates using websockets
-* Flag Types - Static, Regex, Datetime, Multiple Choice, File (w/options for case senstivity)
+* Flag Types: Static, Regex, Datetime, Multiple Choice, File - w/options for case senstivity
 * Options for Penalties, Hints, Level Bonuses, Dynamic Scoring, Categories and more
 * Built-in team based file/text sharing and Admin game material distirbution
-* A wall of sheep displaying cracked passwords
+* Freeze Scores at a specific time allowing for end game countdown
+* Optional [in-game Botnets](https://github.com/moloch--/RootTheBox/wiki/Features) or wall of sheep displaying cracked passwords
 * Unlocks and upgrades as users capture flags
 * Export and share Boxes/Flags
 * Other cool stuff
