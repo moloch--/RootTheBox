@@ -67,7 +67,7 @@ class SettingsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Calls function based on parameter '''
         post_functions = {
-            'avatar': self.post_avatar,
+            'user_avatar': self.post_avatar,
             'team_avatar': self.post_team_avatar,
             'password': self.post_password,
             'bank_password': self.post_bankpassword,
@@ -151,6 +151,9 @@ class SettingsHandler(BaseHandler):
 
     def post_theme(self, *args, **kwargs):
         ''' Change per-user theme '''
+        if not options.allow_user_to_change_theme:
+            self.render_page(errors=["Users are not allowed to change themes"])
+            return
         theme = Theme.by_uuid(self.get_argument('theme_uuid', ''))
         if theme is not None:
             self.session['theme_id'] = theme.id

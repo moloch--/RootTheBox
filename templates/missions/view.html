@@ -53,21 +53,21 @@
             <div class="well">
                 {% if len(GameLevel.all()) > 1 %}
                 <h3 style="display:inline; vertical-align: middle;">
-                    {% if level in team.game_levels %}
+                    {% if level.type == 'none' or level in team.game_levels %}
                         <i class="fa fa-unlock-alt"></i>
                     {% else %}
                         <i class="fa fa-lock"></i>
                     {% end %}
                     {{ level.name }}&nbsp;&nbsp;&nbsp;
                 </h3>
-                {% if level in team.game_levels %}
+                {% if level.type == 'none' or level in team.game_levels %}
                     <div class="progress" style="height: 10px; background-color: #424242;">
                         <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
                         </div>
                     </div>
                 {% end %}
                 {% end %}
-                {% if level in team.game_levels %}
+                {% if level.type == 'none' or level in team.game_levels %}
                     <hr>
                     <div class="container">
                         {% set boxes = [] %}

@@ -176,6 +176,8 @@ class Box(DatabaseObject):
         split all of the text and insert newlines every 70 chars +2 whitespace
         at be beginning of each line, so the indents line up nicely.
         '''
+        if self._description is None:
+            self._description = ""
         if self.autoformat:
             index, step = 0, 70
             ls = [' ']

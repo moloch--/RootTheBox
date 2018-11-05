@@ -34,7 +34,7 @@
                                 {% end %}
                                 <div class="summarycolumn" style="display: table-cell;">
                                     {% if len(gamelevels) > 1 %}
-                                        {% if level in team.game_levels %}
+                                        {% if level.type == 'none' or level in team.game_levels %}
                                             <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
                                         {% else %}
                                             <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
