@@ -83,7 +83,7 @@ class FlagSubmissionHandler(BaseHandler):
         user = self.get_current_user()
         if flag and flag in user.team.flags:
             self.render_page_by_flag(flag)
-        elif flag is not None and (flag.game_level.type == 'none' or flag.game_level in user.team.game_levels):
+        elif flag is None or flag.game_level.type == 'none' or flag.game_level in user.team.game_levels:
             submission = ''
             if flag is not None and flag.is_file:
                 if hasattr(self.request, 'files') and 'flag' in self.request.files:
