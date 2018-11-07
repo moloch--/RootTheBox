@@ -74,9 +74,6 @@ ADD CONSTRAINT `box_ibfk_3`
   REFERENCES `rootthebox`.`category` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
-
-ALTER TABLE `rootthebox`.`box` 
-ADD COLUMN `flag_submission_type` enum('CLASSIC','SINGLE_SUBMISSION_BOX') DEFAULT 'CLASSIC' AFTER `garbage`;
   
 CREATE TABLE `flag_choice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -103,6 +100,10 @@ ADD COLUMN `money` INT(11) NOT NULL DEFAULT 0 AFTER `algorithm`;
 
 ALTER TABLE `rootthebox`.`game_level` 
 ADD COLUMN `_name` VARCHAR(32) NULL DEFAULT NULL AFTER `_reward`;
+
+/* 2.1 -> 2.2 */
+ALTER TABLE `rootthebox`.`box` 
+ADD COLUMN `flag_submission_type` enum('CLASSIC','SINGLE_SUBMISSION_BOX') DEFAULT 'CLASSIC' AFTER `garbage`;
 
 
 
