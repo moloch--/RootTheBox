@@ -29,7 +29,7 @@ from os import urandom
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import Integer, Unicode, String, Boolean
+from sqlalchemy.types import Integer, Unicode, String, Boolean, Enum
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Relationships import team_to_box
@@ -43,10 +43,13 @@ from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
 from PIL import Image
 from resizeimage import resizeimage
+import enum
 
+class FlagsSubmissionType(str, enum.Enum):
+    CLASSIC = 'CLASSIC'
+    SINGLE_SUBMISSION_BOX = 'SINGLE_SUBMISSION_BOX'
 
 class Box(DatabaseObject):
-
     ''' Box definition '''
 
     uuid = Column(String(36),
@@ -92,6 +95,8 @@ class Box(DatabaseObject):
                          backref=backref("box", lazy="select"),
                          cascade="all,delete,delete-orphan"
                          )
+
+    flag_submission_type = Column(Enum(FlagsSubmissionType), default=FlagsSubmissionType.CLASSIC)
 
     ip_addresses = relationship("IpAddress",
                                 backref=backref("box", lazy="select"),
@@ -282,6 +287,7 @@ class Box(DatabaseObject):
         ET.SubElement(
             box_elem, "operatingsystem").text = self._operating_system
         ET.SubElement(box_elem, "description").text = self._description
+        ET.SubElement(box_elem, "flag_submission_type").text = FlagsSubmissionType(self.flag_submission_type).name
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = self.garbage
         if self.category_id:
@@ -291,15 +297,17 @@ class Box(DatabaseObject):
         for flag in self.flags:
             flag.to_xml(flags_elem)
         hints_elem = ET.SubElement(box_elem, "hints")
-        hints_elem.set("count", str(len(self.hints)))
+        count = 0
         for hint in self.hints:
-            if not hint.flag_id is None:
+            if hint.flag_id is None:
                 hint.to_xml(hints_elem)
+                count += 1
+        hints_elem.set("count", str(count))
         ips_elem = ET.SubElement(box_elem, "ipaddresses")
         ips_elem.set("count", str(len(self.ip_addresses)))
         for ip in self.ip_addresses:
             ip.to_xml(ips_elem)
-        with open(options.avatar_dir + '/' + self.avatar) as _avatar:
+        with open(options.avatar_dir + '/' + self.avatar, mode='rb') as _avatar:
             data = _avatar.read()
             ET.SubElement(box_elem, "avatar").text = data.encode('base64')
 
@@ -321,6 +329,7 @@ class Box(DatabaseObject):
             'description': self._description,
             'difficulty': self.difficulty,
             'game_level': game_level.uuid,
+            'flag_submission_type': self.flag_submission_type,
             'flaglist': self.flaglist(self.id)
         }
 

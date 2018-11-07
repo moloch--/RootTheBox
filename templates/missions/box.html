@@ -13,6 +13,7 @@
 {% from models.Flag import FLAG_FILE %}
 {% from models.Flag import FLAG_CHOICE %}
 {% from models.FlagChoice import FlagChoice %}
+{% from models.Box import FlagsSubmissionType %}
 {% from handlers.MaterialsHandler import has_materials %}
 {% from tornado.options import options %}
     <!-- Submit text flag -->
@@ -209,6 +210,24 @@
             </div>
             {% end %}
         {% end %}
+        {% if box.flag_submission_type == FlagsSubmissionType.SINGLE_SUBMISSION_BOX %}
+        <div id="capture-text-flag-box" class="well">
+            <form id="capture-text-flag-box-form" class="form-horizontal" method="post" action="/user/missions/capture">
+                {% raw xsrf_form_html() %}
+                <input id="capture-text-flag-box-box-id" name="box_id" value="{{ box.id }}" type="hidden" />
+                <h4>Submit a Flag</h4>
+                <div class="control-group">
+                    <label class="control-label" for="capture-text-flag-box-token">Flag</label>
+                    <div class="controls">
+                        <input autofocus required id="capture-text-flag-box-token" name="token" type="text" placeholder="Flag" autocomplete="off" size="70" />
+                        <button id="capture-text-flag-box-submit" class="btn btn-primary" type="submit">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% end %}
         <div class="well">
             <table class="table table-hover">
                 <caption><h4> - Flags - </h4></caption>
@@ -276,11 +295,13 @@
                                         <td class="shortcolumn successtext" style="text-align: right;"><i class="fa fa-check-circle"></i></td>
                                     {% else %}         
                                         <td class="shortcolumn">
+                                            {% if box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX or not flag.is_static %}
                                             <a id="capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{% end %}-flag-modal" 
                                             data-uuid="{{ flag.uuid }}" data-choices='{{ str(flag.choicelist()) }}'>
                                                 <i class="fa fa-flag"></i>
                                                 Submit
                                             </a>
+                                            {% end %}
                                         </td>
                                     {% end %}
                                 {% end %}

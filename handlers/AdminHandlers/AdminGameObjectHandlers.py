@@ -33,7 +33,7 @@ import re
 import json
 
 from handlers.BaseHandlers import BaseHandler
-from models.Box import Box
+from models.Box import Box, FlagsSubmissionType
 from models.Corporation import Corporation
 from models.Category import Category
 from models.GameLevel import GameLevel
@@ -183,6 +183,7 @@ class AdminCreateHandler(BaseHandler):
                 box.name = self.get_argument('name', '')
                 box.description = self.get_argument('description', '')
                 box.autoformat = self.get_argument('autoformat', '') == 'true'
+                box.flag_submission_type = FlagsSubmissionType[self.get_argument('flag_submission_type','')]
                 box.difficulty = self.get_argument('difficulty', '')
                 box.operating_system = self.get_argument('operating_system', '?')
                 cat = Category.by_uuid(self.get_argument('category_uuid', ''))
@@ -506,6 +507,13 @@ class AdminEditHandler(BaseHandler):
                     box.name, box.difficulty, difficulty,
                 ))
                 box.difficulty = difficulty
+            # Flag submission type
+            flag_submission_type = self.get_argument('flag_submission_type', '')
+            if flag_submission_type is not None and flag_submission_type != box.flag_submission_type:
+                logging.info("Updated %s's flag submission type %s -> %s" % (
+                    box.name, box.flag_submission_type, flag_submission_type
+                ))
+                box.flag_submission_type = flag_submission_type
             # Avatar
             avatar_select = self.get_argument('box_avatar_select', '')
             if avatar_select and len(avatar_select) > 0:

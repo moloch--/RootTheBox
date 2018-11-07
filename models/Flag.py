@@ -113,6 +113,11 @@ class Flag(DatabaseObject):
         return dbsession.query(cls).filter_by(_token=unicode(token)).first()
 
     @classmethod
+    def by_token_and_box_id(cls, token, box_id):
+        ''' Return and object based on a token '''
+        return dbsession.query(cls).filter_by(_token=unicode(token), box_id = box_id).first()
+
+    @classmethod
     def by_type(cls, _type):
         ''' Return and object based on a token '''
         return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
@@ -290,6 +295,14 @@ class Flag(DatabaseObject):
                 self.lock_id = abs(int(value))
         except ValueError:
             self.lock_id = None
+
+    @property
+    def is_text(self):
+        return self._type == FLAG_REGEX or self._type == FLAG_STATIC
+
+    @property
+    def is_static(self):
+        return self._type == FLAG_STATIC
 
     @property
     def is_file(self):

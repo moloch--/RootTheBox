@@ -37,6 +37,11 @@ function getDetails(obj, uuid) {
                 }
             } else if (obj === "box" && key === "corporation") {
                 $('#edit-box-corporation option[value=' + value + ']').prop('selected',true);
+            } else if (obj === "box" && key === "flag_submission_type") {
+                if(value == "CLASSIC")
+                    $('#box-flag-submission-type-classic').click();
+                else if(value == "SINGLE_SUBMISSION_BOX")
+                    $('#box-flag-submission-type-single-box').click();
             } else if (obj === "flag" && key === "lock_uuid") {
                 if (value.length > 0) {
                     $('#edit-flag-lock option[value=' + value + ']').prop('selected',true);
@@ -188,6 +193,21 @@ $(document).ready(function() {
 
     $("a[id^=delete-ip-address-button]").click(function() {
         $("#delete-ip-address-uuid").val($(this).data("uuid"));
+    });
+
+    $("#box-flag-submission-type-classic").click(function() {
+        $("#box-flag_submission_type").val("CLASSIC");
+        $("#box-flag-submission-type-classic-icon").removeClass("fa-square-o");
+        $("#box-flag-submission-type-classic-icon").addClass("fa-check-square-o");
+        $("#box-flag-submission-type-single-boxe-icon").removeClass("fa-check-square-o");
+        $("#box-flag-submission-type-single-box-icon").addClass("fa-square-o");
+    });
+    $("#box-flag-submission-type-single-box").click(function() {
+        $("#box-flag_submission_type").val("SINGLE_SUBMISSION_BOX");
+        $("#box-flag-submission-type-classic-icon").removeClass("fa-check-square-o");
+        $("#box-flag-submission-type-classic-icon").addClass("fa-square-o");
+        $("#box-flag-submission-type-single-box-icon").removeClass("fa-square-o");
+        $("#box-flag-submission-type-single-box-icon").addClass("fa-check-square-o");
     });
 
     /* Flag */

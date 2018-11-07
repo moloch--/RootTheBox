@@ -75,6 +75,9 @@ ADD CONSTRAINT `box_ibfk_3`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
+ALTER TABLE `rootthebox`.`box` 
+ADD COLUMN `flag_submission_type` enum('CLASSIC','SINGLE_SUBMISSION_BOX') DEFAULT 'CLASSIC' AFTER `garbage`;
+  
 CREATE TABLE `flag_choice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `created` datetime DEFAULT NULL,

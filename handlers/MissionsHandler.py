@@ -73,20 +73,26 @@ class FlagSubmissionHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         ''' Check validity of flag submissions '''
-        flag = Flag.by_uuid(self.get_argument('uuid', ''))
+        box_id = self.get_argument('box_id', None)
+        uuid = self.get_argument('uuid', '')
+        token = self.get_argument('token', '')
+        if(box_id is not None and token is not None):
+            flag = Flag.by_token_and_box_id(token, box_id)
+        else:
+            flag = Flag.by_uuid(uuid)
         user = self.get_current_user()
         if flag and flag in user.team.flags:
-            self.render_page(flag)
-        elif flag is not None and (flag.game_level.type == 'none' or flag.game_level in user.team.game_levels):
+            self.render_page_by_flag(flag)
+        elif flag is None or flag.game_level.type == 'none' or flag.game_level in user.team.game_levels:
             submission = ''
-            if flag.is_file:
+            if flag is not None and flag.is_file:
                 if hasattr(self.request, 'files') and 'flag' in self.request.files:
                     submission = self.request.files['flag'][0]['body']
             else:
                 submission = self.get_argument('token', '')
-            old_reward = flag.value
+            old_reward = flag.value if flag is not None else 0
 
-            if self.attempt_capture(flag, submission):
+            if flag is not None and self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
                 if self.config.story_mode:
                     self.render('missions/captured.html',
@@ -94,14 +100,14 @@ class FlagSubmissionHandler(BaseHandler):
                                 reward=old_reward)
                 else:
                     success = self.success_capture(flag)
-                    self.render_page(flag, success=success)
+                    self.render_page_by_flag(flag, success=success)
             else:
-                if Penalty.by_token_count(flag, user.team, submission) == 0:
+                if flag is None or Penalty.by_token_count(flag, user.team, submission) == 0:
                     if self.config.teams:
                         teamval = "team's "
                     else:
                         teamval = ""
-                    penalty = self.failed_capture(flag, submission)
+                    penalty = self.failed_capture(flag, submission) if flag is not None else 0
                     penalty_dialog = "Sorry - Try Again"
                     if penalty:
                         if self.config.banking:
@@ -112,13 +118,16 @@ class FlagSubmissionHandler(BaseHandler):
                             else:
                                 point = " points have"
                             penalty_dialog = str(penalty) + point + " been deducted from your " + teamval + "score."
-                    self.render_page(flag, errors=[penalty_dialog])
+                    if flag is None:
+                        self.render_page_by_box_id(box_id, errors=[penalty_dialog])
+                    else:
+                        self.render_page_by_flag(flag, errors=[penalty_dialog])
                 else:
                     if self.config.teams:
                         teamdup = " by your team.  Try Again"
                     else:
                         teamdup = " by you.  Try Again"
-                    self.render_page(flag, info=["Duplicate submission - this answer has already been attempted" + teamdup])
+                    self.render_page_by_flag(flag, info=["Duplicate submission - this answer has already been attempted" + teamdup])
         else:
             self.render('public/404.html')
 
@@ -239,10 +248,16 @@ class FlagSubmissionHandler(BaseHandler):
                 user.team.game_levels.append(next_level)
                 self.dbsession.add(user.team)
 
-    def render_page(self, flag, errors=[], success=[], info=[]):
+    def render_page_by_flag(self, flag, errors=[], success=[], info=[]):
+        self.render_page_by_box_id(flag.box_id, errors, success, info)
+
+    def render_page_by_box_id(self, box_id, errors=[], success=[], info=[]):
+        box = Box.by_id(box_id)
+        self.render_page_by_box(box, errors, success, info)
+
+    def render_page_by_box(self, box, errors=[], success=[], info=[]):
         ''' Wrapper to .render() to avoid duplicate code '''
         user = self.get_current_user()
-        box = Box.by_id(flag.box_id)
         self.render('missions/box.html',
                     box=box,
                     team=user.team,
