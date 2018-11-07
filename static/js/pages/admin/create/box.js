@@ -46,6 +46,7 @@ $(document).ready(function() {
     $("#operating-system").popover({placement:'right', trigger:'hover'});
     $("#description").popover({placement:'right', trigger:'hover'});
     $("#autoformat-button").popover({placement:'right', trigger:'hover'});
+    $("#flag-submission-type-button").popover({placement:'right', trigger:'hover'});
     $("#difficulty").popover({placement:'right', trigger:'hover'});
 
     /* Avatar */

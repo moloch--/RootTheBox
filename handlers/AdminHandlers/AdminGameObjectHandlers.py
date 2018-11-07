@@ -507,6 +507,13 @@ class AdminEditHandler(BaseHandler):
                     box.name, box.difficulty, difficulty,
                 ))
                 box.difficulty = difficulty
+            # Flag submission type
+            flag_submission_type = self.get_argument('flag_submission_type', '')
+            if flag_submission_type is not None and flag_submission_type != box.flag_submission_type:
+                logging.info("Updated %s's flag submission type %s -> %s" % (
+                    box.name, box.flag_submission_type, flag_submission_type
+                ))
+                box.flag_submission_type = flag_submission_type
             # Avatar
             avatar_select = self.get_argument('box_avatar_select', '')
             if avatar_select and len(avatar_select) > 0:

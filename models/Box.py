@@ -45,9 +45,9 @@ from PIL import Image
 from resizeimage import resizeimage
 import enum
 
-class FlagsSubmissionType(enum.Enum):
-    CLASSIC = 0
-    SINGLE_SUBMISSION_BOX = 1
+class FlagsSubmissionType(str, enum.Enum):
+    CLASSIC = 'CLASSIC'
+    SINGLE_SUBMISSION_BOX = 'SINGLE_SUBMISSION_BOX'
 
 class Box(DatabaseObject):
     ''' Box definition '''
