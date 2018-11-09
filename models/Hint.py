@@ -82,6 +82,10 @@ class Hint(DatabaseObject):
         return dbsession.query(cls, team_to_hint).filter_by(box_id=_id, flag_id=None).join(team_to_hint).all()
 
     @property
+    def flag(self):
+        return Flag.by_id(self.flag_id)
+    
+    @property
     def price(self):
         return self._price
 

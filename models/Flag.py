@@ -308,6 +308,10 @@ class Flag(DatabaseObject):
     def is_file(self):
         return self._type == FLAG_FILE
 
+    @property
+    def box(self):
+        return Box.by_id(self.box_id)
+
     def choices(self):
         #inlucdes the choice uuid - needed for editing choice
         choices = []

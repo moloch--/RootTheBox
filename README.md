@@ -12,7 +12,7 @@ Features
 * Real-time scoreboard graphs using websockets
 * Real-time status updates using websockets
 * Flag Types: Static, Regex, Datetime, Multiple Choice, File - w/options for case senstivity
-* Options for Penalties, Hints, Level Bonuses, Dynamic Scoring, Categories and more
+* Options for Penalties, Hints, Attempts, Level Bonuses, Dynamic Scoring, Categories and more
 * Built-in team based file/text sharing and Admin game material distirbution
 * Freeze Scores at a specific time allowing for end game countdown
 * Optional [in-game Botnets](https://github.com/moloch--/RootTheBox/wiki/Features) or wall of sheep displaying cracked passwords

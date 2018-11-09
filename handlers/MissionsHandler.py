@@ -28,7 +28,7 @@ import logging
 
 from models.GameLevel import GameLevel
 from models.Flag import Flag
-from models.Box import Box
+from models.Box import Box, FlagsSubmissionType
 from models.Hint import Hint
 from models.Penalty import Penalty
 from libs.SecurityDecorators import authenticated
@@ -76,11 +76,14 @@ class FlagSubmissionHandler(BaseHandler):
         box_id = self.get_argument('box_id', None)
         uuid = self.get_argument('uuid', '')
         token = self.get_argument('token', '')
+        user = self.get_current_user()
         if(box_id is not None and token is not None):
             flag = Flag.by_token_and_box_id(token, box_id)
         else:
             flag = Flag.by_uuid(uuid)
-        user = self.get_current_user()
+            if flag is not None and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
+                self.render_page_by_flag(flag, info=["Max attempts reached - you can no longer answer this flag."])
+                return
         if flag and flag in user.team.flags:
             self.render_page_by_flag(flag)
         elif flag is None or flag.game_level.type == 'none' or flag.game_level in user.team.game_levels:
@@ -275,7 +278,11 @@ class PurchaseHintHandler(BaseHandler):
         hint = Hint.by_uuid(uuid)
         if hint is not None:
             user = self.get_current_user()
-            if hint.price <= user.team.money:
+            flag = hint.flag
+            if flag.box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
+                self.render_page(
+                    hint.box, info=["You can no longer purchase this hint."])
+            elif hint.price <= user.team.money:
                 logging.info("%s (%s) purchased a hint for $%d on %s" % (
                     user.handle, user.team.name, hint.price, hint.box.name
                 ))
@@ -283,7 +290,7 @@ class PurchaseHintHandler(BaseHandler):
                 self.render_page(hint.box)
             else:
                 self.render_page(
-                    hint.box, ["You cannot afford to purchase this hint."])
+                    hint.box, info=["You cannot afford to purchase this hint."])
         else:
             self.render('public/404.html')
 

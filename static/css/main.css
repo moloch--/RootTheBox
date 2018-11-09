@@ -22,6 +22,9 @@ footer {
     font-size: 275%;
     color: green;
 }
+.disabledtext {
+    font-size: 275%;
+}
 .avatarused {
     color: white; 
     font-size: 23pt; 

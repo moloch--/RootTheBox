@@ -17,7 +17,7 @@ function penalty_cost_update() {
 $(document).ready(function() {
     penalty_cost_update();
 
-    /* Hide fields if their corisponding features are disabled */
+    /* Hide fields if their corresponding features are disabled */
     if ($("#use-bots").val() === "false") {
         $('#bot-grouping').hide();
     }
@@ -379,6 +379,7 @@ $(document).ready(function() {
     $("#teams-button").popover({placement:'right', trigger:'hover'});
     $("#max-team-size").popover({placement:'right', trigger:'hover'});
     $("#min-user-password-length").popover({placement:'right', trigger:'hover'});
+    $("#max-flag-attempts").popover({placement:'right', trigger:'hover'});
     $("#dynamic_flag-button").popover({placement:'right', trigger:'hover'});
     $("#flag_value_decrease").popover({placement:'right', trigger:'hover'});
     $("#penalty-button").popover({placement:'right', trigger:'hover'});

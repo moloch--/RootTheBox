@@ -248,10 +248,13 @@
                     </tr>
                 </thead>
                 {% for index, flag in enumerate(box.flags) %}
+                    {% set penalty = Penalty.by_count(flag, team) %}
                     <tbody class="flagbody">
                         <tr>
                         {% if team and flag in team.flags %}
-                            <td class="successcol" style="background: green; margin: 0px; padding: 0px; width: 6px;"></td>
+                            <td class="hidehovercolor" style="background: green; margin: 0px; padding: 0px; width: 6px;"></td>
+                        {% elif box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and penalty >= options.max_flag_attempts %}
+                            <td class="hidehovercolor" style="background: gray; margin: 0px; padding: 0px; width: 6px;"></td>
                         {% else %}
                             <td style="margin: 0px; padding: 0px;"></td>
                         {% end %}
@@ -268,7 +271,7 @@
                                         {% set choices = FlagChoice.by_flag_id(flag.id) %}
                                         {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
                                 {% if team %}
-                                    <td class="shortcolumn" style="text-align: center;">{% if flag in team.flags %}{{ Penalty.by_count(flag, team) + 1 }}{% else %}{{ Penalty.by_count(flag, team) }}{% end %}</td>
+                                    <td class="shortcolumn" style="text-align: center;">{% if flag in team.flags %}{{ penalty + 1 }}{% else %}{{ penalty }}{% end %}</td>
                                 {% end %}
                                 <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
                                 {% if team %}
@@ -277,7 +280,9 @@
                                             {% set i = 1 %}
                                             {% for hint in flaghints %}
                                                 {% if hint.flag_id == flag.id %}
-                                                    {% if not hint in team.hints %}
+                                                    {% if False and box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and penalty >= options.max_flag_attempts %}
+                                                        {% break %}
+                                                    {% elif not hint in team.hints %}
                                                         <a id="purchase-flag-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
                                                             Hint #{{i}}
                                                         </a>
@@ -293,6 +298,8 @@
                                 
                                     {% if flag in team.flags %}
                                         <td class="shortcolumn successtext" style="text-align: right;"><i class="fa fa-check-circle"></i></td>
+                                    {% elif box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and penalty >= options.max_flag_attempts %}
+                                        <td class="shortcolumn disabledtext" style="text-align: right;"><i class="fa fa-ban"></i></td>
                                     {% else %}         
                                         <td class="shortcolumn">
                                             {% if box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX or not flag.is_static %}
@@ -314,7 +321,10 @@
                                     {% if flag in team.flags or hint in team.hints %}
                                         <tr>
                                             {% if flag in team.flags %}
-                                            <td class="successcol" style="background: green; margin: 0px; padding: 0px; border-top: 1px solid green;"></td>
+                                            <td class="hidehovercolor" style="background: green; margin: 0px; padding: 0px; border-top: 1px solid green;"></td>
+                                            <td style="border-top: 0px;"></td>
+                                            {% elif box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and penalty >= options.max_flag_attempts %}
+                                            <td class="hidehovercolor" style="background: gray; margin: 0px; padding: 0px; border-top: 1px solid gray;"></td>
                                             <td style="border-top: 0px;"></td>
                                             {% else %}
                                             <td colspan="2" style="border-top: 0px;"></td>

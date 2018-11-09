@@ -445,6 +445,12 @@ define("dynamic_flag_value",
        help="decrease reward for flags based on captures",
        type=bool)
 
+define("max_flag_attempts",
+       default=100,
+       group="game",
+       help="limits the number of attempts to capture a flag",
+       type=int)
+
 define("flag_value_decrease",
        default=10,
        group="game",

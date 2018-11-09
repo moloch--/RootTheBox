@@ -348,6 +348,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.show_mvp = self.get_bool('show_mvp')
         self.config.team_sharing = self.get_bool('team_sharing')
         self.config.dynamic_flag_value = self.get_bool('dynamic_flag_value', False)
+        self.config.max_flag_attempts = self.get_int('max_flag_attempts', 100)
         self.config.flag_value_decrease = self.get_int('flag_value_decrease')
         self.config.penalize_flag_value = self.get_bool('penalize_flag_value', False)
         self.config.flag_penalty_cost = self.get_int('flag_penalty_cost')

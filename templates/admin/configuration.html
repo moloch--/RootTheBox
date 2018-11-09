@@ -301,6 +301,19 @@
             </div>
             <hr />
             <div class="control-group">
+                <label class="control-label" for="max-flag-attempts">
+                        <i class="fa fa-ban"></i>
+                        Max Flag Attempts
+                    </label>
+                <div class="controls">
+                    <input required id="max-flag-attempts" type="number" min="1" type="number" name="max_flag_attempts" value="{{ config.max_flag_attempts }}"
+                        rel="popover" pattern="\d*"
+                        data-original-title="Maximum flag attempts"
+                        data-html="true"
+                        data-content="Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.<br/><br/>NOTE: This setting is ignored if the box's flag submission type is set to 'Single Box'." />
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="penalize_flag_value">
                     <i class="fa fa-minus-circle"></i>
                     Incorrect Penalty
@@ -311,7 +324,7 @@
                         rel="popover"
                         data-original-title="Incorrect Penalty"
                         data-html="true"
-                        data-content="Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.<br/><br/>If this option is disabled, there is no cost for submitting incorrect flags.">
+                        data-content="Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.<br/><br/>If this option is disabled, there is no cost for submitting incorrect flags.<br/><br/>NOTE: This setting is ignored if the box's flag submission type is set to 'Single Box'.">
                         <button id="penalty-enable" type="button" class="btn btn-success">
                             <i id="penalty-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable
