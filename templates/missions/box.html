@@ -299,7 +299,7 @@
                                     {% if flag in team.flags %}
                                         <td class="shortcolumn successtext" style="text-align: right;"><i class="fa fa-check-circle"></i></td>
                                     {% elif box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and penalty >= options.max_flag_attempts %}
-                                        <td class="shortcolumn disabledtext" style="text-align: right;"><i class="fa fa-ban"></i></td>
+                                        <td class="shortcolumn disabledtext" style="text-align: right;"><i class="fa fa-ban" title="Max Attempts Reached"></i></td>
                                     {% else %}         
                                         <td class="shortcolumn">
                                             {% if box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX or not flag.is_static %}
