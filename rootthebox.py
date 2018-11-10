@@ -222,7 +222,7 @@ define("flag_attachment_dir",
 define("source_code_market_dir",
        default="./files/source_code_market",
        group="application",
-       help="the directory to store souce code market files")
+       help="the directory to store source code market files")
 
 define("game_materials_dir",
        default="./files/game_materials",
@@ -350,7 +350,7 @@ define("global_notification",
 define("teams",
        default=True,
        group="game",
-       help="turn off teams - individal playstyle",
+       help="turn off teams - individual playstyle",
        type=bool)
 
 define("max_team_size",
@@ -409,17 +409,20 @@ define("use_black_market",
 define("password_upgrade_cost",
        default=1000,
        group="game",
-       help="price to upgrade a password hash algorithm")
+       help="price to upgrade a password hash algorithm",
+       type=int)
 
 define("bribe_cost",
        default=2500,
        group="game",
-       help="the base bribe cost to swat another player")
+       help="the base bribe cost to swat another player",
+       type=int)
 
 define("starting_team_money",
        default=500,
        group="game",
-       help="the starting money for a new team when using banking")
+       help="the starting money for a new team when using banking",
+       type=int)
 
 define("whitelist_box_ips",
        default=False,

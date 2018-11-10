@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="restrict-registartion">
+                <label class="control-label" for="restrict-registration">
                     <i class="fa fa-key"></i>
                     Registration Tokens
                 </label>
@@ -123,7 +123,7 @@
                     <div id="hints-taken-button" class="btn-group" data-toggle="buttons-radio"
                         rel="popover"
                         data-original-title="Display Hints Taken"
-                        data-content="Enabling this feature will display the number of hints taken on the scoreboad by a team or player.  Usefull when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.">
+                        data-content="Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.">
                         <button id="hints-taken-enable" type="button" class="btn btn-success">
                             <i id="hints-taken-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable
@@ -146,7 +146,7 @@
                     <div id="teams-button" class="btn-group" data-toggle="buttons-radio"
                         rel="popover"
                         data-original-title="Team Play"
-                        data-content="Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individal competitive play.">
+                        data-content="Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.">
                         <button id="teams-enable" type="button" class="btn btn-success">
                             <i id="teams-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable
@@ -255,7 +255,7 @@
                         rel="popover"
                         data-original-title="Story Mode"
                         data-html="true"
-                        data-content="Enabling this feature will set the game to follow the storyline of Morris, an employeer that sends &apos;secure communique&apos; and assigns missions. Designed primarily for use with the Banking System.<br/><br/>Disabling this option will skip the storyline and give the player an instant capture message.">
+                        data-content="Enabling this feature will set the game to follow the storyline of Morris, an employer that sends &apos;secure communique&apos; and assigns missions. Designed primarily for use with the Banking System.<br/><br/>Disabling this option will skip the storyline and give the player an instant capture message.">
                         <button id="story-enable" type="button" class="btn btn-success">
                             <i id="story-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable
@@ -278,7 +278,7 @@
                     <div id="dynamic_flag-button" class="btn-group" data-toggle="buttons-radio"
                         rel="popover"
                         data-original-title="Dynamic Scoring"
-                        data-content="Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistant as other players capture it.">
+                        data-content="Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.">
                         <button id="dynamic_flag-enable" type="button" class="btn btn-success">
                             <i id="dynamic_flag-enable-icon" class="fa fa-fw fa-square-o"></i>
                             Enable
@@ -344,7 +344,7 @@
                             rel="popover" pattern="\d*"
                             data-original-title="Flag Penalty Start"
                             data-html="true"
-                            data-content="When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.<br/><br/>1 = deduct on & after 1st attempt<br/>2 = deduct on & after 2nd attempt<br/>and so on ...<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost." />
+                            data-content="When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.<br/><br/>1 = deduct on & after 1st attempt<br/>2 = deduct on & after 2nd attempt<br/>and so on ...<br/><br/>Maximum Penalty is determined as<br/>(stop - start) * cost." />
                     </div>
                 </div>
                 <div class="control-group control-section">
@@ -354,7 +354,7 @@
                                 rel="popover" pattern="\d*"
                                 data-original-title="Flag Penalty Stop"
                                 data-html="true"
-                                data-content="When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.<br/><br/>4 = stop on & after 4th attempt<br/>5 = stop on & after 5th attempt<br/>and so on ...<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost." />
+                                data-content="When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.<br/><br/>4 = stop on & after 4th attempt<br/>5 = stop on & after 5th attempt<br/>and so on ...<br/><br/>Maximum Penalty is determined as<br/>(stop - start) * cost." />
                     </div>
                 </div>
                 <div class="control-group control-section">
@@ -364,7 +364,7 @@
                             rel="popover" pattern="\d*"
                             data-original-title="Flag Penalty % Cost"
                             data-html="true"
-                            data-content="Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).<br/><br/>Maxium Penalty is determined as<br/>(stop - start) * cost." />
+                            data-content="Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).<br/><br/>Maximum Penalty is determined as<br/>(stop - start) * cost." />
                     </div>
                 </div>
                 <div class="control-group control-section">
@@ -431,7 +431,7 @@
                 <div class="control-group">
                     <label class="control-label" for="password-upgrade-cost">Password Upgrade Cost</label>
                     <div class="controls">
-                        <input required id="password-upgrade-cost" type="text" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}"
+                        <input required id="password-upgrade-cost" type="number" name="password_upgrade_cost" value="{{ config.password_upgrade_cost }}"
                             rel="popover" pattern="\d*"
                             data-original-title="Password Upgrade Cost"
                             data-content="This is the amount a player must pay to upgrade their bank password's hashing algorithm; each subsequent purchase is also increased by this amount." />
@@ -440,7 +440,7 @@
                 <div class="control-group">
                     <label class="control-label" for="bribe-cost">Bribe Price</label>
                     <div class="controls">
-                        <input required id="bribe-cost" type="text" name="bribe_cost" value="{{ config.bribe_cost }}"
+                        <input required id="bribe-cost" type="number" name="bribe_cost" value="{{ config.bribe_cost }}"
                             rel="popover" pattern="\d*"
                             data-original-title="Bribe Amount"
                             data-content="This is the amount a player must pay to 'SWAT' another player's account.  Subsequent SWATs of the same player are also increased by this amount each time." />

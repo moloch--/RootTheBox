@@ -298,7 +298,7 @@
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
                     <h4 style="display:inline;">
-                        {% if options.banking %}${% end %}{{ team.money }}
+                        {% if options.banking %}${% end %}{{ team.money }}{% if not options.banking %} <span style="font-size: small;">points</span>{% end %}
                     </h4>
                     <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}" style="float:right;">
                         <i class="fa fa-fw fa-pencil"></i>
