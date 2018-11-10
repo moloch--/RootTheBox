@@ -91,8 +91,8 @@ class EventManager(object):
         '''
         Returns bool if the given user has an open notify socket
         '''
-        connections = self.get_user_connection(user)
-        return False if connections is None or len(connections) else True
+        connections = self.get_user_connections(user.team.id, user.id)
+        return False if connections is None or len(connections) == 0 else True
 
     @property
     def all_connections(self):
