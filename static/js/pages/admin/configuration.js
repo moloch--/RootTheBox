@@ -390,6 +390,7 @@ $(document).ready(function() {
     $("#story-button").popover({placement:'right', trigger:'hover'});
     $("#rank_by").popover({placement:'right', trigger:'hover'});
     $("#max-password-length").popover({placement:'right', trigger:'hover'});
+    $("#starting-team-money").popover({placement:'right', trigger:'hover'});
     $("#use-bots-button").popover({placement:'right', trigger:'hover'});
     $("#bot-reward").popover({placement:'right', trigger:'hover'});
     $("#use-black-market-button").popover({placement:'right', trigger:'hover'});

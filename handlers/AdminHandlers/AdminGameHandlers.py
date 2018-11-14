@@ -355,15 +355,16 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.flag_stop_penalty = self.get_int('flag_stop_penalty')
         self.config.flag_start_penalty = self.get_int('flag_start_penalty')
         self.config.max_team_size = self.get_int('max_team_size')
-        self.config.min_user_password_length = self.get_int('min_user_password_length', '12')
+        self.config.min_user_password_length = self.get_int('min_user_password_length', 12)
         self.config.banking = self.get_bool('banking', True)
-        self.config.max_password_length = self.get_int('max_password_length', '7')
+        self.config.max_password_length = self.get_int('max_password_length', 7)
+        self.config.starting_team_money = self.get_int('starting_team_money', 500)
         self.config_bots()
         self.config.bot_reward = self.get_int('bot_reward', 50)
         self.config.use_black_market = self.get_bool('use_black_market', True)
         self.config.password_upgrade_cost = self.get_int('password_upgrade_cost', 1000)
         self.config.bribe_cost = self.get_int('bribe_cost', 2500)
-        self.config.max_pastebin_size = self.get_int('max_pastebin_size', '4096')
+        self.config.max_pastebin_size = self.get_int('max_pastebin_size', 4096)
         self.render('admin/configuration.html',
                     errors=None,
                     config=self.config

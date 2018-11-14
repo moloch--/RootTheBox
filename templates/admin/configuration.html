@@ -395,13 +395,24 @@
                     </div>
                 </div>
             </div>
-            <div id="bank-grouping" class="control-group control-section">
-                <label class="control-label" for="max-password-length">Bank Password Length</label>
-                <div class="controls">
-                    <input required id="max-password-length" type="number" name="max_password_length" value="{{ config.max_password_length }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="Bank Password Length"
-                        data-content="Restrict player's bank password to this length" />
+            <div id="bank-grouping">
+                <div class="control-group control-section">
+                    <label class="control-label" for="max-password-length">Bank Password Length</label>
+                    <div class="controls">
+                        <input required id="max-password-length" type="number" name="max_password_length" value="{{ config.max_password_length }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="Bank Password Length"
+                            data-content="Restrict player's bank password to this length" />
+                    </div>
+                </div>
+                <div class="control-group control-section">
+                    <label class="control-label" for="starting-team-money">{% if config.teams %}Team{% else %}Player{% end %} Starting Money</label>
+                    <div class="controls">
+                        <input required id="starting-team-money" type="number" name="starting_team_money" value="{{ config.starting_team_money }}"
+                            rel="popover" pattern="\d*" min="0"
+                            data-original-title="{% if config.teams %}Team{% else %}Player{% end %} Starting Money"
+                            data-content="The starting money for a new {% if config.teams %}team{% else %}player{% end %} when using banking.  When banking is disabled, {% if config.teams %}teams{% else %}players{% end %} start with 0 points." />
+                    </div>
                 </div>
             </div>
             <hr />
