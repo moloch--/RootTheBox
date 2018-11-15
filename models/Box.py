@@ -179,18 +179,19 @@ class Box(DatabaseObject):
         if self._description is None:
             self._description = ""
         if self.autoformat:
-            index, step = 0, 70
             ls = [' ']
             if 0 < len(self._description):
-                text = self._description.replace('\n', '')
-                while index < len(text):
-                    ls.append("  " + text[index: index + step])
-                    index += step
+                textsplit = self._description.replace("\r\n", "\n").strip().split("\n")
+                for text in textsplit:
+                    index, step = 0, 70
+                    while index <= len(text):
+                        ls.append("  %s" % text[index: index + step])
+                        index += step
             if len(ls) == 1:
                 if self.category_id:
                     ls.append("  Category: %s\n" % Category.by_id(self.category_id).category)
                 else:
-                    ls.append("  No information on file.")
+                    ls.append("  No information on file.\n")
             else:
                 if self.category_id:
                     ls.append("\n  Category: %s\n" % Category.by_id(self.category_id).category)
