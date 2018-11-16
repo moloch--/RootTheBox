@@ -154,32 +154,12 @@
             <div class="control-group">
                 <label class="control-label" for="description">Description</label>
                 <div class="controls">
-                    <textarea id="description" name="description" maxlength="1024" placeholder="Description"
+                    <textarea id="description" style="width: 60%;" rows="5" name="description" maxlength="1024" placeholder="Description (markdown)"
                               rel="popover"
                               data-original-title="Description"
-                              data-content="A brief description of the box [Max: 1024 Characters]">
+                              data-html="true"
+                              data-content="A brief description of the box [Max: 1024 Characters].<br/><br/>Supports Markdown (GitHub Style)">
                     </textarea>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="autoformat">
-                    Autoformat Description
-                </label>
-                <div class="controls">
-                    <input id="autoformat" name="autoformat" type="hidden" value="true" />
-                    <div id="autoformat-button" class="btn-group" data-toggle="buttons-radio"
-                        rel="popover"
-                        data-original-title="Autoformat"
-                        data-content="Automatically format the box description with proper spacing and newlines.">
-                        <button id="autoformat-enable" type="button" class="btn btn-success">
-                            <i id="autoformat-enable-icon" class="fa fa-fw fa-check-square-o"></i>
-                            Enable
-                        </button>
-                        <button id="autoformat-disable" type="button" class="btn btn-danger">
-                            <i id="autoformat-disable-icon" class="fa fa-fw fa-square-o"></i>
-                            Disable
-                        </button>
-                    </div>
                 </div>
             </div>
             <div class="control-group">

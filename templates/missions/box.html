@@ -175,10 +175,11 @@
                 </div>
                 {% end %}
                 <div class='{% if box.avatar != "none" %}span8{% else %}span12{% end %}'>
-                    <pre class="well" style="color: unset;">&nbsp;{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}*********************** BEGIN SECURE COMMUNIQUE ***********************{% else %}***************************** DESCRIPTION *****************************{% end %}{% if box.avatar == "none" %}********************{% end %}
-                        {{ box.description }}
-                        
-                        &nbsp;{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}***********************************************************************{% end %}{% if box.avatar == "none" %}********************{% end %}</pre>
+                    <div class="well" style="color: unset;">
+                        <div class="preformatted" style="text-align: center; margin-top: 5px;">{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}*********************** BEGIN SECURE COMMUNIQUE ***********************{% else %}***************************** DESCRIPTION *****************************{% end %}{% if box.avatar == "none" %}********************{% end %}</div>
+                        <div class="preformatted" style="text-align: justify; padding: 0 20px;">{% raw box.description %}</div>
+                        <div class="preformatted" style="text-align: center; margin: 0;">{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}***********************************************************************{% end %}{% if box.avatar == "none" %}********************{% end %}</div>
+                    </div>
                 </div>
             </div>
         </div>

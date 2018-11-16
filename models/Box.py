@@ -43,6 +43,7 @@ from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
 from PIL import Image
 from resizeimage import resizeimage
+from markdown import markdown
 import enum
 
 class FlagsSubmissionType(str, enum.Enum):
@@ -73,7 +74,6 @@ class Box(DatabaseObject):
     game_level_id = Column(
         Integer, ForeignKey('game_level.id'), nullable=False)
     _avatar = Column(String(64))
-    autoformat = Column(Boolean, default=True)
 
     garbage = Column(String(32),
                      unique=True,
@@ -170,40 +170,23 @@ class Box(DatabaseObject):
 
     @property
     def description(self):
-        '''
-        We have to ensure that the description text is formatted correctly,
-        it gets dumped into a <pre> tag which will honor whitespace this will
-        split all of the text and insert newlines every 70 chars +2 whitespace
-        at be beginning of each line, so the indents line up nicely.
-        '''
         if self._description is None:
             self._description = ""
-        if self.autoformat:
-            ls = [' ']
-            if 0 < len(self._description):
-                textsplit = self._description.replace("\r\n", "\n").strip().split("\n")
-                for text in textsplit:
-                    index, step = 0, 70
-                    while index <= len(text):
-                        ls.append("  %s" % text[index: index + step])
-                        index += step
-            if len(ls) == 1:
-                if self.category_id:
-                    ls.append("  Category: %s\n" % Category.by_id(self.category_id).category)
-                else:
-                    ls.append("  No information on file.\n")
-            else:
-                if self.category_id:
-                    ls.append("\n  Category: %s\n" % Category.by_id(self.category_id).category)
-            if self.operating_system != "none":
-                ls.append("  Operating System: %s\n" % self.operating_system)
-            if self.difficulty != "Unknown":
-                ls.append("  Reported Difficulty: %s\n" % self.difficulty)
-            if not str(ls[-1]).endswith("\n"):
-                ls[-1] = ls[-1] + "\n"
-            return unicode("\n".join(ls))
+        ls = []
+        if 0 < len(self._description):
+            text = self._description.replace("\r\n", "\n").strip()
+            ls.append("%s" % text)
         else:
-            return self._description
+            ls.append("No information on file.")
+        if self.category_id:
+            ls.append("Category: %s" % Category.by_id(self.category_id).category)
+        if self.operating_system != "none":
+            ls.append("Operating System: %s" % self.operating_system)
+        if self.difficulty != "Unknown":
+            ls.append("Reported Difficulty: %s" % self.difficulty)
+        if not str(ls[-1]).endswith("\n"):
+            ls[-1] = ls[-1] + "\n"
+        return unicode(markdown("\n\n".join(ls)))
 
     @description.setter
     def description(self, value):
