@@ -31,6 +31,7 @@ from models.Relationships import team_to_hint
 from models.Flag import Flag
 from models.Box import Box
 from models import dbsession
+from markdown import markdown
 
 
 class Hint(DatabaseObject):
@@ -98,7 +99,7 @@ class Hint(DatabaseObject):
 
     @property
     def description(self):
-        return self._description
+        return markdown(self._description)
 
     @description.setter
     def description(self, value):

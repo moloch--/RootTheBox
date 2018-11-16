@@ -38,6 +38,7 @@ from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
 from tornado.options import options
 from dateutil.parser import parse
+from markdown import markdown
 
 ### Constants
 FLAG_STATIC = u'static'
@@ -228,7 +229,7 @@ class Flag(DatabaseObject):
 
     @property
     def description(self):
-        return self._description
+        return markdown(self._description)
 
     @description.setter
     def description(self, value):

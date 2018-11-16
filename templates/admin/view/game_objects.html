@@ -698,7 +698,7 @@
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
-                                                        <td class="descriptioncol">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
+                                                        <td class="descriptioncol">{% raw flag.description %}{% if flag.type == FLAG_CHOICE %}
                                                             {% set choices = FlagChoice.by_flag_id(flag.id) %}
                                                             {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
                                                         <td style="width: 200px;">{{ flag.token }}</td>
@@ -771,7 +771,7 @@
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
-                                                        <td class="descriptioncol">{{ hint.description }}</td>
+                                                        <td class="descriptioncol">{% raw hint.description %}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
@@ -806,7 +806,7 @@
                                                     <tr>
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
-                                                        <td class="descriptioncol">{{ hint.description }}</td>
+                                                        <td class="descriptioncol">{% raw hint.description %}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
