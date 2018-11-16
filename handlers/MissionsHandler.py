@@ -279,7 +279,7 @@ class PurchaseHintHandler(BaseHandler):
         if hint is not None:
             user = self.get_current_user()
             flag = hint.flag
-            if flag.box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
+            if flag and flag.box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
                 self.render_page(
                     hint.box, info=["You can no longer purchase this hint."])
             elif hint.price <= user.team.money:
