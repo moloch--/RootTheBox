@@ -28,7 +28,7 @@ $(document).ready(function() {
         $("#flag_submission_type").val("CLASSIC");
         $("#flag-submission-type-classic-icon").removeClass("fa-square-o");
         $("#flag-submission-type-classic-icon").addClass("fa-check-square-o");
-        $("#flag-submission-type-single-boxe-icon").removeClass("fa-check-square-o");
+        $("#flag-submission-type-single-box-icon").removeClass("fa-check-square-o");
         $("#flag-submission-type-single-box-icon").addClass("fa-square-o");
     });
     $("#flag-submission-type-single-box").click(function() {
