@@ -323,4 +323,9 @@ $(document).ready(function() {
     $("#flag-token").change(function() {
         testToken();
     });
+    $(function () {
+        $('#hint-description').markdownToolbar(false);
+        $('#box-description').markdownToolbar(false);
+        $('#flag-description').markdownToolbar(false);
+    })
 });
