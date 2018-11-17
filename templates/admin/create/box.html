@@ -3,6 +3,9 @@
 {% block title %}Create Box{% end %}
 
 {% block header %}
+<link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
+<script src="/static/js/libs/commonmark.min.js"></script>
+<script src="/static/js/libs/markdown-toolbar.js"></script>
 <script src="/static/js/pages/admin/create/box.js"></script>
 {% end %}
 
@@ -154,7 +157,7 @@
             <div class="control-group">
                 <label class="control-label" for="description">Description</label>
                 <div class="controls">
-                    <textarea id="description" style="width: 60%;" rows="5" name="description" maxlength="1024" placeholder="Description (markdown)"
+                    <textarea class="toolbar" id="description" style="width: 60%;" rows="5" name="description" maxlength="1024" placeholder="Description"
                               rel="popover"
                               data-original-title="Description"
                               data-html="true"
