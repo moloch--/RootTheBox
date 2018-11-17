@@ -1,8 +1,7 @@
 $(document).ready(function() {
 
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-        $('.toolbar').markdownToolbar(false);
+        $('[data-toggle="tooltip"]').tooltip()
     })
 
     /* Button callbacks */

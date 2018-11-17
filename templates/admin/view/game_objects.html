@@ -3,9 +3,6 @@
 {% block title %}Game Management{% end %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
-<script src="/static/js/libs/commonmark.min.js"></script>
-<script src="/static/js/libs/markdown-toolbar.js"></script>
 <script src="/static/js/pages/admin/view/game_objects.js"></script>
 <script src="/static/js/pages/anchor.js"></script>
 {% end %}
@@ -169,7 +166,7 @@
                 <div class="control-group">
                     <label class="control-label" for="box_description">Description</label>
                     <div class="controls">
-                        <textarea rows="4" id="box-description" name="description" placeholder="Description" ></textarea>
+                        <textarea id="box-description" name="description" placeholder="Description" ></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -278,7 +275,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-description">Description</label>
                     <div class="controls">
-                        <textarea rows="4" id="flag-description" name="description" type="text" placeholder="Description"></textarea>
+                        <textarea id="flag-description" name="description" type="text" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div id="casegroup" class="control-group">
@@ -349,7 +346,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-capture_message">Capture Message</label>
                     <div class="controls">
-                        <textarea rows="4" id="flag-capture_message" name="capture_message" placeholder="(Optional)">
+                        <textarea id="flag-capture_message" name="capture_message" placeholder="(Optional)">
                         </textarea>
                     </div>
                 </div>
@@ -405,7 +402,7 @@
                 <div class="control-group">
                     <label class="control-label" for="hint-description">Description</label>
                     <div class="controls">
-                        <textarea rows="4" id="hint-description" name="description" type="text" maxlength="512" placeholder="Description"></textarea>
+                        <textarea id="hint-description" name="description" type="text" maxlength="512" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
