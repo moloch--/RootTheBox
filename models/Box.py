@@ -43,7 +43,6 @@ from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
 from PIL import Image
 from resizeimage import resizeimage
-from markdown import markdown
 import enum
 
 class FlagsSubmissionType(str, enum.Enum):
@@ -186,7 +185,7 @@ class Box(DatabaseObject):
             ls.append("Reported Difficulty: %s" % self.difficulty)
         if not str(ls[-1]).endswith("\n"):
             ls[-1] = ls[-1] + "\n"
-        return unicode(markdown("\n\n".join(ls)))
+        return unicode("\n\n".join(ls))
 
     @description.setter
     def description(self, value):

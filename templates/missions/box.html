@@ -5,6 +5,7 @@
 {% block header %}
 <script src="/static/js/pages/missions/view.js"></script>
 <script src="/static/js/pages/missions/box.js"></script>
+<script src="/static/js/libs/commonmark.min.js"></script>
 {% end %}
 
 {% block modals %}
@@ -175,11 +176,12 @@
                 </div>
                 {% end %}
                 <div class='{% if box.avatar != "none" %}span8{% else %}span12{% end %}'>
-                    <div class="well">
-                        <div class="preformatted" style="text-align: center; margin-top: 5px;">{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}*********************** BEGIN SECURE COMMUNIQUE ***********************{% else %}***************************** DESCRIPTION *****************************{% end %}{% if box.avatar == "none" %}********************{% end %}</div>
-                        <div class="preformatted" style="text-align: justify; padding: 0 20px;">{% raw box.description %}</div>
-                        <div class="preformatted" style="text-align: center; margin: 0;">{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}***********************************************************************{% end %}{% if box.avatar == "none" %}********************{% end %}</div>
+                     <div class="well">
+                        <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}*********************** BEGIN SECURE COMMUNIQUE ***********************{% else %}***************************** DESCRIPTION *****************************{% end %}{% if box.avatar == "none" %}********************{% end %}</div>
+                        <div class="preformatted markdown" style="text-align: justify; padding: 0 20px;">{{ box.description }}</div>
+                        <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}***********************************************************************{% end %}{% if box.avatar == "none" %}********************{% end %}</div>
                     </div>
+                   
                 </div>
             </div>
         </div>
@@ -268,7 +270,7 @@
                                 <td></td>
                                 <td></td>
                             {% else %}
-                                <td class="descriptioncol">{% raw flag.description %}{% if flag.type == FLAG_CHOICE %}
+                                <td class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
                                         {% set choices = FlagChoice.by_flag_id(flag.id) %}
                                         {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
                                 {% if team %}
@@ -331,7 +333,7 @@
                                             <td colspan="2" style="border-top: 0px;"></td>
                                             {% end %}
                                             <td style="text-align: right; border-top: 0px;"><i class="fa fa-arrow-circle-up"></i><h5 style="display:inline;"> Hint #{{i}}:</h5></td>
-                                            <td colspan="1" class="descriptioncol">{% raw hint.description %}</td>
+                                            <td colspan="1" class="descriptioncol markdown">{{ hint.description }}</td>
                                             <td class="shortcolumn" style="text-align: center;"><i>{% if not team %}{% elif hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% end %}</i></td>
                                             <td class="shortcolumn" style="text-align: center;">{% if team and hint in team.hints %}-{{ hint.price }}{% end %}</td>
                                             <td colspan="2" style="border-top: 0px;"></td>
@@ -391,7 +393,7 @@
                                     <td class="shortcolumn">{{ index + 1 }}</td>
                                     {% if not team or hint in team.hints or flagcount == len(box.flags) %}
                                         <td class="shortcolumn"><i>{% if not team %}{% elif hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% else %}Completed {{box.name}}{% end %}</i></td>
-                                        <td class="descriptioncol">{% raw hint.description %}</td>
+                                        <td class="descriptioncol markdown">{{ hint.description }}</td>
                                     {% else %}
                                         <td class="shortcolumn" style="text-align: center; padding-right: 20px;">{% if options.banking %}${% end %}{% if hint in team.hints or flagcount != len(box.flags) %}{{ hint.price }}{% else %}0{% end %}</td>
                                         <td>Hint not yet taken</td>

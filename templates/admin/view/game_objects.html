@@ -169,7 +169,7 @@
                 <div class="control-group">
                     <label class="control-label" for="box_description">Description</label>
                     <div class="controls">
-                        <textarea rows="4" id="box-description" name="description" placeholder="Description" ></textarea>
+                        <textarea rows="4" class="toolbar" id="box-description" name="description" placeholder="Description" ></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -278,7 +278,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-description">Description</label>
                     <div class="controls">
-                        <textarea rows="4" id="flag-description" name="description" type="text" placeholder="Description"></textarea>
+                        <textarea rows="4" class="toolbar" id="flag-description" name="description" type="text" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div id="casegroup" class="control-group">
@@ -405,7 +405,7 @@
                 <div class="control-group">
                     <label class="control-label" for="hint-description">Description</label>
                     <div class="controls">
-                        <textarea rows="4" id="hint-description" name="description" type="text" maxlength="512" placeholder="Description"></textarea>
+                        <textarea rows="4" class="toolbar" id="hint-description" name="description" type="text" maxlength="512" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -701,7 +701,7 @@
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
-                                                        <td class="descriptioncol">{% raw flag.description %}{% if flag.type == FLAG_CHOICE %}
+                                                        <td class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
                                                             {% set choices = FlagChoice.by_flag_id(flag.id) %}
                                                             {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
                                                         <td style="width: 200px;">{{ flag.token }}</td>
@@ -774,7 +774,7 @@
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
-                                                        <td class="descriptioncol">{% raw hint.description %}</td>
+                                                        <td class="descriptioncol markdown">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
@@ -809,7 +809,7 @@
                                                     <tr>
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
-                                                        <td class="descriptioncol">{% raw hint.description %}</td>
+                                                        <td class="descriptioncol markdown">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
