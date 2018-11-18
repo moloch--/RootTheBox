@@ -31,11 +31,18 @@ class MaterialsHandler(BaseHandler):
     
     @authenticated
     def get(self, *args, **kwargs):
-        self.render('file_upload/material_files.html', errors=None)
+        subdir = ""
+        if len(args) == 1:
+            subdir = "/" + args[0] + "/"
+
+        self.render('file_upload/material_files.html', errors=None, subdir = subdir)
 
     @authenticated
     def post(self, *args, **kwargs):
         d=options.game_materials_dir
+        if len(args) == 1:
+            d = os.path.join(d, args[0])
+
         self.write(json.dumps(self.path_to_dict(d)))
 
     def path_to_dict(self, path):
@@ -45,8 +52,12 @@ class MaterialsHandler(BaseHandler):
             d['children'] = [self.path_to_dict(os.path.join(path,x)) for x in os.listdir(path) if x != "README.md"]
         else:
             downloadpath = path.replace(options.game_materials_dir, "/materials")
+            downloadpath = downloadpath.replace("\\", "/");
             d['type'] = "file"
-            d['a_attr'] = { "href" : "%s" % downloadpath, "onclick":"window.location='%s'" % downloadpath}
+            if options.force_download_game_materials:
+                d['a_attr'] = { "href" : "%s" % downloadpath, "onclick":"window.location.href = '%s';" % downloadpath}
+            else:
+                d['a_attr'] = { "href" : "%s" % downloadpath, "onclick":"window.open('%s');" % downloadpath, "target": "_blank"}
             e=os.path.splitext(path)[1][1:] # get .ext and remove dot
             d['icon'] = "file ext_%s" % (e)
         return d
@@ -61,3 +72,11 @@ def has_materials():
         else:
             i += 1
     return i > 0
+
+def has_box_materials(box):
+    if not options.use_box_materials_dir:
+        return False
+
+    d=options.game_materials_dir
+    path = os.path.join(d, box.name)
+    return os.path.isdir(path)
