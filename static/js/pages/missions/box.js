@@ -1,4 +1,12 @@
 $(document).ready(function() {
+    var reader = new commonmark.Parser({smart: true});
+    var writer = new commonmark.HtmlRenderer({safe: true});
+
+    /* Markdown */
+    $(".markdown").each(function() {
+        var parsed = reader.parse($(this).text());
+        $(this).html(writer.render(parsed).trim());
+    });
 
     /* Flags */
     $("a[id^=capture-file-flag-button]").click(function() {

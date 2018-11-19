@@ -38,3 +38,11 @@ footer {
     top: -6px; 
     right: -1px;
 }
+
+.preformatted {
+    font-family: monospace;
+    font-size: 95%;
+    white-space: pre-wrap;
+    display: block;
+    margin: 1em 0;
+}
