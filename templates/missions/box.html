@@ -176,11 +176,9 @@
                         {% end %}
                     </div>
                     {% end %}
-                    {% if len(box.description) > 0 %}
                     <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}BEGIN SECURE COMMUNIQUE{% else %}DESCRIPTION{% end %} *****************************************************************************************************************************************</div>
-                    <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box._description }}</div>
+                    <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box.description }}</div>
                     <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} END SECURE COMMUNIQUE {% end %}**********************************************************************************************************************************************************************</div>
-                    {% end %}
                 </div>
                 <br clear="all" />
             </div>
