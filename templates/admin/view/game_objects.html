@@ -617,59 +617,19 @@
                                     
                                 <br />{% if box.category %}{{ box.category }}<br />{% end %}
                                 <br />
-                                <div class="row-fluid">
+                                <div>                   
                                     {% if box.avatar != "none" %}
-                                        <div class="span4">
-                                            <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
-                                            <br /><br />
-                                        </div>
-                                    {% end %}
-                                    <div class='{% if box.avatar != "none" %}span8{% else %}span12{% end %}'>
-                                        <h4 style="display:inline;">
-                                            <i class="fa fa-fw fa-globe"></i>
-                                            IP Address&nbsp;&nbsp;
-                                        </h4>
-                                        <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-primary btn-small" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
-                                            <i class="fa fa-fw fa-plus"></i>
-                                            Add IP Address
-                                        </a>
-                                        <br />
-                                        <hr>
-                                        {% if len(box.ip_addresses) != 0 %}
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Address</th>
-                                                        <th>IP Version</th>
-                                                        <th>Visable</th>
-                                                        <th><!-- Delete --></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for index, ip in enumerate(box.ip_addresses) %}
-                                                        <tr>
-                                                            <td>{{ index + 1 }}</td>
-                                                            <td>{{ ip.address }}</td>
-                                                            <td>{{ ip.version }}</td>
-                                                            <td>{% if ip.visable %} Yes {% else %} No {% end %}</td>
-                                                            <td class="shortcolumn">
-                                                                <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
-                                                                    <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                    Delete
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    {% end %}
-                                                </tbody>
-                                            </table>
-                                        {% else %}
-                                            <strong>No Addresses</strong>
-                                        {% end %}
+                                    <div class="span4" style="margin: 0 30px 5px 5px;">
+                                        <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
+                                        <br /><br />
                                     </div>
+                                    {% end %}
+                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}BEGIN SECURE COMMUNIQUE{% else %}DESCRIPTION{% end %} *****************************************************************************************************************************************</div>
+                                    <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box._description }}</div>
+                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} END SECURE COMMUNIQUE {% end %}**********************************************************************************************************************************************************************</div>
                                 </div>
-                                <br />
-                                <div>
+                                <br clear="all" />
+                                <div><!-- Start Flags -->
                                     <h4 style="display:inline;">
                                         <i class="fa fa-flag-o"></i>
                                         Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;
@@ -729,12 +689,10 @@
                                                 {% end %}
                                             </tbody>
                                         </table>
-                                    {% else %}
-                                        <strong>No flags on this box yet, <a href="/admin/create/flag">add some</a></strong>
                                     {% end %}
-                                </div>
+                                </div><!-- End Flags -->
                                 <br />
-                                <div>
+                                <div><!-- Start Hints -->
                                     <h4 style="display:inline;">
                                         <i class="fa fa-medkit"></i>
                                         Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;
@@ -827,10 +785,50 @@
                                             </tbody>
                                         </table>
                                         {% end %}
-                                    {% else %}
-                                        <strong>No hints on this box yet, <a href="/admin/create/hint?box={{box.uuid}}">add some</a></strong>
                                     {% end %}
                                 </div><!-- End Hints -->
+                                <br/>
+                                <div><!-- Start IPs -->
+                                    <h4 style="display:inline;">
+                                        <i class="fa fa-fw fa-globe"></i>
+                                        IP Address&nbsp;&nbsp;
+                                    </h4>
+                                    <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-primary btn-mini" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
+                                        <i class="fa fa-fw fa-plus"></i>
+                                        Add IP Address
+                                    </a>
+                                    <br />
+                                    <hr>
+                                    {% if len(box.ip_addresses) != 0 %}
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Address</th>
+                                                    <th>IP Version</th>
+                                                    <th>Visable</th>
+                                                    <th><!-- Delete --></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for index, ip in enumerate(box.ip_addresses) %}
+                                                    <tr>
+                                                        <td>{{ index + 1 }}</td>
+                                                        <td>{{ ip.address }}</td>
+                                                        <td>{{ ip.version }}</td>
+                                                        <td>{% if ip.visable %} Yes {% else %} No {% end %}</td>
+                                                        <td class="shortcolumn">
+                                                            <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
+                                                                <i class="fa fa-fw fa-times-circle-o"></i>
+                                                                Delete
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                    {% end %}
+                                </div><!-- End IPs -->
                             </div>
                             <br />
                         {% end %}

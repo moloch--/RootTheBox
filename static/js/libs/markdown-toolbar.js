@@ -303,7 +303,7 @@
     };
 
     var toolbarMarkup = '<div class="markdown-toolbar">' +
-        '<div class="toolbar-group">' +
+    '<div class="toolbar-group">' +
         '<div class="toolbar-item dropdown js-menu-container">' +
         '</div>' +
         '<button type="button"' +

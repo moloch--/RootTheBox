@@ -177,10 +177,6 @@ class Box(DatabaseObject):
             ls.append("%s" % text)
         else:
             ls.append("No information on file.")
-        if self.category_id:
-            ls.append("Category: %s" % Category.by_id(self.category_id).category)
-        if self.operating_system != "none":
-            ls.append("Operating System: %s" % self.operating_system)
         if self.difficulty != "Unknown":
             ls.append("Reported Difficulty: %s" % self.difficulty)
         if not str(ls[-1]).endswith("\n"):

@@ -1,3 +1,7 @@
+.toolbar {
+    min-width: 265px;
+}
+
 .toolbar-commenting {
     margin-top: 7px;
 }

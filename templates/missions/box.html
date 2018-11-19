@@ -131,12 +131,12 @@
             {% end %}
             {% if box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
             {% if team %}
-                <a style="float:right;"  class="btn" href="/user/missions">Return to Missions</a>
+                <a style="float:right; margin-top: 10px;"  class="btn" href="/user/missions">Return to Missions</a>
             {% else %}
-                <a style="float:right;"  class="btn" href="/admin/view/game_objects#{{ box.uuid }}">Return to Edit</a>
+                <a style="float:right; margin-top: 10px;"  class="btn" href="/admin/view/game_objects#{{ box.uuid }}">Return to Edit</a>
             {% end %}
         </h1>
-        <br />
+        {% if box.category %}<div style="margin-top: -5px; margin-bottom: -5px;">{{ box.category }}</div>{% end %}<br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error">
@@ -165,27 +165,26 @@
             {% end %}
         {% end %}
         <div class="container">
-            <div class="row">
-                {% if box.avatar != "none" %}
-                <div class="span4">
-                    <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
-                    {% if has_materials() %}
-                        <a style="margin-top: 10px;" class="btn" href="/materials"><i class="fa fa-fw fa-folder-open-o"></i>
-                        Game Materials</a>
+            <div class="well">
+                <div>                   
+                    {% if box.avatar != "none" %}
+                    <div class="span4" style="margin: 0 30px 5px 3px;">
+                        <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
+                        {% if has_materials() %}
+                            <a style="margin-top: 10px;" class="btn" href="/materials"><i class="fa fa-fw fa-folder-open-o"></i>
+                            Game Materials</a>
+                        {% end %}
+                    </div>
+                    {% end %}
+                    {% if len(box.description) > 0 %}
+                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}BEGIN SECURE COMMUNIQUE{% else %}DESCRIPTION{% end %} *****************************************************************************************************************************************</div>
+                    <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box._description }}</div>
+                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} END SECURE COMMUNIQUE {% end %}**********************************************************************************************************************************************************************</div>
                     {% end %}
                 </div>
-                {% end %}
-                <div class='{% if box.avatar != "none" %}span8{% else %}span12{% end %}'>
-                     <div class="well">
-                        <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}*********************** BEGIN SECURE COMMUNIQUE ***********************{% else %}***************************** DESCRIPTION *****************************{% end %}{% if box.avatar == "none" %}********************{% end %}</div>
-                        <div class="preformatted markdown" style="text-align: justify; padding: 0 20px;">{{ box.description }}</div>
-                        <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">{% if box.avatar == "none" %}********************{% end %}{% if options.story_mode %}***********************&nbsp;&nbsp;END SECURE COMMUNIQUE&nbsp;&nbsp;***********************{% else %}***********************************************************************{% end %}{% if box.avatar == "none" %}********************{% end %}</div>
-                    </div>
-                   
-                </div>
+                <br clear="all" />
             </div>
         </div>
-        <br />
         <br />
         {% set boxhints = [] %}
         {% set flaghints = [] %}
@@ -207,10 +206,10 @@
             {% end %}
         {% end %}
         {% if flagcount != 0 and len(box.flags) != 0 %}
-        <div class="progress" style="height: 8px;; background-color: #424242;">
-            <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box.flags) }}">
+            <div class="progress" style="height: 8px;; background-color: #424242;">
+                <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box.flags) }}">
+                </div>
             </div>
-        </div>
         {% end %}
 
         {% if box.flag_submission_type == FlagsSubmissionType.SINGLE_SUBMISSION_BOX %}
