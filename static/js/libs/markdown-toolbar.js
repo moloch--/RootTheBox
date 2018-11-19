@@ -308,6 +308,16 @@
         '</div>' +
         '<button type="button"' +
                 'class="js-toolbar-item toolbar-item tooltipped tooltipped-n"' +
+                'title="Add header text"' +
+                'tabindex="-1"' +
+                'data-prefix="# "' +
+                'data-hotkey="h"' +
+                'data-ga-click="Markdown Toolbar, click, heading"' +
+                'data-surround-with-newlines="true">' +
+            '<svg class="octicon octicon-text-size" viewBox="0 0 18 16" version="1.1" width="18" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.62 9.08L12.1 3.66h-.06l-1.5 5.42h3.08zM5.7 10.13S4.68 6.52 4.53 6.02h-.08l-1.13 4.11H5.7zM17.31 14h-2.25l-.95-3.25h-4.07L9.09 14H6.84l-.69-2.33H2.87L2.17 14H0l3.3-9.59h2.5l2.17 6.34L10.86 2h2.52l3.94 12h-.01z"></path></svg>' +
+        '</button>' +
+        '<button type="button"' +
+                'class="js-toolbar-item toolbar-item tooltipped tooltipped-n"' +
                 'title="Add bold text"' +
                 'tabindex="-1"' +
                 'data-prefix="**"' +
@@ -325,16 +335,6 @@
                 'data-hotkey="i"' +
                 'data-ga-click="Markdown Toolbar, click, italic">' +
             '<svg aria-hidden="true" class="octicon octicon-italic" height="16" role="img" version="1.1" viewBox="0 0 6 16" width="6"><path d="M2.81 5h1.98L3 14H1l1.81-9z m0.36-2.7c0-0.7 0.58-1.3 1.33-1.3 0.56 0 1.13 0.38 1.13 1.03 0 0.75-0.59 1.3-1.33 1.3-0.58 0-1.13-0.38-1.13-1.03z"></path></svg>' +
-        '</button>' +
-        '<button type="button"' +
-                'class="js-toolbar-item toolbar-item tooltipped tooltipped-n"' +
-                'title="Add a heading"' +
-                'tabindex="-1"' +
-                'data-prefix="# "' +
-                'data-hotkey="h"' +
-                'data-ga-click="Markdown Toolbar, click, heading"' +
-                'data-surround-with-newlines="true">' +
-            '<svg aria-hidden="true" class="octicon octicon-header" height="18" role="img" version="1.1" viewBox="0 0 16 10" width="16"><text x="1.9" y="10.2" style="font-size:16px;font-style:normal;font-weight:bold;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan x="1.9" y="10.2">H</tspan></text></svg>' +
         '</button>' +
     '</div>' +
     '<div class="toolbar-group">' +
