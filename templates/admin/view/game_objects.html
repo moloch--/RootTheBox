@@ -3,6 +3,9 @@
 {% block title %}Game Management{% end %}
 
 {% block header %}
+<link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
+<script src="/static/js/libs/commonmark.min.js"></script>
+<script src="/static/js/libs/markdown-toolbar.js"></script>
 <script src="/static/js/pages/admin/view/game_objects.js"></script>
 <script src="/static/js/pages/anchor.js"></script>
 {% end %}
@@ -166,7 +169,7 @@
                 <div class="control-group">
                     <label class="control-label" for="box_description">Description</label>
                     <div class="controls">
-                        <textarea id="box-description" name="description" placeholder="Description" ></textarea>
+                        <textarea rows="4" class="toolbar" id="box-description" name="description" placeholder="Description" ></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -275,7 +278,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-description">Description</label>
                     <div class="controls">
-                        <textarea id="flag-description" name="description" type="text" placeholder="Description"></textarea>
+                        <textarea rows="4" class="toolbar" id="flag-description" name="description" type="text" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div id="casegroup" class="control-group">
@@ -346,7 +349,7 @@
                 <div class="control-group">
                     <label class="control-label" for="flag-capture_message">Capture Message</label>
                     <div class="controls">
-                        <textarea id="flag-capture_message" name="capture_message" placeholder="(Optional)">
+                        <textarea rows="4" id="flag-capture_message" name="capture_message" placeholder="(Optional)">
                         </textarea>
                     </div>
                 </div>
@@ -402,7 +405,7 @@
                 <div class="control-group">
                     <label class="control-label" for="hint-description">Description</label>
                     <div class="controls">
-                        <textarea id="hint-description" name="description" type="text" maxlength="512" placeholder="Description"></textarea>
+                        <textarea rows="4" class="toolbar" id="hint-description" name="description" type="text" maxlength="512" placeholder="Description"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -614,59 +617,19 @@
                                     
                                 <br />{% if box.category %}{{ box.category }}<br />{% end %}
                                 <br />
-                                <div class="row-fluid">
+                                <div>                   
                                     {% if box.avatar != "none" %}
-                                        <div class="span4">
-                                            <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
-                                            <br /><br />
-                                        </div>
-                                    {% end %}
-                                    <div class='{% if box.avatar != "none" %}span8{% else %}span12{% end %}'>
-                                        <h4 style="display:inline;">
-                                            <i class="fa fa-fw fa-globe"></i>
-                                            IP Address&nbsp;&nbsp;
-                                        </h4>
-                                        <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-primary btn-small" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
-                                            <i class="fa fa-fw fa-plus"></i>
-                                            Add IP Address
-                                        </a>
-                                        <br />
-                                        <hr>
-                                        {% if len(box.ip_addresses) != 0 %}
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Address</th>
-                                                        <th>IP Version</th>
-                                                        <th>Visable</th>
-                                                        <th><!-- Delete --></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for index, ip in enumerate(box.ip_addresses) %}
-                                                        <tr>
-                                                            <td>{{ index + 1 }}</td>
-                                                            <td>{{ ip.address }}</td>
-                                                            <td>{{ ip.version }}</td>
-                                                            <td>{% if ip.visable %} Yes {% else %} No {% end %}</td>
-                                                            <td class="shortcolumn">
-                                                                <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
-                                                                    <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                    Delete
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    {% end %}
-                                                </tbody>
-                                            </table>
-                                        {% else %}
-                                            <strong>No Addresses</strong>
-                                        {% end %}
+                                    <div class="span4" style="margin: 0 30px 5px 5px;">
+                                        <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
+                                        <br /><br />
                                     </div>
+                                    {% end %}
+                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}BEGIN SECURE COMMUNIQUE{% else %}DESCRIPTION{% end %} *****************************************************************************************************************************************</div>
+                                    <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box._description }}</div>
+                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} END SECURE COMMUNIQUE {% end %}**********************************************************************************************************************************************************************</div>
                                 </div>
-                                <br />
-                                <div>
+                                <br clear="all" />
+                                <div><!-- Start Flags -->
                                     <h4 style="display:inline;">
                                         <i class="fa fa-flag-o"></i>
                                         Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;
@@ -698,7 +661,7 @@
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
-                                                        <td class="descriptioncol">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
+                                                        <td class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
                                                             {% set choices = FlagChoice.by_flag_id(flag.id) %}
                                                             {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
                                                         <td style="width: 200px;">{{ flag.token }}</td>
@@ -726,12 +689,10 @@
                                                 {% end %}
                                             </tbody>
                                         </table>
-                                    {% else %}
-                                        <strong>No flags on this box yet, <a href="/admin/create/flag">add some</a></strong>
                                     {% end %}
-                                </div>
+                                </div><!-- End Flags -->
                                 <br />
-                                <div>
+                                <div><!-- Start Hints -->
                                     <h4 style="display:inline;">
                                         <i class="fa fa-medkit"></i>
                                         Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;
@@ -771,7 +732,7 @@
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
-                                                        <td class="descriptioncol">{{ hint.description }}</td>
+                                                        <td class="descriptioncol markdown">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
@@ -806,7 +767,7 @@
                                                     <tr>
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
-                                                        <td class="descriptioncol">{{ hint.description }}</td>
+                                                        <td class="descriptioncol markdown">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
@@ -824,10 +785,50 @@
                                             </tbody>
                                         </table>
                                         {% end %}
-                                    {% else %}
-                                        <strong>No hints on this box yet, <a href="/admin/create/hint?box={{box.uuid}}">add some</a></strong>
                                     {% end %}
                                 </div><!-- End Hints -->
+                                <br/>
+                                <div><!-- Start IPs -->
+                                    <h4 style="display:inline;">
+                                        <i class="fa fa-fw fa-globe"></i>
+                                        IP Address&nbsp;&nbsp;
+                                    </h4>
+                                    <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-primary btn-mini" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
+                                        <i class="fa fa-fw fa-plus"></i>
+                                        Add IP Address
+                                    </a>
+                                    <br />
+                                    <hr>
+                                    {% if len(box.ip_addresses) != 0 %}
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Address</th>
+                                                    <th>IP Version</th>
+                                                    <th>Visable</th>
+                                                    <th><!-- Delete --></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for index, ip in enumerate(box.ip_addresses) %}
+                                                    <tr>
+                                                        <td>{{ index + 1 }}</td>
+                                                        <td>{{ ip.address }}</td>
+                                                        <td>{{ ip.version }}</td>
+                                                        <td>{% if ip.visable %} Yes {% else %} No {% end %}</td>
+                                                        <td class="shortcolumn">
+                                                            <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
+                                                                <i class="fa fa-fw fa-times-circle-o"></i>
+                                                                Delete
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                    {% end %}
+                                </div><!-- End IPs -->
                             </div>
                             <br />
                         {% end %}
