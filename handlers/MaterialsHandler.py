@@ -41,7 +41,9 @@ class MaterialsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         d=options.game_materials_dir
         if len(args) == 1:
-            d = os.path.join(d, args[0])
+            d = os.path.join(os.path.abspath(d), args[0])
+            if is_directory_traversal(d):
+                return
 
         self.write(json.dumps(self.path_to_dict(d)))
 
@@ -62,6 +64,11 @@ class MaterialsHandler(BaseHandler):
             d['icon'] = "file ext_%s" % (e)
         return d
 
+def is_directory_traversal(file_name):
+    materials_root_directory = os.path.abspath(options.game_materials_dir)
+    requested_path = os.path.abspath(file_name)
+    common_prefix = os.path.commonprefix([requested_path, materials_root_directory])
+    return common_prefix != materials_root_directory
         
 def has_materials():
     d=options.game_materials_dir
