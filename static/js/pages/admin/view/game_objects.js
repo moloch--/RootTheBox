@@ -142,6 +142,14 @@ function testToken() {
 
 /* Add click events */
 $(document).ready(function() {
+    var reader = new commonmark.Parser({smart: true});
+    var writer = new commonmark.HtmlRenderer({safe: true});
+
+    /* Markdown */
+    $(".markdown").each(function() {
+        var parsed = reader.parse($(this).text());
+        $(this).html(writer.render(parsed).trim());
+    });
 
     /* Corporation */
     $("a[id^=edit-corporation-button]").click(function() {
@@ -323,4 +331,9 @@ $(document).ready(function() {
     $("#flag-token").change(function() {
         testToken();
     });
+    $(function () {
+        $('#hint-description').markdownToolbar(false);
+        $('#box-description').markdownToolbar(false);
+        $('#flag-description').markdownToolbar(false);
+    })
 });
