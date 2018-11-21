@@ -47,6 +47,8 @@ class StaticFileHandler(DefaultStaticHandler):
         this should prevent anyone from serving html/etc from the static
         handler
         '''
+        if options.force_download_game_materials:
+            self.set_header('Content-Disposition','attachment')
         self.set_header("Server", "Microsoft-IIS/7.5")
         self.add_header("X-AspNetMvc-Version", "3.0")
         self.add_header("X-AspNet-Version", "4.0.30319")

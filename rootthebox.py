@@ -229,6 +229,19 @@ define("game_materials_dir",
        group="application",
        help="the directory to store applications, docs, and other materials for the game")
 
+define("use_box_materials_dir",
+       default=True,
+       group="application",
+       help="show files belonging to a box in the box page",
+       type=bool)
+
+define("force_download_game_materials",
+       default=True,
+       group="application",
+       help="force the browser to download game materials (instead of just viewing them)",
+       type=bool)
+
+
 # ReCAPTCHA
 define("use_recaptcha",
        default=True,

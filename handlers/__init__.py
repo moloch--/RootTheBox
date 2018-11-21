@@ -148,11 +148,12 @@ urls = [
         StaticFileHandler, {'path': 'static/'}),
     (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))',
         StaticFileHandler, {'path': 'files/avatars/'}),
-    (r'/materials/(.*)',
+    (r'/materials/(.*)(?<!/)',
         StaticFileHandler, {'path': 'files/game_materials/'}),
 
     # Game Materials
-    (r'/materials', MaterialsHandler),
+    (r'/materials/?', MaterialsHandler),
+    (r'/materials/(.*)/', MaterialsHandler),
     (r'/cyberchef', ChefHandler),
 
     # Admin Handlers

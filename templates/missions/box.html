@@ -3,19 +3,23 @@
 {% block title %}Missions{% end %}
 
 {% block header %}
+<link rel="stylesheet" href="/static/css/jstree.css" />
+<link rel="stylesheet" href="/static/css/icons.css" />
 <script src="/static/js/pages/missions/view.js"></script>
 <script src="/static/js/pages/missions/box.js"></script>
 <script src="/static/js/libs/commonmark.min.js"></script>
+<script src="/static/js/libs/jstree.js"></script>
 {% end %}
 
 {% block modals %}
+{% import os %}
 {% from models.Penalty import Penalty %}
 {% from models.Flag import Flag %}
 {% from models.Flag import FLAG_FILE %}
 {% from models.Flag import FLAG_CHOICE %}
 {% from models.FlagChoice import FlagChoice %}
 {% from models.Box import FlagsSubmissionType %}
-{% from handlers.MaterialsHandler import has_materials %}
+{% from handlers.MaterialsHandler import has_materials,has_box_materials %}
 {% from tornado.options import options %}
     <!-- Submit text flag -->
     <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
@@ -170,7 +174,7 @@
                     {% if box.avatar != "none" %}
                     <div class="span4" style="margin: 0 30px 5px 3px;">
                         <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
-                        {% if has_materials() %}
+                        {% if has_materials() and not has_box_materials(box) %}
                             <a style="margin-top: 10px;" class="btn" href="/materials"><i class="fa fa-fw fa-folder-open-o"></i>
                             Game Materials</a>
                         {% end %}
@@ -183,6 +187,13 @@
                 <br clear="all" />
             </div>
         </div>
+        {% if has_box_materials(box) %}
+        <div id="box-materials" class="well" data-subdir="{{ box.name }}">
+            <div id="box-materials-tree" class="container">
+                <!-- Box materials go here -->
+            </div>
+        </div>
+        {% end %}
         <br />
         {% set boxhints = [] %}
         {% set flaghints = [] %}

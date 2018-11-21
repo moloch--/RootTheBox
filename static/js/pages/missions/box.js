@@ -79,4 +79,18 @@ $(document).ready(function() {
     $('tbody').on('mouseleave', function(e) {
         $(this).css('background-color','');
     });
+
+    if($('#box-materials').length > 0)
+    {
+        var data = {'_xsrf': getCookie("_xsrf")}
+        var subdir = $('#box-materials').data("subdir");
+        $.post('/materials/' + subdir + "/", data, function(response) {
+            $('#box-materials-tree').jstree({
+                'core' : {
+                    'themes' : { name : 'default-dark' },
+                    'data' : $.parseJSON(response)["children"]
+                }
+            });
+        });
+    }
 });

@@ -1,6 +1,7 @@
 $(document).ready(function() {
     data = {'_xsrf': getCookie("_xsrf")}
-    $.post('/materials', data, function(response) {
+    subdir = $('#container').data("subdir");
+    $.post('/materials' + subdir, data, function(response) {
         $('#container').jstree({
             'core' : {
               'themes' : { name : 'default-dark' },
