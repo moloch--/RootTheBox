@@ -206,7 +206,7 @@ class RecoveryConsole(cmd.Cmd):
         if user is None:
             print(WARN + "'%s' user not found in database." % user_id)
         else:
-            print INFO + repr(user)
+            print(INFO + repr(user))
 
     def do_exit(self, *args, **kwargs):
         '''

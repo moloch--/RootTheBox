@@ -34,6 +34,7 @@ from models import dbsession
 from models.Box import Box
 from models.FlagAttachment import FlagAttachment  # Fix object mapper
 from models.FlagChoice import FlagChoice
+from models.Penalty import Penalty
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
 from tornado.options import options
@@ -82,8 +83,14 @@ class Flag(DatabaseObject):
                                     )
 
     flag_choice = relationship("FlagChoice",
-                                    backref=backref("flag", lazy="select")
+                                    backref=backref("flag", lazy="select"),
+                                    cascade="all,delete,delete-orphan"
                                     )
+
+    penalties = relationship("Penalty",
+                                backref=backref("flag", lazy="select"),
+                                cascade="all,delete,delete-orphan"
+                                )
 
     FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME, FLAG_CHOICE]
 

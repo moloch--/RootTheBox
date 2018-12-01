@@ -122,7 +122,7 @@ STATUS_TLS_HANDSHAKE_ERROR = 1015
 
 class WebSocketException(Exception):
     """
-    websocket exeception class.
+    websocket exception class.
     """
     pass
 
@@ -138,15 +138,15 @@ default_timeout = None
 traceEnabled = False
 
 
-def enableTrace(tracable):
+def enableTrace(traceable):
     """
-    turn on/off the tracability.
+    turn on/off the traceability.
 
-    tracable: boolean value. if set True, tracability is enabled.
+    traceable: boolean value. if set True, traceability is enabled.
     """
     global traceEnabled
-    traceEnabled = tracable
-    if tracable:
+    traceEnabled = traceable
+    if traceable:
         logger.setLevel(logging.DEBUG)
 
 
@@ -219,7 +219,7 @@ def create_connection(url, timeout=None, **options):
 
     Connect to url and return the WebSocket object.
     Passing optional timeout parameter will set the timeout on the socket.
-    If no timeout is supplied, the global default timeout setting returned by getdefauttimeout() is used.
+    If no timeout is supplied, the global default timeout setting returned by getdefaulttimeout() is used.
     You can customize using 'options'.
     If you set "header" dict object, you can set your own custom header.
 
@@ -308,7 +308,7 @@ class ABNF(object):
         OPCODE_PONG: "pong"
     }
 
-    # data length threashold.
+    # data length threshold.
     LENGTH_7  = 0x7d
     LENGTH_16 = 1 << 16
     LENGTH_63 = 1 << 63
@@ -334,8 +334,8 @@ class ABNF(object):
         create frame to send text, binary and other data.
 
         data: data to send. This is string value(byte array).
-            if opcode is OPCODE_TEXT and this value is uniocde,
-            data value is conveted into unicode string, automatically.
+            if opcode is OPCODE_TEXT and this value is unicode,
+            data value is converted into unicode string, automatically.
 
         opcode: operation code. please see OPCODE_XXX.
         """
@@ -401,7 +401,7 @@ class WebSocket(object):
       The WebSocket protocol draft-hixie-thewebsocketprotocol-76
       http://tools.ietf.org/html/draft-hixie-thewebsocketprotocol-76
 
-    We can connect to the websocket server and send/recieve data.
+    We can connect to the websocket server and send/receive data.
     The following example is a echo client.
 
     >>> import websocket
@@ -415,12 +415,12 @@ class WebSocket(object):
     get_mask_key: a callable to produce new mask keys, see the set_mask_key
       function's docstring for more details
     sockopt: values for socket.setsockopt.
-        sockopt must be tuple and each element is argument of sock.setscokopt.
+        sockopt must be tuple and each element is argument of sock.setsockopt.
     """
 
     def __init__(self, get_mask_key = None, sockopt = ()):
         """
-        Initalize WebSocket object.
+        Initialize WebSocket object.
         """
         self.connected = False
         self.monitor = None
@@ -431,7 +431,7 @@ class WebSocket(object):
 
     def set_mask_key(self, func):
         """
-        set function to create musk key. You can custumize mask key generator.
+        set function to create musk key. You can customize mask key generator.
         Mainly, this is for testing purpose.
 
         func: callable object. the fuct must 1 argument as integer.
@@ -578,7 +578,7 @@ class WebSocket(object):
         """
         Send the data as string.
 
-        payload: Payload must be utf-8 string or unicoce,
+        payload: Payload must be utf-8 string or unicode,
                   if the opcode is OPCODE_TEXT.
                   Otherwise, it must be string(byte array)
 
@@ -624,7 +624,7 @@ class WebSocket(object):
 
     def recv_data(self):
         """
-        Recieve data with operation code.
+        Receive data with operation code.
 
         return  value: tuple of operation code and string(byte array) value.
         """
@@ -644,7 +644,7 @@ class WebSocket(object):
 
     def recv_frame(self):
         """
-        recieve data as frame from server.
+        receive data as frame from server.
 
         return value: ABNF frame object.
         """
@@ -674,8 +674,8 @@ class WebSocket(object):
             mask_key = self._recv_strict(4)
         data = self._recv_strict(length)
         if traceEnabled:
-            recieved = header_bytes + length_data + mask_key + data
-            logger.debug("recv: " + repr(recieved))
+            received = header_bytes + length_data + mask_key + data
+            logger.debug("recv: " + repr(received))
 
         if mask:
             data = ABNF.mask(mask_key, data)
@@ -760,7 +760,7 @@ class WebSocketApp(object):
     Higher level of APIs are provided.
     The interface is like JavaScript WebSocket object.
     """
-    def __init__(self, url, header = [],
+    def __init__(self, url, header = None,
                  on_open = None, on_message = None, on_error = None,
                  on_close = None, keep_running = True, get_mask_key = None,
                  sockopt=()):
@@ -768,24 +768,24 @@ class WebSocketApp(object):
         url: websocket url.
         header: custom header for websocket handshake.
         on_open: callable object which is called at opening websocket.
-          this function has one argument. The arugment is this class object.
-        on_message: callbale object which is called when recieved data.
+          this function has one argument. The argument is this class object.
+        on_message: callbale object which is called when received data.
          on_message has 2 arguments.
-         The 1st arugment is this class object.
-         The passing 2nd arugment is utf-8 string which we get from the server.
+         The 1st argument is this class object.
+         The passing 2nd argument is utf-8 string which we get from the server.
        on_error: callable object which is called when we get error.
          on_error has 2 arguments.
-         The 1st arugment is this class object.
-         The passing 2nd arugment is exception object.
+         The 1st argument is this class object.
+         The passing 2nd argument is exception object.
        on_close: callable object which is called when closed the connection.
-         this function has one argument. The arugment is this class object.
+         this function has one argument. The argument is this class object.
        keep_running: a boolean flag indicating whether the app's main loop should
          keep running, defaults to True
        get_mask_key: a callable to produce new mask keys, see the WebSocket.set_mask_key's
          docstring for more information
         """
         self.url = url
-        self.header = header
+        self.header = header or []
         self.on_open = on_open
         self.on_message = on_message
         self.on_error = on_error
@@ -815,7 +815,7 @@ class WebSocketApp(object):
         run event loop for WebSocket framework.
         This loop is infinite loop and is alive during websocket is available.
         sockopt: values for socket.setsockopt.
-            sockopt must be tuple and each element is argument of sock.setscokopt.
+            sockopt must be tuple and each element is argument of sock.setsockopt.
         """
         if self.sock:
             raise WebSocketException("socket is already opened")
@@ -832,7 +832,7 @@ class WebSocketApp(object):
                 self._run_with_no_err(self.on_message, data)
         except KeyboardInterrupt:
             pass  # Just close and exit
-        except Exception, e:
+        except Exception as e:
             self._run_with_no_err(self.on_error, e)
         finally:
             self.sock.close()
@@ -929,7 +929,7 @@ def on_message(ws, message):
             raise ValueError('Invalid opcode')
         else:
             OPCODES[response['opcode']](ws, response)
-    except ValueError as error:
+    except ValueError:
         ws.close()
 
 def on_error(ws, error):
@@ -988,7 +988,7 @@ class BotMonitor(object):
 
     def connection_problems(self):
         ''' Display connection issue, and exit '''
-        logging.fatal("Connection faliure!")
+        logging.fatal("Connection failure!")
         self.auth_failure("CONNECTION FAILURE")
 
     def __connect__(self):
@@ -1178,7 +1178,7 @@ class BotMonitor(object):
         curses.noecho()
         prompt = "Password: "
         self.agent_prompt = curses.newwin(
-            3,  # Heigth
+            3,  # Height
             len(self.load_message) + 24,  # Width
             (self.max_y / 2) - 1,  # Start Y
             ((self.max_x - len(self.load_message)) / 2) - 12  # Start X
@@ -1203,7 +1203,7 @@ class BotMonitor(object):
         self.screen.addstr(2, 2, sat_com + "success")
         self.screen.refresh()
         # (3) Uplink animation
-        download = " > Establishing satalite uplink: "
+        download = " > Establishing satellite uplink: "
         for index in range(5, 25):
             signal = random.randint(0, 30)
             self.screen.addstr(3, 2, download + str(signal) + " dBi    ")
@@ -1243,7 +1243,7 @@ class BotMonitor(object):
                 return
 
     def progress(self):
-        ''' Progress animation, executed as sperate thread '''
+        ''' Progress animation, executed as seperate thread '''
         index = 0
         progress_bar = ["=--", "-=-", "--=", "-=-",]
         pong_string = "PNG"
@@ -1340,7 +1340,7 @@ if __name__ == "__main__":
         dest='domain',
     )
     parser.add_argument('--port', '-p',
-        help='netork port to connect to (default: %s)' % __port__,
+        help='network port to connect to (default: %s)' % __port__,
         default=__port__,
         dest='port',
     )

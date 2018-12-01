@@ -68,7 +68,7 @@ def setup():
     import setup.bootstrap
     # Display Details
     if is_devel:
-        environ = bold + R + "Developement boot strap" + W
+        environ = bold + R + "Development boot strap" + W
         details = ", admin password is 'nimda123'."
     else:
         environ = bold + "Production boot strap" + W

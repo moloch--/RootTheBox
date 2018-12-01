@@ -20,7 +20,6 @@ function getDetails(obj, uuid) {
                         $('#hint-flag_uuid option[value=' + response["flag_uuid"] + ']').prop('selected',true);  
                     }
                 } else if (key !== "flag_uuid") {
-
                     $("#" + obj + "-" + key).val(value);
                 }
             } else if (obj === "box" && key === "category") {
@@ -38,10 +37,11 @@ function getDetails(obj, uuid) {
             } else if (obj === "box" && key === "corporation") {
                 $('#edit-box-corporation option[value=' + value + ']').prop('selected',true);
             } else if (obj === "box" && key === "flag_submission_type") {
-                if(value == "CLASSIC")
+                if (value === "CLASSIC") {
                     $('#box-flag-submission-type-classic').click();
-                else if(value == "SINGLE_SUBMISSION_BOX")
+                } else if(value === "SINGLE_SUBMISSION_BOX") {
                     $('#box-flag-submission-type-single-box').click();
+                }
             } else if (obj === "flag" && key === "lock_uuid") {
                 if (value.length > 0) {
                     $('#edit-flag-lock option[value=' + value + ']').prop('selected',true);
@@ -58,7 +58,7 @@ function getDetails(obj, uuid) {
                         var html = $(".copy").html();
                         if (i === 0) {
                             var item = appendarea;
-                        } else if (i == 1) { 
+                        } else if (i === 1) { 
                             var newadd = appendarea.after(html);
                             var item = $(newadd.next());
                         } else {

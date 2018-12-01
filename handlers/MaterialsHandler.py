@@ -56,7 +56,7 @@ class MaterialsHandler(BaseHandler):
             d['children'] = [self.path_to_dict(os.path.join(path,x)) for x in os.listdir(path) if x != "README.md"]
         else:
             downloadpath = path.replace(options.game_materials_dir, "/materials")
-            downloadpath = downloadpath.replace("\\", "/");
+            downloadpath = downloadpath.replace("\\", "/")
             d['type'] = "file"
             if options.force_download_game_materials:
                 d['a_attr'] = { "href" : "%s" % downloadpath, "onclick":"window.location.href = '%s';" % downloadpath}

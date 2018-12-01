@@ -54,6 +54,7 @@ from hashlib import sha512, sha1
 ### Settings
 __version__ = '0.1.0'
 __domain__  = 'game.rootthebox.com'
+__desc__    = 'Root the Box: Botnet'
 __port__    = '80'
 __path__    = 'botnet/connect'
 
@@ -956,7 +957,7 @@ def main(domain, port, user, garbage_path, secure, verbose):
 ##############################################################################
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Root the Box: Botnet',
+        description=__desc__,
     )
     parser.add_argument('--version',
         action='version',
