@@ -40,6 +40,20 @@ class AdminManageUsersHandler(BaseHandler):
         self.render('admin/view/users.html', errors=None)
 
 
+class AdminEditTeamsHandler(BaseHandler):
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        teams = Team.all()
+        for team in teams:
+            team.money += long(self.get_argument('money', 0))
+            self.dbsession.add(team)
+        self.dbsession.commit()
+        self.redirect('/admin/users')
+
+
 class AdminEditUsersHandler(BaseHandler):
 
     @restrict_ip_address

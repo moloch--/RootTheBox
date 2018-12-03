@@ -173,6 +173,7 @@ urls = [
 
     (r'/admin/users', AdminManageUsersHandler),
     (r'/admin/users/edit/(user|team)', AdminEditUsersHandler),
+    (r'/admin/users/edit/teams/scores', AdminEditTeamsHandler),
     (r'/admin/users/delete/(.*)', AdminDeleteUsersHandler),
     (r'/admin/ajax/(user|team)', AdminAjaxUserHandler),
     (r'/admin/lock', AdminLockHandler),

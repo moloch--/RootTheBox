@@ -64,6 +64,10 @@ $(document).ready(function() {
         $("#lock-user-form").submit();
     });
 
+    $("#edit-scores-submit").click(function(){
+        $("#edit-scores-form").submit();
+    });
+
     /* Other */
     $("a[id^=reveal-hash-button]").click(function() {
         alert($(this).data("bank-hash"));
