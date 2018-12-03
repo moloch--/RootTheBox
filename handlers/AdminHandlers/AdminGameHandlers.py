@@ -29,6 +29,7 @@ import xml.etree.cElementTree as ET
 import time
 
 from tempfile import NamedTemporaryFile
+from models.Flag import Flag
 from models.Box import Box
 from models.Swat import Swat
 from models.GameLevel import GameLevel
@@ -556,6 +557,12 @@ class AdminResetHandler(BaseHandler):
             self.dbsession.commit()
             game_history = GameHistory.instance()
             game_history.take_snapshot() # Take starting snapshot
+            flags = Flag.all()
+            for flag in flags:
+                flag.value = flag._original_value if flag._original_value else flag.value
+                self.dbsession.add(flag)       
+            self.dbsession.commit()
+            self.dbsession.flush()                     
             success = "Successfully Reset Game"
             self.render('admin/reset.html', success=success, errors=errors)
         except BaseException as e:

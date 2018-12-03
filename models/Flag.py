@@ -76,6 +76,7 @@ class Flag(DatabaseObject):
     _capture_message = Column(Unicode(512))
     _case_sensitive = Column(Integer, nullable=True)
     _value = Column(Integer, nullable=False)
+    _original_value = Column(Integer, nullable=False)
     _type = Column(Unicode(16), default=False)
 
     flag_attachments = relationship("FlagAttachment",
@@ -160,7 +161,8 @@ class Flag(DatabaseObject):
                    name=name,
                    token=token,
                    description=description,
-                   value=value
+                   value=value,
+                   original_value=value
                    )
 
     @classmethod
@@ -174,7 +176,8 @@ class Flag(DatabaseObject):
                    name=name,
                    token=raw_token,
                    description=description,
-                   value=value
+                   value=value,
+                   original_value=value
                    )
 
     @classmethod
@@ -184,7 +187,8 @@ class Flag(DatabaseObject):
                    name=name,
                    token=raw_token,
                    description=description,
-                   value=value
+                   value=value,
+                   original_value=value
                    )
 
     @classmethod
@@ -198,7 +202,8 @@ class Flag(DatabaseObject):
                    name=name,
                    token=raw_token,
                    description=description,
-                   value=value
+                   value=value,
+                   original_value=value
                    )
 
     @classmethod
@@ -208,7 +213,8 @@ class Flag(DatabaseObject):
                    name=name,
                    token=raw_token,
                    description=description,
-                   value=value
+                   value=value,
+                   original_value=value
                    )
 
     @classmethod
@@ -286,6 +292,17 @@ class Flag(DatabaseObject):
     def value(self, value):
         try:
             self._value = abs(int(value))
+        except ValueError:
+            raise ValidationError("Reward value must be an integer")
+
+    @property
+    def original_value(self):
+        return self._original_value
+
+    @value.setter
+    def original_value(self, value):
+        try:
+            self._original_value = abs(int(value))
         except ValueError:
             raise ValidationError("Reward value must be an integer")
 
@@ -374,6 +391,7 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
+        ET.SubElement(flag_elem, "original_value").text = str(self.original_value)
         if self.lock_id:
             ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
         ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
@@ -409,6 +427,7 @@ class Flag(DatabaseObject):
             'description': self.description,
             'capture_message': self.capture_message,
             'value': self.value,
+            'original_value': self.original_value,
             'box': box.uuid,
             'token': self.token,
             'lock_uuid': lock_uuid,
