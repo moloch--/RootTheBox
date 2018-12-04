@@ -105,8 +105,8 @@ ADD COLUMN `_name` VARCHAR(32) NULL DEFAULT NULL AFTER `_reward`;
 ALTER TABLE `rootthebox`.`box` 
 ADD COLUMN `flag_submission_type` enum('CLASSIC','SINGLE_SUBMISSION_BOX') DEFAULT 'CLASSIC' AFTER `garbage`;
 
-
-
-
+/* increased hint description field*/
+ALTER TABLE `rootthebox`.`hint` 
+CHANGE COLUMN `_description` `_description` VARCHAR(1024) NOT NULL ;
 
 
