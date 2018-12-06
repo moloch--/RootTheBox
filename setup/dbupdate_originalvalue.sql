@@ -1,2 +1,1 @@
-USE `rootthebox`;
 ALTER TABLE `rootthebox`.`flag` ADD COLUMN `_original_value` INTEGER AFTER `_value`;
