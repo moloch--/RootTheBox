@@ -92,6 +92,11 @@ class Flag(DatabaseObject):
                                 cascade="all,delete,delete-orphan"
                                 )
 
+    hints = relationship("Hint",
+                            backref=backref("flag", lazy="select"),
+                            cascade="all,delete,delete-orphan"
+                            )
+
     FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME, FLAG_CHOICE]
 
     @classmethod
@@ -386,10 +391,10 @@ class Flag(DatabaseObject):
         for choice in self.flag_choice:
             ET.SubElement(choice_elem, "choice").text = choice.choice
         from models.Hint import Hint
-        hints = Hint.by_flag_id(self.id)
+        xml_hints = Hint.by_flag_id(self.id)
         hints_elem = ET.SubElement(flag_elem, "hints")
-        hints_elem.set("count", str(len(hints)))
-        for hint in hints:
+        hints_elem.set("count", str(len(xml_hints)))
+        for hint in xml_hints:
             if not hint.flag_id is None:
                 hint.to_xml(hints_elem)
 
