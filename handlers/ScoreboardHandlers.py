@@ -187,7 +187,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
-            self.write_message(self.game_history[:-1])
+            self.write_message(self.get_history(1))
 
     def on_close(self):
         ''' Lost connection to client '''
