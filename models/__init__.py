@@ -61,6 +61,7 @@ db_connection = DatabaseConnection(database=options.sql_database,
 
 ### Update the database schema
 alembic_cfg = Config('alembic/alembic.ini')
+alembic_cfg.attributes['configure_logger'] = False
 alembic_cfg.set_main_option('sqlalchemy.url', str(db_connection))
 command.upgrade(alembic_cfg, "head")
 
