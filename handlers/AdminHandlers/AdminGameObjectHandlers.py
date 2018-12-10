@@ -551,6 +551,7 @@ class AdminEditHandler(BaseHandler):
                 flag.description = description
             # Value
             flag.value = self.get_argument('value', '')
+            flag.original_value = self.get_argument('value', '')
             flag.capture_message = self.get_argument('capture_message', '')
             flag.case_sensitive = self.get_argument('case-sensitive', 1)
             # Dependency Lock

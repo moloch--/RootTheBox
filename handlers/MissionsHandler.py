@@ -102,7 +102,7 @@ class FlagSubmissionHandler(BaseHandler):
                                 flag=flag,
                                 reward=old_reward)
                 else:
-                    success = self.success_capture(flag)
+                    success = self.success_capture(flag, old_reward)
                     self.render_page_by_flag(flag, success=success)
             else:
                 if flag is None or Penalty.by_token_count(flag, user.team, submission) == 0:
@@ -134,13 +134,13 @@ class FlagSubmissionHandler(BaseHandler):
         else:
             self.render('public/404.html')
 
-    def success_capture(self, flag):
+    def success_capture(self, flag, old_reward=None):
         if self.config.teams:
             teamval = "team's "
         else:
             teamval = ""
         user = self.get_current_user()
-        old_reward = flag.value
+        old_reward = flag.value if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
         if self.config.banking:
             reward_dialog += "$" + str(old_reward) + " has been added to your " + teamval + "account."
