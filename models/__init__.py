@@ -29,6 +29,8 @@ from sqlalchemy.engine import Engine
 from contextlib import contextmanager
 from libs.DatabaseConnection import DatabaseConnection
 from libs.ConsoleColors import *
+from alembic.config import Config, command
+
 
 if options.log_sql:
 
@@ -56,6 +58,11 @@ db_connection = DatabaseConnection(database=options.sql_database,
                                    password=options.sql_password,
                                    dialect=options.sql_dialect)
 
+
+### Update the database schema
+alembic_cfg = Config('alembic/alembic.ini')
+alembic_cfg.set_main_option('sqlalchemy.url', str(db_connection))
+command.upgrade(alembic_cfg, "head")
 
 ### Setup the database session
 engine = create_engine(str(db_connection))
