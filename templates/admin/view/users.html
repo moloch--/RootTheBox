@@ -270,16 +270,27 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-fw fa-plus"></i>
-                Add Points to Teams
+                Add {% if options.banking %}Money{% else %}Points{% end %}
             </h3>
         </div>
         <div class="modal-body">
             <form id="edit-scores-form" class="form-horizontal" method="post" action="/admin/users/edit/teams/scores" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
-                    <label class="control-label" for="team-score">Points to Add</label>
+                    <label class="control-label" for="team-money-uuid">{% if options.teams %}Team{% else %}Player{% end %}</label>
                     <div class="controls">
-                        <input id="team-money-add" name="money" type="text" placeholder="Points to Add">
+                        <select id="team-money-uuid" name="team_uuid">
+                            <option value="all">All</option>
+                            {% for team in Team.all() %}
+                                <option value="{{ team.uuid }}">{{ team.name }}</option>
+                            {% end %}
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="team-money-add">{% if options.banking %}Money{% else %}Points{% end %} to Add</label>
+                    <div class="controls">
+                        <input id="team-money-add" name="money" type="number" placeholder="{% if options.banking %}Money{% else %}Points{% end %} to Add">
                     </div>
                 </div>
             </form>
@@ -308,7 +319,7 @@
                 <i class="fa fa-fw fa-group"></i>
                 User Management
                 <a id="edit-scores-button" class="btn btn-small" data-toggle="modal" href="#edit-scores-modal">
-                    <i class="fa fa-fw fa-plus"></i> add points
+                    <i class="fa fa-fw fa-plus"></i> add {% if options.banking %}money{% else %}points{% end %}
                 </a>
             </h1>
             <br />

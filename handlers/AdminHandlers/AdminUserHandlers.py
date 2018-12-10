@@ -47,9 +47,15 @@ class AdminEditTeamsHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         try:
-            teams = Team.all()
-            for team in teams:
-                team.money += long(self.get_argument('money', 0))
+            group = self.get_argument('team_uuid', 'all')
+            if group == 'all':
+                teams = Team.all()
+                for team in teams:
+                    team.money += int(self.get_argument('money', 0))
+                    self.dbsession.add(team)
+            else:
+                team = Team.by_uuid(group)
+                team.money += int(self.get_argument('money', 0))
                 self.dbsession.add(team)
             self.dbsession.commit()
             self.redirect('/admin/users')
