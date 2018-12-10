@@ -180,6 +180,12 @@
                       <input id="user-name" name="name" type="text" maxlength="64" placeholder="Name">
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="user-email">Email</label>
+                    <div class="controls">
+                      <input id="user-email" name="email" type="text" maxlength="64" placeholder="Email">
+                    </div>
+                </div>
                 {% if options.banking %}
                 <div class="control-group">
                     <label class="control-label" for="user-hash-algorithm">Bank Hash Algorithm</label>
@@ -318,7 +324,7 @@
             <h1>
                 <i class="fa fa-fw fa-group"></i>
                 User Management
-                <a id="edit-scores-button" class="btn btn-small" data-toggle="modal" href="#edit-scores-modal">
+                <a style="float: right; margin-right: 5px; margin-top: 12px;" id="edit-scores-button" class="btn btn-small" data-toggle="modal" href="#edit-scores-modal">
                     <i class="fa fa-fw fa-plus"></i> add {% if options.banking %}money{% else %}points{% end %}
                 </a>
             </h1>

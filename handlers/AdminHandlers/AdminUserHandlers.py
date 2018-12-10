@@ -120,11 +120,17 @@ class AdminEditUsersHandler(BaseHandler):
                 else:
                     raise ValidationError("Handle is already in use")
             name = self.get_argument('name', '')
+            email = self.get_argument('email', '')
             if user.name != name:
                 logging.info("Updated user Name %s -> %s" % (
                         user.name, name
                     ))
                 user.name = name
+            if user.email != email:
+                logging.info("Updated user Email %s -> %s" % (
+                        user.email, email
+                    ))
+                user.email = email
             if options.banking:
                 hash_algorithm = self.get_argument('hash_algorithm', '')
                 if hash_algorithm != user.algorithm:

@@ -72,6 +72,7 @@ class User(DatabaseObject):
     logins = Column(Integer, default=0)
     _handle = Column(Unicode(16), unique=True, nullable=False)
     _name = Column(Unicode(64), unique=False, nullable=True)
+    _email = Column(Unicode(64), unique=False, nullable=True)
     _password = Column('password', String(64))
     _bank_password = Column('bank_password', String(128))
     money = Column(Integer, default=0, nullable=False)
@@ -212,8 +213,18 @@ class User(DatabaseObject):
     @name.setter
     def name(self, new_name):
         if len(new_name) > 64:
-            raise ValidationError("Handle must be 0 - 64 characters")
+            raise ValidationError("Name must be 0 - 64 characters")
         self._name = unicode(new_name)
+    
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, new_email):
+        if len(new_email) > 64:
+            raise ValidationError("Email must be 0 - 64 characters")
+        self._email = unicode(new_email)
 
     @property
     def permissions(self):
@@ -345,11 +356,12 @@ class User(DatabaseObject):
         return None
 
     def to_dict(self):
-        ''' Return public data as dictionary '''
+        ''' Return user data as dictionary '''
         return {
             'uuid': self.uuid,
             'handle': self.handle,
             'name': self.name,
+            'email': self.email,
             'hash_algorithm': self.algorithm,
             'team_uuid': self.team.uuid,
             'avatar': self.avatar,
@@ -363,6 +375,8 @@ class User(DatabaseObject):
         if not self.has_permission(ADMIN_PERMISSION):
             user_elem = ET.SubElement(parent, "user")
             ET.SubElement(user_elem, "handle").text = self.handle
+            ET.SubElement(user_elem, "name").text = self.name
+            ET.SubElement(user_elem, "email").text = self.email
             ET.SubElement(user_elem, "password").text = self._password
             bpass_elem = ET.SubElement(user_elem, "bankpassword")
             bpass_elem.text = self._bank_password
