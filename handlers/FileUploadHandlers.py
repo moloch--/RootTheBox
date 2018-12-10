@@ -31,6 +31,7 @@ from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from .BaseHandlers import BaseHandler
 from models.User import ADMIN_PERMISSION
+from tornado.options import options
 
 
 MAX_UPLOADS = 5
@@ -42,45 +43,54 @@ class FileUploadHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        ''' Renders upload file page '''
-        user = self.get_current_user()
-        self.render("file_upload/shared_files.html",
-                    errors=None,
-                    shares=user.team.files)
+        if options.team_sharing:
+            ''' Renders upload file page '''
+            user = self.get_current_user()
+            self.render("file_upload/shared_files.html",
+                        errors=None,
+                        shares=user.team.files)
+        else:
+            self.redirect("/404")
 
     @authenticated
     def post(self, *args, **kwargs):
-        ''' Shit form validation '''
-        user = self.get_current_user()
-        self.errors = []
-        if hasattr(self.request, 'files'):
-            for shared_file in self.request.files['files'][:MAX_UPLOADS]:
-                file_upload = self.create_file(user, shared_file)
-                if file_upload is not None:
-                    self.event_manager.team_file_shared(user, file_upload)
-            if not len(self.errors):
-                self.redirect("/user/share/files")
+        if options.team_sharing:
+            ''' Shit form validation '''
+            user = self.get_current_user()
+            self.errors = []
+            if hasattr(self.request, 'files'):
+                for shared_file in self.request.files['files'][:MAX_UPLOADS]:
+                    file_upload = self.create_file(user, shared_file)
+                    if file_upload is not None:
+                        self.event_manager.team_file_shared(user, file_upload)
+                if not len(self.errors):
+                    self.redirect("/user/share/files")
+                else:
+                    self.render("file_upload/shared_files.html",
+                                errors=self.errors,
+                                shares=user.team.files)
             else:
                 self.render("file_upload/shared_files.html",
-                            errors=self.errors,
+                            errors=["No files in request"],
                             shares=user.team.files)
         else:
-            self.render("file_upload/shared_files.html",
-                        errors=["No files in request"],
-                        shares=user.team.files)
+            self.redirect("/404")
 
     def create_file(self, user, shared_file):
-        ''' Saves uploaded file '''
-        try:
-            file_upload = FileUpload(team_id=user.team.id)
-            file_upload.file_name = shared_file['filename']
-            file_upload.data = shared_file['body']
-            file_upload.description = self.get_argument('description', '')
-            self.dbsession.add(file_upload)
-            self.dbsession.commit()
-            return file_upload
-        except ValidationError as error:
-            self.errors.append(str(error))
+        if options.team_sharing:
+            ''' Saves uploaded file '''
+            try:
+                file_upload = FileUpload(team_id=user.team.id)
+                file_upload.file_name = shared_file['filename']
+                file_upload.data = shared_file['body']
+                file_upload.description = self.get_argument('description', '')
+                self.dbsession.add(file_upload)
+                self.dbsession.commit()
+                return file_upload
+            except ValidationError as error:
+                self.errors.append(str(error))
+        else:
+            self.redirect("/404")
 
 
 class FileDownloadHandler(BaseHandler):
@@ -89,17 +99,20 @@ class FileDownloadHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        ''' Get a file and send it to the user '''
-        user = self.get_current_user()
-        shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
-        if user.has_permission(ADMIN_PERMISSION) or (shared_file is not None and shared_file in user.team.files):
-            self.set_header('Content-Type', shared_file.content_type)
-            self.set_header('Content-Length', shared_file.byte_size)
-            self.set_header('Content-Disposition', 'attachment; filename=%s' % (
-                shared_file.file_name))
-            self.write(shared_file.data)
+        if options.team_sharing:
+            ''' Get a file and send it to the user '''
+            user = self.get_current_user()
+            shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
+            if user.has_permission(ADMIN_PERMISSION) or (shared_file is not None and shared_file in user.team.files):
+                self.set_header('Content-Type', shared_file.content_type)
+                self.set_header('Content-Length', shared_file.byte_size)
+                self.set_header('Content-Disposition', 'attachment; filename=%s' % (
+                    shared_file.file_name))
+                self.write(shared_file.data)
+            else:
+                self.render("public/404.html")
         else:
-            self.render("public/404.html")
+            self.redirect("/404")
 
 
 class FileDeleteHandler(BaseHandler):
@@ -108,21 +121,24 @@ class FileDeleteHandler(BaseHandler):
 
     @authenticated
     def post(self, *args, **kwargs):
-        user = self.get_current_user()
-        shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
-        if user.has_permission(ADMIN_PERMISSION):
-            logging.info("%s deleted a shared file %s" % (
-                user.handle, shared_file.uuid))
-            shared_file.delete_data()
-            self.dbsession.delete(shared_file)
-            self.dbsession.commit()
-            self.redirect('/admin/view/fileshare')
-        if shared_file is not None and shared_file in user.team.files:
-            logging.info("%s deleted a shared file %s" % (
-                user.handle, shared_file.uuid))
-            shared_file.delete_data()
-            self.dbsession.delete(shared_file)
-            self.dbsession.commit()
-            self.redirect('/user/share/files')
+        if options.team_sharing:
+            user = self.get_current_user()
+            shared_file = FileUpload.by_uuid(self.get_argument('uuid', ''))
+            if user.has_permission(ADMIN_PERMISSION):
+                logging.info("%s deleted a shared file %s" % (
+                    user.handle, shared_file.uuid))
+                shared_file.delete_data()
+                self.dbsession.delete(shared_file)
+                self.dbsession.commit()
+                self.redirect('/admin/view/fileshare')
+            if shared_file is not None and shared_file in user.team.files:
+                logging.info("%s deleted a shared file %s" % (
+                    user.handle, shared_file.uuid))
+                shared_file.delete_data()
+                self.dbsession.delete(shared_file)
+                self.dbsession.commit()
+                self.redirect('/user/share/files')
+            else:
+                self.redirect("/404")
         else:
             self.redirect("/404")
