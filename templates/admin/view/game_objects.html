@@ -663,7 +663,8 @@
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
                                                         <td class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
                                                             {% set choices = FlagChoice.by_flag_id(flag.id) %}
-                                                            {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
+                                                            {% if choices and len(choices) > 0 %}{% for item in choices %}- {{item.choice}}
+                                                            {% end %}{% end %}{% end %}</td>
                                                         <td style="width: 200px;">{{ flag.token }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
                                                         <td class="shortcolumn">{{ str(flag.type) }}</td>

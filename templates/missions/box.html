@@ -358,7 +358,8 @@
                             {% end %}
                             <td colspan="{% if team and options.penalize_flag_value %}5{% else %}4{% end %}" class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
                                     {% set choices = FlagChoice.by_flag_id(flag.id) %}
-                                    {% if choices and len(choices) > 0 %}{% for item in choices %}<ul><li>{{item.choice}}</li></ul>{% end %}{% end %}{% end %}</td>
+                                    {% if choices and len(choices) > 0 %}{% for item in choices %}- {{item.choice}}
+                                    {% end %}{% end %}{% end %}</td>
                                     <td style="border-top: 0px;"></td>
                                     <td style="border-top: 0px;">
                                         {% if team and flag in team.flags %}
