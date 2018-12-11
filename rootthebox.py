@@ -39,6 +39,10 @@ current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 
 def start():
+    ''' Update the database schema '''
+    from handlers import update_db
+    update_db()
+
     ''' Starts the application '''
     from handlers import start_server
     logging.info(INFO + '%s : Starting application ...' % current_time())
@@ -73,6 +77,8 @@ def setup():
     else:
         environ = bold + "Production boot strap" + W
         details = '.'
+    from handlers import update_db
+    update_db(False)
     print(INFO + '%s completed successfully%s' % (environ, details))
 
 

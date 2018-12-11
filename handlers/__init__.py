@@ -53,6 +53,8 @@ from handlers.NotificationHandlers import *
 from handlers.MaterialsHandler import *
 from handlers.ChefHandler import *
 from handlers.StaticFileHandler import StaticFileHandler
+from alembic.config import Config, command
+from libs.DatabaseConnection import DatabaseConnection
 from tornado.options import options
 
 # Singletons
@@ -256,6 +258,22 @@ app = Application(
     version=__version__,
 
 )
+
+#Update the database schema
+def update_db(update=True):
+    db_connection = DatabaseConnection(database=options.sql_database,
+                                   hostname=options.sql_host,
+                                   port=options.sql_port,
+                                   username=options.sql_user,
+                                   password=options.sql_password,
+                                   dialect=options.sql_dialect)
+    alembic_cfg = Config('alembic/alembic.ini')
+    alembic_cfg.attributes['configure_logger'] = False
+    alembic_cfg.set_main_option('sqlalchemy.url', str(db_connection))
+    if update:
+        command.upgrade(alembic_cfg, "head")
+    else:
+        command.stamp(alembic_cfg, "head")
 
 
 # Main entry point
