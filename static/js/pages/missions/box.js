@@ -39,6 +39,16 @@ $(document).ready(function() {
         $("#capture-choice-flag-form").submit();
     });
 
+    $(".flag-expand").click(function() {
+        $(this).next(".flag-collapse").toggle();
+        $(this).next().next(".flag-collapse").toggle();
+    });
+
+    $(".showflag").click(function() {
+        $("#showknownname").text($(this).data("name"));
+        $("#showknownflag").text("Flag: " + $(this).data("flag"));
+    });
+
     /* Hints */
     $("a[id^=purchase-hint-button]").click(function() { 
         $("#purchase-hint-uuid").val($(this).data("uuid"));
