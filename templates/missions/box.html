@@ -362,7 +362,7 @@
                                     {% end %}{% end %}{% end %}</td>
                                     <td style="border-top: 0px;"></td>
                                     <td style="border-top: 0px;">
-                                        {% if team and flag in team.flags %}
+                                        {% if options.show_captured_flag and team and flag in team.flags %}
                                         <a style="float: right;" class="btn btn-mini showflag" data-toggle="modal" href="#show-flag-modal" 
                                         data-flag="{{ flag.token }}" data-name="{{ flag.name }}">
                                             <i class="fa fa-flag"></i>

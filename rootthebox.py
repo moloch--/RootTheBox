@@ -354,6 +354,12 @@ define("show_mvp",
        help="display the mvp list on scoreboard",
        type=bool)
 
+define("show_captured_flag",
+       default=False,
+       group="game",
+       help="allow player to see the flag token after capture",
+       type=bool)
+
 define("hints_taken",
        default=False,
        group="game",
@@ -361,7 +367,7 @@ define("hints_taken",
        type=bool)
 
 define("global_notification",
-       default=True,
+       default=False,
        group="game",
        help="notify all players of flag captures and level unlocks",
        type=bool)

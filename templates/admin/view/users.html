@@ -296,7 +296,13 @@
                 <div class="control-group">
                     <label class="control-label" for="team-money-add">{% if options.banking %}Money{% else %}Points{% end %} to Add</label>
                     <div class="controls">
-                        <input id="team-money-add" name="money" type="number" placeholder="{% if options.banking %}Money{% else %}Points{% end %} to Add">
+                        <input id="team-money-add" name="money" type="number" placeholder="{% if options.banking %}Money{% else %}Points{% end %} to Add or Subtract">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="team-message-add">Notification Message</label>
+                    <div class="controls">
+                        <input id="team-message-add" name="message" type="text" value="Your score has been updated">
                     </div>
                 </div>
             </form>

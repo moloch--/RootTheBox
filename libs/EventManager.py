@@ -152,6 +152,16 @@ class EventManager(object):
             self.io_loop.add_callback(self.remove_connection, connection)
 
     # [ Broadcast Events ] -------------------------------------------------
+    def admin_score_update(self, team, message, value):
+        ''' Callback for when admin point change is made '''
+        if value < 0:
+            icon = WARNING
+        else:
+            icon = SUCCESS
+        Notification.create_team(team, "Admin Update", message + " (%s)" % str(value), icon)
+        self.io_loop.add_callback(self.push_team, team.id)
+        self.io_loop.add_callback(self.push_scoreboard)
+
     def flag_captured(self, user, flag):
         ''' Callback for when a flag is captured '''
         if len(GameLevel.all()) > 1:

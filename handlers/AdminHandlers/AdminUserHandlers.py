@@ -31,6 +31,7 @@ from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
 from tornado.options import options
 
+
 class AdminManageUsersHandler(BaseHandler):
 
     @restrict_ip_address
@@ -48,15 +49,19 @@ class AdminEditTeamsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         try:
             group = self.get_argument('team_uuid', 'all')
+            message = self.get_argument('message', '')
+            value = int(self.get_argument('money', 0))
             if group == 'all':
                 teams = Team.all()
                 for team in teams:
-                    team.money += int(self.get_argument('money', 0))
+                    team.money += value
                     self.dbsession.add(team)
+                    self.event_manager.admin_score_update(team, message, value)
             else:
                 team = Team.by_uuid(group)
-                team.money += int(self.get_argument('money', 0))
+                team.money += value
                 self.dbsession.add(team)
+                self.event_manager.admin_score_update(team, message, value)
             self.dbsession.commit()
             self.redirect('/admin/users')
         except ValidationError as error:
