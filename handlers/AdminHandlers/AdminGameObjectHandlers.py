@@ -404,6 +404,7 @@ class AdminEditHandler(BaseHandler):
             'hint': self.edit_hint,
             'market_item': self.edit_market_item,
             'category': self.edit_category,
+            'flag_order': self.edit_flag_order,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -525,6 +526,18 @@ class AdminEditHandler(BaseHandler):
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render("admin/view/game_objects.html", errors=[str(error), ])
+
+    def edit_flag_order(self):
+        ''' Edit flag order in the database '''
+        try:
+            flag = Flag.by_uuid(self.get_argument('uuid', ''))
+            if flag is None:
+                raise ValidationError("Flag does not exist")
+            flag.order = self.get_argument('order', '')
+            self.dbsession.add(flag)
+            self.dbsession.commit()
+        except ValidationError as error:
+            logging.error("Failed to reorder flag: %s" % error)
 
     def edit_flags(self):
         ''' Edit existing flags in the database '''

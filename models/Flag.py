@@ -77,6 +77,7 @@ class Flag(DatabaseObject):
     _case_sensitive = Column(Integer, nullable=True)
     _value = Column(Integer, nullable=False)
     _original_value = Column(Integer, nullable=False)
+    _order = Column(Integer, nullable=True, index=True)
     _type = Column(Unicode(16), default=False)
 
     flag_attachments = relationship("FlagAttachment",
@@ -239,10 +240,15 @@ class Flag(DatabaseObject):
     def name(self, value):
         if not 3 <= len(value) <= 16:
             raise ValidationError("Flag name must be 3 - 16 characters")
-        #TODO Perhaps same name with the same box - ElJefe 6/1/2018
-        #if self.by_name(value) is not None:
-            #raise ValidationError("Flag name must be unique")
         self._name = unicode(value)
+
+    @property
+    def order(self):
+        return self._order
+
+    @order.setter
+    def order(self, value):
+        self._order = int(value)
 
     @property
     def description(self):

@@ -92,7 +92,7 @@ class Box(DatabaseObject):
 
     flags = relationship("Flag",
                          backref=backref("box", lazy="select"),
-                         cascade="all,delete,delete-orphan"
+                         cascade="all,delete,delete-orphan", order_by="Flag._order"
                          )
 
     flag_submission_type = Column(Enum(FlagsSubmissionType), default=FlagsSubmissionType.CLASSIC)

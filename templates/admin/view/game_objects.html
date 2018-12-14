@@ -4,6 +4,7 @@
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
+<script src="/static/js/jquery-ui.min.js"></script>
 <script src="/static/js/libs/commonmark.min.js"></script>
 <script src="/static/js/libs/markdown-toolbar.js"></script>
 <script src="/static/js/pages/admin/view/game_objects.js"></script>
@@ -640,7 +641,7 @@
                                     </a>
                                     <hr>
                                     {% if len(box.flags) != 0 %}
-                                        <table class="table table-striped">
+                                        <table class="table table-striped sort grid">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -658,7 +659,7 @@
                                             <tbody>
                                                 {% for index, flag in enumerate(box.flags) %}
                                                     <tr>
-                                                        <td class="shortcolumn">{{ index + 1 }}</td>
+                                                        <td class="index shortcolumn" data-uuid="{{ flag.uuid }}">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                         <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
                                                         <td class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}

@@ -158,7 +158,7 @@ class EventManager(object):
             icon = WARNING
         else:
             icon = SUCCESS
-        Notification.create_team(team, "Admin Update", message + " (%s)" % str(value), icon)
+        Notification.create_team(team, "Admin Update", "%s (%s)" % (message, str(value)), icon)
         self.io_loop.add_callback(self.push_team, team.id)
         self.io_loop.add_callback(self.push_scoreboard)
 
