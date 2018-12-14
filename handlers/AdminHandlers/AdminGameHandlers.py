@@ -563,6 +563,7 @@ class AdminResetHandler(BaseHandler):
                 self.dbsession.add(flag)
             self.dbsession.commit()
             self.dbsession.flush()
+            self.flush_memcached()
             success = "Successfully Reset Game"
             self.render('admin/reset.html', success=success, errors=errors)
         except BaseException as e:

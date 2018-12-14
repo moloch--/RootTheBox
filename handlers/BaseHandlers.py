@@ -146,6 +146,10 @@ class BaseHandler(RequestHandler):
         new_session.save()
         return new_session
 
+    def flush_memcached(self):
+        if self._memcached is not None:
+            self._memcached.flush_all()
+
     @property
     def session(self):
         if self._session is None:
