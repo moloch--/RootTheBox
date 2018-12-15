@@ -103,11 +103,18 @@ class Theme(DatabaseObject):
     def name(self, value):
         self._name = self._filter_string(value, ".")
 
+    def is_sequence(self, arg):
+        return (not hasattr(arg, "strip") and
+                hasattr(arg, "__getitem__") or
+                hasattr(arg, "__iter__"))
+
     def __iter__(self):
         try:
             for _file in self.files:
                 yield _file
         except:
-            self.files = relationship("ThemeFile")
-            for _file in self.files:
-                yield _file
+            themefile = relationship("ThemeFile")
+            if is_sequence(themefile): 
+                self.files = themefile
+                for _file in self.files:
+                    yield _file

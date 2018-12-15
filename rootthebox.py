@@ -336,6 +336,12 @@ define("ctf_tagline",
        help="the tagline displayed on the welcome page",
        type=game_type)
 
+define("chat_url",
+       default="",
+       group="game",
+       help="slack/discord/... chat url for menu",
+       type=game_type)
+
 define("restrict_registration",
        default=False,
        group="game",

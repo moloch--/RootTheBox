@@ -21,7 +21,7 @@
                 <ul class="nav">
                     <li>
                         <a href="/user">
-                            <i class="fa fa-fw fa-home"></i>
+                            <i class="fa fa-fw fa-home" title="home"></i>
                         </a>
                     </li>
                     <li class="dropdown">
@@ -183,6 +183,13 @@
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                    {% end %}
+                    {% if len(options.chat_url) > 0 %}
+                    <li>
+                        <a href="{{options.chat_url}}" target="_blank">
+                            <i class="fa fa-fw fa-comment" title="chat"></i>
+                        </a>
                     </li>
                     {% end %}
                 </ul>
