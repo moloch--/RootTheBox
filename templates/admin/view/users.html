@@ -248,6 +248,28 @@
             </button>
         </div>
     </div>
+    <div id="delete-team-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3><i class="fa fa-fw fa-times-circle-o"></i> {% if options.teams %}Delete Team{% else %}Delete Player{% end %}</h3>
+        </div>
+        <div class="modal-body">
+        <p>
+            This will delete the {% if options.teams %}team{% else %}player{% end %} and any associated user accounts!<br><br>Are you sure you want to delete?<br />
+        </p>
+        <form id="delete-team-form" method="post" action="/admin/users/delete/team">
+            {% raw xsrf_form_html() %}
+            <input id="delete-team-uuid" name="uuid" type="hidden" value="" />
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="delete-team-submit" type="button" class="btn btn-danger">
+                <i class="fa fa-fw fa-times-circle-o"></i>
+                Delete
+            </button>
+        </div>
+    </div>
     <div id="delete-user-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -354,7 +376,11 @@
                     <h4 style="display:inline;">
                         {% if options.banking %}${% end %}{{ team.money }}{% if not options.banking %} <span style="font-size: small;">points</span>{% end %}
                     </h4>
-                    <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}" style="float:right;">
+                    <a id="delete-team-button{{ team_index }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-team-modal" data-uuid="{{ team.uuid }}" style="float:right;">
+                        <i class="fa fa-fw fa-times-circle-o"></i>
+                        {% if options.teams %}Delete Team{% else %}Delete Player{% end %}
+                    </a>
+                    <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}" style="float:right; margin-right:10px;">
                         <i class="fa fa-fw fa-pencil"></i>
                         {% if options.teams %}Edit Team{% else %}Edit Player{% end %}
                     </a>

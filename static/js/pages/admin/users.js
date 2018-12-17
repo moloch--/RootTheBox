@@ -59,6 +59,14 @@ $(document).ready(function() {
         $("#delete-user-form").submit();
     });
 
+    $("a[id^=delete-team-button]").click(function() {
+        $("#delete-team-uuid").val($(this).data("uuid"));
+    });
+
+    $("#delete-team-submit").click(function() {
+        $("#delete-team-form").submit();
+    });
+
     $("a[id^=lock-user-button]").click(function() {
         $("#lock-user-uuid").val($(this).data("uuid"));
         $("#lock-user-form").submit();

@@ -114,7 +114,7 @@ class Theme(DatabaseObject):
                 yield _file
         except:
             themefile = relationship("ThemeFile")
-            if is_sequence(themefile): 
+            if self.is_sequence(themefile): 
                 self.files = themefile
                 for _file in self.files:
                     yield _file

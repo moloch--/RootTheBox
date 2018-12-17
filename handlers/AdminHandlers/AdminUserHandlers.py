@@ -187,6 +187,7 @@ class AdminDeleteUsersHandler(BaseHandler):
     def post(self, *args, **kwargs):
         uri = {
             'user': self.del_user,
+            'team': self.del_team
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -205,7 +206,29 @@ class AdminDeleteUsersHandler(BaseHandler):
             self.redirect("/admin/users")
         else:
             self.render("admin/view/users.html",
-                        errors=["User is not exist"]
+                        errors=["User does not exist"]
+                        )
+
+    def del_team(self):
+        '''
+        Delete team objects in the database.
+        '''
+        team = Team.by_uuid(self.get_argument('uuid', ''))
+        for user in team.members:
+            if user == self.get_current_user():
+                self.render("admin/view/users.html",
+                        errors=["Unable to delete user %s" % user.handle]
+                        )
+                return
+        if team is not None:
+            logging.info("Deleted Team: '%s'" % str(team.name))
+            self.dbsession.delete(team)
+            self.dbsession.commit()
+            self.flush_memcached()
+            self.redirect("/admin/users")
+        else:
+            self.render("admin/view/users.html",
+                        errors=["Team does not exist"]
                         )
 
 
