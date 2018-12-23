@@ -46,6 +46,12 @@ function testToken() {
 
 $(document).ready(function() {
 
+    /* markdown */
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        $('.toolbar').markdownToolbar(false);
+    })
+
     /* Popovers */
     $("#flag-name").popover({placement:'right', trigger:'hover'});
     $("#token").popover({placement:'right', trigger:'hover'});

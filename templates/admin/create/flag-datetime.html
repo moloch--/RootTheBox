@@ -3,6 +3,9 @@
 {% block title %}Create Flag{% end %}
 
 {% block header %}
+<link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
+<script src="/static/js/libs/commonmark.min.js"></script>
+<script src="/static/js/libs/markdown-toolbar.js"></script>
 <script src="/static/js/pages/admin/create/flags.js"></script>
 {% end %}
 
@@ -67,10 +70,11 @@
                     <div class="control-group">
                         <label class="control-label" for="description">Description</label>
                         <div class="controls">
-                            <textarea required id="description" name="description" type="text" placeholder="Description"
+                            <textarea required class="toolbar" id="description" name="description" maxlength="1024" rows="5" type="text" placeholder="Description"
                                     rel="popover"
                                     data-original-title="Description"
-                                    data-content="This is the description.">
+                                    data-html="true"
+                                    data-content="This is the description [Max: 1024 Characters].<br/><br/>Supports Markdown (GitHub Style)">
                             </textarea>
                         </div>
                     </div>

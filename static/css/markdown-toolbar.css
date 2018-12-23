@@ -64,6 +64,10 @@
     transform: translateX(50%);
 }
 
+.markdown-toolbar {
+    white-space: nowrap;
+}
+
 .markdown-preview {
     background-color: #eee;
 }
