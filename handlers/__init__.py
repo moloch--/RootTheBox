@@ -56,6 +56,10 @@ from handlers.StaticFileHandler import StaticFileHandler
 from alembic.config import Config, command
 from libs.DatabaseConnection import DatabaseConnection
 from tornado.options import options
+try:
+    from urllib.parse import unquote_plus
+except ImportError:
+    from urllib import unquote_plus
 
 # Singletons
 io_loop = IOLoop.instance()
@@ -269,7 +273,7 @@ def update_db(update=True):
                                    dialect=options.sql_dialect)
     alembic_cfg = Config('alembic/alembic.ini')
     alembic_cfg.attributes['configure_logger'] = False
-    alembic_cfg.set_main_option('sqlalchemy.url', str(db_connection))
+    alembic_cfg.set_main_option('sqlalchemy.url', unquote_plus(str(db_connection)))
     if update:
         command.upgrade(alembic_cfg, "head")
     else:

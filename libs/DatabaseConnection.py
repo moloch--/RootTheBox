@@ -4,7 +4,10 @@ import sys
 import getpass
 
 from libs.ConsoleColors import *
-from urllib import quote, quote_plus
+try:
+    from urllib.parse import quote, quote_plus
+except ImportError:
+    from urllib import quote, quote_plus
 from sqlalchemy import create_engine
 from tornado.options import options
 
