@@ -27,4 +27,4 @@ pip2 install nose --upgrade
 pip2 install future --upgrade
 pip2 install python-resize-image --upgrade
 pip2 install alembic --upgrade
-pip2 isntall enum34 --upgrade
+pip2 install enum34 --upgrade
