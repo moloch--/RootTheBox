@@ -62,8 +62,14 @@
                 </h3>
                 {% if level.type == 'none' or level in team.game_levels %}
                     <div class="progress" style="height: 10px; background-color: #424242;">
+			{% if len(level.flags) == 0 %}
+                        <div class="bar minibar" style="width: {{0}}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
+                        {% end %}
+			{% if len(level.flags) != 0 %}
                         <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
-                        </div>
+			{% end %}
+
+			</div>
                     </div>
                 {% end %}
                 {% end %}
