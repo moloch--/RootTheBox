@@ -286,9 +286,13 @@ class Box(DatabaseObject):
         ips_elem.set("count", str(len(self.ip_addresses)))
         for ip in self.ip_addresses:
             ip.to_xml(ips_elem)
-        with open(options.avatar_dir + '/' + self.avatar, mode='rb') as _avatar:
-            data = _avatar.read()
-            ET.SubElement(box_elem, "avatar").text = data.encode('base64')
+        avatarfile = os.path.join(options.avatar_dir, self.avatar)
+        if self.avatar and os.path.isfile(avatarfile):
+            with open(avatarfile, mode='rb') as _avatar:
+                data = _avatar.read()
+                ET.SubElement(box_elem, "avatar").text = data.encode('base64')
+        else:
+            ET.SubElement(box_elem, "avatar").text = "none"
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''

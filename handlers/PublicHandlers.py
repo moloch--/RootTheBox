@@ -37,6 +37,7 @@ from models.GameLevel import GameLevel
 from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from datetime import datetime
+from pbkdf2 import PBKDF2
 from tornado.options import options
 
 class HomePageHandler(BaseHandler):
@@ -65,21 +66,26 @@ class LoginHandler(BaseHandler):
         ''' Checks submitted username and password '''
         user = User.by_handle(self.get_argument('account', ''))
         password_attempt = self.get_argument('password', '')
-        if user is not None and user.validate_password(password_attempt):
-            if not user.locked:
-                if self.game_started(user):
-                    self.successful_login(user)
-                    if self.config.story_mode and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
-                        self.redirect('/user/missions/firstlogin')
+        if user is not None:
+            if user.validate_password(password_attempt):
+                if not user.locked:
+                    if self.game_started(user):
+                        self.successful_login(user)
+                        if self.config.story_mode and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
+                            self.redirect('/user/missions/firstlogin')
+                        else:
+                            self.redirect('/user')
                     else:
-                        self.redirect('/user')
+                        self.render('public/login.html',
+                                    errors=None, info=["The game has not started yet"])
                 else:
                     self.render('public/login.html',
-                                errors=None, info=["The game has not started yet"])
+                                info=None, errors=["Your account has been locked"])
             else:
-                self.render('public/login.html',
-                            info=None, errors=["Your account has been locked"])
+                self.failed_login()
         else:
+            if password_attempt is not None:
+                PBKDF2.crypt(password_attempt, "BurnTheHashTime")
             self.failed_login()
 
     def game_started(self, user):

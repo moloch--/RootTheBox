@@ -16,9 +16,7 @@
 
 pip2 install tornado --upgrade
 pip2 install pbkdf2 --upgrade
-pip2 install mysql-python --upgrade
-pip2 install mysqlclient --upgrade
-pip2 install sqlalchemy --upgrade
+pip2 install PyMySQL --upgrade
 pip2 install python-memcached --upgrade
 pip2 install python-dateutil --upgrade
 pip2 install defusedxml --upgrade
@@ -26,5 +24,7 @@ pip2 install netaddr --upgrade
 pip2 install nose --upgrade
 pip2 install future --upgrade
 pip2 install python-resize-image --upgrade
+pip2 install sqlalchemy --upgrade
 pip2 install alembic --upgrade
 pip2 install enum34 --upgrade
+pip2 install mysqlclient --upgrade

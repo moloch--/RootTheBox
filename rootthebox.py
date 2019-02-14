@@ -45,7 +45,7 @@ def start():
 
     ''' Starts the application '''
     from handlers import start_server
-    logging.info(INFO + '%s : Starting application ...' % current_time())
+    logging.info(INFO + '%s : Starting RTB on port %s' % (current_time(), options.listen_port))
     start_server()
 
 
