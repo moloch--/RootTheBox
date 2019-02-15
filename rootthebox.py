@@ -473,6 +473,12 @@ define("hide_scoreboard",
        help="for non-competitive games, hide the scoreboard menu",
        type=bool)
 
+define("public_scoreboard",
+       default=True,
+       group="game",
+       help="make the scoreboard visible to non-authenticated users",
+       type=bool)
+
 define("dynamic_flag_value",
        default=False,
        group="game",

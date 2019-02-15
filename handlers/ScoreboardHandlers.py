@@ -38,6 +38,7 @@ from models.Box import Box
 from models.Category import Category
 from models.WallOfSheep import WallOfSheep
 from datetime import datetime, timedelta
+from tornado.options import options
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):
@@ -76,7 +77,10 @@ class ScoreboardHandler(BaseHandler):
     ''' Main summary page '''
 
     def get(self, *args, **kargs):
-        self.render('scoreboard/summary.html', timer=self.timer())
+        if not options.hide_scoreboard and (options.public_scoreboard or self.get_current_user()):
+            self.render('scoreboard/summary.html', timer=self.timer())
+        else:
+            self.render('public/404.html')
 
 
 class ScoreboardAjaxHandler(BaseHandler):
@@ -164,7 +168,10 @@ class ScoreboardAjaxHandler(BaseHandler):
 class ScoreboardHistoryHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        self.render('scoreboard/history.html', timer=self.timer())
+        if not options.hide_scoreboard and (options.public_scoreboard or self.get_current_user()):
+            self.render('scoreboard/history.html', timer=self.timer())
+        else:
+            self.render('public/404.html')
 
 
 class ScoreboardHistorySocketHandler(WebSocketHandler):
@@ -204,17 +211,20 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
     @use_black_market
     def get(self, *args, **kwargs):
         ''' Optionally order by argument; defaults to date/time '''
-        order = self.get_argument('order_by', '').lower()
-        if order == 'prize':
-            sheep = WallOfSheep.all_order_value()
-        elif order == 'length':
-            sheep = sorted(WallOfSheep.all())
+        if not options.hide_scoreboard and (options.public_scoreboard or self.get_current_user()):
+            order = self.get_argument('order_by', '').lower()
+            if order == 'prize':
+                sheep = WallOfSheep.all_order_value()
+            elif order == 'length':
+                sheep = sorted(WallOfSheep.all())
+            else:
+                sheep = WallOfSheep.all_order_created()
+            leaderboard = WallOfSheep.leaderboard()
+            self.render('scoreboard/wall_of_sheep.html',
+                        leaderboard=leaderboard,
+                        flock=sheep)
         else:
-            sheep = WallOfSheep.all_order_created()
-        leaderboard = WallOfSheep.leaderboard()
-        self.render('scoreboard/wall_of_sheep.html',
-                    leaderboard=leaderboard,
-                    flock=sheep)
+            self.render('public/404.html')
 
 
 class ScoreboardPauseHandler(WebSocketHandler):
@@ -246,7 +256,9 @@ class ScoreboardPauseHandler(WebSocketHandler):
 class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        self.render('scoreboard/teams.html', timer=self.timer())
-
+        if not options.hide_scoreboard and (options.public_scoreboard or self.get_current_user()):
+            self.render('scoreboard/teams.html', timer=self.timer())
+        else:
+            self.render('public/404.html')
 
 
