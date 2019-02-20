@@ -40,8 +40,12 @@ current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 def start():
     ''' Update the database schema '''
-    from handlers import update_db
-    update_db()
+    try:
+        from handlers import update_db
+        update_db()
+    except:
+        logging.fatal("Error: Unable to verify the db schema.  '--setup=prod' or '--setup=dev' can be used to create the database.")
+        os._exit(1)
 
     ''' Starts the application '''
     from handlers import start_server
@@ -601,7 +605,14 @@ if __name__ == '__main__':
     options.parse_command_line()
 
     check_cwd()
-    if os.path.isfile(options.config):
+
+    if options.version:
+        version()
+    elif options.save or not os.path.isfile(options.config):
+        save_config()
+        logging.info("Please add the db username and password to the cfg and set any advanced configuration options.")
+        os._exit(1)
+    else:
         logging.debug("Parsing config file `%s`" % (
             os.path.abspath(options.config),
         ))
@@ -609,9 +620,7 @@ if __name__ == '__main__':
 
     # Make sure that cli args always have president over the file
     options.parse_command_line()
-    if options.save:
-        save_config()
-
+    
     if options.setup.lower()[:3] in ['pro', 'dev']:
         setup()
     elif options.start:
@@ -620,5 +629,3 @@ if __name__ == '__main__':
         restart()
     elif options.recovery:
         recovery()
-    elif options.version:
-        version()

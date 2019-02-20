@@ -75,16 +75,25 @@ class DatabaseConnection(object):
         __mysql = 'mysql://%s:%s@%s/%s' % (
             db_user, db_password, db_server, db_name
         )
+        __mysqlclient = 'mysql+mysqldb://%s:%s@%s/%s' % (
+            db_user, db_password, db_server, db_name
+        )
         __pymysql = 'mysql+pymysql://%s:%s@%s/%s' % (
+            db_user, db_password, db_server, db_name
+        )
+        __mysqlconnector = 'mysql+mysqlconnector://%s:%s@%s/%s' % (
             db_user, db_password, db_server, db_name
         )
         if self._test_connection(__mysql):
             return __mysql
+        if self._test_connection(__mysqlclient):
+            return __mysqlclient
         elif self._test_connection(__pymysql):
-            logging.debug("Falling back to PyMySQL driver ...")
             return __pymysql
+        elif self._test_connection(__mysqlconnector):
+            return __mysqlconnector
         else:
-            logging.fatal("Cannot connect to database with any available driver")
+            logging.fatal("Cannot connect to database with any available driver. Verify correct username & password in rootthebox.cfg and db dependecies.")
             os._exit(1)
 
     def _test_connection(self, connection_string):
@@ -96,9 +105,9 @@ class DatabaseConnection(object):
             connection = engine.connect()
             connection.close()
             return True
-        except:
+        except Exception as e:
             if options.debug:
-                logging.exception("Database connection failed")
+                logging.exception("Database connection failed: %s" % e)
             return False
 
     def _db_credentials(self):
