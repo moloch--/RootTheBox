@@ -352,6 +352,12 @@ define("restrict_registration",
        help="require registration tokens",
        type=bool)
 
+define("require_email",
+       default=True,
+       group="game",
+       help="require email for registration",
+       type=bool)
+
 define("public_teams",
        default=True,
        group="game",

@@ -127,7 +127,7 @@
                         Email
                     </label>
                     <div class="controls">
-                        <input required id="email" name="email" maxlength="64" minlength="3" placeholder="Email" type="text"
+                        <input {% if options.require_email %}required {% end %}id="email" name="email" maxlength="64" minlength="3" placeholder="Email" type="text"
                             rel="popover" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                             data-original-title="Player's Email"
                             data-content="Your email, visible to game administrators." />
