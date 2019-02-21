@@ -11,6 +11,7 @@ def save_config():
         fp.write("##########################")
         fp.write(" Root the Box Config File ")
         fp.write("##########################\n")
+        fp.write("# Documentation: %s\n" % "https://github.com/moloch--/RootTheBox/wiki/Configuration-File-Details")
         fp.write("# Last updated: %s\n" % datetime.now())
         for group in options.groups():
             # Shitty work around for Tornado 4.1
