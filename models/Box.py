@@ -179,7 +179,8 @@ class Box(DatabaseObject):
             ls.append("No information on file.")
         if self.difficulty != "Unknown":
             ls.append("Reported Difficulty: %s" % self.difficulty)
-        if not str(ls[-1]).endswith("\n"):
+        
+        if ls[-1] and not ls[-1].encode('utf8').endswith("\n"):
             ls[-1] = ls[-1] + "\n"
         return unicode("\n\n".join(ls))
 
