@@ -37,6 +37,7 @@ from models.FlagChoice import FlagChoice
 from models.Penalty import Penalty
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
+from libs.StringCoding import str3
 from tornado.options import options
 from dateutil.parser import parse
 
@@ -65,7 +66,7 @@ class Flag(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     lock_id = Column(Integer, ForeignKey('flag.id', ondelete="SET NULL"), nullable=True)
@@ -370,9 +371,9 @@ class Flag(DatabaseObject):
     def capture(self, submission):
         if self._type == FLAG_STATIC:
             if self._case_sensitive == 0:
-                return str(self.token).lower().strip() == str(submission).lower().strip()
+                return str3(self.token).lower().strip() == str3(submission).lower().strip()
             else:
-                return str(self.token).strip() == str(submission).strip()
+                return str3(self.token).strip() == str3(submission).strip()
         elif self._type == FLAG_REGEX:
             if not self.token.startswith("^(") and not self.token.endswith(")$"):
                 self.token = "^(" + self.token + ")$"
@@ -401,23 +402,23 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "token").text = self.token
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
-        ET.SubElement(flag_elem, "value").text = str(self.value)
-        ET.SubElement(flag_elem, "original_value").text = str(self.original_value)
+        ET.SubElement(flag_elem, "value").text = str3(self.value)
+        ET.SubElement(flag_elem, "original_value").text = str3(self.original_value)
         if self.lock_id:
             ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
-        ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
+        ET.SubElement(flag_elem, "case_sensitive").text = str3(self.case_sensitive)
         attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
-        attachements_elem.set("count", str(len(self.flag_attachments)))
+        attachements_elem.set("count", str3(len(self.flag_attachments)))
         for attachement in self.flag_attachments:
             attachement.to_xml(attachements_elem)
         choice_elem = ET.SubElement(flag_elem, "flag_choices")
-        choice_elem.set("count", str(len(self.flag_choice)))
+        choice_elem.set("count", str3(len(self.flag_choice)))
         for choice in self.flag_choice:
             ET.SubElement(choice_elem, "choice").text = choice.choice
         from models.Hint import Hint
         xml_hints = Hint.by_flag_id(self.id)
         hints_elem = ET.SubElement(flag_elem, "hints")
-        hints_elem.set("count", str(len(xml_hints)))
+        hints_elem.set("count", str3(len(xml_hints)))
         for hint in xml_hints:
             if not hint.flag_id is None:
                 hint.to_xml(hints_elem)
@@ -449,5 +450,5 @@ class Flag(DatabaseObject):
 
     def __repr__(self):
         return "<Flag - name:%s, type:%s >" % (
-            self.name, str(self._type)
+            self.name, str3(self._type)
         )

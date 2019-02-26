@@ -15,6 +15,7 @@ import collections
 
 from datetime import datetime, timedelta
 from tornado.options import options
+from libs.StringCoding import str3
 
 
 class BaseSession(collections.MutableMapping):
@@ -124,7 +125,7 @@ class BaseSession(collections.MutableMapping):
         dump = {
             'session_id': self.session_id,
             'data': self.data,
-            'expires': str(self.expires),
+            'expires': str3(self.expires),
             'ip_address': self.ip_address,
         }
         return json.dumps(dump).encode('base64').strip()
@@ -178,7 +179,7 @@ class MemcachedSession(BaseSession):
         if self.dirty:
             ttl = self.expires - datetime.utcnow()
             self.connection.set(
-                str(self.session_id), self.serialize(), time=ttl.seconds)
+                str3(self.session_id), self.serialize(), time=ttl.seconds)
             self.dirty = False
 
     @staticmethod

@@ -5,6 +5,9 @@ from logging.config import fileConfig
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+# alembic.context is only available for the env.py 
+# script when it is executed through the alembic
+# pylint: disable=method-hidden,no-member
 config = context.config
 
 # Interpret the config file for Python logging.

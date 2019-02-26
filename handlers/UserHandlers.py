@@ -34,6 +34,7 @@ from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from libs.XSSImageCheck import IMG_FORMATS
+from libs.StringCoding import str3
 from .BaseHandlers import BaseHandler
 from tornado.options import options
 
@@ -111,7 +112,7 @@ class SettingsHandler(BaseHandler):
                 self.dbsession.commit()
                 self.render_page(success=["Updated avatar"])
             except ValidationError as error:
-                self.render_page(errors=[str(error), ])
+                self.render_page(errors=[str3(error), ])
         else:
             self.render_page(errors=["Please provide an image"])
 
@@ -145,7 +146,7 @@ class SettingsHandler(BaseHandler):
                     else:
                         self.render_page(success=["Updated avatar"])
             except ValidationError as error:
-                self.render_page(errors=[str(error), ])
+                self.render_page(errors=[str3(error), ])
         else:
             self.render_page(errors=["Please provide an image"])
 
@@ -157,7 +158,7 @@ class SettingsHandler(BaseHandler):
         theme = Theme.by_uuid(self.get_argument('theme_uuid', ''))
         if theme is not None:
             self.session['theme_id'] = theme.id
-            self.session['theme'] = [str(f) for f in theme.files]
+            self.session['theme'] = [str3(f) for f in theme.files]
             self.session.save()
             user = self.get_current_user()
             user.theme_id = theme.id

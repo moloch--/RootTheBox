@@ -29,6 +29,7 @@ from models import dbsession
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
 from tornado.options import options
+from libs.StringCoding import str3, uni3
 
 
 class SourceCode(DatabaseObject):
@@ -41,7 +42,7 @@ class SourceCode(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
 
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
@@ -76,7 +77,7 @@ class SourceCode(DatabaseObject):
     @file_name.setter
     def file_name(self, value):
         fname = value.replace('\n', '').replace('\r', '')
-        self._file_name = unicode(os.path.basename(fname))[:64]
+        self._file_name = uni3(os.path.basename(fname))[:64]
 
     @property
     def data(self):
@@ -86,7 +87,7 @@ class SourceCode(DatabaseObject):
     @data.setter
     def data(self, value):
         if self.uuid is None:
-            self.uuid = str(uuid4())
+            self.uuid = str3(uuid4())
         self.byte_size = len(value)
         self.checksum = sha1(value).hexdigest()
         with open(options.source_code_market_dir + '/' + self.uuid, 'wb') as fp:
@@ -115,7 +116,7 @@ class SourceCode(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value)[:1024]
+        self._description = uni3(value)[:1024]
 
     def to_dict(self):
         return {

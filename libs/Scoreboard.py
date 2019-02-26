@@ -19,6 +19,7 @@ Created on Oct 04, 2012
     See the License for the specific language governing permissions and
     limitations under the License.
 '''
+# pylint: disable=no-member
 
 
 import json
@@ -27,6 +28,7 @@ import logging
 from models import dbsession
 from models.Team import Team
 from libs.BotManager import BotManager
+from libs.StringCoding import str3
 from tornado.options import options
 
 
@@ -41,8 +43,8 @@ class Scoreboard(object):
             if len(team.members) > 0:
                 game_state[team.name] = {
                     'money': team.money,
-                    'flags': [str(flag) for flag in team.flags],
-                    'game_levels': [str(lvl) for lvl in team.game_levels],
+                    'flags': [str3(flag) for flag in team.flags],
+                    'game_levels': [str3(lvl) for lvl in team.game_levels],
                 }
         return json.dumps(game_state)
 

@@ -27,6 +27,7 @@ from sqlalchemy import Column
 from sqlalchemy.types import Unicode, String
 from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
+from libs.StringCoding import str3, uni3
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
@@ -37,7 +38,7 @@ class Corporation(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
 
     _name = Column(Unicode(32), unique=True, nullable=False)
@@ -64,7 +65,7 @@ class Corporation(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         ''' Returns a the object with name of name '''
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=uni3(name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
@@ -79,7 +80,7 @@ class Corporation(DatabaseObject):
     def name(self, value):
         if not len(value) <= 32:
             raise ValidationError("Corporation name must be 0 - 32 characters")
-        self._name = unicode(value)
+        self._name = uni3(value)
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''
@@ -94,7 +95,7 @@ class Corporation(DatabaseObject):
         corp_elem = ET.SubElement(parent, "corporation")
         ET.SubElement(corp_elem, "name").text = self.name
         boxes_elem = ET.SubElement(corp_elem, "boxes")
-        boxes_elem.set("count", str(len(self.boxes)))
+        boxes_elem.set("count", str3(len(self.boxes)))
         for box in self.boxes:
             box.to_xml(boxes_elem)
 

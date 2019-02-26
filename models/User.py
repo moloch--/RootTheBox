@@ -29,7 +29,7 @@ import os
 import imghdr
 import string
 import random
-import StringIO
+import io
 import xml.etree.cElementTree as ET
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
@@ -48,6 +48,7 @@ from string import printable
 from tornado.options import options
 from PIL import Image
 from resizeimage import resizeimage
+from libs.StringCoding import str3, uni3
 
 
 # Constants
@@ -62,7 +63,7 @@ class User(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
 
     team_id = Column(Integer, ForeignKey('team.id'))
@@ -132,12 +133,12 @@ class User(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=uni3(_uuid)).first()
 
     @classmethod
     def by_handle(cls, handle):
         ''' Return the user object whose user is "_handle" '''
-        return dbsession.query(cls).filter_by(_handle=unicode(handle)).first()
+        return dbsession.query(cls).filter_by(_handle=uni3(handle)).first()
 
     @classmethod
     def _hash_bank_password(cls, algorithm_name, password):
@@ -204,7 +205,7 @@ class User(DatabaseObject):
     def handle(self, new_handle):
         if not 3 <= len(new_handle) <= 16:
             raise ValidationError("Handle must be 3 - 16 characters")
-        self._handle = unicode(new_handle)
+        self._handle = uni3(new_handle)
 
     @property
     def name(self):
@@ -214,7 +215,7 @@ class User(DatabaseObject):
     def name(self, new_name):
         if len(new_name) > 64:
             raise ValidationError("Name must be 0 - 64 characters")
-        self._name = unicode(new_name)
+        self._name = uni3(new_name)
     
     @property
     def email(self):
@@ -224,17 +225,17 @@ class User(DatabaseObject):
     def email(self, new_email):
         if len(new_email) > 64:
             raise ValidationError("Email must be 0 - 64 characters")
-        self._email = unicode(new_email)
+        self._email = uni3(new_email)
 
     @property
-    def permissions(self):
+    def permissions_all(self):
         ''' Return a set with all permissions granted to the user '''
         return dbsession.query(Permission).filter_by(user_id=self.id)
 
     @property
     def permissions_names(self):
         ''' Return a list with all permissions accounts granted to the user '''
-        return [permission.name for permission in self.permissions]
+        return [permission.name for permission in self.permissions_all]
 
     @property
     def locked(self):
@@ -278,8 +279,8 @@ class User(DatabaseObject):
             if ext in IMG_FORMATS and not is_xss_image(image_data):
                 if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
                     os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
-                image = Image.open(StringIO.StringIO(image_data))
+                file_path = str3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                image = Image.open(io.BytesIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
                 self._avatar = 'upload/' + self.uuid + '.' + ext
@@ -296,7 +297,7 @@ class User(DatabaseObject):
         ''' Check to see if a team has purchased an item '''
         item = MarketItem.by_name(item_name)
         if item is None:
-            raise ValueError("Item '%s' not in database." % str(item_name))
+            raise ValueError("Item '%s' not in database." % str3(item_name))
         return True if item in self.team.items else False
 
     def has_permission(self, permission):

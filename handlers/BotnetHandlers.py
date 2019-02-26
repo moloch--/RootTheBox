@@ -18,6 +18,8 @@ Created on Mar 15, 2012
     See the License for the specific language governing permissions and
     limitations under the License.
 '''
+# pylint: disable=unused-wildcard-import,no-member
+
 
 import os
 import json
@@ -29,6 +31,7 @@ from uuid import uuid4
 from hashlib import sha512
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
+from libs.StringCoding import str3, uni3
 from models import Box, Team, User
 from models.User import ADMIN_PERMISSION
 from .BaseHandlers import BaseHandler, BaseWebSocketHandler
@@ -77,7 +80,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         if not self.config.use_bots:
             self.close()
         else:
-            self.uuid = unicode(uuid4())
+            self.uuid = uni3(uuid4())
             self.opcodes = {
                 'interrogation_response': self.interrogation_response,
             }
@@ -108,7 +111,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             else:
                 self.opcodes[req['opcode']](req)
         except ValueError as error:
-            logging.warn("Invalid json request from bot: %s" % str(error))
+            logging.warn("Invalid json request from bot: %s" % str3(error))
             self.close()
 
     def on_close(self):
@@ -186,7 +189,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
         if not self.config.use_bots:
             self.close()
         else:
-            self.uuid = unicode(uuid4())
+            self.uuid = uni3(uuid4())
             self.opcodes = {
                 'auth': self.auth,
             }
@@ -205,7 +208,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             else:
                 self.opcodes[req['opcode']](req)
         except ValueError as error:
-            logging.warn("Invalid json request from bot: %s" % str(error))
+            logging.warn("Invalid json request from bot: %s" % str3(error))
 
     def on_close(self):
         ''' Close connection to remote host '''
@@ -283,7 +286,7 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
         user = self.get_current_user()
         if self.session is not None and ('team_id' in self.session or user.has_permission(ADMIN_PERMISSION)):
             logging.debug("[Web Socket] Opened web monitor socket with %s" % user.handle)
-            self.uuid = unicode(uuid4())
+            self.uuid = uni3(uuid4())
             self.bot_manager = BotManager.instance()
             
             if user.has_permission(ADMIN_PERMISSION):

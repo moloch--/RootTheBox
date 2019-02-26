@@ -28,6 +28,7 @@ from models import dbsession
 from models.User import User
 from models.BaseModels import DatabaseObject
 from tornado.options import options
+from libs.StringCoding import str3
 
 
 class Swat(DatabaseObject):
@@ -39,7 +40,7 @@ class Swat(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
 
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)

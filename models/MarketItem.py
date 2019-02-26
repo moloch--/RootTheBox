@@ -27,12 +27,13 @@ from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Integer, String
 from models.BaseModels import DatabaseObject
 from models import dbsession
+from libs.StringCoding import str3, uni3
 
 
 class MarketItem(DatabaseObject):
     ''' Item definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str3(uuid4()))
     name = Column(Unicode(64), nullable=False)
     price = Column(Integer, nullable=False)
     image = Column(Unicode(256), nullable=False)
@@ -51,12 +52,12 @@ class MarketItem(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Returns a the object with a given uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=uni3(_uuid)).first()
 
     @classmethod
     def by_name(cls, _name):
         ''' Returns an object with a given name '''
-        return dbsession.query(cls).filter_by(name=unicode(_name)).first()
+        return dbsession.query(cls).filter_by(name=uni3(_name)).first()
 
     def to_dict(self):
         ''' Returns object data as dictionary object '''

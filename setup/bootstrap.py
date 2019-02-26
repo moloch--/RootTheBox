@@ -26,6 +26,7 @@ import sys
 import getpass
 
 from libs.ConsoleColors import *
+from libs.StringCoding import uni3
 from models import dbsession
 from models.Permission import Permission
 from models.Theme import Theme, ThemeFile
@@ -43,7 +44,7 @@ if options.setup.lower().startswith('dev'):
     password = 'nimda123'
     print("Admin Username: %s, Password: %s" % (admin_handle, password))
 else:
-    admin_handle = unicode(raw_input(PROMPT + "RootTheBox Admin Username [admin]: ")) or u'admin'
+    admin_handle = uni3(raw_input(PROMPT + "RootTheBox Admin Username [admin]: ")) or u'admin'
     sys.stdout.write(PROMPT+"New Admin ")
     sys.stdout.flush()
     password1 = getpass.getpass()

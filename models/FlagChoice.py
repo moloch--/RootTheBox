@@ -27,6 +27,7 @@ from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, String, Integer
 from models import dbsession
 from models.BaseModels import DatabaseObject
+from libs.StringCoding import str3, uni3
 
 
 class FlagChoice(DatabaseObject):
@@ -35,7 +36,7 @@ class FlagChoice(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
 
     flag_id = Column(Integer, ForeignKey('flag.id'), nullable=False)
@@ -75,7 +76,7 @@ class FlagChoice(DatabaseObject):
             flag = cls.flag
         if not item:
             item = cls.item
-        choice = cls._create(flag, unicode(item)[:256])
+        choice = cls._create(flag, uni3(item)[:256])
         dbsession.add(choice)
         dbsession.commit()
         
@@ -94,7 +95,7 @@ class FlagChoice(DatabaseObject):
 
     @choice.setter
     def choice(self, value):
-        self._choice = unicode(value)[:256]
+        self._choice = uni3(value)[:256]
 
     def to_dict(self):
         ''' Return public data as dict '''

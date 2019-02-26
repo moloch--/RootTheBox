@@ -21,6 +21,8 @@ Created on Nov 24, 2014
 
 Handlers for user-related tasks.
 '''
+# pylint: disable=unused-wildcard-import
+
 
 import logging
 
@@ -29,8 +31,9 @@ from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
+from libs.StringCoding import str3
 from tornado.options import options
-
+from netaddr import IPAddress
 
 class AdminManageUsersHandler(BaseHandler):
 
@@ -66,7 +69,7 @@ class AdminEditTeamsHandler(BaseHandler):
             self.redirect('/admin/users')
         except ValidationError as error:
             self.render('admin/view/users.html',
-                        errors=[str(error), ]
+                        errors=[str3(error), ]
                         )
 
 
@@ -106,7 +109,7 @@ class AdminEditUsersHandler(BaseHandler):
             self.redirect('/admin/users')
         except ValidationError as error:
             self.render('admin/view/users.html',
-                        errors=[str(error), ]
+                        errors=[str3(error), ]
                         )
 
     def edit_user(self):
@@ -175,7 +178,7 @@ class AdminEditUsersHandler(BaseHandler):
             self.redirect('/admin/users')
         except ValidationError as error:
             self.render("admin/view/users.html",
-                        errors=[str(error), ]
+                        errors=[str3(error), ]
                         )
 
 
@@ -200,7 +203,7 @@ class AdminDeleteUsersHandler(BaseHandler):
         '''
         user = User.by_uuid(self.get_argument('uuid', ''))
         if user is not None and user != self.get_current_user():
-            logging.info("Deleted User: '%s'" % str(user.handle))
+            logging.info("Deleted User: '%s'" % str3(user.handle))
             self.dbsession.delete(user)
             self.dbsession.commit()
             self.redirect("/admin/users")
@@ -221,7 +224,7 @@ class AdminDeleteUsersHandler(BaseHandler):
                         )
                 return
         if team is not None:
-            logging.info("Deleted Team: '%s'" % str(team.name))
+            logging.info("Deleted Team: '%s'" % str3(team.name))
             self.dbsession.delete(team)
             self.dbsession.commit()
             self.flush_memcached()

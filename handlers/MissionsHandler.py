@@ -26,12 +26,14 @@ This file contains the code for displaying flags / recv flag submissions
 
 import logging
 
+from builtins import next
 from models.GameLevel import GameLevel
 from models.Flag import Flag
 from models.Box import Box, FlagsSubmissionType
 from models.Hint import Hint
 from models.Penalty import Penalty
 from libs.SecurityDecorators import authenticated
+from libs.StringCoding import str3
 from handlers.BaseHandlers import BaseHandler
 
 
@@ -114,13 +116,13 @@ class FlagSubmissionHandler(BaseHandler):
                     penalty_dialog = "Sorry - Try Again"
                     if penalty:
                         if self.config.banking:
-                            penalty_dialog = "$" + str(penalty) + " has been deducted from your " + teamval + "account."
+                            penalty_dialog = "$" + str3(penalty) + " has been deducted from your " + teamval + "account."
                         else:
                             if penalty == 1:
                                 point = " point has"
                             else:
                                 point = " points have"
-                            penalty_dialog = str(penalty) + point + " been deducted from your " + teamval + "score."
+                            penalty_dialog = str3(penalty) + point + " been deducted from your " + teamval + "score."
                     if flag is None:
                         self.render_page_by_box_id(box_id, errors=[penalty_dialog])
                     else:
@@ -143,9 +145,9 @@ class FlagSubmissionHandler(BaseHandler):
         old_reward = flag.value if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
         if self.config.banking:
-            reward_dialog += "$" + str(old_reward) + " has been added to your " + teamval + "account."
+            reward_dialog += "$" + str3(old_reward) + " has been added to your " + teamval + "account."
         else:
-            reward_dialog += str(old_reward) + " points added to your " + teamval + "score."
+            reward_dialog += str3(old_reward) + " points added to your " + teamval + "score."
         success = [reward_dialog]
 
         # Check for Box Completion
@@ -169,10 +171,10 @@ class FlagSubmissionHandler(BaseHandler):
                 self.dbsession.flush()
                 self.dbsession.commit()
                 if self.config.banking:
-                    reward_dialog += "$" + str(level._reward) + " has been added to your " + teamval + "account."
+                    reward_dialog += "$" + str3(level._reward) + " has been added to your " + teamval + "account."
                 else:
-                    reward_dialog += str(level._reward) + " points added to your " + teamval + "score."
-            success.append("Congratulations! You have completed " + str(level.name) + ". " + reward_dialog)
+                    reward_dialog += str3(level._reward) + " points added to your " + teamval + "score."
+            success.append("Congratulations! You have completed " + str3(level.name) + ". " + reward_dialog)
 
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
@@ -184,7 +186,7 @@ class FlagSubmissionHandler(BaseHandler):
             self.dbsession.add(user.team)
             self.dbsession.commit()
             self.event_manager.level_unlocked(user, next_level)
-            success.append("Congratulations! You have unlocked " + str(next_level.name))
+            success.append("Congratulations! You have unlocked " + str3(next_level.name))
         
         return success
 
@@ -244,7 +246,7 @@ class FlagSubmissionHandler(BaseHandler):
     def _check_level(self, flag):
         user = self.get_current_user()
         if len(user.team.level_flags(flag.game_level.number)) == len(flag.game_level.flags):
-            next_level = flag.game_level.next()
+            next_level = next(flag.game_level)
             logging.info("Next level is %r" % next_level)
             if next_level is not None and next_level not in user.team.game_levels:
                 logging.info("Team completed level, unlocking the next level")
@@ -330,7 +332,7 @@ class MissionsHandler(BaseHandler):
         ''' Submit flags/buyout to levels '''
         uri = {'buyout': self.buyout}
         if len(args) and args[0] in uri:
-            uri[str(args[0])]()
+            uri[str3(args[0])]()
         else:
             self.render("public/404.html")
 

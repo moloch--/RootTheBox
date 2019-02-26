@@ -22,7 +22,7 @@ Created on Mar 11, 2012
 
 import os
 import imghdr
-import StringIO
+import io
 import xml.etree.cElementTree as ET
 
 from os import urandom
@@ -41,6 +41,7 @@ from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
+from libs.StringCoding import str3, uni3
 from PIL import Image
 from resizeimage import resizeimage
 import enum
@@ -55,7 +56,7 @@ class Box(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
 
     corporation_id = Column(Integer, ForeignKey('corporation.id'),
@@ -115,12 +116,12 @@ class Box(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=uni3(_uuid)).first()
 
     @classmethod
     def by_name(cls, name):
         ''' Return the box object whose name is "name" '''
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=uni3(name)).first()
 
     @classmethod
     def by_category(cls, _cat_id):
@@ -155,9 +156,9 @@ class Box(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 <= len(unicode(value)) <= 32:
+        if not 3 <= len(uni3(value)) <= 32:
             raise ValidationError("Name must be 3 - 32 characters")
-        self._name = unicode(value)
+        self._name = uni3(value)
 
     @property
     def operating_system(self):
@@ -165,7 +166,7 @@ class Box(DatabaseObject):
 
     @operating_system.setter
     def operating_system(self, value):
-        self._operating_system = unicode(value)
+        self._operating_system = uni3(value)
 
     @property
     def description(self):
@@ -179,9 +180,9 @@ class Box(DatabaseObject):
             ls.append("No information on file.")
         if self.difficulty != "Unknown":
             ls.append("Reported Difficulty: %s" % self.difficulty)
-        if not str(ls[-1]).endswith("\n"):
+        if ls[-1] and not ls[-1].encode('utf8').endswith("\n"):
             ls[-1] = ls[-1] + "\n"
-        return unicode("\n\n".join(ls))
+        return uni3("\n\n".join(ls))
 
     @description.setter
     def description(self, value):
@@ -189,7 +190,7 @@ class Box(DatabaseObject):
             return ""
         if 1025 < len(value):
             raise ValidationError("Description cannot be greater than 1024 characters")
-        self._description = unicode(value)
+        self._description = uni3(value)
 
     @property
     def difficulty(self):
@@ -201,7 +202,7 @@ class Box(DatabaseObject):
             return
         if 17 < len(value):
             raise ValidationError("Difficulty cannot be greater than 16 characters")
-        self._difficulty = unicode(value)
+        self._difficulty = uni3(value)
 
     @property
     def avatar(self):
@@ -218,14 +219,14 @@ class Box(DatabaseObject):
     @avatar.setter
     def avatar(self, image_data):
         if self.uuid is None:
-            self.uuid = str(uuid4())
+            self.uuid = str3(uuid4())
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp'] and not is_xss_image(image_data):
                 if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
                     os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
-                image = Image.open(StringIO.StringIO(image_data))
+                file_path = str3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                image = Image.open(io.BytesIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
                 self._avatar = 'upload/' + self.uuid + '.' + ext
@@ -261,7 +262,7 @@ class Box(DatabaseObject):
     def to_xml(self, parent):
         ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")
-        box_elem.set("gamelevel", str(self.game_level.number))
+        box_elem.set("gamelevel", str3(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
         ET.SubElement(
             box_elem, "operatingsystem").text = self._operating_system
@@ -272,7 +273,7 @@ class Box(DatabaseObject):
         if self.category_id:
             ET.SubElement(box_elem, "category").text = Category.by_id(self.category_id).category
         flags_elem = ET.SubElement(box_elem, "flags")
-        flags_elem.set("count", str(len(self.flags)))
+        flags_elem.set("count", str3(len(self.flags)))
         for flag in self.flags:
             flag.to_xml(flags_elem)
         hints_elem = ET.SubElement(box_elem, "hints")
@@ -281,9 +282,9 @@ class Box(DatabaseObject):
             if hint.flag_id is None:
                 hint.to_xml(hints_elem)
                 count += 1
-        hints_elem.set("count", str(count))
+        hints_elem.set("count", str3(count))
         ips_elem = ET.SubElement(box_elem, "ipaddresses")
-        ips_elem.set("count", str(len(self.ip_addresses)))
+        ips_elem.set("count", str3(len(self.ip_addresses)))
         for ip in self.ip_addresses:
             ip.to_xml(ips_elem)
         avatarfile = os.path.join(options.avatar_dir, self.avatar)

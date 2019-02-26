@@ -17,8 +17,9 @@
 
 This file is the main starting point for the application, based on the
 command line arguments it calls various components setup/start/etc.
-
 '''
+# pylint: disable=unused-wildcard-import
+
 
 from __future__ import print_function
 
@@ -32,10 +33,11 @@ from datetime import datetime
 from tornado.options import define, options
 from libs.ConsoleColors import *
 from libs.ConfigHelpers import save_config
+from libs.StringCoding import str3, uni3
 from setup import __version__
 
 
-current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
+current_time = lambda: uni3(datetime.now()).split(' ')[1].split('.')[0]
 
 
 def start():
@@ -97,7 +99,7 @@ def recovery():
         print(INFO + "Have a nice day!")
 
 
-def setup_xml():
+def setup_xml(xml_params):
     ''' Imports XML file(s) '''
     from setup.xmlsetup import import_xml
     for index, xml_param in enumerate(xml_params):

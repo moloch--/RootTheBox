@@ -33,6 +33,7 @@ from models import dbsession
 from models.User import User
 from models.BaseModels import DatabaseObject
 from tornado.options import options
+from libs.StringCoding import uni3
 
 
 ### Constants ###
@@ -116,8 +117,8 @@ class Notification(DatabaseObject):
         icon = icon if icon is not None else INFO
         notification = Notification(
             user_id=user.id,
-            title=unicode(title),
-            message=unicode(message),
+            title=uni3(title),
+            message=uni3(message),
             icon_url=urlparse(icon).path,
         )
         return notification

@@ -22,6 +22,7 @@ Created on Mar 13, 2012
 This is the main file the defines what URLs get routed to what handlers
 
 '''
+# pylint: disable=no-member,unsupported-assignment-operation
 
 
 import sys
@@ -55,6 +56,7 @@ from handlers.ChefHandler import *
 from handlers.StaticFileHandler import StaticFileHandler
 from alembic.config import Config, command
 from libs.DatabaseConnection import DatabaseConnection
+from libs.StringCoding import uni3
 from tornado.options import options
 try:
     from urllib.parse import unquote_plus
@@ -273,7 +275,7 @@ def update_db(update=True):
                                    dialect=options.sql_dialect)
     alembic_cfg = Config('alembic/alembic.ini')
     alembic_cfg.attributes['configure_logger'] = False
-    alembic_cfg.set_main_option('sqlalchemy.url', unquote_plus(str(db_connection)))
+    alembic_cfg.set_main_option('sqlalchemy.url', unquote_plus(uni3(db_connection)))
     if update:
         command.upgrade(alembic_cfg, "head")
     else:

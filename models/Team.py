@@ -18,13 +18,14 @@ Created on Mar 12, 2012
     See the License for the specific language governing permissions and
     limitations under the License.
 '''
+# pylint: disable=no-member
 
 
 import xml.etree.cElementTree as ET
 
 import os
 import imghdr
-import StringIO
+import io
                 
 from uuid import uuid4
 from sqlalchemy import Column
@@ -43,17 +44,18 @@ from tornado.options import options
 from PIL import Image
 from resizeimage import resizeimage
 from random import randint
+from libs.StringCoding import str3, uni3
 
 class Team(DatabaseObject):
 
     ''' Team definition '''
 
     uuid = Column(
-        String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+        String(36), unique=True, nullable=False, default=lambda: str3(uuid4()))
     _name = Column(Unicode(24), unique=True, nullable=False)
     _motto = Column(Unicode(32))
     _avatar = Column(String(64))
-    _code = Column('code', String(16), unique=True, default=lambda: str(uuid4().hex)[:16])
+    _code = Column('code', String(16), unique=True, default=lambda: str3(uuid4().hex)[:16])
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
     money = Column(Integer, default=options.starting_team_money, nullable=False)
@@ -111,7 +113,7 @@ class Team(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         ''' Return the team object based on "team_name" '''
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=uni3(name)).first()
 
     @classmethod
     def ranks(cls):
@@ -131,7 +133,7 @@ class Team(DatabaseObject):
         if not 3 <= len(value) <= 24:
             raise ValidationError("Team name must be 3 - 24 characters")
         else:
-            self._name = unicode(value)
+            self._name = uni3(value)
 
     @property
     def motto(self):
@@ -142,7 +144,7 @@ class Team(DatabaseObject):
         if 32 < len(value):
             raise ValidationError("Motto must be less than 32 characters")
         else:
-            self._motto = unicode(value)
+            self._motto = uni3(value)
 
     @property
     def code(self):
@@ -170,8 +172,8 @@ class Team(DatabaseObject):
             if ext in IMG_FORMATS and not is_xss_image(image_data):
                 if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
                     os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
-                image = Image.open(StringIO.StringIO(image_data))
+                file_path = str3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                image = Image.open(io.BytesIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
                 self._avatar = 'upload/' + self.uuid + '.' + ext
@@ -218,7 +220,7 @@ class Team(DatabaseObject):
         ET.SubElement(team_elem, "name").text = self.name
         ET.SubElement(team_elem, "motto").text = self.motto
         users_elem = ET.SubElement(team_elem, "users")
-        users_elem.set("count", str(len(self.members)))
+        users_elem.set("count", str3(len(self.members)))
         for user in self.members:
             user.to_xml(users_elem)
 

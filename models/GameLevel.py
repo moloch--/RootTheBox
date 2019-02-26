@@ -29,6 +29,7 @@ from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
+from libs.StringCoding import str3
 
 
 class GameLevel(DatabaseObject):
@@ -38,7 +39,7 @@ class GameLevel(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
 
     next_level_id = Column(Integer, ForeignKey('game_level.id'))
@@ -123,7 +124,7 @@ class GameLevel(DatabaseObject):
         if self._name:
             return self._name
         else:
-            return "Level #" + str(self.number)
+            return "Level #" + str3(self.number)
 
     @name.setter
     def name(self, value):
@@ -141,7 +142,7 @@ class GameLevel(DatabaseObject):
         if value is None:
             return
         try:
-            self._type = str(value)
+            self._type = str3(value)
         except ValueError:
             raise ValidationError("type value must be an string")
 
@@ -162,11 +163,11 @@ class GameLevel(DatabaseObject):
 
     def to_xml(self, parent):
         level_elem = ET.SubElement(parent, "gamelevel")
-        ET.SubElement(level_elem, "number").text = str(self.number)
-        ET.SubElement(level_elem, "buyout").text = str(self.buyout)
-        ET.SubElement(level_elem, "type").text = str(self._type)
-        ET.SubElement(level_elem, "reward").text = str(self._reward)
-        ET.SubElement(level_elem, "name").text = str(self._name)
+        ET.SubElement(level_elem, "number").text = str3(self.number)
+        ET.SubElement(level_elem, "buyout").text = str3(self.buyout)
+        ET.SubElement(level_elem, "type").text = str3(self._type)
+        ET.SubElement(level_elem, "reward").text = str3(self._reward)
+        ET.SubElement(level_elem, "name").text = str3(self._name)
 
     def to_dict(self):
         ''' Return public data as dict '''

@@ -31,6 +31,7 @@ from mimetypes import guess_type
 from tornado.options import options
 from string import printable
 from libs.ValidationError import ValidationError
+from libs.StringCoding import str3, uni3
 
 
 MAX_FILE_SIZE = 50 * (1024 ** 2)  # Max file size 50Mb
@@ -46,7 +47,7 @@ class FileUpload(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str(uuid4())
+                  default=lambda: str3(uuid4())
                   )
 
     team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
@@ -74,7 +75,7 @@ class FileUpload(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        fname = unicode(os.path.basename(value))[:64]
+        fname = uni3(os.path.basename(value))[:64]
         fname = filter(lambda char: char in printable[:-6], fname)
         if len(fname) <= 2:
             raise ValidationError("File name is too short")
@@ -94,7 +95,7 @@ class FileUpload(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value)
+        self._description = uni3(value)
 
     @property
     def data(self):
@@ -106,7 +107,7 @@ class FileUpload(DatabaseObject):
         if MAX_FILE_SIZE <= len(value):
             raise ValidationError("File is too large")
         if self.uuid is None:
-            self.uuid = str(uuid4())
+            self.uuid = str3(uuid4())
         self.byte_size = len(value)
         with open(options.share_dir + '/' + self.uuid, 'wb') as fp:
             fp.write(value.encode('base64'))

@@ -23,6 +23,7 @@ This file contains the base handlers, all other handlers should inherit
 from these base classes.
 
 '''
+# pylint: disable=unused-wildcard-import,no-member
 
 
 import logging
@@ -35,6 +36,7 @@ from models.User import User
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
 from libs.EventManager import EventManager
+from libs.StringCoding import str3
 try:
     from urllib.parse import urlparse
 except ImportError:
@@ -122,7 +124,7 @@ class BaseHandler(RequestHandler):
     def _refresh_csp(self):
         ''' Rebuild the Content-Security-Policy header '''
         _csp = []
-        for src, policies in self.csp.iteritems():
+        for src, policies in list(self.csp.items()):
             if len(policies):
                 _csp.append("%s %s; " % (src, " ".join(policies)))
         csp = ''.join(_csp)
@@ -250,7 +252,7 @@ class BaseHandler(RequestHandler):
             timerdiff = self.application.settings['freeze_scoreboard'] - time.time()
             if timerdiff < 0:
                 timerdiff = 0
-            timer = str(timerdiff)
+            timer = str3(timerdiff)
         return timer
 
 

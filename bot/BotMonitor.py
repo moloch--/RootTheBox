@@ -29,6 +29,7 @@ For the sake of portability everything is in one file
 
 '''
 
+# pylint: disable=unused-variable
 ###################
 # > Imports
 ###################
@@ -47,12 +48,13 @@ import logging
 import argparse
 import platform
 import threading
-
+from builtins import range
 try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
 from datetime import datetime
+from libs.StringCoding import str3
 
 try:
     import curses
@@ -243,7 +245,7 @@ def create_connection(url, timeout=None, **options):
     return websock
 
 _MAX_INTEGER = (1 << 32) -1
-_AVAILABLE_KEY_CHARS = range(0x21, 0x2f + 1) + range(0x3a, 0x7e + 1)
+_AVAILABLE_KEY_CHARS = list(range(0x21, 0x2f + 1)) + list(range(0x3a, 0x7e + 1))
 _MAX_CHAR_BYTE = (1<<8) -1
 
 # ref. Websocket gets an update, and it breaks stuff.
@@ -920,7 +922,7 @@ def on_open(ws):
 
 def on_message(ws, message):
     ''' Parse message and call a function '''
-    logging.debug("Recv'd message: %s" % str(message))
+    logging.debug("Recv'd message: %s" % str3(message))
     try:
         response = json.loads(message)
         if 'opcode' not in response:
@@ -1206,7 +1208,7 @@ class BotMonitor(object):
         download = " > Establishing satellite uplink: "
         for index in range(5, 25):
             signal = random.randint(0, 30)
-            self.screen.addstr(3, 2, download + str(signal) + " dBi    ")
+            self.screen.addstr(3, 2, download + str3(signal) + " dBi    ")
             self.screen.refresh()
             time.sleep(0.2)
             if self.stop_thread:
@@ -1216,7 +1218,7 @@ class BotMonitor(object):
         # (4) Downloading animation
         download = " > Downloading noki telcodes: "
         for index in range(0, 100):
-            self.screen.addstr(4, 2, download + str(index) + "%")
+            self.screen.addstr(4, 2, download + str3(index) + "%")
             self.screen.refresh()
             time.sleep(0.1)
             if self.stop_thread:
@@ -1227,11 +1229,11 @@ class BotMonitor(object):
         memory = " > Initializing memory: "
         for index in xrange(0, 2 ** 32, 2 ** 20):
             time.sleep(0.02)
-            self.screen.addstr(5, 2, memory + str("0x%08X" % index))
+            self.screen.addstr(5, 2, memory + str3("0x%08X" % index))
             self.screen.refresh()
             if self.stop_thread:
                 return
-        self.screen.addstr(5, 2, memory + str("0x%08X -> 0xFFFFFFFF" % (0,)))
+        self.screen.addstr(5, 2, memory + str3("0x%08X -> 0xFFFFFFFF" % (0,)))
         self.screen.refresh()
         # (6) Matrix animation
         matrix = " > The matrix has you ... follow the white rabbit "
