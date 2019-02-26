@@ -48,7 +48,8 @@ from string import printable
 from tornado.options import options
 from PIL import Image
 from resizeimage import resizeimage
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import str3, unicode3, encode
+from past.builtins import basestring
 
 
 # Constants
@@ -112,18 +113,13 @@ class User(DatabaseObject):
     @classmethod
     def all_users(cls):
         ''' Return all non-admin user objects '''
-        return filter(
-            lambda user: user.has_permission(
-                ADMIN_PERMISSION) is False, cls.all()
-        )
+        return [user for user in cls.all() if user.has_permission(ADMIN_PERMISSION) is False]
 
     @classmethod
     def not_team(cls, tid):
         ''' Return all users not on a given team, exclude admins '''
         teams = dbsession.query(cls).filter(cls.team_id != tid).all()
-        return filter(
-            lambda user: user.has_permission(ADMIN_PERMISSION) is False, teams
-        )
+        return [user for user in teams if user.has_permission(ADMIN_PERMISSION) is False]
 
     @classmethod
     def by_id(cls, _id):
@@ -133,12 +129,12 @@ class User(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=uni3(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode3(_uuid)).first()
 
     @classmethod
     def by_handle(cls, handle):
         ''' Return the user object whose user is "_handle" '''
-        return dbsession.query(cls).filter_by(_handle=uni3(handle)).first()
+        return dbsession.query(cls).filter_by(_handle=unicode3(handle)).first()
 
     @classmethod
     def _hash_bank_password(cls, algorithm_name, password):
@@ -171,7 +167,7 @@ class User(DatabaseObject):
 
     @password.setter
     def password(self, value):
-        _password = filter(lambda char: char in printable[:-6], value)
+        _password = [char for char in value if char in printable[:-6]]
         if len(_password) >= int(options.min_user_password_length):
             self._password = self._hash_password(value)
         else:
@@ -189,7 +185,7 @@ class User(DatabaseObject):
             #random password
             _password = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(options.max_password_length))
         else:
-            _password = filter(lambda char: char in printable[:-6], value)
+            _password = [char for char in value if char in printable[:-6]]
         if 0 < len(_password) <= options.max_password_length:
             self._bank_password = self._hash_bank_password(self.algorithm, _password)
         else:
@@ -205,7 +201,7 @@ class User(DatabaseObject):
     def handle(self, new_handle):
         if not 3 <= len(new_handle) <= 16:
             raise ValidationError("Handle must be 3 - 16 characters")
-        self._handle = uni3(new_handle)
+        self._handle = unicode3(new_handle)
 
     @property
     def name(self):
@@ -215,7 +211,7 @@ class User(DatabaseObject):
     def name(self, new_name):
         if len(new_name) > 64:
             raise ValidationError("Name must be 0 - 64 characters")
-        self._name = uni3(new_name)
+        self._name = unicode3(new_name)
     
     @property
     def email(self):
@@ -225,7 +221,7 @@ class User(DatabaseObject):
     def email(self, new_email):
         if len(new_email) > 64:
             raise ValidationError("Email must be 0 - 64 characters")
-        self._email = uni3(new_email)
+        self._email = unicode3(new_email)
 
     @property
     def permissions_all(self):
@@ -279,7 +275,7 @@ class User(DatabaseObject):
             if ext in IMG_FORMATS and not is_xss_image(image_data):
                 if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
                     os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                file_path = str3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                file_path = unicode3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
                 image = Image.open(io.BytesIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
@@ -297,7 +293,7 @@ class User(DatabaseObject):
         ''' Check to see if a team has purchased an item '''
         item = MarketItem.by_name(item_name)
         if item is None:
-            raise ValueError("Item '%s' not in database." % str3(item_name))
+            raise ValueError("Item '%s' not in database." % unicode3(item_name))
         return True if item in self.team.items else False
 
     def has_permission(self, permission):
@@ -326,9 +322,7 @@ class User(DatabaseObject):
         @return: List of unread messages
         @rtype: List of Notification objects
         '''
-        return filter(
-            lambda notify: notify.viewed is False, self.notifications
-        )
+        return [notify for notify in self.notifications if notify.viewed is False]
 
     def get_notifications(self, limit=10):
         '''
@@ -384,7 +378,7 @@ class User(DatabaseObject):
             bpass_elem.set("algorithm", self.algorithm)
             with open(options.avatar_dir + self.avatar) as fp:
                 data = fp.read()
-                ET.SubElement(user_elem, "avatar").text = data.encode('base64')
+                ET.SubElement(user_elem, "avatar").text = encode(data, 'base64')
 
     def __eq__(self, other):
         return self.id == other.id

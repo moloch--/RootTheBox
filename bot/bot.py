@@ -27,6 +27,7 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
 '''
 # pylint: disable=unused-variable
 
+
 import os
 import sys
 import json
@@ -40,7 +41,7 @@ import logging
 import argparse
 import platform
 import traceback
-from libs.StringCoding import str3
+from libs.StringCoding import unicode3, encode, decode
 try:
     import ConfigParser
 except ImportError:
@@ -51,6 +52,7 @@ except ImportError:
     from urlparse import urlparse
 from datetime import datetime
 from hashlib import sha512, sha1
+from builtins import range, object, chr
 
 
 ### Settings
@@ -96,7 +98,7 @@ else:
 INFO = bold + C + "[*]" + W
 WARN = bold + R + "[!]" + W
 PROMPT = bold + P + "[?]" + W
-current_time = lambda: str3(datetime.now()).split(' ')[1].split('.')[0]
+current_time = lambda: unicode3(datetime.now()).split(' ')[1].split('.')[0]
 
 """
 websocket python client.
@@ -343,7 +345,7 @@ class ABNF(object):
         opcode: operation code. please see OPCODE_XXX.
         """
         if opcode == ABNF.OPCODE_TEXT and isinstance(data, unicode):
-            data = data.encode("utf-8")
+            data = encode(data, "utf-8")
         # mask must be set if send data from client
         return ABNF(1, 0, 0, 0, opcode, 1, data)
 
@@ -392,7 +394,7 @@ class ABNF(object):
         """
         _m = array.array("B", mask_key)
         _d = array.array("B", data)
-        for i in xrange(len(_d)):
+        for i in range(len(_d)):
             _d[i] ^= _m[i % 4]
         return _d.tostring()
 
@@ -867,7 +869,7 @@ def get_response_xid(garbage, xid):
     round1 = sha512(xid + garbage).hexdigest()
     print("Garbage: " + garbage)
     print("XID :" + xid)
-    print("[*] Return: " + str3(sha512(round1).hexdigest()))
+    print("[*] Return: " + unicode3(sha512(round1).hexdigest()))
     return sha512(round1).hexdigest()
 
 def send_interrogation_response(ws, response):
@@ -909,10 +911,10 @@ def on_message(ws, message):
         else:
             opcodes[response['opcode']](ws, response)
     except ValueError as error:
-        display_error(ws, {'error': str3(error)})
+        display_error(ws, {'error': unicode3(error)})
 
 def on_error(ws, error):
-    display_error(ws, {'error': str3(error)})
+    display_error(ws, {'error': unicode3(error)})
 
 def on_close(ws):
     display_error(ws, {'error': "Disconnected from command & control\n"})
@@ -945,14 +947,14 @@ def main(domain, port, user, garbage_path, secure, verbose):
         )
         ws.verbose = verbose
         ws.garbage = garbage_cfg.get("Bot", 'garbage')
-        ws.box_name = garbage_cfg.get("Bot", 'name').decode('hex')
+        ws.box_name = decode(garbage_cfg.get("Bot", 'name'), 'hex')
         ws.user = user
         ws.on_open = on_open
         ws.run_forever()
     except KeyboardInterrupt:
         os._exit(0)
     except Exception as error:
-        display_error(None, {'error': str3(error)})
+        display_error(None, {'error': unicode3(error)})
         os._exit(1)
 
 

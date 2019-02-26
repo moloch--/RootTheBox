@@ -36,7 +36,7 @@ from models.User import User
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
 from libs.EventManager import EventManager
-from libs.StringCoding import str3
+from libs.StringCoding import unicode3
 try:
     from urllib.parse import urlparse
 except ImportError:
@@ -252,7 +252,7 @@ class BaseHandler(RequestHandler):
             timerdiff = self.application.settings['freeze_scoreboard'] - time.time()
             if timerdiff < 0:
                 timerdiff = 0
-            timer = str3(timerdiff)
+            timer = unicode3(timerdiff)
         return timer
 
 

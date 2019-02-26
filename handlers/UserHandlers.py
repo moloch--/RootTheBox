@@ -22,9 +22,13 @@ Created on Mar 13, 2012
 This file contains code for managing user accounts
 
 '''
+# pylint: disable=no-member
 
 
-import urllib
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 import logging
 import tornado
 
@@ -34,7 +38,7 @@ from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from libs.XSSImageCheck import IMG_FORMATS
-from libs.StringCoding import str3
+from libs.StringCoding import unicode3
 from .BaseHandlers import BaseHandler
 from tornado.options import options
 
@@ -112,7 +116,7 @@ class SettingsHandler(BaseHandler):
                 self.dbsession.commit()
                 self.render_page(success=["Updated avatar"])
             except ValidationError as error:
-                self.render_page(errors=[str3(error), ])
+                self.render_page(errors=[unicode3(error), ])
         else:
             self.render_page(errors=["Please provide an image"])
 
@@ -146,7 +150,7 @@ class SettingsHandler(BaseHandler):
                     else:
                         self.render_page(success=["Updated avatar"])
             except ValidationError as error:
-                self.render_page(errors=[str3(error), ])
+                self.render_page(errors=[unicode3(error), ])
         else:
             self.render_page(errors=["Please provide an image"])
 
@@ -158,7 +162,7 @@ class SettingsHandler(BaseHandler):
         theme = Theme.by_uuid(self.get_argument('theme_uuid', ''))
         if theme is not None:
             self.session['theme_id'] = theme.id
-            self.session['theme'] = [str3(f) for f in theme.files]
+            self.session['theme'] = [unicode3(f) for f in theme.files]
             self.session.save()
             user = self.get_current_user()
             user.theme_id = theme.id
@@ -237,7 +241,7 @@ class SettingsHandler(BaseHandler):
         }
         try:
             recaptcha_http = tornado.httpclient.AsyncHTTPClient()
-            recaptcha_req_body = urllib.urlencode(recaptcha_req_data)
+            recaptcha_req_body = urlparse.urlencode(recaptcha_req_data)
             recaptcha_http.fetch(RECAPTCHA_URL, self.recaptcha_callback,
                                  method='POST',
                                  body=recaptcha_req_body)

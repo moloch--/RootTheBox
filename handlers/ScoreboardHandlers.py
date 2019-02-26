@@ -22,6 +22,7 @@ Created on Oct 04, 2012
 This file contains handlers related to the scoreboard.
 
 '''
+# pylint: disable=no-member
 
 
 import json
@@ -32,7 +33,7 @@ from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
-from libs.StringCoding import str3
+from libs.StringCoding import unicode3
 from models.Team import Team
 from models.User import User
 from models.Box import Box
@@ -160,7 +161,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             skillvalues = []
             for val in catlist:
                 skillvalues.append(catlist[val])
-            self.write(str3(skillvalues))
+            self.write(unicode3(skillvalues))
         else:
             self.write({'error': 'Team does not exist'})
         self.finish()

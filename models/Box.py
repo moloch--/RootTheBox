@@ -41,7 +41,7 @@ from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import str3, unicode3, encode
 from PIL import Image
 from resizeimage import resizeimage
 import enum
@@ -78,7 +78,7 @@ class Box(DatabaseObject):
     garbage = Column(String(32),
                      unique=True,
                      nullable=False,
-                     default=lambda: urandom(16).encode('hex')
+                     default=lambda: encode(urandom(16), 'hex')
                      )
 
     teams = relationship("Team",
@@ -116,12 +116,12 @@ class Box(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=uni3(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode3(_uuid)).first()
 
     @classmethod
     def by_name(cls, name):
         ''' Return the box object whose name is "name" '''
-        return dbsession.query(cls).filter_by(_name=uni3(name)).first()
+        return dbsession.query(cls).filter_by(_name=unicode3(name)).first()
 
     @classmethod
     def by_category(cls, _cat_id):
@@ -156,9 +156,9 @@ class Box(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 <= len(uni3(value)) <= 32:
+        if not 3 <= len(unicode3(value)) <= 32:
             raise ValidationError("Name must be 3 - 32 characters")
-        self._name = uni3(value)
+        self._name = unicode3(value)
 
     @property
     def operating_system(self):
@@ -166,7 +166,7 @@ class Box(DatabaseObject):
 
     @operating_system.setter
     def operating_system(self, value):
-        self._operating_system = uni3(value)
+        self._operating_system = unicode3(value)
 
     @property
     def description(self):
@@ -180,9 +180,9 @@ class Box(DatabaseObject):
             ls.append("No information on file.")
         if self.difficulty != "Unknown":
             ls.append("Reported Difficulty: %s" % self.difficulty)
-        if ls[-1] and not ls[-1].encode('utf8').endswith("\n"):
+        if not encode(ls[-1], 'utf-8').endswith("\n"):
             ls[-1] = ls[-1] + "\n"
-        return uni3("\n\n".join(ls))
+        return unicode3("\n\n".join(ls))
 
     @description.setter
     def description(self, value):
@@ -190,7 +190,7 @@ class Box(DatabaseObject):
             return ""
         if 1025 < len(value):
             raise ValidationError("Description cannot be greater than 1024 characters")
-        self._description = uni3(value)
+        self._description = unicode3(value)
 
     @property
     def difficulty(self):
@@ -202,7 +202,7 @@ class Box(DatabaseObject):
             return
         if 17 < len(value):
             raise ValidationError("Difficulty cannot be greater than 16 characters")
-        self._difficulty = uni3(value)
+        self._difficulty = unicode3(value)
 
     @property
     def avatar(self):
@@ -225,7 +225,7 @@ class Box(DatabaseObject):
             if ext in ['png', 'jpeg', 'gif', 'bmp'] and not is_xss_image(image_data):
                 if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
                     os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                file_path = str3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                file_path = unicode3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
                 image = Image.open(io.BytesIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
@@ -239,16 +239,16 @@ class Box(DatabaseObject):
     @property
     def ipv4s(self):
         ''' Return a list of all ipv4 addresses '''
-        return filter(lambda ip: ip.version == 4, self.ip_addresses)
+        return [ip for ip in self.ip_addresses if ip.version == 4]
 
     @property
     def ipv6s(self):
         ''' Return a list of all ipv6 addresses '''
-        return filter(lambda ip: ip.version == 6, self.ip_addresses)
+        return [ip for ip in self.ip_addresses if ip.version == 6]
 
     @property
     def visable_ips(self):
-        return filter(lambda ip: ip.visable is True, self.ip_addresses)
+        return [ip for ip in self.ip_addresses if ip.visable is True]
 
     @property
     def source_code(self):
@@ -256,13 +256,13 @@ class Box(DatabaseObject):
 
     def get_garbage_cfg(self):
         return "[Bot]\nname = %s\ngarbage = %s\n" % (
-            self.name.encode('hex'), self.garbage
+            encode(self.name, 'hex'), self.garbage
         )
 
     def to_xml(self, parent):
         ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")
-        box_elem.set("gamelevel", str3(self.game_level.number))
+        box_elem.set("gamelevel", unicode3(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
         ET.SubElement(
             box_elem, "operatingsystem").text = self._operating_system
@@ -273,7 +273,7 @@ class Box(DatabaseObject):
         if self.category_id:
             ET.SubElement(box_elem, "category").text = Category.by_id(self.category_id).category
         flags_elem = ET.SubElement(box_elem, "flags")
-        flags_elem.set("count", str3(len(self.flags)))
+        flags_elem.set("count", unicode3(len(self.flags)))
         for flag in self.flags:
             flag.to_xml(flags_elem)
         hints_elem = ET.SubElement(box_elem, "hints")
@@ -282,16 +282,16 @@ class Box(DatabaseObject):
             if hint.flag_id is None:
                 hint.to_xml(hints_elem)
                 count += 1
-        hints_elem.set("count", str3(count))
+        hints_elem.set("count", unicode3(count))
         ips_elem = ET.SubElement(box_elem, "ipaddresses")
-        ips_elem.set("count", str3(len(self.ip_addresses)))
+        ips_elem.set("count", unicode3(len(self.ip_addresses)))
         for ip in self.ip_addresses:
             ip.to_xml(ips_elem)
         avatarfile = os.path.join(options.avatar_dir, self.avatar)
         if self.avatar and os.path.isfile(avatarfile):
             with open(avatarfile, mode='rb') as _avatar:
                 data = _avatar.read()
-                ET.SubElement(box_elem, "avatar").text = data.encode('base64')
+                ET.SubElement(box_elem, "avatar").text = encode(data, 'base64')
         else:
             ET.SubElement(box_elem, "avatar").text = "none"
 
@@ -321,4 +321,4 @@ class Box(DatabaseObject):
         return u'<Box - name: %s>' % (self.name,)
 
     def __str__(self):
-        return self.name.encode('ascii', 'ignore')
+        return encode(self.name, 'ascii', 'ignore')

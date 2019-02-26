@@ -29,7 +29,7 @@ from models import dbsession
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
 from tornado.options import options
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import str3, unicode3, encode, decode
 
 
 class SourceCode(DatabaseObject):
@@ -77,12 +77,12 @@ class SourceCode(DatabaseObject):
     @file_name.setter
     def file_name(self, value):
         fname = value.replace('\n', '').replace('\r', '')
-        self._file_name = uni3(os.path.basename(fname))[:64]
+        self._file_name = unicode3(os.path.basename(fname))[:64]
 
     @property
     def data(self):
         with open(options.source_code_market_dir + '/' + self.uuid, 'rb') as fp:
-            return fp.read().decode('base64')
+            return decode(fp.read(), 'base64')
 
     @data.setter
     def data(self, value):
@@ -91,7 +91,7 @@ class SourceCode(DatabaseObject):
         self.byte_size = len(value)
         self.checksum = sha1(value).hexdigest()
         with open(options.source_code_market_dir + '/' + self.uuid, 'wb') as fp:
-            fp.write(value.encode('base64'))
+            fp.write(encode(value, 'base64'))
 
     def delete_data(self):
         ''' Remove the file from the file system, if it exists '''
@@ -116,7 +116,7 @@ class SourceCode(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = uni3(value)[:1024]
+        self._description = unicode3(value)[:1024]
 
     def to_dict(self):
         return {

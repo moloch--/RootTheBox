@@ -18,7 +18,7 @@
 This file is the main starting point for the application, based on the
 command line arguments it calls various components setup/start/etc.
 '''
-# pylint: disable=unused-wildcard-import
+# pylint: disable=unused-wildcard-import,unused-variable
 
 
 from __future__ import print_function
@@ -33,11 +33,11 @@ from datetime import datetime
 from tornado.options import define, options
 from libs.ConsoleColors import *
 from libs.ConfigHelpers import save_config
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import unicode3, input3
 from setup import __version__
 
 
-current_time = lambda: uni3(datetime.now()).split(' ')[1].split('.')[0]
+current_time = lambda: unicode3(datetime.now()).split(' ')[1].split('.')[0]
 
 
 def start():
@@ -68,7 +68,7 @@ def setup():
             WARN + bold, W, WARN,
         ))
         message = "I know what the fuck I am doing"
-        resp = raw_input(PROMPT + 'Please type "%s": ' % message)
+        resp = input3(PROMPT + 'Please type "%s": ' % message)
         if resp.replace('"', '').lower().strip() != message.lower():
             os._exit(1)
     print(INFO + '%s : Creating the database ...' % current_time())

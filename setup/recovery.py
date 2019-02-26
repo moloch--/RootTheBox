@@ -29,7 +29,7 @@ import sys
 import getpass
 
 from libs.ConsoleColors import *
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import unicode3, input3
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *
@@ -73,10 +73,10 @@ class RecoveryConsole(cmd.Cmd):
                 if 0 < len(user.permissions_names):
                     permissions = " ("
                     for perm in user.permissions_names[:-1]:
-                        permissions += perm + str3(", ")
-                    permissions += str3("%s)" % user.permissions_names[-1])
+                        permissions += perm + unicode3(", ")
+                    permissions += unicode3("%s)" % user.permissions_names[-1])
                 if user.team is not None:
-                    team = " from " + bold + str3(user.team) + W + " "
+                    team = " from " + bold + unicode3(user.team) + W + " "
                 print(INFO + bold + user.handle + W + team + permissions)
         elif obj.lower() == "team" or obj.lower() == "teams":
             for team in Team.all():
@@ -94,8 +94,8 @@ class RecoveryConsole(cmd.Cmd):
             print(WARN + "'%s' user not found in database." % username)
         else:
             username = user.handle
-            print(WARN + str3("Are you sure you want to delete %s?" % username))
-            if raw_input(PROMPT + "Delete [y/n]: ").lower() == 'y':
+            print(WARN + unicode3("Are you sure you want to delete %s?" % username))
+            if input3(PROMPT + "Delete [y/n]: ").lower() == 'y':
                 permissions = Permission.by_user_id(user.id)
                 for perm in permissions:
                     print(INFO + "Removing permission: " + perm.name)
@@ -112,7 +112,7 @@ class RecoveryConsole(cmd.Cmd):
         '''
         try:
             user = User(
-                handle=uni3(raw_input(PROMPT + "Handle: ")),
+                handle=unicode3(input3(PROMPT + "Handle: ")),
             )
             dbsession.add(user)
             dbsession.flush()
@@ -132,8 +132,8 @@ class RecoveryConsole(cmd.Cmd):
         '''
         try:
             team = Team(
-                name=uni3(raw_input(PROMPT + "Team name: ")),
-                motto=uni3(raw_input(PROMPT + "Team motto: ")),
+                name=unicode3(input3(PROMPT + "Team name: ")),
+                motto=unicode3(input3(PROMPT + "Team motto: ")),
             )
             dbsession.add(team)
             dbsession.commit()
@@ -150,8 +150,8 @@ class RecoveryConsole(cmd.Cmd):
         if user is None:
             print(WARN + "'%s' user not found in database." % username)
         else:
-            name = raw_input(PROMPT + "Add permission: ")
-            permission = Permission(name=uni3(name), user_id=user.id)
+            name = input3(PROMPT + "Add permission: ")
+            permission = Permission(name=unicode3(name), user_id=user.id)
             dbsession.add(permission)
             dbsession.add(user)
             dbsession.commit()
@@ -189,7 +189,7 @@ class RecoveryConsole(cmd.Cmd):
             print(INFO + "Available teams:")
             for team in Team.all():
                 print(" %d. %s" % (team.id, team.name))
-            team_id = raw_input(PROMPT + "Set user's team to: ")
+            team_id = input3(PROMPT + "Set user's team to: ")
             team = Team.by_id(team_id)
             if team is not None:
                 user.team_id = team.id

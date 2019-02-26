@@ -13,9 +13,10 @@ import json
 import logging
 import collections
 
+from builtins import str
 from datetime import datetime, timedelta
 from tornado.options import options
-from libs.StringCoding import str3
+from libs.StringCoding import unicode3, encode, decode
 
 
 class BaseSession(collections.MutableMapping):
@@ -78,16 +79,16 @@ class BaseSession(collections.MutableMapping):
         self.dirty = True
 
     def keys(self):
-        return self.data.keys()
+        return list(self.data.keys())
 
     def __iter__(self):
         return self.data.__iter__()
 
     def __len__(self):
-        return len(self.data.keys())
+        return len(self.keys())
 
     def _generate_session_id(self):
-        return os.urandom(self.id_size).encode('hex')
+        return encode(os.urandom(self.id_size), 'hex')
 
     def is_expired(self):
         '''Check if the session has expired.'''
@@ -123,16 +124,16 @@ class BaseSession(collections.MutableMapping):
     def serialize(self):
         ''' We use JSON instead of Pickles '''
         dump = {
-            'session_id': self.session_id,
+            'session_id': str(self.session_id),
             'data': self.data,
-            'expires': str3(self.expires),
+            'expires': str(self.expires),
             'ip_address': self.ip_address,
         }
-        return json.dumps(dump).encode('base64').strip()
+        return encode(json.dumps(dump), 'base64').strip()
 
     @staticmethod
     def deserialize(datastring):
-        dump = json.loads(datastring.decode('base64'))
+        dump = json.loads(decode(datastring, 'base64'))
         dump['expires'] = datetime.strptime(
             dump['expires'], "%Y-%m-%d %H:%M:%S.%f")
         return dump
@@ -179,7 +180,7 @@ class MemcachedSession(BaseSession):
         if self.dirty:
             ttl = self.expires - datetime.utcnow()
             self.connection.set(
-                str3(self.session_id), self.serialize(), time=ttl.seconds)
+                str(self.session_id), self.serialize(), time=ttl.seconds)
             self.dirty = False
 
     @staticmethod
@@ -187,7 +188,7 @@ class MemcachedSession(BaseSession):
         '''Load the session from storage.'''
         session = None
         try:
-            value = connection.get(session_id)
+            value = connection.get(str(session_id))
             if value:
                 kwargs = MemcachedSession.deserialize(value)
                 session = MemcachedSession(connection, **kwargs)
@@ -197,4 +198,4 @@ class MemcachedSession(BaseSession):
 
     def delete(self):
         '''Delete the session from storage.'''
-        self.connection.delete(self.session_id.encode('ascii', 'ignore'))
+        self.connection.delete(str(self.session_id))

@@ -25,11 +25,11 @@ from sqlalchemy import Column
 from sqlalchemy.types import String, Boolean
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import uni3
+from libs.StringCoding import unicode3, encode
 
 
 
-gen_token = lambda: urandom(3).encode('hex')
+gen_token = lambda: encode(urandom(3), 'hex')
 
 
 class RegistrationToken(DatabaseObject):
@@ -57,4 +57,4 @@ class RegistrationToken(DatabaseObject):
     @classmethod
     def by_value(cls, value):
         ''' Returns a the object with value of value '''
-        return dbsession.query(cls).filter_by(value=uni3(value)).first()
+        return dbsession.query(cls).filter_by(value=unicode3(value)).first()

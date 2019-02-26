@@ -32,7 +32,7 @@ from libs.SecurityDecorators import authenticated
 from .BaseHandlers import BaseHandler
 from models.User import ADMIN_PERMISSION
 from tornado.options import options
-from libs.StringCoding import str3
+from libs.StringCoding import unicode3
 
 
 MAX_UPLOADS = 5
@@ -89,7 +89,7 @@ class FileUploadHandler(BaseHandler):
                 self.dbsession.commit()
                 return file_upload
             except ValidationError as error:
-                self.errors.append(str3(error))
+                self.errors.append(unicode3(error))
         else:
             self.redirect("/404")
 

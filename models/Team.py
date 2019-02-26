@@ -44,7 +44,7 @@ from tornado.options import options
 from PIL import Image
 from resizeimage import resizeimage
 from random import randint
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import str3, unicode3, encode
 
 class Team(DatabaseObject):
 
@@ -113,7 +113,7 @@ class Team(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         ''' Return the team object based on "team_name" '''
-        return dbsession.query(cls).filter_by(_name=uni3(name)).first()
+        return dbsession.query(cls).filter_by(_name=unicode3(name)).first()
 
     @classmethod
     def ranks(cls):
@@ -133,7 +133,7 @@ class Team(DatabaseObject):
         if not 3 <= len(value) <= 24:
             raise ValidationError("Team name must be 3 - 24 characters")
         else:
-            self._name = uni3(value)
+            self._name = unicode3(value)
 
     @property
     def motto(self):
@@ -144,7 +144,7 @@ class Team(DatabaseObject):
         if 32 < len(value):
             raise ValidationError("Motto must be less than 32 characters")
         else:
-            self._motto = uni3(value)
+            self._motto = unicode3(value)
 
     @property
     def code(self):
@@ -172,7 +172,7 @@ class Team(DatabaseObject):
             if ext in IMG_FORMATS and not is_xss_image(image_data):
                 if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
                     os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                file_path = str3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                file_path = unicode3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
                 image = Image.open(io.BytesIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
@@ -193,7 +193,7 @@ class Team(DatabaseObject):
 
     def level_flags(self, lvl):
         ''' Given a level number return all flags captured for that level '''
-        return filter(lambda flag: flag.game_level.number == lvl, self.flags)
+        return [flag for flag in self.flags if flag.game_level.number == lvl]
 
     @property
     def bot_count(self):
@@ -220,7 +220,7 @@ class Team(DatabaseObject):
         ET.SubElement(team_elem, "name").text = self.name
         ET.SubElement(team_elem, "motto").text = self.motto
         users_elem = ET.SubElement(team_elem, "users")
-        users_elem.set("count", str3(len(self.members)))
+        users_elem.set("count", unicode3(len(self.members)))
         for user in self.members:
             user.to_xml(users_elem)
 
@@ -228,7 +228,7 @@ class Team(DatabaseObject):
         return u'<Team - name: %s, money: %d>' % (self.name, self.money)
 
     def __str__(self):
-        return self.name.encode('ascii', 'ignore')
+        return encode(self.name, 'ascii', 'ignore')
 
     def __eq__(self, other):
         return self.id == other.id

@@ -21,6 +21,8 @@ This file wraps the Python scripted game setup API.
 It reads an XML file(s) and calls the API based on the it's contents.
 
 '''
+# pylint: disable=unused-wildcard-import
+
 
 import os
 import logging
@@ -30,13 +32,12 @@ import defusedxml.cElementTree as ET
 from setup.create_database import *
 from models import dbsession
 from models.Box import FlagsSubmissionType
+from libs.StringCoding import decode
 
 
 def get_child_by_tag(elem, tag_name):
     ''' Return child elements with a given tag '''
-    tags = filter(
-        lambda child: child.tag == tag_name, elem.getchildren()
-    )
+    tags = [child for child in elem.getchildren() if child.tag == tag_name]
     return tags[0] if 0 < len(tags) else None
 
 
@@ -181,7 +182,7 @@ def create_boxes(parent, corporation):
 
                 box.description = get_child_text(box_elem, 'description')
                 box.operating_system = get_child_text(box_elem, 'operatingsystem')
-                box.avatar = get_child_text(box_elem, 'avatar').decode('base64')
+                box.avatar = decode(get_child_text(box_elem, 'avatar'), 'base64')
                 box.garbage = get_child_text(box_elem, 'garbage')
                 category = get_child_text(box_elem, 'category')
                 if category:
@@ -242,7 +243,7 @@ def import_xml(target):
     elif os.path.isdir(target):
         # Import any .xml files in the target directory
         logging.debug("%s is a directory ..." % target)
-        ls = filter(lambda fname: fname.lower().endswith('.xml'), os.listdir(target))
+        ls = [fname for fname in os.listdir(target) if fname.lower().endswith('.xml')]
         logging.debug("Found %d XML file(s) ..." % len(ls))
         results = [_xml_file_import(target + '/' + fxml) for fxml in ls]
         return False not in results

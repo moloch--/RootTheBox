@@ -26,7 +26,8 @@ from tornado.websocket import WebSocketClosedError
 from tornado.options import options
 from libs.Singleton import Singleton
 from libs.Scoreboard import Scoreboard
-from libs.StringCoding import str3
+from libs.StringCoding import unicode3
+from builtins import object
 from models import dbsession
 from models.User import User
 from models.Flag import Flag
@@ -159,7 +160,7 @@ class EventManager(object):
             icon = WARNING
         else:
             icon = SUCCESS
-        Notification.create_team(team, "Admin Update", "%s (%s)" % (message, str3(value)), icon)
+        Notification.create_team(team, "Admin Update", "%s (%s)" % (message, unicode3(value)), icon)
         self.io_loop.add_callback(self.push_team, team.id)
         self.io_loop.add_callback(self.push_scoreboard)
 

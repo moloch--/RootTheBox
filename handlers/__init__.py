@@ -56,7 +56,7 @@ from handlers.ChefHandler import *
 from handlers.StaticFileHandler import StaticFileHandler
 from alembic.config import Config, command
 from libs.DatabaseConnection import DatabaseConnection
-from libs.StringCoding import uni3
+from libs.StringCoding import unicode3, encode
 from tornado.options import options
 try:
     from urllib.parse import unquote_plus
@@ -72,7 +72,7 @@ def get_cookie_secret():
     if options.debug:
         return "Don't use this in production"
     else:
-        return urandom(32).encode('hex')
+        return encode(urandom(32), 'hex')
 
 
 # Main URL Configuration
@@ -275,7 +275,7 @@ def update_db(update=True):
                                    dialect=options.sql_dialect)
     alembic_cfg = Config('alembic/alembic.ini')
     alembic_cfg.attributes['configure_logger'] = False
-    alembic_cfg.set_main_option('sqlalchemy.url', unquote_plus(uni3(db_connection)))
+    alembic_cfg.set_main_option('sqlalchemy.url', unquote_plus(unicode3(db_connection)))
     if update:
         command.upgrade(alembic_cfg, "head")
     else:

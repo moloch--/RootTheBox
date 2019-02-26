@@ -28,8 +28,9 @@ import logging
 from models import dbsession
 from models.Team import Team
 from libs.BotManager import BotManager
-from libs.StringCoding import str3
+from libs.StringCoding import unicode3
 from tornado.options import options
+from builtins import object
 
 
 class Scoreboard(object):
@@ -43,8 +44,8 @@ class Scoreboard(object):
             if len(team.members) > 0:
                 game_state[team.name] = {
                     'money': team.money,
-                    'flags': [str3(flag) for flag in team.flags],
-                    'game_levels': [str3(lvl) for lvl in team.game_levels],
+                    'flags': [unicode3(flag) for flag in team.flags],
+                    'game_levels': [unicode3(lvl) for lvl in team.game_levels],
                 }
         return json.dumps(game_state)
 

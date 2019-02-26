@@ -15,14 +15,14 @@ import os
 from string import printable
 from tornado.options import options
 from random import randint
-from libs.StringCoding import uni3
+from libs.StringCoding import unicode3
 
 MAX_AVATAR_SIZE = 1024 * 1024
 MIN_AVATAR_SIZE = 64
 IMG_FORMATS = ['png', 'jpeg', 'jpg', 'gif', 'bmp']
 
 def is_xss_image(data):
-    return all([uni3(char) in printable for char in data[:16]])
+    return all([unicode3(char) in printable for char in data[:16]])
 
 def get_new_avatar(dir, forceteam=False):
     avatar = default_avatar(dir)

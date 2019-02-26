@@ -35,7 +35,7 @@ from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.User import User, ADMIN_PERMISSION
 from libs.SecurityDecorators import authenticated, has_item, use_black_market
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import unicode3
 from mimetypes import guess_type
 from base64 import b64decode
 from string import ascii_letters
@@ -226,7 +226,7 @@ class FederalReserveAjaxHandler(BaseHandler):
         self.dbsession.add(victim.team)
         user = self.get_current_user()
         sheep = WallOfSheep(
-            preimage=uni3(preimage),
+            preimage=unicode3(preimage),
             cracker_id=user.id,
             victim_id=victim.id,
             value=value)
@@ -276,7 +276,7 @@ class SourceCodeMarketHandler(BaseHandler):
     def render_page(self, errors=None):
         ''' Addes extra params to render() '''
         user = self.get_current_user()
-        boxes = filter(lambda box: box.source_code is not None, Box.all())
+        boxes = [box for box in Box.all() if box.source_code is not None]
         self.render('upgrades/source_code_market.html',
                     user=user,
                     boxes=boxes,
@@ -302,7 +302,7 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
                 if content_type is None: content_type = 'unknown/data'
                 self.set_header('Content-Type', content_type)
                 self.set_header('Content-Length', len(box.source_code.data))
-                fname = filter(lambda char: char in self.goodchars, box.source_code.file_name)
+                fname = [char for char in box.source_code.file_name if char in self.goodchars]
                 self.set_header('Content-Disposition',
                     'attachment; filename=%s' % fname
                 )
@@ -362,10 +362,9 @@ class SwatHandler(BaseHandler):
     def render_page(self, errors=None):
         ''' Render page with extra arguments '''
         if errors is not None and not isinstance(errors, list):
-            errors = [str3(errors), ]
+            errors = [unicode3(errors), ]
         user = self.get_current_user()
-        targets = filter(
-            lambda target: target not in user.team.members, User.all_users())
+        targets = [target for target in User.all_users() if target not in user.team.members]
         self.render('upgrades/swat.html',
                     targets=targets,
                     user_bribes=Swat.ordered_by_user_id(user.id),

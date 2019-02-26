@@ -31,7 +31,7 @@ from mimetypes import guess_type
 from tornado.options import options
 from string import printable
 from libs.ValidationError import ValidationError
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import str3, unicode3, encode, decode
 
 
 MAX_FILE_SIZE = 50 * (1024 ** 2)  # Max file size 50Mb
@@ -75,8 +75,8 @@ class FileUpload(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        fname = uni3(os.path.basename(value))[:64]
-        fname = filter(lambda char: char in printable[:-6], fname)
+        fname = unicode3(os.path.basename(value))[:64]
+        fname = [char for char in fname if char in printable[:-6]]
         if len(fname) <= 2:
             raise ValidationError("File name is too short")
         self._file_name = fname
@@ -95,12 +95,12 @@ class FileUpload(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = uni3(value)
+        self._description = unicode3(value)
 
     @property
     def data(self):
         with open(options.share_dir + '/' + self.uuid, 'rb') as fp:
-            return fp.read().decode('base64')
+            return decode(fp.read(), 'base64')
 
     @data.setter
     def data(self, value):
@@ -110,7 +110,7 @@ class FileUpload(DatabaseObject):
             self.uuid = str3(uuid4())
         self.byte_size = len(value)
         with open(options.share_dir + '/' + self.uuid, 'wb') as fp:
-            fp.write(value.encode('base64'))
+            fp.write(encode(value, 'base64'))
 
     def delete_data(self):
         if os.path.exists(options.share_dir + '/' + self.uuid):

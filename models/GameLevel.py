@@ -29,7 +29,7 @@ from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import str3
+from libs.StringCoding import str3, unicode3
 
 
 class GameLevel(DatabaseObject):
@@ -124,7 +124,7 @@ class GameLevel(DatabaseObject):
         if self._name:
             return self._name
         else:
-            return "Level #" + str3(self.number)
+            return "Level #" + unicode3(self.number)
 
     @name.setter
     def name(self, value):
@@ -142,7 +142,7 @@ class GameLevel(DatabaseObject):
         if value is None:
             return
         try:
-            self._type = str3(value)
+            self._type = unicode3(value)
         except ValueError:
             raise ValidationError("type value must be an string")
 
@@ -154,20 +154,14 @@ class GameLevel(DatabaseObject):
             _flags += box.flags
         return _flags
 
-    def next(self):
-        ''' Return the next level, or None '''
-        if self.next_level_id is not None:
-            return self.by_id(self.next_level_id)
-        else:
-            return None
 
     def to_xml(self, parent):
         level_elem = ET.SubElement(parent, "gamelevel")
-        ET.SubElement(level_elem, "number").text = str3(self.number)
-        ET.SubElement(level_elem, "buyout").text = str3(self.buyout)
-        ET.SubElement(level_elem, "type").text = str3(self._type)
-        ET.SubElement(level_elem, "reward").text = str3(self._reward)
-        ET.SubElement(level_elem, "name").text = str3(self._name)
+        ET.SubElement(level_elem, "number").text = unicode3(self.number)
+        ET.SubElement(level_elem, "buyout").text = unicode3(self.buyout)
+        ET.SubElement(level_elem, "type").text = unicode3(self._type)
+        ET.SubElement(level_elem, "reward").text = unicode3(self._reward)
+        ET.SubElement(level_elem, "name").text = unicode3(self._name)
 
     def to_dict(self):
         ''' Return public data as dict '''
@@ -185,6 +179,13 @@ class GameLevel(DatabaseObject):
             'reward': self._reward,
             'last_level': last_level
         }
+
+    def __next__(self):
+        ''' Return the next level, or None '''
+        if self.next_level_id is not None:
+            return self.by_id(self.next_level_id)
+        else:
+            return None
 
     def __str__(self):
         return "GameLevel #%d" % self.number

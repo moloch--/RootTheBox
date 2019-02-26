@@ -28,7 +28,7 @@ from sqlalchemy import Column
 from sqlalchemy.types import Unicode, String
 from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import str3, unicode3
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
@@ -74,7 +74,7 @@ class Category(DatabaseObject):
     @classmethod
     def by_category(cls, name):
         ''' Returns a the object with category of name '''
-        return dbsession.query(cls).filter_by(_category=uni3(name)).first()
+        return dbsession.query(cls).filter_by(_category=unicode3(name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
@@ -89,7 +89,7 @@ class Category(DatabaseObject):
     def category(self, value):
         if not len(value) <= 24:
             raise ValidationError("Category name must be 0 - 24 characters")
-        self._category = uni3(value)
+        self._category = unicode3(value)
 
     def to_dict(self):
         ''' Returns editable data as a dictionary '''

@@ -3,7 +3,7 @@ import logging
 
 from tornado.options import options
 from datetime import datetime
-
+from past.builtins import basestring
 
 def save_config():
     logging.info("Saving current config to: %s" % options.config)
@@ -18,12 +18,7 @@ def save_config():
             if 'rootthebox.py' in group.lower() or group == '':
                 continue
             fp.write("\n# [ %s ]\n" % group.title())
-            try:
-                # python2
-                opt = options.group_dict(group).iteritems()
-            except AttributeError:
-                # python3
-                opt = options.group_dict(group).items()
+            opt = list(options.group_dict(group).items())
             for key, value in opt:
                 try:
                     # python2

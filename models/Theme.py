@@ -27,7 +27,7 @@ from sqlalchemy.orm import synonym, relationship
 from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import str3, unicode3
 
 
 class ThemeFile(DatabaseObject):
@@ -41,7 +41,7 @@ class ThemeFile(DatabaseObject):
     def _filter_string(cls, string, extra_chars=""):
         ''' Remove any non-white listed chars from a string '''
         char_white_list = ascii_letters + digits + extra_chars
-        return filter(lambda char: char in char_white_list, string)
+        return [char for char in string if char in char_white_list]
 
     @property
     def file_name(self):
@@ -52,7 +52,7 @@ class ThemeFile(DatabaseObject):
         self._file_name = self._filter_string(value, ".")
 
     def endswith(self, needle):
-        return uni3(self).endswith(needle)
+        return unicode3(self).endswith(needle)
 
     def __str__(self):
         return self._file_name
@@ -88,13 +88,13 @@ class Theme(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         ''' Return the object whose name is _name '''
-        return dbsession.query(cls).filter_by(_name=uni3(name)).first()
+        return dbsession.query(cls).filter_by(_name=unicode3(name)).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):
         ''' Remove any non-white listed chars from a string '''
         char_white_list = ascii_letters + digits + extra_chars
-        return filter(lambda char: char in char_white_list, string)
+        return [char for char in string if char in char_white_list]
 
     @property
     def name(self):

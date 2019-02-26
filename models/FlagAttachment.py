@@ -25,7 +25,7 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, String, Integer
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import str3, uni3
+from libs.StringCoding import str3, unicode3, encode, decode
 from tornado.options import options
 
 
@@ -52,12 +52,12 @@ class FlagAttachment(DatabaseObject):
     @file_name.setter
     def file_name(self, value):
         fname = value.replace('\n', '').replace('\r', '')
-        self._file_name = uni3(os.path.basename(fname))[:64]
+        self._file_name = unicode3(os.path.basename(fname))[:64]
 
     @property
     def data(self):
         with open(options.flag_attachment_dir + '/' + self.uuid, 'rb') as fp:
-            return fp.read().decode('base64')
+            return decode(fp.read(), 'base64')
 
     @data.setter
     def data(self, value):
@@ -65,7 +65,7 @@ class FlagAttachment(DatabaseObject):
             self.uuid = str3(uuid4())
         self.byte_size = len(value)
         with open(options.flag_attachment_dir + '/' + self.uuid, 'wb') as fp:
-            fp.write(value.encode('base64'))
+            fp.write(encode(value, 'base64'))
 
     def delete_data(self):
         ''' Remove the file from the file system, if it exists '''
