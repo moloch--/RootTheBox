@@ -35,7 +35,7 @@ from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.User import User, ADMIN_PERMISSION
 from libs.SecurityDecorators import authenticated, has_item, use_black_market
-from libs.StringCoding import unicode3
+from builtins import str
 from mimetypes import guess_type
 from base64 import b64decode
 from string import ascii_letters
@@ -226,7 +226,7 @@ class FederalReserveAjaxHandler(BaseHandler):
         self.dbsession.add(victim.team)
         user = self.get_current_user()
         sheep = WallOfSheep(
-            preimage=unicode3(preimage),
+            preimage=str(preimage),
             cracker_id=user.id,
             victim_id=victim.id,
             value=value)
@@ -362,7 +362,7 @@ class SwatHandler(BaseHandler):
     def render_page(self, errors=None):
         ''' Render page with extra arguments '''
         if errors is not None and not isinstance(errors, list):
-            errors = [unicode3(errors), ]
+            errors = [str(errors), ]
         user = self.get_current_user()
         targets = [target for target in User.all_users() if target not in user.team.members]
         self.render('upgrades/swat.html',

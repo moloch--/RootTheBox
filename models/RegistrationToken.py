@@ -25,7 +25,8 @@ from sqlalchemy import Column
 from sqlalchemy.types import String, Boolean
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import unicode3, encode
+from libs.StringCoding import encode
+from builtins import str
 
 
 
@@ -57,4 +58,4 @@ class RegistrationToken(DatabaseObject):
     @classmethod
     def by_value(cls, value):
         ''' Returns a the object with value of value '''
-        return dbsession.query(cls).filter_by(value=unicode3(value)).first()
+        return dbsession.query(cls).filter_by(value=str(value)).first()

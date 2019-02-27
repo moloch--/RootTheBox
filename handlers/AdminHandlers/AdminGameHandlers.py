@@ -30,7 +30,8 @@ import xml.etree.cElementTree as ET
 import time
 
 from tempfile import NamedTemporaryFile
-from libs.StringCoding import unicode3, encode
+from libs.StringCoding import encode
+from builtins import str
 from models.Flag import Flag
 from models.Box import Box
 from models.Swat import Swat
@@ -53,6 +54,7 @@ from handlers.BaseHandlers import BaseHandler
 from string import printable
 from setup.xmlsetup import import_xml
 from tornado.options import options
+from past.builtins import basestring
 
 
 class AdminGameHandler(BaseHandler):
@@ -191,7 +193,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
                 uri[args[0]]()
             except ValidationError as error:
                 self.render('admin/upgrades/source_code_market.html',
-                            errors=[unicode3(error), ]
+                            errors=[str(error), ]
                             )
         else:
             self.render("public/404.html")
@@ -252,7 +254,7 @@ class AdminSwatHandler(BaseHandler):
     def render_page(self, errors=None):
         ''' Render page with extra arguments '''
         if errors is not None and not isinstance(errors, list):
-            errors = [unicode3(errors), ]
+            errors = [str(errors), ]
         self.render('admin/upgrades/swat.html',
                     pending_bribes=Swat.all_pending(),
                     in_progress_bribes=Swat.all_in_progress(),
@@ -320,7 +322,7 @@ class AdminConfigurationHandler(BaseHandler):
 
     def get_bool(self, name, default=''):
         if not isinstance(default, basestring):
-            default = unicode3(default).lower()
+            default = str(default).lower()
         return self.get_argument(name, default) == 'true'
 
     @restrict_ip_address
@@ -345,7 +347,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.global_notification = self.get_bool('global_notification', True)
         self.config.hints_taken = self.get_bool('hints_taken', False)
         self.config.story_mode = self.get_bool('story_mode', False)
-        self.config.rank_by = unicode3(self.get_argument('rank_by', 'money'))
+        self.config.rank_by = str(self.get_argument('rank_by', 'money'))
         self.config.teams = self.get_bool('teams', True)
         self.config.public_teams = self.get_bool('public_teams')
         self.config.show_mvp = self.get_bool('show_mvp')
@@ -446,15 +448,15 @@ class AdminExportHandler(BaseHandler):
         For the record, I hate XML with a passion.
         '''
         levels_elem = ET.SubElement(root, "gamelevels")
-        levels_elem.set("count", unicode3(GameLevel.count()))
+        levels_elem.set("count", str(GameLevel.count()))
         for level in GameLevel.all()[1:]:
             level.to_xml(levels_elem)
         category_elem = ET.SubElement(root, "categories")
-        category_elem.set("count", unicode3(Category.count()))
+        category_elem.set("count", str(Category.count()))
         for category in Category.all():
             category.to_xml(category_elem)
         corps_elem = ET.SubElement(root, "corporations")
-        corps_elem.set("count", unicode3(Corporation.count()))
+        corps_elem.set("count", str(Corporation.count()))
         for corp in Corporation.all():
             corp.to_xml(corps_elem)
 
@@ -570,7 +572,7 @@ class AdminResetHandler(BaseHandler):
             self.render('admin/reset.html', success=success, errors=errors)
         except BaseException as e:
             errors.append("Failed to Reset Game")
-            logging.error(unicode3(e))
+            logging.error(str(e))
             self.render('admin/reset.html',
                         success=None,
                         errors=errors)

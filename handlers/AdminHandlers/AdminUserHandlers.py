@@ -31,7 +31,7 @@ from models.User import User, ADMIN_PERMISSION
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
-from libs.StringCoding import unicode3
+from builtins import str
 from tornado.options import options
 from netaddr import IPAddress
 
@@ -69,7 +69,7 @@ class AdminEditTeamsHandler(BaseHandler):
             self.redirect('/admin/users')
         except ValidationError as error:
             self.render('admin/view/users.html',
-                        errors=[unicode3(error), ]
+                        errors=[str(error), ]
                         )
 
 
@@ -109,7 +109,7 @@ class AdminEditUsersHandler(BaseHandler):
             self.redirect('/admin/users')
         except ValidationError as error:
             self.render('admin/view/users.html',
-                        errors=[unicode3(error), ]
+                        errors=[str(error), ]
                         )
 
     def edit_user(self):
@@ -178,7 +178,7 @@ class AdminEditUsersHandler(BaseHandler):
             self.redirect('/admin/users')
         except ValidationError as error:
             self.render("admin/view/users.html",
-                        errors=[unicode3(error), ]
+                        errors=[str(error), ]
                         )
 
 
@@ -203,7 +203,7 @@ class AdminDeleteUsersHandler(BaseHandler):
         '''
         user = User.by_uuid(self.get_argument('uuid', ''))
         if user is not None and user != self.get_current_user():
-            logging.info("Deleted User: '%s'" % unicode3(user.handle))
+            logging.info("Deleted User: '%s'" % str(user.handle))
             self.dbsession.delete(user)
             self.dbsession.commit()
             self.redirect("/admin/users")
@@ -224,7 +224,7 @@ class AdminDeleteUsersHandler(BaseHandler):
                         )
                 return
         if team is not None:
-            logging.info("Deleted Team: '%s'" % unicode3(team.name))
+            logging.info("Deleted Team: '%s'" % str(team.name))
             self.dbsession.delete(team)
             self.dbsession.commit()
             self.flush_memcached()

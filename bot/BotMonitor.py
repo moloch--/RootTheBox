@@ -55,7 +55,8 @@ try:
 except ImportError:
     from urlparse import urlparse
 from datetime import datetime
-from libs.StringCoding import str3, unicode3, encode
+from libs.StringCoding import str3, encode
+from builtins import str
 
 try:
     import curses
@@ -927,7 +928,7 @@ def on_open(ws):
 
 def on_message(ws, message):
     ''' Parse message and call a function '''
-    logging.debug("Recv'd message: %s" % unicode3(message))
+    logging.debug("Recv'd message: %s" % str(message))
     try:
         response = json.loads(message)
         if 'opcode' not in response:
@@ -1213,7 +1214,7 @@ class BotMonitor(object):
         download = " > Establishing satellite uplink: "
         for index in range(5, 25):
             signal = random.randint(0, 30)
-            self.screen.addstr(3, 2, download + unicode3(signal) + " dBi    ")
+            self.screen.addstr(3, 2, download + str(signal) + " dBi    ")
             self.screen.refresh()
             time.sleep(0.2)
             if self.stop_thread:
@@ -1223,7 +1224,7 @@ class BotMonitor(object):
         # (4) Downloading animation
         download = " > Downloading noki telcodes: "
         for index in range(0, 100):
-            self.screen.addstr(4, 2, download + unicode3(index) + "%")
+            self.screen.addstr(4, 2, download + str(index) + "%")
             self.screen.refresh()
             time.sleep(0.1)
             if self.stop_thread:

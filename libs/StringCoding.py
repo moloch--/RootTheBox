@@ -55,12 +55,6 @@ def str3(s):
     else:
         return str(s)
 
-def unicode3(s):
-    if (sys.version_info > (3, 0)):
-        return str(s)
-    else:
-        return unicode(s)
-
 def input3(s):
     if (sys.version_info > (3, 0)):
         return input(s)

@@ -29,7 +29,7 @@ from sqlalchemy.engine import Engine
 from contextlib import contextmanager
 from libs.DatabaseConnection import DatabaseConnection
 from libs.ConsoleColors import *
-from libs.StringCoding import unicode3
+from builtins import str
 
 
 if options.log_sql:
@@ -60,7 +60,7 @@ db_connection = DatabaseConnection(database=options.sql_database,
 
 
 ### Setup the database session
-engine = create_engine(unicode3(db_connection))
+engine = create_engine(str(db_connection))
 _Session = sessionmaker(bind=engine)
 StartSession = lambda: _Session(autoflush=True)
 

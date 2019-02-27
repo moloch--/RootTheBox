@@ -33,11 +33,11 @@ from datetime import datetime
 from tornado.options import define, options
 from libs.ConsoleColors import *
 from libs.ConfigHelpers import save_config
-from libs.StringCoding import unicode3, input3
+from libs.StringCoding import input3
+from builtins import str
 from setup import __version__
 
-
-current_time = lambda: unicode3(datetime.now()).split(' ')[1].split('.')[0]
+current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
 
 
 def start():

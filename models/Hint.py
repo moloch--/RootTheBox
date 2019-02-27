@@ -31,7 +31,7 @@ from models.Relationships import team_to_hint
 from models.Flag import Flag
 from models.Box import Box
 from models import dbsession
-from libs.StringCoding import unicode3
+from builtins import str
 
 
 class Hint(DatabaseObject):
@@ -44,7 +44,7 @@ class Hint(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: unicode3(uuid4())
+                  default=lambda: str(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     flag_id = Column(Integer, ForeignKey('flag.id'), nullable=True)
@@ -64,7 +64,7 @@ class Hint(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Returns a the object with a given uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode3(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_box_id(cls, _id):
@@ -105,11 +105,11 @@ class Hint(DatabaseObject):
     def description(self, value):
         if not 0 < len(value) < 1025:
             raise ValidationError("Hint description must be 1 - 1024 characters")
-        self._description = unicode3(value)
+        self._description = str(value)
 
     def to_xml(self, parent):
         hint_elem = ET.SubElement(parent, "hint")
-        ET.SubElement(hint_elem, "price").text = unicode3(self.price)
+        ET.SubElement(hint_elem, "price").text = str(self.price)
         ET.SubElement(hint_elem, "description").text = self._description
 
     def to_dict(self):
@@ -119,7 +119,7 @@ class Hint(DatabaseObject):
         else:
             flag_uuid = ""
         return {
-            'price': unicode3(self.price),
+            'price': str(self.price),
             'description': self.description,
             'flag_uuid': flag_uuid,
             'uuid': self.uuid,

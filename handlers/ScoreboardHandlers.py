@@ -33,7 +33,7 @@ from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
-from libs.StringCoding import unicode3
+from builtins import str
 from models.Team import Team
 from models.User import User
 from models.Box import Box
@@ -161,7 +161,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             skillvalues = []
             for val in catlist:
                 skillvalues.append(catlist[val])
-            self.write(unicode3(skillvalues))
+            self.write(str(skillvalues))
         else:
             self.write({'error': 'Team does not exist'})
         self.finish()

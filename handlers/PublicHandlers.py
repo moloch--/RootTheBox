@@ -30,7 +30,7 @@ import logging
 from netaddr import IPAddress
 from libs.SecurityDecorators import blacklist_ips
 from libs.ValidationError import ValidationError
-from libs.StringCoding import unicode3
+from builtins import str
 from models.Team import Team
 from models.Theme import Theme
 from models.RegistrationToken import RegistrationToken
@@ -111,7 +111,7 @@ class LoginHandler(BaseHandler):
         self.session['user_id'] = int(user.id)
         self.session['user_uuid'] = user.uuid
         self.session['handle'] = user.handle
-        self.session['theme'] = [unicode3(f) for f in theme.files]
+        self.session['theme'] = [str(f) for f in theme.files]
         self.session['theme_id'] = int(theme.id)
         if user.has_permission(ADMIN_PERMISSION):
             self.session['menu'] = 'admin'
@@ -165,7 +165,7 @@ class RegistrationHandler(BaseHandler):
                 user = self.create_user()
                 self.render('public/successful_reg.html', account=user.handle)
         except ValidationError as error:
-            self.render('public/registration.html', errors=[unicode3(error)], suspend=self.application.settings['suspend_registration'])
+            self.render('public/registration.html', errors=[str(error)], suspend=self.application.settings['suspend_registration'])
 
     def check_regtoken(self):
         regtoken = self.get_argument('token', '')

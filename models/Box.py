@@ -41,7 +41,8 @@ from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
-from libs.StringCoding import unicode3, encode
+from libs.StringCoding import encode
+from builtins import str
 from PIL import Image
 from resizeimage import resizeimage
 import enum
@@ -56,7 +57,7 @@ class Box(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: unicode3(uuid4())
+                  default=lambda: str(uuid4())
                   )
 
     corporation_id = Column(Integer, ForeignKey('corporation.id'),
@@ -116,12 +117,12 @@ class Box(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode3(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_name(cls, name):
         ''' Return the box object whose name is "name" '''
-        return dbsession.query(cls).filter_by(_name=unicode3(name)).first()
+        return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_category(cls, _cat_id):
@@ -156,9 +157,9 @@ class Box(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 <= len(unicode3(value)) <= 32:
+        if not 3 <= len(str(value)) <= 32:
             raise ValidationError("Name must be 3 - 32 characters")
-        self._name = unicode3(value)
+        self._name = str(value)
 
     @property
     def operating_system(self):
@@ -166,7 +167,7 @@ class Box(DatabaseObject):
 
     @operating_system.setter
     def operating_system(self, value):
-        self._operating_system = unicode3(value)
+        self._operating_system = str(value)
 
     @property
     def description(self):
@@ -182,7 +183,7 @@ class Box(DatabaseObject):
             ls.append("Reported Difficulty: %s" % self.difficulty)
         if not encode(ls[-1], 'utf-8').endswith(b'\n'):
             ls[-1] = ls[-1] + "\n"
-        return unicode3("\n\n".join(ls))
+        return str("\n\n".join(ls))
 
     @description.setter
     def description(self, value):
@@ -190,7 +191,7 @@ class Box(DatabaseObject):
             return ""
         if 1025 < len(value):
             raise ValidationError("Description cannot be greater than 1024 characters")
-        self._description = unicode3(value)
+        self._description = str(value)
 
     @property
     def difficulty(self):
@@ -202,7 +203,7 @@ class Box(DatabaseObject):
             return
         if 17 < len(value):
             raise ValidationError("Difficulty cannot be greater than 16 characters")
-        self._difficulty = unicode3(value)
+        self._difficulty = str(value)
 
     @property
     def avatar(self):
@@ -219,14 +220,14 @@ class Box(DatabaseObject):
     @avatar.setter
     def avatar(self, image_data):
         if self.uuid is None:
-            self.uuid = unicode3(uuid4())
+            self.uuid = str(uuid4())
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp'] and not is_xss_image(image_data):
                 try:
                     if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
                         os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                    file_path = unicode3(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                    file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
                     image = Image.open(io.BytesIO(image_data))
                     cover = resizeimage.resize_cover(image, [500, 250])
                     cover.save(file_path, image.format)
@@ -265,7 +266,7 @@ class Box(DatabaseObject):
     def to_xml(self, parent):
         ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")
-        box_elem.set("gamelevel", unicode3(self.game_level.number))
+        box_elem.set("gamelevel", str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
         ET.SubElement(
             box_elem, "operatingsystem").text = self._operating_system
@@ -276,7 +277,7 @@ class Box(DatabaseObject):
         if self.category_id:
             ET.SubElement(box_elem, "category").text = Category.by_id(self.category_id).category
         flags_elem = ET.SubElement(box_elem, "flags")
-        flags_elem.set("count", unicode3(len(self.flags)))
+        flags_elem.set("count", str(len(self.flags)))
         for flag in self.flags:
             flag.to_xml(flags_elem)
         hints_elem = ET.SubElement(box_elem, "hints")
@@ -285,9 +286,9 @@ class Box(DatabaseObject):
             if hint.flag_id is None:
                 hint.to_xml(hints_elem)
                 count += 1
-        hints_elem.set("count", unicode3(count))
+        hints_elem.set("count", str(count))
         ips_elem = ET.SubElement(box_elem, "ipaddresses")
-        ips_elem.set("count", unicode3(len(self.ip_addresses)))
+        ips_elem.set("count", str(len(self.ip_addresses)))
         for ip in self.ip_addresses:
             ip.to_xml(ips_elem)
         avatarfile = os.path.join(options.avatar_dir, self.avatar)

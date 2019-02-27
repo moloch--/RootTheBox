@@ -31,7 +31,7 @@ import logging
 
 from datetime import datetime
 from libs.Singleton import Singleton
-from libs.StringCoding import unicode3
+from builtins import str
 from sqlalchemy import Column, create_engine
 from sqlalchemy.sql import and_
 from sqlalchemy.orm import sessionmaker
@@ -52,7 +52,7 @@ class _BotDatabaseObject(object):
     def __tablename__(self):
         ''' Converts class name from camel case to snake case '''
         name = self.__name__
-        return unicode3(
+        return str(
             name[0].lower() +
             re.sub(r'([A-Z])',
                    lambda letter: "_" + letter.group(0).lower(), name[1:])
@@ -91,7 +91,7 @@ class Bot(BotDatabaseObject):
     def to_dict(self):
         return {
             'team_name': self.team_name,
-            'last_ping': unicode3(self.last_ping),
+            'last_ping': str(self.last_ping),
             'total_reward': self.total_reward,
             'box_name': self.box_name,
             'remote_ip': self.remote_ip,
@@ -128,28 +128,28 @@ class BotManager(object):
         return self.botdb.query(Bot).all()
 
     def by_box(self, box):
-        bots = self.botdb.query(Bot).filter_by(box_uuid=unicode3(box.uuid)).all()
+        bots = self.botdb.query(Bot).filter_by(box_uuid=str(box.uuid)).all()
         return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def by_team(self, team):
-        bots = self.botdb.query(Bot).filter_by(team_name=unicode3(team.name)).all()
+        bots = self.botdb.query(Bot).filter_by(team_name=str(team.name)).all()
         return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def count_by_team(self, team):
         return len(self.by_team(team))
 
     def count_by_team_uuid(self, tuuid):
-        return self.botdb.query(Bot).filter_by(team_uuid=unicode3(tuuid)).count()
+        return self.botdb.query(Bot).filter_by(team_uuid=str(tuuid)).count()
 
     def add_bot(self, bot_wsocket):
         if not self.is_duplicate(bot_wsocket):
             bot = Bot(
-                wsock_uuid=unicode3(bot_wsocket.uuid),
-                team_name=unicode3(bot_wsocket.team_name),
-                box_name=unicode3(bot_wsocket.box_name),
-                team_uuid=unicode3(bot_wsocket.team_uuid),
-                box_uuid=unicode3(bot_wsocket.box_uuid),
-                remote_ip=unicode3(bot_wsocket.remote_ip)
+                wsock_uuid=str(bot_wsocket.uuid),
+                team_name=str(bot_wsocket.team_name),
+                box_name=str(bot_wsocket.box_name),
+                team_uuid=str(bot_wsocket.team_uuid),
+                box_uuid=str(bot_wsocket.box_uuid),
+                remote_ip=str(bot_wsocket.remote_ip)
             )
             bot.dbsession = self.dbsession
             self.botdb.add(bot)
@@ -166,7 +166,7 @@ class BotManager(object):
         self.botdb.flush()
 
     def remove_bot(self, bot_wsocket):
-        bot = self.botdb.query(Bot).filter_by(wsock_uuid=unicode3(bot_wsocket.uuid)).first()
+        bot = self.botdb.query(Bot).filter_by(wsock_uuid=str(bot_wsocket.uuid)).first()
         if bot is not None:
             logging.debug("Removing bot '%s' at %s" % (bot.team_uuid, bot.remote_ip))
             team = bot.team_name
@@ -182,7 +182,7 @@ class BotManager(object):
         assert(bot_wsocket.team_uuid is not None)
         assert(bot_wsocket.box_uuid is not None)
         return 0 < self.botdb.query(Bot).filter(
-            and_(Bot.team_uuid == unicode3(bot_wsocket.team_uuid), Bot.box_uuid == unicode3(bot_wsocket.box_uuid))
+            and_(Bot.team_uuid == str(bot_wsocket.team_uuid), Bot.box_uuid == str(bot_wsocket.box_uuid))
         ).count()
 
     def add_monitor(self, monitor_wsocket):
@@ -206,7 +206,7 @@ class BotManager(object):
 
     def get_bots(self, team):
         ''' Get info on boxes for a team '''
-        bots = self.botdb.query(Bot).filter_by(team_name=unicode3(team)).all()
+        bots = self.botdb.query(Bot).filter_by(team_name=str(team)).all()
         return [bot.to_dict() for bot in bots]
 
     def get_all_bots(self):
@@ -216,7 +216,7 @@ class BotManager(object):
 
     def add_rewards(self, team, reward):
         ''' Add rewards to bot records '''
-        bots = self.botdb.query(Bot).filter_by(team_name=unicode3(team)).all()
+        bots = self.botdb.query(Bot).filter_by(team_name=str(team)).all()
         for bot in bots:
             bot.total_reward += reward
             self.botdb.add(bot)

@@ -25,7 +25,7 @@ from sqlalchemy.orm import relationship, backref
 from models import dbsession
 from models.Relationships import snapshot_to_snapshot_team
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import unicode3
+from builtins import str
 
 ### Constants ###
 # Ignore time zone for now
@@ -62,10 +62,10 @@ class Snapshot(DatabaseObject):
     def to_dict(self):
         data = {}
         for team in self.teams:
-            data[unicode3(team.name)] = {
+            data[str(team.name)] = {
                 'bots': team.bots,
                 'money': team.money,
-                'game_levels': [unicode3(level) for level in team.game_levels],
+                'game_levels': [str(level) for level in team.game_levels],
                 'flags': [flag.name for flag in team.flags],
             }
         unix_time = self.created - UNIX_EPOCH

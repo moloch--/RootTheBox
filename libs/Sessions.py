@@ -16,7 +16,7 @@ import collections
 from builtins import str
 from datetime import datetime, timedelta
 from tornado.options import options
-from libs.StringCoding import unicode3, encode, decode
+from libs.StringCoding import encode, decode
 
 
 class BaseSession(collections.MutableMapping):

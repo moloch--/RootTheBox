@@ -25,7 +25,8 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Unicode, String, Integer
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import unicode3, encode, decode
+from libs.StringCoding import encode, decode
+from builtins import str
 from tornado.options import options
 
 
@@ -39,7 +40,7 @@ class FlagAttachment(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: unicode3(uuid4())
+                  default=lambda: str(uuid4())
                   )
 
     flag_id = Column(Integer, ForeignKey('flag.id'), nullable=False)
@@ -52,7 +53,7 @@ class FlagAttachment(DatabaseObject):
     @file_name.setter
     def file_name(self, value):
         fname = value.replace('\n', '').replace('\r', '')
-        self._file_name = unicode3(os.path.basename(fname))[:64]
+        self._file_name = str(os.path.basename(fname))[:64]
 
     @property
     def data(self):
@@ -62,7 +63,7 @@ class FlagAttachment(DatabaseObject):
     @data.setter
     def data(self, value):
         if self.uuid is None:
-            self.uuid = unicode3(uuid4())
+            self.uuid = str(uuid4())
         self.byte_size = len(value)
         with open(options.flag_attachment_dir + '/' + self.uuid, 'wb') as fp:
             fp.write(encode(value, 'base64'))

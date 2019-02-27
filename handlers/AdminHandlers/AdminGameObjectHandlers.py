@@ -49,7 +49,7 @@ from models.User import ADMIN_PERMISSION
 from models.Flag import Flag, FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME, FLAG_CHOICE
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import *
-from libs.StringCoding import unicode3
+from builtins import str
 
 
 class AdminCreateHandler(BaseHandler):
@@ -135,7 +135,7 @@ class AdminCreateHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect('/admin/users')
         except ValidationError as error:
-            self.render("admin/create/team.html", errors=[unicode3(error), ])
+            self.render("admin/create/team.html", errors=[str(error), ])
 
     def create_corporation(self):
         ''' Add a new corporation to the database '''
@@ -150,7 +150,7 @@ class AdminCreateHandler(BaseHandler):
                 self.dbsession.commit()
                 self.redirect('/admin/view/game_objects')
         except ValidationError as error:
-            self.render("admin/create/corporation.html", errors=[unicode3(error), ])
+            self.render("admin/create/corporation.html", errors=[str(error), ])
 
     def create_category(self):
         ''' Add a new category to the database '''
@@ -165,7 +165,7 @@ class AdminCreateHandler(BaseHandler):
                 self.dbsession.commit()
                 self.redirect('/admin/view/categories')
         except ValidationError as error:
-            self.render("admin/create/category.html", errors=[unicode3(error), ])
+            self.render("admin/create/category.html", errors=[str(error), ])
 
     def create_box(self):
         ''' Create a box object '''
@@ -202,42 +202,42 @@ class AdminCreateHandler(BaseHandler):
                 self.dbsession.commit()
                 self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render('admin/create/box.html', errors=[unicode3(error), ])
+            self.render('admin/create/box.html', errors=[str(error), ])
 
     def create_flag_static(self):
         ''' Create a static flag '''
         try:
             self._mkflag(FLAG_STATIC)
         except ValidationError as error:
-            self.render('admin/create/flag-static.html', errors=[unicode3(error)])
+            self.render('admin/create/flag-static.html', errors=[str(error)])
 
     def create_flag_regex(self):
         ''' Create a regex flag '''
         try:
             self._mkflag(FLAG_REGEX)
         except ValidationError as error:
-            self.render('admin/create/flag-regex.html', errors=[unicode3(error)])
+            self.render('admin/create/flag-regex.html', errors=[str(error)])
 
     def create_flag_file(self):
         ''' Create a flag flag '''
         try:
             self._mkflag(FLAG_FILE, is_file=True)
         except ValidationError as error:
-            self.render('admin/create/flag-file.html', errors=[unicode3(error)])
+            self.render('admin/create/flag-file.html', errors=[str(error)])
 
     def create_flag_choice(self):
         ''' Create a multiple choice flag '''
         try:
             self._mkflag(FLAG_CHOICE)
         except ValidationError as error:
-            self.render('admin/create/flag-choice.html', errors=[unicode3(error)])
+            self.render('admin/create/flag-choice.html', errors=[str(error)])
 
     def create_flag_datetime(self):
         ''' Create a datetime flag '''
         try:
             self._mkflag(FLAG_DATETIME)
         except ValidationError as error:
-            self.render('admin/create/flag-datetime.html', errors=[unicode3(error)])
+            self.render('admin/create/flag-datetime.html', errors=[str(error)])
 
     def create_game_level(self):
         '''
@@ -273,7 +273,7 @@ class AdminCreateHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect('/admin/view/game_levels')
         except ValidationError as error:
-            self.render('admin/create/game_level.html', errors=[unicode3(error), ])
+            self.render('admin/create/game_level.html', errors=[str(error), ])
 
     def create_hint(self):
         ''' Add hint to database '''
@@ -293,7 +293,7 @@ class AdminCreateHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render('admin/create/hint.html', errors=[unicode3(error), ])
+            self.render('admin/create/hint.html', errors=[str(error), ])
 
     def _mkflag(self, flag_type, is_file=False):
         ''' Creates the flag in the database '''
@@ -429,7 +429,7 @@ class AdminEditHandler(BaseHandler):
                 self.dbsession.commit()
             self.redirect('/admin/view/game_objects')
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[unicode3(error), ])
+            self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_category(self):
         ''' Updates category object in the database '''
@@ -447,7 +447,7 @@ class AdminEditHandler(BaseHandler):
                 self.dbsession.commit()
             self.redirect('/admin/view/categories')
         except ValidationError as error:
-            self.render("admin/view/categories.html", errors=[unicode3(error), ])
+            self.render("admin/view/categories.html", errors=[str(error), ])
 
     def edit_boxes(self):
         '''
@@ -527,7 +527,7 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[unicode3(error), ])
+            self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_flag_order(self):
         ''' Edit flag order in the database '''
@@ -638,7 +638,7 @@ class AdminEditHandler(BaseHandler):
             else:
                 raise ValidationError("IP address is already in use")
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[unicode3(error), ])
+            self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_game_level(self):
         ''' Update game level objects '''
@@ -676,7 +676,7 @@ class AdminEditHandler(BaseHandler):
         except ValueError:
             raise ValidationError("That was not a number ...")
         except ValidationError as error:
-            self.render("admin/view/game_levels.html", errors=[unicode3(error), ])
+            self.render("admin/view/game_levels.html", errors=[str(error), ])
 
     def box_level(self):
         ''' Changes a boxs level '''
@@ -716,7 +716,7 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[unicode3(error), ])
+            self.render("admin/view/game_objects.html", errors=[str(error), ])
 
     def edit_market_item(self):
         ''' Change a market item's price '''
@@ -731,7 +731,7 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect('/admin/view/market_objects')
         except ValidationError as error:
-            self.render('admin/view/market_objects.html', errors=[unicode3(error)])
+            self.render('admin/view/market_objects.html', errors=[str(error)])
 
 
 class AdminDeleteHandler(BaseHandler):
@@ -761,7 +761,7 @@ class AdminDeleteHandler(BaseHandler):
         ''' Delete an ip address object '''
         ip = IpAddress.by_uuid(self.get_argument('ip_uuid', ''))
         if ip is not None:
-            logging.info("Deleted IP address: '%s'" % unicode3(ip))
+            logging.info("Deleted IP address: '%s'" % str(ip))
             self.dbsession.delete(ip)
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects")
@@ -891,9 +891,9 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
             flag = Flag.by_uuid(uuid)
             if flag is not None:
                 if options.banking:
-                    flaginfo = [{"name": flag.name, "token": flag.token, "price": "$" + unicode3(flag.value)}]
+                    flaginfo = [{"name": flag.name, "token": flag.token, "price": "$" + str(flag.value)}]
                 else:
-                    flaginfo = [{"name": flag.name, "token": flag.token, "price": unicode3(flag.value) + " points"}]
+                    flaginfo = [{"name": flag.name, "token": flag.token, "price": str(flag.value) + " points"}]
                 captures = []
                 for item in Flag.captures(flag.id):
                     team = Team.by_id(item[0])
@@ -910,9 +910,9 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                     hint = Hint.by_id(item.hint_id)
                     if team:
                         if options.banking:
-                            hints.append({"name": team.name, "price": "$" + unicode3(hint.price)})
+                            hints.append({"name": team.name, "price": "$" + str(hint.price)})
                         else:
-                            hints.append({"name": team.name, "price": unicode3(hint.price) + " points"})
+                            hints.append({"name": team.name, "price": str(hint.price) + " points"})
                 obj = {
                     "flag": flaginfo,
                     "captures": captures, 
@@ -941,9 +941,9 @@ class AdminTestTokenHandler(BaseHandler):
         case = int(self.get_argument('case', 1))
         if flagtype == FLAG_STATIC:
             if case == 0:
-                test = unicode3(token).lower().strip() == unicode3(submission).lower().strip()
+                test = str(token).lower().strip() == str(submission).lower().strip()
             else:
-                test = unicode3(token).strip() == unicode3(submission).strip()
+                test = str(token).strip() == str(submission).strip()
         elif flagtype == FLAG_REGEX:
             if not token.startswith("^(") and not token.endswith(")$"):
                 token = "^(" + token + ")$"

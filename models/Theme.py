@@ -27,7 +27,7 @@ from sqlalchemy.orm import synonym, relationship
 from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import unicode3
+from builtins import str
 
 
 class ThemeFile(DatabaseObject):
@@ -52,7 +52,7 @@ class ThemeFile(DatabaseObject):
         self._file_name = self._filter_string(value, ".")
 
     def endswith(self, needle):
-        return unicode3(self).endswith(needle)
+        return str(self).endswith(needle)
 
     def __str__(self):
         return self._file_name
@@ -66,7 +66,7 @@ class Theme(DatabaseObject):
     Holds theme related settings
     '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: unicode3(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _name = Column(Unicode(64), unique=True, nullable=False)
     files = relationship("ThemeFile", lazy="joined")
 
@@ -88,7 +88,7 @@ class Theme(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         ''' Return the object whose name is _name '''
-        return dbsession.query(cls).filter_by(_name=unicode3(name)).first()
+        return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):

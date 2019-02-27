@@ -37,7 +37,7 @@ from models.FlagChoice import FlagChoice
 from models.Penalty import Penalty
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
-from libs.StringCoding import unicode3
+from builtins import str
 from tornado.options import options
 from dateutil.parser import parse
 
@@ -66,7 +66,7 @@ class Flag(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: unicode3(uuid4())
+                  default=lambda: str(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     lock_id = Column(Integer, ForeignKey('flag.id', ondelete="SET NULL"), nullable=True)
@@ -115,27 +115,27 @@ class Flag(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         ''' Returns a the object with name of _name '''
-        return dbsession.query(cls).filter_by(_name=unicode3(name)).first()
+        return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode3(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_token(cls, token):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_token=unicode3(token)).first()
+        return dbsession.query(cls).filter_by(_token=str(token)).first()
 
     @classmethod
     def by_token_and_box_id(cls, token, box_id):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_token=unicode3(token), box_id = box_id).first()
+        return dbsession.query(cls).filter_by(_token=str(token), box_id = box_id).first()
 
     @classmethod
     def by_type(cls, _type):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_type=unicode3(_type)).all()
+        return dbsession.query(cls).filter_by(_type=str(_type)).all()
 
     @classmethod
     def captures(cls, _id):
@@ -241,7 +241,7 @@ class Flag(DatabaseObject):
     def name(self, value):
         if not 3 <= len(value) <= 16:
             raise ValidationError("Flag name must be 3 - 16 characters")
-        self._name = unicode3(value)
+        self._name = str(value)
 
     @property
     def order(self):
@@ -257,7 +257,7 @@ class Flag(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = unicode3(value)[:1024]
+        self._description = str(value)[:1024]
 
     @property
     def capture_message(self):
@@ -265,7 +265,7 @@ class Flag(DatabaseObject):
 
     @capture_message.setter
     def capture_message(self, value):
-        self._capture_message = unicode3(value)
+        self._capture_message = str(value)
 
     @property
     def type(self):
@@ -275,7 +275,7 @@ class Flag(DatabaseObject):
     def type(self, value):
         if value not in self.FLAG_TYPES:
             raise ValueError("Invalid flag type")
-        self._type = unicode3(value)
+        self._type = str(value)
 
     @property
     def token(self):
@@ -283,7 +283,7 @@ class Flag(DatabaseObject):
 
     @token.setter
     def token(self, value):
-        self._token = unicode3(value)
+        self._token = str(value)
 
     @property
     def case_sensitive(self):
@@ -374,9 +374,9 @@ class Flag(DatabaseObject):
     def capture(self, submission):
         if self._type == FLAG_STATIC:
             if self._case_sensitive == 0:
-                return unicode3(self.token).lower().strip() == unicode3(submission).lower().strip()
+                return str(self.token).lower().strip() == str(submission).lower().strip()
             else:
-                return unicode3(self.token).strip() == unicode3(submission).strip()
+                return str(self.token).strip() == str(submission).strip()
         elif self._type == FLAG_REGEX:
             if not self.token.startswith("^(") and not self.token.endswith(")$"):
                 self.token = "^(" + self.token + ")$"
@@ -405,23 +405,23 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "token").text = self.token
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
-        ET.SubElement(flag_elem, "value").text = unicode3(self.value)
-        ET.SubElement(flag_elem, "original_value").text = unicode3(self.original_value)
+        ET.SubElement(flag_elem, "value").text = str(self.value)
+        ET.SubElement(flag_elem, "original_value").text = str(self.original_value)
         if self.lock_id:
             ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
-        ET.SubElement(flag_elem, "case_sensitive").text = unicode3(self.case_sensitive)
+        ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
         attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
-        attachements_elem.set("count", unicode3(len(self.flag_attachments)))
+        attachements_elem.set("count", str(len(self.flag_attachments)))
         for attachement in self.flag_attachments:
             attachement.to_xml(attachements_elem)
         choice_elem = ET.SubElement(flag_elem, "flag_choices")
-        choice_elem.set("count", unicode3(len(self.flag_choice)))
+        choice_elem.set("count", str(len(self.flag_choice)))
         for choice in self.flag_choice:
             ET.SubElement(choice_elem, "choice").text = choice.choice
         from models.Hint import Hint
         xml_hints = Hint.by_flag_id(self.id)
         hints_elem = ET.SubElement(flag_elem, "hints")
-        hints_elem.set("count", unicode3(len(xml_hints)))
+        hints_elem.set("count", str(len(xml_hints)))
         for hint in xml_hints:
             if not hint.flag_id is None:
                 hint.to_xml(hints_elem)
@@ -453,5 +453,5 @@ class Flag(DatabaseObject):
 
     def __repr__(self):
         return "<Flag - name:%s, type:%s >" % (
-            self.name, unicode3(self._type)
+            self.name, str(self._type)
         )
