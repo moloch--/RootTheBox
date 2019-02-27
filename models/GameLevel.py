@@ -212,3 +212,6 @@ class GameLevel(DatabaseObject):
         return "<GameLevel number: %d, buyout: %d, next: id(%s)>" % (
             self.number, self.buyout, self.next_level_id
         )
+
+    def __hash__(self):
+        return hash(self.uuid)

@@ -48,7 +48,7 @@ import logging
 import argparse
 import platform
 import threading
-from builtins import range, object, chr
+from builtins import range, object, chr, str
 from past.utils import old_div
 try:
     from urllib.parse import urlparse
@@ -56,7 +56,6 @@ except ImportError:
     from urlparse import urlparse
 from datetime import datetime
 from libs.StringCoding import encode
-from builtins import str
 
 try:
     import curses
