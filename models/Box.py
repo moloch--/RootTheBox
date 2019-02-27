@@ -41,7 +41,7 @@ from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
-from libs.StringCoding import str3, unicode3, encode
+from libs.StringCoding import unicode3, encode
 from PIL import Image
 from resizeimage import resizeimage
 import enum
@@ -56,7 +56,7 @@ class Box(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str3(uuid4())
+                  default=lambda: unicode3(uuid4())
                   )
 
     corporation_id = Column(Integer, ForeignKey('corporation.id'),
@@ -180,7 +180,7 @@ class Box(DatabaseObject):
             ls.append("No information on file.")
         if self.difficulty != "Unknown":
             ls.append("Reported Difficulty: %s" % self.difficulty)
-        if not encode(ls[-1], 'utf-8').endswith("\n"):
+        if not encode(ls[-1], 'utf-8').endswith(b'\n'):
             ls[-1] = ls[-1] + "\n"
         return unicode3("\n\n".join(ls))
 
@@ -219,7 +219,7 @@ class Box(DatabaseObject):
     @avatar.setter
     def avatar(self, image_data):
         if self.uuid is None:
-            self.uuid = str3(uuid4())
+            self.uuid = unicode3(uuid4())
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ['png', 'jpeg', 'gif', 'bmp'] and not is_xss_image(image_data):

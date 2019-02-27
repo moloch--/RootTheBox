@@ -48,7 +48,7 @@ from string import printable
 from tornado.options import options
 from PIL import Image
 from resizeimage import resizeimage
-from libs.StringCoding import str3, unicode3, encode
+from libs.StringCoding import unicode3, encode
 from past.builtins import basestring
 
 
@@ -64,7 +64,7 @@ class User(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str3(uuid4())
+                  default=lambda: unicode3(uuid4())
                   )
 
     team_id = Column(Integer, ForeignKey('team.id'))

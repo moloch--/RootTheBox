@@ -44,18 +44,18 @@ from tornado.options import options
 from PIL import Image
 from resizeimage import resizeimage
 from random import randint
-from libs.StringCoding import str3, unicode3, encode
+from libs.StringCoding import unicode3, encode
 
 class Team(DatabaseObject):
 
     ''' Team definition '''
 
     uuid = Column(
-        String(36), unique=True, nullable=False, default=lambda: str3(uuid4()))
+        String(36), unique=True, nullable=False, default=lambda: unicode3(uuid4()))
     _name = Column(Unicode(24), unique=True, nullable=False)
     _motto = Column(Unicode(32))
     _avatar = Column(String(64))
-    _code = Column('code', String(16), unique=True, default=lambda: str3(uuid4().hex)[:16])
+    _code = Column('code', String(16), unique=True, default=lambda: unicode3(uuid4().hex)[:16])
     files = relationship("FileUpload", backref=backref("team", lazy="select"))
     pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
     money = Column(Integer, default=options.starting_team_money, nullable=False)

@@ -27,13 +27,13 @@ from sqlalchemy import Column
 from sqlalchemy.types import Unicode, Integer, String
 from models.BaseModels import DatabaseObject
 from models import dbsession
-from libs.StringCoding import str3, unicode3
+from libs.StringCoding import unicode3
 
 
 class MarketItem(DatabaseObject):
     ''' Item definition '''
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str3(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: unicode3(uuid4()))
     name = Column(Unicode(64), nullable=False)
     price = Column(Integer, nullable=False)
     image = Column(Unicode(256), nullable=False)

@@ -31,7 +31,7 @@ from models.Relationships import team_to_hint
 from models.Flag import Flag
 from models.Box import Box
 from models import dbsession
-from libs.StringCoding import str3, unicode3
+from libs.StringCoding import unicode3
 
 
 class Hint(DatabaseObject):
@@ -44,7 +44,7 @@ class Hint(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str3(uuid4())
+                  default=lambda: unicode3(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     flag_id = Column(Integer, ForeignKey('flag.id'), nullable=True)

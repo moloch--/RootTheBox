@@ -45,8 +45,8 @@ def start():
     try:
         from handlers import update_db
         update_db()
-    except:
-        logging.fatal("Error: Unable to verify the db schema.  '--setup=prod' or '--setup=dev' can be used to create the database.")
+    except Exception as e:
+        logging.fatal("Unable to verify the db schema. If this is a new setup, use '--setup=prod' or '--setup=dev' to create the database.\nError: %s" % e)
         os._exit(1)
 
     ''' Starts the application '''

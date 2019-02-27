@@ -37,7 +37,7 @@ from models.FlagChoice import FlagChoice
 from models.Penalty import Penalty
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
-from libs.StringCoding import str3, unicode3
+from libs.StringCoding import unicode3
 from tornado.options import options
 from dateutil.parser import parse
 
@@ -66,7 +66,7 @@ class Flag(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str3(uuid4())
+                  default=lambda: unicode3(uuid4())
                   )
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     lock_id = Column(Integer, ForeignKey('flag.id', ondelete="SET NULL"), nullable=True)
@@ -77,7 +77,7 @@ class Flag(DatabaseObject):
     _capture_message = Column(Unicode(512))
     _case_sensitive = Column(Integer, nullable=True)
     _value = Column(Integer, nullable=False)
-    _original_value = Column(Integer, nullable=False)
+    _original_value = Column(Integer, nullable=True)
     _order = Column(Integer, nullable=True, index=True)
     _type = Column(Unicode(16), default=False)
 
@@ -115,27 +115,27 @@ class Flag(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         ''' Returns a the object with name of _name '''
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=unicode3(name)).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
         ''' Return and object based on a uuid '''
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=unicode3(_uuid)).first()
 
     @classmethod
     def by_token(cls, token):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_token=unicode(token)).first()
+        return dbsession.query(cls).filter_by(_token=unicode3(token)).first()
 
     @classmethod
     def by_token_and_box_id(cls, token, box_id):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_token=unicode(token), box_id = box_id).first()
+        return dbsession.query(cls).filter_by(_token=unicode3(token), box_id = box_id).first()
 
     @classmethod
     def by_type(cls, _type):
         ''' Return and object based on a token '''
-        return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
+        return dbsession.query(cls).filter_by(_type=unicode3(_type)).all()
 
     @classmethod
     def captures(cls, _id):
@@ -241,7 +241,7 @@ class Flag(DatabaseObject):
     def name(self, value):
         if not 3 <= len(value) <= 16:
             raise ValidationError("Flag name must be 3 - 16 characters")
-        self._name = unicode(value)
+        self._name = unicode3(value)
 
     @property
     def order(self):
@@ -257,7 +257,7 @@ class Flag(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value)[:1024]
+        self._description = unicode3(value)[:1024]
 
     @property
     def capture_message(self):
@@ -265,7 +265,7 @@ class Flag(DatabaseObject):
 
     @capture_message.setter
     def capture_message(self, value):
-        self._capture_message = unicode(value)
+        self._capture_message = unicode3(value)
 
     @property
     def type(self):
@@ -275,7 +275,7 @@ class Flag(DatabaseObject):
     def type(self, value):
         if value not in self.FLAG_TYPES:
             raise ValueError("Invalid flag type")
-        self._type = unicode(value)
+        self._type = unicode3(value)
 
     @property
     def token(self):
@@ -283,7 +283,7 @@ class Flag(DatabaseObject):
 
     @token.setter
     def token(self, value):
-        self._token = unicode(value)
+        self._token = unicode3(value)
 
     @property
     def case_sensitive(self):
@@ -309,9 +309,12 @@ class Flag(DatabaseObject):
 
     @property
     def original_value(self):
-        return self._original_value
+        if self._original_value:
+            return self._original_value
+        else:
+            return self._value
 
-    @value.setter
+    @original_value.setter
     def original_value(self, value):
         try:
             self._original_value = abs(int(value))

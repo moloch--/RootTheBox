@@ -28,7 +28,7 @@ from sqlalchemy import Column
 from sqlalchemy.types import Unicode, String
 from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
-from libs.StringCoding import str3, unicode3
+from libs.StringCoding import unicode3
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
@@ -39,7 +39,7 @@ class Category(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str3(uuid4())
+                  default=lambda: unicode3(uuid4())
                   )
 
     _category = Column(Unicode(24), unique=True, nullable=False)

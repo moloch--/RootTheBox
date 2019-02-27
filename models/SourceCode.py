@@ -29,7 +29,7 @@ from models import dbsession
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
 from tornado.options import options
-from libs.StringCoding import str3, unicode3, encode, decode
+from libs.StringCoding import unicode3, encode, decode
 
 
 class SourceCode(DatabaseObject):
@@ -42,7 +42,7 @@ class SourceCode(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str3(uuid4())
+                  default=lambda: unicode3(uuid4())
                   )
 
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
@@ -87,7 +87,7 @@ class SourceCode(DatabaseObject):
     @data.setter
     def data(self, value):
         if self.uuid is None:
-            self.uuid = str3(uuid4())
+            self.uuid = unicode3(uuid4())
         self.byte_size = len(value)
         self.checksum = sha1(value).hexdigest()
         with open(options.source_code_market_dir + '/' + self.uuid, 'wb') as fp:

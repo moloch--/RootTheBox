@@ -29,7 +29,7 @@ from sqlalchemy.types import Integer, String, Boolean
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
-from libs.StringCoding import str3, unicode3
+from libs.StringCoding import unicode3
 
 
 class IpAddress(DatabaseObject):
@@ -38,7 +38,7 @@ class IpAddress(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str3(uuid4())
+                  default=lambda: unicode3(uuid4())
                   )
 
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)

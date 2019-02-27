@@ -109,9 +109,9 @@ class SettingsHandler(BaseHandler):
                 self.dbsession.add(user)
                 self.dbsession.commit()
                 self.render_page(success=["Updated avatar"])
-        elif hasattr(self.request, 'files') and 'avatar' in self.request.files:
+        elif hasattr(self.request, 'files') and 'user_avatar' in self.request.files:
             try:
-                user.avatar = self.request.files['avatar'][0]['body']
+                user.avatar = self.request.files['user_avatar'][0]['body']
                 self.dbsession.add(user)
                 self.dbsession.commit()
                 self.render_page(success=["Updated avatar"])

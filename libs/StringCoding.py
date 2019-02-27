@@ -39,7 +39,10 @@ def encode(s, name="utf-8", *args, **kwargs):
 
 def decode(s, name="utf-8", *args, **kwargs):
     if name == 'base64':
-        return bytearray(b64decode(s)).decode('utf-8')
+        try:
+            return bytearray(b64decode(s)).decode('utf-8')
+        except:
+            pass
     codec = codecs.lookup(name)
     rv, length = codec.decode(s, *args, **kwargs)
     if not isinstance(rv, (str, bytes, bytearray)):

@@ -29,7 +29,7 @@ from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import str3, unicode3
+from libs.StringCoding import unicode3
 
 
 class GameLevel(DatabaseObject):
@@ -39,7 +39,7 @@ class GameLevel(DatabaseObject):
     uuid = Column(String(36),
                   unique=True,
                   nullable=False,
-                  default=lambda: str3(uuid4())
+                  default=lambda: unicode3(uuid4())
                   )
 
     next_level_id = Column(Integer, ForeignKey('game_level.id'))
