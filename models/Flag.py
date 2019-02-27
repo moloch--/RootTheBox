@@ -76,7 +76,7 @@ class Flag(DatabaseObject):
     _capture_message = Column(Unicode(512))
     _case_sensitive = Column(Integer, nullable=True)
     _value = Column(Integer, nullable=False)
-    _original_value = Column(Integer, nullable=False)
+    _original_value = Column(Integer, nullable=True)
     _order = Column(Integer, nullable=True, index=True)
     _type = Column(Unicode(16), default=False)
 
