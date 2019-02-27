@@ -55,7 +55,7 @@ try:
 except ImportError:
     from urlparse import urlparse
 from datetime import datetime
-from libs.StringCoding import str3, encode
+from libs.StringCoding import encode
 from builtins import str
 
 try:
@@ -1235,11 +1235,11 @@ class BotMonitor(object):
         memory = " > Initializing memory: "
         for index in range(0, 2 ** 32, 2 ** 20):
             time.sleep(0.02)
-            self.screen.addstr(5, 2, memory + str3("0x%08X" % index))
+            self.screen.addstr(5, 2, memory + str("0x%08X" % index))
             self.screen.refresh()
             if self.stop_thread:
                 return
-        self.screen.addstr(5, 2, memory + str3("0x%08X -> 0xFFFFFFFF" % (0,)))
+        self.screen.addstr(5, 2, memory + str("0x%08X -> 0xFFFFFFFF" % (0,)))
         self.screen.refresh()
         # (6) Matrix animation
         matrix = " > The matrix has you ... follow the white rabbit "

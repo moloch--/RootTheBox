@@ -48,15 +48,3 @@ def decode(s, name="utf-8", *args, **kwargs):
     if not isinstance(rv, (str, bytes, bytearray)):
         raise TypeError('Not a string or byte codec')
     return rv
-
-def str3(s):
-    if (sys.version_info > (3, 0)):
-        return bytes(s)
-    else:
-        return str(s)
-
-def input3(s):
-    if (sys.version_info > (3, 0)):
-        return input(s)
-    else:
-        return raw_input(s)

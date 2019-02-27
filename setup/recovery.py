@@ -29,8 +29,7 @@ import sys
 import getpass
 
 from libs.ConsoleColors import *
-from libs.StringCoding import input3
-from builtins import str
+from builtins import str, input
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *
@@ -96,7 +95,7 @@ class RecoveryConsole(cmd.Cmd):
         else:
             username = user.handle
             print(WARN + str("Are you sure you want to delete %s?" % username))
-            if input3(PROMPT + "Delete [y/n]: ").lower() == 'y':
+            if input(PROMPT + "Delete [y/n]: ").lower() == 'y':
                 permissions = Permission.by_user_id(user.id)
                 for perm in permissions:
                     print(INFO + "Removing permission: " + perm.name)
@@ -113,7 +112,7 @@ class RecoveryConsole(cmd.Cmd):
         '''
         try:
             user = User(
-                handle=str(input3(PROMPT + "Handle: ")),
+                handle=str(input(PROMPT + "Handle: ")),
             )
             dbsession.add(user)
             dbsession.flush()
@@ -133,8 +132,8 @@ class RecoveryConsole(cmd.Cmd):
         '''
         try:
             team = Team(
-                name=str(input3(PROMPT + "Team name: ")),
-                motto=str(input3(PROMPT + "Team motto: ")),
+                name=str(input(PROMPT + "Team name: ")),
+                motto=str(input(PROMPT + "Team motto: ")),
             )
             dbsession.add(team)
             dbsession.commit()
@@ -151,7 +150,7 @@ class RecoveryConsole(cmd.Cmd):
         if user is None:
             print(WARN + "'%s' user not found in database." % username)
         else:
-            name = input3(PROMPT + "Add permission: ")
+            name = input(PROMPT + "Add permission: ")
             permission = Permission(name=str(name), user_id=user.id)
             dbsession.add(permission)
             dbsession.add(user)
@@ -190,7 +189,7 @@ class RecoveryConsole(cmd.Cmd):
             print(INFO + "Available teams:")
             for team in Team.all():
                 print(" %d. %s" % (team.id, team.name))
-            team_id = input3(PROMPT + "Set user's team to: ")
+            team_id = input(PROMPT + "Set user's team to: ")
             team = Team.by_id(team_id)
             if team is not None:
                 user.team_id = team.id

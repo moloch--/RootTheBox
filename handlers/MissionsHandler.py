@@ -33,7 +33,7 @@ from models.Box import Box, FlagsSubmissionType
 from models.Hint import Hint
 from models.Penalty import Penalty
 from libs.SecurityDecorators import authenticated
-from libs.StringCoding import str3
+from builtins import str
 from handlers.BaseHandlers import BaseHandler
 from past.utils import old_div
 
@@ -333,7 +333,7 @@ class MissionsHandler(BaseHandler):
         ''' Submit flags/buyout to levels '''
         uri = {'buyout': self.buyout}
         if len(args) and args[0] in uri:
-            uri[str3(args[0])]()
+            uri[str(args[0])]()
         else:
             self.render("public/404.html")
 
