@@ -47,12 +47,11 @@ develop-eggs
 # Installer logs
 pip-log.txt
 
-# Eclipse
+# IDE
 .project
 .pydevproject
-
-# PyCharm
 .idea/*
+.vscode/*
 
 # OSX
 .DS_Store
