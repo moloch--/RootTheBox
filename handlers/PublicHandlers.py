@@ -69,15 +69,11 @@ class LoginHandler(BaseHandler):
         if user is not None:
             if user.validate_password(password_attempt):
                 if not user.locked:
-                    if self.game_started(user):
-                        self.successful_login(user)
-                        if self.config.story_mode and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
-                            self.redirect('/user/missions/firstlogin')
-                        else:
-                            self.redirect('/user')
+                    self.successful_login(user)
+                    if self.config.story_mode and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
+                        self.redirect('/user/missions/firstlogin')
                     else:
-                        self.render('public/login.html',
-                                    errors=None, info=["The game has not started yet"])
+                        self.redirect('/user')
                 else:
                     self.render('public/login.html',
                                 info=None, errors=["Your account has been locked"])
@@ -87,12 +83,6 @@ class LoginHandler(BaseHandler):
             if password_attempt is not None:
                 PBKDF2.crypt(password_attempt, "BurnTheHashTime")
             self.failed_login()
-
-    def game_started(self, user):
-        if self.application.settings['game_started']:
-            return True
-        else:
-            return True if user.has_permission(ADMIN_PERMISSION) else False
 
     def successful_login(self, user):
         ''' Called when a user successfully logs in '''

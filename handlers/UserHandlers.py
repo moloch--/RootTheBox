@@ -50,7 +50,8 @@ class HomeHandler(BaseHandler):
         if user.has_permission(ADMIN_PERMISSION):
             self.render('admin/home.html', user=user)
         else:
-            self.render('user/home.html', user=user)
+            game_started = self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION)
+            self.render('user/home.html', user=user, game_started=game_started)
 
 
 class SettingsHandler(BaseHandler):
