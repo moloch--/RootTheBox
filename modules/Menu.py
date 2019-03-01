@@ -21,7 +21,8 @@ Created on Mar 14, 2012
 
 
 from tornado.web import UIModule
-from models.User import User
+from models.User import User, ADMIN_PERMISSION
+from tornado.options import options
 
 
 class Menu(UIModule):
@@ -33,8 +34,19 @@ class Menu(UIModule):
         ''' Renders the top menu '''
         if self.handler.session is not None:
             user = User.by_id(self.handler.session['user_id'])
+        else:
+            user = None
+        scoreboard_visible = self.scoreboard_visible(user)
+        if self.handler.session is not None:
             if self.handler.session['menu'] == 'user':
-                return self.render_string('menu/user.html', user=user)
+                return self.render_string('menu/user.html', user=user, scoreboard_visible=scoreboard_visible)
             elif self.handler.session['menu'] == 'admin':
-                return self.render_string('menu/admin.html', handle=user.handle)
-        return self.render_string('menu/public.html')
+                return self.render_string('menu/admin.html', handle=user.handle, scoreboard_visible=scoreboard_visible)
+        return self.render_string('menu/public.html', scoreboard_visible=scoreboard_visible)
+
+    def scoreboard_visible(self, user):
+        if options.scoreboard_visibility == "public":
+            return True
+        if user:
+            return options.scoreboard_visibility == "players" or user.has_permission(ADMIN_PERMISSION)  
+        return False    

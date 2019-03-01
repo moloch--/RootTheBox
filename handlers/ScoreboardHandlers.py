@@ -33,7 +33,7 @@ from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
 from models.Team import Team
-from models.User import User
+from models.User import User, ADMIN_PERMISSION
 from models.Box import Box
 from models.Category import Category
 from models.WallOfSheep import WallOfSheep
@@ -77,10 +77,18 @@ class ScoreboardHandler(BaseHandler):
     ''' Main summary page '''
 
     def get(self, *args, **kargs):
-        if not options.hide_scoreboard and (options.public_scoreboard or self.get_current_user()):
+        if self.scoreboard_visible():
             self.render('scoreboard/summary.html', timer=self.timer())
         else:
             self.render('public/404.html')
+
+    def scoreboard_visible(self):
+        if options.scoreboard_visibility == "public":
+            return True
+        user = self.get_current_user()
+        if user:
+            return options.scoreboard_visibility == "players" or user.has_permission(ADMIN_PERMISSION)
+        return False
 
 
 class ScoreboardAjaxHandler(BaseHandler):
@@ -168,7 +176,7 @@ class ScoreboardAjaxHandler(BaseHandler):
 class ScoreboardHistoryHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        if not options.hide_scoreboard and (options.public_scoreboard or self.get_current_user()):
+        if ScoreboardHandler.scoreboard_visible(self):
             self.render('scoreboard/history.html', timer=self.timer())
         else:
             self.render('public/404.html')
@@ -211,7 +219,7 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
     @use_black_market
     def get(self, *args, **kwargs):
         ''' Optionally order by argument; defaults to date/time '''
-        if not options.hide_scoreboard and (options.public_scoreboard or self.get_current_user()):
+        if ScoreboardHandler.scoreboard_visible(self):
             order = self.get_argument('order_by', '').lower()
             if order == 'prize':
                 sheep = WallOfSheep.all_order_value()
@@ -256,7 +264,7 @@ class ScoreboardPauseHandler(WebSocketHandler):
 class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        if not options.hide_scoreboard and (options.public_scoreboard or self.get_current_user()):
+        if ScoreboardHandler.scoreboard_visible(self):
             self.render('scoreboard/teams.html', timer=self.timer())
         else:
             self.render('public/404.html')

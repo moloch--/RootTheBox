@@ -340,6 +340,12 @@ define("ctf_tagline",
        help="the tagline displayed on the welcome page",
        type=game_type)
 
+define("org_footer",
+       default="",
+       group="game",
+       help="Organization footer - righthand text / html",
+       type=game_type)
+
 define("chat_url",
        default="",
        group="game",
@@ -477,17 +483,11 @@ define("story_mode",
        help="Morris story with secure communique dialog screen after capture success",
        type=bool)
 
-define("hide_scoreboard",
-       default=False,
+define("scoreboard_visibility",
+       default="public",
        group="game",
-       help="for non-competitive games, hide the scoreboard menu",
-       type=bool)
-
-define("public_scoreboard",
-       default=True,
-       group="game",
-       help="make the scoreboard visible to non-authenticated users",
-       type=bool)
+       help="Visibility of the Scoreboard - public, players, admins",
+       type=game_type)
 
 define("dynamic_flag_value",
        default=False,

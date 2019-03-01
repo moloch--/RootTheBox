@@ -114,6 +114,22 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="scoreboard_visibility">
+                    <i class="fa fa-eye"></i>
+                    Scoreboard Visibility</label>
+                <div class="controls">
+                    <select id="scoreboard_visibility" name="scoreboard_visibility" 
+                        rel="popover"
+                        data-original-title="Scoreboard Visibility"
+                        data-html="true"
+                        data-content="This selection determines the visibility of the scoreboard menu and pages.<br/><br/>It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).">
+                        <option value="public" {% if config.scoreboard_visibility == "public" %}selected{% end %}>Public</option>
+                        <option value="players" {% if config.scoreboard_visibility == "players" %}selected{% end %}>Players</option>
+                        <option value="admins" {% if config.scoreboard_visibility == "admins" %}selected{% end %}>Admins</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="hints-taken">
                     <i class="fa fa-medkit"></i>
                     Display Hints Taken
