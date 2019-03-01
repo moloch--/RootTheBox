@@ -308,9 +308,12 @@ class Flag(DatabaseObject):
 
     @property
     def original_value(self):
-        return self._original_value
+        if self._original_value:
+            return self._original_value
+        else:
+            return self._value
 
-    @value.setter
+    @original_value.setter
     def original_value(self, value):
         try:
             self._original_value = abs(int(value))
