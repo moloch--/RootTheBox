@@ -96,7 +96,7 @@ class Penalty(DatabaseObject):
         if not flag:
             flag = cls.flag
         if not submission:
-            submission = cls.submission
+            submission = ''
         logging.debug("Creating flag '%s' attempt for %r" % (flag.id, team.name))
         attempt = Penalty(
             team_id=team.id,
