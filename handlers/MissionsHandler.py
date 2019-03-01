@@ -96,8 +96,10 @@ class FlagSubmissionHandler(BaseHandler):
                     submission = self.request.files['flag'][0]['body']
             else:
                 submission = self.get_argument('token', '')
-            old_reward = flag.value if flag is not None else 0
 
+            if len(submission) == 0:
+                  self.render_page_by_flag(flag, info=["No flag was provided - try again."])
+            old_reward = flag.value if flag is not None else 0
             if flag is not None and self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
                 if self.config.story_mode:
