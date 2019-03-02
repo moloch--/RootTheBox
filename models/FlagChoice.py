@@ -94,7 +94,7 @@ class FlagChoice(DatabaseObject):
 
     @choice.setter
     def choice(self, value):
-        self._choice = unicode(value)[:256]
+        self._choice = value[:256]
 
     def to_dict(self):
         ''' Return public data as dict '''
