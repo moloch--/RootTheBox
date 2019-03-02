@@ -32,6 +32,7 @@ from models.Flag import Flag
 from models.Box import Box, FlagsSubmissionType
 from models.Hint import Hint
 from models.Penalty import Penalty
+from models.User import ADMIN_PERMISSION
 from libs.SecurityDecorators import authenticated
 from builtins import str
 from handlers.BaseHandlers import BaseHandler
@@ -61,12 +62,15 @@ class BoxHandler(BaseHandler):
         box = Box.by_uuid(uuid)
         if box is not None:
             user = self.get_current_user()
-            self.render('missions/box.html',
-                        box=box,
-                        team=user.team,
-                        errors=[],
-                        success=[],
-                        info=[])
+            if self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION):
+                self.render('missions/box.html',
+                            box=box,
+                            team=user.team,
+                            errors=[],
+                            success=[],
+                            info=[])
+            else:
+                self.render('missions/status.html', errors=None, info=["The game has not started yet"])
         else:
             self.render('public/404.html')
 
@@ -80,6 +84,9 @@ class FlagSubmissionHandler(BaseHandler):
         uuid = self.get_argument('uuid', '')
         token = self.get_argument('token', '')
         user = self.get_current_user()
+        if not self.application.settings['game_started'] and not user.has_permission(ADMIN_PERMISSION):
+            self.render('missions/status.html', errors=None, info=["The game has not started yet"])
+            return
         if(box_id is not None and token is not None):
             flag = Flag.by_token_and_box_id(token, box_id)
         else:
@@ -96,7 +103,6 @@ class FlagSubmissionHandler(BaseHandler):
                     submission = self.request.files['flag'][0]['body']
             else:
                 submission = self.get_argument('token', '')
-
             if len(submission) == 0:
                   self.render_page_by_flag(flag, info=["No flag was provided - try again."])
             old_reward = flag.value if flag is not None else 0
@@ -267,11 +273,11 @@ class FlagSubmissionHandler(BaseHandler):
         ''' Wrapper to .render() to avoid duplicate code '''
         user = self.get_current_user()
         self.render('missions/box.html',
-                    box=box,
-                    team=user.team,
-                    errors=errors,
-                    success=success,
-                    info=info)
+                        box=box,
+                        team=user.team,
+                        errors=errors,
+                        success=success,
+                        info=info)
 
 
 class PurchaseHintHandler(BaseHandler):
@@ -283,19 +289,22 @@ class PurchaseHintHandler(BaseHandler):
         hint = Hint.by_uuid(uuid)
         if hint is not None:
             user = self.get_current_user()
-            flag = hint.flag
-            if flag and flag.box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
-                self.render_page(
-                    hint.box, info=["You can no longer purchase this hint."])
-            elif hint.price <= user.team.money:
-                logging.info("%s (%s) purchased a hint for $%d on %s" % (
-                    user.handle, user.team.name, hint.price, hint.box.name
-                ))
-                self._purchase_hint(hint, user.team)
-                self.render_page(hint.box)
+            if self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION):
+                flag = hint.flag
+                if flag and flag.box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
+                    self.render_page(
+                        hint.box, info=["You can no longer purchase this hint."])
+                elif hint.price <= user.team.money:
+                    logging.info("%s (%s) purchased a hint for $%d on %s" % (
+                        user.handle, user.team.name, hint.price, hint.box.name
+                    ))
+                    self._purchase_hint(hint, user.team)
+                    self.render_page(hint.box)
+                else:
+                    self.render_page(
+                        hint.box, info=["You cannot afford to purchase this hint."])
             else:
-                self.render_page(
-                    hint.box, info=["You cannot afford to purchase this hint."])
+                self.render('missions/status.html', errors=None, info=["The game has not started yet"])
         else:
             self.render('public/404.html')
 
@@ -328,16 +337,24 @@ class MissionsHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Render missions view '''
         user = self.get_current_user()
-        self.render("missions/view.html", team=user.team, errors=None, success=None)
+        if self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION):
+            self.render("missions/view.html", team=user.team, errors=None, success=None)
+        else:
+            self.render('missions/status.html', errors=None, info=["The game has not started yet"])
+
 
     @authenticated
     def post(self, *args, **kwargs):
         ''' Submit flags/buyout to levels '''
-        uri = {'buyout': self.buyout}
-        if len(args) and args[0] in uri:
-            uri[str(args[0])]()
+        user = self.get_current_user()
+        if self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION):
+            uri = {'buyout': self.buyout}
+            if len(args) and args[0] in uri:
+                uri[str(args[0])]()
+            else:
+                self.render("public/404.html")
         else:
-            self.render("public/404.html")
+            self.render('missions/status.html', errors=None, info=["The game has not started yet"])
 
     def buyout(self):
         ''' Buyout and unlock a level '''
@@ -364,3 +381,4 @@ class MissionsHandler(BaseHandler):
                         team=user.team,
                         errors=["Level does not exist"],
                         success=None)
+        

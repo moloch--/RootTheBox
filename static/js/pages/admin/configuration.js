@@ -389,6 +389,7 @@ $(document).ready(function() {
     $("#banking-button").popover({placement:'right', trigger:'hover'});
     $("#story-button").popover({placement:'right', trigger:'hover'});
     $("#rank_by").popover({placement:'right', trigger:'hover'});
+    $("#scoreboard_visibility").popover({placement:'right', trigger:'hover'});
     $("#max-password-length").popover({placement:'right', trigger:'hover'});
     $("#starting-team-money").popover({placement:'right', trigger:'hover'});
     $("#use-bots-button").popover({placement:'right', trigger:'hover'});

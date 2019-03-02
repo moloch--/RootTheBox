@@ -348,6 +348,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.hints_taken = self.get_bool('hints_taken', False)
         self.config.story_mode = self.get_bool('story_mode', False)
         self.config.rank_by = str(self.get_argument('rank_by', 'money'))
+        self.config.scoreboard_visibility = str(self.get_argument('scoreboard_visibility', 'public'))
         self.config.teams = self.get_bool('teams', True)
         self.config.public_teams = self.get_bool('public_teams')
         self.config.show_mvp = self.get_bool('show_mvp')

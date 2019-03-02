@@ -1,0 +1,31 @@
+{% extends "../main.html" %}
+
+{% block title %}Missions{% end %}
+
+{% block content %}
+
+    <!-- Visable -->
+    <div class="container">
+        <h1>Missions</h1>
+        <br />
+        {% if errors is not None and len(errors) != 0 %}
+            {% for error in errors %}
+            <div class="alert alert-error">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">ERROR</h4>
+                    {{ error }}
+            </div>
+            {% end %}
+        {% end %}
+         {% if info is not None and len(info) != 0 %}
+            {% for msg in info %}
+            <div class="alert alert-info">
+                    <a class="close" data-dismiss="alert" href="#">&times;</a>
+                    <h4 class="alert-heading">INFO</h4>
+                    {{ msg }}
+            </div>
+            {% end %}
+        {% end %}
+        
+    </div>
+{% end %}
