@@ -42,15 +42,16 @@ from tornado.options import options
 from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
 from libs.StringCoding import encode
-from builtins import str
 from PIL import Image
 from resizeimage import resizeimage
 import enum
 
-class FlagsSubmissionType(enum.Enum):
+class FlagsSubmissionType(str, enum.Enum):
     CLASSIC = 'CLASSIC'
     SINGLE_SUBMISSION_BOX = 'SINGLE_SUBMISSION_BOX'
 
+
+from builtins import str
 
 class Box(DatabaseObject):
     ''' Box definition '''
