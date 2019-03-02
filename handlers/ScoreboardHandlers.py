@@ -79,18 +79,10 @@ class ScoreboardHandler(BaseHandler):
     ''' Main summary page '''
 
     def get(self, *args, **kargs):
-        if self.scoreboard_visible():
+        if scoreboard_visible(self.get_current_user()):
             self.render('scoreboard/summary.html', timer=self.timer())
         else:
             self.render('public/404.html')
-
-    def scoreboard_visible(self):
-        if options.scoreboard_visibility == "public":
-            return True
-        user = self.get_current_user()
-        if user:
-            return options.scoreboard_visibility == "players" or user.has_permission(ADMIN_PERMISSION)
-        return False
 
 
 class ScoreboardAjaxHandler(BaseHandler):
@@ -178,7 +170,7 @@ class ScoreboardAjaxHandler(BaseHandler):
 class ScoreboardHistoryHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        if ScoreboardHandler.scoreboard_visible(self):
+        if scoreboard_visible(self.get_current_user()):
             self.render('scoreboard/history.html', timer=self.timer())
         else:
             self.render('public/404.html')
@@ -221,7 +213,7 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
     @use_black_market
     def get(self, *args, **kwargs):
         ''' Optionally order by argument; defaults to date/time '''
-        if ScoreboardHandler.scoreboard_visible(self):
+        if scoreboard_visible(self.get_current_user()):
             order = self.get_argument('order_by', '').lower()
             if order == 'prize':
                 sheep = WallOfSheep.all_order_value()
@@ -266,9 +258,15 @@ class ScoreboardPauseHandler(WebSocketHandler):
 class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        if ScoreboardHandler.scoreboard_visible(self):
+        if scoreboard_visible(self.get_current_user()):
             self.render('scoreboard/teams.html', timer=self.timer())
         else:
             self.render('public/404.html')
 
 
+def scoreboard_visible(user):
+        if options.scoreboard_visibility == "public":
+            return True
+        if user:
+            return options.scoreboard_visibility == "players" or user.has_permission(ADMIN_PERMISSION)
+        return False
