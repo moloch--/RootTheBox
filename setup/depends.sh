@@ -48,8 +48,11 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   echo -e "\t   Linux Configuration"
   echo -e "\t#########################"
 
+  add-apt-repository universe "$SKIP"
+
   echo "Update package list..."
   apt-get update
+
   echo "[*] Installing pip/gcc..."
   if [[ "$python_version" == "2" ]]; then
       apt-get install python-pip python-dev build-essential "$SKIP"

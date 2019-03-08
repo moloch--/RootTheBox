@@ -28,6 +28,7 @@ import logging
 
 from models.Team import Team
 from models.User import User, ADMIN_PERMISSION
+from models.Permission import Permission
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
@@ -174,6 +175,19 @@ class AdminEditUsersHandler(BaseHandler):
             elif options.teams:
                 raise ValidationError("Team does not exist in database")
             self.dbsession.add(user)
+
+            admin = self.get_argument('admin', 'false')
+            if admin == 'true' and not user.has_permission(ADMIN_PERMISSION):
+                permission = Permission()
+                permission.name = ADMIN_PERMISSION
+                permission.user_id = user.id
+                self.dbsession.add(permission)
+            elif admin == 'false' and user.has_permission(ADMIN_PERMISSION):
+                permissions = Permission.by_user_id(user.id)
+                for permission in permissions:
+                    if permission.name == ADMIN_PERMISSION:
+                        self.dbsession.delete(permission)
+                
             self.dbsession.commit()
             self.redirect('/admin/users')
         except ValidationError as error:

@@ -211,6 +211,15 @@
                         <input id="user-password" name="password" type="password" placeholder="New Password" minlength="{{ options.min_user_password_length}}">
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="user-admin">Role</label>
+                    <div class="controls">
+                        <select id="user-admin" name="admin">
+                            <option value=false>Player</option>
+                            <option value=true>Admin</option>
+                        </select>
+                    </div>
+                </div>
                 {% if options.teams %}
                 <div class="control-group">
                     <label class="control-label" for="user-team-uuid">Team</label>

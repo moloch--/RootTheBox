@@ -361,6 +361,7 @@ class User(DatabaseObject):
             'handle': self.handle,
             'name': self.name,
             'email': self.email,
+            'admin': str(self.has_permission(ADMIN_PERMISSION)).lower(),
             'hash_algorithm': self.algorithm,
             'team_uuid': self.team.uuid,
             'avatar': self.avatar,
