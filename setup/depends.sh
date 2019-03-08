@@ -48,6 +48,7 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   echo -e "\t   Linux Configuration"
   echo -e "\t#########################"
 
+  echo "[*] Add Universe Repo..."
   add-apt-repository universe "$SKIP"
 
   echo "Update package list..."
