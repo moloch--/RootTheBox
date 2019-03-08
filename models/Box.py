@@ -51,7 +51,8 @@ class FlagsSubmissionType(str, enum.Enum):
     SINGLE_SUBMISSION_BOX = 'SINGLE_SUBMISSION_BOX'
 
 
-from builtins import str
+from builtins import str #TODO Python2/3 compatibility issue if imported before FlagSubmissionType
+
 
 class Box(DatabaseObject):
     ''' Box definition '''
