@@ -46,6 +46,10 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   echo -e "\t   Linux Configuration"
   echo -e "\t#########################"
 
+  echo "[*] Add Universe Repo..."
+  add-apt-repository universe "$SKIP"
+  apt-get update
+
   echo "[*] Installing pip/gcc..."
   apt-get install python-pip python-dev build-essential "$SKIP"
 

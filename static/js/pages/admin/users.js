@@ -10,8 +10,13 @@ function getDetails(obj, uuid) {
     data = {'uuid': uuid, '_xsrf': getCookie("_xsrf")};
     $.post('/admin/ajax/' + obj, data, function(response) {
         $.each(response, function(key, value) {
-            // console.log("#" + obj + "-" + key + " => " + value);
-            $("#" + obj + "-" + key).val(value);
+            //console.log("#" + obj + "-" + key + " => " + value);
+            var selection = $("#" + obj + "-" + key);
+            if(selection.is("select")) {
+                selection.val(value).change();
+            } else {
+                selection.val(value);
+            }
             if (key === "avatar") {
                 $("#" + obj + "-avatarimg").attr("src", "/avatars/" + value);
             }
