@@ -177,12 +177,12 @@ class AdminEditUsersHandler(BaseHandler):
             self.dbsession.add(user)
 
             admin = self.get_argument('admin', 'false')
-            if admin == 'true' and not user.has_permission(ADMIN_PERMISSION):
+            if admin == 'true' and not user.is_admin():
                 permission = Permission()
                 permission.name = ADMIN_PERMISSION
                 permission.user_id = user.id
                 self.dbsession.add(permission)
-            elif admin == 'false' and user.has_permission(ADMIN_PERMISSION):
+            elif admin == 'false' and user.is_admin():
                 permissions = Permission.by_user_id(user.id)
                 for permission in permissions:
                     if permission.name == ADMIN_PERMISSION:

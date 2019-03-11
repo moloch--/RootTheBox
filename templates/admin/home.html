@@ -167,10 +167,10 @@
             <div class="row">
                 <div class="span1">
                     {% if notify.icon_url is not None %}
-                        <img src="{{ notify.icon_url }}" style="width: 40%; float: right; vertical-align: middle;" />
+                        <img src="{{ notify.icon_url }}" style="width: 30px; float: right; padding-bottom: 10px" />
                     {% end %}
                 </div>
-                <div class="span11 msgdescription"  style="margin-left: 5px;">
+                <div class="span11 msgdescription"  style="margin-left: 5px; padding-top: 5px;">
                     <p>
                         <strong>{{ notify.title }}</strong>
                         {{ notify.created.strftime("%I:%M%p") }}:&nbsp;&nbsp;{{ notify.message }}

@@ -32,7 +32,6 @@ from models.Flag import Flag
 from models.Box import Box, FlagsSubmissionType
 from models.Hint import Hint
 from models.Penalty import Penalty
-from models.User import ADMIN_PERMISSION
 from libs.SecurityDecorators import authenticated
 from builtins import str
 from handlers.BaseHandlers import BaseHandler
@@ -62,9 +61,10 @@ class BoxHandler(BaseHandler):
         box = Box.by_uuid(uuid)
         if box is not None:
             user = self.get_current_user()
-            if self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION):
+            if self.application.settings['game_started'] or user.is_admin():
                 self.render('missions/box.html',
                             box=box,
+                            user=user,
                             team=user.team,
                             errors=[],
                             success=[],
@@ -84,7 +84,7 @@ class FlagSubmissionHandler(BaseHandler):
         uuid = self.get_argument('uuid', '')
         token = self.get_argument('token', '')
         user = self.get_current_user()
-        if not self.application.settings['game_started'] and not user.has_permission(ADMIN_PERMISSION):
+        if not self.application.settings['game_started'] and not user.is_admin():
             self.render('missions/status.html', errors=None, info=["The game has not started yet"])
             return
         if(box_id is not None and token is not None):
@@ -274,6 +274,7 @@ class FlagSubmissionHandler(BaseHandler):
         user = self.get_current_user()
         self.render('missions/box.html',
                         box=box,
+                        user=user,
                         team=user.team,
                         errors=errors,
                         success=success,
@@ -289,7 +290,7 @@ class PurchaseHintHandler(BaseHandler):
         hint = Hint.by_uuid(uuid)
         if hint is not None:
             user = self.get_current_user()
-            if self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION):
+            if self.application.settings['game_started'] or user.is_admin():
                 flag = hint.flag
                 if flag and flag.box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
                     self.render_page(
@@ -323,6 +324,7 @@ class PurchaseHintHandler(BaseHandler):
         user = self.get_current_user()
         self.render('missions/box.html',
                     box=box,
+                    user=user,
                     team=user.team,
                     errors=errors,
                     success=success,
@@ -337,7 +339,7 @@ class MissionsHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Render missions view '''
         user = self.get_current_user()
-        if self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION):
+        if self.application.settings['game_started'] or user.is_admin():
             self.render("missions/view.html", team=user.team, errors=None, success=None)
         else:
             self.render('missions/status.html', errors=None, info=["The game has not started yet"])
@@ -347,7 +349,7 @@ class MissionsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Submit flags/buyout to levels '''
         user = self.get_current_user()
-        if self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION):
+        if self.application.settings['game_started'] or user.is_admin():
             uri = {'buyout': self.buyout}
             if len(args) and args[0] in uri:
                 uri[str(args[0])]()

@@ -148,7 +148,7 @@
                 <i class="fa fa-th"></i>
             {% end %}
             {% if box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
-            {% if team %}
+            {% if not user.is_admin() %}
                 <a style="float:right; margin-top: 10px;"  class="btn" href="/user/missions">Return to Missions</a>
             {% else %}
                 <a style="float:right; margin-top: 10px;"  class="btn" href="/admin/view/game_objects#{{ box.uuid }}">Return to Edit</a>
@@ -263,11 +263,11 @@
                         <th><!-- Name --></th>
                         <th><!-- Description --></th>
                         <th style="text-align: center;">Captures</th>
-                        {% if team and options.penalize_flag_value %}
+                        {% if team and options.penalize_flag_value and not user.is_admin() %}
                                 <th style="text-align: center;">Attempts</th>
                         {% end %}
                         <th style="text-align: center;">{% if options.banking %}Reward{% else %}Points{% end %}</th>
-                        {% if team %}
+                        {% if team or not user.is_admin() %}
                             <th><!-- Hints --></th>
                             <th><!-- Submit --></th>
                         {% end %}
@@ -298,11 +298,11 @@
                             {% else %}
                                 <td style="width: 100%;"></td>
                                 <td class="shortcolumn" style="text-align: center; vertical-align: middle;">{{ len(Flag.captures(flag.id)) }}</td>
-                                {% if team and options.penalize_flag_value %}
+                                {% if team and options.penalize_flag_value and not user.is_admin() %}
                                     <td class="shortcolumn" style="text-align: center; vertical-align: middle;">{% if flag in team.flags %}{{ penalty + 1 }}{% else %}{{ penalty }}{% end %}</td>
                                 {% end %}
                                 <td class="shortcolumn" style="text-align: center; vertical-align: middle;">{% if options.banking %}${% end %}{{ flag.value }}</td>
-                                {% if team %}
+                                {% if team and not user.is_admin() %}
                                     <td class="shortcolumn"{% if not flag in team.flags %} style="padding-right: 10px;"{% end %}>
                                         {% if not flag in team.flags %}
                                             {% set i = 1 %}
@@ -376,7 +376,7 @@
                             {% set i = 1 %}
                             {% for hint in flaghints %}
                                 {% if hint.flag_id == flag.id %}
-                                    {% if not team or flag in team.flags or hint in team.hints %}
+                                    {% if user.is_admin() or flag in team.flags or hint in team.hints %}
                                         <tr{% if team and flag in team.flags %} class="flag-collapse" style="display: none;"{% end %}>
                                             {% if team and flag in team.flags %}
                                             <td class="hidehovercolor" style="background: green; margin: 0px; padding: 0px; border-top: 1px solid green;"></td>
@@ -389,7 +389,7 @@
                                             {% end %}
                                             <td style="text-align: right;"><i class="fa fa-arrow-circle-up"></i><h5 style="display:inline;"> Hint #{{i}}:</h5></td>
                                             <td colspan="{% if team and options.penalize_flag_value %}2{% else %}1{% end %}" class="descriptioncol markdown">{{ hint.description }}</td>
-                                            <td class="shortcolumn" style="text-align: center;"><i>{% if not team %}{% elif hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% end %}</i></td>
+                                            <td class="shortcolumn" style="text-align: center;"><i>{% if user.is_admin() %}{% elif hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% end %}</i></td>
                                             <td class="shortcolumn" style="text-align: center;">{% if team and hint in team.hints %}-{{ hint.price }}{% end %}</td>
                                             <td colspan="2" style="border-top: 0px;"></td>
                                         </tr>
@@ -446,8 +446,8 @@
                             {% for index, hint in enumerate(boxhints) %}
                                 <tr>
                                     <td class="shortcolumn">{{ index + 1 }}</td>
-                                    {% if not team or hint in team.hints or flagcount == len(box.flags) %}
-                                        <td class="shortcolumn"><i>{% if not team %}{% elif hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% else %}Completed {{box.name}}{% end %}</i></td>
+                                    {% if user.is_admin() or (team and hint in team.hints) or flagcount == len(box.flags) %}
+                                        <td class="shortcolumn"><i>{% if user.is_admin() %}{% elif hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% else %}Completed {{box.name}}{% end %}</i></td>
                                         <td class="descriptioncol markdown">{{ hint.description }}</td>
                                     {% else %}
                                         <td class="shortcolumn" style="text-align: center; padding-right: 20px;">{% if options.banking %}${% end %}{% if hint in team.hints or flagcount != len(box.flags) %}{{ hint.price }}{% else %}0{% end %}</td>

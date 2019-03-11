@@ -27,7 +27,6 @@ This file contains handlers related to the pastebin functionality
 from handlers.BaseHandlers import BaseHandler
 from models.PasteBin import PasteBin
 from libs.SecurityDecorators import authenticated
-from models.User import ADMIN_PERMISSION
 from tornado.options import options
 
 
@@ -89,7 +88,7 @@ class DisplayPasteHandler(BaseHandler):
             paste_uuid = self.get_argument("paste_uuid")
             user = self.get_current_user()
             paste = PasteBin.by_uuid(paste_uuid)
-            if user.has_permission(ADMIN_PERMISSION):
+            if user.is_admin():
                 self.render("pastebin/display.html", errors=None, paste=paste, nocreate=True)
             elif paste is None or paste not in user.team.pastes:
                 self.render("pastebin/display.html",
@@ -112,7 +111,7 @@ class DeletePasteHandler(BaseHandler):
             ''' AJAX // Delete a paste object from the database '''
             paste = PasteBin.by_uuid(self.get_argument("uuid", ""))
             user = self.get_current_user()
-            if user.has_permission(ADMIN_PERMISSION):
+            if user.is_admin():
                 self.dbsession.delete(paste)
                 self.dbsession.commit()
                 self.redirect("/admin/view/pastebin")

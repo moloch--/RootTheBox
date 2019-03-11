@@ -35,7 +35,7 @@ from models.Team import Team
 from models.Theme import Theme
 from models.RegistrationToken import RegistrationToken
 from models.GameLevel import GameLevel
-from models.User import User, ADMIN_PERMISSION
+from models.User import User
 from handlers.BaseHandlers import BaseHandler
 from datetime import datetime
 from pbkdf2 import PBKDF2
@@ -71,7 +71,7 @@ class LoginHandler(BaseHandler):
             if user.validate_password(password_attempt):
                 if not user.locked:
                     self.successful_login(user)
-                    if self.config.story_mode and user.logins == 1 and not user.has_permission(ADMIN_PERMISSION):
+                    if self.config.story_mode and user.logins == 1 and not user.is_admin():
                         self.redirect('/user/missions/firstlogin')
                     else:
                         self.redirect('/user')
@@ -103,7 +103,7 @@ class LoginHandler(BaseHandler):
         self.session['handle'] = user.handle
         self.session['theme'] = [str(f) for f in theme.files]
         self.session['theme_id'] = int(theme.id)
-        if user.has_permission(ADMIN_PERMISSION):
+        if user.is_admin():
             self.session['menu'] = 'admin'
         else:
             self.session['menu'] = 'user'

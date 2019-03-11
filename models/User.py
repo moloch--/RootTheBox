@@ -114,13 +114,13 @@ class User(DatabaseObject):
     @classmethod
     def all_users(cls):
         ''' Return all non-admin user objects '''
-        return [user for user in cls.all() if user.has_permission(ADMIN_PERMISSION) is False]
+        return [user for user in cls.all() if user.is_admin() is False]
 
     @classmethod
     def not_team(cls, tid):
         ''' Return all users not on a given team, exclude admins '''
         teams = dbsession.query(cls).filter(cls.team_id != tid).all()
-        return [user for user in teams if user.has_permission(ADMIN_PERMISSION) is False]
+        return [user for user in teams if user.is_admin() is False]
 
     @classmethod
     def by_id(cls, _id):
@@ -240,7 +240,7 @@ class User(DatabaseObject):
         Determines if an admin has locked an account, accounts with
         administrative permissions cannot be locked.
         '''
-        if self.has_permission(ADMIN_PERMISSION):
+        if self.is_admin():
             return False  # Admin accounts cannot be locked
         else:
             return self._locked
@@ -249,7 +249,7 @@ class User(DatabaseObject):
     def locked(self, value):
         ''' Setter method for _lock '''
         assert isinstance(value, bool)
-        if not self.has_permission(ADMIN_PERMISSION):
+        if not self.is_admin():
             self._locked = value
 
     @property
@@ -259,7 +259,7 @@ class User(DatabaseObject):
         else:
             if not options.teams:
                 avatar = default_avatar('user')
-            elif self.has_permission(ADMIN_PERMISSION):
+            elif self.is_admin():
                 avatar = default_avatar('user')
             else:
                 avatar = get_new_avatar('user')
@@ -303,6 +303,9 @@ class User(DatabaseObject):
     def has_permission(self, permission):
         ''' Return True if 'permission' is in permissions_names '''
         return True if permission in self.permissions_names else False
+
+    def is_admin(self):
+        return self.has_permission(ADMIN_PERMISSION)
 
     def validate_password(self, attempt):
         ''' Check the password against existing credentials '''
@@ -361,7 +364,7 @@ class User(DatabaseObject):
             'handle': self.handle,
             'name': self.name,
             'email': self.email,
-            'admin': str(self.has_permission(ADMIN_PERMISSION)).lower(),
+            'admin': str(self.is_admin()).lower(),
             'hash_algorithm': self.algorithm,
             'team_uuid': self.team.uuid,
             'avatar': self.avatar,
@@ -372,7 +375,7 @@ class User(DatabaseObject):
         Admins cannot be exported as XML, not that they would be
         exported because they're not on a team, but check anyways
         '''
-        if not self.has_permission(ADMIN_PERMISSION):
+        if not self.is_admin():
             user_elem = ET.SubElement(parent, "user")
             ET.SubElement(user_elem, "handle").text = self.handle
             ET.SubElement(user_elem, "name").text = self.name

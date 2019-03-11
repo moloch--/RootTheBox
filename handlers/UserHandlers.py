@@ -32,7 +32,6 @@ except ImportError:
 import logging
 import tornado
 
-from models.User import ADMIN_PERMISSION
 from models.Theme import Theme
 from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
@@ -52,10 +51,10 @@ class HomeHandler(BaseHandler):
     def get(self, *args, **kwargs):
         ''' Display the default user page '''
         user = self.get_current_user()
-        if user.has_permission(ADMIN_PERMISSION):
+        if user.is_admin():
             self.render('admin/home.html', user=user)
         else:
-            game_started = self.application.settings['game_started'] or user.has_permission(ADMIN_PERMISSION)
+            game_started = self.application.settings['game_started'] or user.is_admin()
             self.render('user/home.html', user=user, game_started=game_started)
 
 

@@ -34,7 +34,6 @@ from libs.EventManager import EventManager
 from libs.StringCoding import encode
 from builtins import str
 from models import Box, Team, User
-from models.User import ADMIN_PERMISSION
 from .BaseHandlers import BaseHandler, BaseWebSocketHandler
 from libs.SecurityDecorators import *
 from tornado.options import options
@@ -129,7 +128,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         box = Box.by_name(msg['box_name'])
         if self.config.whitelist_box_ips and self.remote_ip not in box.ips:
             self.send_error("Invalid remote IP for this box")
-        elif user is None or user.has_permission(ADMIN_PERMISSION):
+        elif user is None or user.is_admin():
             self.send_error("User does not exist")
         elif box is None:
             self.send_error("Box does not exist")
@@ -222,7 +221,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             user = User.by_handle(req['handle'])
         except:
             user = None
-        if user is None or user.has_permission(ADMIN_PERMISSION):
+        if user is None or user.is_admin():
             logging.debug("Monitor socket user does not exist.")
             self.write_message({
                 'opcode': 'auth_failure',
@@ -259,7 +258,7 @@ class BotWebMonitorHandler(BaseHandler):
     @use_bots
     def get(self, *args, **kwargs):
         user = self.get_current_user()
-        self.render('botnet/monitor.html', teamname=user.has_permission(ADMIN_PERMISSION))
+        self.render('botnet/monitor.html', teamname=user.is_admin())
 
 
 class BotWebMonitorSocketHandler(BaseWebSocketHandler):
@@ -285,12 +284,12 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
     def open(self):
         ''' Only open sockets from authenticated clients '''
         user = self.get_current_user()
-        if self.session is not None and ('team_id' in self.session or user.has_permission(ADMIN_PERMISSION)):
+        if self.session is not None and ('team_id' in self.session or user.is_admin()):
             logging.debug("[Web Socket] Opened web monitor socket with %s" % user.handle)
             self.uuid = str(uuid4())
             self.bot_manager = BotManager.instance()
             
-            if user.has_permission(ADMIN_PERMISSION):
+            if user.is_admin():
                 self.team_name = user.name
                 self.bot_manager.add_monitor(self)
                 bots = self.bot_manager.get_all_bots()

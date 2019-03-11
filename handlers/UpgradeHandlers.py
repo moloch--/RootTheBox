@@ -33,7 +33,7 @@ from models.Team import Team
 from models.Box import Box
 from models.SourceCode import SourceCode
 from models.Swat import Swat
-from models.User import User, ADMIN_PERMISSION
+from models.User import User
 from libs.SecurityDecorators import authenticated, has_item, use_black_market
 from builtins import str
 from mimetypes import guess_type
@@ -330,7 +330,7 @@ class SwatHandler(BaseHandler):
     def post(self, *args, **kwargs):
         ''' Validate user arguments for SWAT request '''
         target = User.by_uuid(self.get_argument('uuid', ''))
-        if target is not None and not target.has_permission(ADMIN_PERMISSION):
+        if target is not None and not target.is_admin():
             if not Swat.user_is_pending(target) and not Swat.user_is_in_progress(target):
                 user = self.get_current_user()
                 if target not in user.team.members:
