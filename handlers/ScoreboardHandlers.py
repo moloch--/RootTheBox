@@ -33,7 +33,7 @@ from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
 from models.Team import Team
-from models.User import User, ADMIN_PERMISSION
+from models.User import User
 from models.Box import Box
 from models.Category import Category
 from models.WallOfSheep import WallOfSheep
@@ -266,5 +266,5 @@ def scoreboard_visible(user):
         if options.scoreboard_visibility == "public":
             return True
         if user:
-            return options.scoreboard_visibility == "players" or user.has_permission(ADMIN_PERMISSION)
+            return options.scoreboard_visibility == "players" or user.is_admin()
         return False

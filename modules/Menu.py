@@ -21,7 +21,7 @@ Created on Mar 14, 2012
 
 
 from tornado.web import UIModule
-from models.User import User, ADMIN_PERMISSION
+from models.User import User
 from tornado.options import options
 
 
@@ -48,5 +48,5 @@ class Menu(UIModule):
         if options.scoreboard_visibility == "public":
             return True
         if user:
-            return options.scoreboard_visibility == "players" or user.has_permission(ADMIN_PERMISSION)  
+            return options.scoreboard_visibility == "players" or user.is_admin()
         return False    
