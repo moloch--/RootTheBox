@@ -40,7 +40,7 @@ def encode(s, name="utf-8", *args, **kwargs):
 def decode(s, name="utf-8", *args, **kwargs):
     if name == 'base64':
         try:
-            return bytearray(b64decode(s)).decode('utf-8')
+            return bytearray(b64decode(s))
         except:
             pass
     codec = codecs.lookup(name)
