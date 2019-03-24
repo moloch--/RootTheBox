@@ -48,7 +48,7 @@ def get_child_text(elem, tag_name, default = ''):
         if text == 'None' or text is None:
             return default
         else:
-            return str(text)
+            return text
     except:
         return default
 
