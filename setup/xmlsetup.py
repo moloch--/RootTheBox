@@ -48,7 +48,7 @@ def get_child_text(elem, tag_name, default = ''):
         if text == 'None' or text is None:
             return default
         else:
-            return text
+            return str(text)
     except:
         return default
 
@@ -57,13 +57,14 @@ def create_categories(categories):
     ''' Create Category objects based on XML data '''
     logging.info("Found %s categories" % categories.get('count'))
     for index, cat_elem in enumerate(categories.getchildren()):
-        try:
-            category = Category()
-            category.category = get_child_text(cat_elem, 'category')
-            dbsession.add(category)
-        except:
-            logging.exception("Failed to import category #%d" % (index + 1))
-    dbsession.flush()
+        cat = get_child_text(cat_elem, 'category')
+        if Category.by_category(cat) is None:
+            try:
+                category = Category()
+                category.category = cat
+                dbsession.add(category)
+            except:
+                logging.exception("Failed to import category #%d" % (index + 1))
     dbsession.commit()
 
 
