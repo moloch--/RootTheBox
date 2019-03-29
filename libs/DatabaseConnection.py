@@ -99,18 +99,18 @@ class DatabaseConnection(object):
         __mysql = 'mysql://%s:%s@%s/%s' % (
             db_user, db_password, db_server, db_name
         )
-        __mysqlclient = 'mysql+mysqldb://%s:%s@%s/%s' % (
+        __mysqlclient = 'mysql\+mysqldb://%s:%s@%s/%s' % (
             db_user, db_password, db_server, db_name
         )
-        __pymysql = 'mysql+pymysql://%s:%s@%s/%s' % (
+        __pymysql = 'mysql\+pymysql://%s:%s@%s/%s' % (
             db_user, db_password, db_server, db_name
         )
-        __mysqlconnector = 'mysql+mysqlconnector://%s:%s@%s/%s' % (
+        __mysqlconnector = 'mysql\+mysqlconnector://%s:%s@%s/%s' % (
             db_user, db_password, db_server, db_name
         )
         if self._test_connection(__mysql):
             return __mysql
-        if self._test_connection(__mysqlclient):
+        elif self._test_connection(__mysqlclient):
             return __mysqlclient
         elif self._test_connection(__pymysql):
             return __pymysql
