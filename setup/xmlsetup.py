@@ -33,6 +33,7 @@ from setup.create_database import *
 from models import dbsession
 from models.Box import FlagsSubmissionType
 from libs.StringCoding import decode
+from base64 import b64decode
 
 
 def get_child_by_tag(elem, tag_name):
@@ -183,7 +184,7 @@ def create_boxes(parent, corporation):
 
                 box.description = get_child_text(box_elem, 'description')
                 box.operating_system = get_child_text(box_elem, 'operatingsystem')
-                box.avatar = decode(get_child_text(box_elem, 'avatar'), 'base64')
+                box.avatar = bytearray(b64decode(get_child_text(box_elem, 'avatar')))
                 box.garbage = get_child_text(box_elem, 'garbage')
                 category = get_child_text(box_elem, 'category')
                 if category:

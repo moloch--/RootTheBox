@@ -27,7 +27,6 @@ from sqlalchemy.orm import synonym, relationship
 from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from builtins import str
 
 
 class ThemeFile(DatabaseObject):
@@ -41,7 +40,7 @@ class ThemeFile(DatabaseObject):
     def _filter_string(cls, string, extra_chars=""):
         ''' Remove any non-white listed chars from a string '''
         char_white_list = ascii_letters + digits + extra_chars
-        return [char for char in string if char in char_white_list]
+        return "".join([char for char in string if char in char_white_list])
 
     @property
     def file_name(self):
@@ -94,7 +93,7 @@ class Theme(DatabaseObject):
     def _filter_string(cls, string, extra_chars=""):
         ''' Remove any non-white listed chars from a string '''
         char_white_list = ascii_letters + digits + extra_chars
-        return [char for char in string if char in char_white_list]
+        return "".join([char for char in string if char in char_white_list])
 
     @property
     def name(self):
