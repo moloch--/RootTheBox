@@ -42,11 +42,12 @@ class MaterialsHandler(BaseHandler):
     def post(self, *args, **kwargs):
         d=options.game_materials_dir
         if len(args) == 1:
-            d = os.path.join(os.path.abspath(d), args[0])
-            if is_directory_traversal(d):
+            tmp = os.path.join(os.path.abspath(d), args[0])
+            if is_directory_traversal(tmp):
                 logging.warn("%s attempted to use a directory traversal" % self.request.remote_ip)
                 self.redirect(self.application.settings['forbidden_url'])
                 return
+            d = os.path.join(d, args[0])
         self.write(json.dumps(self.path_to_dict(d)))
 
     def path_to_dict(self, path):
