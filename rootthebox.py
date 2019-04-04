@@ -635,3 +635,5 @@ if __name__ == '__main__':
         restart()
     elif options.recovery:
         recovery()
+    else:
+        print("\tNo options specified. Examples: 'rootthebox.py --setup=prod' or 'rootthebox.py --start'")

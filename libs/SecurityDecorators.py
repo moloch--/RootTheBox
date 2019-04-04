@@ -34,7 +34,12 @@ def authenticated(method):
         if self.session is not None:
             if self.session.ip_address == self.request.remote_ip:
                 if not self.request.remote_ip in self.application.settings['blacklisted_ips']:
-                    if not self.get_current_user().locked:
+                    user = self.get_current_user()
+                    if user is None:
+                        self.session.delete()
+                        self.clear_all_cookies()
+                        self.redirect(self.application.settings['login_url'])
+                    elif not user.locked:
                         return method(self, *args, **kwargs)
                     else:
                         self.session.delete()
