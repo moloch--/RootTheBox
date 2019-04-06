@@ -2,6 +2,7 @@ import os
 import logging
 import sys
 import getpass
+import codecs
 
 from libs.ConsoleColors import *
 try:
@@ -72,21 +73,23 @@ class DatabaseConnection(object):
         ''' Configure db_connection for MySQL '''
         logging.debug("Configured to use MySQL for a database")
         db_server, db_name, db_user, db_password = self._db_credentials()
-        __mysql = 'mysql://%s:%s@%s/%s' % (
-            db_user, db_password, db_server, db_name
+        db_charset = "utf8mb4"
+        codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else None)
+        __mysql = 'mysql://%s:%s@%s/%s?charset=%s' % (
+            db_user, db_password, db_server, db_name, db_charset
         )
-        __mysqlclient = 'mysql+mysqldb://%s:%s@%s/%s' % (
-            db_user, db_password, db_server, db_name
+        __mysqlclient = 'mysql+mysqldb://%s:%s@%s/%s?charset=%s' % (
+            db_user, db_password, db_server, db_name, db_charset
         )
-        __pymysql = 'mysql+pymysql://%s:%s@%s/%s' % (
-            db_user, db_password, db_server, db_name
+        __pymysql = 'mysql+pymysql://%s:%s@%s/%s?charset=%s' % (
+            db_user, db_password, db_server, db_name, db_charset
         )
-        __mysqlconnector = 'mysql+mysqlconnector://%s:%s@%s/%s' % (
-            db_user, db_password, db_server, db_name
+        __mysqlconnector = 'mysql+mysqlconnector://%s:%s@%s/%s?charset=%s' % (
+            db_user, db_password, db_server, db_name, db_charset
         )
         if self._test_connection(__mysql):
             return __mysql
-        if self._test_connection(__mysqlclient):
+        elif self._test_connection(__mysqlclient):
             return __mysqlclient
         elif self._test_connection(__pymysql):
             return __pymysql
