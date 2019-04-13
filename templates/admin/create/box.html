@@ -14,6 +14,7 @@
 {% from models.Category import Category %}
 {% from models.Corporation import Corporation %}
 {% from libs.XSSImageCheck import filter_avatars %}
+{% from tornado.options import options %}
 {% set avatars = filter_avatars("box") %}
 <!-- Select Avatars -->
 <div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
@@ -207,6 +208,18 @@
                         <div id="avatarfilename" style="padding: 5px;"></div>
                 </div>
             </div>
+            {% if options.story_mode %}
+            <div class="control-group">
+                <label class="control-label" for="capture-message">Completion Message</label>
+                <div class="controls">
+                    <textarea class="toolbar" id="capture-message" name="capture_message" style="width: 60%;" rows="5" maxlength="1024" type="text" placeholder="(Optional)"
+                            rel="popover"
+                            data-original-title="Completion Message"
+                            data-content="This is the message displayed to the user once the box is completed." >
+                    </textarea>
+                </div>
+            </div>
+            {% end %}
             <div class="control-group">
                 <div class="controls">
                     <button class="btn btn-primary" type="submit">Create Box</button>
