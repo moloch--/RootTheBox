@@ -27,7 +27,7 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 
 ## Platform Requirements
 
--   [Python 2.7.x](https://www.python.org/) or [Pypy 2.x](http://pypy.org/)
+-   [Python 2.7.x](https://www.python.org/), [Pypy 2.x](http://pypy.org/), or beta the [Python 3 branch](https://github.com/moloch--/RootTheBox/tree/Python3)
 -   Install scripts are for [Ubuntu](http://www.ubuntu.com/) (or [Debian](https://www.debian.org/)) but the application should work on any Linux, BSD, or OSX system.
 -   Internet Explorer is _NOT_ supported, any compatability with IE is purely coincidental. Please use the latest release of [Firefox](https://www.mozilla.org/en-US/), [Chrome](https://www.google.com/chrome/), [Opera](http://www.opera.com/), or any other browser that supports open standards.
 
@@ -38,8 +38,12 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 
 ## Questions? Problems?
 
-Open a ticket on GitHub and I'd be happy to help you out with setup/configuration/edits.
+Open a ticket on GitHub and we'd be happy to help you out with setup/configuration/edits.
 
 ## Feature Requests
 
-Open a ticket on GitHub, and I'll see what I can do for you.  I'm always brainstorming new ideas, and looking for cool stuff to add!
+Open a ticket on GitHub and we'll see what we can do for you.  We're always brainstorming new ideas and looking for cool stuff to add!
+
+## Contributing
+
+We welcome code contributions, please [see our contributing guidelines](https://github.com/moloch--/RootTheBox/blob/master/CONTRIBUTING.md) on the wiki for more information.
