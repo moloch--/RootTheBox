@@ -45,8 +45,10 @@ def start():
         update_db()
     except Exception as error:
         logging.error("Error: %s" % error)
-        os._exit(1)
-
+        if "Can't locate revision identified" not in str(error):
+            #Skipped if alembic record ahead for branch compatibility
+            os._exit(1)
+        
     ''' Starts the application '''
     from handlers import start_server
     logging.info(INFO + '%s : Starting RTB on port %s' % (current_time(), options.listen_port))
@@ -128,6 +130,15 @@ def restart():
     pid = os.getpid()
     print(INFO + '%s : Restarting the service (%i)...' % (current_time(), pid))
     os.execl('./setup/restart.sh', '')
+
+
+def update():
+    ''' 
+    Update RTB to the latest repository code.
+    TODO: Expand on this to be a more feature rich update mechanism
+    Add GUI Update button on Admin Home when behind.
+    '''
+    os.system("git pull")
 
 
 def version():
@@ -590,6 +601,11 @@ define("restart",
        help="restart the server",
        type=bool)
 
+define("update",
+       default=False,
+       help="pull the latest code via github",
+       type=bool)
+
 define("version",
        default=False,
        help="display version information and exit",
@@ -635,5 +651,7 @@ if __name__ == '__main__':
         restart()
     elif options.recovery:
         recovery()
+    elif options.update:
+        update()
     else:
         print("\tNo options specified. Examples: 'rootthebox.py --setup=prod' or 'rootthebox.py --start'")

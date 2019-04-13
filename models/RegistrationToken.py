@@ -32,7 +32,7 @@ gen_token = lambda: urandom(3).encode('hex')
 
 
 class RegistrationToken(DatabaseObject):
-    ''' User definition '''
+    ''' Registration token definition '''
 
     value = Column(String(6), unique=True, nullable=False, default=gen_token)
     used = Column(Boolean, nullable=False, default=False)

@@ -38,8 +38,12 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 
 ## Questions? Problems?
 
-Open a ticket on GitHub and I'd be happy to help you out with setup/configuration/edits.
+Open a ticket on GitHub and we'd be happy to help you out with setup/configuration/edits.
 
 ## Feature Requests
 
-Open a ticket on GitHub, and I'll see what I can do for you.  I'm always brainstorming new ideas, and looking for cool stuff to add!
+Open a ticket on GitHub and we'll see what we can do for you.  We're always brainstorming new ideas and looking for cool stuff to add!
+
+## Contributing
+
+We welcome code contributions, please [see our contributing guidelines](https://github.com/moloch--/RootTheBox/blob/master/CONTRIBUTING.md) on the wiki for more information.
