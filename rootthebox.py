@@ -36,7 +36,10 @@ from libs.ConfigHelpers import save_config
 from builtins import str, input
 from setup import __version__
 
-current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
+
+def current_time():
+    ''' Nicely formatted current time as a string '''
+    return str(datetime.now()).split(' ')[1].split('.')[0]
 
 
 def start():
@@ -577,7 +580,7 @@ define("bot_reward_interval",
        help="interval for rewarding botnets (milliseconds)",
        type=int)
 
-# Process modes
+# Process modes/flags
 define("setup",
        default="",
        help="setup a database (prod|devel)")

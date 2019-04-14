@@ -135,7 +135,8 @@ class User(DatabaseObject):
     @classmethod
     def by_handle(cls, handle):
         ''' Return the user object whose user is "_handle" '''
-        return dbsession.query(cls).filter_by(_handle=str(handle)).first()
+        handle = str(handle).strip()
+        return dbsession.query(cls).filter_by(_handle=handle).first()
 
     @classmethod
     def _hash_bank_password(cls, algorithm_name, password):
@@ -200,9 +201,10 @@ class User(DatabaseObject):
 
     @handle.setter
     def handle(self, new_handle):
+        new_handle = str(new_handle).strip()
         if not 3 <= len(new_handle) <= 16:
             raise ValidationError("Handle must be 3 - 16 characters")
-        self._handle = str(new_handle)
+        self._handle = new_handle
 
     @property
     def name(self):
@@ -392,7 +394,7 @@ class User(DatabaseObject):
         return self.id == other.id
 
     def __ne__(self, other):
-        return not self == other
+        return not self.__eq__(other)
 
     def __str__(self):
         return self.handle
