@@ -54,7 +54,7 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   apt-get install python-pip python-dev build-essential "$SKIP"
 
   echo "[*] Installing packages..."
-  apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev libmysqlclient-dev "$SKIP"
+  apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev default-libmysqlclient-dev "$SKIP"
 
 elif [[ ${OSTYPE} == "darwin14" ]]; then
   echo -e "\t#########################"
