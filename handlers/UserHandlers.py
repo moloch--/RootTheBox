@@ -37,7 +37,7 @@ from .BaseHandlers import BaseHandler
 from tornado.options import options
 
 
-RECAPTCHA_URL = 'http://www.google.com/recaptcha/api/verify'
+RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/verify'
 
 
 class HomeHandler(BaseHandler):
