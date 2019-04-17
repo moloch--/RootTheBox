@@ -118,6 +118,11 @@ class Team(DatabaseObject):
         return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
+    def by_code(cls, code):
+        ''' Return the team object based on the _code '''
+        return dbsession.query(cls).filter_by(_code=code).first()
+
+    @classmethod
     def ranks(cls):
         ''' Returns a list of all objects in the database '''
         return sorted(dbsession.query(cls).all())

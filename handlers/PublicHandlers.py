@@ -204,12 +204,11 @@ class RegistrationHandler(BaseHandler):
 
     def get_team(self):
         ''' Create a team object, or pull the existing one '''
-        team = Team.by_uuid(self.get_argument('team', ''))
-        code = self.get_argument('team-code', '')
-        if team is not None and self.config.max_team_size <= len(team.members):
+        team = Team.by_code(self.get_argument('team-code', ''))
+        if not team:
+            raise ValidationError("Invalid team code")
+        elif self.config.max_team_size <= len(team.members):
             raise ValidationError("Team %s is already full" % team.name)
-        elif team is not None and team.code != code:
-            raise ValidationError("Invalid team code for %s" % team.name)
         return team if team is not None else self.create_team()
 
     def create_team(self):
