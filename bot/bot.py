@@ -41,7 +41,8 @@ import logging
 import argparse
 import platform
 import traceback
-from libs.StringCoding import encode, decode
+import codecs
+
 from builtins import str
 try:
     import ConfigParser
@@ -249,7 +250,7 @@ def create_connection(url, timeout=None, **options):
     return websock
 
 _MAX_INTEGER = (1 << 32) -1
-_AVAILABLE_KEY_CHARS = range(0x21, 0x2f + 1) + range(0x3a, 0x7e + 1)
+_AVAILABLE_KEY_CHARS = list(range(0x21, 0x2f + 1)) + list(range(0x3a, 0x7e + 1))
 _MAX_CHAR_BYTE = (1<<8) -1
 
 # ref. Websocket gets an update, and it breaks stuff.
@@ -264,6 +265,21 @@ _HEADERS_TO_CHECK = {
     "upgrade": "websocket",
     "connection": "upgrade",
 }
+
+
+def encode(s, name="utf-8", *args, **kwargs):
+    codec = codecs.lookup(name)
+    rv, length = codec.encode(s, *args, **kwargs)
+    if not isinstance(rv, (str, bytes, bytearray)):
+        raise TypeError('Not a string or byte codec')
+    return rv
+
+def decode(s, name="utf-8", *args, **kwargs):
+    codec = codecs.lookup(name)
+    rv, length = codec.decode(s, *args, **kwargs)
+    if not isinstance(rv, (str, bytes, bytearray)):
+        raise TypeError('Not a string or byte codec')
+    return rv
 
 
 class _SSLSocketWrapper(object):
@@ -345,7 +361,7 @@ class ABNF(object):
 
         opcode: operation code. please see OPCODE_XXX.
         """
-        if opcode == ABNF.OPCODE_TEXT and isinstance(data, unicode):
+        if opcode == ABNF.OPCODE_TEXT and isinstance(data, str):
             data = encode(data, "utf-8")
         # mask must be set if send data from client
         return ABNF(1, 0, 0, 0, opcode, 1, data)
@@ -381,11 +397,11 @@ class ABNF(object):
             return frame_header + self._get_masked(mask_key)
 
     def _get_masked(self, mask_key):
-        s = ABNF.mask(mask_key, self.data)
+        s = ABNF.mask_data(mask_key, self.data)
         return mask_key + "".join(s)
 
     @staticmethod
-    def mask(mask_key, data):
+    def mask_data(mask_key, data):
         """
         mask or unmask data. Just do xor for each byte
 
@@ -513,7 +529,7 @@ class WebSocket(object):
         headers.append("")
         headers.append("")
 
-        header_str = "\r\n".join(headers)
+        header_str = encode("\r\n".join(headers), "utf-8")
         sock.send(header_str)
         if traceEnabled:
             logger.debug("--- request header ---")
@@ -533,7 +549,7 @@ class WebSocket(object):
         self.connected = True
 
     def _validate_header(self, headers, key):
-        for k, v in _HEADERS_TO_CHECK.iteritems():
+        for k, v in list(_HEADERS_TO_CHECK.items()):
             r = headers.get(k, None)
             if not r:
                 return False
@@ -680,7 +696,7 @@ class WebSocket(object):
             logger.debug("recv: " + repr(recieved))
 
         if mask:
-            data = ABNF.mask(mask_key, data)
+            data = ABNF.mask_data(mask_key, data)
 
         frame = ABNF(fin, rsv1, rsv2, rsv3, opcode, mask, data)
         return frame
@@ -733,19 +749,19 @@ class WebSocket(object):
         self.io_sock = self.sock
 
     def _recv(self, bufsize):
-        bytes = self.io_sock.recv(bufsize)
-        if not bytes:
+        bytes_val = self.io_sock.recv(bufsize)
+        if not bytes_val:
             raise WebSocketConnectionClosedException()
-        return bytes
+        return bytes_val
 
     def _recv_strict(self, bufsize):
         remaining = bufsize
-        bytes = ""
+        bytes_val = ""
         while remaining:
-            bytes += self._recv(remaining)
-            remaining = bufsize - len(bytes)
+            bytes_val += self._recv(remaining)
+            remaining = bufsize - len(bytes_val)
 
-        return bytes
+        return bytes_val
 
     def _recv_line(self):
         line = []
@@ -830,7 +846,7 @@ class WebSocketApp(object):
                 if data is None:
                     break
                 self._run_with_no_err(self.on_message, data)
-        except Exception, e:
+        except Exception as e:
             self._run_with_no_err(self.on_error, e)
         finally:
             self.sock.close()
@@ -841,7 +857,7 @@ class WebSocketApp(object):
         if callback:
             try:
                 callback(self, *args)
-            except Exception, e:
+            except Exception as e:
                 if logger.isEnabledFor(logging.DEBUG):
                     logger.error(e)
 

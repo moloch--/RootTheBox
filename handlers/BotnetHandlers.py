@@ -98,7 +98,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.close()
         else:
             logging.debug("Interrogating bot on %s" % self.request.remote_ip)
-            self.write_message({'opcode': 'interrogate', 'xid': self.xid})
+            self.write_message({'opcode': 'interrogate', 'xid': str(self.xid)})
 
     def on_message(self, message):
         ''' Routes the request to the correct function based on opcode '''
