@@ -55,7 +55,7 @@ def score_bots():
     bot_manager = BotManager.instance()
     for team in Team.all():
         if len(team.members) > 0:
-            bots = bot_manager.by_team(team)
+            bots = bot_manager.by_team(team.name)
             reward = 0
             for bot in bots:
                 try:

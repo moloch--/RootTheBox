@@ -132,7 +132,7 @@ class BotManager(object):
         return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def by_team(self, team):
-        bots = self.botdb.query(Bot).filter_by(team_name=str(team.name)).all()
+        bots = self.botdb.query(Bot).filter_by(team_name=str(team)).all()
         return [self.botnet[bot.wsock_uuid] for bot in bots]
 
     def count_by_team(self, team):
