@@ -119,7 +119,7 @@ class GameHistory(object):
                 snapshot_team = SnapshotTeam(
                     team_id=team.id,
                     money=team.money,
-                    bots=bot_manager.count_by_team(team)
+                    bots=bot_manager.count_by_team(team.name)
                 )
                 snapshot_team.game_levels = team.game_levels
                 snapshot_team.flags = team.flags

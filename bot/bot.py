@@ -259,7 +259,7 @@ _MAX_CHAR_BYTE = (1<<8) -1
 
 def _create_sec_websocket_key():
     uid = uuid.uuid4()
-    return base64.encodestring(uid.bytes).strip()
+    return decode(base64.encodestring(uid.bytes).strip())
 
 _HEADERS_TO_CHECK = {
     "upgrade": "websocket",
@@ -362,7 +362,7 @@ class ABNF(object):
         opcode: operation code. please see OPCODE_XXX.
         """
         if opcode == ABNF.OPCODE_TEXT and isinstance(data, str):
-            data = encode(data, "utf-8")
+            data = data
         # mask must be set if send data from client
         return ABNF(1, 0, 0, 0, opcode, 1, data)
 
@@ -377,7 +377,6 @@ class ABNF(object):
         length = len(self.data)
         if length >= ABNF.LENGTH_63:
             raise ValueError("data is too long")
-
         frame_header = chr(self.fin << 7
                            | self.rsv1 << 6 | self.rsv2 << 5 | self.rsv3 << 4
                            | self.opcode)
@@ -389,7 +388,6 @@ class ABNF(object):
         else:
             frame_header += chr(self.mask << 7 | 0x7f)
             frame_header += struct.pack("!Q", length)
-
         if not self.mask:
             return frame_header + self.data
         else:
@@ -533,7 +531,7 @@ class WebSocket(object):
         sock.send(header_str)
         if traceEnabled:
             logger.debug("--- request header ---")
-            logger.debug(header_str)
+            logger.debug(decode(header_str))
             logger.debug("-----------------------")
 
         status, resp_headers = self._read_headers()
@@ -563,7 +561,7 @@ class WebSocket(object):
         result = result.lower()
 
         value = key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
-        hashed = base64.encodestring(hashlib.sha1(value).digest()).strip().lower()
+        hashed = decode(base64.encodestring(hashlib.sha1(encode(value)).digest()).strip().lower())
         return hashed == result
 
     def _read_headers(self):
@@ -669,13 +667,19 @@ class WebSocket(object):
         header_bytes = self._recv_strict(2)
         if not header_bytes:
             return None
-        b1 = ord(header_bytes[0])
+        if isinstance(header_bytes[0], int):
+            b1 = header_bytes[0]
+        else:
+            b1 = ord(header_bytes[0])
         fin = b1 >> 7 & 1
         rsv1 = b1 >> 6 & 1
         rsv2 = b1 >> 5 & 1
         rsv3 = b1 >> 4 & 1
         opcode = b1 & 0xf
-        b2 = ord(header_bytes[1])
+        if isinstance(header_bytes[1], int):
+            b2 = header_bytes[1]
+        else:
+            b2 = ord(header_bytes[1])
         mask = b2 >> 7 & 1
         length = b2 & 0x7f
 
@@ -691,8 +695,9 @@ class WebSocket(object):
         if mask:
             mask_key = self._recv_strict(4)
         data = self._recv_strict(length)
+        
         if traceEnabled:
-            recieved = header_bytes + length_data + mask_key + data
+            recieved = header_bytes + encode(length_data) + encode(mask_key) + data
             logger.debug("recv: " + repr(recieved))
 
         if mask:
@@ -756,17 +761,16 @@ class WebSocket(object):
 
     def _recv_strict(self, bufsize):
         remaining = bufsize
-        bytes_val = ""
+        bytes_val = b''
         while remaining:
             bytes_val += self._recv(remaining)
             remaining = bufsize - len(bytes_val)
-
         return bytes_val
 
     def _recv_line(self):
         line = []
         while True:
-            c = self._recv(1)
+            c = decode(self._recv(1))
             line.append(c)
             if c == "\n":
                 break
@@ -883,7 +887,7 @@ def display_status(ws, response, verbose=False):
     sys.stdout.flush()
 
 def get_response_xid(garbage, xid):
-    round1 = sha512(xid + garbage).hexdigest()
+    round1 = encode(sha512(encode(xid + garbage)).hexdigest())
     print("Garbage: " + garbage)
     print("XID :" + xid)
     print("[*] Return: " + str(sha512(round1).hexdigest()))
@@ -894,7 +898,7 @@ def send_interrogation_response(ws, response):
     solved_xid = {
         'opcode': 'interrogation_response',
         'response_xid': get_response_xid(ws.garbage, response['xid']),
-        'box_name': ws.box_name,
+        'box_name': decode(ws.box_name),
         'handle': ws.user
     }
     ws.send(json.dumps(solved_xid))

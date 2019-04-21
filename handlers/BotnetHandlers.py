@@ -31,7 +31,7 @@ from uuid import uuid4
 from hashlib import sha512
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
-from libs.StringCoding import encode
+from libs.StringCoding import encode, decode
 from builtins import str
 from models import Box, Team, User
 from .BaseHandlers import BaseHandler, BaseWebSocketHandler
@@ -76,7 +76,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
     remote_ip = None
 
     def initialize(self):
-        self.xid = encode(os.urandom(16), 'hex')
+        self.xid = decode(encode(os.urandom(16), 'hex'))
         if not self.config.use_bots:
             self.close()
         else:
@@ -155,7 +155,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.send_error("Duplicate bot")
 
     def is_valid_xid(self, box, response_xid):
-        round1 = sha512(self.xid + box.garbage).hexdigest()
+        round1 = encode(sha512(encode(self.xid + box.garbage)).hexdigest())
         return response_xid == sha512(round1).hexdigest()
 
     def ping(self):
