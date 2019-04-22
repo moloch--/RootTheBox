@@ -377,26 +377,26 @@ class ABNF(object):
         length = len(self.data)
         if length >= ABNF.LENGTH_63:
             raise ValueError("data is too long")
-        frame_header = chr(self.fin << 7
-                           | self.rsv1 << 6 | self.rsv2 << 5 | self.rsv3 << 4
-                           | self.opcode)
+        frame_header = struct.pack('B', self.fin << 7
+                        | self.rsv1 << 6 | self.rsv2 << 5 | self.rsv3 << 4
+                        | self.opcode)
         if length < ABNF.LENGTH_7:
-            frame_header += chr(self.mask << 7 | length)
+            frame_header += struct.pack('B', self.mask << 7 | length)
         elif length < ABNF.LENGTH_16:
-            frame_header += chr(self.mask << 7 | 0x7e)
+            frame_header += struct.pack('B', self.mask << 7 | 0x7e)
             frame_header += struct.pack("!H", length)
         else:
-            frame_header += chr(self.mask << 7 | 0x7f)
+            frame_header += struct.pack('B', self.mask << 7 | 0x7f)
             frame_header += struct.pack("!Q", length)
         if not self.mask:
-            return frame_header + self.data
+            return frame_header + encode(self.data)
         else:
             mask_key = self.get_mask_key(4)
             return frame_header + self._get_masked(mask_key)
 
     def _get_masked(self, mask_key):
-        s = ABNF.mask_data(mask_key, self.data)
-        return mask_key + "".join(s)
+        mask = ABNF.mask_data(mask_key, self.data)
+        return mask_key + mask
 
     @staticmethod
     def mask_data(mask_key, data):
@@ -408,7 +408,7 @@ class ABNF(object):
         data: data to mask/unmask.
         """
         _m = array.array("B", mask_key)
-        _d = array.array("B", data)
+        _d = array.array("B", encode(data))
         for i in range(len(_d)):
             _d[i] ^= _m[i % 4]
         return _d.tostring()
@@ -603,6 +603,8 @@ class WebSocket(object):
 
         opcode: operation code to send. Please see OPCODE_XXX.
         """
+        if traceEnabled:
+            logger.debug("send: " + repr(payload))
         frame = ABNF.create_frame(payload, opcode)
         if self.get_mask_key:
             frame.get_mask_key = self.get_mask_key
@@ -610,8 +612,6 @@ class WebSocket(object):
         while data:
             l = self.io_sock.send(data)
             data = data[l:]
-        if traceEnabled:
-            logger.debug("send: " + repr(data))
 
     def ping(self, payload = ""):
         """
