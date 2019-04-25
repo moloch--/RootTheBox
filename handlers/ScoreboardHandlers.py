@@ -55,7 +55,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         if self.application.settings['freeze_scoreboard']:
             self.write_message("pause")
         else:
-            self.write_message(Scoreboard.now())
+            self.write_message(Scoreboard.now(self))
 
     def on_message(self, message):
         ''' We ignore messages if there are more than 1 every 3 seconds '''
@@ -63,7 +63,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
-            self.write_message(Scoreboard.now())
+            self.write_message(Scoreboard.now(self))
 
     def on_close(self):
         ''' Lost connection to client '''

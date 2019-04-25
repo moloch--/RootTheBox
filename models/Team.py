@@ -126,6 +126,17 @@ class Team(DatabaseObject):
     def name(self):
         return self._name
 
+    def get_score(self, item):
+        if item == 'money':
+            return self.money
+        elif item == 'flag':
+            return len(self.flags)
+        elif item == 'hint':
+            return len(self.hints)
+        elif item == 'bot':
+            return self.bot_count
+        return 0
+
     @name.setter
     def name(self, value):
         if not 3 <= len(value) <= 24:

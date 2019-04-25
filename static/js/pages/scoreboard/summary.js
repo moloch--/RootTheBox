@@ -1,3 +1,27 @@
+var glowtime = 10000;  //time in ms
+var tableOptions = {
+    onComplete: function(){ /*do nothing*/ },
+    duration: [1000, 0, 700, 0, 500], //The milliseconds to do each phase and the delay between them
+    extractIdFromCell: function(td){ return $.trim($(td).text()); }, //the function to use to extract the id value from a cell in the id column.
+    animationSettings: {
+        up: {
+            left: -25, // Move left
+            backgroundColor: '#004400' // Dullish green
+        },
+        down: {
+            left: 25, // Move right
+            backgroundColor: '#550000' // Dullish red
+        },
+        fresh: {
+            left: 0, //Stay put in first stage.
+            backgroundColor: 'transparent' // Yellow
+        },
+        drop: {
+            left: 0, //Stay put in first stage.
+            backgroundColor: 'transparent' // Purple
+        }
+    }
+};
 
 /* Update code */
 $(document).ready(function() {
@@ -20,20 +44,24 @@ $(document).ready(function() {
                 location.reload();
             } else {
                 game_data = jQuery.parseJSON(event.data);
-                console.log(game_data);
                 
                 /* Update Summary Table */
-                $.get("/scoreboard/ajax/summary", function(table) {
-                    $("#summary_table").html(table);
+                $.get("/scoreboard/ajax/summary", function(table_data) {
+                    if ($("#summary_tbody").find('tr').length == 0) {
+                        $("#summary_tbody").html(highlights(game_data, table_data));
+                    } else {
+                        var table = $("#summary_table").clone();
+                        table.children('tbody').html(highlights(game_data, table_data));
+                        $("#summary_table").rankingTableUpdate(table, tableOptions);
+                    }
                     $("a[id^=team-details-button]").click(function() {
                         window.location = "/teams#" + $(this).data("uuid");
                     });
-                    barcolor();
                 });
                 if ($("#mvp_table").length > 0) {
                     /* Update MVP Table */
-                    $.get("/scoreboard/ajax/mvp", function(table) {
-                        $("#mvp_table").html(table);
+                    $.get("/scoreboard/ajax/mvp", function(table_data) {
+                        $("#mvp_table").html(table_data);
                     });
                 }
             }
@@ -41,6 +69,49 @@ $(document).ready(function() {
     }
 });
 
+function highlights(game_data, table_data) {
+    var table_data = $(table_data);
+    //Set color of minibar
+    $(table_data).find(".minibar").each(function() {
+        if (this.style.width == "100%") {
+            $(this).css('background-color', "#00bb00");
+            $(this).css('background-image', 'linear-gradient(to bottom,#00bb00,#009900)')
+        } else {
+            $(this).css('background-color', "#eeee00");
+            $(this).css('background-image', 'linear-gradient(to bottom,#eeee00,#b3b300)');
+        }
+    });
+    //Glow for new updates
+    for (team in game_data) {
+        if ("highlights" in game_data[team]) {
+            var highlights = game_data[team]["highlights"];
+            var now = highlights["now"];
+            for (item in highlights) {
+                if (item !== "now") {
+                    var diff = now - highlights[item];
+                    if (diff < glowtime) {
+                        var column = $(table_data).siblings("#" + game_data[team]["uuid"]).find("." + item + "col");
+                        if (!$(column).hasClass("glow")) {
+                            $(column).addClass("glow");
+                            var id = setTimeout(function() {
+                                $(column).removeClass("glow");
+                            }, glowtime);
+                            $(column).data("id", id);
+                        } else {
+                            //already glowing - set new timeout
+                            clearTimeout($(column).data("id"));
+                            var id = setTimeout(function() {
+                                $(column).removeClass("glow");
+                            }, glowtime);
+                            $(column).data("id", id);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return table_data;
+}
 
 function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
@@ -68,4 +139,26 @@ function setTimer(distance) {
         }
         distance = distance - 1000;
     }, 1000);
+}
+
+function timeConversion(millisec) {
+    // Describe time since last flag
+    if (millisec == 0) {
+        return "";
+    }
+    
+    var seconds = (millisec / 1000).toFixed(1);
+    var minutes = (millisec / (1000 * 60)).toFixed(1);
+    var hours = (millisec / (1000 * 60 * 60)).toFixed(1);
+    var days = (millisec / (1000 * 60 * 60 * 24)).toFixed(1);
+
+    if (seconds < 60) {
+        return seconds + " Sec";
+    } else if (minutes < 60) {
+        return minutes + " Min";
+    } else if (hours < 24) {
+        return hours + " Hrs";
+    } else {
+        return days + " Days";
+    }
 }
