@@ -137,22 +137,6 @@
                 {% if options.teams %}
                 <h5>Join a Team</h5>
                     <div class="control-group">
-                        <label class="control-label" for="team">
-                            <i class="fa fa-users"></i>
-                            Select a Team
-                        </label>
-                        <div class="controls">
-                            <select name="team">
-                                <option value=""></option>
-                                {% for team in Team.all() %}
-                                    {% if len(team.members) < options.max_team_size %}
-                                        <option value="{{ team.uuid }}">{{ team.name }}</option>
-                                    {% end %}
-                                {% end %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="control-group">
                         <label class="control-label" for="team-code">Team Code</label>
                         <div class="controls">
                             <input id="team-code" name="team-code" type="text" placeholder="Team Code"
