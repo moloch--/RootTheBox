@@ -94,10 +94,18 @@
 	//given a cell it removes the padding from it and returns what it was as a string.
 	var removeAndReturnPadding = function(td){
 		td = $(td);
-		var cellPadding = td.css("padding-top") + " " +  td.css("padding-right") + " " + td.css("padding-bottom") + " " +  td.css("padding-left");
+		var cellPadding = getPadding(td);
 		td.css({padding : 0});
 		return cellPadding;
 	};
+
+	function getPadding(td) {
+		return td.css("padding-top") + " " +  td.css("padding-right") + " " + td.css("padding-bottom") + " " +  td.css("padding-left");
+	}
+
+	function getMargins(td) {
+		return td.css("margin-top") + " " +  td.css("margin-right") + " " + td.css("margin-bottom") + " " +  td.css("margin-left");
+	}
 	
 	//should be given the options passed in from the command-line and
 	//fills in any missing parameters with default values.
@@ -226,6 +234,7 @@
 		
 		//we need to store the heights of the tables so that we can animate any differences between them..
 		var origHeight = jOrigTable.height();
+		var origMargins = getMargins(jOrigTable);
 		var newHeight = jNewTable.height();
 		var minLeftValue = getMinLeftValueInOptions(options);
 	
@@ -234,33 +243,40 @@
 		//the wrapper to the left the same amount, this is because setting overflow: hidden or (even just
 		//for overflow-y: hidden!) prevents an inner element extending the left hand side of the container.
 		jOrigTable.css({position: "relative", left: 0-minLeftValue });
+		
 		jOrigTable.wrap(
 			$("<div />", {
 				css: {
 					height: origHeight,
 					overflow: "visible",
 					position: "relative",
-					left: minLeftValue
+					left: minLeftValue,
+					margin: origMargins,
 				}
 			})
 		);
 
 		//wrap table cell contents with a div..
 		$(origTBody.rows).each(function(row, tr){
+			var row_height = $(tr).height() - 9 + "px";  //TODO - figure out what this difference is.. padding, margins, line height?
 			$.each(tr.cells, function(column, td){
 				var wrapper = $('<div/>', {
 					'class' : 'moveable',
 					css: {
 						position: "relative",
-						padding: removeAndReturnPadding(td)
+						padding: removeAndReturnPadding(td),
+						height: row_height,
 					}
 				});
+				if(!$(td).hasClass("anim:hold")){	
+					wrapper.css("line-height", row_height);
+				}
 				wrapper.data("row", row);
 				wrapper.data("column", column);
 				$(td).wrapInner(wrapper);
 			});
 		});
-		console.log(origTBody);
+
 		var rowDiff = rowsInNewTable - origTBody.rows.length;
 		//we'll attach empty extra rows to the end of the table which will be used to hold
 		//data latter and will stop fresh rows at the bottom from showing up.

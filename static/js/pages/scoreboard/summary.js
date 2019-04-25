@@ -1,4 +1,5 @@
-var glowtime = 10000;  //time in ms
+var glowtime = 30000;  //time in ms
+var ranking = "";
 var tableOptions = {
     onComplete: function(){ /*do nothing*/ },
     duration: [1000, 0, 700, 0, 500], //The milliseconds to do each phase and the delay between them
@@ -47,12 +48,21 @@ $(document).ready(function() {
                 
                 /* Update Summary Table */
                 $.get("/scoreboard/ajax/summary", function(table_data) {
+                    highlight_table = highlights(game_data, table_data);
                     if ($("#summary_tbody").find('tr').length == 0) {
-                        $("#summary_tbody").html(highlights(game_data, table_data));
+                        $("#summary_tbody").html(highlight_table);
+                        ranking = getRanking(table_data);
                     } else {
-                        var table = $("#summary_table").clone();
-                        table.children('tbody').html(highlights(game_data, table_data));
-                        $("#summary_table").rankingTableUpdate(table, tableOptions);
+                        new_ranking = getRanking(table_data);
+                        if (new_ranking === ranking) {
+                            $("#summary_tbody").html(highlight_table);
+                        } else {
+                            //Animated Table Reorder
+                            ranking = new_ranking;
+                            var table = $("#summary_table").clone();
+                            table.children('tbody').html(highlight_table);
+                            $("#summary_table").rankingTableUpdate(table, tableOptions);
+                        }
                     }
                     $("a[id^=team-details-button]").click(function() {
                         window.location = "/teams#" + $(this).data("uuid");
@@ -68,6 +78,14 @@ $(document).ready(function() {
         };
     }
 });
+
+function getRanking(table_data) {
+    var new_rank = "";
+    $(table_data).siblings("tr").each(function() {
+        new_rank += $(this).attr("id");
+    });
+    return new_rank;
+}
 
 function highlights(game_data, table_data) {
     var table_data = $(table_data);

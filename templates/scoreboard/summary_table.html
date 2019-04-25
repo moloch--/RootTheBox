@@ -5,12 +5,12 @@
 {% set hintcount = len(Hint.all()) %}
 {% for index, team in enumerate(teams) %}
     {% if len(team.members) > 0 %}
-    <tr id="{{ team.uuid }}" style="padding-top: 5px; height: 100%;">
-        <td class="summarycolumn shortcolumn" style="text-align: center; vertical-align: middle; font-size: x-large; padding: 0px 20px 0px 10px; height: 100%;">
+    <tr id="{{ team.uuid }}" style="padding-top: 5px;">
+        <td class="summarycolumn shortcolumn" style="text-align: center; vertical-align: middle; font-size: x-large; padding: 0px 20px 0px 10px;">
             {{ index + 1 }}
         </td>
-        <td class="anim:id" style="display:none;">{{ team.uuid }}</td>
-        <td class="summarycolumn">
+        <td style="display:none;">{{ team.uuid }}</td>
+        <td class="summarycolumn anim:hold">
             <div style="width: 100%; display: table;">
                 <div style="display: table-row;">
                     <div class="summarycolumn" style="display: table-cell; font-size: large;">{{ team.name }}</div>
