@@ -1,4 +1,6 @@
-var glowtime = 30000;  //time in ms
+var glowtime = 30000;  //time score glows in ms
+var fadetext = 20000;  //interval between hints taken / time since last capture fade effects
+var scoretext = true;
 var ranking = "";
 var tableOptions = {
     onComplete: function(){ /*do nothing*/ },
@@ -76,8 +78,25 @@ $(document).ready(function() {
                 }
             }
         };
+        setTimeout(changeDisplay, fadetext);
     }
 });
+
+function changeDisplay() {
+    if (scoretext) {
+        $(".hintcol").fadeOut("slow", function() {
+            $(".lastflagcol").fadeIn("slow");
+        });
+    } else {
+        $(".lastflagcol").fadeOut("slow", function() {
+            $(".hintcol").fadeIn("slow");
+        });
+    }
+    scoretext = !scoretext;
+    setTimeout(function () {     
+        changeDisplay();
+    }, fadetext);
+}
 
 function getRanking(table_data) {
     var new_rank = "";
@@ -99,6 +118,13 @@ function highlights(game_data, table_data) {
             $(this).css('background-image', 'linear-gradient(to bottom,#eeee00,#b3b300)');
         }
     });
+    if (!scoretext) {
+        $(table_data).find(".hintcol").hide();
+        $(table_data).find(".lastflagcol").show();
+    } else {
+        $(table_data).find(".lastflagcol").hide();
+        $(table_data).find(".hintcol").show();
+    }
     //Glow for new updates
     for (team in game_data) {
         if ("highlights" in game_data[team]) {
@@ -107,6 +133,12 @@ function highlights(game_data, table_data) {
             for (item in highlights) {
                 if (item !== "now") {
                     var diff = now - highlights[item];
+                    if (item === "money") {
+                        var lastflag = $(table_data).siblings("#" + game_data[team]["uuid"]).find(".lastflagcol");
+                        if (highlights[item] !== 0) {
+                            lastflag.text(timeConversion(diff) + " Since Score");
+                        }
+                    }
                     if (diff < glowtime) {
                         var column = $(table_data).siblings("#" + game_data[team]["uuid"]).find("." + item + "col");
                         if (!$(column).hasClass("glow")) {
@@ -159,24 +191,35 @@ function setTimer(distance) {
     }, 1000);
 }
 
-function timeConversion(millisec) {
-    // Describe time since last flag
-    if (millisec == 0) {
-        return "";
+function timeConversion(s) {
+   
+    // Pad to 2 or 3 digits, default is 2
+    function pad(prior, n, z) {
+        if (prior > 0) {
+            z = z || 2;
+            return ('00' + n).slice(-z);
+        } else {
+            return n;
+        }
     }
-    
-    var seconds = (millisec / 1000).toFixed(1);
-    var minutes = (millisec / (1000 * 60)).toFixed(1);
-    var hours = (millisec / (1000 * 60 * 60)).toFixed(1);
-    var days = (millisec / (1000 * 60 * 60 * 24)).toFixed(1);
 
-    if (seconds < 60) {
-        return seconds + " Sec";
-    } else if (minutes < 60) {
-        return minutes + " Min";
-    } else if (hours < 24) {
-        return hours + " Hrs";
-    } else {
-        return days + " Days";
+    var s = s / 1000;
+    var secs = s % 60;
+    s = (s - secs) / 60;
+    var mins = s % 60;
+    var hrs = (s - mins) / 60;
+    var flagtime = "";
+    if (hrs > 0) {
+        flagtime += hrs + ':';
     }
+    if (flagtime.length > 0 || mins > 0) {
+        flagtime += pad(hrs, mins) + ":"
+    }
+    if (flagtime.length > 0 || secs > 0) {
+        flagtime += pad(hrs + mins, secs);
+    }
+    if (flagtime.length === 0) {
+        return 0;
+    }
+    return flagtime;
 }

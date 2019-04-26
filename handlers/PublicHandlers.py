@@ -169,7 +169,7 @@ class RegistrationHandler(BaseHandler):
     def create_user(self):
         ''' Add user to the database '''
         if User.by_handle(self.get_argument('handle', '')) is not None:
-            raise ValidationError("This hacker name is already registered")
+            raise ValidationError("This handle is already registered")
         if self.get_argument('pass1', '') != self.get_argument('pass2', ''):
             raise ValidationError("Passwords do not match")
         user = User()
