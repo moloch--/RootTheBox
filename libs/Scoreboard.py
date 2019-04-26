@@ -42,7 +42,11 @@ class Scoreboard(object):
         for team in Team.all():
             if len(team.members) > 0:
                 millis = int(round(time.time() * 1000))
-                game_state[team.name] = {'uuid': team.uuid}
+                game_state[team.name] = {
+                    'uuid': team.uuid,
+                    'flags': [str(flag) for flag in team.flags],
+                    'game_levels': [str(lvl) for lvl in team.game_levels],
+                }
                 highlights = {'money': 0, 'flag': 0, 'bot': 0, 'hint': 0}
                 for item in highlights:
                     value = team.get_score(item)
