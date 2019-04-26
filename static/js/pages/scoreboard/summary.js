@@ -1,112 +1,30 @@
-var flag_chart;
-var money_chart;
-var game_data;
-
-/* Highcharts code */
-$(document).ready(function() {
-    if ($("#timercount").length === 0) {
-        /* Options for both graphs*/
-        Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
-            return {
-                radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
-                stops: [
-                    [0, color],
-                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]
-                ]
-            };
-        });
-        /* Flag Chart */
-        flag_chart = new Highcharts.Chart({
-            chart: {
-                renderTo: 'pie_flags',
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                backgroundColor:'transparent'
-            },
-            title: {
-                text: '<strong>Flags Captured</strong>',
-                style: {
-                    color: '#FFFFFF',
-                    font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
-                    'text-shadow': '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
-                },
-            },
-            tooltip: {
-                enable: true,
-                formatter: function() {
-                    return htmlEncode(this.point.y) + ' flag(s)<br /><strong>' + htmlEncode(this.point.percentage.toFixed(2)) + '%</strong>';
-                }
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        color: '#FFFFFF',
-                        connectorColor: '#FFFFFF',
-                        formatter: function() {
-                            return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">' +
-                                        htmlEncode(this.point.name) + '</div>';
-                        }
-                    }
-                }
-            },
-            series: [{
-                type: 'pie',
-                name: 'Flags Captured',
-                data: []
-            }]
-        });
-        /* Money Chart */
-        money_chart = new Highcharts.Chart({
-            chart: {
-                renderTo: 'pie_money',
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                backgroundColor:'transparent'
-            },
-            title: {
-                text: '<strong>' + $("#bankname").text() + '</strong>',
-                style: {
-                    color: '#FFFFFF',
-                    font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
-                    'text-shadow': '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
-                },
-            },
-            tooltip: {
-                enabled: true,
-                formatter: function() {
-                    return $("#banksymbol").text() + htmlEncode(this.point.y) + '<br /><strong>' +
-                        htmlEncode(this.point.percentage.toFixed(2)) + '%</strong>';
-                }
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        color: '#FFFFFF',
-                        connectorColor: '#FFFFFF',
-                        formatter: function() {
-                            return '<div style="font-size:small;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">' +
-                                        htmlEncode(this.point.name) + '</div>';
-                        }
-                    }
-                }
-            },
-            series: [{
-                type: 'pie',
-                name: 'Team Money',
-                data: []
-            }]
-        });
+var glowtime = 30000;  //time score glows in ms
+var fadetext = 20000;  //interval between hints taken / time since last capture fade effects
+var scoretext = true;
+var ranking = "";
+var tableOptions = {
+    onComplete: function(){ /*do nothing*/ },
+    duration: [1000, 0, 700, 0, 500], //The milliseconds to do each phase and the delay between them
+    extractIdFromCell: function(td){ return $.trim($(td).text()); }, //the function to use to extract the id value from a cell in the id column.
+    animationSettings: {
+        up: {
+            left: -25, // Move left
+            backgroundColor: '#004400' // Dullish green
+        },
+        down: {
+            left: 25, // Move right
+            backgroundColor: '#550000' // Dullish red
+        },
+        fresh: {
+            left: 0, //Stay put in first stage.
+            backgroundColor: 'transparent' // Yellow
+        },
+        drop: {
+            left: 0, //Stay put in first stage.
+            backgroundColor: 'transparent' // Purple
+        }
     }
-});
-
+};
 
 /* Update code */
 $(document).ready(function() {
@@ -129,49 +47,121 @@ $(document).ready(function() {
                 location.reload();
             } else {
                 game_data = jQuery.parseJSON(event.data);
-
-                /* Update Money */
-                var money_ls = [];
-                $.each(game_data, function(index, item) {
-                    money_ls.push([index.toString(), item.money]);
-                });
-                money_chart.series[0].setData(money_ls, true);
-    
-                /* Update Flags */
-                var flag_ls = [];
-                $.each(game_data, function(index, item) {
-                    flag_ls.push([index.toString(), item.flags.length]);
-                });
-                flag_chart.series[0].setData(flag_ls, true);
-    
+                
                 /* Update Summary Table */
-                $.get("/scoreboard/ajax/summary", function(table) {
-                    $("#summary_table").html(table);
+                $.get("/scoreboard/ajax/summary", function(table_data) {
+                    highlight_table = highlights(game_data, table_data);
+                    if ($("#summary_tbody").find('tr').length == 0) {
+                        $("#summary_tbody").html(highlight_table);
+                        ranking = getRanking(table_data);
+                    } else {
+                        new_ranking = getRanking(table_data);
+                        if (new_ranking === ranking) {
+                            $("#summary_tbody").html(highlight_table);
+                        } else {
+                            //Animated Table Reorder
+                            ranking = new_ranking;
+                            var table = $("#summary_table").clone();
+                            table.children('tbody').html(highlight_table);
+                            $("#summary_table").rankingTableUpdate(table, tableOptions);
+                        }
+                    }
                     $("a[id^=team-details-button]").click(function() {
                         window.location = "/teams#" + $(this).data("uuid");
                     });
-                    barcolor();
                 });
                 if ($("#mvp_table").length > 0) {
                     /* Update MVP Table */
-                    $.get("/scoreboard/ajax/mvp", function(table) {
-                        $("#mvp_table").html(table);
+                    $.get("/scoreboard/ajax/mvp", function(table_data) {
+                        $("#mvp_table").html(table_data);
                     });
                 }
             }
         };
-
-        $("#graphtext").click(function(){
-            $("#pie_graphs").toggle();
-            if ($("#pie_graphs").is(":visible")) {
-                $("#graphtext").html('<i class="fa fa-caret-down graphtoggle"></i>&nbsp;&nbsp;Graphs');
-            } else {
-                $("#graphtext").html('<i class="fa fa-caret-up graphtoggle"></i>&nbsp;&nbsp;Graphs');
-            }
-        });
+        setTimeout(changeDisplay, fadetext);
     }
 });
 
+function changeDisplay() {
+    if (scoretext) {
+        $(".hintcol").fadeOut("slow", function() {
+            $(".lastflagcol").fadeIn("slow");
+        });
+    } else {
+        $(".lastflagcol").fadeOut("slow", function() {
+            $(".hintcol").fadeIn("slow");
+        });
+    }
+    scoretext = !scoretext;
+    setTimeout(function () {     
+        changeDisplay();
+    }, fadetext);
+}
+
+function getRanking(table_data) {
+    var new_rank = "";
+    $(table_data).siblings("tr").each(function() {
+        new_rank += $(this).attr("id");
+    });
+    return new_rank;
+}
+
+function highlights(game_data, table_data) {
+    var table_data = $(table_data);
+    //Set color of minibar
+    $(table_data).find(".minibar").each(function() {
+        if (this.style.width == "100%") {
+            $(this).css('background-color', "#00bb00");
+            $(this).css('background-image', 'linear-gradient(to bottom,#00bb00,#009900)')
+        } else {
+            $(this).css('background-color', "#eeee00");
+            $(this).css('background-image', 'linear-gradient(to bottom,#eeee00,#b3b300)');
+        }
+    });
+    if (!scoretext) {
+        $(table_data).find(".hintcol").hide();
+        $(table_data).find(".lastflagcol").show();
+    } else {
+        $(table_data).find(".lastflagcol").hide();
+        $(table_data).find(".hintcol").show();
+    }
+    //Glow for new updates
+    for (team in game_data) {
+        if ("highlights" in game_data[team]) {
+            var highlights = game_data[team]["highlights"];
+            var now = highlights["now"];
+            for (item in highlights) {
+                if (item !== "now") {
+                    var diff = now - highlights[item];
+                    if (item === "money") {
+                        var lastflag = $(table_data).siblings("#" + game_data[team]["uuid"]).find(".lastflagcol");
+                        if (highlights[item] !== 0) {
+                            lastflag.text(timeConversion(diff) + " Since Score");
+                        }
+                    }
+                    if (diff < glowtime) {
+                        var column = $(table_data).siblings("#" + game_data[team]["uuid"]).find("." + item + "col");
+                        if (!$(column).hasClass("glow")) {
+                            $(column).addClass("glow");
+                            var id = setTimeout(function() {
+                                $(column).removeClass("glow");
+                            }, glowtime);
+                            $(column).data("id", id);
+                        } else {
+                            //already glowing - set new timeout
+                            clearTimeout($(column).data("id"));
+                            var id = setTimeout(function() {
+                                $(column).removeClass("glow");
+                            }, glowtime);
+                            $(column).data("id", id);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return table_data;
+}
 
 function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
@@ -199,4 +189,37 @@ function setTimer(distance) {
         }
         distance = distance - 1000;
     }, 1000);
+}
+
+function timeConversion(s) {
+   
+    // Pad to 2 or 3 digits, default is 2
+    function pad(prior, n, z) {
+        if (prior > 0) {
+            z = z || 2;
+            return ('00' + n).slice(-z);
+        } else {
+            return n;
+        }
+    }
+
+    var s = s / 1000;
+    var secs = s % 60;
+    s = (s - secs) / 60;
+    var mins = s % 60;
+    var hrs = (s - mins) / 60;
+    var flagtime = "";
+    if (hrs > 0) {
+        flagtime += hrs + ':';
+    }
+    if (flagtime.length > 0 || mins > 0) {
+        flagtime += pad(hrs, mins) + ":"
+    }
+    if (flagtime.length > 0 || secs > 0) {
+        flagtime += pad(hrs + mins, secs);
+    }
+    if (flagtime.length === 0) {
+        return 0;
+    }
+    return flagtime;
 }

@@ -5,67 +5,57 @@
 {% set hintcount = len(Hint.all()) %}
 {% for index, team in enumerate(teams) %}
     {% if len(team.members) > 0 %}
-    <tr style="padding-top: 5px;">
+    <tr id="{{ team.uuid }}" style="padding-top: 5px;">
         <td class="summarycolumn shortcolumn" style="text-align: center; vertical-align: middle; font-size: x-large; padding: 0px 20px 0px 10px;">
-            {% if index == 0 %}
-                <i class="fa fa-trophy"></i>
-            {% else %}
-                {{ index + 1 }}
-            {% end %}
+            {{ index + 1 }}
         </td>
-        
-        <td class="summarycolumn" colspan="3">
+        <td style="display:none;">{{ team.uuid }}</td>
+        <td class="summarycolumn anim:hold">
             <div style="width: 100%; display: table;">
                 <div style="display: table-row;">
                     <div class="summarycolumn" style="display: table-cell; font-size: large;">{{ team.name }}</div>
                     <!-- <div class="summarycolumn" style="display: table-cell;">{{ team.levels[-1].number }} </div> -->
-                    {% if options.hints_taken and hintcount > 0 %}
-                    <div class="summarycolumn shortcolumn" style="display: table-cell; vertical-align: bottom; font-size: small;">{{ len(team.hints) }} Hints Taken</div>
-                    {% end %}
-                </div>
-            </div>
-                <div style="height: 8px; padding: 7px 0px;">
-                    <div style="width: 100%; display: table;">
-                        <div style="display: table-row; ">
-                            {% set gamelevels = GameLevel.all() %}
-                            {% for index, level in enumerate(gamelevels) %}
-                                {% if len(level.boxes) > 0 %}
-                                    {% if index > 0 %}
-                                        <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
-                                    {% end %}
-                                    <div class="summarycolumn" style="display: table-cell;">
-                                        {% if len(gamelevels) > 1 %}
-                                            {% if level.type == 'none' or level in team.game_levels %}
-                                                <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
-                                            {% else %}
-                                                <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
-                                            {% end %}
-                                        {% end %}
-                                        <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}{{ level.name }} &ndash; {% end %}{% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
-                                            {% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}
-                                                <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
-                                            {% else %}
-                                                <div class="bar minibar" style="width: 0%;"></div>
-                                            {% end %}
-                                        </div>
-                                    </div>
-                                {% end %}
-                            {% end %}
-                        </div>
+                    <div class="summarycolumn shortcolumn" style="display: table-cell; vertical-align: bottom; font-size: small;">
+                        {% if options.hints_taken and hintcount > 0 %}<span class="hintcol">{{ len(team.hints) }} Hints Taken</span>{% end %}<span {% if options.hints_taken and hintcount > 0 %}class="lastflagcol" style="display: none;"{% end %}></span>
                     </div>
                 </div>
             </div>
+            <div style="height: 8px; padding: 7px 0px;">
+                <div style="width: 100%; display: table;">
+                    <div style="display: table-row; ">
+                        {% set gamelevels = GameLevel.all() %}
+                        {% for index, level in enumerate(gamelevels) %}
+                            {% if len(level.boxes) > 0 %}
+                                {% if index > 0 %}
+                                    <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
+                                {% end %}
+                                <div class="summarycolumn" style="display: table-cell;">
+                                    {% if len(gamelevels) > 1 %}
+                                        {% if level.type == 'none' or level in team.game_levels %}
+                                            <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
+                                        {% else %}
+                                            <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
+                                        {% end %}
+                                    {% end %}
+                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}{{ level.name }} &ndash; {% end %}{% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
+                                        {% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}
+                                            <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;"></div>
+                                        {% else %}
+                                            <div class="bar minibar" style="width: 0%;"></div>
+                                        {% end %}
+                                    </div>
+                                </div>
+                            {% end %}
+                        {% end %}
+                    </div>
+                </div>
+            </div>    
         </td>
-        {% if options.use_bots %}
-            <td class="summarycolumn" style="display: table-cell; font-size: large; white-space: nowrap; vertical-align: middle; width: 40px; text-align: center;">{{ BotManager.instance().count_by_team(team) }}</td>
-        {% end %}
-        <td class="summarycolumn" style="{% if not options.rank_by == "money" %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %}white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.flags) }}</div></td>
-        <td class="summarycolumn" style="{% if options.rank_by == "money" %}font-size: x-large; font-weight: bold;{% else %}font-size: large; {% end %} white-space: nowrap; vertical-align: middle; width: 50px;">{% if options.banking %}${% end %}{{ team.money }}</td>
-        <td class="summarycolumn shortcolumn" style="vertical-align: middle; padding-left: 10px;">
-            <a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.uuid }}">
-                Details &raquo;
-            </a>
-        </td>
+        <td class="summarycolumn botcol" style="font-size: large; white-space: nowrap; vertical-align: middle; width: 40px; text-align: center;{% if options.use_bots %} display: table-cell;{% else %} display: none;{% end %}">{{ BotManager.instance().count_by_team(team) }}</td>
+        <td class="summarycolumn flagcol" style="{% if not options.rank_by == 'money' %}font-size: x-large; font-weight: bold;{% else %}font-size: large;{% end %} white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.flags) }}</div></td>
+        <td class="summarycolumn moneycol" style="{% if options.rank_by == 'money' %}font-size: x-large; font-weight: bold;{% else %}font-size: large;{% end %} white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{% if options.banking %}${% end %}{{ team.money }}</td>
+        <td class="summarycolumn shortcolumn" style="vertical-align: middle; padding-left: 20px;"><a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.uuid }}">Details &raquo;</a></td>
     </tr>
+   
     {% end %}
 {% end %}

@@ -5,81 +5,101 @@
 {% block header %}
 <script src="/static/js/libs/highcharts-all.js"></script>
 <script src="/static/js/pages/scoreboard/history.js"></script>
+<link href="/static/css/pages/public/summary.css" rel="stylesheet" />
 {% end %}
 
 {% block content %}
 {% from tornado.options import options %}
-{% if not timer %}
-    <script type="application/javascript">
-        setGraphTitle("{% if options.banking %}Bank Account Balance{% else %}Score{% end %}");
-        setGraphScale("{% if options.banking %}Money{% else %}Points{% end %}");
-        setGraphSymbol("{% if options.banking %}${% end %}");
-    </script>
-    <div class="navbar navbar-inverse">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="brand" href="#">
-                    <i id="history-icon" class="fa fa-fw fa-calendar"></i>
-                    History
-                </a>
-                <div class="nav-collapse collapse">
-                    <ul class="nav">
-                        <li>
-                            <a id="flags-history-button" href="#">
-                                <i class="fa fa-flag"></i>
-                                Flags
+    {% if not timer %}
+        <script type="application/javascript">
+            setGraphTitle("{% if options.banking %}Bank Account Balance{% else %}Score{% end %}");
+            setGraphScale("{% if options.banking %}Money{% else %}Points{% end %}");
+            setGraphSymbol("{% if options.banking %}${% end %}");
+        </script>
+        <div id="bankname" style="display: none;">{% if options.banking %}Bank Account{% else %}Score{% end %}</div>
+        <div id="banksymbol" style="display: none;">{% if options.banking %}${% end %}</div>
+        <div class="row-fluid">
+            <h5 class="offset1 span10 graphhr" style="margin-bottom: 0px;">
+                <span id="graphtext" style="float: right; cursor: pointer;"><i class="fa fa-caret-down graphtoggle"></i>&nbsp;&nbsp;Charts&nbsp;</span>
+            </h5>
+            <div id="pie_graphs" class="row-fluid">
+                <div class="well span5 offset1">
+                    <div id="pie_flags" style="height:300px;">
+                        <!-- Pie Chart Here -->
+                    </div>
+                </div>
+                <div class="well span5">
+                    <div id="pie_money" style="height:300px;">
+                        <!-- Pie Chart Here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="well span10 offset1">
+                <div class="navbar navbar-inverse">
+                    <div class="navbar-inner">
+                        <div class="container ">
+                            <a class="brand" href="#">
+                                <i id="history-icon" class="fa fa-fw fa-calendar"></i>
+                                History
                             </a>
-                        </li>
-                        <li>
-                            <a id="money-history-button" href="#">
-                                {% if options.banking %}
-                                    <i class="fa fa-dollar"></i>
-                                    Money
-                                {% else %}
-                                    <i class="fa fa-fw fa-bar-chart-o"></i>
-                                    Score
-                                {% end %}
-                            </a>
-                        </li>
-                        {% if options.use_bots %}
-                            <li>
-                                <a id="bots-history-button" href="#">
-                                    <i class="fa fa-android"></i>
-                                    Bots
+                            <div class="nav-collapse collapse">
+                                <ul class="nav">
+                                    <li>
+                                        <a id="flags-history-button" href="#">
+                                            <i class="fa fa-flag"></i>
+                                            Flags
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a id="money-history-button" href="#">
+                                            {% if options.banking %}
+                                                <i class="fa fa-dollar"></i>
+                                                Money
+                                            {% else %}
+                                                <i class="fa fa-fw fa-bar-chart-o"></i>
+                                                Score
+                                            {% end %}
+                                        </a>
+                                    </li>
+                                    {% if options.use_bots %}
+                                        <li>
+                                            <a id="bots-history-button" href="#">
+                                                <i class="fa fa-android"></i>
+                                                Bots
+                                            </a>
+                                        </li>
+                                    {% end %}
+                                    <li style="padding: 15px; padding-right: 0;">Data Points</li>
+                                    <li style="padding: 10px; padding-bottom: 0px;">
+                                        <select id="datapoints" style="width: 100px;">
+                                            <option value="29">30</option>
+                                            <option value="89">90</option>
+                                            <option value="149">150</option>
+                                            <option value="299">300</option>
+                                            <option value="499">500</option>
+                                            <option value="799">800</option>
+                                            <option value="1199">1200</option>
+                                            <option value="1499">1500</option>
+                                        </select>  
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="nav pull-right">
+                                <a class="brand">
+                                    <i id="activity-monitor" class="fa fa-fw fa-eye-slash"></i>
                                 </a>
-                            </li>
-                        {% end %}
-                        <li style="padding: 15px; padding-right: 0;">Data Points</li>
-                        <li style="padding: 10px; padding-bottom: 0px;">
-                            <select id="datapoints" style="width: 100px;">
-                                <option value="29">30</option>
-                                <option value="89">90</option>
-                                <option value="149">150</option>
-                                <option value="299">300</option>
-                                <option value="499">500</option>
-                                <option value="799">800</option>
-                                <option value="1199">1200</option>
-                                <option value="1499">1500</option>
-                            </select>  
-                        </li>
-                    </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="nav pull-right">
-                    <a class="brand">
-                        <i id="activity-monitor" class="fa fa-fw fa-eye-slash"></i>
-                    </a>
+                <div id="history-graph" style="height:400px;">
+                    <!-- Graph goes here -->
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <div id="history-graph" class="well" style="height:500px;">
-                <!-- Graph goes here -->
-            </div>
-        </div>
-    </div>
     {% else %}
-    <h1 id="timercount" style="padding-top: 100px; color: red; text-align: center;"></h1>
+        <h1 id="timercount" style="padding-top: 100px; color: red; text-align: center;"></h1>
     {% end %}
 {% end %}

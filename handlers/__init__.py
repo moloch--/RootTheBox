@@ -33,7 +33,7 @@ from modules.Menu import Menu
 from modules.Recaptcha import Recaptcha
 from modules.AppTheme import AppTheme
 from libs.ConsoleColors import *
-from libs.Scoreboard import score_bots
+from libs.Scoreboard import Scoreboard, score_bots
 from libs.GameHistory import GameHistory
 from tornado import netutil
 from tornado.web import Application
@@ -261,6 +261,9 @@ app = Application(
         options.history_snapshot_interval
     ),
 
+    # Scoreboard Hightlights
+    scoreboard_history={},
+
     # Application version
     version=__version__,
 
@@ -308,6 +311,7 @@ def start_server():
         server = HTTPServer(app, xheaders=options.x_headers)
     sockets = netutil.bind_sockets(options.listen_port, options.listen_interface)
     server.add_sockets(sockets)
+    Scoreboard.now(app)
     try:
         io_loop.start()
     except KeyboardInterrupt:
