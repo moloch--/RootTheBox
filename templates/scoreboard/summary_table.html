@@ -51,7 +51,7 @@
                 </div>
             </div>    
         </td>
-        <td class="summarycolumn botcol" style="font-size: large; white-space: nowrap; vertical-align: middle; width: 40px; text-align: center;{% if options.use_bots %} display: table-cell;{% else %} display: none;{% end %}">{{ BotManager.instance().count_by_team(team) }}</td>
+        <td class="summarycolumn botcol" style="font-size: large; white-space: nowrap; vertical-align: middle; width: 40px; text-align: center;{% if options.use_bots %} display: table-cell;{% else %} display: none;{% end %}">{{ BotManager.instance().count_by_team(team.name) }}</td>
         <td class="summarycolumn flagcol" style="{% if not options.rank_by == 'money' %}font-size: x-large; font-weight: bold;{% else %}font-size: large;{% end %} white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.flags) }}</div></td>
         <td class="summarycolumn moneycol" style="{% if options.rank_by == 'money' %}font-size: x-large; font-weight: bold;{% else %}font-size: large;{% end %} white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{% if options.banking %}${% end %}{{ team.money }}</td>
         <td class="summarycolumn shortcolumn" style="vertical-align: middle; padding-left: 20px;"><a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.uuid }}">Details &raquo;</a></td>
