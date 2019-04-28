@@ -142,11 +142,15 @@ function highlights(game_data, table_data) {
                     if (diff < glowtime) {
                         var column = $(table_data).siblings("#" + game_data[team]["uuid"]).find("." + item + "col");
                         if (!$(column).hasClass("glow")) {
+                            var currentColumn = $("#summary_table").find("#" + game_data[team]["uuid"]).find("." + item + "col");
                             $(column).addClass("glow");
+                            $(currentColumn).addClass("glow");
+                            $(currentColumn).text($(column).text());
                             var id = setTimeout(function() {
                                 $(column).removeClass("glow");
                             }, glowtime);
                             $(column).data("id", id);
+                            $(currentColumn).data("id", id);
                         } else {
                             //already glowing - set new timeout
                             clearTimeout($(column).data("id"));
