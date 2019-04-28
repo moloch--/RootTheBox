@@ -27,6 +27,7 @@ import logging
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import authenticated
 from tornado.options import options
+from models.Corporation import Corporation
 
 class MaterialsHandler(BaseHandler):
     
@@ -89,4 +90,11 @@ def has_box_materials(box):
 
     d=options.game_materials_dir
     path = os.path.join(d, box.name)
-    return os.path.isdir(path)
+    if os.path.isdir(path):
+        return box.name
+    else:
+        corp = Corporation.by_id(box.corporation_id)
+        path = os.path.join(d, corp.name, box.name)
+    if os.path.isdir(path):
+        return os.path.join(corp.name, box.name)
+    return False
