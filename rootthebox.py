@@ -137,11 +137,7 @@ def restart():
 
 
 def update():
-    ''' 
-    Update RTB to the latest repository code.
-    TODO: Expand on this to be a more feature rich update mechanism
-    Add GUI Update button on Admin Home when behind.
-    '''
+    ''' Update RTB to the latest repository code. '''
     os.system("git pull")
 
 
