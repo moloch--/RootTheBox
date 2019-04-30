@@ -185,6 +185,7 @@ urls = [
     (r'/admin/lock', AdminLockHandler),
 
     (r'/admin/configuration', AdminConfigurationHandler),
+    (r'/admin/gitstatus', AdminGitStatusHandler),
     (r'/admin/export/(.*)', AdminExportHandler),
     (r'/admin/import/xml', AdminImportXmlHandler),
     (r'/admin/reset', AdminResetHandler),

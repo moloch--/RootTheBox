@@ -9,7 +9,7 @@
 
 {% block modals %}
  <!-- Set Countdown Timer -->
- <div id="timer-modal" class="modal hide fade" style="display: none; ">
+ <div id="timer-modal" class="modal hide fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3>
@@ -55,6 +55,11 @@
         <div class="row">
             <div class="span11 offset1 well">
                 <h3>Game Control</h3>
+                <div id="gitstatus"></div>
+                <form class="gitform hide" id="update-rtb">
+                    {% raw xsrf_form_html() %}
+                    <a id="updatebutton" class="btn btn-primary" title="Updates RTB to the latest GitHub commits" href="#">Update RootTheBox</a>
+                </form>
                 <hr />
                 <form id="start-game-form" action="/admin/game" method="post">
                     {% raw xsrf_form_html() %}

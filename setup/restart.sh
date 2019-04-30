@@ -1,8 +1,8 @@
 #!/bin/bash
 # Kill exact match command.
-for process in $(pgrep -f "python ./rootthebox.py (-s|--start-server)"); do
+for process in $(pgrep -f "(python|python3) ./rootthebox.py --start"); do
   kill -9 $process;
 done &&
 
 # Restart
-./rootthebox.py -s
+./rootthebox.py --start
