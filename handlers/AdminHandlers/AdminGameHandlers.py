@@ -31,7 +31,7 @@ import xml.etree.cElementTree as ET
 import time
 
 from tempfile import NamedTemporaryFile
-from libs.StringCoding import encode
+from libs.StringCoding import encode, decode
 from builtins import str
 from models.Flag import Flag
 from models.Box import Box
@@ -426,6 +426,7 @@ class AdminGitStatusHandler(BaseHandler):
         else:
             sp = subprocess.Popen(['git', 'status', '-uno'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = sp.communicate()
+            out = decode(out)
             if "Your branch is behind" in out and "modified:" in out:
                 git = "RTB Updates: Modified files (merge conflicts)"
             elif "Your branch is" in out:
