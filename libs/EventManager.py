@@ -25,7 +25,6 @@ from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketClosedError
 from tornado.options import options
 from libs.Singleton import Singleton
-from libs.Scoreboard import Scoreboard
 from models import dbsession
 from models.User import User
 from models.Flag import Flag
@@ -174,6 +173,21 @@ class EventManager(object):
             )
         Notification.create_broadcast(user.team, "Flag Capture", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
+        self.io_loop.add_callback(self.push_scoreboard)
+
+    def bot_added(self, user, count):
+        ''' Callback for when a bot is added '''
+        message = "%s added a new bot; total number of bots is now %d" % (user.team.name, count)
+        Notification.create_broadcast(user.team, "Bot added", message, INFO)
+        self.io_loop.add_callback(self.push_broadcast)
+        self.io_loop.add_callback(self.push_scoreboard)
+
+    def bot_scored(self, team, message=None):
+        ''' Callback for when a bot scores '''
+        if message is None:
+            message = "%s botnet has scored" % team.name
+        Notification.create_team(team, "Botnet Scored", message, SUCCESS)
+        self.io_loop.add_callback(self.push_team, team.id)
         self.io_loop.add_callback(self.push_scoreboard)
 
     def hint_taken(self, user, hint):

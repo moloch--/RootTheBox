@@ -114,6 +114,11 @@ class Team(DatabaseObject):
         return dbsession.query(cls).filter_by(_name=unicode(name)).first()
 
     @classmethod
+    def by_code(cls, code):
+        ''' Return the team object based on the _code '''
+        return dbsession.query(cls).filter_by(_code=code).first()
+
+    @classmethod
     def ranks(cls):
         ''' Returns a list of all objects in the database '''
         return sorted(dbsession.query(cls).all())
@@ -125,6 +130,17 @@ class Team(DatabaseObject):
     @property
     def name(self):
         return self._name
+
+    def get_score(self, item):
+        if item == 'money':
+            return self.money
+        elif item == 'flag':
+            return len(self.flags)
+        elif item == 'hint':
+            return len(self.hints)
+        elif item == 'bot':
+            return self.bot_count
+        return 0
 
     @name.setter
     def name(self, value):

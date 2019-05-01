@@ -135,9 +135,9 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.team_uuid = user.team.uuid
             self.box_uuid = box.uuid
             self.box_name = box.name
-            self.add_to_botnet()
+            self.add_to_botnet(user)
 
-    def add_to_botnet(self):
+    def add_to_botnet(self, user):
         ''' Step 6 and 7; Add current web socket to botnet '''
         if self.bot_manager.add_bot(self):
             logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
@@ -146,6 +146,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
                 'opcode': 'status',
                 'message': 'Added new bot; total number of bots is now %d' % count
             })
+            self.event_manager.bot_added(user, count)
         else:
             logging.debug("Duplicate bot on %s" % self.remote_ip)
             self.send_error("Duplicate bot")

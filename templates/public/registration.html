@@ -118,7 +118,7 @@
                     <div class="controls">
                         <input required id="playername" name="playername" maxlength="64" minlength="3" placeholder="Name" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,64}$"
-                            data-original-title="Player's Name"
+                            data-original-title="Player&#x27;s Name"
                             data-content="Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters" />
                     </div>
                 </div>
@@ -129,29 +129,13 @@
                     <div class="controls">
                         <input {% if options.require_email %}required {% end %}id="email" name="email" maxlength="64" minlength="3" placeholder="Email" type="text"
                             rel="popover" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                            data-original-title="Player's Email"
+                            data-original-title="Player&#x27;s Email"
                             data-content="Your email, visible to game administrators." />
                     </div>
                 </div>
                 <hr style="margin-right: 400px;">
                 {% if options.teams %}
                 <h5>Join a Team</h5>
-                    <div class="control-group">
-                        <label class="control-label" for="team">
-                            <i class="fa fa-users"></i>
-                            Select a Team
-                        </label>
-                        <div class="controls">
-                            <select name="team">
-                                <option value=""></option>
-                                {% for team in Team.all() %}
-                                    {% if len(team.members) < options.max_team_size %}
-                                        <option value="{{ team.uuid }}">{{ team.name }}</option>
-                                    {% end %}
-                                {% end %}
-                            </select>
-                        </div>
-                    </div>
                     <div class="control-group">
                         <label class="control-label" for="team-code">Team Code</label>
                         <div class="controls">
@@ -181,7 +165,7 @@
                         <input id="motto" name="motto" maxlength="32" type="text" placeholder="{% if options.teams %}Team {% end %}Motto"
                             rel="popover"
                             data-original-title="{% if options.teams %}Team {% end %}Motto"
-                            data-content="Optional: What's your {% if options.teams %}team's {% end %}motto? [Max: 32 Characters]">
+                            data-content="Optional: What&#x27;s your {% if options.teams %}team&#x27;s {% end %}motto? [Max: 32 Characters]">
                     </div>
                 </div>
                 {% end %}

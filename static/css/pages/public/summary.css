@@ -1,0 +1,28 @@
+.summarycolumn {
+  padding-bottom: 0px !important;
+}
+.graphhr {
+  text-align:right !important;
+  margin: -10px 0 2px !important;
+  padding-right: 4px !important;
+}
+.graphtoggle {
+  font-size: large; 
+  vertical-align: middle;
+}
+.glow {
+  color: #fff;
+  font-weight: bold;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 1px #fff, 0 0 4px #e67b00, 0 0 8px #e67b00, 0 0 12px #e67b00, 0 0 16px #e67b00;
+  }
+  to {
+    text-shadow: 0 0 2px #e69d00, 0 0 6px #e69d00, 0 0 18px #e69d00, 0 0 24px #e69d00, 0 0 30px #e69d00;
+  }
+}

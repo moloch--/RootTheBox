@@ -9,3 +9,24 @@
     display: inline; 
     vertical-align: middle;
 }
+.gitstatus {
+    padding-left: 15px; 
+    font-size: 150%; 
+}
+
+.gitstatus.info {
+    color: #4d9ecb;
+}
+
+.gitstatus.ok {
+    color: #adff2f;
+}
+
+.gitstatus.warn {
+    color: #eff834;
+}
+
+.gitform {
+    padding-top: 15px; 
+    padding-left: 15px;
+}

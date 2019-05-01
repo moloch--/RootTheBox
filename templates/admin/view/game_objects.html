@@ -2,8 +2,6 @@
 
 {% block title %}Game Management{% end %}
 
-<script src="/static/js/jquery-ui.min.js"></script> <!-- load before bootstrap -->
-
 {% block header %}
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
 <script src="/static/js/libs/commonmark.min.js"></script>
@@ -177,7 +175,7 @@
                 <div class="control-group">
                     <label class="control-label" for="box_difficulty">Difficulty</label>
                     <div class="controls">
-                        <input id="box-difficulty" name="difficulty" type="text" placeholder="Difficutly Rating" />
+                        <input id="box-difficulty" name="difficulty" type="text" placeholder="Difficulty Rating" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -290,7 +288,7 @@
                         <div id="case-button" class="btn-group" data-toggle="buttons-radio"
                             rel="popover"
                             data-original-title="Case-Sensitive"
-                            data-content="Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.">
+                            data-content="Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.">
                             <button id="case-enable" type="button" class="btn btn-success">
                                 <i id="case-enable-icon" class="fa fa-fw fa-check-square-o"></i>
                                 Enable
@@ -667,7 +665,7 @@
                                                             {% set choices = FlagChoice.by_flag_id(flag.id) %}
                                                             {% if choices and len(choices) > 0 %}{% for item in choices %}- {{item.choice}}
                                                             {% end %}{% end %}{% end %}</td>
-                                                        <td style="width: 200px;">{{ flag.token }}</td>
+                                                        <td><div style="min-width: 200px; max-width: 300px; display: inline-block; word-wrap: break-word;">{{ flag.token }}</div></td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
                                                         <td class="shortcolumn">{{ str(flag.type) }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">

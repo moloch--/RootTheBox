@@ -1,10 +1,11 @@
 {% extends "../main.html" %}
 
 {% block header %}
-<script src="/static/js/libs/highcharts-all.js"></script>
+<script src="/static/js/libs/animator.min.js"></script>
+<script src="/static/js/pages/scoreboard/rankingTableUpdate.js"></script>
 <script src="/static/js/pages/scoreboard/summary.js"></script>
 <script src="/static/js/pages/missions/view.js"></script>
-<link href="/static/css/pages/user/summary.css" rel="stylesheet" />
+<link href="/static/css/pages/public/summary.css" rel="stylesheet" />
 {% end %}
 
 {% block title %}Scoreboard{% end %}
@@ -17,52 +18,36 @@
             <i class="fa fa-bar-chart-o"></i>
             Scoreboard
         </h1>
-        <h5 class="offset1 span11 graphhr">
-            <span id="graphtext" style="cursor: pointer;"><i class="fa fa-caret-down graphtoggle"></i>&nbsp;&nbsp;Graphs</span>
-        </h5>
         <br />
     </div>
-    <div id="pie_graphs" class="row-fluid">
-        <div class="well span5 offset1">
-            <div id="pie_flags" style="height:300px;">
-                <!-- Pie Chart Here -->
-            </div>
-        </div>
-        <div class="well span5">
-            <div id="pie_money" style="height:300px;">
-                <!-- Pie Chart Here -->
-            </div>
-        </div>
-    </div>
+   
     <div class="row-fluid">
-        <div class="well {% if options.teams and options.show_mvp %}span7{% else %}span10{% end %} offset1">
-            <table class="table table-striped">
+        <div class="well {% if options.teams and options.show_mvp %}span7{% else %}span10{% end %} offset1" style="padding-left: 30px; padding-right: 30px;">
+            <table id="summary_table" class="table table-striped">
                 <thead>
-                    <tr>
-                        <th style="text-align: center;">#&nbsp;&nbsp;&nbsp;</th>
-                        <th>
+                    <tr style="font-size: 120%;">
+                        <th class="anim:position anim:update" style="text-align: center;"><i class="fa fa-trophy" style="font-size: 140%; margin-left: -10px; margin-top: -10px;"></i></th>
+                        <th class="anim:id" style="display:none;"><!-- UUID --></th>
+                        <th class="anim:constant">
                             {% if options.teams %}
                                 Team
                             {% else %}
                                 Player
                             {% end %}
                         </th>
-                        <th></th><th></th>
-                        {% if options.use_bots %}
-                            <th style="text-align: center;">Bots</th>
-                        {% end %}
-                        <th style="text-align: center;">Flags</th>
-                        <th id="bankname">
+                        <th class="anim:constant" style="text-align: center;{% if not options.use_bots %} display: none;{% end %}">Bots</th>
+                        <th class="anim:constant" style="text-align: center;">Flags</th>
+                        <th class="anim:constant" style="text-align: center;">
                             {% if options.banking %}
                                 Bank Account
                             {% else %}
                                 Score
                             {% end %}
                         </th>
-                        <th><!-- Details --></th>
+                        <th class="anim:update"><!-- Details --></th>
                     </tr>
                 </thead>
-                <tbody id="summary_table">
+                <tbody id="summary_tbody" >
                     <!-- AJAX -->
                 </tbody>
             </table>

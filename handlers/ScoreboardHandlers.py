@@ -55,7 +55,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         if self.application.settings['freeze_scoreboard']:
             self.write_message("pause")
         else:
-            self.write_message(Scoreboard.now())
+            self.write_message(Scoreboard.now(self))
 
     def on_message(self, message):
         ''' We ignore messages if there are more than 1 every 3 seconds '''
@@ -63,7 +63,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
-            self.write_message(Scoreboard.now())
+            self.write_message(Scoreboard.now(self))
 
     def on_close(self):
         ''' Lost connection to client '''
@@ -77,8 +77,11 @@ class ScoreboardHandler(BaseHandler):
     ''' Main summary page '''
 
     def get(self, *args, **kargs):
-        if scoreboard_visible(self.get_current_user()):
+        user = self.get_current_user()
+        if scoreboard_visible(user):
             self.render('scoreboard/summary.html', timer=self.timer())
+        elif not user:
+            self.redirect('/login')
         else:
             self.render('public/404.html')
 
@@ -168,8 +171,11 @@ class ScoreboardAjaxHandler(BaseHandler):
 class ScoreboardHistoryHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        if scoreboard_visible(self.get_current_user()):
+        user = self.get_current_user()
+        if scoreboard_visible(user):
             self.render('scoreboard/history.html', timer=self.timer())
+        elif not user:
+            self.redirect('/login')
         else:
             self.render('public/404.html')
 
@@ -211,7 +217,8 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
     @use_black_market
     def get(self, *args, **kwargs):
         ''' Optionally order by argument; defaults to date/time '''
-        if scoreboard_visible(self.get_current_user()):
+        user = self.get_current_user()
+        if scoreboard_visible(user):
             order = self.get_argument('order_by', '').lower()
             if order == 'prize':
                 sheep = WallOfSheep.all_order_value()
@@ -223,6 +230,8 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
             self.render('scoreboard/wall_of_sheep.html',
                         leaderboard=leaderboard,
                         flock=sheep)
+        elif not user:
+            self.redirect('/login')
         else:
             self.render('public/404.html')
 
@@ -256,8 +265,11 @@ class ScoreboardPauseHandler(WebSocketHandler):
 class TeamsHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
-        if scoreboard_visible(self.get_current_user()):
+        user = self.get_current_user()
+        if scoreboard_visible(user):
             self.render('scoreboard/teams.html', timer=self.timer())
+        elif not user:
+            self.redirect('/login')
         else:
             self.render('public/404.html')
 

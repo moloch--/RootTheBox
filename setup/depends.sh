@@ -54,7 +54,7 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   apt-get install python-pip python-dev build-essential "$SKIP"
 
   echo "[*] Installing packages..."
-  apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev libmysqlclient-dev "$SKIP"
+  apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev default-libmysqlclient-dev "$SKIP"
 
 elif [[ ${OSTYPE} == "darwin14" ]]; then
   echo -e "\t#########################"
@@ -80,9 +80,9 @@ echo "[*] Installing python libs..."
 #sh "$current_path/python-depends.sh"
 python_version="$(python -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
 if [[ "$python_version" == "2" ]]; then
-    sh "$current_path/python2-depends.sh"
+    pip2 install -r "$current_path/requirements.txt" --upgrade
 else
-    sh "$current_path/python3-depends.sh"
+    pip3 install -r "$current_path/requirements.txt" --upgrade
 fi
 
 echo ""

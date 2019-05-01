@@ -16,6 +16,7 @@
             <script src="/static/js/libs/html5.js"></script>
         <![endif]-->
         <script src="/static/js/jquery.min.js" type="text/javascript"></script>
+        <script src="/static/js/jquery-ui.min.js"></script> <!-- load before bootstrap -->
         <script src="/static/js/underscore.min.js" type="text/javascript"></script>
         <script src="/static/js/backbone.min.js" type="text/javascript"></script>
         <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
@@ -38,7 +39,6 @@
                 <a href="http://root-the-box.com" target="_blank">
                     Root the Box
                 </a> &copy; {{ datetime.date.today().year }} -
-                <a href="/about">Version {{ handler.application.settings['version'] }}</a> -
                 <a href="https://github.com/moloch--/RootTheBox" target="_blank">Source Code</a> -
                 <a href="https://github.com/moloch--/RootTheBox/issues" target="_blank">Submit a Bug</a>
                 <span style="float:right; padding-right: 5px;">{% raw options.org_footer %}</span>

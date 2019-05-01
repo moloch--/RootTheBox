@@ -188,7 +188,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             self.write({"error": "Source account does not exist"})
         elif destination is None:
             self.write({"error": "Destination account does not exist"})
-        elif victim_user is None or not victim_user in source.members:
+        elif victim_user is None or victim_user not in source.members:
             self.write({"error": "User is not authorized for this account"})
         elif victim_user in user.team.members:
             self.write({"error": "You cannot steal from your own team"})

@@ -169,7 +169,7 @@ class RegistrationHandler(BaseHandler):
     def create_user(self):
         ''' Add user to the database '''
         if User.by_handle(self.get_argument('handle', '')) is not None:
-            raise ValidationError("This hacker name is already registered")
+            raise ValidationError("This handle is already registered")
         if self.get_argument('pass1', '') != self.get_argument('pass2', ''):
             raise ValidationError("Passwords do not match")
         user = User()
@@ -203,13 +203,15 @@ class RegistrationHandler(BaseHandler):
 
     def get_team(self):
         ''' Create a team object, or pull the existing one '''
-        team = Team.by_uuid(self.get_argument('team', ''))
         code = self.get_argument('team-code', '')
-        if team is not None and self.config.max_team_size <= len(team.members):
-            raise ValidationError("Team %s is already full" % team.name)
-        elif team is not None and team.code != code:
-            raise ValidationError("Invalid team code for %s" % team.name)
-        return team if team is not None else self.create_team()
+        if len(code) > 0:
+            team = Team.by_code(code)
+            if not team:
+                raise ValidationError("Invalid team code")
+            elif self.config.max_team_size <= len(team.members):
+                raise ValidationError("Team %s is already full" % team.name)
+            return team
+        return self.create_team()
 
     def create_team(self):
         ''' Create a new team '''
@@ -238,7 +240,7 @@ class RegistrationHandler(BaseHandler):
             return team
         elif self.config.public_teams:
             if Team.by_name(self.get_argument('team_name', '')) is not None:
-                raise ValidationError("This team name is already registered")
+                raise ValidationError("This team name is already registered.  Use team code to join that team.")
             team = Team()
             team.name = self.get_argument('team_name', '')
             team.motto = self.get_argument('motto', '')

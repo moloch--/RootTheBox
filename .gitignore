@@ -1,6 +1,9 @@
 # Bytecode
 *.py[co]
 
+# Leftovers from merges
+*.orig
+
 # File uploads and what not
 files/avatars/*-*
 files/avatars/user/*-*
