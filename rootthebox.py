@@ -355,6 +355,12 @@ define("org_footer",
        help="Organization footer - righthand text / html",
        type=game_type)
 
+define("story_character",
+       default="/static/images/morris.jpg",
+       group="game",
+       help="the character image displayed on the communication dialog",
+       type=game_type)
+
 define("chat_url",
        default="",
        group="game",

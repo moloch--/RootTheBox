@@ -10,9 +10,11 @@
 {% end %}
 
 {% block content %}
+{% from tornado.options import options %}
 <div class="container">
     <br />
     <div class="well">
+    <span style="float: right; padding-right: 6px; margin-top: -15px;"><button id="closebutton" type="button" class="close"><h2>×</h2></button></span>
         <h3>
             <i class="fa fa-globe"></i>
             Incoming Transmission
@@ -21,7 +23,18 @@
         <input id="usebots" type="hidden" value="{{ str(bots).lower() }}" />
         <input id="handle" type="hidden" value="{{ user.handle }}" />
         <input id="reward" type="hidden" value="{{ reward }}" />
-        <div id="console" style="width: auto; height: 500px;">
+        <div class="terminalbg">
+            <div class="terminalimage c-glitch" style="background-image: url('{{ options.story_character }}');">
+                <div class="terminalimage c-glitch__img" style="background-image: url('{{ options.story_character }}');"></div>
+                <div class="terminalimage c-glitch__img" style="background-image: url('{{ options.story_character }}');"></div>
+                <div class="terminalimage c-glitch__img" style="background-image: url('{{ options.story_character }}');"></div>
+                <div class="terminalimage c-glitch__img" style="background-image: url('{{ options.story_character }}');"></div>
+                <div class="terminalimage c-glitch__img" style="background-image: url('{{ options.story_character }}');"></div>
+            </div>
+            <div class="terminaloverlay">
+                <br/>
+                <div id="console" class="consoleview">
+            </div>
         </div>
     </div>
 </div>

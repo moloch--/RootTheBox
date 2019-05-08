@@ -276,7 +276,7 @@
                 {% for index, flag in enumerate(box.flags) %}
                     {% set penalty = Penalty.by_count(flag, team) %}
                     <tbody class="flagbody">
-                        <tr{% if team and flag in team.flags %} class="flag-expand" style="cursor: pointer;"{% end %}>
+                        <tr {% if team and flag in team.flags %}class="flag-expand" style="cursor: pointer;"{% end %}>
                         {% if team and flag in team.flags %}
                             <td class="hidehovercolor" style="background: green; margin: 0px; padding: 0px; min-width: 6px;"></td>
                         {% elif box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and penalty >= options.max_flag_attempts %}
@@ -321,6 +321,11 @@
                                                     {% end %}
                                                 {% end %}
                                             {% end %}
+                                        {% elif len(flag.capture_message) > 0 %}
+                                            <a class="btn btn-mini playstory" href="captured?flag={{ flag.uuid }}&reward={{ flag.value }}">
+                                                <i class="fa fa-play"></i>
+                                                Story
+                                            </a>
                                         {% end %}
                                     </td>
                                 
@@ -346,7 +351,7 @@
                         </tr>
                         {% if team and flag.lock_id and not Flag.by_id(flag.lock_id) in team.flags %}
                         {% else %}
-                        <tr{% if team and flag in team.flags %} class="flag-collapse" style="display: none;"{% end %}>
+                        <tr {% if team and flag in team.flags %}class="flag-collapse" style="display: none;"{% end %}>
                             {% if team and flag in team.flags %}
                             <td class="hidehovercolor" style="background: green; margin: 0px; padding: 0px; border-top: 1px solid green;"></td>
                             <td style="border-top: 0px;"></td>
@@ -377,7 +382,7 @@
                             {% for hint in flaghints %}
                                 {% if hint.flag_id == flag.id %}
                                     {% if user.is_admin() or flag in team.flags or hint in team.hints %}
-                                        <tr{% if team and flag in team.flags %} class="flag-collapse" style="display: none;"{% end %}>
+                                        <tr {% if team and flag in team.flags %}class="flag-collapse" style="display: none;"{% end %}>
                                             {% if team and flag in team.flags %}
                                             <td class="hidehovercolor" style="background: green; margin: 0px; padding: 0px; border-top: 1px solid green;"></td>
                                             <td style="border-top: 0px;"></td>

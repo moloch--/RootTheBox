@@ -40,8 +40,10 @@ $(document).ready(function() {
     });
 
     $(".flag-expand").click(function() {
-        $(this).next(".flag-collapse").toggle();
-        $(this).next().next(".flag-collapse").toggle();
+        if (!$('.playstory').is(':hover')) {
+            $(this).next(".flag-collapse").toggle();
+            $(this).next().next(".flag-collapse").toggle();
+        }
     });
 
     $(".showflag").click(function() {
