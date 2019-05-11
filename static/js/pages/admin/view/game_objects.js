@@ -347,8 +347,13 @@ $(document).ready(function() {
     },
         updateIndex = function(e, ui) {
             $('td.index', ui.item.parent()).each(function (i) {
-                $(this).text(i + 1);
-                data = {'uuid': $(this).data("uuid"), 'order': (i+1), '_xsrf': getCookie("_xsrf")};
+                var inc = i+1;
+                $(this).text(inc);
+                var flagname = $(this).next().next();
+                if (flagname.text().startsWith("Question ")) {
+                    flagname.text("Question " + inc);
+                }
+                data = {'uuid': $(this).data("uuid"), 'order': (inc), '_xsrf': getCookie("_xsrf")};
                 $.post('/admin/edit/flag_order', data);
             });
         };

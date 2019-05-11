@@ -30,6 +30,7 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String, Boolean, Enum
+from sqlalchemy.sql.expression import nullslast
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Relationships import team_to_box
@@ -92,7 +93,7 @@ class Box(DatabaseObject):
 
     flags = relationship("Flag",
                          backref=backref("box", lazy="select"),
-                         cascade="all,delete,delete-orphan", order_by="Flag._order"
+                         cascade="all,delete,delete-orphan", order_by="desc(-Flag._order)",
                          )
 
     flag_submission_type = Column(Enum(FlagsSubmissionType), default=FlagsSubmissionType.CLASSIC)

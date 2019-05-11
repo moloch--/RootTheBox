@@ -70,7 +70,7 @@ class Flag(DatabaseObject):
     box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
     lock_id = Column(Integer, ForeignKey('flag.id', ondelete="SET NULL"), nullable=True)
 
-    _name = Column(Unicode(64), nullable=False)
+    _name = Column(Unicode(64), nullable=True)
     _token = Column(Unicode(256), nullable=False)
     _description = Column(Unicode(1024), nullable=False)
     _capture_message = Column(Unicode(512))
@@ -234,12 +234,17 @@ class Flag(DatabaseObject):
 
     @property
     def name(self):
-        return self._name
+        if self._name and len(self._name) > 0:
+            return self._name
+        elif self.order:
+            return ("Question %d" % self.order)
+        else:
+            return ("Question %d" % (self.box.flags.index(self) + 1))
 
     @name.setter
     def name(self, value):
-        if not 3 <= len(value) <= 16:
-            raise ValidationError("Flag name must be 3 - 16 characters")
+        if not len(value) <= 16:
+            raise ValidationError("Flag name must be less than 16 characters")
         self._name = unicode(value)
 
     @property
