@@ -40,7 +40,7 @@ $(document).ready(function() {
     });
 
     $(".flag-expand").click(function() {
-        if (!$('.playstory').is(':hover')) {
+        if ($('.playstory').length === 0 || !$('.playstory').is(':hover')) {
             $(this).next(".flag-collapse").toggle();
             $(this).next().next(".flag-collapse").toggle();
         }
