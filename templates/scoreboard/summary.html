@@ -22,7 +22,14 @@
     </div>
    
     <div class="row-fluid">
-        <div class="well {% if options.teams and options.show_mvp %}span7{% else %}span10{% end %} offset1" style="padding-left: 30px; padding-right: 30px;">
+        {% if len(options.scoreboard_right_image) > 0 %}
+            {% set wellspan="span7" %}
+        {% elif options.teams and options.show_mvp %}
+            {% set wellspan="span7" %}
+        {% else %}
+            {% set wellspan="span10" %}
+        {% end %}
+        <div class="well {{wellspan}} offset1" style="padding-left: 30px; padding-right: 30px;">
             <table id="summary_table" class="table table-striped">
                 <thead>
                     <tr style="font-size: 120%;">
@@ -52,7 +59,11 @@
                 </tbody>
             </table>
         </div>
-        {% if options.teams and options.show_mvp %}
+        {% if len(options.scoreboard_right_image) > 0 %}
+        <div class="well span3">
+            <img src="{{options.scoreboard_right_image}}">
+        </div>
+        {% elif options.teams and options.show_mvp %}
         <div class="well span3">
             <table class="table table-striped">
                 <thead>

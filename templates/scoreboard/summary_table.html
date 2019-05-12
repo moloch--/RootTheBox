@@ -16,7 +16,7 @@
                     <div class="summarycolumn" style="display: table-cell; font-size: large;">{{ team.name }}</div>
                     <!-- <div class="summarycolumn" style="display: table-cell;">{{ team.levels[-1].number }} </div> -->
                     <div class="summarycolumn shortcolumn" style="display: table-cell; vertical-align: bottom; font-size: small;">
-                        {% if options.hints_taken and hintcount > 0 %}<span class="hintcol">{{ len(team.hints) }} Hints Taken</span>{% end %}<span {% if options.hints_taken and hintcount > 0 %}class="lastflagcol" style="display: none;"{% end %}></span>
+                        {% if options.hints_taken and hintcount > 0 %}<span class="hintcol">{{ len(team.hints) }} Hints Taken</span>{% end %}<span id="last-{{team.uuid}}" {% if options.hints_taken and hintcount > 0 %}class="lastflagcol" style="display: none;"{% end %}></span>
                     </div>
                 </div>
             </div>

@@ -391,6 +391,12 @@ define("show_mvp",
        help="display the mvp list on scoreboard",
        type=bool)
 
+define("scoreboard_right_image",
+       default="",
+       group="game",
+       help="display image to right of scoreboard (disables show_mvp)",
+       type=game_type)
+
 define("show_captured_flag",
        default=False,
        group="game",
