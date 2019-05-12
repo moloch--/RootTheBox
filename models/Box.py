@@ -27,10 +27,10 @@ import xml.etree.cElementTree as ET
 
 from os import urandom
 from uuid import uuid4
+from collections import OrderedDict
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String, Boolean, Enum
-from sqlalchemy.sql.expression import nullslast
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Relationships import team_to_box
@@ -145,7 +145,7 @@ class Box(DatabaseObject):
     @classmethod
     def flaglist(self, box_id=None):
         flags = self.by_id(box_id).flags
-        flaglist = {}
+        flaglist = OrderedDict()
         for flag in flags:
             flaglist[flag.uuid] = flag.name
         return flaglist
