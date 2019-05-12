@@ -78,6 +78,21 @@ class BoxHandler(BaseHandler):
 class FlagSubmissionHandler(BaseHandler):
 
     @authenticated
+    def get(self, *args, **kwargs):
+        uuid = self.get_argument('flag', None)
+        reward = self.get_argument('reward', None)
+        user = self.get_current_user()
+        flag = Flag.by_uuid(uuid)
+        if flag is not None and flag in user.team.flags:
+            self.add_content_policy('script', "'unsafe-eval'")
+            if self.config.story_mode and flag.capture_message and len(flag.capture_message) > 0:
+                self.render('missions/captured.html',
+                            flag=flag,
+                            reward=reward)
+                return
+        self.render('public/404.html')
+
+    @authenticated
     def post(self, *args, **kwargs):
         ''' Check validity of flag submissions '''
         box_id = self.get_argument('box_id', None)

@@ -173,10 +173,10 @@ class GameLevel(DatabaseObject):
         return {
             'uuid': self.uuid,
             'number': self.number,
-            'name': self._name,
+            'name': self.name,
             'buyout': self.buyout,
-            'type': self._type,
-            'reward': self._reward,
+            'type': self.type,
+            'reward': self.reward,
             'last_level': last_level
         }
 
