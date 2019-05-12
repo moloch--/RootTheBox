@@ -173,7 +173,6 @@ function updateLastFlag() {
             if (money !== 0) {
                 var now = highlights["now"];
                 var diff = now - money;
-                console.log(setTimer(diff));
                 var last = $("#last-" + game_data[team]["uuid"]);
                 last.text(timeConversion(diff) + " Since Score");
                 highlights["now"] = now + 1000;
