@@ -355,6 +355,12 @@ define("org_footer",
        help="Organization footer - righthand text / html",
        type=game_type)
 
+define("story_character",
+       default="/static/images/morris.jpg",
+       group="game",
+       help="the character image displayed on the communication dialog",
+       type=game_type)
+
 define("chat_url",
        default="",
        group="game",
@@ -384,6 +390,12 @@ define("show_mvp",
        group="game",
        help="display the mvp list on scoreboard",
        type=bool)
+
+define("scoreboard_right_image",
+       default="",
+       group="game",
+       help="display image to right of scoreboard (disables show_mvp)",
+       type=game_type)
 
 define("show_captured_flag",
        default=False,

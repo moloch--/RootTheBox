@@ -2,6 +2,7 @@ var glowtime = 30000;  //time score glows in ms
 var fadetext = 20000;  //interval between hints taken / time since last capture fade effects
 var scoretext = true;
 var ranking = "";
+var game_data = [];
 var tableOptions = {
     onComplete: function(){ /*do nothing*/ },
     duration: [1000, 0, 700, 0, 500], //The milliseconds to do each phase and the delay between them
@@ -50,7 +51,7 @@ $(document).ready(function() {
                 
                 /* Update Summary Table */
                 $.get("/scoreboard/ajax/summary", function(table_data) {
-                    highlight_table = highlights(game_data, table_data);
+                    highlight_table = highlights(table_data);
                     if ($("#summary_tbody").find('tr').length == 0) {
                         $("#summary_tbody").html(highlight_table);
                         ranking = getRanking(table_data);
@@ -79,20 +80,23 @@ $(document).ready(function() {
             }
         };
         setTimeout(changeDisplay, fadetext);
+        setTimeout(updateLastFlag, 1000);
     }
 });
 
 function changeDisplay() {
-    if (scoretext) {
-        $(".hintcol").fadeOut("slow", function() {
-            $(".lastflagcol").fadeIn("slow");
-        });
-    } else {
-        $(".lastflagcol").fadeOut("slow", function() {
-            $(".hintcol").fadeIn("slow");
-        });
+    if ($(".lastflagcol").text().length > 0) {
+        if (scoretext) {
+            $(".hintcol").fadeOut("slow", function() {
+                $(".lastflagcol").fadeIn("slow");
+            });
+        } else {
+            $(".lastflagcol").fadeOut("slow", function() {
+                $(".hintcol").fadeIn("slow");
+            });
+        }
+        scoretext = !scoretext;
     }
-    scoretext = !scoretext;
     setTimeout(function () {     
         changeDisplay();
     }, fadetext);
@@ -106,7 +110,7 @@ function getRanking(table_data) {
     return new_rank;
 }
 
-function highlights(game_data, table_data) {
+function highlights(table_data) {
     var table_data = $(table_data);
     //Set color of minibar
     $(table_data).find(".minibar").each(function() {
@@ -133,12 +137,6 @@ function highlights(game_data, table_data) {
             for (item in highlights) {
                 if (item !== "now") {
                     var diff = now - highlights[item];
-                    if (item === "money") {
-                        var lastflag = $(table_data).siblings("#" + game_data[team]["uuid"]).find(".lastflagcol");
-                        if (highlights[item] !== 0) {
-                            lastflag.text(timeConversion(diff) + " Since Score");
-                        }
-                    }
                     if (diff < glowtime) {
                         var column = $(table_data).siblings("#" + game_data[team]["uuid"]).find("." + item + "col");
                         if (!$(column).hasClass("glow")) {
@@ -167,6 +165,23 @@ function highlights(game_data, table_data) {
     return table_data;
 }
 
+function updateLastFlag() {
+    for (team in game_data) {
+        if ("highlights" in game_data[team]) {
+            var highlights = game_data[team]["highlights"];
+            var money = highlights["money"];
+            if (money !== 0) {
+                var now = highlights["now"];
+                var diff = now - money;
+                var last = $("#last-" + game_data[team]["uuid"]);
+                last.text(timeConversion(diff) + " Since Score");
+                highlights["now"] = now + 1000;
+            }
+        }
+    }
+    setTimeout(updateLastFlag, 1000);
+}
+
 function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }
@@ -182,14 +197,14 @@ function setTimer(distance) {
         // Display the result in the element with id="demo"
         var hourval = "";
         if (hours > 0) {
-        hourval = hours + "h ";
+            hourval = hours + "h ";
         }
         $("#timercount").text(hourval + padDigits(minutes,2) + "m " + padDigits(seconds,2) + "s ");
 
         // If the count down is finished, write some text
         if (distance < 0) {
-        clearInterval(x);
-        $("#timercount").text("EXPIRED");
+            clearInterval(x);
+            $("#timercount").text("EXPIRED");
         }
         distance = distance - 1000;
     }, 1000);
@@ -207,7 +222,7 @@ function timeConversion(s) {
         }
     }
 
-    var s = s / 1000;
+    var s = parseInt(s / 1000);
     var secs = s % 60;
     s = (s - secs) / 60;
     var mins = s % 60;

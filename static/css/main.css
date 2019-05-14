@@ -11,12 +11,17 @@ footer {
 .footernav {
     padding: 5px 20px;
 }
-.shortcolumn{
+.shortcolumn {
     width: 1px;
     white-space: nowrap;
 }
-.descriptioncol{
+.descriptioncol {
     white-space: pre-wrap;
+    word-wrap: break-word; 
+    max-width: 500px;
+}
+.wordbreak {
+    word-wrap: break-word; 
 }
 .successtext {
     font-size: 225%;
@@ -45,4 +50,19 @@ footer {
     white-space: pre-wrap;
     display: block;
     margin: 1em 0;
+}
+
+code,
+pre {
+    background-color: #000 !important;
+    font-family: unset !important;
+    font-size: unset !important;
+    padding: 0px 6px 1px 5px !important;
+    white-space: pre-wrap !important;
+
+}
+
+code {
+    color: #f52323 !important;
+    border: 1px solid #979797 !important;
 }
