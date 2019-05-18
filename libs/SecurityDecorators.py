@@ -53,6 +53,8 @@ def authenticated(method):
                 logging.warn("Session hijack attempt from %s?" % (
                     self.request.remote_ip,
                 ))
+                self.session.delete()
+                self.clear_all_cookies()
                 self.redirect(self.application.settings['login_url'])
         else:
             self.redirect(self.application.settings['login_url'])
