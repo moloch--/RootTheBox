@@ -120,12 +120,12 @@ class FlagSubmissionHandler(BaseHandler):
             old_reward = flag.value if flag is not None else 0
             if flag is not None and self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
+                success = self.success_capture(flag, old_reward)
                 if self.config.story_mode and flag.capture_message and len(flag.capture_message) > 0:
                     self.render('missions/captured.html',
                                 flag=flag,
-                                reward=old_reward)
-                else:
-                    success = self.success_capture(flag, old_reward)
+                                reward=old_reward, success=success)
+                else:  
                     self.render_page_by_flag(flag, success=success)
             else:
                 if flag is None or Penalty.by_token_count(flag, user.team, submission) == 0:
