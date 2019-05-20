@@ -70,6 +70,7 @@ class Box(DatabaseObject):
     _name = Column(Unicode(32), unique=True, nullable=False)
     _operating_system = Column(Unicode(16))
     _description = Column(Unicode(1024))
+    _capture_message = Column(Unicode(1024))
     _difficulty = Column(Unicode(16))
     game_level_id = Column(
         Integer, ForeignKey('game_level.id'), nullable=False)
@@ -204,6 +205,14 @@ class Box(DatabaseObject):
         if 17 < len(value):
             raise ValidationError("Difficulty cannot be greater than 16 characters")
         self._difficulty = unicode(value)
+
+    @property
+    def capture_message(self):
+        return self._capture_message if self._capture_message else ''
+
+    @capture_message.setter
+    def capture_message(self, value):
+        self._capture_message = unicode(value)
 
     @property
     def avatar(self):

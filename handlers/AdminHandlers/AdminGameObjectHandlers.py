@@ -185,6 +185,7 @@ class AdminCreateHandler(BaseHandler):
                 box.flag_submission_type = FlagsSubmissionType[self.get_argument('flag_submission_type','')]
                 box.difficulty = self.get_argument('difficulty', '')
                 box.operating_system = self.get_argument('operating_system', '?')
+                box.capture_message = self.get_argument('capture_message', '')
                 cat = Category.by_uuid(self.get_argument('category_uuid', ''))
                 if cat is not None:
                     box.category_id = cat.id
@@ -514,6 +515,13 @@ class AdminEditHandler(BaseHandler):
                     box.name, box.flag_submission_type, flag_submission_type
                 ))
                 box.flag_submission_type = flag_submission_type
+            # Capture Message
+            capture_message = self.get_argument('capture_message', '')
+            if capture_message != box.capture_message:
+                logging.info("Updated %s's capture message %s -> %s" % (
+                    box.name, box.capture_message, capture_message,
+                ))
+                box.capture_message = capture_message
             # Avatar
             avatar_select = self.get_argument('box_avatar_select', '')
             if avatar_select and len(avatar_select) > 0:
