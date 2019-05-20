@@ -102,7 +102,7 @@ function updateGitStatus() {
             status = '<hr /><i class="fa fa-check-circle gitstatus ok"></i>&nbsp;&nbsp;Root the Box is up to date.';
         } else {
             status = '<hr /><i class="fa fa-exclamation-circle gitstatus warn"></i>&nbsp;&nbsp;' +
-                '<span title="commands: git fetch ; git status">' + status + '</span>';
+                '<span title="commands: git fetch ; git status">git: ' + status + '</span>';
         }
         $("#gitstatus").html(status);
     });
