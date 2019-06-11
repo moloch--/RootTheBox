@@ -76,14 +76,25 @@ class FlagSubmissionHandler(BaseHandler):
 
     @authenticated
     def get(self, *args, **kwargs):
-        uuid = self.get_argument('flag', None)
+        fuuid = self.get_argument('flag', None)
+        buuid = self.get_argument('box', None)
         reward = self.get_argument('reward', None)
         user = self.get_current_user()
-        flag = Flag.by_uuid(uuid)
-        if flag is not None and flag in user.team.flags:
-            self.add_content_policy('script', "'unsafe-eval'")
-            if self.config.story_mode and flag.capture_message and len(flag.capture_message) > 0:
+        box = Box.by_uuid(buuid)
+        flag = Flag.by_uuid(fuuid)
+        if box is not None and box.is_complete(user):
+            if self.config.story_mode and len(box.capture_message) > 0:
+                self.add_content_policy('script', "'unsafe-eval'")
                 self.render('missions/captured.html',
+                            box=box,
+                            flag=None,
+                            reward=reward)
+                return
+        elif flag is not None and flag in user.team.flags:
+            if self.config.story_mode and len(flag.capture_message) > 0:
+                self.add_content_policy('script', "'unsafe-eval'")
+                self.render('missions/captured.html',
+                            box=None,
                             flag=flag,
                             reward=reward)
                 return
@@ -121,12 +132,18 @@ class FlagSubmissionHandler(BaseHandler):
             if flag is not None and self.attempt_capture(flag, submission):
                 self.add_content_policy('script', "'unsafe-eval'")
                 success = self.success_capture(flag, old_reward)
-                if self.config.story_mode and flag.capture_message and len(flag.capture_message) > 0:
-                    self.render('missions/captured.html',
-                                flag=flag,
-                                reward=old_reward, success=success)
-                else:  
-                    self.render_page_by_flag(flag, success=success)
+                if self.config.story_mode:
+                    box = flag.box
+                    if not (len(box.capture_message) > 0 and box.is_complete(user)):
+                        box = None
+                    has_capture_message = len(flag.capture_message) > 0 or box is not None
+                    if has_capture_message:
+                        self.render('missions/captured.html',
+                                    flag=flag,
+                                    box=box,
+                                    reward=old_reward, success=success)  
+                        return
+                self.render_page_by_flag(flag, success=success)
             else:
                 if flag is None or Penalty.by_token_count(flag, user.team, submission) == 0:
                     if self.config.teams:
@@ -172,13 +189,8 @@ class FlagSubmissionHandler(BaseHandler):
         success = [reward_dialog]
 
         # Check for Box Completion
-        boxcomplete = True
         box = flag.box
-        for boxflag in box.flags:
-            if not boxflag in user.team.flags:
-                boxcomplete = False
-                break
-        if boxcomplete:
+        if box.is_complete(user):
             success.append("Congratulations! You have completed " + box.name + ".")
 
         # Check for Level Completion

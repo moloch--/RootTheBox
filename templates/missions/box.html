@@ -154,7 +154,15 @@
                 <a style="float:right; margin-top: 10px;"  class="btn" href="/admin/view/game_objects#{{ box.uuid }}">Return to Edit</a>
             {% end %}
         </h1>
-        {% if box.category %}<div style="margin-top: -5px; margin-bottom: -5px;">{{ box.category }}</div>{% end %}<br />
+        <div style="margin-top: -5px; margin-bottom: -5px;">
+            {% if options.story_mode and len(box.capture_message) > 0 and box.is_complete %}
+                <a class="btn btn-mini playstory" href="captured?box={{ box.uuid }}">
+                    <i class="fa fa-play"></i>
+                    Story
+                </a>&nbsp;&nbsp;
+            {% end %}
+            {% if box.category %}{{ box.category }}{% end %}
+        </div><br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error">

@@ -269,6 +269,14 @@ class Box(DatabaseObject):
             self.name.encode('hex'), self.garbage
         )
 
+    def is_complete(self, user):
+        boxcomplete = True
+        for boxflag in self.flags:
+            if not boxflag in user.team.flags:
+                boxcomplete = False
+                break
+        return boxcomplete
+
     def to_xml(self, parent):
         ''' Convert object to XML '''
         box_elem = ET.SubElement(parent, "box")

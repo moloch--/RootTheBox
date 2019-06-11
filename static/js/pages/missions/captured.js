@@ -4,17 +4,23 @@ function text_animation(term) {
     var reward = $('#reward').val();
     var msg = $('#capture-message').val();
     var banking = $('#banking').val();
-    var intro_frames = [
-        "I have received the '" + flag + "' information.",
-        "  "
-    ];
-    if (banking === "$") {
-        intro_frames.push("This is acceptable and I have transfered $" + reward + " to your\naccount.", " ");
-    } else {
-        intro_frames.push("This is acceptable and I have added " + reward + " points to your\nscore.", " ");
+    var intro_frames = [];
+    if (flag.length > 0) {
+        intro_frames.push("I have received the '" + flag + "' information.");
+        intro_frames.push("  ");
+        if (reward.length > 0) {
+            if (banking === "$") {
+                intro_frames.push("This is acceptable and I have transfered $" + reward + " to your\naccount.", " ");
+            } else {
+                intro_frames.push("This is acceptable and I have added " + reward + " points to your\nscore.", " ");
+            }
+        }
     }
     if (msg.toString() !== "" && msg.toString() !== "None") {
-        intro_frames.push(msg.toString(), " ");
+        msgsplit = msg.toString().split("\n\n")
+        for (x in msgsplit) {
+            intro_frames.push(msgsplit[x], " ");
+        }
     }
     
     intro_frames.push("Good hunting,\n    -Morris", " ");
@@ -62,7 +68,12 @@ function greetings(term) {
 
 $(document).ready(function() {
     $("#closebutton").click(function(){
-        window.location = '/user/missions/boxes?uuid=' + $(this).val();
+        if ($(this).val().length > 0) {
+            window.location = '/user/missions/boxes?uuid=' + $(this).val();
+        } else {
+            window.location = '/user/missions';
+        }
+        
     });
     $('#console').terminal({
         /* No commands just animation */
