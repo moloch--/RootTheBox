@@ -101,6 +101,9 @@ function updateGitStatus() {
         } else if (status.includes("Your branch is up to date")) {
             status = '<hr /><i class="fa fa-check-circle gitstatus ok"></i>&nbsp;&nbsp;Root the Box is up to date.';
         } else {
+            if (status.indexOf(":") > 0) {
+                status = status.slice(0,status.indexOf(":")) + "."
+            }
             status = '<hr /><i class="fa fa-exclamation-circle gitstatus warn"></i>&nbsp;&nbsp;' +
                 '<span title="commands: git fetch ; git status">git: ' + status + '</span>';
         }

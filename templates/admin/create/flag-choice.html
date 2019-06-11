@@ -51,9 +51,9 @@
                                     data-original-title="Box"
                                     data-content="This is the box the flag is located on.">
                                 <option value=""></option>
-                                {% for box in Box.all() %}
-                                <option value="{{ box.uuid }}">
-                                    {{ box.name }}{% if box.corporation.name != "" %} ({{ box.corporation.name }}){% end %}
+                                {% for thebox in Box.all() %}
+                                <option value="{{ thebox.uuid }}"{% if box and box.uuid == thebox.uuid %} selected{% end %}>
+                                    {{ thebox.name }}{% if thebox.corporation.name != "" %} ({{ thebox.corporation.name }}){% end %}
                                 </option>
                                 {% end %}
                             </select>
