@@ -75,6 +75,7 @@ class Box(DatabaseObject):
     _name = Column(Unicode(32), unique=True, nullable=False)
     _operating_system = Column(Unicode(16))
     _description = Column(Unicode(1024))
+    _capture_message = Column(Unicode(1024))
     _difficulty = Column(Unicode(16))
     game_level_id = Column(
         Integer, ForeignKey('game_level.id'), nullable=False)
@@ -210,6 +211,14 @@ class Box(DatabaseObject):
         self._difficulty = str(value)
 
     @property
+    def capture_message(self):
+        return self._capture_message if self._capture_message else ''
+
+    @capture_message.setter
+    def capture_message(self, value):
+        self._capture_message = unicode(value)
+
+    @property
     def avatar(self):
         if self._avatar is not None:
             return self._avatar
@@ -266,6 +275,14 @@ class Box(DatabaseObject):
         return "[Bot]\nname = %s\ngarbage = %s\n" % (
             encode(self.name, 'hex'), self.garbage
         )
+
+    def is_complete(self, user):
+        boxcomplete = True
+        for boxflag in self.flags:
+            if not boxflag in user.team.flags:
+                boxcomplete = False
+                break
+        return boxcomplete
 
     def to_xml(self, parent):
         ''' Convert object to XML '''

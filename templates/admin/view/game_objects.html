@@ -207,6 +207,15 @@
                         <div id="avatarfilename" style="padding: 5px;"></div>
                     </div>
                 </div>
+                {% if options.story_mode %}
+                <div class="control-group">
+                    <label class="control-label" for="box-capture_message">Capture Message</label>
+                    <div class="controls">
+                        <textarea rows="4" id="box-capture_message" name="capture_message" placeholder="(Optional)">
+                        </textarea>
+                    </div>
+                </div>
+                {% end %}
             </form>
         </div>
         <div class="modal-footer">
@@ -634,7 +643,7 @@
                                         <i class="fa fa-flag-o"></i>
                                         Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;
                                     </h4>
-                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/flag">
+                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/flag?box={{box.uuid}}">
                                         <i class="fa fa-plus"></i>
                                         Add Flags
                                     </a>
