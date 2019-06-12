@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Sep 25, 2012
 
 @author: moloch
@@ -21,7 +21,7 @@ Created on Sep 25, 2012
 
 This file contains handlers related to the "Black Market" functionality
 
-'''
+"""
 
 
 import logging
@@ -34,47 +34,50 @@ from libs.SecurityDecorators import authenticated, use_black_market
 
 class MarketViewHandler(BaseHandler):
 
-    ''' Renders views of items in the market '''
+    """ Renders views of items in the market """
 
     @authenticated
     @use_black_market
     def get(self, *args, **kwargs):
-        ''' Renders the main table '''
+        """ Renders the main table """
         user = self.get_current_user()
-        self.render('market/view.html', user=user, errors=None)
+        self.render("market/view.html", user=user, errors=None)
 
     @authenticated
     @use_black_market
     def post(self, *args, **kwargs):
-        ''' Called to purchase an item '''
-        uuid = self.get_argument('uuid', '')
+        """ Called to purchase an item """
+        uuid = self.get_argument("uuid", "")
         item = MarketItem.by_uuid(uuid)
         if not item is None:
             user = self.get_current_user()
             team = Team.by_id(user.team.id)  # Refresh object
             if user.has_item(item.name):
-                self.render('market/view.html',
-                            user=user,
-                            errors=["You have already purchased this item."]
-                            )
+                self.render(
+                    "market/view.html",
+                    user=user,
+                    errors=["You have already purchased this item."],
+                )
             elif team.money < item.price:
                 message = "You only have $%d" % (team.money,)
-                self.render('market/view.html', user=user, errors=[message])
+                self.render("market/view.html", user=user, errors=[message])
             else:
-                logging.info("%s (%s) purchased '%s' for $%d" % (
-                    user.handle, team.name, item.name, item.price
-                ))
+                logging.info(
+                    "%s (%s) purchased '%s' for $%d"
+                    % (user.handle, team.name, item.name, item.price)
+                )
                 self.purchase_item(team, item)
                 self.event_manager.item_purchased(user, item)
-                self.redirect('/user/market')
+                self.redirect("/user/market")
         else:
-            self.render('market/view.html',
-                        user=self.get_current_user(),
-                        errors=["Item does not exist."]
-                        )
+            self.render(
+                "market/view.html",
+                user=self.get_current_user(),
+                errors=["Item does not exist."],
+            )
 
     def purchase_item(self, team, item):
-        ''' Conducts the actual purchase of an item '''
+        """ Conducts the actual purchase of an item """
         team.money -= abs(item.price)
         team.items.append(item)
         self.dbsession.add(team)
@@ -83,16 +86,16 @@ class MarketViewHandler(BaseHandler):
 
 class MarketDetailsHandler(BaseHandler):
 
-    ''' Renders views of items in the market '''
+    """ Renders views of items in the market """
 
     @authenticated
     @use_black_market
     def get(self, *args, **kwargs):
-        ''' Get details on an item '''
-        uuid = self.get_argument('uuid', '')
+        """ Get details on an item """
+        uuid = self.get_argument("uuid", "")
         item = MarketItem.by_uuid(uuid)
         if item is None:
-            self.write({'Error': 'Item does not exist.'})
+            self.write({"Error": "Item does not exist."})
         else:
             self.write(item.to_dict())
         self.finish()

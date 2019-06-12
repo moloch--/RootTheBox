@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Unit tests for everything in models/
-'''
+"""
 
 
 import unittest
@@ -12,12 +12,18 @@ from models.User import User
 from models.Corporation import Corporation
 from models.Box import Box
 from models.GameLevel import GameLevel
-from models.Flag import Flag, FLAG_STATIC, FLAG_REGEX, FLAG_FILE, FLAG_DATETIME, FLAG_CHOICE
+from models.Flag import (
+    Flag,
+    FLAG_STATIC,
+    FLAG_REGEX,
+    FLAG_FILE,
+    FLAG_DATETIME,
+    FLAG_CHOICE,
+)
 from tests.Helpers import *
 
 
 class TestTeam(unittest.TestCase):
-
     def setUp(self):
         self.team = create_team()
 
@@ -39,7 +45,6 @@ class TestTeam(unittest.TestCase):
 
 
 class TestUser(unittest.TestCase):
-
     def setUp(self):
         self.user = create_user()
 
@@ -67,7 +72,6 @@ class TestUser(unittest.TestCase):
 
 
 class TestGameLevel(unittest.TestCase):
-
     def setUp(self):
         self.game_level = GameLevel()
         self.game_level.number = 1
@@ -101,7 +105,6 @@ class TestGameLevel(unittest.TestCase):
 
 
 class TestCorporation(unittest.TestCase):
-
     def setUp(self):
         self.corp = create_corp()
 
@@ -118,7 +121,6 @@ class TestCorporation(unittest.TestCase):
 
 
 class TestBox(unittest.TestCase):
-
     def setUp(self):
         self.box, self.corp = create_box()
 
@@ -139,7 +141,6 @@ class TestBox(unittest.TestCase):
 
 
 class TestFlag(unittest.TestCase):
-
     def setUp(self):
         self.box, self.corp = create_box()
         self.static_flag = Flag.create_flag(
@@ -182,7 +183,7 @@ class TestFlag(unittest.TestCase):
             description="A datetime test token",
             value=500,
         )
-        
+
         dbsession.add(self.static_flag)
         dbsession.add(self.regex_flag)
         dbsession.add(self.file_flag)

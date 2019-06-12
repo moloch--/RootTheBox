@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 12, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 12, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 from uuid import uuid4
@@ -30,31 +30,27 @@ from builtins import str
 
 
 class PasteBin(DatabaseObject):
-    ''' PasteBin definition '''
+    """ PasteBin definition """
 
-    uuid = Column(String(36),
-                  unique=True,
-                  nullable=False,
-                  default=lambda: str(uuid4())
-                  )
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
-    team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
+    team_id = Column(Integer, ForeignKey("team.id"), nullable=False)
     _name = Column(Unicode(32), nullable=False)
     _contents = Column(Unicode(options.max_pastebin_size), nullable=False)
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        ''' Get a paste object by uuid '''
+        """ Get a paste object by uuid """
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @property
@@ -71,7 +67,7 @@ class PasteBin(DatabaseObject):
 
     @contents.setter
     def contents(self, value):
-        self._contents = str(value[:options.max_pastebin_size])
+        self._contents = str(value[: options.max_pastebin_size])
 
     def __repr__(self):
-        return ('<PasteBin - name:%s, user_id:%d>' % (self.name, self.user_id))
+        return "<PasteBin - name:%s, user_id:%d>" % (self.name, self.user_id)

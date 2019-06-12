@@ -17,7 +17,7 @@
 
 import platform
 
-if platform.system().lower() in ['linux', 'darwin']:
+if platform.system().lower() in ["linux", "darwin"]:
 
     # === Text Colors ===
     W = "\033[0m"  # default/white

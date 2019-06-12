@@ -1,4 +1,3 @@
-
 from models import dbsession
 from models.Team import Team
 from models.User import User
@@ -15,6 +14,7 @@ def create_team():
     dbsession.commit()
     return team
 
+
 def create_user():
     user = User.by_handle("HacKer")
     if user is None:
@@ -26,12 +26,14 @@ def create_user():
         dbsession.commit()
     return user
 
+
 def create_corp():
     corp = Corporation()
     corp.name = "TestCorp"
     dbsession.add(corp)
     dbsession.commit()
     return corp
+
 
 def create_box(corp=None):
     if corp is None:

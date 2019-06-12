@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 15, 2012
 
 @author: haddaway, moloch
@@ -17,7 +17,7 @@ Created on Mar 15, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 import logging
 
@@ -28,48 +28,47 @@ from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 class NotifySocketHandler(BaseWebSocketHandler):
 
-    ''' Handles websocket connections '''
+    """ Handles websocket connections """
 
     event_manager = EventManager.instance()
 
     def open(self):
-        ''' When we receive a new websocket connect '''
+        """ When we receive a new websocket connect """
         self.event_manager.add_connection(self)
-        if self.session is not None and 'team_id' in self.session:
-            logging.debug("Opened new websocket with user id: %s" % (
-                self.session['user_id'],
-            ))
-            self.io_loop.add_callback(self.event_manager.push_user,
-                                      self.team_id, self.user_id
-                                      )
+        if self.session is not None and "team_id" in self.session:
+            logging.debug(
+                "Opened new websocket with user id: %s" % (self.session["user_id"],)
+            )
+            self.io_loop.add_callback(
+                self.event_manager.push_user, self.team_id, self.user_id
+            )
         else:
             logging.debug("[Web Socket] Opened public notification socket.")
 
     def on_close(self):
-        ''' Lost connection to client '''
+        """ Lost connection to client """
         self.event_manager.remove_connection(self)
 
     @property
     def team_id(self):
-        if self.session is not None and 'team_id' in self.session:
-            return self.session['team_id']
+        if self.session is not None and "team_id" in self.session:
+            return self.session["team_id"]
 
     @team_id.setter
     def team_id(self, value):
-        raise ValueError('Cannot set team_id')
+        raise ValueError("Cannot set team_id")
 
     @property
     def user_id(self):
-        if self.session is not None and 'user_id' in self.session:
-            return self.session['user_id']
+        if self.session is not None and "user_id" in self.session:
+            return self.session["user_id"]
 
     @user_id.setter
     def user_id(self, value):
-        raise ValueError('Cannot set user_id')
+        raise ValueError("Cannot set user_id")
 
 
 class AllNotificationsHandler(BaseHandler):
-
     @authenticated
     def get(self, *args, **kwargs):
         user = self.get_current_user()

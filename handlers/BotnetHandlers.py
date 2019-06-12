@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 15, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 15, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 # pylint: disable=unused-wildcard-import,no-member
 
 
@@ -40,7 +40,7 @@ from tornado.options import options
 
 
 class BotSocketHandler(tornado.websocket.WebSocketHandler):
-    '''
+    """
     *** Rough bot protocol layout ***
     =================================
     1) Bot connects to server
@@ -65,7 +65,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
 
     7) Add new bot to botnet
 
-    '''
+    """
 
     bot_manager = BotManager.instance()
     event_manager = EventManager.instance()
@@ -76,56 +76,51 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
     remote_ip = None
 
     def initialize(self):
-        self.xid = decode(encode(os.urandom(16), 'hex'))
+        self.xid = decode(encode(os.urandom(16), "hex"))
         if not self.config.use_bots:
             self.close()
         else:
             self.uuid = str(uuid4())
-            self.opcodes = {
-                'interrogation_response': self.interrogation_response,
-            }
+            self.opcodes = {"interrogation_response": self.interrogation_response}
 
     def open(self, *args):
-        ''' Steps 1 and 2; called when a new bot connects '''
+        """ Steps 1 and 2; called when a new bot connects """
         box = Box.by_ip_address(self.request.remote_ip)
         self.remote_ip = self.request.remote_ip
         if box is None and self.config.whitelist_box_ips:
             logging.debug("Rejected bot from '%s' (not a box)" % self.request.remote_ip)
-            self.write_message({
-                'opcode': 'error',
-                'message': 'Invalid IP address.'
-            })
+            self.write_message({"opcode": "error", "message": "Invalid IP address."})
             self.close()
         else:
             logging.debug("Interrogating bot on %s" % self.request.remote_ip)
-            self.write_message({'opcode': 'interrogate', 'xid': str(self.xid)})
+            self.write_message({"opcode": "interrogate", "xid": str(self.xid)})
 
     def on_message(self, message):
-        ''' Routes the request to the correct function based on opcode '''
+        """ Routes the request to the correct function based on opcode """
         try:
             req = json.loads(message)
-            if 'opcode' not in req:
-                raise ValueError('Missing opcode')
-            elif req['opcode'] not in self.opcodes:
-                raise ValueError('Invalid opcode in request: %s' % req['opcode'])
+            if "opcode" not in req:
+                raise ValueError("Missing opcode")
+            elif req["opcode"] not in self.opcodes:
+                raise ValueError("Invalid opcode in request: %s" % req["opcode"])
             else:
-                self.opcodes[req['opcode']](req)
+                self.opcodes[req["opcode"]](req)
         except ValueError as error:
             logging.warn("Invalid json request from bot: %s" % str(error))
             self.close()
 
     def on_close(self):
-        ''' Close connection to remote host '''
+        """ Close connection to remote host """
         if self.uuid in self.bot_manager.botnet:
             self.bot_manager.remove_bot(self)
         logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
 
     def interrogation_response(self, msg):
-        ''' Steps 3 and 4; validate repsonses '''
+        """ Steps 3 and 4; validate repsonses """
         logging.debug("Received interrogate response, validating ...")
-        response_xid = msg['response_xid']
-        user = User.by_handle(msg['handle'])
-        box = Box.by_name(msg['box_name'])
+        response_xid = msg["response_xid"]
+        user = User.by_handle(msg["handle"])
+        box = Box.by_name(msg["box_name"])
         if self.config.whitelist_box_ips and self.remote_ip not in box.ips:
             self.send_error("Invalid remote IP for this box")
         elif user is None or user.is_admin():
@@ -142,14 +137,16 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.add_to_botnet(user)
 
     def add_to_botnet(self, user):
-        ''' Step 6 and 7; Add current web socket to botnet '''
+        """ Step 6 and 7; Add current web socket to botnet """
         if self.bot_manager.add_bot(self):
             logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
             count = self.bot_manager.count_by_team(self.team_name)
-            self.write_message({
-                'opcode': 'status',
-                'message': 'Added new bot; total number of bots is now %d' % count
-            })
+            self.write_message(
+                {
+                    "opcode": "status",
+                    "message": "Added new bot; total number of bots is now %d" % count,
+                }
+            )
             self.event_manager.bot_added(user, count)
         else:
             logging.debug("Duplicate bot on %s" % self.remote_ip)
@@ -160,27 +157,24 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         return response_xid == sha512(round1).hexdigest()
 
     def ping(self):
-        ''' Just make sure we can write data to the socket '''
+        """ Just make sure we can write data to the socket """
         try:
-            self.write_message({'opcode': 'ping'})
+            self.write_message({"opcode": "ping"})
         except:
             logging.exception("Error: while sending ping to bot.")
             self.close()
 
     def send_error(self, msg):
-        ''' Send the errors, and close socket '''
-        self.write_message({
-            'opcode': 'error',
-            'message': msg,
-        })
+        """ Send the errors, and close socket """
+        self.write_message({"opcode": "error", "message": msg})
         self.close()
 
 
 class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
-    '''
+    """
     Handles the CLI BotMonitor websocket connections, has custom auth.
     TODO: Trash this and use the web api handler, w/ normal session cookie
-    '''
+    """
 
     config = options
     bot_manager = BotManager.instance()
@@ -191,79 +185,79 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             self.close()
         else:
             self.uuid = str(uuid4())
-            self.opcodes = {
-                'auth': self.auth,
-            }
+            self.opcodes = {"auth": self.auth}
 
     def open(self):
         logging.debug("Opened new monitor socket to %s" % self.request.remote_ip)
 
     def on_message(self, message):
-        ''' Parse request '''
+        """ Parse request """
         try:
             req = json.loads(message)
-            if 'opcode' not in req:
-                raise ValueError('Missing opcode')
-            elif req['opcode'] not in self.opcodes:
-                raise ValueError('Invalid opcode in request: %s' % req['opcode'])
+            if "opcode" not in req:
+                raise ValueError("Missing opcode")
+            elif req["opcode"] not in self.opcodes:
+                raise ValueError("Invalid opcode in request: %s" % req["opcode"])
             else:
-                self.opcodes[req['opcode']](req)
+                self.opcodes[req["opcode"]](req)
         except ValueError as error:
             logging.warn("Invalid json request from bot: %s" % str(error))
 
     def on_close(self):
-        ''' Close connection to remote host '''
+        """ Close connection to remote host """
         self.bot_manager.remove_monitor(self)
-        logging.debug("Closing connection to bot monitor at %s" % self.request.remote_ip)
+        logging.debug(
+            "Closing connection to bot monitor at %s" % self.request.remote_ip
+        )
 
     def auth(self, req):
-        ''' Authenticate user '''
+        """ Authenticate user """
         try:
-            user = User.by_handle(req['handle'])
+            user = User.by_handle(req["handle"])
         except:
             user = None
         if user is None or user.is_admin():
             logging.debug("Monitor socket user does not exist.")
-            self.write_message({
-                'opcode': 'auth_failure',
-                'message': 'Authentication failure',
-            })
+            self.write_message(
+                {"opcode": "auth_failure", "message": "Authentication failure"}
+            )
             self.close()
-        elif user.validate_password(req.get('password', '')):
-            logging.debug("Monitor socket successfully authenticated as %s" % user.handle)
-            self.team_name = ''.join(user.team.name)
+        elif user.validate_password(req.get("password", "")):
+            logging.debug(
+                "Monitor socket successfully authenticated as %s" % user.handle
+            )
+            self.team_name = "".join(user.team.name)
             self.bot_manager.add_monitor(self)
-            self.write_message({'opcode': 'auth_success'})
+            self.write_message({"opcode": "auth_success"})
             bots = self.bot_manager.get_bots(self.team_name)
             self.update(bots)
         else:
             logging.debug("Monitor socket provided invalid password for user")
-            self.write_message({
-                'opcode': 'auth_failure',
-                'message': 'Authentication failure',
-            })
+            self.write_message(
+                {"opcode": "auth_failure", "message": "Authentication failure"}
+            )
             self.close()
 
     def update(self, bots):
-        ''' Called by the observable class '''
-        self.write_message({'opcode': 'update', 'bots': bots})
+        """ Called by the observable class """
+        self.write_message({"opcode": "update", "bots": bots})
 
     def ping(self):
-        self.write_message({'opcode': 'ping'})
+        self.write_message({"opcode": "ping"})
 
 
 class BotWebMonitorHandler(BaseHandler):
-    ''' Just renders the html page for the web monitor '''
+    """ Just renders the html page for the web monitor """
 
     @authenticated
     @use_bots
     def get(self, *args, **kwargs):
         user = self.get_current_user()
-        self.render('botnet/monitor.html', teamname=user.is_admin())
+        self.render("botnet/monitor.html", teamname=user.is_admin())
 
 
 class BotWebMonitorSocketHandler(BaseWebSocketHandler):
-    '''
+    """
     Bot monitor API, requires user to be authenticated with the web app
     TODO: Move the cli api to use this one.
 
@@ -275,7 +269,7 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
         cls.team_name
         cls.ping
 
-    '''
+    """
 
     def initialize(self):
         self.config = options
@@ -283,24 +277,28 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
             self.close()
 
     def open(self):
-        ''' Only open sockets from authenticated clients '''
+        """ Only open sockets from authenticated clients """
         user = self.get_current_user()
-        if self.session is not None and ('team_id' in self.session or user.is_admin()):
-            logging.debug("[Web Socket] Opened web monitor socket with %s" % user.handle)
+        if self.session is not None and ("team_id" in self.session or user.is_admin()):
+            logging.debug(
+                "[Web Socket] Opened web monitor socket with %s" % user.handle
+            )
             self.uuid = str(uuid4())
             self.bot_manager = BotManager.instance()
-            
+
             if user.is_admin():
                 self.team_name = user.name
                 self.bot_manager.add_monitor(self)
                 bots = self.bot_manager.get_all_bots()
             else:
-                self.team_name = ''.join(user.team.name)
+                self.team_name = "".join(user.team.name)
                 self.bot_manager.add_monitor(self)
                 bots = self.bot_manager.get_bots(self.team_name)
             self.update(bots)
         else:
-            logging.debug("[Web Socket] Denied web monitor socket to %s" % self.request.remote_ip)
+            logging.debug(
+                "[Web Socket] Denied web monitor socket to %s" % self.request.remote_ip
+            )
             self.bot_manager = None
             self.close()
 
@@ -309,64 +307,66 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
         logging.debug("%s is send us websocket messages." % user.handle)
 
     def update(self, boxes):
-        ''' Called by observable class '''
-        self.write_message({'opcode': 'update', 'bots': boxes})
+        """ Called by observable class """
+        self.write_message({"opcode": "update", "bots": boxes})
 
     def ping(self):
-        ''' Send an update as a ping '''
+        """ Send an update as a ping """
         bots = self.bot_manager.get_bots(self.team_name)
         self.update(bots)
 
     def on_close(self):
-        ''' Close connection to remote host '''
+        """ Close connection to remote host """
         if self.bot_manager is not None:
             self.bot_manager.remove_monitor(self)
 
 
 class BotDownloadHandler(BaseHandler):
-    ''' Distributes bot binaries / scripts '''
+    """ Distributes bot binaries / scripts """
 
     @authenticated
     @use_bots
     def get(self, *args, **kwargs):
         download_options = {
-            'windows': self.windows,
-            'linux': self.generic,
-            'monitor': self.monitor,
+            "windows": self.windows,
+            "linux": self.generic,
+            "monitor": self.monitor,
         }
         if len(args) and args[0] in download_options:
             download_options[args[0]]()
         self.finish()
 
     def windows(self):
-        ''' Download Windows PE file '''
+        """ Download Windows PE file """
         self.set_header("Content-Type", "application/exe")
         self.set_header("Content-disposition", "attachment; filename=rtb_bot.exe")
-        if os.path.exists('bot/dist/bot.exe'):
-            with open('bot/dist/bot.exe', 'rb') as fp:
+        if os.path.exists("bot/dist/bot.exe"):
+            with open("bot/dist/bot.exe", "rb") as fp:
                 data = fp.read()
-                self.set_header('Content-Length', len(data))
+                self.set_header("Content-Length", len(data))
                 self.write(data)
         else:
-            logging.error("Missing Windows bot file, please run build script: bot/build_bot.py")
+            logging.error(
+                "Missing Windows bot file, please run build script: bot/build_bot.py"
+            )
             self.generic()
 
     def generic(self):
-        ''' Send them the generic python script '''
+        """ Send them the generic python script """
         self.set_header("Content-Type", "text/x-python")
         self.set_header("Content-disposition", "attachment; filename=rtb_bot.py")
-        if os.path.exists('bot/bot.py'):
-            with open('bot/bot.py', 'rb') as fp:
+        if os.path.exists("bot/bot.py"):
+            with open("bot/bot.py", "rb") as fp:
                 data = fp.read()
-                self.set_header('Content-Length', len(data))
+                self.set_header("Content-Length", len(data))
                 self.write(data)
 
     def monitor(self):
-        ''' Send curses ui bot monitor '''
+        """ Send curses ui bot monitor """
         self.set_header("Content-Type", "text/x-python")
         self.set_header("Content-disposition", "attachment; filename=botnet_monitor.py")
-        if os.path.exists('bot/BotMonitor.py'):
-            with open('bot/BotMonitor.py', 'rb') as fp:
+        if os.path.exists("bot/BotMonitor.py"):
+            with open("bot/BotMonitor.py", "rb") as fp:
                 data = fp.read()
-                self.set_header('Content-Length', len(data))
+                self.set_header("Content-Length", len(data))
                 self.write(data)

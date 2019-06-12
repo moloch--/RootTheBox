@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 12, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 12, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 from uuid import uuid4
@@ -30,15 +30,16 @@ from models.BaseModels import DatabaseObject
 
 
 class ThemeFile(DatabaseObject):
-    '''
+    """
     Holds theme related settings
-    '''
-    theme_id = Column(Integer, ForeignKey('theme.id'), nullable=False)
+    """
+
+    theme_id = Column(Integer, ForeignKey("theme.id"), nullable=False)
     _file_name = Column(Unicode(64), nullable=False)
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):
-        ''' Remove any non-white listed chars from a string '''
+        """ Remove any non-white listed chars from a string """
         char_white_list = ascii_letters + digits + extra_chars
         return "".join([char for char in string if char in char_white_list])
 
@@ -61,9 +62,9 @@ class ThemeFile(DatabaseObject):
 
 
 class Theme(DatabaseObject):
-    '''
+    """
     Holds theme related settings
-    '''
+    """
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _name = Column(Unicode(64), unique=True, nullable=False)
@@ -71,27 +72,27 @@ class Theme(DatabaseObject):
 
     @classmethod
     def all(cls):
-        ''' Return all objects '''
+        """ Return all objects """
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        ''' Return the object whose id is _id '''
+        """ Return the object whose id is _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        ''' Return the object whose uuid is _uuid '''
+        """ Return the object whose uuid is _uuid """
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
     def by_name(cls, name):
-        ''' Return the object whose name is _name '''
+        """ Return the object whose name is _name """
         return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):
-        ''' Remove any non-white listed chars from a string '''
+        """ Remove any non-white listed chars from a string """
         char_white_list = ascii_letters + digits + extra_chars
         return "".join([char for char in string if char in char_white_list])
 
@@ -104,9 +105,11 @@ class Theme(DatabaseObject):
         self._name = self._filter_string(value, ".")
 
     def is_sequence(self, arg):
-        return (not hasattr(arg, "strip") and
-                hasattr(arg, "__getitem__") or
-                hasattr(arg, "__iter__"))
+        return (
+            not hasattr(arg, "strip")
+            and hasattr(arg, "__getitem__")
+            or hasattr(arg, "__iter__")
+        )
 
     def __iter__(self):
         try:
@@ -114,7 +117,7 @@ class Theme(DatabaseObject):
                 yield _file
         except:
             themefile = relationship("ThemeFile")
-            if self.is_sequence(themefile): 
+            if self.is_sequence(themefile):
                 self.files = themefile
                 for _file in self.files:
                     yield _file

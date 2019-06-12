@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 13, 2012
 
 @author: moloch
@@ -21,7 +21,7 @@ Created on Mar 13, 2012
 
 This is the main file the defines what URLs get routed to what handlers
 
-'''
+"""
 # pylint: disable=no-member,unsupported-assignment-operation
 
 
@@ -59,6 +59,7 @@ from libs.DatabaseConnection import DatabaseConnection
 from libs.StringCoding import encode
 from builtins import str
 from tornado.options import options
+
 try:
     from urllib.parse import unquote_plus
 except ImportError:
@@ -73,214 +74,176 @@ def get_cookie_secret():
     if options.debug:
         return "Don't use this in production"
     else:
-        return encode(urandom(32), 'hex')
+        return encode(urandom(32), "hex")
 
 
 # Main URL Configuration
 # First get base URLs that all game types will require
 urls = [
-
     # Public handlers - PublicHandlers.py
-    (r'/login', LoginHandler),
-    (r'/registration', RegistrationHandler),
-    (r'/about', AboutHandler),
-    (r'/', HomePageHandler),
-    (r'/robots(|\.txt)', FakeRobotsHandler),
-
+    (r"/login", LoginHandler),
+    (r"/registration", RegistrationHandler),
+    (r"/about", AboutHandler),
+    (r"/", HomePageHandler),
+    (r"/robots(|\.txt)", FakeRobotsHandler),
     # Scoreboard Handlers - ScoreboardHandlers.py
-    (r'/scoreboard', ScoreboardHandler),
-    (r'/scoreboard/history', ScoreboardHistoryHandler),
-    (r'/scoreboard/ajax/(.*)', ScoreboardAjaxHandler),
-    (r'/scoreboard/wsocket/game_data', ScoreboardDataSocketHandler),
-    (r'/scoreboard/wsocket/game_history', ScoreboardHistorySocketHandler),
-    (r'/scoreboard/wsocket/pause_score', ScoreboardPauseHandler),
-    (r'/teams', TeamsHandler),
-
+    (r"/scoreboard", ScoreboardHandler),
+    (r"/scoreboard/history", ScoreboardHistoryHandler),
+    (r"/scoreboard/ajax/(.*)", ScoreboardAjaxHandler),
+    (r"/scoreboard/wsocket/game_data", ScoreboardDataSocketHandler),
+    (r"/scoreboard/wsocket/game_history", ScoreboardHistorySocketHandler),
+    (r"/scoreboard/wsocket/pause_score", ScoreboardPauseHandler),
+    (r"/teams", TeamsHandler),
     # FileUploadHandlers - FileUploadHandlers.py
-    (r'/user/shares/delete', FileDeleteHandler),
-    (r'/user/shares/download(.*)', FileDownloadHandler),
-    (r'/user/share/files', FileUploadHandler),
-
+    (r"/user/shares/delete", FileDeleteHandler),
+    (r"/user/shares/download(.*)", FileDownloadHandler),
+    (r"/user/share/files", FileUploadHandler),
     # PasteBin - PastebinHandlers.py
-    (r'/user/share/pastebin', PasteHandler),
-    (r'/user/share/pastebin/create', CreatePasteHandler),
-    (r'/user/share/pastebin/display', DisplayPasteHandler),
-    (r'/user/share/pastebin/delete', DeletePasteHandler),
-
+    (r"/user/share/pastebin", PasteHandler),
+    (r"/user/share/pastebin/create", CreatePasteHandler),
+    (r"/user/share/pastebin/display", DisplayPasteHandler),
+    (r"/user/share/pastebin/delete", DeletePasteHandler),
     # Mission handlers - MissionHandlers.py
-    (r'/user/missions', MissionsHandler),
-    (r'/user/missions/capture(.*)', FlagSubmissionHandler),
-    (r'/user/missions/(flag|buyout)', MissionsHandler),
-    (r'/user/missions/firstlogin', FirstLoginHandler),
-    (r'/user/missions/boxes', BoxHandler),
-    (r'/user/missions/hint', PurchaseHintHandler),
-
-
+    (r"/user/missions", MissionsHandler),
+    (r"/user/missions/capture(.*)", FlagSubmissionHandler),
+    (r"/user/missions/(flag|buyout)", MissionsHandler),
+    (r"/user/missions/firstlogin", FirstLoginHandler),
+    (r"/user/missions/boxes", BoxHandler),
+    (r"/user/missions/hint", PurchaseHintHandler),
     ### BOTNET URLS ###
     # Bot Handlers - BotHandlers.py
-    (r'/botnet/connect', BotSocketHandler),
-    (r'/botnet/climonitor', BotCliMonitorSocketHandler),
-    (r'/botnet/webmonitor', BotWebMonitorSocketHandler),
-    (r'/user/bots/download/(windows|linux|monitor)', BotDownloadHandler),
-    (r'/user/bots/webmonitor', BotWebMonitorHandler),
-
-
+    (r"/botnet/connect", BotSocketHandler),
+    (r"/botnet/climonitor", BotCliMonitorSocketHandler),
+    (r"/botnet/webmonitor", BotWebMonitorSocketHandler),
+    (r"/user/bots/download/(windows|linux|monitor)", BotDownloadHandler),
+    (r"/user/bots/webmonitor", BotWebMonitorHandler),
     ### BLACK MARKET URLS ###
     # This is only relevent if the black market is enabled
-    (r'/scoreboard/wall_of_sheep', ScoreboardWallOfSheepHandler),
-
+    (r"/scoreboard/wall_of_sheep", ScoreboardWallOfSheepHandler),
     # Market handlers - MarketHandlers.py
-    (r'/user/market', MarketViewHandler),
-    (r'/user/market/details', MarketDetailsHandler),
-
+    (r"/user/market", MarketViewHandler),
+    (r"/user/market/details", MarketDetailsHandler),
     # Upgrade handlers - UpgradeHandlers.py
-    (r'/password_security', PasswordSecurityHandler),
-    (r'/federal_reserve', FederalReserveHandler),
-    (r'/federal_reserve/json/(.*)', FederalReserveAjaxHandler),
-    (r'/source_code_market', SourceCodeMarketHandler),
-    (r'/source_code_market/download', SourceCodeMarketDownloadHandler),
-    (r'/swat', SwatHandler),
-
-
+    (r"/password_security", PasswordSecurityHandler),
+    (r"/federal_reserve", FederalReserveHandler),
+    (r"/federal_reserve/json/(.*)", FederalReserveAjaxHandler),
+    (r"/source_code_market", SourceCodeMarketHandler),
+    (r"/source_code_market/download", SourceCodeMarketDownloadHandler),
+    (r"/swat", SwatHandler),
     # User handlers - UserHandlers.py
-    (r'/user', HomeHandler),
-    (r'/user/settings', SettingsHandler),
-    (r'/user/settings/(.*)', SettingsHandler),
-    (r'/logout', LogoutHandler),
-
+    (r"/user", HomeHandler),
+    (r"/user/settings", SettingsHandler),
+    (r"/user/settings/(.*)", SettingsHandler),
+    (r"/logout", LogoutHandler),
     # Notificaiton handlers - NotificationHandlers.py
-    (r'/notifications/all', AllNotificationsHandler),
-    (r'/connect/notifications/updates', NotifySocketHandler),
-
+    (r"/notifications/all", AllNotificationsHandler),
+    (r"/connect/notifications/updates", NotifySocketHandler),
     # Static Handlers - StaticFileHandler.py
-    (r'/static/(.*\.(jpg|png|gif|css|js|ico|mp3|eot|svg|ttf|woff|otf))',
-        StaticFileHandler, {'path': 'static/'}),
-    (r'/avatars/(.*\.(png|jpeg|jpg|gif|bmp))',
-        StaticFileHandler, {'path': 'files/avatars/'}),
-    (r'/materials/(.*)(?<!/)',
-        StaticFileHandler, {'path': 'files/game_materials/'}),
-
+    (
+        r"/static/(.*\.(jpg|png|gif|css|js|ico|mp3|eot|svg|ttf|woff|otf))",
+        StaticFileHandler,
+        {"path": "static/"},
+    ),
+    (
+        r"/avatars/(.*\.(png|jpeg|jpg|gif|bmp))",
+        StaticFileHandler,
+        {"path": "files/avatars/"},
+    ),
+    (r"/materials/(.*)(?<!/)", StaticFileHandler, {"path": "files/game_materials/"}),
     # Game Materials
-    (r'/materials/?', MaterialsHandler),
-    (r'/materials/(.*)/', MaterialsHandler),
-    (r'/cyberchef', ChefHandler),
-
+    (r"/materials/?", MaterialsHandler),
+    (r"/materials/(.*)/", MaterialsHandler),
+    (r"/cyberchef", ChefHandler),
     # Admin Handlers
-    (r'/admin/game', AdminGameHandler),
-    (r'/admin/ban/(add|clear|config)', AdminBanHammerHandler),
-    (r'/admin/regtoken/(.*)', AdminRegTokenHandler),
-    (r'/admin/garbage', AdminGarbageCfgHandler),
-    (r'/admin/create/(.*)', AdminCreateHandler),
-    (r'/admin/edit/(.*)', AdminEditHandler),
-    (r'/admin/view/(.*)', AdminViewHandler),
-    (r'/admin/delete/(.*)', AdminDeleteHandler),
-    (r'/admin/ajax/objects(.*)', AdminAjaxGameObjectDataHandler),
-    (r'/admin/tokentest/(.*)', AdminTestTokenHandler),
-
-    (r'/admin/upgrades/source_code_market(.*)', AdminSourceCodeMarketHandler),
-    (r'/admin/upgrades/swat(.*)', AdminSwatHandler),
-
-    (r'/admin/users', AdminManageUsersHandler),
-    (r'/admin/users/edit/(user|team)', AdminEditUsersHandler),
-    (r'/admin/users/edit/teams/scores', AdminEditTeamsHandler),
-    (r'/admin/users/delete/(.*)', AdminDeleteUsersHandler),
-    (r'/admin/ajax/(user|team)', AdminAjaxUserHandler),
-    (r'/admin/lock', AdminLockHandler),
-
-    (r'/admin/configuration', AdminConfigurationHandler),
-    (r'/admin/gitstatus', AdminGitStatusHandler),
-    (r'/admin/export/(.*)', AdminExportHandler),
-    (r'/admin/import/xml', AdminImportXmlHandler),
-    (r'/admin/reset', AdminResetHandler),
-
+    (r"/admin/game", AdminGameHandler),
+    (r"/admin/ban/(add|clear|config)", AdminBanHammerHandler),
+    (r"/admin/regtoken/(.*)", AdminRegTokenHandler),
+    (r"/admin/garbage", AdminGarbageCfgHandler),
+    (r"/admin/create/(.*)", AdminCreateHandler),
+    (r"/admin/edit/(.*)", AdminEditHandler),
+    (r"/admin/view/(.*)", AdminViewHandler),
+    (r"/admin/delete/(.*)", AdminDeleteHandler),
+    (r"/admin/ajax/objects(.*)", AdminAjaxGameObjectDataHandler),
+    (r"/admin/tokentest/(.*)", AdminTestTokenHandler),
+    (r"/admin/upgrades/source_code_market(.*)", AdminSourceCodeMarketHandler),
+    (r"/admin/upgrades/swat(.*)", AdminSwatHandler),
+    (r"/admin/users", AdminManageUsersHandler),
+    (r"/admin/users/edit/(user|team)", AdminEditUsersHandler),
+    (r"/admin/users/edit/teams/scores", AdminEditTeamsHandler),
+    (r"/admin/users/delete/(.*)", AdminDeleteUsersHandler),
+    (r"/admin/ajax/(user|team)", AdminAjaxUserHandler),
+    (r"/admin/lock", AdminLockHandler),
+    (r"/admin/configuration", AdminConfigurationHandler),
+    (r"/admin/gitstatus", AdminGitStatusHandler),
+    (r"/admin/export/(.*)", AdminExportHandler),
+    (r"/admin/import/xml", AdminImportXmlHandler),
+    (r"/admin/reset", AdminResetHandler),
     # Error handlers - ErrorHandlers.py
-    (r'/403', UnauthorizedHandler),
-    (r'/(.*).php', NoobHandler),
-    (r'/admin', NoobHandler),
-    (r'/(.*)phpmyadmin(.*)', NoobHandler),
-    (r'/administrator(.*)', NoobHandler)
+    (r"/403", UnauthorizedHandler),
+    (r"/(.*).php", NoobHandler),
+    (r"/admin", NoobHandler),
+    (r"/(.*)phpmyadmin(.*)", NoobHandler),
+    (r"/administrator(.*)", NoobHandler),
 ]
 
 # This one has to be last
-urls.append((r'/(.*)', NotFoundHandler))
+urls.append((r"/(.*)", NotFoundHandler))
 
 app = Application(
     # URL handler mappings
     urls,
-
     # Randomly generated secret key
     cookie_secret=get_cookie_secret(),
-
     # Ip addresses that access the admin interface
     admin_ips=options.admin_ips,
-
     # Template directory
-    template_path='templates/',
-
+    template_path="templates/",
     # Request that does not pass @authorized will be
     # redirected here
-    forbidden_url='/403',
-
+    forbidden_url="/403",
     # Requests that does not pass @authenticated  will be
     # redirected here
-    login_url='/login',
-
+    login_url="/login",
     # UI Modules
-    ui_modules={
-        "Menu": Menu,
-        "Theme": AppTheme,
-        "Recaptcha": Recaptcha,
-    },
-
+    ui_modules={"Menu": Menu, "Theme": AppTheme, "Recaptcha": Recaptcha},
     # Enable XSRF protected forms; not optional
     xsrf_cookies=True,
-
     # Anti-bruteforce
     automatic_ban=False,
     blacklist_threshold=10,
     blacklisted_ips=[],
     failed_logins={},
-
     # Debug mode
     debug=options.debug,
-
     # Flags used to run the game
     game_started=options.autostart_game,
     suspend_registration=False,
     freeze_scoreboard=False,
     temp_global_notifications=None,
-
-
     # Callback functions
-    score_bots_callback=PeriodicCallback(
-        score_bots,
-        options.bot_reward_interval
-    ),
-
+    score_bots_callback=PeriodicCallback(score_bots, options.bot_reward_interval),
     history_callback=PeriodicCallback(
-        game_history.take_snapshot,
-        options.history_snapshot_interval
+        game_history.take_snapshot, options.history_snapshot_interval
     ),
-
     # Scoreboard Hightlights
     scoreboard_history={},
-
     # Application version
     version=__version__,
-
 )
 
-#Update the database schema
+# Update the database schema
 def update_db(update=True):
-    db_connection = DatabaseConnection(database=options.sql_database,
-                                   hostname=options.sql_host,
-                                   port=options.sql_port,
-                                   username=options.sql_user,
-                                   password=options.sql_password,
-                                   dialect=options.sql_dialect)
-    alembic_cfg = Config('alembic/alembic.ini')
-    alembic_cfg.attributes['configure_logger'] = False
-    alembic_cfg.set_main_option('sqlalchemy.url', unquote_plus(str(db_connection)))
+    db_connection = DatabaseConnection(
+        database=options.sql_database,
+        hostname=options.sql_host,
+        port=options.sql_port,
+        username=options.sql_user,
+        password=options.sql_password,
+        dialect=options.sql_dialect,
+    )
+    alembic_cfg = Config("alembic/alembic.ini")
+    alembic_cfg.attributes["configure_logger"] = False
+    alembic_cfg.set_main_option("sqlalchemy.url", unquote_plus(str(db_connection)))
     if update:
         command.upgrade(alembic_cfg, "head")
     else:
@@ -289,25 +252,23 @@ def update_db(update=True):
 
 # Main entry point
 def start_server():
-    ''' Main entry point for the application '''
+    """ Main entry point for the application """
     if options.debug:
-        logging.warn("%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (
-            bold + R, W
-        ))
+        logging.warn(
+            "%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (bold + R, W)
+        )
     if options.autostart_game:
         logging.info("The game is about to begin, good hunting!")
-        app.settings['history_callback'].start()
+        app.settings["history_callback"].start()
         if options.use_bots:
-            app.settings['score_bots_callback'].start()
+            app.settings["score_bots_callback"].start()
     # Setup server object
     if options.ssl:
-        server = HTTPServer(app,
-                            ssl_options={
-                                "certfile": options.certfile,
-                                "keyfile": options.keyfile,
-                            },
-                            xheaders=options.x_headers
-                            )
+        server = HTTPServer(
+            app,
+            ssl_options={"certfile": options.certfile, "keyfile": options.keyfile},
+            xheaders=options.x_headers,
+        )
     else:
         server = HTTPServer(app, xheaders=options.x_headers)
     sockets = netutil.bind_sockets(options.listen_port, options.listen_interface)
@@ -316,7 +277,7 @@ def start_server():
     try:
         io_loop.start()
     except KeyboardInterrupt:
-        sys.stdout.write('\r' + WARN + 'Shutdown Everything!\n')
+        sys.stdout.write("\r" + WARN + "Shutdown Everything!\n")
     except:
         logging.exception("Main i/o loop threw exception")
     finally:

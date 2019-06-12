@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 @author: Milan Cermak <milan.cermak@gmail.com>
 @author: Moloch
 
 This module implements sessions for Tornado using Memcached.
-'''
+"""
 
 
 import re
@@ -20,7 +20,7 @@ from libs.StringCoding import encode, decode
 
 
 class BaseSession(collections.MutableMapping):
-    '''
+    """
     The base class for the session object. Work with the session object
     is really simple, just treat is as any other dictionary:
 
@@ -40,13 +40,14 @@ class BaseSession(collections.MutableMapping):
     and define save(), load() and delete(). For inspiration, check out any
     of the already available classes and documentation to aformentioned
     functions.
-    '''
+    """
 
     id_size = 16  # Size in bytes
     duration = options.session_age  # Minutes
 
-    def __init__(self, session_id=None, data=None, expires=None,
-                 ip_address=None,  **kwargs):
+    def __init__(
+        self, session_id=None, data=None, expires=None, ip_address=None, **kwargs
+    ):
         # if session_id is True, we're loading a previously initialized session
         if session_id:
             self.session_id = session_id
@@ -61,8 +62,7 @@ class BaseSession(collections.MutableMapping):
         self.ip_address = ip_address
 
     def __repr__(self):
-        return '<Session id: %s, Expires: %s>' % (
-            self.session_id, self.expires)
+        return "<Session id: %s, Expires: %s>" % (self.session_id, self.expires)
 
     def __str__(self):
         return self.session_id
@@ -88,10 +88,10 @@ class BaseSession(collections.MutableMapping):
         return len(self.keys())
 
     def _generate_session_id(self):
-        return encode(os.urandom(self.id_size), 'hex')
+        return encode(os.urandom(self.id_size), "hex")
 
     def is_expired(self):
-        '''Check if the session has expired.'''
+        """Check if the session has expired."""
         return datetime.utcnow() > self.expires
 
     def _expires_at(self):
@@ -106,41 +106,40 @@ class BaseSession(collections.MutableMapping):
         self.dirty = True
 
     def save(self):
-        '''Save the session data and metadata to the backend storage
+        """Save the session data and metadata to the backend storage
         if necessary (self.dirty == True). On successful save set
-        dirty to False.'''
+        dirty to False."""
         pass
 
     @staticmethod
     def load(session_id, location):
-        '''Load the stored session from storage backend or return
-        None if the session was not found, in case of stale cookie.'''
+        """Load the stored session from storage backend or return
+        None if the session was not found, in case of stale cookie."""
         pass
 
     def delete(self):
-        '''Remove all data representing the session from backend storage.'''
+        """Remove all data representing the session from backend storage."""
         pass
 
     def serialize(self):
-        ''' We use JSON instead of Pickles '''
+        """ We use JSON instead of Pickles """
         dump = {
-            'session_id': str(self.session_id),
-            'data': self.data,
-            'expires': str(self.expires),
-            'ip_address': self.ip_address,
+            "session_id": str(self.session_id),
+            "data": self.data,
+            "expires": str(self.expires),
+            "ip_address": self.ip_address,
         }
-        return encode(json.dumps(dump), 'base64').strip()
+        return encode(json.dumps(dump), "base64").strip()
 
     @staticmethod
     def deserialize(datastring):
-        dump = json.loads(decode(datastring, 'base64'))
-        dump['expires'] = datetime.strptime(
-            dump['expires'], "%Y-%m-%d %H:%M:%S.%f")
+        dump = json.loads(decode(datastring, "base64"))
+        dump["expires"] = datetime.strptime(dump["expires"], "%Y-%m-%d %H:%M:%S.%f")
         return dump
 
 
 class MemcachedSession(BaseSession):
-    '''
+    """
     Class responsible for Memcached stored sessions. It uses the
     pylibmc library because it's fast. It communicates with the
     memcached server through the binary protocol and uses async
@@ -153,39 +152,40 @@ class MemcachedSession(BaseSession):
     Values are stored with timeout set to the difference between
     saving time and expiry time in seconds. Therefore, no
     old sessions will be held in Memcached memory.
-    '''
+    """
 
     def __init__(self, connection, **kwargs):
         super(MemcachedSession, self).__init__(**kwargs)
         self.connection = connection
-        if not 'session_id' in kwargs:
+        if not "session_id" in kwargs:
             self.save()
 
     @staticmethod
     def _parse_connection_details(details):
         if len(details) > 12:
-            return re.sub('\s+', '', details[12:]).split(',')
+            return re.sub("\s+", "", details[12:]).split(",")
         else:
-            return ['127.0.0.1']
+            return ["127.0.0.1"]
 
     def save(self):
-        '''
+        """
         Write the session to Memcached. Session ID is used as
         key, value is constructed as colon separated values of
         serialized session, session expiry timestamp, ip address
         The value is not stored indefinitely. It's expiration time
         in seconds is calculated as the difference between the saving
         time and session expiry.
-        '''
+        """
         if self.dirty:
             ttl = self.expires - datetime.utcnow()
             self.connection.set(
-                str(self.session_id), self.serialize(), time=ttl.seconds)
+                str(self.session_id), self.serialize(), time=ttl.seconds
+            )
             self.dirty = False
 
     @staticmethod
     def load(connection, session_id, ip_address):
-        '''Load the session from storage.'''
+        """Load the session from storage."""
         session = None
         try:
             value = connection.get(str(session_id))
@@ -197,5 +197,5 @@ class MemcachedSession(BaseSession):
         return session
 
     def delete(self):
-        '''Delete the session from storage.'''
+        """Delete the session from storage."""
         self.connection.delete(str(self.session_id))

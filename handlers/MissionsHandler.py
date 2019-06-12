@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Oct 28, 2012
 
 @author: moloch
@@ -21,7 +21,7 @@ Created on Oct 28, 2012
 
 This file contains the code for displaying flags / recv flag submissions
 
-'''
+"""
 
 
 import logging
@@ -39,131 +39,174 @@ from past.utils import old_div
 
 
 class FirstLoginHandler(BaseHandler):
-
     @authenticated
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         reward = self.config.bot_reward
         usebots = self.config.use_bots
         banking = self.config.banking
-        self.add_content_policy('script', "'unsafe-eval'")
-        self.render('missions/firstlogin.html', reward=reward, user=user, bots=usebots, bank=banking)
+        self.add_content_policy("script", "'unsafe-eval'")
+        self.render(
+            "missions/firstlogin.html",
+            reward=reward,
+            user=user,
+            bots=usebots,
+            bank=banking,
+        )
 
 
 class BoxHandler(BaseHandler):
-
     @authenticated
     def get(self, *args, **kwargs):
-        '''
+        """
         Renders the box details page.
-        '''
-        uuid = self.get_argument('uuid', '')
+        """
+        uuid = self.get_argument("uuid", "")
         box = Box.by_uuid(uuid)
         if box is not None:
             user = self.get_current_user()
-            if self.application.settings['game_started'] or user.is_admin():
-                self.render('missions/box.html',
-                            box=box,
-                            user=user,
-                            team=user.team,
-                            errors=[],
-                            success=[],
-                            info=[])
+            if self.application.settings["game_started"] or user.is_admin():
+                self.render(
+                    "missions/box.html",
+                    box=box,
+                    user=user,
+                    team=user.team,
+                    errors=[],
+                    success=[],
+                    info=[],
+                )
             else:
-                self.render('missions/status.html', errors=None, info=["The game has not started yet"])
+                self.render(
+                    "missions/status.html",
+                    errors=None,
+                    info=["The game has not started yet"],
+                )
         else:
-            self.render('public/404.html')
+            self.render("public/404.html")
 
 
 class FlagSubmissionHandler(BaseHandler):
-
     @authenticated
     def get(self, *args, **kwargs):
-        fuuid = self.get_argument('flag', None)
-        buuid = self.get_argument('box', None)
-        reward = self.get_argument('reward', None)
+        fuuid = self.get_argument("flag", None)
+        buuid = self.get_argument("box", None)
+        reward = self.get_argument("reward", None)
         user = self.get_current_user()
         box = Box.by_uuid(buuid)
         flag = Flag.by_uuid(fuuid)
         if box is not None and box.is_complete(user):
             if self.config.story_mode and len(box.capture_message) > 0:
-                self.add_content_policy('script', "'unsafe-eval'")
-                self.render('missions/captured.html',
-                            box=box,
-                            flag=None,
-                            reward=reward)
+                self.add_content_policy("script", "'unsafe-eval'")
+                self.render("missions/captured.html", box=box, flag=None, reward=reward)
                 return
         elif flag is not None and flag in user.team.flags:
             if self.config.story_mode and len(flag.capture_message) > 0:
-                self.add_content_policy('script', "'unsafe-eval'")
-                self.render('missions/captured.html',
-                            box=None,
-                            flag=flag,
-                            reward=reward)
+                self.add_content_policy("script", "'unsafe-eval'")
+                self.render(
+                    "missions/captured.html", box=None, flag=flag, reward=reward
+                )
                 return
-        self.render('public/404.html')
+        self.render("public/404.html")
 
     @authenticated
     def post(self, *args, **kwargs):
-        ''' Check validity of flag submissions '''
-        box_id = self.get_argument('box_id', None)
-        uuid = self.get_argument('uuid', '')
-        token = self.get_argument('token', '')
+        """ Check validity of flag submissions """
+        box_id = self.get_argument("box_id", None)
+        uuid = self.get_argument("uuid", "")
+        token = self.get_argument("token", "")
         user = self.get_current_user()
-        if not self.application.settings['game_started'] and not user.is_admin():
-            self.render('missions/status.html', errors=None, info=["The game has not started yet"])
+        if not self.application.settings["game_started"] and not user.is_admin():
+            self.render(
+                "missions/status.html",
+                errors=None,
+                info=["The game has not started yet"],
+            )
             return
-        if(box_id is not None and token is not None):
+        if box_id is not None and token is not None:
             flag = Flag.by_token_and_box_id(token, box_id)
         else:
             flag = Flag.by_uuid(uuid)
-            if flag is not None and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
-                self.render_page_by_flag(flag, info=["Max attempts reached - you can no longer answer this flag."])
+            if (
+                flag is not None
+                and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts
+            ):
+                self.render_page_by_flag(
+                    flag,
+                    info=["Max attempts reached - you can no longer answer this flag."],
+                )
                 return
         if flag and flag in user.team.flags:
             self.render_page_by_flag(flag)
-        elif flag is None or flag.game_level.type == 'none' or flag.game_level in user.team.game_levels:
-            submission = ''
+        elif (
+            flag is None
+            or flag.game_level.type == "none"
+            or flag.game_level in user.team.game_levels
+        ):
+            submission = ""
             if flag is not None and flag.is_file:
-                if hasattr(self.request, 'files') and 'flag' in self.request.files:
-                    submission = self.request.files['flag'][0]['body']
+                if hasattr(self.request, "files") and "flag" in self.request.files:
+                    submission = self.request.files["flag"][0]["body"]
             else:
-                submission = self.get_argument('token', '')
+                submission = self.get_argument("token", "")
             if len(submission) == 0:
-                  self.render_page_by_flag(flag, info=["No flag was provided - try again."])
+                self.render_page_by_flag(
+                    flag, info=["No flag was provided - try again."]
+                )
             old_reward = flag.value if flag is not None else 0
             if flag is not None and self.attempt_capture(flag, submission):
-                self.add_content_policy('script', "'unsafe-eval'")
+                self.add_content_policy("script", "'unsafe-eval'")
                 success = self.success_capture(flag, old_reward)
                 if self.config.story_mode:
                     box = flag.box
                     if not (len(box.capture_message) > 0 and box.is_complete(user)):
                         box = None
-                    has_capture_message = len(flag.capture_message) > 0 or box is not None
+                    has_capture_message = (
+                        len(flag.capture_message) > 0 or box is not None
+                    )
                     if has_capture_message:
-                        self.render('missions/captured.html',
-                                    flag=flag,
-                                    box=box,
-                                    reward=old_reward, success=success)  
+                        self.render(
+                            "missions/captured.html",
+                            flag=flag,
+                            box=box,
+                            reward=old_reward,
+                            success=success,
+                        )
                         return
                 self.render_page_by_flag(flag, success=success)
             else:
-                if flag is None or Penalty.by_token_count(flag, user.team, submission) == 0:
+                if (
+                    flag is None
+                    or Penalty.by_token_count(flag, user.team, submission) == 0
+                ):
                     if self.config.teams:
                         teamval = "team's "
                     else:
                         teamval = ""
-                    penalty = self.failed_capture(flag, submission) if flag is not None else 0
+                    penalty = (
+                        self.failed_capture(flag, submission) if flag is not None else 0
+                    )
                     penalty_dialog = "Sorry - Try Again"
                     if penalty:
                         if self.config.banking:
-                            penalty_dialog = "$" + str(penalty) + " has been deducted from your " + teamval + "account."
+                            penalty_dialog = (
+                                "$"
+                                + str(penalty)
+                                + " has been deducted from your "
+                                + teamval
+                                + "account."
+                            )
                         else:
                             if penalty == 1:
                                 point = " point has"
                             else:
                                 point = " points have"
-                            penalty_dialog = str(penalty) + point + " been deducted from your " + teamval + "score."
+                            penalty_dialog = (
+                                str(penalty)
+                                + point
+                                + " been deducted from your "
+                                + teamval
+                                + "score."
+                            )
                     if flag is None:
                         self.render_page_by_box_id(box_id, errors=[penalty_dialog])
                     else:
@@ -173,9 +216,15 @@ class FlagSubmissionHandler(BaseHandler):
                         teamdup = " by your team.  Try Again"
                     else:
                         teamdup = " by you.  Try Again"
-                    self.render_page_by_flag(flag, info=["Duplicate submission - this answer has already been attempted" + teamdup])
+                    self.render_page_by_flag(
+                        flag,
+                        info=[
+                            "Duplicate submission - this answer has already been attempted"
+                            + teamdup
+                        ],
+                    )
         else:
-            self.render('public/404.html')
+            self.render("public/404.html")
 
     def success_capture(self, flag, old_reward=None):
         if self.config.teams:
@@ -186,9 +235,17 @@ class FlagSubmissionHandler(BaseHandler):
         old_reward = flag.value if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
         if self.config.banking:
-            reward_dialog += "$" + str(old_reward) + " has been added to your " + teamval + "account."
+            reward_dialog += (
+                "$"
+                + str(old_reward)
+                + " has been added to your "
+                + teamval
+                + "account."
+            )
         else:
-            reward_dialog += str(old_reward) + " points added to your " + teamval + "score."
+            reward_dialog += (
+                str(old_reward) + " points added to your " + teamval + "score."
+            )
         success = [reward_dialog]
 
         # Check for Box Completion
@@ -198,7 +255,9 @@ class FlagSubmissionHandler(BaseHandler):
 
         # Check for Level Completion
         level = GameLevel.by_id(box.game_level_id)
-        level_progress = old_div(len(user.team.level_flags(level.number)),  float(len(level.flags)))
+        level_progress = old_div(
+            len(user.team.level_flags(level.number)), float(len(level.flags))
+        )
         if level_progress == 1.0 and level not in user.team.game_levels:
             reward_dialog = ""
             if level._reward > 0:
@@ -207,23 +266,44 @@ class FlagSubmissionHandler(BaseHandler):
                 self.dbsession.flush()
                 self.dbsession.commit()
                 if self.config.banking:
-                    reward_dialog += "$" + str(level._reward) + " has been added to your " + teamval + "account."
+                    reward_dialog += (
+                        "$"
+                        + str(level._reward)
+                        + " has been added to your "
+                        + teamval
+                        + "account."
+                    )
                 else:
-                    reward_dialog += str(level._reward) + " points added to your " + teamval + "score."
-            success.append("Congratulations! You have completed " + str(level.name) + ". " + reward_dialog)
+                    reward_dialog += (
+                        str(level._reward)
+                        + " points added to your "
+                        + teamval
+                        + "score."
+                    )
+            success.append(
+                "Congratulations! You have completed "
+                + str(level.name)
+                + ". "
+                + reward_dialog
+            )
 
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
-        if next_level and next_level._type == "progress" and level_progress * 100 >= next_level.buyout and next_level not in user.team.game_levels:
-            logging.info("%s (%s) unlocked %s" % (
-                    user.handle, user.team.name, next_level.name
-                ))
+        if (
+            next_level
+            and next_level._type == "progress"
+            and level_progress * 100 >= next_level.buyout
+            and next_level not in user.team.game_levels
+        ):
+            logging.info(
+                "%s (%s) unlocked %s" % (user.handle, user.team.name, next_level.name)
+            )
             user.team.game_levels.append(next_level)
             self.dbsession.add(user.team)
             self.dbsession.commit()
             self.event_manager.level_unlocked(user, next_level)
             success.append("Congratulations! You have unlocked " + str(next_level.name))
-        
+
         return success
 
     def failed_capture(self, flag, submission):
@@ -231,11 +311,7 @@ class FlagSubmissionHandler(BaseHandler):
         if submission is not None and flag not in user.team.flags:
             if flag.is_file:
                 submission = Flag.digest(submission)
-            Penalty.create_attempt(
-                team=user.team,
-                flag=flag,
-                submission=submission,
-            )
+            Penalty.create_attempt(team=user.team, flag=flag, submission=submission)
             if not self.config.penalize_flag_value:
                 return False
             attempts = Penalty.by_count(flag, user.team)
@@ -243,10 +319,11 @@ class FlagSubmissionHandler(BaseHandler):
                 return False
             if attempts >= self.config.flag_stop_penalty:
                 return False
-            penalty = int(flag.value * self.config.flag_penalty_cost * .01)
-            logging.info("%s (%s) capture failed '%s' - lost %s" % (
-                user.handle, user.team.name, flag.name, penalty
-            ))
+            penalty = int(flag.value * self.config.flag_penalty_cost * 0.01)
+            logging.info(
+                "%s (%s) capture failed '%s' - lost %s"
+                % (user.handle, user.team.name, flag.name, penalty)
+            )
             user.team.money -= penalty
             user.money -= penalty
             self.dbsession.add(user.team)
@@ -257,11 +334,11 @@ class FlagSubmissionHandler(BaseHandler):
         return False
 
     def attempt_capture(self, flag, submission):
-        ''' Compares a user provided token to the token in the db '''
+        """ Compares a user provided token to the token in the db """
         user = self.get_current_user()
-        logging.info("%s (%s) capture the flag '%s'" % (
-            user.handle, user.team.name, flag.name
-        ))
+        logging.info(
+            "%s (%s) capture the flag '%s'" % (user.handle, user.team.name, flag.name)
+        )
         if submission is not None and flag not in user.team.flags:
             if flag.capture(submission):
                 user.team.flags.append(flag)
@@ -269,7 +346,9 @@ class FlagSubmissionHandler(BaseHandler):
                 user.money += flag.value
                 self.dbsession.add(user.team)
                 if self.config.dynamic_flag_value:
-                    depreciation = float(old_div(self.config.flag_value_decrease, 100.0))
+                    depreciation = float(
+                        old_div(self.config.flag_value_decrease, 100.0)
+                    )
                     flag.value = int(flag.value - (flag.value * depreciation))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
@@ -281,7 +360,9 @@ class FlagSubmissionHandler(BaseHandler):
 
     def _check_level(self, flag):
         user = self.get_current_user()
-        if len(user.team.level_flags(flag.game_level.number)) == len(flag.game_level.flags):
+        if len(user.team.level_flags(flag.game_level.number)) == len(
+            flag.game_level.flags
+        ):
             next_level = next(flag.game_level)
             logging.info("Next level is %r" % next_level)
             if next_level is not None and next_level not in user.team.game_levels:
@@ -297,47 +378,61 @@ class FlagSubmissionHandler(BaseHandler):
         self.render_page_by_box(box, errors, success, info)
 
     def render_page_by_box(self, box, errors=[], success=[], info=[]):
-        ''' Wrapper to .render() to avoid duplicate code '''
+        """ Wrapper to .render() to avoid duplicate code """
         user = self.get_current_user()
-        self.render('missions/box.html',
-                        box=box,
-                        user=user,
-                        team=user.team,
-                        errors=errors,
-                        success=success,
-                        info=info)
+        self.render(
+            "missions/box.html",
+            box=box,
+            user=user,
+            team=user.team,
+            errors=errors,
+            success=success,
+            info=info,
+        )
 
 
 class PurchaseHintHandler(BaseHandler):
-
     @authenticated
     def post(self, *args, **kwargs):
-        ''' Purchase a hint '''
-        uuid = self.get_argument('uuid', '')
+        """ Purchase a hint """
+        uuid = self.get_argument("uuid", "")
         hint = Hint.by_uuid(uuid)
         if hint is not None:
             user = self.get_current_user()
-            if self.application.settings['game_started'] or user.is_admin():
+            if self.application.settings["game_started"] or user.is_admin():
                 flag = hint.flag
-                if flag and flag.box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts:
+                if (
+                    flag
+                    and flag.box.flag_submission_type
+                    != FlagsSubmissionType.SINGLE_SUBMISSION_BOX
+                    and Penalty.by_count(flag, user.team)
+                    >= self.config.max_flag_attempts
+                ):
                     self.render_page(
-                        hint.box, info=["You can no longer purchase this hint."])
+                        hint.box, info=["You can no longer purchase this hint."]
+                    )
                 elif hint.price <= user.team.money:
-                    logging.info("%s (%s) purchased a hint for $%d on %s" % (
-                        user.handle, user.team.name, hint.price, hint.box.name
-                    ))
+                    logging.info(
+                        "%s (%s) purchased a hint for $%d on %s"
+                        % (user.handle, user.team.name, hint.price, hint.box.name)
+                    )
                     self._purchase_hint(hint, user.team)
                     self.render_page(hint.box)
                 else:
                     self.render_page(
-                        hint.box, info=["You cannot afford to purchase this hint."])
+                        hint.box, info=["You cannot afford to purchase this hint."]
+                    )
             else:
-                self.render('missions/status.html', errors=None, info=["The game has not started yet"])
+                self.render(
+                    "missions/status.html",
+                    errors=None,
+                    info=["The game has not started yet"],
+                )
         else:
-            self.render('public/404.html')
+            self.render("public/404.html")
 
     def _purchase_hint(self, hint, team):
-        ''' Add hint to team object '''
+        """ Add hint to team object """
         if hint not in team.hints:
             team.money -= abs(hint.price)
             team.hints.append(hint)
@@ -347,53 +442,63 @@ class PurchaseHintHandler(BaseHandler):
             self.dbsession.commit()
 
     def render_page(self, box, errors=[], success=[], info=[]):
-        ''' Wrapper to .render() to avoid duplicate code '''
+        """ Wrapper to .render() to avoid duplicate code """
         user = self.get_current_user()
-        self.render('missions/box.html',
-                    box=box,
-                    user=user,
-                    team=user.team,
-                    errors=errors,
-                    success=success,
-                    info=info)
+        self.render(
+            "missions/box.html",
+            box=box,
+            user=user,
+            team=user.team,
+            errors=errors,
+            success=success,
+            info=info,
+        )
 
 
 class MissionsHandler(BaseHandler):
 
-    ''' Renders pages related to Missions/Flag submissions '''
+    """ Renders pages related to Missions/Flag submissions """
 
     @authenticated
     def get(self, *args, **kwargs):
-        ''' Render missions view '''
+        """ Render missions view """
         user = self.get_current_user()
-        if self.application.settings['game_started'] or user.is_admin():
+        if self.application.settings["game_started"] or user.is_admin():
             self.render("missions/view.html", team=user.team, errors=None, success=None)
         else:
-            self.render('missions/status.html', errors=None, info=["The game has not started yet"])
-
+            self.render(
+                "missions/status.html",
+                errors=None,
+                info=["The game has not started yet"],
+            )
 
     @authenticated
     def post(self, *args, **kwargs):
-        ''' Submit flags/buyout to levels '''
+        """ Submit flags/buyout to levels """
         user = self.get_current_user()
-        if self.application.settings['game_started'] or user.is_admin():
-            uri = {'buyout': self.buyout}
+        if self.application.settings["game_started"] or user.is_admin():
+            uri = {"buyout": self.buyout}
             if len(args) and args[0] in uri:
                 uri[str(args[0])]()
             else:
                 self.render("public/404.html")
         else:
-            self.render('missions/status.html', errors=None, info=["The game has not started yet"])
+            self.render(
+                "missions/status.html",
+                errors=None,
+                info=["The game has not started yet"],
+            )
 
     def buyout(self):
-        ''' Buyout and unlock a level '''
+        """ Buyout and unlock a level """
         user = self.get_current_user()
-        level = GameLevel.by_uuid(self.get_argument('uuid', ''))
+        level = GameLevel.by_uuid(self.get_argument("uuid", ""))
         if level is not None and user is not None:
             if level.buyout <= user.team.money:
-                logging.info("%s (%s) payed buyout for %d" % (
-                    user.handle, user.team.name, level.name
-                ))
+                logging.info(
+                    "%s (%s) payed buyout for %d"
+                    % (user.handle, user.team.name, level.name)
+                )
                 user.team.game_levels.append(level)
                 user.team.money -= level.buyout
                 self.dbsession.add(user.team)
@@ -401,13 +506,16 @@ class MissionsHandler(BaseHandler):
                 self.event_manager.level_unlocked(user, level)
                 self.redirect("/user/missions")
             else:
-                self.render("missions/view.html",
-                            team=user.team,
-                            errors=["You do not have enough money to unlock this level"],
-                            success=None)
+                self.render(
+                    "missions/view.html",
+                    team=user.team,
+                    errors=["You do not have enough money to unlock this level"],
+                    success=None,
+                )
         else:
-            self.render("missions/view.html",
-                        team=user.team,
-                        errors=["Level does not exist"],
-                        success=None)
-        
+            self.render(
+                "missions/view.html",
+                team=user.team,
+                errors=["Level does not exist"],
+                success=None,
+            )

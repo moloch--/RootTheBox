@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 12, 2012
 
 @author: moloch
@@ -21,9 +21,10 @@ Created on Mar 12, 2012
 
 Wrapper for AsyncHTTPTestCase that removed somes of the boilerplate code
 
-'''
+"""
 
 import logging
+
 try:
     from urllib.parse import quote_plus
 except ImportError:
@@ -35,12 +36,12 @@ from libs.StringCoding import decode
 
 
 class ApplicationTest(AsyncHTTPTestCase):
-    '''
+    """
     Modification of a wrapper class by marxus85
-    '''
+    """
 
-    username = ''
-    password = ''
+    username = ""
+    password = ""
     headers = {}
     cookies = []
 
@@ -50,58 +51,58 @@ class ApplicationTest(AsyncHTTPTestCase):
     def get(self, path, authenticated=False, **kwargs):
         if authenticated:
             self._login(self.username, self.password)
-        return self._fetch(path, method='GET', **kwargs)
+        return self._fetch(path, method="GET", **kwargs)
 
     def post(self, path, authenticated=False, **kwargs):
-        ''' Automatically adds the _xsrf tokens '''
+        """ Automatically adds the _xsrf tokens """
         if authenticated:
             self._login(self.username, self.password)
-        if 'data' not in kwargs:
-            kwargs['data'] = {}
-        kwargs['data']['_xsrf'] = '3858f62230ac3c915f300c664312c63f'
-        self.cookies.append('_xsrf=3858f62230ac3c915f300c664312c63f')
-        return self._fetch(path, method='POST', **kwargs)
+        if "data" not in kwargs:
+            kwargs["data"] = {}
+        kwargs["data"]["_xsrf"] = "3858f62230ac3c915f300c664312c63f"
+        self.cookies.append("_xsrf=3858f62230ac3c915f300c664312c63f")
+        return self._fetch(path, method="POST", **kwargs)
 
     def _login(self, username, password):
-        ''' Login to the web app and obtain a session_id cookie '''
+        """ Login to the web app and obtain a session_id cookie """
         try:
-            form = {'username': username, 'password': password}
-            self.post('/login', data=form, follow_redirects=False)(self.stop)
-            auth_cookie = '%s;' % self.wait()[0].headers['Set-Cookie'].split(';')[0]
+            form = {"username": username, "password": password}
+            self.post("/login", data=form, follow_redirects=False)(self.stop)
+            auth_cookie = "%s;" % self.wait()[0].headers["Set-Cookie"].split(";")[0]
             self.cookies.append("session_id=%s" % auth_cookie)
         except:
             logging.exception("Login failed")
 
     def _fetch(self, path, **kwargs):
-        ''' Little wrapper to make .fetch easier '''
-        data = kwargs.get('data', '')
+        """ Little wrapper to make .fetch easier """
+        data = kwargs.get("data", "")
         if data:
-            kwargs.pop('data')
+            kwargs.pop("data")
             data = self._form_encode(data)
-        method = kwargs['method']
-        if method.upper() == 'GET':
-            path = '%s?%s' % (path, data)
-        elif method.upper() == 'POST':
-            kwargs['body'] = data
+        method = kwargs["method"]
+        if method.upper() == "GET":
+            path = "%s?%s" % (path, data)
+        elif method.upper() == "POST":
+            kwargs["body"] = data
         return lambda callback: self.http_client.fetch(
             HTTPRequest(self.get_url(path), headers=self.get_headers(), **kwargs),
-            lambda response: self._parse(response, callback)
+            lambda response: self._parse(response, callback),
         )
 
     def get_headers(self):
         _headers = self.headers
-        _headers['Cookie'] = ';'.join(self.cookies)
+        _headers["Cookie"] = ";".join(self.cookies)
         return _headers
 
     def _form_encode(self, data):
-        ''' URLEncode parameters '''
+        """ URLEncode parameters """
         _data = []
         for name, param in list(data.items()):
             _data.append("%s=%s" % (quote_plus(name), quote_plus(param)))
-        return '&'.join(_data)
+        return "&".join(_data)
 
     def _parse(self, response, callback):
-        body = decode(response.body, 'utf-8')
+        body = decode(response.body, "utf-8")
         if callback == self.stop:
             callback([response, body])
         else:

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 12, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 12, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 from sqlalchemy.types import Unicode, Integer
 from sqlalchemy import Column, ForeignKey
@@ -26,19 +26,19 @@ from models.BaseModels import DatabaseObject
 
 
 class Permission(DatabaseObject):
-    ''' Permission definition '''
+    """ Permission definition """
 
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     name = Column(Unicode(64), nullable=False)
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
@@ -49,4 +49,4 @@ class Permission(DatabaseObject):
         pass
 
     def __repr__(self):
-        return u'<Permission - name: %s, user_id: %d>' % (self.name, self.user_id)
+        return "<Permission - name: %s, user_id: %d>" % (self.name, self.user_id)
