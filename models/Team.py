@@ -53,6 +53,7 @@ from libs.StringCoding import encode
 from builtins import str
 
 
+
 class Team(DatabaseObject):
 
     """ Team definition """

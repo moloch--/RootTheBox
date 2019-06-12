@@ -28,7 +28,6 @@ from models.BaseModels import DatabaseObject
 from tornado.options import options
 from builtins import str
 
-
 class PasteBin(DatabaseObject):
     """ PasteBin definition """
 
