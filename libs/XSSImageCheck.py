@@ -26,7 +26,6 @@ def is_xss_image(data):
     return all([str(char) in printable for char in data[:16]])
 
 
-
 def get_new_avatar(dir, forceteam=False):
     avatar = default_avatar(dir)
     avatars = filter_avatars(dir)
