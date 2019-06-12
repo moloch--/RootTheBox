@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 11, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 11, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 import datetime
 
@@ -32,27 +32,28 @@ UNIX_EPOCH = datetime.datetime(year=1970, month=1, day=1)
 
 
 class Snapshot(DatabaseObject):
-    ''' Snapshot of game data '''
+    """ Snapshot of game data """
 
     # Has many 'SnapshotTeam' objects
-    teams = relationship("SnapshotTeam",
-                         secondary=snapshot_to_snapshot_team,
-                         backref=backref("snapshot", lazy="select")
-                         )
+    teams = relationship(
+        "SnapshotTeam",
+        secondary=snapshot_to_snapshot_team,
+        backref=backref("snapshot", lazy="select"),
+    )
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, identifier):
-        ''' Returns a the object with id of identifier '''
+        """ Returns a the object with id of identifier """
         return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod
     def to_key(cls, val):
-        return 'snapshot.%d' % val
+        return "snapshot.%d" % val
 
     @property
     def key(self):
@@ -62,10 +63,10 @@ class Snapshot(DatabaseObject):
         data = {}
         for team in self.teams:
             data[unicode(team.name)] = {
-                'bots': team.bots,
-                'money': team.money,
-                'game_levels': [str(level) for level in team.game_levels],
-                'flags': [flag.name for flag in team.flags],
+                "bots": team.bots,
+                "money": team.money,
+                "game_levels": [str(level) for level in team.game_levels],
+                "flags": [flag.name for flag in team.flags],
             }
         unix_time = self.created - UNIX_EPOCH
-        return {'timestamp': unix_time.total_seconds(), 'scoreboard': data}
+        return {"timestamp": unix_time.total_seconds(), "scoreboard": data}

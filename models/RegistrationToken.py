@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Sep 22, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Sep 22, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 from os import urandom
@@ -27,33 +27,31 @@ from models import dbsession
 from models.BaseModels import DatabaseObject
 
 
-
-gen_token = lambda: urandom(3).encode('hex')
+gen_token = lambda: urandom(3).encode("hex")
 
 
 class RegistrationToken(DatabaseObject):
-    ''' Registration token definition '''
+    """ Registration token definition """
 
     value = Column(String(6), unique=True, nullable=False, default=gen_token)
     used = Column(Boolean, nullable=False, default=False)
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def count(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).count()
-
 
     @classmethod
     def by_value(cls, value):
-        ''' Returns a the object with value of value '''
+        """ Returns a the object with value of value """
         return dbsession.query(cls).filter_by(value=unicode(value)).first()

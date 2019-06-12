@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 @author: moloch
 
     Copyright 2013
@@ -15,7 +15,7 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 from models import engine
@@ -23,8 +23,8 @@ from models.BaseModels import DatabaseObject
 
 
 def create_tables(sqla_engine, sqla_metadata, echo=False):
-    ''' Create all the tables '''
-    setattr(sqla_engine, 'echo', echo)
+    """ Create all the tables """
+    setattr(sqla_engine, "echo", echo)
     sqla_metadata.create_all(sqla_engine)
 
 

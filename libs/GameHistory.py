@@ -1,4 +1,4 @@
-'''
+"""
 Created on Nov 11, 2012
 
 @author: moloch
@@ -16,7 +16,7 @@ Created on Nov 11, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 import memcache
@@ -35,10 +35,10 @@ from tornado.options import options
 
 @Singleton
 class GameHistory(object):
-    '''
+    """
     List-like object to store game history, with cache to avoid
     multiple large database reads.
-    '''
+    """
 
     def __init__(self):
         self.config = options
@@ -49,7 +49,7 @@ class GameHistory(object):
         self.event_manager = EventManager.instance()
 
     def _load(self):
-        ''' Moves snapshots from db into the cache '''
+        """ Moves snapshots from db into the cache """
         logging.info("Loading game history from database ...")
         snaps = Snapshot.all()
         if len(snaps) > 0:
@@ -63,61 +63,61 @@ class GameHistory(object):
             for index in range(start_index, max_index + 1):
                 snapshot = Snapshot.by_id(index)
                 if self.cache.get(snapshot.key) is None:
-                    logging.info("Cached snapshot (%d of %d)" % (
-                        snapshot.id, max_index
-                    ))
+                    logging.info(
+                        "Cached snapshot (%d of %d)" % (snapshot.id, max_index)
+                    )
                     self.cache.set(snapshot.key, snapshot.to_dict())
             logging.info("History load complete.")
         except KeyboardInterrupt:
             logging.info("History load stopped by user.")
 
-    def take_snapshot(self,*args):
-        ''' Take a snapshot of the current game data '''
+    def take_snapshot(self, *args):
+        """ Take a snapshot of the current game data """
         snapshot = self.__now__()
         self.cache.set(snapshot.key, snapshot.to_dict())
         self.event_manager.push_history(snapshot.to_dict())
 
     def get_flag_history_by_name(self, name, start, stop=None):
-        ''' Retrieves flag capture history for a team '''
+        """ Retrieves flag capture history for a team """
         snapshots = self[start:] if stop is None else self[start:stop]
         series = []
         for snapshot in snapshots:
-            if name in snapshot['scoreboard']:
-                flags = snapshot['scoreboard'][name]['flags']
-                series.append((snapshot['timestamp'], len(flags),))
+            if name in snapshot["scoreboard"]:
+                flags = snapshot["scoreboard"][name]["flags"]
+                series.append((snapshot["timestamp"], len(flags)))
         return series
 
     def get_money_history_by_name(self, name, start, stop=None):
-        ''' Retrieves money history for a team '''
+        """ Retrieves money history for a team """
         snapshots = self[start:] if stop is None else self[start:stop]
         series = []
         for snapshot in snapshots:
-            if name in snapshot['scoreboard']:
-                money = snapshot['scoreboard'][name]['money']
-                series.append((snapshot['timestamp'], money,))
+            if name in snapshot["scoreboard"]:
+                money = snapshot["scoreboard"][name]["money"]
+                series.append((snapshot["timestamp"], money))
         return series
 
     def get_bot_history_by_name(self, name, start, stop=None):
-        ''' Retrieves money history for a team '''
+        """ Retrieves money history for a team """
         snapshots = self[start:] if stop is None else self[start:stop]
         series = []
         for snapshot in snapshots:
-            if name in snapshot['scoreboard']:
-                bots = snapshot['scoreboard'][name]['bots']
-                series.append((snapshot['timestamp'], bots,))
+            if name in snapshot["scoreboard"]:
+                bots = snapshot["scoreboard"][name]["bots"]
+                series.append((snapshot["timestamp"], bots))
         return series
 
     def __now__(self):
-        ''' Returns snapshot object it as a dict '''
+        """ Returns snapshot object it as a dict """
         snapshot = Snapshot()
         bot_manager = BotManager.instance()
-        #self.dbsession = DBSession()
+        # self.dbsession = DBSession()
         for team in Team.all():
             if len(team.members) > 0:
                 snapshot_team = SnapshotTeam(
                     team_id=team.id,
                     money=team.money,
-                    bots=bot_manager.count_by_team(team)
+                    bots=bot_manager.count_by_team(team),
                 )
                 snapshot_team.game_levels = team.game_levels
                 snapshot_team.flags = team.flags
@@ -136,11 +136,11 @@ class GameHistory(object):
         return True if Snapshot.by_id(index) is not None else False
 
     def __len__(self):
-        ''' Return length of the game history '''
+        """ Return length of the game history """
         return self.dbsession.query(Snapshot).order_by(desc(Snapshot.id)).first().id
 
     def __getitem__(self, key):
-        ''' Implements slices and indexs '''
+        """ Implements slices and indexs """
         if isinstance(key, slice):
             ls = [self[index] for index in xrange(*key.indices(len(self)))]
             return filter(lambda item: item is not None, ls)
@@ -154,7 +154,7 @@ class GameHistory(object):
             raise TypeError("Invalid index argument to GameHistory")
 
     def __at__(self, index):
-        ''' Get snapshot at specific index '''
+        """ Get snapshot at specific index """
         key = Snapshot.to_key(index + 1)
         if self.cache.get(key) is not None:
             return self.cache.get(key)

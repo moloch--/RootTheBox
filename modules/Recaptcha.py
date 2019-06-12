@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 14, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 14, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 from tornado.web import UIModule
@@ -25,9 +25,8 @@ from tornado.options import options
 
 
 class Recaptcha(UIModule):
-
     def render(self, *args, **kwargs):
         if options.use_recaptcha:
-            return self.render_string('recaptcha/captcha.html')
+            return self.render_string("recaptcha/captcha.html")
         else:
-            return self.render_string('recaptcha/disabled.html')
+            return self.render_string("recaptcha/disabled.html")

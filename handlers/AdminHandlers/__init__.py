@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Nov 24, 2014
 
 @author: moloch
@@ -25,7 +25,7 @@ There's a lot of code in here ... and it's mostly ugly validation code...
 Guidelines for writing code in this file:
     - GET requests should NEVER alter application state
     - All functions should check authentication/IP address/permission
-'''
+"""
 
 from .AdminGameHandlers import *
 from .AdminGameObjectHandlers import *

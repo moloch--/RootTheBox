@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Jun 19, 2018
 
 @author: eljefe
@@ -17,7 +17,7 @@ Created on Jun 19, 2018
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 import xml.etree.cElementTree as ET
@@ -33,28 +33,22 @@ from models.BaseModels import DatabaseObject
 
 
 class Category(DatabaseObject):
-    ''' Category definition '''
+    """ Category definition """
 
-    uuid = Column(String(36),
-                  unique=True,
-                  nullable=False,
-                  default=lambda: str(uuid4())
-                  )
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
     _category = Column(Unicode(24), unique=True, nullable=False)
 
-    boxes = relationship("Box",
-                         backref=backref("category", lazy="select")
-                         )
+    boxes = relationship("Box", backref=backref("category", lazy="select"))
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def list(cls):
-        ''' Returns a list of all categories in the database '''
+        """ Returns a list of all categories in the database """
         categories = dbsession.query(cls).all()
         catlist = []
         for cat in categories:
@@ -67,17 +61,17 @@ class Category(DatabaseObject):
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_category(cls, name):
-        ''' Returns a the object with category of name '''
+        """ Returns a the object with category of name """
         return dbsession.query(cls).filter_by(_category=unicode(name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
-        ''' Return an object based on uuid '''
+        """ Return an object based on uuid """
         return dbsession.query(cls).filter_by(uuid=uuid).first()
 
     @property
@@ -91,14 +85,11 @@ class Category(DatabaseObject):
         self._category = unicode(value)
 
     def to_dict(self):
-        ''' Returns editable data as a dictionary '''
-        return {
-            "uuid": self.uuid,
-            "category": self.category,
-        }
+        """ Returns editable data as a dictionary """
+        return {"uuid": self.uuid, "category": self.category}
 
     def to_xml(self, parent):
-        ''' Add to XML dom '''
+        """ Add to XML dom """
         corp_elem = ET.SubElement(parent, "category")
         ET.SubElement(corp_elem, "category").text = self.category
 

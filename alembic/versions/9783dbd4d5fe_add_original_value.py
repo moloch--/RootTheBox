@@ -10,21 +10,27 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9783dbd4d5fe'
+revision = "9783dbd4d5fe"
 down_revision = None
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    op.alter_column('hint', '_description',
-               existing_type=sa.VARCHAR(length=512),
-               type_=sa.VARCHAR(length=1024))
-    op.add_column('flag', sa.Column('_original_value', sa.INTEGER))
+    op.alter_column(
+        "hint",
+        "_description",
+        existing_type=sa.VARCHAR(length=512),
+        type_=sa.VARCHAR(length=1024),
+    )
+    op.add_column("flag", sa.Column("_original_value", sa.INTEGER))
 
 
 def downgrade():
-    op.alter_column('hint', '_description',
-               existing_type=sa.VARCHAR(length=1024),
-               type_=sa.VARCHAR(length=512))
-    op.drop_column('flag', '_original_value')
+    op.alter_column(
+        "hint",
+        "_description",
+        existing_type=sa.VARCHAR(length=1024),
+        type_=sa.VARCHAR(length=512),
+    )
+    op.drop_column("flag", "_original_value")

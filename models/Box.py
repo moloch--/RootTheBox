@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 11, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 11, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 import os
@@ -46,87 +46,86 @@ from PIL import Image
 from resizeimage import resizeimage
 import enum
 
+
 class FlagsSubmissionType(str, enum.Enum):
-    CLASSIC = 'CLASSIC'
-    SINGLE_SUBMISSION_BOX = 'SINGLE_SUBMISSION_BOX'
+    CLASSIC = "CLASSIC"
+    SINGLE_SUBMISSION_BOX = "SINGLE_SUBMISSION_BOX"
+
 
 class Box(DatabaseObject):
-    ''' Box definition '''
+    """ Box definition """
 
-    uuid = Column(String(36),
-                  unique=True,
-                  nullable=False,
-                  default=lambda: str(uuid4())
-                  )
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
-    corporation_id = Column(Integer, ForeignKey('corporation.id'),
-                            nullable=False
-                            )
+    corporation_id = Column(Integer, ForeignKey("corporation.id"), nullable=False)
 
-    category_id = Column(Integer, ForeignKey('category.id'),
-                            nullable=True
-                            )
+    category_id = Column(Integer, ForeignKey("category.id"), nullable=True)
 
     _name = Column(Unicode(32), unique=True, nullable=False)
     _operating_system = Column(Unicode(16))
     _description = Column(Unicode(1024))
     _capture_message = Column(Unicode(1024))
     _difficulty = Column(Unicode(16))
-    game_level_id = Column(
-        Integer, ForeignKey('game_level.id'), nullable=False)
+    game_level_id = Column(Integer, ForeignKey("game_level.id"), nullable=False)
     _avatar = Column(String(64))
 
-    garbage = Column(String(32),
-                     unique=True,
-                     nullable=False,
-                     default=lambda: urandom(16).encode('hex')
-                     )
+    garbage = Column(
+        String(32),
+        unique=True,
+        nullable=False,
+        default=lambda: urandom(16).encode("hex"),
+    )
 
-    teams = relationship("Team",
-                         secondary=team_to_box,
-                         backref=backref("box", lazy="select")
-                         )
+    teams = relationship(
+        "Team", secondary=team_to_box, backref=backref("box", lazy="select")
+    )
 
-    hints = relationship("Hint",
-                         backref=backref("box", lazy="select"),
-                         cascade="all,delete,delete-orphan"
-                         )
+    hints = relationship(
+        "Hint",
+        backref=backref("box", lazy="select"),
+        cascade="all,delete,delete-orphan",
+    )
 
-    flags = relationship("Flag",
-                         backref=backref("box", lazy="select"),
-                         cascade="all,delete,delete-orphan", order_by="desc(-Flag._order)",
-                         )
+    flags = relationship(
+        "Flag",
+        backref=backref("box", lazy="select"),
+        cascade="all,delete,delete-orphan",
+        order_by="desc(-Flag._order)",
+    )
 
-    flag_submission_type = Column(Enum(FlagsSubmissionType), default=FlagsSubmissionType.CLASSIC)
+    flag_submission_type = Column(
+        Enum(FlagsSubmissionType), default=FlagsSubmissionType.CLASSIC
+    )
 
-    ip_addresses = relationship("IpAddress",
-                                backref=backref("box", lazy="select"),
-                                cascade="all,delete,delete-orphan"
-                                )
+    ip_addresses = relationship(
+        "IpAddress",
+        backref=backref("box", lazy="select"),
+        cascade="all,delete,delete-orphan",
+    )
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        ''' Return and object based on a uuid '''
+        """ Return and object based on a uuid """
         return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_name(cls, name):
-        ''' Return the box object whose name is "name" '''
+        """ Return the box object whose name is "name" """
         return dbsession.query(cls).filter_by(_name=unicode(name)).first()
 
     @classmethod
     def by_category(cls, _cat_id):
-        ''' Return the box object whose category is "_cat_id" '''
+        """ Return the box object whose category is "_cat_id" """
         return dbsession.query(cls).filter_by(category_id=int(_cat_id)).all()
 
     @classmethod
@@ -135,10 +134,10 @@ class Box(DatabaseObject):
 
     @classmethod
     def by_ip_address(cls, ip_addr):
-        '''
+        """
         Returns a box object based on an ip address, supports both ipv4
         and ipv6
-        '''
+        """
         ip = IpAddress.by_address(ip_addr)
 
         return ip.box if ip is not None else None
@@ -163,7 +162,7 @@ class Box(DatabaseObject):
 
     @property
     def operating_system(self):
-        return self._operating_system if self._operating_system else '?'
+        return self._operating_system if self._operating_system else "?"
 
     @operating_system.setter
     def operating_system(self, value):
@@ -181,8 +180,8 @@ class Box(DatabaseObject):
             ls.append("No information on file.")
         if self.difficulty != "Unknown":
             ls.append("Reported Difficulty: %s" % self.difficulty)
-        
-        if ls[-1] and not ls[-1].encode('utf8').endswith("\n"):
+
+        if ls[-1] and not ls[-1].encode("utf8").endswith("\n"):
             ls[-1] = ls[-1] + "\n"
         return unicode("\n\n".join(ls))
 
@@ -196,7 +195,11 @@ class Box(DatabaseObject):
 
     @property
     def difficulty(self):
-        return self._difficulty if self._difficulty and len(self._difficulty) else u"Unknown"
+        return (
+            self._difficulty
+            if self._difficulty and len(self._difficulty)
+            else u"Unknown"
+        )
 
     @difficulty.setter
     def difficulty(self, value):
@@ -208,7 +211,7 @@ class Box(DatabaseObject):
 
     @property
     def capture_message(self):
-        return self._capture_message if self._capture_message else ''
+        return self._capture_message if self._capture_message else ""
 
     @capture_message.setter
     def capture_message(self, value):
@@ -219,7 +222,7 @@ class Box(DatabaseObject):
         if self._avatar is not None:
             return self._avatar
         else:
-            avatar = get_new_avatar('box')
+            avatar = get_new_avatar("box")
             if not avatar.startswith("default_"):
                 self._avatar = avatar
                 dbsession.add(self)
@@ -232,28 +235,31 @@ class Box(DatabaseObject):
             self.uuid = str(uuid4())
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
-            if ext in ['png', 'jpeg', 'gif', 'bmp'] and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
-                    os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+            if ext in ["png", "jpeg", "gif", "bmp"] and not is_xss_image(image_data):
+                if self._avatar is not None and os.path.exists(
+                    options.avatar_dir + "/upload/" + self._avatar
+                ):
+                    os.unlink(options.avatar_dir + "/upload/" + self._avatar)
+                file_path = str(options.avatar_dir + "/upload/" + self.uuid + "." + ext)
                 image = Image.open(StringIO.StringIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
-                self._avatar = 'upload/' + self.uuid + '.' + ext
+                self._avatar = "upload/" + self.uuid + "." + ext
             else:
                 raise ValidationError(
-                    "Invalid image format, avatar must be: .png .jpeg .gif or .bmp")
+                    "Invalid image format, avatar must be: .png .jpeg .gif or .bmp"
+                )
         else:
             raise ValidationError("The image is too large")
 
     @property
     def ipv4s(self):
-        ''' Return a list of all ipv4 addresses '''
+        """ Return a list of all ipv4 addresses """
         return filter(lambda ip: ip.version == 4, self.ip_addresses)
 
     @property
     def ipv6s(self):
-        ''' Return a list of all ipv6 addresses '''
+        """ Return a list of all ipv6 addresses """
         return filter(lambda ip: ip.version == 6, self.ip_addresses)
 
     @property
@@ -266,7 +272,8 @@ class Box(DatabaseObject):
 
     def get_garbage_cfg(self):
         return "[Bot]\nname = %s\ngarbage = %s\n" % (
-            self.name.encode('hex'), self.garbage
+            self.name.encode("hex"),
+            self.garbage,
         )
 
     def is_complete(self, user):
@@ -278,18 +285,21 @@ class Box(DatabaseObject):
         return boxcomplete
 
     def to_xml(self, parent):
-        ''' Convert object to XML '''
+        """ Convert object to XML """
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
-        ET.SubElement(
-            box_elem, "operatingsystem").text = self._operating_system
+        ET.SubElement(box_elem, "operatingsystem").text = self._operating_system
         ET.SubElement(box_elem, "description").text = self._description
-        ET.SubElement(box_elem, "flag_submission_type").text = FlagsSubmissionType(self.flag_submission_type).name
+        ET.SubElement(box_elem, "flag_submission_type").text = FlagsSubmissionType(
+            self.flag_submission_type
+        ).name
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = self.garbage
         if self.category_id:
-            ET.SubElement(box_elem, "category").text = Category.by_id(self.category_id).category
+            ET.SubElement(box_elem, "category").text = Category.by_id(
+                self.category_id
+            ).category
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", str(len(self.flags)))
         for flag in self.flags:
@@ -307,14 +317,14 @@ class Box(DatabaseObject):
             ip.to_xml(ips_elem)
         avatarfile = os.path.join(options.avatar_dir, self.avatar)
         if self.avatar and os.path.isfile(avatarfile):
-            with open(avatarfile, mode='rb') as _avatar:
+            with open(avatarfile, mode="rb") as _avatar:
                 data = _avatar.read()
-                ET.SubElement(box_elem, "avatar").text = data.encode('base64')
+                ET.SubElement(box_elem, "avatar").text = data.encode("base64")
         else:
             ET.SubElement(box_elem, "avatar").text = "none"
 
     def to_dict(self):
-        ''' Returns editable data as a dictionary '''
+        """ Returns editable data as a dictionary """
         corp = Corporation.by_id(self.corporation_id)
         game_level = GameLevel.by_id(self.game_level_id)
         cat = Category.by_id(self.category_id)
@@ -323,20 +333,20 @@ class Box(DatabaseObject):
         else:
             category = ""
         return {
-            'name': self.name,
-            'uuid': self.uuid,
-            'corporation': corp.uuid,
-            'category': category,
-            'operating_system': self.operating_system,
-            'description': self._description,
-            'difficulty': self.difficulty,
-            'game_level': game_level.uuid,
-            'flag_submission_type': self.flag_submission_type,
-            'flaglist': self.flaglist(self.id)
+            "name": self.name,
+            "uuid": self.uuid,
+            "corporation": corp.uuid,
+            "category": category,
+            "operating_system": self.operating_system,
+            "description": self._description,
+            "difficulty": self.difficulty,
+            "game_level": game_level.uuid,
+            "flag_submission_type": self.flag_submission_type,
+            "flaglist": self.flaglist(self.id),
         }
 
     def __repr__(self):
-        return u'<Box - name: %s>' % (self.name,)
+        return u"<Box - name: %s>" % (self.name,)
 
     def __str__(self):
-        return self.name.encode('ascii', 'ignore')
+        return self.name.encode("ascii", "ignore")

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Oct 04, 2012
 
 @author: moloch
@@ -21,7 +21,7 @@ Created on Oct 04, 2012
 
 This file contains handlers related to the scoreboard.
 
-'''
+"""
 
 
 import json
@@ -42,7 +42,7 @@ from tornado.options import options
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):
-    ''' Get Score data via websocket '''
+    """ Get Score data via websocket """
 
     connections = set()
 
@@ -50,23 +50,23 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         self.last_message = datetime.now()
 
     def open(self):
-        ''' When we receive a new websocket connect '''
+        """ When we receive a new websocket connect """
         self.connections.add(self)
-        if self.application.settings['freeze_scoreboard']:
+        if self.application.settings["freeze_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message(Scoreboard.now(self))
 
     def on_message(self, message):
-        ''' We ignore messages if there are more than 1 every 3 seconds '''
-        if self.application.settings['freeze_scoreboard']:
+        """ We ignore messages if there are more than 1 every 3 seconds """
+        if self.application.settings["freeze_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
             self.write_message(Scoreboard.now(self))
 
     def on_close(self):
-        ''' Lost connection to client '''
+        """ Lost connection to client """
         try:
             self.connections.remove(self)
         except KeyError:
@@ -74,41 +74,40 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
 
 class ScoreboardHandler(BaseHandler):
-    ''' Main summary page '''
+    """ Main summary page """
 
     def get(self, *args, **kargs):
         user = self.get_current_user()
         if scoreboard_visible(user):
-            self.render('scoreboard/summary.html', timer=self.timer())
+            self.render("scoreboard/summary.html", timer=self.timer())
         elif not user:
-            self.redirect('/login')
+            self.redirect("/login")
         else:
-            self.render('public/404.html')
+            self.render("public/404.html")
 
 
 class ScoreboardAjaxHandler(BaseHandler):
-
     def get(self, *args, **kargs):
-        ''' Renders AJAX snippit based on URI '''
+        """ Renders AJAX snippit based on URI """
         uri = {
-            'summary': self.summary_table,
-            'team': self.team_details,
-            'skills': self.team_skills,
-            'mvp': self.mvp_table,
-            'timer': self.timediff,
+            "summary": self.summary_table,
+            "team": self.team_details,
+            "skills": self.team_skills,
+            "mvp": self.mvp_table,
+            "timer": self.timediff,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
-            self.render('public/404.html')
+            self.render("public/404.html")
 
     def summary_table(self):
-        ''' Render the "leaderboard" snippit '''
-        self.render('scoreboard/summary_table.html', teams=Team.ranks())
-        
+        """ Render the "leaderboard" snippit """
+        self.render("scoreboard/summary_table.html", teams=Team.ranks())
+
     def mvp_table(self):
-        ''' Render the "leaderboard" snippit '''
-        self.render('scoreboard/mvp_table.html', users=User.ranks())
+        """ Render the "leaderboard" snippit """
+        self.render("scoreboard/mvp_table.html", users=User.ranks())
 
     def timediff(self):
         timer = self.timer()
@@ -118,31 +117,27 @@ class ScoreboardAjaxHandler(BaseHandler):
             self.finish()
 
     def team_details(self):
-        ''' Returns team details in JSON form '''
-        uuid = self.get_argument('uuid', '')
+        """ Returns team details in JSON form """
+        uuid = self.get_argument("uuid", "")
         team = Team.by_uuid(uuid)
         if team is not None:
-            details = {
-                'name': team.name,
-                'game_levels': [],
-            }
+            details = {"name": team.name, "game_levels": []}
             for lvl in team.levels:
                 lvl_details = {
-                    'number': lvl.number,
-                    'captured':
-                        [flag.name for flag in team.level_flags(lvl.number)],
-                    'total': len(lvl.flags),
+                    "number": lvl.number,
+                    "captured": [flag.name for flag in team.level_flags(lvl.number)],
+                    "total": len(lvl.flags),
                 }
-                details['game_levels'].append(lvl_details)
+                details["game_levels"].append(lvl_details)
             self.write(details)
         else:
-            self.write({'error': 'Team does not exist'})
+            self.write({"error": "Team does not exist"})
         self.finish()
 
     def team_skills(self):
-        ''' Returns team details in JSON form '''
-        uuid = self.get_argument('uuid', '')
-        if uuid == '':
+        """ Returns team details in JSON form """
+        uuid = self.get_argument("uuid", "")
+        if uuid == "":
             user = self.get_current_user()
             if user:
                 team = user.team
@@ -153,7 +148,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             catlist = {}
             for cat in categories:
                 catbox = Box.by_category(cat.id)
-                if (len(catbox) > 0):
+                if len(catbox) > 0:
                     catlist[int(cat.id)] = 0
             for flag in team.flags:
                 box = flag.box
@@ -164,20 +159,19 @@ class ScoreboardAjaxHandler(BaseHandler):
                 skillvalues.append(catlist[val])
             self.write(str(skillvalues))
         else:
-            self.write({'error': 'Team does not exist'})
+            self.write({"error": "Team does not exist"})
         self.finish()
 
 
 class ScoreboardHistoryHandler(BaseHandler):
-
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         if scoreboard_visible(user):
-            self.render('scoreboard/history.html', timer=self.timer())
+            self.render("scoreboard/history.html", timer=self.timer())
         elif not user:
-            self.redirect('/login')
+            self.redirect("/login")
         else:
-            self.render('public/404.html')
+            self.render("public/404.html")
 
 
 class ScoreboardHistorySocketHandler(WebSocketHandler):
@@ -189,51 +183,50 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
         self.last_message = datetime.now()
 
     def open(self):
-        ''' When we receive a new websocket connect '''
+        """ When we receive a new websocket connect """
         self.connections.add(self)
-        history_length = int(self.get_argument('length', 29))
+        history_length = int(self.get_argument("length", 29))
         self.write_message(self.get_history(history_length))
 
     def on_message(self, message):
-        ''' We ignore messages if there are more than 1 every 3 seconds '''
-        if self.application.settings['freeze_scoreboard']:
+        """ We ignore messages if there are more than 1 every 3 seconds """
+        if self.application.settings["freeze_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
             self.write_message(self.get_history(1))
 
     def on_close(self):
-        ''' Lost connection to client '''
+        """ Lost connection to client """
         self.connections.remove(self)
 
     def get_history(self, length=29):
-        ''' Send history in JSON '''
+        """ Send history in JSON """
         length = abs(length) + 1
-        return json.dumps({'history': self.game_history[(-1 * length):]})
+        return json.dumps({"history": self.game_history[(-1 * length) :]})
 
 
 class ScoreboardWallOfSheepHandler(BaseHandler):
-
     @use_black_market
     def get(self, *args, **kwargs):
-        ''' Optionally order by argument; defaults to date/time '''
+        """ Optionally order by argument; defaults to date/time """
         user = self.get_current_user()
         if scoreboard_visible(user):
-            order = self.get_argument('order_by', '').lower()
-            if order == 'prize':
+            order = self.get_argument("order_by", "").lower()
+            if order == "prize":
                 sheep = WallOfSheep.all_order_value()
-            elif order == 'length':
+            elif order == "length":
                 sheep = sorted(WallOfSheep.all())
             else:
                 sheep = WallOfSheep.all_order_created()
             leaderboard = WallOfSheep.leaderboard()
-            self.render('scoreboard/wall_of_sheep.html',
-                        leaderboard=leaderboard,
-                        flock=sheep)
+            self.render(
+                "scoreboard/wall_of_sheep.html", leaderboard=leaderboard, flock=sheep
+            )
         elif not user:
-            self.redirect('/login')
+            self.redirect("/login")
         else:
-            self.render('public/404.html')
+            self.render("public/404.html")
 
 
 class ScoreboardPauseHandler(WebSocketHandler):
@@ -241,21 +234,21 @@ class ScoreboardPauseHandler(WebSocketHandler):
     connections = set()
 
     def open(self):
-        ''' When we receive a new websocket connect '''
+        """ When we receive a new websocket connect """
         self.connections.add(self)
-        if self.application.settings['freeze_scoreboard']:
+        if self.application.settings["freeze_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message("play")
 
     def on_message(self, message):
-        if self.application.settings['freeze_scoreboard']:
+        if self.application.settings["freeze_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message("play")
 
     def on_close(self):
-        ''' Lost connection to client '''
+        """ Lost connection to client """
         try:
             self.connections.remove(self)
         except KeyError:
@@ -263,20 +256,19 @@ class ScoreboardPauseHandler(WebSocketHandler):
 
 
 class TeamsHandler(BaseHandler):
-
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         if scoreboard_visible(user):
-            self.render('scoreboard/teams.html', timer=self.timer())
+            self.render("scoreboard/teams.html", timer=self.timer())
         elif not user:
-            self.redirect('/login')
+            self.redirect("/login")
         else:
-            self.render('public/404.html')
+            self.render("public/404.html")
 
 
 def scoreboard_visible(user):
-        if options.scoreboard_visibility == "public":
-            return True
-        if user:
-            return options.scoreboard_visibility == "players" or user.is_admin()
-        return False
+    if options.scoreboard_visibility == "public":
+        return True
+    if user:
+        return options.scoreboard_visibility == "players" or user.is_admin()
+    return False

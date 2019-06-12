@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 15, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 15, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 import os
@@ -38,30 +38,26 @@ MAX_FILE_SIZE = 50 * (1024 ** 2)  # Max file size 50Mb
 
 class FileUpload(DatabaseObject):
 
-    '''
+    """
     This is the object that stores data about files shared by
     players via the team file sharing feature.
-    '''
+    """
 
-    uuid = Column(String(36),
-                  unique=True,
-                  nullable=False,
-                  default=lambda: str(uuid4())
-                  )
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
-    team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
+    team_id = Column(Integer, ForeignKey("team.id"), nullable=False)
     byte_size = Column(Integer, nullable=False)
     _description = Column(Unicode(1024), nullable=False)
     _file_name = Column(Unicode(64), nullable=False)
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
@@ -86,11 +82,11 @@ class FileUpload(DatabaseObject):
         if content[0] is not None:
             return content[0]
         else:
-            'application/octet-stream'
+            "application/octet-stream"
 
     @property
     def description(self):
-        return self._description if self._description else u'No description'
+        return self._description if self._description else u"No description"
 
     @description.setter
     def description(self, value):
@@ -98,8 +94,8 @@ class FileUpload(DatabaseObject):
 
     @property
     def data(self):
-        with open(options.share_dir + '/' + self.uuid, 'rb') as fp:
-            return fp.read().decode('base64')
+        with open(options.share_dir + "/" + self.uuid, "rb") as fp:
+            return fp.read().decode("base64")
 
     @data.setter
     def data(self, value):
@@ -108,13 +104,12 @@ class FileUpload(DatabaseObject):
         if self.uuid is None:
             self.uuid = str(uuid4())
         self.byte_size = len(value)
-        with open(options.share_dir + '/' + self.uuid, 'wb') as fp:
-            fp.write(value.encode('base64'))
+        with open(options.share_dir + "/" + self.uuid, "wb") as fp:
+            fp.write(value.encode("base64"))
 
     def delete_data(self):
-        if os.path.exists(options.share_dir + '/' + self.uuid):
-            os.unlink(options.share_dir + '/' + self.uuid)
+        if os.path.exists(options.share_dir + "/" + self.uuid):
+            os.unlink(options.share_dir + "/" + self.uuid)
 
     def __repr__(self):
-        return u'<FileUpload - name: %s, size: %s>' % (
-            self.file_name, self.byte_size)
+        return u"<FileUpload - name: %s, size: %s>" % (self.file_name, self.byte_size)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''
+"""
 @author: moloch
 Copyright 2012 Root the Box
 Created on Feb 24, 2012
@@ -24,7 +24,7 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ---------
 
-'''
+"""
 
 import os
 import sys
@@ -39,6 +39,7 @@ import logging
 import argparse
 import platform
 import traceback
+
 try:
     import ConfigParser
 except ImportError:
@@ -52,24 +53,24 @@ from hashlib import sha512, sha1
 
 
 ### Settings
-__version__ = '0.1.0'
-__domain__  = 'game.rootthebox.com'
-__desc__    = 'Root the Box: Botnet'
-__port__    = '80'
-__path__    = 'botnet/connect'
+__version__ = "0.1.0"
+__domain__ = "game.rootthebox.com"
+__desc__ = "Root the Box: Botnet"
+__port__ = "80"
+__path__ = "botnet/connect"
 
-if platform.system().lower() in ['linux', 'darwin']:
+if platform.system().lower() in ["linux", "darwin"]:
 
     # === Text Colors ===
-    W = "\033[0m"     # default/white
+    W = "\033[0m"  # default/white
     BLA = "\033[30m"  # black
-    R = "\033[31m"    # red
-    G = "\033[32m"    # green
-    O = "\033[33m"    # orange
+    R = "\033[31m"  # red
+    G = "\033[32m"  # green
+    O = "\033[33m"  # orange
     BLU = "\033[34m"  # blue
-    P = "\033[35m"    # purple
-    C = "\033[36m"    # cyan
-    GR = "\033[37m"   # gray
+    P = "\033[35m"  # purple
+    C = "\033[36m"  # cyan
+    GR = "\033[37m"  # gray
 
     # === Styles ===
     bold = "\033[1m"
@@ -94,7 +95,7 @@ else:
 INFO = bold + C + "[*]" + W
 WARN = bold + R + "[!]" + W
 PROMPT = bold + P + "[?]" + W
-current_time = lambda: str(datetime.now()).split(' ')[1].split('.')[0]
+current_time = lambda: str(datetime.now()).split(" ")[1].split(".")[0]
 
 """
 websocket python client.
@@ -128,6 +129,7 @@ class WebSocketException(Exception):
     """
     websocket exeception class.
     """
+
     pass
 
 
@@ -136,7 +138,9 @@ class WebSocketConnectionClosedException(WebSocketException):
     If remote host closed the connection or some network error happened,
     this exception will be raised.
     """
+
     pass
+
 
 default_timeout = None
 traceEnabled = False
@@ -243,9 +247,10 @@ def create_connection(url, timeout=None, **options):
     websock.connect(url, **options)
     return websock
 
-_MAX_INTEGER = (1 << 32) -1
-_AVAILABLE_KEY_CHARS = range(0x21, 0x2f + 1) + range(0x3a, 0x7e + 1)
-_MAX_CHAR_BYTE = (1<<8) -1
+
+_MAX_INTEGER = (1 << 32) - 1
+_AVAILABLE_KEY_CHARS = range(0x21, 0x2F + 1) + range(0x3A, 0x7E + 1)
+_MAX_CHAR_BYTE = (1 << 8) - 1
 
 # ref. Websocket gets an update, and it breaks stuff.
 # http://axod.blogspot.com/2010/06/websocket-gets-update-and-it-breaks.html
@@ -255,10 +260,8 @@ def _create_sec_websocket_key():
     uid = uuid.uuid4()
     return base64.encodestring(uid.bytes).strip()
 
-_HEADERS_TO_CHECK = {
-    "upgrade": "websocket",
-    "connection": "upgrade",
-}
+
+_HEADERS_TO_CHECK = {"upgrade": "websocket", "connection": "upgrade"}
 
 
 class _SSLSocketWrapper(object):
@@ -270,6 +273,7 @@ class _SSLSocketWrapper(object):
 
     def send(self, payload):
         return self.ssl.write(payload)
+
 
 _BOOL_VALUES = (0, 1)
 
@@ -290,15 +294,14 @@ class ABNF(object):
     """
 
     # operation code values.
-    OPCODE_TEXT   = 0x1
+    OPCODE_TEXT = 0x1
     OPCODE_BINARY = 0x2
-    OPCODE_CLOSE  = 0x8
-    OPCODE_PING   = 0x9
-    OPCODE_PONG   = 0xa
+    OPCODE_CLOSE = 0x8
+    OPCODE_PING = 0x9
+    OPCODE_PONG = 0xA
 
     # available operation code value tuple
-    OPCODES = (OPCODE_TEXT, OPCODE_BINARY, OPCODE_CLOSE,
-                OPCODE_PING, OPCODE_PONG)
+    OPCODES = (OPCODE_TEXT, OPCODE_BINARY, OPCODE_CLOSE, OPCODE_PING, OPCODE_PONG)
 
     # opcode human readable string
     OPCODE_MAP = {
@@ -306,16 +309,17 @@ class ABNF(object):
         OPCODE_BINARY: "binary",
         OPCODE_CLOSE: "close",
         OPCODE_PING: "ping",
-        OPCODE_PONG: "pong"
+        OPCODE_PONG: "pong",
     }
 
     # data length threashold.
-    LENGTH_7  = 0x7d
+    LENGTH_7 = 0x7D
     LENGTH_16 = 1 << 16
     LENGTH_63 = 1 << 63
 
-    def __init__(self, fin = 0, rsv1 = 0, rsv2 = 0, rsv3 = 0,
-                 opcode = OPCODE_TEXT, mask = 1, data = ""):
+    def __init__(
+        self, fin=0, rsv1=0, rsv2=0, rsv3=0, opcode=OPCODE_TEXT, mask=1, data=""
+    ):
         """
         Constructor for ABNF.
         please check RFC for arguments.
@@ -357,16 +361,20 @@ class ABNF(object):
         if length >= ABNF.LENGTH_63:
             raise ValueError("data is too long")
 
-        frame_header = chr(self.fin << 7
-                           | self.rsv1 << 6 | self.rsv2 << 5 | self.rsv3 << 4
-                           | self.opcode)
+        frame_header = chr(
+            self.fin << 7
+            | self.rsv1 << 6
+            | self.rsv2 << 5
+            | self.rsv3 << 4
+            | self.opcode
+        )
         if length < ABNF.LENGTH_7:
             frame_header += chr(self.mask << 7 | length)
         elif length < ABNF.LENGTH_16:
-            frame_header += chr(self.mask << 7 | 0x7e)
+            frame_header += chr(self.mask << 7 | 0x7E)
             frame_header += struct.pack("!H", length)
         else:
-            frame_header += chr(self.mask << 7 | 0x7f)
+            frame_header += chr(self.mask << 7 | 0x7F)
             frame_header += struct.pack("!Q", length)
 
         if not self.mask:
@@ -419,7 +427,7 @@ class WebSocket(object):
         sockopt must be tuple and each element is argument of sock.setscokopt.
     """
 
-    def __init__(self, get_mask_key = None, sockopt = ()):
+    def __init__(self, get_mask_key=None, sockopt=()):
         """
         Initalize WebSocket object.
         """
@@ -574,7 +582,7 @@ class WebSocket(object):
 
         return status, headers
 
-    def send(self, payload, opcode = ABNF.OPCODE_TEXT):
+    def send(self, payload, opcode=ABNF.OPCODE_TEXT):
         """
         Send the data as string.
 
@@ -594,7 +602,7 @@ class WebSocket(object):
         if traceEnabled:
             logger.debug("send: " + repr(data))
 
-    def ping(self, payload = ""):
+    def ping(self, payload=""):
         """
         send ping data.
 
@@ -653,16 +661,16 @@ class WebSocket(object):
         rsv1 = b1 >> 6 & 1
         rsv2 = b1 >> 5 & 1
         rsv3 = b1 >> 4 & 1
-        opcode = b1 & 0xf
+        opcode = b1 & 0xF
         b2 = ord(header_bytes[1])
         mask = b2 >> 7 & 1
-        length = b2 & 0x7f
+        length = b2 & 0x7F
 
         length_data = ""
-        if length == 0x7e:
+        if length == 0x7E:
             length_data = self._recv_strict(2)
             length = struct.unpack("!H", length_data)[0]
-        elif length == 0x7f:
+        elif length == 0x7F:
             length_data = self._recv_strict(8)
             length = struct.unpack("!Q", length_data)[0]
 
@@ -680,7 +688,7 @@ class WebSocket(object):
         frame = ABNF(fin, rsv1, rsv2, rsv3, opcode, mask, data)
         return frame
 
-    def send_close(self, status = STATUS_NORMAL, reason = ""):
+    def send_close(self, status=STATUS_NORMAL, reason=""):
         """
         send close data to the server.
 
@@ -690,9 +698,9 @@ class WebSocket(object):
         """
         if status < 0 or status >= ABNF.LENGTH_16:
             raise ValueError("code is invalid range")
-        self.send(struct.pack('!H', status) + reason, ABNF.OPCODE_CLOSE)
+        self.send(struct.pack("!H", status) + reason, ABNF.OPCODE_CLOSE)
 
-    def close(self, status = STATUS_NORMAL, reason = ""):
+    def close(self, status=STATUS_NORMAL, reason=""):
         """
         Close Websocket object
 
@@ -705,7 +713,7 @@ class WebSocket(object):
                 raise ValueError("code is invalid range")
 
             try:
-                self.send(struct.pack('!H', status) + reason, ABNF.OPCODE_CLOSE)
+                self.send(struct.pack("!H", status) + reason, ABNF.OPCODE_CLOSE)
                 timeout = self.sock.gettimeout()
                 self.sock.settimeout(3)
                 try:
@@ -757,10 +765,19 @@ class WebSocketApp(object):
     Higher level of APIs are provided.
     The interface is like JavaScript WebSocket object.
     """
-    def __init__(self, url, header = [],
-                 on_open = None, on_message = None, on_error = None,
-                 on_close = None, keep_running = True, get_mask_key = None,
-                 sockopt=()):
+
+    def __init__(
+        self,
+        url,
+        header=[],
+        on_open=None,
+        on_message=None,
+        on_error=None,
+        on_close=None,
+        keep_running=True,
+        get_mask_key=None,
+        sockopt=(),
+    ):
         """
         url: websocket url.
         header: custom header for websocket handshake.
@@ -791,7 +808,7 @@ class WebSocketApp(object):
         self.get_mask_key = get_mask_key
         self.sock = None
 
-    def send(self, data, opcode = ABNF.OPCODE_TEXT):
+    def send(self, data, opcode=ABNF.OPCODE_TEXT):
         """
         send message.
         data: message to send. If you set opcode to OPCODE_TEXT, data must be utf-8 string or unicode.
@@ -817,8 +834,8 @@ class WebSocketApp(object):
         if self.sock:
             raise WebSocketException("socket is already opened")
         try:
-            self.sock = WebSocket(self.get_mask_key, sockopt = sockopt)
-            self.sock.connect(self.url, header = self.header)
+            self.sock = WebSocket(self.get_mask_key, sockopt=sockopt)
+            self.sock.connect(self.url, header=self.header)
             self._run_with_no_err(self.on_open)
             while self.keep_running:
                 data = self.sock.recv()
@@ -840,26 +857,28 @@ class WebSocketApp(object):
                 if logger.isEnabledFor(logging.DEBUG):
                     logger.error(e)
 
+
 #############################################################################################
 ### [ Messages ] ############################################################################
 #############################################################################################
 
+
 def display_error(ws, response, verbose=False):
-    msg = response['message'] if 'message' in response else response['error']
+    msg = response["message"] if "message" in response else response["error"]
     sys.stderr.write("\n%s %s Error  : %s" % (WARN, current_time(), msg))
     if (ws is not None and ws.verbose) or verbose:
-        sys.stderr.write('\n')
+        sys.stderr.write("\n")
         traceback.print_exc(file=sys.stderr)
     sys.stderr.flush()
 
+
 def display_status(ws, response, verbose=False):
-    sys.stdout.write(chr(27) + '[2K' + '\r')
-    sys.stdout.write("%s %s Status : %s " % (
-        INFO, current_time(), response['message']
-    ))
+    sys.stdout.write(chr(27) + "[2K" + "\r")
+    sys.stdout.write("%s %s Status : %s " % (INFO, current_time(), response["message"]))
     if (ws is not None and ws.verbose) or verbose:
-        sys.stdout.write('\n')
+        sys.stdout.write("\n")
     sys.stdout.flush()
+
 
 def get_response_xid(garbage, xid):
     round1 = sha512(xid + garbage).hexdigest()
@@ -868,129 +887,153 @@ def get_response_xid(garbage, xid):
     print("[*] Return: " + str(sha512(round1).hexdigest()))
     return sha512(round1).hexdigest()
 
+
 def send_interrogation_response(ws, response):
-    display_status(ws, {'message': "Authorizing, please wait ..."})
+    display_status(ws, {"message": "Authorizing, please wait ..."})
     solved_xid = {
-        'opcode': 'interrogation_response',
-        'response_xid': get_response_xid(ws.garbage, response['xid']),
-        'box_name': ws.box_name,
-        'handle': ws.user
+        "opcode": "interrogation_response",
+        "response_xid": get_response_xid(ws.garbage, response["xid"]),
+        "box_name": ws.box_name,
+        "handle": ws.user,
     }
     ws.send(json.dumps(solved_xid))
 
+
 def recv_ping(ws, response, verbose=False):
-    ''' Print that we just got a ping from c&c '''
-    sys.stdout.write(chr(27) + '[2K' + '\r')
-    sys.stdout.write(INFO+' %s  Ping  : Received a ping from command & control' % current_time())
+    """ Print that we just got a ping from c&c """
+    sys.stdout.write(chr(27) + "[2K" + "\r")
+    sys.stdout.write(
+        INFO + " %s  Ping  : Received a ping from command & control" % current_time()
+    )
     if (ws is not None and ws.verbose) or verbose:
-        sys.stdout.write('\n')
+        sys.stdout.write("\n")
     sys.stdout.flush()
 
+
 opcodes = {
-    'error': display_error,
-    'status': display_status,
-    'interrogate': send_interrogation_response,
-    'ping': recv_ping,
+    "error": display_error,
+    "status": display_status,
+    "interrogate": send_interrogation_response,
+    "ping": recv_ping,
 }
 
+
 def on_open(ws):
-    display_status(ws, {'message': "Successfully connected to command & control ..."})
+    display_status(ws, {"message": "Successfully connected to command & control ..."})
+
 
 def on_message(ws, message):
-    ''' Parse message and call a function '''
+    """ Parse message and call a function """
     try:
         response = json.loads(message)
-        if 'opcode' not in response:
-            raise ValueError('Missing opcode')
-        elif response['opcode'] not in opcodes:
-            raise ValueError('Invalid opcode')
+        if "opcode" not in response:
+            raise ValueError("Missing opcode")
+        elif response["opcode"] not in opcodes:
+            raise ValueError("Invalid opcode")
         else:
-            opcodes[response['opcode']](ws, response)
+            opcodes[response["opcode"]](ws, response)
     except ValueError as error:
-        display_error(ws, {'error': str(error)})
+        display_error(ws, {"error": str(error)})
+
 
 def on_error(ws, error):
-    display_error(ws, {'error': str(error)})
+    display_error(ws, {"error": str(error)})
+
 
 def on_close(ws):
-    display_error(ws, {'error': "Disconnected from command & control\n"})
+    display_error(ws, {"error": "Disconnected from command & control\n"})
+
 
 def get_default_garbage():
-    return '/root/garbage' if platform.system().lower() in ['linux', 'darwin'] else 'C:\\garbage'
+    return (
+        "/root/garbage"
+        if platform.system().lower() in ["linux", "darwin"]
+        else "C:\\garbage"
+    )
+
 
 def main(domain, port, user, garbage_path, secure, verbose):
-    ''' Main() '''
+    """ Main() """
     garbage_cfg = ConfigParser.SafeConfigParser()
     if garbage_path is None:
         garbage_path = get_default_garbage()
     if not os.path.exists(garbage_path):
-        print(WARN+" Garbage file not found %s" % garbage_path)
+        print(WARN + " Garbage file not found %s" % garbage_path)
         os._exit(1)
-    fp = open(garbage_path, 'r')
+    fp = open(garbage_path, "r")
     try:
         garbage_cfg.readfp(fp)
     except:
-        print(WARN+" Garbage file is not properly formatted")
+        print(WARN + " Garbage file is not properly formatted")
         os._exit(2)
     try:
         enableTrace(verbose)
         connection_url = "ws://%s:%s/%s" % (domain, port, __path__)
-        display_status(None, {'message': "Connecting to: %s" % connection_url}, verbose=verbose)
-        ws = WebSocketApp(connection_url,
-            on_message = on_message,
-            on_error = on_error,
-            on_close = on_close,
+        display_status(
+            None, {"message": "Connecting to: %s" % connection_url}, verbose=verbose
+        )
+        ws = WebSocketApp(
+            connection_url, on_message=on_message, on_error=on_error, on_close=on_close
         )
         ws.verbose = verbose
-        ws.garbage = garbage_cfg.get("Bot", 'garbage')
-        ws.box_name = garbage_cfg.get("Bot", 'name').decode('hex')
+        ws.garbage = garbage_cfg.get("Bot", "garbage")
+        ws.box_name = garbage_cfg.get("Bot", "name").decode("hex")
         ws.user = user
         ws.on_open = on_open
         ws.run_forever()
     except KeyboardInterrupt:
         os._exit(0)
     except Exception as error:
-        display_error(None, {'error': str(error)})
+        display_error(None, {"error": str(error)})
         os._exit(1)
 
 
 ##############################################################################
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=__desc__,
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__desc__)
+    parser.add_argument(
+        "--version", action="version", version="%(prog)s v" + __version__
     )
-    parser.add_argument('--version',
-        action='version',
-        version='%(prog)s v'+__version__
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        help="display verbose output (default: false)",
+        action="store_true",
+        dest="verbose",
     )
-    parser.add_argument('--verbose', '-v',
-        help='display verbose output (default: false)',
-        action='store_true',
-        dest='verbose',
+    parser.add_argument(
+        "--secure",
+        "-s",
+        help="connect using a secure socket (default: false)",
+        action="store_true",
+        dest="secure",
     )
-    parser.add_argument('--secure', '-s',
-        help='connect using a secure socket (default: false)',
-        action='store_true',
-        dest='secure',
+    parser.add_argument(
+        "--garbage",
+        "-g",
+        help="path to garbage file (defult: /root/garbage or C:\\garbage)",
+        dest="garbage",
     )
-    parser.add_argument('--garbage', '-g',
-        help='path to garbage file (defult: /root/garbage or C:\\garbage)',
-        dest='garbage',
-    )
-    parser.add_argument('--domain', '-d',
-        help='scoring engine ip address, or domain (default: %s)' % __domain__,
+    parser.add_argument(
+        "--domain",
+        "-d",
+        help="scoring engine ip address, or domain (default: %s)" % __domain__,
         default=__domain__,
-        dest='domain',
+        dest="domain",
     )
-    parser.add_argument('--port', '-p',
-        help='netork port to connect to (default: %s)' % __port__,
+    parser.add_argument(
+        "--port",
+        "-p",
+        help="netork port to connect to (default: %s)" % __port__,
         default=__port__,
-        dest='port',
+        dest="port",
     )
-    parser.add_argument('--user', '-u',
-        help='your handle (scoring engine account name)',
+    parser.add_argument(
+        "--user",
+        "-u",
+        help="your handle (scoring engine account name)",
         required=True,
-        dest='handle',
+        dest="handle",
     )
     args = parser.parse_args()
     main(args.domain, args.port, args.handle, args.garbage, args.secure, args.verbose)

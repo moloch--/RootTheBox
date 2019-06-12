@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 11, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 11, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 
 from sqlalchemy import Column, ForeignKey
@@ -31,31 +31,31 @@ from models.BaseModels import DatabaseObject
 
 class SnapshotTeam(DatabaseObject):
 
-    '''
+    """
     Used by game history; snapshot of a single team in history
-    '''
+    """
 
     team_id = Column(Integer, ForeignKey("team.id"), nullable=False)
     money = Column(Integer, nullable=False)
     bots = Column(Integer, nullable=False)
 
-    game_levels = relationship("GameLevel",
-                               secondary=snapshot_team_to_game_level,
-                               backref=backref("snapshot_team", lazy="select")
-                               )
+    game_levels = relationship(
+        "GameLevel",
+        secondary=snapshot_team_to_game_level,
+        backref=backref("snapshot_team", lazy="select"),
+    )
 
-    flags = relationship("Flag",
-                         secondary=snapshot_team_to_flag,
-                         backref=backref("snapshot_team", lazy="select")
-                         )
+    flags = relationship(
+        "Flag",
+        secondary=snapshot_team_to_flag,
+        backref=backref("snapshot_team", lazy="select"),
+    )
 
     @property
     def name(self):
-        return dbsession.query(Team._name).filter_by(
-            id=self.team_id
-        ).first()[0]
+        return dbsession.query(Team._name).filter_by(id=self.team_id).first()[0]
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()

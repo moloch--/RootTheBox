@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 13, 2012
 
 @author: moloch
@@ -21,7 +21,7 @@ Created on Mar 13, 2012
 
 Modification of the tornado web StaticFileHandler
 
-'''
+"""
 
 
 import logging
@@ -32,23 +32,23 @@ from tornado.options import options
 
 class StaticFileHandler(DefaultStaticHandler):
 
-    '''
+    """
     Same as the normal Tornado StaticFileHandler with a
     couple overloaded methods.
-    '''
+    """
 
     session = None
     config = options
 
     def set_default_headers(self):
-        '''
+        """
         We need to add the security headers here too, especially the
         X-Content-Type-Options header, since we whitelist file extenstions.
         this should prevent anyone from serving html/etc from the static
         handler
-        '''
+        """
         if options.force_download_game_materials:
-            self.set_header('Content-Disposition','attachment')
+            self.set_header("Content-Disposition", "attachment")
         self.set_header("Server", "Microsoft-IIS/7.5")
         self.add_header("X-AspNetMvc-Version", "3.0")
         self.add_header("X-AspNet-Version", "4.0.30319")
@@ -57,12 +57,13 @@ class StaticFileHandler(DefaultStaticHandler):
         self.add_header("X-XSS-Protection", "1; mode=block")
         self.add_header("X-Content-Type-Options", "nosniff")
         if self.config.ssl:
-            self.add_header("Strict-Transport-Security", 'max-age=31536000;')
+            self.add_header("Strict-Transport-Security", "max-age=31536000;")
 
     def write_error(self, status_code, **kwargs):
-        ''' Render a generic error page '''
-        logging.error("Static file request from %s resulted in %d status" % (
-            self.request.remote_ip, status_code
-        ))
+        """ Render a generic error page """
+        logging.error(
+            "Static file request from %s resulted in %d status"
+            % (self.request.remote_ip, status_code)
+        )
         # Reguardless of error, send a 404
-        self.render('public/404.html')
+        self.render("public/404.html")

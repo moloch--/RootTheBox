@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 12, 2012
 
 @author: moloch
@@ -17,11 +17,12 @@ Created on Mar 12, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 import logging
 
 from uuid import uuid4
+
 try:
     from urllib.parse import urlparse
 except ImportError:
@@ -44,9 +45,9 @@ ERROR = u"/static/images/error.png"
 
 class Notification(DatabaseObject):
 
-    ''' Notification definition '''
+    """ Notification definition """
 
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey("user.id"))
     title = Column(Unicode(256), nullable=False)
     message = Column(Unicode(256), nullable=False)
     viewed = Column(Boolean, default=False)
@@ -54,37 +55,44 @@ class Notification(DatabaseObject):
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).filter_by(user_id=None).all()
 
     @classmethod
     def admin(cls):
-        ''' Returns a list of unique notifications in the database '''
-        return dbsession.query(cls.created, cls.icon_url, cls.message, cls.title).distinct()
+        """ Returns a list of unique notifications in the database """
+        return dbsession.query(
+            cls.created, cls.icon_url, cls.message, cls.title
+        ).distinct()
 
     @classmethod
     def clear(cls):
-        ''' Deletes all objects in the database '''
+        """ Deletes all objects in the database """
         return dbsession.query(cls).delete()
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_user_id(cls, _id):
-        ''' Return notifications for a single user '''
-        return dbsession.query(cls).filter_by(user_id=_id).order_by(
-            desc(cls.created)
-        ).all()
+        """ Return notifications for a single user """
+        return (
+            dbsession.query(cls)
+            .filter_by(user_id=_id)
+            .order_by(desc(cls.created))
+            .all()
+        )
 
     @classmethod
     def unread_by_user_id(cls, user_id):
-        ''' Return all notification which have not been viewed '''
-        return dbsession.query(cls).filter(
-            and_(cls.user_id == user_id, cls.viewed == False)
-        ).all()
+        """ Return all notification which have not been viewed """
+        return (
+            dbsession.query(cls)
+            .filter(and_(cls.user_id == user_id, cls.viewed == False))
+            .all()
+        )
 
     @classmethod
     def create_user(cls, user, title, message, icon=None):
@@ -111,7 +119,7 @@ class Notification(DatabaseObject):
 
     @classmethod
     def _create(cls, user, title, message, icon=None):
-        ''' Create a notification and save it to the database '''
+        """ Create a notification and save it to the database """
         logging.debug("Creating notification '%s' for %r" % (title, user))
         icon = icon if icon is not None else INFO
         notification = Notification(
@@ -123,9 +131,5 @@ class Notification(DatabaseObject):
         return notification
 
     def to_dict(self):
-        ''' Return public data as dict '''
-        return {
-            'title': self.title,
-            'message': self.message,
-            'icon_url': self.icon_url,
-        }
+        """ Return public data as dict """
+        return {"title": self.title, "message": self.message, "icon_url": self.icon_url}

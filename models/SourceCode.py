@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 12, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Mar 12, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 import os
 
@@ -33,18 +33,14 @@ from tornado.options import options
 
 class SourceCode(DatabaseObject):
 
-    '''
+    """
     Holds the source code for a box which can be purchased from the
     source code market.
-    '''
+    """
 
-    uuid = Column(String(36),
-                  unique=True,
-                  nullable=False,
-                  default=lambda: str(uuid4())
-                  )
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
-    box_id = Column(Integer, ForeignKey('box.id'), nullable=False)
+    box_id = Column(Integer, ForeignKey("box.id"), nullable=False)
     _price = Column(Integer, nullable=False)
     _description = Column(Unicode(1024), nullable=False)
     checksum = Column(String(40))
@@ -52,17 +48,17 @@ class SourceCode(DatabaseObject):
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        ''' Returns a the object with a given _uuid '''
+        """ Returns a the object with a given _uuid """
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
@@ -75,13 +71,13 @@ class SourceCode(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        fname = value.replace('\n', '').replace('\r', '')
+        fname = value.replace("\n", "").replace("\r", "")
         self._file_name = unicode(os.path.basename(fname))[:64]
 
     @property
     def data(self):
-        with open(options.source_code_market_dir + '/' + self.uuid, 'rb') as fp:
-            return fp.read().decode('base64')
+        with open(options.source_code_market_dir + "/" + self.uuid, "rb") as fp:
+            return fp.read().decode("base64")
 
     @data.setter
     def data(self, value):
@@ -89,12 +85,12 @@ class SourceCode(DatabaseObject):
             self.uuid = str(uuid4())
         self.byte_size = len(value)
         self.checksum = sha1(value).hexdigest()
-        with open(options.source_code_market_dir + '/' + self.uuid, 'wb') as fp:
-            fp.write(value.encode('base64'))
+        with open(options.source_code_market_dir + "/" + self.uuid, "wb") as fp:
+            fp.write(value.encode("base64"))
 
     def delete_data(self):
-        ''' Remove the file from the file system, if it exists '''
-        fpath = options.source_code_market_dir + '/' + self.uuid
+        """ Remove the file from the file system, if it exists """
+        fpath = options.source_code_market_dir + "/" + self.uuid
         if os.path.exists(fpath) and os.path.isfile(fpath):
             os.unlink(fpath)
 
@@ -119,7 +115,7 @@ class SourceCode(DatabaseObject):
 
     def to_dict(self):
         return {
-            'file_name': self.file_name,
-            'price': self.price,
-            'description': self.description,
+            "file_name": self.file_name,
+            "price": self.price,
+            "description": self.description,
         }

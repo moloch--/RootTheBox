@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Nov 24, 2014
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Nov 24, 2014
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 import os
 
@@ -30,18 +30,14 @@ from tornado.options import options
 
 class FlagAttachment(DatabaseObject):
 
-    '''
+    """
     These are files that the administrator wants to
     distribute alongside a flag.
-    '''
+    """
 
-    uuid = Column(String(36),
-                  unique=True,
-                  nullable=False,
-                  default=lambda: str(uuid4())
-                  )
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
-    flag_id = Column(Integer, ForeignKey('flag.id'), nullable=False)
+    flag_id = Column(Integer, ForeignKey("flag.id"), nullable=False)
     _file_name = Column(Unicode(64), nullable=False)
 
     @property
@@ -50,24 +46,24 @@ class FlagAttachment(DatabaseObject):
 
     @file_name.setter
     def file_name(self, value):
-        fname = value.replace('\n', '').replace('\r', '')
+        fname = value.replace("\n", "").replace("\r", "")
         self._file_name = unicode(os.path.basename(fname))[:64]
 
     @property
     def data(self):
-        with open(options.flag_attachment_dir + '/' + self.uuid, 'rb') as fp:
-            return fp.read().decode('base64')
+        with open(options.flag_attachment_dir + "/" + self.uuid, "rb") as fp:
+            return fp.read().decode("base64")
 
     @data.setter
     def data(self, value):
         if self.uuid is None:
             self.uuid = str(uuid4())
         self.byte_size = len(value)
-        with open(options.flag_attachment_dir + '/' + self.uuid, 'wb') as fp:
-            fp.write(value.encode('base64'))
+        with open(options.flag_attachment_dir + "/" + self.uuid, "wb") as fp:
+            fp.write(value.encode("base64"))
 
     def delete_data(self):
-        ''' Remove the file from the file system, if it exists '''
-        fpath = options.flag_attachment_dir + '/' + self.uuid
+        """ Remove the file from the file system, if it exists """
+        fpath = options.flag_attachment_dir + "/" + self.uuid
         if os.path.exists(fpath) and os.path.isfile(fpath):
             os.unlink(fpath)

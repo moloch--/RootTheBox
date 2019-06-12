@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 12, 2012
 
 @author: moloch
@@ -22,7 +22,7 @@ Created on Mar 12, 2012
 This file contiains the user object, used to store data related to an
 indiviudal user, such as handle/account/password/etc
 
-'''
+"""
 
 
 import os
@@ -51,21 +51,18 @@ from resizeimage import resizeimage
 
 
 # Constants
-ADMIN_PERMISSION = u'admin'
-DEFAULT_HASH_ALGORITHM = 'md5'
-ITERATE = 0x2bad  # 11181
+ADMIN_PERMISSION = u"admin"
+DEFAULT_HASH_ALGORITHM = "md5"
+ITERATE = 0x2BAD  # 11181
+
 
 class User(DatabaseObject):
 
-    ''' User definition '''
+    """ User definition """
 
-    uuid = Column(String(36),
-                  unique=True,
-                  nullable=False,
-                  default=lambda: str(uuid4())
-                  )
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
-    team_id = Column(Integer, ForeignKey('team.id'))
+    team_id = Column(Integer, ForeignKey("team.id"))
     _avatar = Column(String(64))
     _locked = Column(Boolean, default=False, nullable=False)
     last_login = Column(DateTime)
@@ -73,79 +70,71 @@ class User(DatabaseObject):
     _handle = Column(Unicode(16), unique=True, nullable=False)
     _name = Column(Unicode(64), unique=False, nullable=True)
     _email = Column(Unicode(64), unique=False, nullable=True)
-    _password = Column('password', String(64))
-    _bank_password = Column('bank_password', String(128))
+    _password = Column("password", String(64))
+    _bank_password = Column("bank_password", String(128))
     money = Column(Integer, default=0, nullable=False)
 
-    theme_id = Column(Integer, ForeignKey('theme.id'),
-                      default=3,
-                      nullable=False
-                      )
+    theme_id = Column(Integer, ForeignKey("theme.id"), default=3, nullable=False)
 
-    algorithm = Column(String(8),
-                       default=DEFAULT_HASH_ALGORITHM,
-                       nullable=False
-                       )
+    algorithm = Column(String(8), default=DEFAULT_HASH_ALGORITHM, nullable=False)
 
-    permissions = relationship("Permission",
-                               backref=backref("user", lazy="select"),
-                               cascade="all,delete,delete-orphan"
-                               )
-    notifications = relationship("Notification",
-                                 backref=backref("user", lazy="select"),
-                                 cascade="all,delete,delete-orphan"
-                                 )
+    permissions = relationship(
+        "Permission",
+        backref=backref("user", lazy="select"),
+        cascade="all,delete,delete-orphan",
+    )
+    notifications = relationship(
+        "Notification",
+        backref=backref("user", lazy="select"),
+        cascade="all,delete,delete-orphan",
+    )
 
     algorithms = {
-        'md5': (md5, 1, 'md5',),
-        'sha1': (sha1, 2, 'sha1',),
-        'sha256': (sha256, 3, 'sha256',),
-        'sha512': (sha512, 4, 'sha512',),
+        "md5": (md5, 1, "md5"),
+        "sha1": (sha1, 2, "sha1"),
+        "sha256": (sha256, 3, "sha256"),
+        "sha512": (sha512, 4, "sha512"),
     }
 
     @classmethod
     def all(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).all()
 
     @classmethod
     def all_users(cls):
-        ''' Return all non-admin user objects '''
-        return filter(
-            lambda user: user.is_admin() is False, cls.all()
-        )
+        """ Return all non-admin user objects """
+        return filter(lambda user: user.is_admin() is False, cls.all())
 
     @classmethod
     def not_team(cls, tid):
-        ''' Return all users not on a given team, exclude admins '''
+        """ Return all users not on a given team, exclude admins """
         teams = dbsession.query(cls).filter(cls.team_id != tid).all()
-        return filter(
-            lambda user: user.is_admin() is False, teams
-        )
+        return filter(lambda user: user.is_admin() is False, teams)
 
     @classmethod
     def by_id(cls, _id):
-        ''' Returns a the object with id of _id '''
+        """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        ''' Return and object based on a uuid '''
+        """ Return and object based on a uuid """
         return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
 
     @classmethod
     def by_handle(cls, handle):
-        ''' Return the user object whose user is "_handle" '''
+        """ Return the user object whose user is "_handle" """
         handle = unicode(handle).strip()
         return dbsession.query(cls).filter_by(_handle=handle).first()
 
     @classmethod
     def _hash_bank_password(cls, algorithm_name, password):
-        '''
+        """
         Hashes the password using Md5/Sha1/Sha256/Sha512
         only used for the admin accounts.  We only allow
         whitespace/non-ascii.
-        '''
+        """
         if algorithm_name is None:
             algorithm_name = DEFAULT_HASH_ALGORITHM
         if algorithm_name in cls.algorithms:
@@ -161,7 +150,7 @@ class User(DatabaseObject):
 
     @classmethod
     def ranks(cls):
-        ''' Returns a list of all objects in the database '''
+        """ Returns a list of all objects in the database """
         return dbsession.query(cls).order_by(desc(cls.money)).all()
 
     @property
@@ -174,9 +163,10 @@ class User(DatabaseObject):
         if len(_password) >= int(options.min_user_password_length):
             self._password = self._hash_password(value)
         else:
-            raise ValidationError("Invalid password length (min %d chars)" % (
-                options.min_user_password_length,
-            ))
+            raise ValidationError(
+                "Invalid password length (min %d chars)"
+                % (options.min_user_password_length,)
+            )
 
     @property
     def bank_password(self):
@@ -185,16 +175,20 @@ class User(DatabaseObject):
     @bank_password.setter
     def bank_password(self, value):
         if not options.banking:
-            #random password
-            _password = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(options.max_password_length))
+            # random password
+            _password = "".join(
+                random.SystemRandom().choice(string.ascii_uppercase + string.digits)
+                for _ in range(options.max_password_length)
+            )
         else:
             _password = filter(lambda char: char in printable[:-6], value)
         if 0 < len(_password) <= options.max_password_length:
             self._bank_password = self._hash_bank_password(self.algorithm, _password)
         else:
-            raise ValidationError("Invalid bank password length (max %d chars)" % (
-                options.max_password_length,
-            ))
+            raise ValidationError(
+                "Invalid bank password length (max %d chars)"
+                % (options.max_password_length,)
+            )
 
     @property
     def handle(self):
@@ -216,7 +210,7 @@ class User(DatabaseObject):
         if len(new_name) > 64:
             raise ValidationError("Name must be 0 - 64 characters")
         self._name = unicode(new_name)
-    
+
     @property
     def email(self):
         return self._email
@@ -229,20 +223,20 @@ class User(DatabaseObject):
 
     @property
     def permissions(self):
-        ''' Return a set with all permissions granted to the user '''
+        """ Return a set with all permissions granted to the user """
         return dbsession.query(Permission).filter_by(user_id=self.id)
 
     @property
     def permissions_names(self):
-        ''' Return a list with all permissions accounts granted to the user '''
+        """ Return a list with all permissions accounts granted to the user """
         return [permission.name for permission in self.permissions]
 
     @property
     def locked(self):
-        '''
+        """
         Determines if an admin has locked an account, accounts with
         administrative permissions cannot be locked.
-        '''
+        """
         if self.is_admin():
             return False  # Admin accounts cannot be locked
         else:
@@ -250,7 +244,7 @@ class User(DatabaseObject):
 
     @locked.setter
     def locked(self, value):
-        ''' Setter method for _lock '''
+        """ Setter method for _lock """
         assert isinstance(value, bool)
         if not self.is_admin():
             self._locked = value
@@ -261,11 +255,11 @@ class User(DatabaseObject):
             return self._avatar
         else:
             if not options.teams:
-                avatar = default_avatar('user')
+                avatar = default_avatar("user")
             elif self.is_admin():
-                avatar = default_avatar('user')
+                avatar = default_avatar("user")
             else:
-                avatar = get_new_avatar('user')
+                avatar = get_new_avatar("user")
                 if not avatar.startswith("default_"):
                     self._avatar = avatar
                     dbsession.add(self)
@@ -277,45 +271,48 @@ class User(DatabaseObject):
         if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
             ext = imghdr.what("", h=image_data)
             if ext in IMG_FORMATS and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(options.avatar_dir + '/upload/' + self._avatar):
-                    os.unlink(options.avatar_dir + '/upload/' + self._avatar)
-                file_path = str(options.avatar_dir + '/upload/' + self.uuid + '.' + ext)
+                if self._avatar is not None and os.path.exists(
+                    options.avatar_dir + "/upload/" + self._avatar
+                ):
+                    os.unlink(options.avatar_dir + "/upload/" + self._avatar)
+                file_path = str(options.avatar_dir + "/upload/" + self.uuid + "." + ext)
                 image = Image.open(StringIO.StringIO(image_data))
                 cover = resizeimage.resize_cover(image, [500, 250])
                 cover.save(file_path, image.format)
-                self._avatar = 'upload/' + self.uuid + '.' + ext
+                self._avatar = "upload/" + self.uuid + "." + ext
             else:
-                raise ValidationError("Invalid image format, avatar must be: %s" % (
-                    ' '.join(IMG_FORMATS)
-                ))
+                raise ValidationError(
+                    "Invalid image format, avatar must be: %s" % (" ".join(IMG_FORMATS))
+                )
         else:
-            raise ValidationError("The image is too large must be %d - %d bytes"  % (
-                MIN_AVATAR_SIZE, MAX_AVATAR_SIZE
-            ))
+            raise ValidationError(
+                "The image is too large must be %d - %d bytes"
+                % (MIN_AVATAR_SIZE, MAX_AVATAR_SIZE)
+            )
 
     def has_item(self, item_name):
-        ''' Check to see if a team has purchased an item '''
+        """ Check to see if a team has purchased an item """
         item = MarketItem.by_name(item_name)
         if item is None:
             raise ValueError("Item '%s' not in database." % str(item_name))
         return True if item in self.team.items else False
 
     def has_permission(self, permission):
-        ''' Return True if 'permission' is in permissions_names '''
+        """ Return True if 'permission' is in permissions_names """
         return True if permission in self.permissions_names else False
 
     def is_admin(self):
         return self.has_permission(ADMIN_PERMISSION)
 
     def validate_password(self, attempt):
-        ''' Check the password against existing credentials '''
+        """ Check the password against existing credentials """
         if self._password is not None:
             return self.password == PBKDF2.crypt(attempt, self.password)
         else:
             return False
 
     def validate_bank_password(self, attempt):
-        ''' Check the bank password against existing credentials '''
+        """ Check the bank password against existing credentials """
         if self._bank_password is not None:
             result = self._hash_bank_password(self.algorithm, attempt)
             return self.bank_password == result
@@ -323,34 +320,31 @@ class User(DatabaseObject):
             return False
 
     def get_new_notifications(self):
-        '''
+        """
         Returns any unread messages
 
         @return: List of unread messages
         @rtype: List of Notification objects
-        '''
-        return filter(
-            lambda notify: notify.viewed is False, self.notifications
-        )
+        """
+        return filter(lambda notify: notify.viewed is False, self.notifications)
 
     def get_notifications(self, limit=10):
-        '''
+        """
         Returns most recent notifications
 
         @param limit: Max number of notifications to return, defaults to 10
         @return: Most recent notifications
         @rtype: List of Notification objects
-        '''
-        return self.notifications.sort(
-            key=lambda notify: notify.created)[:limit]
+        """
+        return self.notifications.sort(key=lambda notify: notify.created)[:limit]
 
     def next_algorithm(self):
-        ''' Returns next algo '''
+        """ Returns next algo """
         current = self.get_algorithm(self.algorithm)
         return self.get_algorithm(current[1] + 1)
 
     def get_algorithm(self, index):
-        ''' Return algorithm tuple based on string or int '''
+        """ Return algorithm tuple based on string or int """
         if isinstance(index, basestring) and index in self.algorithms:
             return self.algorithms[index]
         elif isinstance(index, int):  # Find by numeric index
@@ -360,23 +354,23 @@ class User(DatabaseObject):
         return None
 
     def to_dict(self):
-        ''' Return user data as dictionary '''
+        """ Return user data as dictionary """
         return {
-            'uuid': self.uuid,
-            'handle': self.handle,
-            'name': self.name,
-            'email': self.email,
-            'admin': str(self.is_admin()).lower(),
-            'hash_algorithm': self.algorithm,
-            'team_uuid': self.team.uuid,
-            'avatar': self.avatar,
+            "uuid": self.uuid,
+            "handle": self.handle,
+            "name": self.name,
+            "email": self.email,
+            "admin": str(self.is_admin()).lower(),
+            "hash_algorithm": self.algorithm,
+            "team_uuid": self.team.uuid,
+            "avatar": self.avatar,
         }
 
     def to_xml(self, parent):
-        '''
+        """
         Admins cannot be exported as XML, not that they would be
         exported because they're not on a team, but check anyways
-        '''
+        """
         if not self.is_admin():
             user_elem = ET.SubElement(parent, "user")
             ET.SubElement(user_elem, "handle").text = self.handle
@@ -388,7 +382,7 @@ class User(DatabaseObject):
             bpass_elem.set("algorithm", self.algorithm)
             with open(options.avatar_dir + self.avatar) as fp:
                 data = fp.read()
-                ET.SubElement(user_elem, "avatar").text = data.encode('base64')
+                ET.SubElement(user_elem, "avatar").text = data.encode("base64")
 
     def __eq__(self, other):
         return self.id == other.id
@@ -400,4 +394,4 @@ class User(DatabaseObject):
         return self.handle
 
     def __repr__(self):
-        return u'<User - handle: %s>' % (self.handle,)
+        return u"<User - handle: %s>" % (self.handle,)

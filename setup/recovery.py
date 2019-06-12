@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''
+"""
 Created on Aug 22, 2012
 
     Copyright 2012 Root the Box
@@ -19,7 +19,7 @@ Created on Aug 22, 2012
 
 The all powerful recovery console
 
-'''
+"""
 
 
 import os
@@ -35,19 +35,21 @@ from models import dbsession
 
 
 class RecoveryConsole(cmd.Cmd):
-    ''' Recovery console for user/passwords '''
+    """ Recovery console for user/passwords """
 
-    intro = "\n ====================\n" + \
-        "   Recovery Console \n" + \
-        " ====================\n\n" + \
-        "Type 'help' for a list of available commands"
+    intro = (
+        "\n ====================\n"
+        + "   Recovery Console \n"
+        + " ====================\n\n"
+        + "Type 'help' for a list of available commands"
+    )
     prompt = underline + "Recovery" + W + " > "
 
     def do_chpass(self, username):
-        '''
+        """
         Change a user's password
         Usage: reset <handle>
-        '''
+        """
         user = User.by_handle(username)
         if user is None:
             print(WARN + "'%s' user not found in database." % username)
@@ -60,10 +62,10 @@ class RecoveryConsole(cmd.Cmd):
             print(INFO + "Updated %s password successfully." % user.handle)
 
     def do_ls(self, obj):
-        '''
+        """
         List all users or teams in the database
         Usage: ls <user/team>
-        '''
+        """
         if obj == "" or obj.lower() == "user" or obj.lower() == "users":
             for user in User.all():
                 permissions = ""
@@ -78,22 +80,27 @@ class RecoveryConsole(cmd.Cmd):
                 print(INFO + bold + user.handle + W + team + permissions)
         elif obj.lower() == "team" or obj.lower() == "teams":
             for team in Team.all():
-                print(INFO + team.name + ": " + ", ".join([user.handle for user in team.members]))
+                print(
+                    INFO
+                    + team.name
+                    + ": "
+                    + ", ".join([user.handle for user in team.members])
+                )
         else:
             print(WARN + "Syntax error; see 'help ls'.")
 
     def do_rmuser(self, username):
-        '''
+        """
         Delete a user from the database
         Usage: delete <handle>
-        '''
+        """
         user = User.by_handle(username)
         if user is None:
             print(WARN + "'%s' user not found in database." % username)
         else:
             username = user.handle
             print(WARN + str("Are you sure you want to delete %s?" % username))
-            if raw_input(PROMPT + "Delete [y/n]: ").lower() == 'y':
+            if raw_input(PROMPT + "Delete [y/n]: ").lower() == "y":
                 permissions = Permission.by_user_id(user.id)
                 for perm in permissions:
                     print(INFO + "Removing permission: " + perm.name)
@@ -104,14 +111,12 @@ class RecoveryConsole(cmd.Cmd):
                 print(INFO + "Successfully deleted %s from database." % username)
 
     def do_mkuser(self, nop):
-        '''
+        """
         Make a new user account
         Usage: mkuser
-        '''
+        """
         try:
-            user = User(
-                handle=unicode(raw_input(PROMPT + "Handle: ")),
-            )
+            user = User(handle=unicode(raw_input(PROMPT + "Handle: ")))
             dbsession.add(user)
             dbsession.flush()
             sys.stdout.write(PROMPT + "New ")
@@ -124,10 +129,10 @@ class RecoveryConsole(cmd.Cmd):
             print(WARN + "Failed to create new account.")
 
     def do_mkteam(self, nop):
-        '''
+        """
         Make a new team.
         Usage: mkteam
-        '''
+        """
         try:
             team = Team(
                 name=unicode(raw_input(PROMPT + "Team name: ")),
@@ -140,10 +145,10 @@ class RecoveryConsole(cmd.Cmd):
             print(WARN + "Failed to create new team.")
 
     def do_grant(self, username):
-        '''
+        """
         Add user permissions
         Usage: grant <handle>
-        '''
+        """
         user = User.by_handle(username)
         if user is None:
             print(WARN + "'%s' user not found in database." % username)
@@ -153,13 +158,16 @@ class RecoveryConsole(cmd.Cmd):
             dbsession.add(permission)
             dbsession.add(user)
             dbsession.commit()
-            print(INFO + "Successfully granted %s permissions to %s." % (name, user.handle,))
+            print(
+                INFO
+                + "Successfully granted %s permissions to %s." % (name, user.handle)
+            )
 
     def do_strip(self, username):
-        '''
+        """
         Strip a user of all permissions
         Usage: strip <handle>
-        '''
+        """
         user = User.by_handle(username)
         if user is None:
             print(WARN + "'%s' user not found in database." % username)
@@ -176,10 +184,10 @@ class RecoveryConsole(cmd.Cmd):
             print(INFO + "Successfully removed %s's permissions." % user.handle)
 
     def do_chteam(self, username):
-        '''
+        """
         Change a user's team
         Usage: chteam <handle>
-        '''
+        """
         user = User.by_handle(username)
         if user is None:
             print(WARN + "'%s' user not found in database." % username)
@@ -193,15 +201,18 @@ class RecoveryConsole(cmd.Cmd):
                 user.team_id = team.id
                 dbsession.add(user)
                 dbsession.commit()
-                print(INFO + "Successfully changed %s's team to %s." % (user.handle, team.name))
+                print(
+                    INFO
+                    + "Successfully changed %s's team to %s." % (user.handle, team.name)
+                )
             else:
                 print(WARN + "Team does not exist.")
 
     def do_id(self, user_id):
-        '''
+        """
         Pull user based on id.
         Usage: id <user_id>
-        '''
+        """
         user = User.by_id(user_id)
         if user is None:
             print(WARN + "'%s' user not found in database." % user_id)
@@ -209,13 +220,13 @@ class RecoveryConsole(cmd.Cmd):
             print(INFO + repr(user))
 
     def do_exit(self, *args, **kwargs):
-        '''
+        """
         Exit recovery console
         Usage: exit
-        '''
+        """
         print(INFO + "Have a nice day!")
         os._exit(0)
 
     def default(self, command):
-        ''' Called when input is not a command '''
+        """ Called when input is not a command """
         print(WARN + "Unknown command " + bold + command + W + ", see help.")

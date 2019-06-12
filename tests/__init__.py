@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Mar 12, 2012
 
 @author: moloch
@@ -21,7 +21,7 @@ Created on Mar 12, 2012
 
 Setup / delete the unit test database
 
-'''
+"""
 
 
 import os
@@ -34,12 +34,13 @@ def setup_database(db_name):
     # Setup the test database
     logging.debug("Setting up the test database connection ...")
 
-    options.sql_dialect = 'sqlite'
-    options.sql_database = '%s.db' % db_name
+    options.sql_dialect = "sqlite"
+    options.sql_database = "%s.db" % db_name
 
     # Create the default tables
     logging.debug("Creating tables ... ")
     from setup.create_database import create_tables, engine, metadata
+
     create_tables(engine, metadata, False)
     import setup.bootstrap
 

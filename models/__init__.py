@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on Sep 12, 2012
 
 @author: moloch
@@ -17,7 +17,7 @@ Created on Sep 12, 2012
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-'''
+"""
 
 import time
 import logging
@@ -33,29 +33,31 @@ from libs.ConsoleColors import *
 
 if options.log_sql:
 
-    sql_logger = logging.getLogger('sqlalchemy.engine')
+    sql_logger = logging.getLogger("sqlalchemy.engine")
     sql_logger.setLevel(logging.INFO)
 
     # This benchmarks the amount of time spent quering the database
     @event.listens_for(Engine, "before_cursor_execute")
-    def before_cursor_execute(conn, cursor, statement, parameters,
-                              context, executemany):
-        conn.info.setdefault('query_start_time', []).append(time.time())
+    def before_cursor_execute(
+        conn, cursor, statement, parameters, context, executemany
+    ):
+        conn.info.setdefault("query_start_time", []).append(time.time())
 
     @event.listens_for(Engine, "after_cursor_execute")
-    def after_cursor_execute(conn, cursor, statement, parameters,
-                             context, executemany):
-        total = time.time() - conn.info['query_start_time'].pop(-1)
+    def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+        total = time.time() - conn.info["query_start_time"].pop(-1)
         color = R if total > 0.01 else BLU
         logging.debug("Total query time: %s%s%f%s" % (bold, color, total, W))
 
 
-db_connection = DatabaseConnection(database=options.sql_database,
-                                   hostname=options.sql_host,
-                                   port=options.sql_port,
-                                   username=options.sql_user,
-                                   password=options.sql_password,
-                                   dialect=options.sql_dialect)
+db_connection = DatabaseConnection(
+    database=options.sql_database,
+    hostname=options.sql_host,
+    port=options.sql_port,
+    username=options.sql_user,
+    password=options.sql_password,
+    dialect=options.sql_dialect,
+)
 
 
 ### Setup the database session
@@ -68,7 +70,7 @@ dbsession = StartSession()
 
 @contextmanager
 def cxt_dbsession():
-    ''' Provide a transactional scope around a series of operations. '''
+    """ Provide a transactional scope around a series of operations. """
     session = StartSession()
     try:
         yield session
@@ -78,6 +80,7 @@ def cxt_dbsession():
         raise
     finally:
         session.close()
+
 
 # Avoids mapper issues
 from models.Box import Box
@@ -101,4 +104,3 @@ from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.Hint import Hint
-
