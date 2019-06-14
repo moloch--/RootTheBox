@@ -27,7 +27,7 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 
 ## Platform Requirements
 
--   [Python 2.7.x](https://www.python.org/), [Pypy 2.x](http://pypy.org/), or beta the [Python 3 branch](https://github.com/moloch--/RootTheBox/tree/Python3)
+-   [Python 2.7.x or 3.6.x](https://www.python.org/), [Pypy 2.x](http://pypy.org/)
 -   Install scripts are for [Ubuntu](http://www.ubuntu.com/) (or [Debian](https://www.debian.org/)) but the application should work on any Linux, BSD, or OSX system.
 -   Internet Explorer is _NOT_ supported, any compatability with IE is purely coincidental. Please use the latest release of [Firefox](https://www.mozilla.org/en-US/), [Chrome](https://www.google.com/chrome/), [Opera](http://www.opera.com/), or any other browser that supports open standards.
 
