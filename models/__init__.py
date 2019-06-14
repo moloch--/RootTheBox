@@ -29,6 +29,7 @@ from sqlalchemy.engine import Engine
 from contextlib import contextmanager
 from libs.DatabaseConnection import DatabaseConnection
 from libs.ConsoleColors import *
+from builtins import str
 
 
 if options.log_sql:

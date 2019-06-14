@@ -23,11 +23,16 @@ Wrapper for AsyncHTTPTestCase that removed somes of the boilerplate code
 
 """
 
+import logging
 
+try:
+    from urllib.parse import quote_plus
+except ImportError:
+    from urllib import quote_plus
 from handlers import app
-from urllib import quote_plus
 from tornado.httpclient import HTTPRequest
 from tornado.testing import AsyncHTTPTestCase
+from libs.StringCoding import decode
 
 
 class ApplicationTest(AsyncHTTPTestCase):
@@ -92,12 +97,12 @@ class ApplicationTest(AsyncHTTPTestCase):
     def _form_encode(self, data):
         """ URLEncode parameters """
         _data = []
-        for name, param in data.iteritems():
+        for name, param in list(data.items()):
             _data.append("%s=%s" % (quote_plus(name), quote_plus(param)))
         return "&".join(_data)
 
     def _parse(self, response, callback):
-        body = response.body.decode("utf-8")
+        body = decode(response.body, "utf-8")
         if callback == self.stop:
             callback([response, body])
         else:

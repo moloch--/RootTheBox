@@ -18,13 +18,14 @@ Created on Mar 12, 2012
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+# pylint: disable=no-member
 
 
 import xml.etree.cElementTree as ET
 
 import os
 import imghdr
-import StringIO
+import io
 
 from uuid import uuid4
 from sqlalchemy import Column
@@ -48,6 +49,8 @@ from tornado.options import options
 from PIL import Image
 from resizeimage import resizeimage
 from random import randint
+from libs.StringCoding import encode
+from builtins import str
 
 
 class Team(DatabaseObject):
@@ -117,7 +120,7 @@ class Team(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         """ Return the team object based on "team_name" """
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_code(cls, code):
@@ -153,7 +156,7 @@ class Team(DatabaseObject):
         if not 3 <= len(value) <= 24:
             raise ValidationError("Team name must be 3 - 24 characters")
         else:
-            self._name = unicode(value)
+            self._name = str(value)
 
     @property
     def motto(self):
@@ -164,7 +167,7 @@ class Team(DatabaseObject):
         if 32 < len(value):
             raise ValidationError("Motto must be less than 32 characters")
         else:
-            self._motto = unicode(value)
+            self._motto = str(value)
 
     @property
     def code(self):
@@ -190,15 +193,21 @@ class Team(DatabaseObject):
         if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
             ext = imghdr.what("", h=image_data)
             if ext in IMG_FORMATS and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(
-                    options.avatar_dir + "/upload/" + self._avatar
-                ):
-                    os.unlink(options.avatar_dir + "/upload/" + self._avatar)
-                file_path = str(options.avatar_dir + "/upload/" + self.uuid + "." + ext)
-                image = Image.open(StringIO.StringIO(image_data))
-                cover = resizeimage.resize_cover(image, [500, 250])
-                cover.save(file_path, image.format)
-                self._avatar = "upload/" + self.uuid + "." + ext
+                try:
+                    if self._avatar is not None and os.path.exists(
+                        options.avatar_dir + "/upload/" + self._avatar
+                    ):
+                        os.unlink(options.avatar_dir + "/upload/" + self._avatar)
+                    file_path = str(
+                        options.avatar_dir + "/upload/" + self.uuid + "." + ext
+                    )
+                    image = Image.open(io.BytesIO(image_data))
+                    cover = resizeimage.resize_cover(image, [500, 250])
+                    cover.save(file_path, image.format)
+                    self._avatar = "upload/" + self.uuid + "." + ext
+                except Exception as e:
+                    raise ValidationError(e)
+
             else:
                 raise ValidationError(
                     "Invalid image format, avatar must be: %s" % (" ".join(IMG_FORMATS))
@@ -216,7 +225,7 @@ class Team(DatabaseObject):
 
     def level_flags(self, lvl):
         """ Given a level number return all flags captured for that level """
-        return filter(lambda flag: flag.game_level.number == lvl, self.flags)
+        return [flag for flag in self.flags if flag.game_level.number == lvl]
 
     @property
     def bot_count(self):
@@ -248,10 +257,10 @@ class Team(DatabaseObject):
             user.to_xml(users_elem)
 
     def __repr__(self):
-        return u"<Team - name: %s, money: %d>" % (self.name, self.money)
+        return "<Team - name: %s, money: %d>" % (self.name, self.money)
 
     def __str__(self):
-        return self.name.encode("ascii", "ignore")
+        return encode(self.name, "ascii", "ignore")
 
     def __eq__(self, other):
         return self.id == other.id

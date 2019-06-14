@@ -21,6 +21,8 @@ Created on Nov 24, 2014
 
 Handlers for user-related tasks.
 """
+# pylint: disable=unused-wildcard-import
+
 
 import logging
 
@@ -30,7 +32,9 @@ from models.Permission import Permission
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
+from builtins import str
 from tornado.options import options
+from netaddr import IPAddress
 
 
 class AdminManageUsersHandler(BaseHandler):

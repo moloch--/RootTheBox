@@ -25,6 +25,8 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
 ---------
 
 """
+# pylint: disable=unused-variable
+
 
 import os
 import sys
@@ -39,6 +41,9 @@ import logging
 import argparse
 import platform
 import traceback
+import codecs
+
+from builtins import str
 
 try:
     import ConfigParser
@@ -50,6 +55,7 @@ except ImportError:
     from urlparse import urlparse
 from datetime import datetime
 from hashlib import sha512, sha1
+from builtins import range, object, chr
 
 
 ### Settings
@@ -249,7 +255,7 @@ def create_connection(url, timeout=None, **options):
 
 
 _MAX_INTEGER = (1 << 32) - 1
-_AVAILABLE_KEY_CHARS = range(0x21, 0x2F + 1) + range(0x3A, 0x7E + 1)
+_AVAILABLE_KEY_CHARS = list(range(0x21, 0x2F + 1)) + list(range(0x3A, 0x7E + 1))
 _MAX_CHAR_BYTE = (1 << 8) - 1
 
 # ref. Websocket gets an update, and it breaks stuff.
@@ -258,10 +264,26 @@ _MAX_CHAR_BYTE = (1 << 8) - 1
 
 def _create_sec_websocket_key():
     uid = uuid.uuid4()
-    return base64.encodestring(uid.bytes).strip()
+    return decode(base64.encodestring(uid.bytes).strip())
 
 
 _HEADERS_TO_CHECK = {"upgrade": "websocket", "connection": "upgrade"}
+
+
+def encode(s, name="utf-8", *args, **kwargs):
+    codec = codecs.lookup(name)
+    rv, length = codec.encode(s, *args, **kwargs)
+    if not isinstance(rv, (str, bytes, bytearray)):
+        raise TypeError("Not a string or byte codec")
+    return rv
+
+
+def decode(s, name="utf-8", *args, **kwargs):
+    codec = codecs.lookup(name)
+    rv, length = codec.decode(s, *args, **kwargs)
+    if not isinstance(rv, (str, bytes, bytearray)):
+        raise TypeError("Not a string or byte codec")
+    return rv
 
 
 class _SSLSocketWrapper(object):
@@ -344,8 +366,8 @@ class ABNF(object):
 
         opcode: operation code. please see OPCODE_XXX.
         """
-        if opcode == ABNF.OPCODE_TEXT and isinstance(data, unicode):
-            data = data.encode("utf-8")
+        if opcode == ABNF.OPCODE_TEXT and isinstance(data, str):
+            data = data
         # mask must be set if send data from client
         return ABNF(1, 0, 0, 0, opcode, 1, data)
 
@@ -360,35 +382,34 @@ class ABNF(object):
         length = len(self.data)
         if length >= ABNF.LENGTH_63:
             raise ValueError("data is too long")
-
-        frame_header = chr(
+        frame_header = struct.pack(
+            "B",
             self.fin << 7
             | self.rsv1 << 6
             | self.rsv2 << 5
             | self.rsv3 << 4
-            | self.opcode
+            | self.opcode,
         )
         if length < ABNF.LENGTH_7:
-            frame_header += chr(self.mask << 7 | length)
+            frame_header += struct.pack("B", self.mask << 7 | length)
         elif length < ABNF.LENGTH_16:
-            frame_header += chr(self.mask << 7 | 0x7E)
+            frame_header += struct.pack("B", self.mask << 7 | 0x7E)
             frame_header += struct.pack("!H", length)
         else:
-            frame_header += chr(self.mask << 7 | 0x7F)
+            frame_header += struct.pack("B", self.mask << 7 | 0x7F)
             frame_header += struct.pack("!Q", length)
-
         if not self.mask:
-            return frame_header + self.data
+            return frame_header + encode(self.data)
         else:
             mask_key = self.get_mask_key(4)
             return frame_header + self._get_masked(mask_key)
 
     def _get_masked(self, mask_key):
-        s = ABNF.mask(mask_key, self.data)
-        return mask_key + "".join(s)
+        mask = ABNF.mask_data(mask_key, self.data)
+        return mask_key + mask
 
     @staticmethod
-    def mask(mask_key, data):
+    def mask_data(mask_key, data):
         """
         mask or unmask data. Just do xor for each byte
 
@@ -397,8 +418,8 @@ class ABNF(object):
         data: data to mask/unmask.
         """
         _m = array.array("B", mask_key)
-        _d = array.array("B", data)
-        for i in xrange(len(_d)):
+        _d = array.array("B", encode(data))
+        for i in range(len(_d)):
             _d[i] ^= _m[i % 4]
         return _d.tostring()
 
@@ -516,11 +537,11 @@ class WebSocket(object):
         headers.append("")
         headers.append("")
 
-        header_str = "\r\n".join(headers)
+        header_str = encode("\r\n".join(headers), "utf-8")
         sock.send(header_str)
         if traceEnabled:
             logger.debug("--- request header ---")
-            logger.debug(header_str)
+            logger.debug(decode(header_str))
             logger.debug("-----------------------")
 
         status, resp_headers = self._read_headers()
@@ -536,7 +557,7 @@ class WebSocket(object):
         self.connected = True
 
     def _validate_header(self, headers, key):
-        for k, v in _HEADERS_TO_CHECK.iteritems():
+        for k, v in list(_HEADERS_TO_CHECK.items()):
             r = headers.get(k, None)
             if not r:
                 return False
@@ -550,7 +571,9 @@ class WebSocket(object):
         result = result.lower()
 
         value = key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
-        hashed = base64.encodestring(hashlib.sha1(value).digest()).strip().lower()
+        hashed = decode(
+            base64.encodestring(hashlib.sha1(encode(value)).digest()).strip().lower()
+        )
         return hashed == result
 
     def _read_headers(self):
@@ -592,6 +615,8 @@ class WebSocket(object):
 
         opcode: operation code to send. Please see OPCODE_XXX.
         """
+        if traceEnabled:
+            logger.debug("send: " + repr(payload))
         frame = ABNF.create_frame(payload, opcode)
         if self.get_mask_key:
             frame.get_mask_key = self.get_mask_key
@@ -599,8 +624,6 @@ class WebSocket(object):
         while data:
             l = self.io_sock.send(data)
             data = data[l:]
-        if traceEnabled:
-            logger.debug("send: " + repr(data))
 
     def ping(self, payload=""):
         """
@@ -656,13 +679,19 @@ class WebSocket(object):
         header_bytes = self._recv_strict(2)
         if not header_bytes:
             return None
-        b1 = ord(header_bytes[0])
+        if isinstance(header_bytes[0], int):
+            b1 = header_bytes[0]
+        else:
+            b1 = ord(header_bytes[0])
         fin = b1 >> 7 & 1
         rsv1 = b1 >> 6 & 1
         rsv2 = b1 >> 5 & 1
         rsv3 = b1 >> 4 & 1
         opcode = b1 & 0xF
-        b2 = ord(header_bytes[1])
+        if isinstance(header_bytes[1], int):
+            b2 = header_bytes[1]
+        else:
+            b2 = ord(header_bytes[1])
         mask = b2 >> 7 & 1
         length = b2 & 0x7F
 
@@ -678,12 +707,13 @@ class WebSocket(object):
         if mask:
             mask_key = self._recv_strict(4)
         data = self._recv_strict(length)
+
         if traceEnabled:
-            recieved = header_bytes + length_data + mask_key + data
+            recieved = header_bytes + encode(length_data) + encode(mask_key) + data
             logger.debug("recv: " + repr(recieved))
 
         if mask:
-            data = ABNF.mask(mask_key, data)
+            data = ABNF.mask_data(mask_key, data)
 
         frame = ABNF(fin, rsv1, rsv2, rsv3, opcode, mask, data)
         return frame
@@ -736,24 +766,23 @@ class WebSocket(object):
         self.io_sock = self.sock
 
     def _recv(self, bufsize):
-        bytes = self.io_sock.recv(bufsize)
-        if not bytes:
+        bytes_val = self.io_sock.recv(bufsize)
+        if not bytes_val:
             raise WebSocketConnectionClosedException()
-        return bytes
+        return bytes_val
 
     def _recv_strict(self, bufsize):
         remaining = bufsize
-        bytes = ""
+        bytes_val = b""
         while remaining:
-            bytes += self._recv(remaining)
-            remaining = bufsize - len(bytes)
-
-        return bytes
+            bytes_val += self._recv(remaining)
+            remaining = bufsize - len(bytes_val)
+        return bytes_val
 
     def _recv_line(self):
         line = []
         while True:
-            c = self._recv(1)
+            c = decode(self._recv(1))
             line.append(c)
             if c == "\n":
                 break
@@ -842,7 +871,7 @@ class WebSocketApp(object):
                 if data is None:
                     break
                 self._run_with_no_err(self.on_message, data)
-        except Exception, e:
+        except Exception as e:
             self._run_with_no_err(self.on_error, e)
         finally:
             self.sock.close()
@@ -853,7 +882,7 @@ class WebSocketApp(object):
         if callback:
             try:
                 callback(self, *args)
-            except Exception, e:
+            except Exception as e:
                 if logger.isEnabledFor(logging.DEBUG):
                     logger.error(e)
 
@@ -881,7 +910,7 @@ def display_status(ws, response, verbose=False):
 
 
 def get_response_xid(garbage, xid):
-    round1 = sha512(xid + garbage).hexdigest()
+    round1 = encode(sha512(encode(xid + garbage)).hexdigest())
     print("Garbage: " + garbage)
     print("XID :" + xid)
     print("[*] Return: " + str(sha512(round1).hexdigest()))
@@ -893,7 +922,7 @@ def send_interrogation_response(ws, response):
     solved_xid = {
         "opcode": "interrogation_response",
         "response_xid": get_response_xid(ws.garbage, response["xid"]),
-        "box_name": ws.box_name,
+        "box_name": decode(ws.box_name),
         "handle": ws.user,
     }
     ws.send(json.dumps(solved_xid))
@@ -977,7 +1006,7 @@ def main(domain, port, user, garbage_path, secure, verbose):
         )
         ws.verbose = verbose
         ws.garbage = garbage_cfg.get("Bot", "garbage")
-        ws.box_name = garbage_cfg.get("Bot", "name").decode("hex")
+        ws.box_name = decode(garbage_cfg.get("Bot", "name"), "hex")
         ws.user = user
         ws.on_open = on_open
         ws.run_forever()

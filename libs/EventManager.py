@@ -25,6 +25,7 @@ from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketClosedError
 from tornado.options import options
 from libs.Singleton import Singleton
+from builtins import object, str
 from models import dbsession
 from models.User import User
 from models.Flag import Flag

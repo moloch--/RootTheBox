@@ -22,7 +22,7 @@ Created on Mar 11, 2012
 
 import os
 import imghdr
-import StringIO
+import io
 import xml.etree.cElementTree as ET
 
 from os import urandom
@@ -42,6 +42,7 @@ from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
+from libs.StringCoding import encode
 from PIL import Image
 from resizeimage import resizeimage
 import enum
@@ -50,6 +51,11 @@ import enum
 class FlagsSubmissionType(str, enum.Enum):
     CLASSIC = "CLASSIC"
     SINGLE_SUBMISSION_BOX = "SINGLE_SUBMISSION_BOX"
+
+
+from builtins import (
+    str,
+)  # TODO Python2/3 compatibility issue if imported before FlagSubmissionType
 
 
 class Box(DatabaseObject):
@@ -73,7 +79,7 @@ class Box(DatabaseObject):
         String(32),
         unique=True,
         nullable=False,
-        default=lambda: urandom(16).encode("hex"),
+        default=lambda: encode(urandom(16), "hex"),
     )
 
     teams = relationship(
@@ -116,12 +122,12 @@ class Box(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         """ Return and object based on a uuid """
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_name(cls, name):
         """ Return the box object whose name is "name" """
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_category(cls, _cat_id):
@@ -156,9 +162,9 @@ class Box(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not 3 <= len(unicode(value)) <= 32:
+        if not 3 <= len(str(value)) <= 32:
             raise ValidationError("Name must be 3 - 32 characters")
-        self._name = unicode(value)
+        self._name = str(value)
 
     @property
     def operating_system(self):
@@ -166,7 +172,7 @@ class Box(DatabaseObject):
 
     @operating_system.setter
     def operating_system(self, value):
-        self._operating_system = unicode(value)
+        self._operating_system = str(value)
 
     @property
     def description(self):
@@ -180,10 +186,9 @@ class Box(DatabaseObject):
             ls.append("No information on file.")
         if self.difficulty != "Unknown":
             ls.append("Reported Difficulty: %s" % self.difficulty)
-
-        if ls[-1] and not ls[-1].encode("utf8").endswith("\n"):
+        if not encode(ls[-1], "utf-8").endswith(b"\n"):
             ls[-1] = ls[-1] + "\n"
-        return unicode("\n\n".join(ls))
+        return str("\n\n".join(ls))
 
     @description.setter
     def description(self, value):
@@ -191,14 +196,14 @@ class Box(DatabaseObject):
             return ""
         if 1025 < len(value):
             raise ValidationError("Description cannot be greater than 1024 characters")
-        self._description = unicode(value)
+        self._description = str(value)
 
     @property
     def difficulty(self):
         return (
             self._difficulty
             if self._difficulty and len(self._difficulty)
-            else u"Unknown"
+            else "Unknown"
         )
 
     @difficulty.setter
@@ -207,7 +212,7 @@ class Box(DatabaseObject):
             return
         if 17 < len(value):
             raise ValidationError("Difficulty cannot be greater than 16 characters")
-        self._difficulty = unicode(value)
+        self._difficulty = str(value)
 
     @property
     def capture_message(self):
@@ -236,15 +241,20 @@ class Box(DatabaseObject):
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ["png", "jpeg", "gif", "bmp"] and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(
-                    options.avatar_dir + "/upload/" + self._avatar
-                ):
-                    os.unlink(options.avatar_dir + "/upload/" + self._avatar)
-                file_path = str(options.avatar_dir + "/upload/" + self.uuid + "." + ext)
-                image = Image.open(StringIO.StringIO(image_data))
-                cover = resizeimage.resize_cover(image, [500, 250])
-                cover.save(file_path, image.format)
-                self._avatar = "upload/" + self.uuid + "." + ext
+                try:
+                    if self._avatar is not None and os.path.exists(
+                        options.avatar_dir + "/upload/" + self._avatar
+                    ):
+                        os.unlink(options.avatar_dir + "/upload/" + self._avatar)
+                    file_path = str(
+                        options.avatar_dir + "/upload/" + self.uuid + "." + ext
+                    )
+                    image = Image.open(io.BytesIO(image_data))
+                    cover = resizeimage.resize_cover(image, [500, 250])
+                    cover.save(file_path, image.format)
+                    self._avatar = "upload/" + self.uuid + "." + ext
+                except Exception as e:
+                    raise ValidationError(e)
             else:
                 raise ValidationError(
                     "Invalid image format, avatar must be: .png .jpeg .gif or .bmp"
@@ -255,16 +265,16 @@ class Box(DatabaseObject):
     @property
     def ipv4s(self):
         """ Return a list of all ipv4 addresses """
-        return filter(lambda ip: ip.version == 4, self.ip_addresses)
+        return [ip for ip in self.ip_addresses if ip.version == 4]
 
     @property
     def ipv6s(self):
         """ Return a list of all ipv6 addresses """
-        return filter(lambda ip: ip.version == 6, self.ip_addresses)
+        return [ip for ip in self.ip_addresses if ip.version == 6]
 
     @property
     def visable_ips(self):
-        return filter(lambda ip: ip.visable is True, self.ip_addresses)
+        return [ip for ip in self.ip_addresses if ip.visable is True]
 
     @property
     def source_code(self):
@@ -272,7 +282,7 @@ class Box(DatabaseObject):
 
     def get_garbage_cfg(self):
         return "[Bot]\nname = %s\ngarbage = %s\n" % (
-            self.name.encode("hex"),
+            encode(self.name, "hex"),
             self.garbage,
         )
 
@@ -319,7 +329,7 @@ class Box(DatabaseObject):
         if self.avatar and os.path.isfile(avatarfile):
             with open(avatarfile, mode="rb") as _avatar:
                 data = _avatar.read()
-                ET.SubElement(box_elem, "avatar").text = data.encode("base64")
+                ET.SubElement(box_elem, "avatar").text = encode(data, "base64")
         else:
             ET.SubElement(box_elem, "avatar").text = "none"
 
@@ -346,7 +356,7 @@ class Box(DatabaseObject):
         }
 
     def __repr__(self):
-        return u"<Box - name: %s>" % (self.name,)
+        return "<Box - name: %s>" % (self.name,)
 
     def __str__(self):
-        return self.name.encode("ascii", "ignore")
+        return encode(self.name, "ascii", "ignore")

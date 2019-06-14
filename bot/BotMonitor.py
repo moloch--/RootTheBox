@@ -29,6 +29,7 @@ For the sake of portability everything is in one file
 
 """
 
+# pylint: disable=unused-variable
 ###################
 # > Imports
 ###################
@@ -47,12 +48,15 @@ import logging
 import argparse
 import platform
 import threading
+from builtins import range, object, chr, str
+from past.utils import old_div
 
 try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
 from datetime import datetime
+from libs.StringCoding import encode
 
 try:
     import curses
@@ -247,7 +251,7 @@ def create_connection(url, timeout=None, **options):
 
 
 _MAX_INTEGER = (1 << 32) - 1
-_AVAILABLE_KEY_CHARS = range(0x21, 0x2F + 1) + range(0x3A, 0x7E + 1)
+_AVAILABLE_KEY_CHARS = list(range(0x21, 0x2F + 1)) + list(range(0x3A, 0x7E + 1))
 _MAX_CHAR_BYTE = (1 << 8) - 1
 
 # ref. Websocket gets an update, and it breaks stuff.
@@ -342,8 +346,12 @@ class ABNF(object):
 
         opcode: operation code. please see OPCODE_XXX.
         """
-        if opcode == ABNF.OPCODE_TEXT and isinstance(data, unicode):
-            data = data.encode("utf-8")
+        if sys.version_info.major == 2:
+            instance = isinstance(data, unicode)
+        else:
+            instance = isinstance(data, str)
+        if opcode == ABNF.OPCODE_TEXT and instance:
+            data = encode(data, "utf-8")
         # mask must be set if send data from client
         return ABNF(1, 0, 0, 0, opcode, 1, data)
 
@@ -396,7 +404,7 @@ class ABNF(object):
         """
         _m = array.array("B", mask_key)
         _d = array.array("B", data)
-        for i in xrange(len(_d)):
+        for i in range(len(_d)):
             _d[i] ^= _m[i % 4]
         return _d.tostring()
 
@@ -535,7 +543,7 @@ class WebSocket(object):
         self.connected = True
 
     def _validate_header(self, headers, key):
-        for k, v in _HEADERS_TO_CHECK.iteritems():
+        for k, v in list(_HEADERS_TO_CHECK.items()):
             r = headers.get(k, None)
             if not r:
                 return False
@@ -1031,7 +1039,10 @@ class BotMonitor(object):
         self.screen.refresh()
         prompt = " Connecting, please wait ..."
         connecting = curses.newwin(
-            3, len(prompt) + 2, (self.max_y / 2) - 1, ((self.max_x - len(prompt)) / 2)
+            3,
+            len(prompt) + 2,
+            (old_div(self.max_y, 2)) - 1,
+            (old_div((self.max_x - len(prompt)), 2)),
         )
         connecting.clear()
         connecting.addstr(1, 1, prompt, curses.A_BOLD | curses.color_pair(self.CYAN))
@@ -1054,8 +1065,8 @@ class BotMonitor(object):
         self.loading_bar = curses.newwin(
             3,
             len(self.load_message) + 2,
-            (self.max_y / 2) - 1,
-            ((self.max_x - len(self.load_message)) / 2),
+            (old_div(self.max_y, 2)) - 1,
+            (old_div((self.max_x - len(self.load_message)), 2)),
         )
         self.loading_bar.border(0)
         self.loading_bar.addstr(1, 1, self.load_message, curses.A_BOLD)
@@ -1076,7 +1087,7 @@ class BotMonitor(object):
     def __title__(self):
         """ Create title and footer """
         title = " Root the Box: Botnet Monitor "
-        start_x = (self.max_x - len(title)) / 2
+        start_x = old_div((self.max_x - len(title)), 2)
         self.screen.addstr(
             0, start_x, title, curses.A_BOLD | curses.color_pair(self.BLUE)
         )
@@ -1131,7 +1142,7 @@ class BotMonitor(object):
             )
             self.screen.addstr(start_row + index, self.start_name_pos, box[1])
             if 0 < float(update_income):
-                percent = (float(box[2]) / float(update_income)) * 100.0
+                percent = (old_div(float(box[2]), float(update_income))) * 100.0
                 income_string = "$%d  (%.02d%s)" % (box[2], percent, "%")
             else:
                 income_string = "$%d" % (box[2],)
@@ -1182,8 +1193,8 @@ class BotMonitor(object):
         self.agent_prompt = curses.newwin(
             3,
             len(self.load_message) + 2,
-            (self.max_y / 2) - 1,
-            ((self.max_x - len(self.load_message)) / 2),
+            (old_div(self.max_y, 2)) - 1,
+            (old_div((self.max_x - len(self.load_message)), 2)),
         )
         self.agent_prompt.clear()
         self.agent_prompt.border(0)
@@ -1199,8 +1210,8 @@ class BotMonitor(object):
         self.agent_prompt = curses.newwin(
             3,  # Height
             len(self.load_message) + 24,  # Width
-            (self.max_y / 2) - 1,  # Start Y
-            ((self.max_x - len(self.load_message)) / 2) - 12,  # Start X
+            (old_div(self.max_y, 2)) - 1,  # Start Y
+            (old_div((self.max_x - len(self.load_message)), 2)) - 12,  # Start X
         )
         self.agent_prompt.border(0)
         self.agent_prompt.addstr(1, 1, prompt, curses.A_BOLD)
@@ -1244,7 +1255,7 @@ class BotMonitor(object):
         self.screen.refresh()
         # (5) Initializing memory address
         memory = " > Initializing memory: "
-        for index in xrange(0, 2 ** 32, 2 ** 20):
+        for index in range(0, 2 ** 32, 2 ** 20):
             time.sleep(0.02)
             self.screen.addstr(5, 2, memory + str("0x%08X" % index))
             self.screen.refresh()
@@ -1292,7 +1303,10 @@ class BotMonitor(object):
         self.screen.refresh()
         prompt = " *** %s *** " % msg
         access_denied = curses.newwin(
-            3, len(prompt) + 2, (self.max_y / 2) - 1, ((self.max_x - len(prompt)) / 2)
+            3,
+            len(prompt) + 2,
+            (old_div(self.max_y, 2)) - 1,
+            (old_div((self.max_x - len(prompt)), 2)),
         )
         access_denied.addstr(1, 1, prompt, curses.A_BOLD | curses.color_pair(self.RED))
         access_denied.refresh()

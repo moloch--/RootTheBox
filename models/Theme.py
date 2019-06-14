@@ -41,7 +41,7 @@ class ThemeFile(DatabaseObject):
     def _filter_string(cls, string, extra_chars=""):
         """ Remove any non-white listed chars from a string """
         char_white_list = ascii_letters + digits + extra_chars
-        return filter(lambda char: char in char_white_list, string)
+        return "".join([char for char in string if char in char_white_list])
 
     @property
     def file_name(self):
@@ -88,13 +88,13 @@ class Theme(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         """ Return the object whose name is _name """
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):
         """ Remove any non-white listed chars from a string """
         char_white_list = ascii_letters + digits + extra_chars
-        return filter(lambda char: char in char_white_list, string)
+        return "".join([char for char in string if char in char_white_list])
 
     @property
     def name(self):

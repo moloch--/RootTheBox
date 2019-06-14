@@ -41,6 +41,8 @@ if [[ "$SKIP" == " -y" ]]; then
   sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
 fi
 
+python_version="$(python -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
+
 if [[ $OSTYPE == "linux-gnu" ]]; then
   echo -e "\t#########################"
   echo -e "\t   Linux Configuration"
@@ -48,10 +50,16 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
 
   echo "[*] Add Universe Repo..."
   add-apt-repository universe "$SKIP"
+
+  echo "Update package list..."
   apt-get update
 
   echo "[*] Installing pip/gcc..."
-  apt-get install python-pip python-dev build-essential "$SKIP"
+  if [[ "$python_version" == "2" ]]; then
+      apt-get install python-pip python-dev build-essential "$SKIP"
+  else
+      apt-get install python3-pip python3-dev build-essential "$SKIP"
+  fi
 
   echo "[*] Installing packages..."
   apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev default-libmysqlclient-dev "$SKIP"
@@ -78,7 +86,6 @@ fi
 echo "[*] Installing python libs..."
 
 #sh "$current_path/python-depends.sh"
-python_version="$(python -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
 if [[ "$python_version" == "2" ]]; then
     pip2 install -r "$current_path/requirements.txt" --upgrade
 else

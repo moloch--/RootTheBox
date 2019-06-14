@@ -22,6 +22,7 @@ Created on Oct 04, 2012
 This file contains handlers related to the scoreboard.
 
 """
+# pylint: disable=no-member
 
 
 import json
@@ -32,6 +33,7 @@ from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
+from builtins import str
 from models.Team import Team
 from models.User import User
 from models.Box import Box

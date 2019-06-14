@@ -17,8 +17,9 @@
 
 This file is the main starting point for the application, based on the
 command line arguments it calls various components setup/start/etc.
-
 """
+# pylint: disable=unused-wildcard-import,unused-variable
+
 
 from __future__ import print_function
 
@@ -32,6 +33,7 @@ from datetime import datetime
 from tornado.options import define, options
 from libs.ConsoleColors import *
 from libs.ConfigHelpers import save_config
+from builtins import str, input
 from setup import __version__
 
 
@@ -72,7 +74,7 @@ def setup():
     if is_devel:
         print("%sWARNING:%s Setup is in development mode %s" % (WARN + bold, W, WARN))
         message = "I know what the fuck I am doing"
-        resp = raw_input(PROMPT + 'Please type "%s": ' % message)
+        resp = input(PROMPT + 'Please type "%s": ' % message)
         if resp.replace('"', "").lower().strip() != message.lower():
             os._exit(1)
     print(INFO + "%s : Creating the database ..." % current_time())
@@ -107,7 +109,7 @@ def recovery():
         print(INFO + "Have a nice day!")
 
 
-def setup_xml():
+def setup_xml(xml_params):
     """ Imports XML file(s) """
     from setup.xmlsetup import import_xml
 

@@ -49,4 +49,4 @@ class Permission(DatabaseObject):
         pass
 
     def __repr__(self):
-        return u"<Permission - name: %s, user_id: %d>" % (self.name, self.user_id)
+        return "<Permission - name: %s, user_id: %d>" % (self.name, self.user_id)

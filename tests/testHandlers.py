@@ -36,7 +36,7 @@ class TestPublicHandlers(ApplicationTest):
         self.post("/login", data=form)(self.stop)
         rsp, body = self.wait()
         # Sould redirect to firstlogin
-        print rsp, body
+        print(rsp, body)
         assert "Incoming Transmission" in body
 
     def _login_failure(self):

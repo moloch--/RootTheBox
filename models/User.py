@@ -29,7 +29,7 @@ import os
 import imghdr
 import string
 import random
-import StringIO
+import io
 import xml.etree.cElementTree as ET
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
@@ -48,10 +48,13 @@ from string import printable
 from tornado.options import options
 from PIL import Image
 from resizeimage import resizeimage
+from libs.StringCoding import encode
+from builtins import str
+from past.builtins import basestring
 
 
 # Constants
-ADMIN_PERMISSION = u"admin"
+ADMIN_PERMISSION = "admin"
 DEFAULT_HASH_ALGORITHM = "md5"
 ITERATE = 0x2BAD  # 11181
 
@@ -104,13 +107,13 @@ class User(DatabaseObject):
     @classmethod
     def all_users(cls):
         """ Return all non-admin user objects """
-        return filter(lambda user: user.is_admin() is False, cls.all())
+        return [user for user in cls.all() if user.is_admin() is False]
 
     @classmethod
     def not_team(cls, tid):
         """ Return all users not on a given team, exclude admins """
         teams = dbsession.query(cls).filter(cls.team_id != tid).all()
-        return filter(lambda user: user.is_admin() is False, teams)
+        return [user for user in teams if user.is_admin() is False]
 
     @classmethod
     def by_id(cls, _id):
@@ -120,12 +123,12 @@ class User(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         """ Return and object based on a uuid """
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_handle(cls, handle):
         """ Return the user object whose user is "_handle" """
-        handle = unicode(handle).strip()
+        handle = str(handle).strip()
         return dbsession.query(cls).filter_by(_handle=handle).first()
 
     @classmethod
@@ -159,7 +162,7 @@ class User(DatabaseObject):
 
     @password.setter
     def password(self, value):
-        _password = filter(lambda char: char in printable[:-6], value)
+        _password = [char for char in value if char in printable[:-6]]
         if len(_password) >= int(options.min_user_password_length):
             self._password = self._hash_password(value)
         else:
@@ -181,7 +184,7 @@ class User(DatabaseObject):
                 for _ in range(options.max_password_length)
             )
         else:
-            _password = filter(lambda char: char in printable[:-6], value)
+            _password = [char for char in value if char in printable[:-6]]
         if 0 < len(_password) <= options.max_password_length:
             self._bank_password = self._hash_bank_password(self.algorithm, _password)
         else:
@@ -196,7 +199,7 @@ class User(DatabaseObject):
 
     @handle.setter
     def handle(self, new_handle):
-        new_handle = unicode(new_handle).strip()
+        new_handle = str(new_handle).strip()
         if not 3 <= len(new_handle) <= 16:
             raise ValidationError("Handle must be 3 - 16 characters")
         self._handle = new_handle
@@ -209,7 +212,7 @@ class User(DatabaseObject):
     def name(self, new_name):
         if len(new_name) > 64:
             raise ValidationError("Name must be 0 - 64 characters")
-        self._name = unicode(new_name)
+        self._name = str(new_name)
 
     @property
     def email(self):
@@ -219,17 +222,17 @@ class User(DatabaseObject):
     def email(self, new_email):
         if len(new_email) > 64:
             raise ValidationError("Email must be 0 - 64 characters")
-        self._email = unicode(new_email)
+        self._email = str(new_email)
 
     @property
-    def permissions(self):
+    def permissions_all(self):
         """ Return a set with all permissions granted to the user """
         return dbsession.query(Permission).filter_by(user_id=self.id)
 
     @property
     def permissions_names(self):
         """ Return a list with all permissions accounts granted to the user """
-        return [permission.name for permission in self.permissions]
+        return [permission.name for permission in self.permissions_all]
 
     @property
     def locked(self):
@@ -271,15 +274,20 @@ class User(DatabaseObject):
         if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
             ext = imghdr.what("", h=image_data)
             if ext in IMG_FORMATS and not is_xss_image(image_data):
-                if self._avatar is not None and os.path.exists(
-                    options.avatar_dir + "/upload/" + self._avatar
-                ):
-                    os.unlink(options.avatar_dir + "/upload/" + self._avatar)
-                file_path = str(options.avatar_dir + "/upload/" + self.uuid + "." + ext)
-                image = Image.open(StringIO.StringIO(image_data))
-                cover = resizeimage.resize_cover(image, [500, 250])
-                cover.save(file_path, image.format)
-                self._avatar = "upload/" + self.uuid + "." + ext
+                try:
+                    if self._avatar is not None and os.path.exists(
+                        options.avatar_dir + "/upload/" + self._avatar
+                    ):
+                        os.unlink(options.avatar_dir + "/upload/" + self._avatar)
+                    file_path = str(
+                        options.avatar_dir + "/upload/" + self.uuid + "." + ext
+                    )
+                    image = Image.open(io.BytesIO(image_data))
+                    cover = resizeimage.resize_cover(image, [500, 250])
+                    cover.save(file_path, image.format)
+                    self._avatar = "upload/" + self.uuid + "." + ext
+                except Exception as e:
+                    raise ValidationError(e)
             else:
                 raise ValidationError(
                     "Invalid image format, avatar must be: %s" % (" ".join(IMG_FORMATS))
@@ -326,7 +334,7 @@ class User(DatabaseObject):
         @return: List of unread messages
         @rtype: List of Notification objects
         """
-        return filter(lambda notify: notify.viewed is False, self.notifications)
+        return [notify for notify in self.notifications if notify.viewed is False]
 
     def get_notifications(self, limit=10):
         """
@@ -382,7 +390,7 @@ class User(DatabaseObject):
             bpass_elem.set("algorithm", self.algorithm)
             with open(options.avatar_dir + self.avatar) as fp:
                 data = fp.read()
-                ET.SubElement(user_elem, "avatar").text = data.encode("base64")
+                ET.SubElement(user_elem, "avatar").text = encode(data, "base64")
 
     def __eq__(self, other):
         return self.id == other.id
@@ -394,4 +402,4 @@ class User(DatabaseObject):
         return self.handle
 
     def __repr__(self):
-        return u"<User - handle: %s>" % (self.handle,)
+        return "<User - handle: %s>" % (self.handle,)

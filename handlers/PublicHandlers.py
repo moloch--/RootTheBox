@@ -30,6 +30,7 @@ import logging
 from netaddr import IPAddress
 from libs.SecurityDecorators import blacklist_ips
 from libs.ValidationError import ValidationError
+from builtins import str
 from models.Team import Team
 from models.Theme import Theme
 from models.RegistrationToken import RegistrationToken

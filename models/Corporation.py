@@ -27,6 +27,7 @@ from sqlalchemy import Column
 from sqlalchemy.types import Unicode, String
 from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
+from builtins import str
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
@@ -61,7 +62,7 @@ class Corporation(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         """ Returns a the object with name of name """
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
@@ -76,7 +77,7 @@ class Corporation(DatabaseObject):
     def name(self, value):
         if not len(value) <= 32:
             raise ValidationError("Corporation name must be 0 - 32 characters")
-        self._name = unicode(value)
+        self._name = str(value)
 
     def to_dict(self):
         """ Returns editable data as a dictionary """

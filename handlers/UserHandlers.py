@@ -22,9 +22,13 @@ Created on Mar 13, 2012
 This file contains code for managing user accounts
 
 """
+# pylint: disable=no-member
 
 
-import urllib
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 import logging
 import tornado
 
@@ -33,6 +37,7 @@ from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from libs.XSSImageCheck import IMG_FORMATS
+from builtins import str
 from .BaseHandlers import BaseHandler
 from tornado.options import options
 
@@ -243,7 +248,7 @@ class SettingsHandler(BaseHandler):
         }
         try:
             recaptcha_http = tornado.httpclient.AsyncHTTPClient()
-            recaptcha_req_body = urllib.urlencode(recaptcha_req_data)
+            recaptcha_req_body = urlparse.urlencode(recaptcha_req_data)
             recaptcha_http.fetch(
                 RECAPTCHA_URL,
                 self.recaptcha_callback,

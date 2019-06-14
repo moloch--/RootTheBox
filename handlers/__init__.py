@@ -22,6 +22,7 @@ Created on Mar 13, 2012
 This is the main file the defines what URLs get routed to what handlers
 
 """
+# pylint: disable=no-member,unsupported-assignment-operation
 
 
 import sys
@@ -55,6 +56,8 @@ from handlers.ChefHandler import *
 from handlers.StaticFileHandler import StaticFileHandler
 from alembic.config import Config, command
 from libs.DatabaseConnection import DatabaseConnection
+from libs.StringCoding import encode
+from builtins import str
 from tornado.options import options
 
 try:
@@ -71,7 +74,7 @@ def get_cookie_secret():
     if options.debug:
         return "Don't use this in production"
     else:
-        return urandom(32).encode("hex")
+        return encode(urandom(32), "hex")
 
 
 # Main URL Configuration

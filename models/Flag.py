@@ -37,15 +37,16 @@ from models.FlagChoice import FlagChoice
 from models.Penalty import Penalty
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
+from builtins import str
 from tornado.options import options
 from dateutil.parser import parse
 
 ### Constants
-FLAG_STATIC = u"static"
-FLAG_REGEX = u"regex"
-FLAG_FILE = u"file"
-FLAG_DATETIME = u"datetime"
-FLAG_CHOICE = u"choice"
+FLAG_STATIC = "static"
+FLAG_REGEX = "regex"
+FLAG_FILE = "file"
+FLAG_DATETIME = "datetime"
+FLAG_CHOICE = "choice"
 
 
 class Flag(DatabaseObject):
@@ -113,29 +114,27 @@ class Flag(DatabaseObject):
     @classmethod
     def by_name(cls, name):
         """ Returns a the object with name of _name """
-        return dbsession.query(cls).filter_by(_name=unicode(name)).first()
+        return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
         """ Return and object based on a uuid """
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_token(cls, token):
         """ Return and object based on a token """
-        return dbsession.query(cls).filter_by(_token=unicode(token)).first()
+        return dbsession.query(cls).filter_by(_token=str(token)).first()
 
     @classmethod
     def by_token_and_box_id(cls, token, box_id):
         """ Return and object based on a token """
-        return (
-            dbsession.query(cls).filter_by(_token=unicode(token), box_id=box_id).first()
-        )
+        return dbsession.query(cls).filter_by(_token=str(token), box_id=box_id).first()
 
     @classmethod
     def by_type(cls, _type):
         """ Return and object based on a token """
-        return dbsession.query(cls).filter_by(_type=unicode(_type)).all()
+        return dbsession.query(cls).filter_by(_type=str(_type)).all()
 
     @classmethod
     def captures(cls, _id):
@@ -251,7 +250,7 @@ class Flag(DatabaseObject):
     def name(self, value):
         if not len(value) <= 16:
             raise ValidationError("Flag name must be less than 16 characters")
-        self._name = unicode(value)
+        self._name = str(value)
 
     @property
     def order(self):
@@ -267,7 +266,7 @@ class Flag(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value)[:1024]
+        self._description = str(value)[:1024]
 
     @property
     def capture_message(self):
@@ -275,7 +274,7 @@ class Flag(DatabaseObject):
 
     @capture_message.setter
     def capture_message(self, value):
-        self._capture_message = unicode(value)
+        self._capture_message = str(value)
 
     @property
     def type(self):
@@ -285,7 +284,7 @@ class Flag(DatabaseObject):
     def type(self, value):
         if value not in self.FLAG_TYPES:
             raise ValueError("Invalid flag type")
-        self._type = unicode(value)
+        self._type = str(value)
 
     @property
     def token(self):
@@ -293,7 +292,7 @@ class Flag(DatabaseObject):
 
     @token.setter
     def token(self, value):
-        self._token = unicode(value)
+        self._token = str(value)
 
     @property
     def case_sensitive(self):

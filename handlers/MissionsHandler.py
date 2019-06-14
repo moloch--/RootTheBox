@@ -26,13 +26,16 @@ This file contains the code for displaying flags / recv flag submissions
 
 import logging
 
+from builtins import next
 from models.GameLevel import GameLevel
 from models.Flag import Flag
 from models.Box import Box, FlagsSubmissionType
 from models.Hint import Hint
 from models.Penalty import Penalty
 from libs.SecurityDecorators import authenticated
+from builtins import str
 from handlers.BaseHandlers import BaseHandler
+from past.utils import old_div
 
 
 class FirstLoginHandler(BaseHandler):
@@ -252,8 +255,8 @@ class FlagSubmissionHandler(BaseHandler):
 
         # Check for Level Completion
         level = GameLevel.by_id(box.game_level_id)
-        level_progress = len(user.team.level_flags(level.number)) / float(
-            len(level.flags)
+        level_progress = old_div(
+            len(user.team.level_flags(level.number)), float(len(level.flags))
         )
         if level_progress == 1.0 and level not in user.team.game_levels:
             reward_dialog = ""
@@ -343,7 +346,9 @@ class FlagSubmissionHandler(BaseHandler):
                 user.money += flag.value
                 self.dbsession.add(user.team)
                 if self.config.dynamic_flag_value:
-                    depreciation = float(self.config.flag_value_decrease / 100.0)
+                    depreciation = float(
+                        old_div(self.config.flag_value_decrease, 100.0)
+                    )
                     flag.value = int(flag.value - (flag.value * depreciation))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
@@ -358,7 +363,7 @@ class FlagSubmissionHandler(BaseHandler):
         if len(user.team.level_flags(flag.game_level.number)) == len(
             flag.game_level.flags
         ):
-            next_level = flag.game_level.next()
+            next_level = next(flag.game_level)
             logging.info("Next level is %r" % next_level)
             if next_level is not None and next_level not in user.team.game_levels:
                 logging.info("Team completed level, unlocking the next level")

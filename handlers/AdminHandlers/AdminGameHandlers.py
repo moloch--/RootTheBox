@@ -21,6 +21,7 @@ Created on Nov 24, 2014
 
 Handlers related to controlling and configuring the overall game.
 """
+# pylint: disable=unused-wildcard-import,no-member
 
 import os
 import subprocess
@@ -30,6 +31,8 @@ import xml.etree.cElementTree as ET
 import time
 
 from tempfile import NamedTemporaryFile
+from libs.StringCoding import encode, decode
+from builtins import str
 from models.Flag import Flag
 from models.Box import Box
 from models.Swat import Swat
@@ -53,6 +56,7 @@ from handlers.BaseHandlers import BaseHandler
 from string import printable
 from setup.xmlsetup import import_xml
 from tornado.options import options
+from past.builtins import basestring
 from datetime import datetime
 
 
@@ -423,6 +427,7 @@ class AdminGitStatusHandler(BaseHandler):
                 stderr=subprocess.PIPE,
             )
             out, err = sp.communicate()
+            out = decode(out)
             if "Your branch is behind" in out and "modified:" in out:
                 git = "RTB Updates: Modified files (merge conflicts)"
             elif "Your branch is" in out:
@@ -489,8 +494,8 @@ class AdminExportHandler(BaseHandler):
             "attachment; filename=%s.xml"
             % (self.config.game_name.replace("\n", "").replace("\r", ""),),
         )
-        self.set_header("Content-Length", len(xml_doc.encode("utf-8")))
-        self.write(xml_doc.encode("utf-8"))
+        self.set_header("Content-Length", len(encode(xml_doc, "utf-8")))
+        self.write(encode(xml_doc, "utf-8"))
         self.finish()
 
     def export_game_objects(self, root):

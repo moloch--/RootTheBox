@@ -19,6 +19,7 @@
 
 
 from threading import Lock
+from builtins import object
 
 
 class Singleton(object):

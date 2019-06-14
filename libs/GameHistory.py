@@ -17,6 +17,7 @@ Created on Nov 11, 2012
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+# pylint: disable=no-member
 
 
 import memcache
@@ -31,6 +32,7 @@ from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from libs.Singleton import Singleton
 from tornado.options import options
+from builtins import object, range
 
 
 @Singleton
@@ -142,8 +144,8 @@ class GameHistory(object):
     def __getitem__(self, key):
         """ Implements slices and indexs """
         if isinstance(key, slice):
-            ls = [self[index] for index in xrange(*key.indices(len(self)))]
-            return filter(lambda item: item is not None, ls)
+            ls = [self[index] for index in range(*key.indices(len(self)))]
+            return [item for item in ls if item is not None]
         elif isinstance(key, int):
             if key < 0:  # Handle negative indices
                 key += len(self)

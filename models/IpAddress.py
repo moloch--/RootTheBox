@@ -29,6 +29,7 @@ from sqlalchemy.types import Integer, String, Boolean
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from libs.ValidationError import ValidationError
+from builtins import str
 
 
 class IpAddress(DatabaseObject):

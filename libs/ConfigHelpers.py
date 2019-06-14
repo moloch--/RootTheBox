@@ -2,6 +2,7 @@ import logging
 
 from tornado.options import options
 from datetime import datetime
+from past.builtins import basestring
 
 
 def save_config():
@@ -20,12 +21,7 @@ def save_config():
             if "rootthebox.py" in group.lower() or group == "":
                 continue
             fp.write("\n# [ %s ]\n" % group.title())
-            try:
-                # python2
-                opt = options.group_dict(group).iteritems()
-            except AttributeError:
-                # python3
-                opt = options.group_dict(group).items()
+            opt = list(options.group_dict(group).items())
             for key, value in opt:
                 try:
                     # python2
@@ -35,7 +31,7 @@ def save_config():
                     value_type = str
                 if isinstance(value, value_type):
                     # Str/Unicode needs to have quotes
-                    fp.write(u'%s = "%s"\n' % (key, value))
+                    fp.write('%s = "%s"\n' % (key, value))
                 else:
                     # Int/Bool/List use __str__
                     fp.write("%s = %s\n" % (key, value))

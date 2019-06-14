@@ -31,6 +31,7 @@ from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from .BaseHandlers import BaseHandler
 from tornado.options import options
+from builtins import str
 
 
 MAX_UPLOADS = 5

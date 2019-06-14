@@ -27,6 +27,7 @@ from sqlalchemy.sql import and_
 from sqlalchemy.types import Unicode, String, Integer
 from models import dbsession
 from models.BaseModels import DatabaseObject
+from builtins import str
 
 
 class FlagChoice(DatabaseObject):
@@ -72,7 +73,7 @@ class FlagChoice(DatabaseObject):
             flag = cls.flag
         if not item:
             item = cls.item
-        choice = cls._create(flag, unicode(item)[:256])
+        choice = cls._create(flag, str(item)[:256])
         dbsession.add(choice)
         dbsession.commit()
 

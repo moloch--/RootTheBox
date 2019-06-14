@@ -21,6 +21,7 @@ Created on Mar 12, 2012
 
 import re
 
+from builtins import object
 from datetime import datetime
 from sqlalchemy import Column
 from sqlalchemy.types import DateTime, Integer

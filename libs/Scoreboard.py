@@ -19,6 +19,7 @@ Created on Oct 04, 2012
     See the License for the specific language governing permissions and
     limitations under the License.
 """
+# pylint: disable=no-member
 
 
 import json
@@ -30,6 +31,7 @@ from models.Team import Team
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from tornado.options import options
+from builtins import object, str
 
 
 class Scoreboard(object):

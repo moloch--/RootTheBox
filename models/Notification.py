@@ -34,13 +34,14 @@ from models import dbsession
 from models.User import User
 from models.BaseModels import DatabaseObject
 from tornado.options import options
+from builtins import str
 
 
 ### Constants ###
-SUCCESS = u"/static/images/success.png"
-INFO = u"/static/images/info.png"
-WARNING = u"/static/images/warning.png"
-ERROR = u"/static/images/error.png"
+SUCCESS = "/static/images/success.png"
+INFO = "/static/images/info.png"
+WARNING = "/static/images/warning.png"
+ERROR = "/static/images/error.png"
 
 
 class Notification(DatabaseObject):
@@ -124,8 +125,8 @@ class Notification(DatabaseObject):
         icon = icon if icon is not None else INFO
         notification = Notification(
             user_id=user.id,
-            title=unicode(title),
-            message=unicode(message),
+            title=str(title),
+            message=str(message),
             icon_url=urlparse(icon).path,
         )
         return notification

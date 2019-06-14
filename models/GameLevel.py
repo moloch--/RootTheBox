@@ -29,6 +29,7 @@ from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
+from builtins import str
 
 
 class GameLevel(DatabaseObject):
@@ -40,7 +41,7 @@ class GameLevel(DatabaseObject):
     next_level_id = Column(Integer, ForeignKey("game_level.id"))
     _number = Column(Integer, unique=True, nullable=False)
     _buyout = Column(Integer, nullable=False)
-    _type = Column(Unicode(16), nullable=False, default=u"buyout")
+    _type = Column(Unicode(16), nullable=False, default="buyout")
     _reward = Column(Integer, nullable=False, default=0)
     _name = Column(Unicode(32), nullable=True)
 
@@ -150,13 +151,6 @@ class GameLevel(DatabaseObject):
             _flags += box.flags
         return _flags
 
-    def next(self):
-        """ Return the next level, or None """
-        if self.next_level_id is not None:
-            return self.by_id(self.next_level_id)
-        else:
-            return None
-
     def to_xml(self, parent):
         level_elem = ET.SubElement(parent, "gamelevel")
         ET.SubElement(level_elem, "number").text = str(self.number)
@@ -181,6 +175,13 @@ class GameLevel(DatabaseObject):
             "reward": self.reward,
             "last_level": last_level,
         }
+
+    def __next__(self):
+        """ Return the next level, or None """
+        if self.next_level_id is not None:
+            return self.by_id(self.next_level_id)
+        else:
+            return None
 
     def __str__(self):
         return "GameLevel #%d" % self.number
@@ -215,3 +216,6 @@ class GameLevel(DatabaseObject):
             self.buyout,
             self.next_level_id,
         )
+
+    def __hash__(self):
+        return hash(self.uuid)

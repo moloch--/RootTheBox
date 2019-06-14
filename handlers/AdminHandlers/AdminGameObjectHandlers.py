@@ -25,8 +25,9 @@ CRUD for game objects:
     - Flags (and FlagAttachment)
     - Game Levels
     - Hints
-
 """
+# pylint: disable=unused-wildcard-import
+
 
 import logging
 import re
@@ -55,6 +56,7 @@ from models.Flag import (
 )
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import *
+from builtins import str
 
 
 class AdminCreateHandler(BaseHandler):

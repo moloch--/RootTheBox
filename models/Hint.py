@@ -31,6 +31,7 @@ from models.Relationships import team_to_hint
 from models.Flag import Flag
 from models.Box import Box
 from models import dbsession
+from builtins import str
 
 
 class Hint(DatabaseObject):
@@ -59,7 +60,7 @@ class Hint(DatabaseObject):
     @classmethod
     def by_uuid(cls, _uuid):
         """ Returns a the object with a given uuid """
-        return dbsession.query(cls).filter_by(uuid=unicode(_uuid)).first()
+        return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_box_id(cls, _id):
@@ -110,7 +111,7 @@ class Hint(DatabaseObject):
     def description(self, value):
         if not 0 < len(value) < 1025:
             raise ValidationError("Hint description must be 1 - 1024 characters")
-        self._description = unicode(value)
+        self._description = str(value)
 
     def to_xml(self, parent):
         hint_elem = ET.SubElement(parent, "hint")
