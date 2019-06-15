@@ -220,7 +220,7 @@ class Box(DatabaseObject):
 
     @capture_message.setter
     def capture_message(self, value):
-        self._capture_message = unicode(value)
+        self._capture_message = str(value)
 
     @property
     def avatar(self):
@@ -301,6 +301,7 @@ class Box(DatabaseObject):
         ET.SubElement(box_elem, "name").text = self.name
         ET.SubElement(box_elem, "operatingsystem").text = self._operating_system
         ET.SubElement(box_elem, "description").text = self._description
+        ET.SubElement(box_elem, "capture_message").text = self.capture_message
         ET.SubElement(box_elem, "flag_submission_type").text = FlagsSubmissionType(
             self.flag_submission_type
         ).name
@@ -349,6 +350,7 @@ class Box(DatabaseObject):
             "category": category,
             "operating_system": self.operating_system,
             "description": self._description,
+            "capture_message": self.capture_message,
             "difficulty": self.difficulty,
             "game_level": game_level.uuid,
             "flag_submission_type": self.flag_submission_type,
