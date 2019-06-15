@@ -1,6 +1,8 @@
 {% from libs.BotManager import BotManager %}
 {% from tornado.options import options %}
 {% from models.GameLevel import GameLevel %}
+{% from models.Box import Box %}
+{% from models.Flag import Flag %}
 {% from models.Hint import Hint %}
 {% set hintcount = len(Hint.all()) %}
 {% for index, team in enumerate(teams) %}
@@ -24,18 +26,23 @@
                 <div style="width: 100%; display: table;">
                     <div style="display: table-row; ">
                         {% set gamelevels = GameLevel.all() %}
+                        {% set box_count_all = len(Box.all()) %}
                         {% for index, level in enumerate(gamelevels) %}
-                            {% if len(level.boxes) > 0 %}
+                            <!--  
+                                Display Level Progress. 
+                                If there is only one level with boxes, display boxes.  
+                                If there is only one box with flags, display flags. 
+                            -->
+                            {% set box_count_lvl = len(level.boxes) %}
+                            {% if len(gamelevels) > 1 and box_count_lvl > 0 and box_count_lvl < box_count_all %}
                                 {% if index > 0 %}
                                     <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
                                 {% end %}
                                 <div class="summarycolumn" style="display: table-cell;">
-                                    {% if len(gamelevels) > 1 %}
-                                        {% if level.type == 'none' or not team or level in team.game_levels %}
-                                            <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
-                                        {% else %}
-                                            <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
-                                        {% end %}
+                                    {% if level.type == 'none' or not team or level in team.game_levels %}
+                                        <i class="fa fa-unlock-alt" style="font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
+                                    {% else %}
+                                        <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
                                     {% end %}
                                     <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if len(GameLevel.all()) > 1 %}{{ level.name }} &ndash; {% end %}{% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}{{ int(( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100) }}%{% else %}0%{% end %}">
                                         {% if level.number >= 0 and len(team.level_flags(level.number)) != 0 %}
@@ -45,6 +52,40 @@
                                         {% end %}
                                     </div>
                                 </div>
+                            {% elif box_count_lvl > 0 %}
+                                {% set flag_count_all = Flag.all() %}
+                                {% for index, box in enumerate(level.boxes) %}
+                                    {% set flag_count_box = len(box.flags) %}
+                                    {% if box_count_lvl > 1 and flag_count_box > 0 and (flag_count_box < flag_count_all or flag_count_all > 35) %}
+                                        {% if index > 0 %}
+                                            <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
+                                        {% end %}
+                                        <div class="summarycolumn" style="display: table-cell;">
+                                            <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if box_count_all > 1 %}{{ box.name }} &ndash; {% end %}{% if len(team.box_flags(box)) != 0 %}{{ int(( len(team.box_flags(box)) /  float(len(box.flags)) ) * 100) }}%{% else %}0%{% end %}">
+                                                {% if len(team.box_flags(box)) != 0 %}
+                                                    <div class="bar minibar" style="width: {{ ( len(team.box_flags(box)) /  float(flag_count_box) ) * 100.0 }}%;"></div>
+                                                {% else %}
+                                                    <div class="bar minibar" style="width: 0%;"></div>
+                                                {% end %}
+                                            </div>
+                                        </div>
+                                    {% elif flag_count_box > 0 %}
+                                        {% for index, flag in enumerate(box.flags) %}
+                                            {% if index > 0 %}
+                                                <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
+                                            {% end %}
+                                            <div class="summarycolumn" style="display: table-cell;">
+                                                <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{{ flag.name }}">
+                                                    {% if flag in team.flags %}
+                                                        <div class="bar minibar" style="width: 100%;"></div>
+                                                    {% else %}
+                                                        <div class="bar minibar" style="width: 0%;"></div>
+                                                    {% end %}
+                                                </div>
+                                            </div>
+                                        {% end %}
+                                    {% end %}
+                                {% end %}
                             {% end %}
                         {% end %}
                     </div>

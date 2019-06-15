@@ -227,6 +227,10 @@ class Team(DatabaseObject):
         """ Given a level number return all flags captured for that level """
         return [flag for flag in self.flags if flag.game_level.number == lvl]
 
+    def box_flags(self, box):
+        """ Given a box return all flags captured for that box """
+        return [flag for flag in self.flags if flag.box == box]
+
     @property
     def bot_count(self):
         bot_manager = BotManager.instance()
