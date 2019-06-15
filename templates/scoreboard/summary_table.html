@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                             {% elif box_count_lvl > 0 %}
-                                {% set flag_count_all = Flag.all() %}
+                                {% set flag_count_all = len(Flag.all()) %}
                                 {% for index, box in enumerate(level.boxes) %}
                                     {% set flag_count_box = len(box.flags) %}
                                     {% if box_count_lvl > 1 and flag_count_box > 0 and (flag_count_box < flag_count_all or flag_count_all > 35) %}
