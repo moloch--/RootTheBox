@@ -56,13 +56,15 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
 
   echo "[*] Installing pip/gcc..."
   if [[ "$python_version" == "2" ]]; then
+      echo "[*] Using Python 2.x profile..."
       apt-get install python-pip python-dev build-essential "$SKIP"
   else
+      echo "[*] Using Python 3.x profile..."
       apt-get install python3-pip python3-dev build-essential "$SKIP"
   fi
 
   echo "[*] Installing packages..."
-  apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev default-libmysqlclient-dev "$SKIP"
+  apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev libmysqlclient-dev "$SKIP"
 
 elif [[ ${OSTYPE} == "darwin14" ]]; then
   echo -e "\t#########################"

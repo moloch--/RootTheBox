@@ -13,5 +13,4 @@ python-resize-image
 sqlalchemy
 alembic
 enum34
-libmysqlclient-dev
 mysqlclient
