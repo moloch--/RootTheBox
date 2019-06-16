@@ -42,11 +42,11 @@ from tornado.options import options
 from dateutil.parser import parse
 
 ### Constants
-FLAG_STATIC = "static"
-FLAG_REGEX = "regex"
-FLAG_FILE = "file"
-FLAG_DATETIME = "datetime"
-FLAG_CHOICE = "choice"
+FLAG_STATIC = u"static"
+FLAG_REGEX = u"regex"
+FLAG_FILE = u"file"
+FLAG_DATETIME = u"datetime"
+FLAG_CHOICE = u"choice"
 
 
 class Flag(DatabaseObject):

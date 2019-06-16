@@ -61,13 +61,11 @@ class SettingsHandler(BaseHandler):
     """ Modify user controlled attributes """
 
     @authenticated
-    @tornado.web.asynchronous
     def get(self, *args, **kwargs):
         """ Display the user settings """
         self.render_page()
 
     @authenticated
-    @tornado.web.asynchronous
     def post(self, *args, **kwargs):
         """ Calls function based on parameter """
         post_functions = {

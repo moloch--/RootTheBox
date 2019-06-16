@@ -54,8 +54,8 @@ from past.builtins import basestring
 
 
 # Constants
-ADMIN_PERMISSION = "admin"
-DEFAULT_HASH_ALGORITHM = "md5"
+ADMIN_PERMISSION = u"admin"
+DEFAULT_HASH_ALGORITHM = u"md5"
 ITERATE = 0x2BAD  # 11181
 
 

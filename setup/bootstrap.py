@@ -64,20 +64,20 @@ else:
 
 # Theme objects
 css_files = [
-    ("Bootstrap", ["bootstrap.min.css"]),
-    ("Amelia", ["amelia.min.css"]),
-    ("Cyborg", ["cyborg.min.css"]),
-    ("Readable", ["readable.min.css"]),
-    ("Slate", ["slate.min.css"]),
-    ("Spruce", ["spruce.min.css"]),
-    ("United", ["united.min.css"]),
-    ("Cerulean", ["cerulean.min.css"]),
-    ("Journal", ["journal.min.css"]),
-    ("Simplex", ["simplex.min.css"]),
-    ("Spacelab", ["spacelab.min.css"]),
-    ("Superhero", ["superhero.min.css"]),
-    ("Geocities", ["geocities.min.css"]),
-    ("386", ["386.css", "386.js", "386.responsive.css"]),
+    (u"Bootstrap", [u"bootstrap.min.css"]),
+    (u"Amelia", [u"amelia.min.css"]),
+    (u"Cyborg", [u"cyborg.min.css"]),
+    (u"Readable", [u"readable.min.css"]),
+    (u"Slate", [u"slate.min.css"]),
+    (u"Spruce", [u"spruce.min.css"]),
+    (u"United", [u"united.min.css"]),
+    (u"Cerulean", [u"cerulean.min.css"]),
+    (u"Journal", [u"journal.min.css"]),
+    (u"Simplex", [u"simplex.min.css"]),
+    (u"Spacelab", [u"spacelab.min.css"]),
+    (u"Superhero", [u"superhero.min.css"]),
+    (u"Geocities", [u"geocities.min.css"]),
+    (u"386", [u"386.css", u"386.js", u"386.responsive.css"]),
 ]
 for css in css_files:
     theme = Theme(name=css[0])
@@ -90,37 +90,37 @@ for css in css_files:
 
 # Market Items
 item = MarketItem(
-    name="Source Code Market",
+    name=u"Source Code Market",
     price=500,
-    image="source_code_market.png",
-    description="Allows your team access to the Source Code Black Market where you can purchase leaked source code for certain target boxes.",
+    image=u"source_code_market.png",
+    description=u"Allows your team access to the Source Code Black Market where you can purchase leaked source code for certain target boxes.",
 )
 dbsession.add(item)
 dbsession.flush()
 
 item = MarketItem(
-    name="Password Security",
+    name=u"Password Security",
     price=1000,
-    image="password_security.png",
-    description="Allows your team to upgrade their password hashes to more secure algorithms such as SHA1, and SHA256.",
+    image=u"password_security.png",
+    description=u"Allows your team to upgrade their password hashes to more secure algorithms such as SHA1, and SHA256.",
 )
 dbsession.add(item)
 dbsession.flush()
 
 item = MarketItem(
-    name="Federal Reserve",
+    name=u"Federal Reserve",
     price=1750,
-    image="federal_reserve.png",
-    description="Gain access to the internal New York Federal Reserve banking system, allowing you to transfer funds to/from accounts.",
+    image=u"federal_reserve.png",
+    description=u"Gain access to the internal New York Federal Reserve banking system, allowing you to transfer funds to/from accounts.",
 )
 dbsession.add(item)
 dbsession.flush()
 
 item = MarketItem(
-    name="SWAT",
+    name=u"SWAT",
     price=3000,
-    image="swat.png",
-    description="Gain access to the internal police computer system, allowing you to insert fraudlent arrest warrents for other players.",
+    image=u"swat.png",
+    description=u"Gain access to the internal police computer system, allowing you to insert fraudlent arrest warrents for other players.",
 )
 dbsession.add(item)
 dbsession.flush()

@@ -38,10 +38,10 @@ from builtins import str
 
 
 ### Constants ###
-SUCCESS = "/static/images/success.png"
-INFO = "/static/images/info.png"
-WARNING = "/static/images/warning.png"
-ERROR = "/static/images/error.png"
+SUCCESS = u"/static/images/success.png"
+INFO = u"/static/images/info.png"
+WARNING = u"/static/images/warning.png"
+ERROR = u"/static/images/error.png"
 
 
 class Notification(DatabaseObject):
