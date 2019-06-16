@@ -27,6 +27,7 @@ from sqlalchemy.orm import synonym, relationship
 from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
+from builtins import str
 
 
 class ThemeFile(DatabaseObject):
@@ -66,7 +67,7 @@ class Theme(DatabaseObject):
     Holds theme related settings
     """
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
     _name = Column(Unicode(64), unique=True, nullable=False)
     files = relationship("ThemeFile", lazy="joined")
 
