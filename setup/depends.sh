@@ -42,6 +42,7 @@ if [[ "$SKIP" == " -y" ]]; then
 fi
 
 python_version="$(python -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
+python3_version="$(python3 -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
 
 if [[ $OSTYPE == "linux-gnu" ]]; then
   echo -e "\t#########################"
@@ -56,10 +57,11 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
 
   echo "[*] Installing pip/gcc..."
   if [[ "$python_version" == "2" ]]; then
-      echo "[*] Using Python 2.x profile..."
+      echo "[*] Installing Python 2.x depends..."
       apt-get install python-pip python-dev build-essential "$SKIP"
-  else
-      echo "[*] Using Python 3.x profile..."
+  fi
+  if [[ "$python3_version" == "3" ]]; then
+      echo "[*] Installing Python 3.x depends..."
       apt-get install python3-pip python3-dev build-essential "$SKIP"
   fi
 
@@ -90,7 +92,8 @@ echo "[*] Installing python libs..."
 #sh "$current_path/python-depends.sh"
 if [[ "$python_version" == "2" ]]; then
     pip2 install -r "$current_path/requirements.txt" --upgrade
-else
+fi
+if [[ "$python3_version" == "3" ]]; then
     pip3 install -r "$current_path/requirements.txt" --upgrade
 fi
 
