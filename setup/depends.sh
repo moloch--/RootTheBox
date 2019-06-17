@@ -50,7 +50,7 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   echo -e "\t#########################"
 
   echo "[*] Add Universe Repo..."
-  add-apt-repository universe "$SKIP"
+  add-apt-repository universe
 
   echo "Update package list..."
   apt-get update
@@ -58,15 +58,15 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   echo "[*] Installing pip/gcc..."
   if [[ "$python_version" == "2" ]]; then
       echo "[*] Installing Python 2.x depends..."
-      apt-get install python-pip python-dev build-essential "$SKIP"
+      apt-get install python-pip python-dev python-mysqldb python-mysqldb-dbg python-pycurl "$SKIP"
   fi
   if [[ "$python3_version" == "3" ]]; then
       echo "[*] Installing Python 3.x depends..."
-      apt-get install python3-pip python3-dev build-essential "$SKIP"
+      apt-get install python3-pip python3-dev python3-mysqldb python3-mysqldb-dbg python3-pycurl "$SKIP"
   fi
 
   echo "[*] Installing packages..."
-  apt-get install mysql-server memcached libmemcached-dev python-mysqldb python-mysqldb-dbg python-pycurl python-recaptcha zlib1g-dev libmysqlclient-dev "$SKIP"
+  apt-get install build-essential mysql-server zlib1g-dev libmysqlclient-dev memcached libmemcached-dev "$SKIP"
 
 elif [[ ${OSTYPE} == "darwin14" ]]; then
   echo -e "\t#########################"
