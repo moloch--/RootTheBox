@@ -289,7 +289,7 @@ class Box(DatabaseObject):
     def is_complete(self, user):
         boxcomplete = True
         for boxflag in self.flags:
-            if not boxflag in user.team.flags:
+            if user.team and not boxflag in user.team.flags:
                 boxcomplete = False
                 break
         return boxcomplete

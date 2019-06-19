@@ -53,27 +53,25 @@
             <div class="well">
                 {% if len(GameLevel.all()) > 1 %}
                 <h3 style="display:inline; vertical-align: middle;">
-                    {% if level.type == 'none' or level in team.game_levels %}
+                    {% if not team or level.type == 'none' or level in team.game_levels %}
                         <i class="fa fa-unlock-alt"></i>
                     {% else %}
                         <i class="fa fa-lock"></i>
                     {% end %}
                     {{ level.name }}&nbsp;&nbsp;&nbsp;
                 </h3>
-                {% if level.type == 'none' or level in team.game_levels %}
-                    <div class="progress" style="height: 10px; background-color: #424242;">
-			{% if len(level.flags) == 0 %}
-                        <div class="bar minibar" style="width: {{0}}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
+                    {% if team and (level.type == 'none' or level in team.game_levels) %}
+                        <div class="progress" style="height: 10px; background-color: #424242;">
+                        {% if len(level.flags) == 0 %}
+                            <div class="bar minibar" style="width: {{0}}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}"></div>
                         {% end %}
-			{% if len(level.flags) != 0 %}
-                        <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
-			{% end %}
-
-			</div>
-                    </div>
+                        {% if len(level.flags) != 0 %}
+                            <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}"></div>
+                        {% end %}
+                        </div>
+                    {% end %}
                 {% end %}
-                {% end %}
-                {% if level.type == 'none' or level in team.game_levels %}
+                {% if not team or level.type == 'none' or level in team.game_levels %}
                     <hr>
                     <div class="container">
                         {% set boxes = [] %}
@@ -102,19 +100,21 @@
                                                 {% end %}
                                                 {% if box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
                                             </h5>
-                                            {% set flagcount=0 %}
-                                            {% for index, flag in enumerate(box.flags) %}
-                                                {% if flag in team.flags %}
-                                                    {% set flagcount += 1 %}
+                                            {% if team %}
+                                                {% set flagcount=0 %}
+                                                {% for index, flag in enumerate(box.flags) %}
+                                                    {% if flag in team.flags %}
+                                                        {% set flagcount += 1 %}
+                                                    {% end %}
                                                 {% end %}
+                                                <div class="progress" style="height: 8px; margin-bottom: 8px; margin-right: -10px; background-color: #424242;">
+                                                    {% if flagcount != 0 and len(box.flags) != 0 %}
+                                                            <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box.flags) }}"></div>
+                                                    {% else %}
+                                                            <div class="bar minibar" style="width: 0%;"></div>
+                                                    {% end %}
+                                                </div>
                                             {% end %}
-                                            <div class="progress" style="height: 8px; margin-bottom: 8px; margin-right: -10px; background-color: #424242;">
-                                                {% if flagcount != 0 and len(box.flags) != 0 %}
-                                                        <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box.flags) }}"></div>
-                                                {% else %}
-                                                        <div class="bar minibar" style="width: 0%;"></div>
-                                                {% end %}
-                                            </div>
                                             {% if box.avatar != "none" %}
                                             <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                                             {% end %}
@@ -140,19 +140,21 @@
                                                     {% end %}
                                                     {% if box.corporation.name != "" %}{{ box1.corporation.name }} - {% end %}{{ box1.name }}
                                                 </h5>
-                                                {% set flagcount=0 %}
-                                                {% for index, flag in enumerate(box1.flags) %}
-                                                    {% if flag in team.flags %}
-                                                        {% set flagcount += 1 %}
+                                                {% if team %}
+                                                    {% set flagcount=0 %}
+                                                    {% for index, flag in enumerate(box1.flags) %}
+                                                        {% if flag in team.flags %}
+                                                            {% set flagcount += 1 %}
+                                                        {% end %}
                                                     {% end %}
+                                                    <div class="progress" style="height: 8px; margin-bottom: 8px; margin-right: -10px; background-color: #424242;" title="{% if len(box1.flags) != 0 %}{{ flagcount }} / {{ len(box1.flags) }}{% else %}0 / 0{% end %}">
+                                                        {% if flagcount != 0 and len(box1.flags) != 0 %}
+                                                                <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box1.flags)) ) * 100.0 }}%;"></div>
+                                                        {% else %}
+                                                                <div class="bar minibar" style="width: 0%;"></div>
+                                                        {% end %}
+                                                    </div>
                                                 {% end %}
-                                                <div class="progress" style="height: 8px; margin-bottom: 8px; margin-right: -10px; background-color: #424242;" title="{% if len(box1.flags) != 0 %}{{ flagcount }} / {{ len(box1.flags) }}{% else %}0 / 0{% end %}">
-                                                    {% if flagcount != 0 and len(box1.flags) != 0 %}
-                                                            <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box1.flags)) ) * 100.0 }}%;"></div>
-                                                    {% else %}
-                                                            <div class="bar minibar" style="width: 0%;"></div>
-                                                    {% end %}
-                                                </div>
                                                 {% if box1.avatar != "none" %}
                                                 <img src="/avatars/{{ box1.avatar }}" class="img-polaroid" />
                                                 {% end %}
@@ -179,19 +181,21 @@
                                                     {% end %}
                                                     {% if box.corporation.name != "" %}{{ box2.corporation.name }} - {% end %}{{ box2.name }}
                                                 </h5>
-                                                {% set flagcount=0 %}
-                                                {% for index, flag in enumerate(box2.flags) %}
-                                                    {% if flag in team.flags %}
-                                                        {% set flagcount += 1 %}
+                                                {% if team %}
+                                                    {% set flagcount=0 %}
+                                                    {% for index, flag in enumerate(box2.flags) %}
+                                                        {% if flag in team.flags %}
+                                                            {% set flagcount += 1 %}
+                                                        {% end %}
                                                     {% end %}
+                                                    <div class="progress" style="height: 8px; margin-bottom: 8px; margin-right: -10px; background-color: #424242;">
+                                                        {% if flagcount != 0 and len(box2.flags) != 0 %}
+                                                                <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box2.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box2.flags) }}"></div>
+                                                        {% else %}
+                                                                <div class="bar minibar" style="width: 0%;"></div>
+                                                        {% end %}
+                                                    </div>
                                                 {% end %}
-                                                <div class="progress" style="height: 8px; margin-bottom: 8px; margin-right: -10px; background-color: #424242;">
-                                                    {% if flagcount != 0 and len(box2.flags) != 0 %}
-                                                            <div class="bar minibar" style="width: {{ ( flagcount /  float(len(box2.flags)) ) * 100.0 }}%;" title="{{ flagcount }} / {{ len(box2.flags) }}"></div>
-                                                    {% else %}
-                                                            <div class="bar minibar" style="width: 0%;"></div>
-                                                    {% end %}
-                                                </div>
                                                 {% if box2.avatar != "none" %}
                                                 <img src="/avatars/{{ box2.avatar }}" class="img-polaroid" />
                                                 {% end %}
