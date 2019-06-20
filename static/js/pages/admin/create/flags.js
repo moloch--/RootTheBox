@@ -106,4 +106,8 @@ $(document).ready(function() {
             $("#token").val($('input[name=multichoice]:checked').next('input').val());
         }
     });
+    let searchParams = new URLSearchParams(window.location.search)
+    if (searchParams.has('box')) {
+        getBoxFlags(searchParams.get('box'), '');
+    }
 });

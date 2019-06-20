@@ -142,7 +142,7 @@ class User(DatabaseObject):
             algorithm_name = DEFAULT_HASH_ALGORITHM
         if algorithm_name in cls.algorithms:
             algo = cls.algorithms[algorithm_name][0]()
-            algo.update(password)
+            algo.update(encode(password))
             return algo.hexdigest()
         else:
             raise ValueError("Algorithm %s not supported." % algorithm_name)
