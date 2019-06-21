@@ -52,14 +52,14 @@
             {% if len(level.boxes) > 0 %}
             <div class="well">
                 {% if len(GameLevel.all()) > 1 %}
-                <h3 style="display:inline; vertical-align: middle;">
-                    {% if not team or level.type == 'none' or level in team.game_levels %}
-                        <i class="fa fa-unlock-alt"></i>
-                    {% else %}
-                        <i class="fa fa-lock"></i>
-                    {% end %}
-                    {{ level.name }}&nbsp;&nbsp;&nbsp;
-                </h3>
+                    <h3 style="display:inline; vertical-align: middle;">
+                        {% if not team or level.type == 'none' or level in team.game_levels %}
+                            <i class="fa fa-unlock-alt"></i>
+                        {% else %}
+                            <i class="fa fa-lock"></i>
+                        {% end %}
+                        {{ level.name }}&nbsp;&nbsp;&nbsp;
+                    </h3>
                     {% if team and (level.type == 'none' or level in team.game_levels) %}
                         <div class="progress" style="height: 10px; background-color: #424242;">
                         {% if len(level.flags) == 0 %}
@@ -70,9 +70,9 @@
                         {% end %}
                         </div>
                     {% end %}
+                    <hr>
                 {% end %}
                 {% if not team or level.type == 'none' or level in team.game_levels %}
-                    <hr>
                     <div class="container">
                         {% set boxes = [] %}
                         {% for box in level.boxes %}

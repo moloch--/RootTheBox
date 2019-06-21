@@ -399,6 +399,54 @@ define(
 )
 
 define(
+    "story_signature",
+    multiple=True,
+    default=[" ", "Good hunting,\n    -Morris"],
+    group="game",
+    help="the ending at the end of the communication dialog",
+    type=game_type,
+)
+
+define(
+    "story_firstlogin",
+    multiple=True,
+    default=[
+        "Hello [[b;;]$user],\n",
+        "I am your new employer. You may call me [[b;;]Morris].",
+        " ",
+        "I hope you're well rested.  We have a lot of work to do.",
+        "I have several assignments which require your... special skill set.",
+        " ",
+        'You may view your current assignments by selecting \n"Missions" from the Game menu.',
+    ],
+    group="game",
+    help="the dialog displayed at first login",
+    type=game_type,
+)
+
+define(
+    "story_banking",
+    multiple=True,
+    default=[
+        " ",
+        "I've taken the liberty of depositing some seed money in your team's bank account.",
+        "See that it's put to good use.",
+    ],
+    group="game",
+    help="additional dialog displayed at first login if banking is enabled",
+    type=game_type,
+)
+
+define(
+    "story_bots",
+    multiple=True,
+    default=[" ", "I will also be glad to rent your botnet for $$reward per bot."],
+    group="game",
+    help="additional dialog displayed at first login if bots are enabled",
+    type=game_type,
+)
+
+define(
     "chat_url",
     default="",
     group="game",

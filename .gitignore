@@ -6,11 +6,12 @@
 
 # File uploads and what not
 files/avatars/*-*
-files/avatars/user/*-*
+files/avatars/user/*
 
-files/avatars/team/*-*
-files/avatars/box/*-*
-files/avatars/upload/*-*
+files/avatars/team/*
+files/avatars/box/*
+files/avatars/upload/*
+files/story/*
 files/icons/*-*
 files/shares/*-*
 files/source_code_market/*-*

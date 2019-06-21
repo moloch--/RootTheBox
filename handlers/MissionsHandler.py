@@ -24,18 +24,20 @@ This file contains the code for displaying flags / recv flag submissions
 """
 
 
-import logging
+import logging, json
 
+from tornado.options import options
 from builtins import next
+from builtins import str
+from past.utils import old_div
+
+from libs.SecurityDecorators import authenticated
+from handlers.BaseHandlers import BaseHandler
 from models.GameLevel import GameLevel
 from models.Flag import Flag
 from models.Box import Box, FlagsSubmissionType
 from models.Hint import Hint
 from models.Penalty import Penalty
-from libs.SecurityDecorators import authenticated
-from builtins import str
-from handlers.BaseHandlers import BaseHandler
-from past.utils import old_div
 
 
 class FirstLoginHandler(BaseHandler):
@@ -53,6 +55,37 @@ class FirstLoginHandler(BaseHandler):
             bots=usebots,
             bank=banking,
         )
+
+
+class StoryAjaxHandler(BaseHandler):
+    @authenticated
+    def get(self, *args, **kargs):
+        """ Renders AJAX snippit based on URI """
+        uri = {"firstlogin": self.firstlogin}
+        user = self.get_current_user()
+        if user and len(args) and args[0] in uri:
+            dialog = uri[args[0]]()
+            if isinstance(options.story_signature, list):
+                dialog.extend(options.story_signature)
+            for index, line in enumerate(dialog):
+                dialog[index] = line.replace("$user", str(user.handle)).replace(
+                    "$reward", str(options.bot_reward)
+                )
+            dialog.append(" ")
+            self.write(json.dumps(dialog))
+        else:
+            self.render("public/404.html")
+
+    def firstlogin(self):
+        """ Render the first login dialog """
+        dialog = []
+        if isinstance(options.story_firstlogin, list):
+            dialog.extend(options.story_firstlogin)
+        if options.use_bots and isinstance(options.story_bots, list):
+            dialog.extend(options.story_bots)
+        if options.banking and isinstance(options.story_banking, list):
+            dialog.extend(options.story_banking)
+        return dialog
 
 
 class BoxHandler(BaseHandler):

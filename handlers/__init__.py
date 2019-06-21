@@ -105,6 +105,7 @@ urls = [
     (r"/user/share/pastebin/delete", DeletePasteHandler),
     # Mission handlers - MissionHandlers.py
     (r"/user/missions", MissionsHandler),
+    (r"/user/missions/ajax/(.*)", StoryAjaxHandler),
     (r"/user/missions/capture(.*)", FlagSubmissionHandler),
     (r"/user/missions/(flag|buyout)", MissionsHandler),
     (r"/user/missions/firstlogin", FirstLoginHandler),
@@ -148,6 +149,11 @@ urls = [
         r"/avatars/(.*\.(png|jpeg|jpg|gif|bmp))",
         StaticFileHandler,
         {"path": "files/avatars/"},
+    ),
+    (
+        r"/story/(.*\.(png|jpeg|jpg|gif|bmp))",
+        StaticFileHandler,
+        {"path": "files/story/"},
     ),
     (r"/materials/(.*)(?<!/)", StaticFileHandler, {"path": "files/game_materials/"}),
     # Game Materials

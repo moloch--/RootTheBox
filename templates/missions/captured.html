@@ -27,7 +27,8 @@
             {% set message = box.capture_message %}
         {% else %}
             {% set message = flag.capture_message %}
-        {% end %}
+        {% end %} 
+        {% set message = message + "\n\n".join(options.story_signature) %}
         <input id="banking" type="hidden" value="{% if options.banking %}${% end %}" />
         <input id="flag" type="hidden" value="{% if flag %}{{ flag.name }}{% end %}" />
         <input id="capture-message" type="hidden" value="{{ message }}" />

@@ -1,28 +1,7 @@
+var dialog;
 function text_animation(term) {
     var index = 0;
-    var user = $('#handle').val();
-    var reward = $('#reward').val();
-    var bots = $('#usebots').val();
-    var bank = $('#banking').val();
-    var intro_frames = [
-        "Hello [[b;;]" + user + "],\n",
-        "I am your new employer. You may call me [[b;;]Morris].",
-        " ",
-        "I hope you're well rested.  We have a lot of work to do.",
-        "I have several assignments which require your... special skill set.",
-        " ",
-        "You may view your current assignments by selecting \n\"Missions\" from the Game menu.",
-    ];
-    if (bots === 'true') {
-        intro_frames.push("\nI will also be glad to rent your botnet for $" + reward + " per bot.");
-    }
-    if (bank === 'true') {
-        intro_frames.push(" ",
-            "\nI've taken the liberty of depositing some seed money in your team's bank account.",
-            "See that it's put to good use."
-        );
-    }
-    intro_frames.push(" ", "Good hunting,\n    -Morris", " ");
+    var intro_frames = $.parseJSON(dialog);
 
     term.echo("[[b;;]**************** BEGIN SECURE COMMUNIQUE ****************]\n");
 
@@ -35,7 +14,7 @@ function text_animation(term) {
             term.echo("[[b;;]**************** END OF TRANSMISSION ****************]");
         }
     }
-    setTimeout(display, 1500, term, index);
+    setTimeout(display, 2000, term, index);
 }
 
 function loading(term) {
@@ -69,15 +48,19 @@ $(document).ready(function() {
     $("#closebutton").click(function(){
         window.location = '/user';
     });
-    $('#console').terminal({
-        /* No commands just animation */
-    }, {
-        prompt: " > ",
-        name: 'console',
-        greetings: null,
-        tabcompletion: true,
-        onInit: function(term) {
-            greetings(term);
-        },
+    /* Update Summary Table */
+    $.get("/user/missions/ajax/firstlogin", function(firstlogin) {
+        dialog = firstlogin;
+        $('#console').terminal({
+            /* No commands just animation */
+        }, {
+            prompt: " > ",
+            name: 'console',
+            greetings: null,
+            tabcompletion: true,
+            onInit: function(term) {
+                greetings(term);
+            },
+        });
     });
 });

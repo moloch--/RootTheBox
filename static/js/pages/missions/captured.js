@@ -22,16 +22,13 @@ function text_animation(term) {
             intro_frames.push(msgsplit[x], " ");
         }
     }
-    
-    intro_frames.push("Good hunting,\n    -Morris", " ");
-
     term.echo("[[b;;]**************** BEGIN SECURE COMMUNIQUE ****************]\n");
 
     function display(term, index) {
         term.echo(intro_frames[index]);
         index += 1;
         if (index < intro_frames.length) {
-            setTimeout(display, 1500, term, index);
+            setTimeout(display, 2000, term, index);
         } else {
             term.echo("[[b;;]**************** END OF TRANSMISSION ****************]");
         }
