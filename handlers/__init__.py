@@ -159,7 +159,8 @@ urls = [
     # Game Materials
     (r"/materials/?", MaterialsHandler),
     (r"/materials/(.*)/", MaterialsHandler),
-    (r"/cyberchef", ChefHandler),
+    (r"/cyberchef/", ChefHandler),
+    (r"/cyberchef/(.*)", StaticFileHandler, {"path": "cyberchef/"}),
     # Admin Handlers
     (r"/admin/game", AdminGameHandler),
     (r"/admin/ban/(add|clear|config)", AdminBanHammerHandler),
