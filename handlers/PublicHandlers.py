@@ -77,6 +77,14 @@ class LoginHandler(BaseHandler):
                         and not user.is_admin()
                     ):
                         self.redirect("/user/missions/firstlogin")
+                    elif user.is_admin() and not self.allowed_ip():
+                        self.render(
+                            "public/login.html",
+                            info=[
+                                "Succesfull credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
+                            ],
+                            errors=None,
+                        )
                     else:
                         self.redirect("/user")
                 else:
@@ -91,6 +99,11 @@ class LoginHandler(BaseHandler):
             if password_attempt is not None:
                 PBKDF2.crypt(password_attempt, "BurnTheHashTime")
             self.failed_login()
+
+    def allowed_ip(self):
+        return (
+            len(options.admin_ips) == 0 or self.request.remote_ip in options.admin_ips
+        )
 
     def successful_login(self, user):
         """ Called when a user successfully logs in """
