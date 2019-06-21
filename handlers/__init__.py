@@ -280,13 +280,14 @@ def start_server():
         server = HTTPServer(app, xheaders=options.x_headers)
     try:
         sockets = netutil.bind_sockets(options.listen_port, options.listen_interface)
-    except PermissionError:
-        pypath = sys.executable
-        if os_path.islink(pypath):
-            pypath = os_path.realpath(pypath)
-        logging.error("Problem binding to port %s", str(options.listen_port))
-        logging.error("Possible Fix: sudo setcap CAP_NET_BIND_SERVICE=+eip %s", pypath)
-        sys.exit()
+    except (OSError, IOError) as err:
+        if err.errno == 13:
+            pypath = sys.executable
+            if os_path.islink(pypath):
+                pypath = os_path.realpath(pypath)
+            logging.error("Problem binding to port %s", str(options.listen_port))
+            logging.error("Possible Fix: sudo setcap CAP_NET_BIND_SERVICE=+eip %s", pypath)
+            sys.exit()
     server.add_sockets(sockets)
     Scoreboard.now(app)
     try:

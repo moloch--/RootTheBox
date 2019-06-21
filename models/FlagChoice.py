@@ -72,7 +72,7 @@ class FlagChoice(DatabaseObject):
         if not flag:
             flag = cls.flag
         if not item:
-            item = cls.item
+            item = cls._choice
         choice = cls._create(flag, str(item)[:256])
         dbsession.add(choice)
         dbsession.commit()
