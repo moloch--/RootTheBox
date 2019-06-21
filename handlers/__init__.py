@@ -28,7 +28,7 @@ This is the main file the defines what URLs get routed to what handlers
 import sys
 
 from setup import __version__
-from os import urandom, _exit
+from os import urandom, _exit, path as os_path
 from modules.Menu import Menu
 from modules.Recaptcha import Recaptcha
 from modules.AppTheme import AppTheme
@@ -277,7 +277,15 @@ def start_server():
         )
     else:
         server = HTTPServer(app, xheaders=options.x_headers)
-    sockets = netutil.bind_sockets(options.listen_port, options.listen_interface)
+    try:
+        sockets = netutil.bind_sockets(options.listen_port, options.listen_interface)
+    except PermissionError:
+        pypath = sys.executable
+        if os_path.islink(pypath):
+            pypath = os_path.realpath(pypath)
+        logging.error("Problem binding to port %s", str(options.listen_port))
+        logging.error("Possible Fix: sudo setcap CAP_NET_BIND_SERVICE=+eip %s", pypath)
+        sys.exit()
     server.add_sockets(sockets)
     Scoreboard.now(app)
     try:
