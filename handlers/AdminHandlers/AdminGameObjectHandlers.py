@@ -319,6 +319,7 @@ class AdminCreateHandler(BaseHandler):
         flag = Flag.create_flag(flag_type, box, name, token, description, reward)
         flag.capture_message = self.get_argument("capture_message", "")
         flag.case_sensitive = self.get_argument("case-sensitive", 1)
+        flag.order = len(box.flags) + 1
         lock = Flag.by_uuid(self.get_argument("lock_uuid", ""))
         if lock:
             flag.lock_id = lock.id
@@ -332,11 +333,6 @@ class AdminCreateHandler(BaseHandler):
         if choices is not None:
             for item in choices:
                 FlagChoice.create_choice(flag, item)
-
-        #Update the flag order
-        flag.order = box.flags.index(flag) + 1
-        self.dbsession.add(flag)
-        self.dbsession.commit()
 
         self.redirect("/admin/view/game_objects#%s" % box.uuid)
 
