@@ -638,7 +638,8 @@
                                     <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} END SECURE COMMUNIQUE {% end %}**********************************************************************************************************************************************************************</div>
                                 </div>
                                 <br clear="all" />
-                                <div><!-- Start Flags -->
+                                <!-- Start Flags -->
+                                <div class="startflags">
                                     <h4 style="display:inline;">
                                         <i class="fa fa-flag-o"></i>
                                         Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;
@@ -699,9 +700,11 @@
                                             </tbody>
                                         </table>
                                     {% end %}
-                                </div><!-- End Flags -->
+                                </div>
+                                <!-- End Flags -->
                                 <br />
-                                <div><!-- Start Hints -->
+                                <!-- Start Hints -->
+                                <div class="starthints">
                                     <h4 style="display:inline;">
                                         <i class="fa fa-medkit"></i>
                                         Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;
@@ -740,7 +743,7 @@
                                                     <tr>
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
-                                                        <td class="shortcolumn" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
+                                                        <td class="shortcolumn flagname" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
                                                         <td class="descriptioncol markdown">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
@@ -795,9 +798,11 @@
                                         </table>
                                         {% end %}
                                     {% end %}
-                                </div><!-- End Hints -->
+                                </div>
+                                <!-- End Hints -->
                                 <br/>
-                                <div><!-- Start IPs -->
+                                <!-- Start IPs -->
+                                <div class="startips">
                                     <h4 style="display:inline;">
                                         <i class="fa fa-fw fa-globe"></i>
                                         IP Address&nbsp;&nbsp;
@@ -837,7 +842,8 @@
                                             </tbody>
                                         </table>
                                     {% end %}
-                                </div><!-- End IPs -->
+                                </div>
+                                <!-- End IPs -->
                             </div>
                             <br />
                         {% end %}

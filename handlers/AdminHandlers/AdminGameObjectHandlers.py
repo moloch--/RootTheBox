@@ -327,10 +327,17 @@ class AdminCreateHandler(BaseHandler):
         self.add_attachments(flag)
         self.dbsession.add(flag)
         self.dbsession.commit()
+
         choices = self.get_arguments("addmore[]", strip=True)
         if choices is not None:
             for item in choices:
                 FlagChoice.create_choice(flag, item)
+
+        #Update the flag order
+        flag.order = box.flags.index(flag) + 1
+        self.dbsession.add(flag)
+        self.dbsession.commit()
+
         self.redirect("/admin/view/game_objects#%s" % box.uuid)
 
     def add_attachments(self, flag):

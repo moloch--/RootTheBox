@@ -81,6 +81,11 @@ function getDetails(obj, uuid) {
                         $("#flag-token").val($('input[name=multichoice]:checked').next('input').val());
                     });
                 }  
+            } else if (obj === "flag" && key === "name") {
+                // Leave name value blank if it's auto-generated based on order
+                if (value !== "Question " + response.order) {
+                    $("#" + obj + "-" + key).val(value);
+                }
             } else {
                 $("#" + obj + "-" + key).val(value);    
             }
@@ -346,16 +351,30 @@ $(document).ready(function() {
         return $helper;
     },
         updateIndex = function(e, ui) {
+            hintcheck = {}
+            hints = ui.item.closest(".startflags").siblings(".starthints");
             $('td.index', ui.item.parent()).each(function (i) {
                 var inc = i+1;
                 $(this).text(inc);
                 var flagname = $(this).next().next();
-                if (flagname.text().startsWith("Question ")) {
-                    flagname.text("Question " + inc);
+                var beforename = flagname.text();
+                if (beforename.startsWith("Question ")) {
+                    var aftername = "Question " + inc;
+                    if (beforename !== aftername) {
+                        flagname.text("Question " + inc);
+                        hintcheck[beforename] = aftername;
+                    }
                 }
                 data = {'uuid': $(this).data("uuid"), 'order': (inc), '_xsrf': getCookie("_xsrf")};
                 $.post('/admin/edit/flag_order', data);
             });
+            hintupdate = hints.find(".flagname");
+            for (var i = 0; i < hintupdate.length; i++) {
+                fname = $(hintupdate[i]).text();
+                if (fname in hintcheck) {
+                    $(hintupdate[i]).text(hintcheck[fname]);
+                }
+            }
         };
     
     $(".sort tbody").sortable({

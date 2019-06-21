@@ -461,6 +461,7 @@ class Flag(DatabaseObject):
             "case-sensitive": case_sensitive,
             "flagtype": self.type,
             "choices": self.choices(),
+            "order": self.order,
         }
 
     def __repr__(self):
