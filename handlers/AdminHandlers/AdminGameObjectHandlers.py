@@ -624,7 +624,7 @@ class AdminEditHandler(BaseHandler):
                         choiceitems[uuidsplit[1]] = arguments[item][0]
                     else:
                         for flagoption in arguments[item]:
-                            if flagoption != "":
+                            if len(flagoption) > 0:
                                 # add choice
                                 FlagChoice.create_choice(flag, flagoption)
         for choice in currentchoices:
