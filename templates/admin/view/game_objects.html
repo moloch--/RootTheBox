@@ -167,6 +167,12 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label" for="box-value">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                    <div class="controls">
+                        <input id="box-value" name="value" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}" />
+                    </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="box_description">Description</label>
                     <div class="controls">
                         <textarea rows="4" class="toolbar" id="box-description" name="description" placeholder="Description" ></textarea>

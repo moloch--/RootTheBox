@@ -34,6 +34,8 @@ $(document).ready(function() {
     $("#description").popover({placement:'right', trigger:'hover'});
     $("#flag-submission-type-button").popover({placement:'right', trigger:'hover'});
     $("#difficulty").popover({placement:'right', trigger:'hover'});
+    $("#reward").popover({placement:'right', trigger:'hover'});
+    $("#category").popover({placement:'right', trigger:'hover'});
 
     /* Avatar */
     $(".boxavatarimg").click(function() {

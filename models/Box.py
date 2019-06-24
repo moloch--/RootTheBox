@@ -74,6 +74,7 @@ class Box(DatabaseObject):
     _difficulty = Column(Unicode(16))
     game_level_id = Column(Integer, ForeignKey("game_level.id"), nullable=False)
     _avatar = Column(String(64))
+    _value = Column(Integer, nullable=True)
 
     garbage = Column(
         String(32),
@@ -223,6 +224,19 @@ class Box(DatabaseObject):
         self._capture_message = str(value)
 
     @property
+    def value(self):
+        if not self._value:
+            return 0
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        try:
+            self._value = abs(int(value))
+        except ValueError:
+            raise ValidationError("Reward value must be an integer")
+
+    @property
     def avatar(self):
         if self._avatar is not None:
             return self._avatar
@@ -302,6 +316,7 @@ class Box(DatabaseObject):
         ET.SubElement(box_elem, "operatingsystem").text = self._operating_system
         ET.SubElement(box_elem, "description").text = self._description
         ET.SubElement(box_elem, "capture_message").text = self.capture_message
+        ET.SubElement(box_elem, "value").text = str(self.value)
         ET.SubElement(box_elem, "flag_submission_type").text = FlagsSubmissionType(
             self.flag_submission_type
         ).name
@@ -355,6 +370,7 @@ class Box(DatabaseObject):
             "game_level": game_level.uuid,
             "flag_submission_type": self.flag_submission_type,
             "flaglist": self.flaglist(self.id),
+            "value": self.value,
         }
 
     def __repr__(self):

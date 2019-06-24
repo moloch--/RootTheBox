@@ -156,6 +156,15 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                <div class="controls">
+                    <input id="reward" name="reward" type="number" pattern="[0-9]+" value="0" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                           rel="popover"
+                           data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
+                           data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for completion of the box.">
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="description">Description</label>
                 <div class="controls">
                     <textarea class="toolbar" id="description" style="width: 60%;" rows="5" name="description" maxlength="1024" placeholder="Description"

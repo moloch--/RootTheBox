@@ -194,6 +194,7 @@ class AdminCreateHandler(BaseHandler):
                 box.difficulty = self.get_argument("difficulty", "")
                 box.operating_system = self.get_argument("operating_system", "?")
                 box.capture_message = self.get_argument("capture_message", "")
+                box.value = self.get_argument("reward", 0)
                 cat = Category.by_uuid(self.get_argument("category_uuid", ""))
                 if cat is not None:
                     box.category_id = cat.id
@@ -538,6 +539,14 @@ class AdminEditHandler(BaseHandler):
                     % (box.name, box.capture_message, capture_message)
                 )
                 box.capture_message = capture_message
+            # Reward Value
+            reward = self.get_argument("value", 0)
+            if reward != box.value:
+                logging.info(
+                    "Updated %s's capture value %s -> %s"
+                    % (box.name, box.value, reward)
+                )
+                box.value = reward
             # Avatar
             avatar_select = self.get_argument("box_avatar_select", "")
             if avatar_select and len(avatar_select) > 0:

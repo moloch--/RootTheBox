@@ -284,7 +284,16 @@ class FlagSubmissionHandler(BaseHandler):
         # Check for Box Completion
         box = flag.box
         if box.is_complete(user):
-            success.append("Congratulations! You have completed " + box.name + ".")
+            if box.value > 0:
+                user.team.money += box.value
+                self.dbsession.add(user.team)
+                self.dbsession.flush()
+                self.dbsession.commit()
+                dialog = str(box.value) + " points added to your " + teamval + "score."
+                reward_dialog += dialog
+                success.append("Congratulations! You have completed " + box.name + ". " + dialog)
+            else:
+                success.append("Congratulations! You have completed " + box.name + ".")
 
         # Check for Level Completion
         level = GameLevel.by_id(box.game_level_id)
