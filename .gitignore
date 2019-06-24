@@ -19,6 +19,9 @@ files/game_materials/*
 files/*.db
 files/*.cfg
 
+#Alembic
+alembic/alembic.ini
+
 # Packages
 *.egg
 *.egg-info

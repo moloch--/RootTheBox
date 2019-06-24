@@ -35,7 +35,7 @@ class SnapshotTeam(DatabaseObject):
     Used by game history; snapshot of a single team in history
     """
 
-    team_id = Column(Integer, ForeignKey("team.id"), nullable=False)
+    team_id = Column(Integer, ForeignKey("team.id", ondelete="CASCADE"), nullable=False)
     money = Column(Integer, nullable=False)
     bots = Column(Integer, nullable=False)
 

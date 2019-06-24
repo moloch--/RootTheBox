@@ -22,6 +22,7 @@ Created on Nov 24, 2014
 Handlers for user-related tasks.
 """
 # pylint: disable=unused-wildcard-import
+# pylint: disable=no-member
 
 
 import logging
@@ -32,6 +33,7 @@ from models.Permission import Permission
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
+from libs.EventManager import EventManager
 from builtins import str
 from tornado.options import options
 from netaddr import IPAddress
@@ -218,11 +220,11 @@ class AdminDeleteUsersHandler(BaseHandler):
                     errors=["Unable to delete user %s" % user.handle],
                 )
                 return
+            EventManager.instance().deauth(user)
         if team is not None:
             logging.info("Deleted Team: '%s'" % str(team.name))
             self.dbsession.delete(team)
             self.dbsession.commit()
-            self.flush_memcached()
             self.redirect("/admin/users")
         else:
             self.render("admin/view/users.html", errors=["Team does not exist"])

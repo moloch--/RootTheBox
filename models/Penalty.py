@@ -33,8 +33,8 @@ class Penalty(DatabaseObject):
 
     """ Penalty definition """
 
-    team_id = Column(Integer, ForeignKey("team.id"))
-    flag_id = Column(Integer, ForeignKey("flag.id"))
+    team_id = Column(Integer, ForeignKey("team.id", ondelete="CASCADE"))
+    flag_id = Column(Integer, ForeignKey("flag.id", ondelete="CASCADE"))
     _token = Column(Unicode(256), nullable=True)
 
     @classmethod
