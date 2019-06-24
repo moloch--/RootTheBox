@@ -286,7 +286,9 @@ def start_server():
             if os_path.islink(pypath):
                 pypath = os_path.realpath(pypath)
             logging.error("Problem binding to port %s", str(options.listen_port))
-            logging.error("Possible Fix: sudo setcap CAP_NET_BIND_SERVICE=+eip %s", pypath)
+            logging.error(
+                "Possible Fix: sudo setcap CAP_NET_BIND_SERVICE=+eip %s", pypath
+            )
             sys.exit()
     server.add_sockets(sockets)
     Scoreboard.now(app)
