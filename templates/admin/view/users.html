@@ -118,19 +118,19 @@
                 <div class="control-group">
                     <label class="control-label" for="team-name">{% if options.teams %}Team{% else %}Player{% end %} Name</label>
                     <div class="controls">
-                        <input required id="team-name" name="name" type="text" placeholder="Team Name">
+                        <input required id="team-name" name="name" maxlength="24" type="text" placeholder="Team Name">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="team-motto">{% if options.teams %}Team{% else %}Player{% end %} Motto</label>
                     <div class="controls">
-                        <input required id="team-motto" name="motto" type="text" placeholder="Team Motto">
+                        <input required id="team-motto" name="motto" maxlength="32" type="text" placeholder="Team Motto">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="team-money">{% if options.banking %}Bank Account{% else %}Score{% end %}</label>
                     <div class="controls">
-                        <input required id="team-money" name="money" type="text" placeholder="Bank Account">
+                        <input required id="team-money" name="money" type="number" placeholder="Bank Account">
                     </div>
                 </div>
                 <div class="control-group">

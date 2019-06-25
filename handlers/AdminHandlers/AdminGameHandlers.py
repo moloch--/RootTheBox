@@ -427,7 +427,7 @@ class AdminGitStatusHandler(BaseHandler):
                 stderr=subprocess.PIPE,
             )
             out, err = sp.communicate()
-            out = decode(out)
+            out = str(out)
             if "Your branch is behind" in out and "modified:" in out:
                 git = "RTB Updates: Modified files (merge conflicts)"
             elif "Your branch is" in out:
