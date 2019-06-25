@@ -291,7 +291,9 @@ class FlagSubmissionHandler(BaseHandler):
                 self.dbsession.commit()
                 dialog = str(box.value) + " points added to your " + teamval + "score."
                 reward_dialog += dialog
-                success.append("Congratulations! You have completed " + box.name + ". " + dialog)
+                success.append(
+                    "Congratulations! You have completed " + box.name + ". " + dialog
+                )
             else:
                 success.append("Congratulations! You have completed " + box.name + ".")
 

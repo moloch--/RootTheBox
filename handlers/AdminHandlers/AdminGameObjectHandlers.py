@@ -474,7 +474,7 @@ class AdminEditHandler(BaseHandler):
                 else:
                     raise ValidationError("Box name already exists")
             # Corporation
-            corp = Corporation.by_uuid(self.get_argument("corporation_uuid"))
+            corp = Corporation.by_uuid(self.get_argument("corporation_uuid", ""))
             if corp is not None and corp.id != box.corporation_id:
                 logging.info(
                     "Updated %s's corporation %s -> %s"
@@ -484,7 +484,7 @@ class AdminEditHandler(BaseHandler):
             elif corp is None:
                 raise ValidationError("Corporation does not exist")
             # Category
-            cat = Category.by_uuid(self.get_argument("category_uuid"))
+            cat = Category.by_uuid(self.get_argument("category_uuid", ""))
             if cat is not None and cat.id != box.category_id:
                 logging.info(
                     "Updated %s's category %s -> %s"
@@ -497,7 +497,7 @@ class AdminEditHandler(BaseHandler):
                 )
                 box.category_id = None
             # System Type
-            ostype = self.get_argument("operating_system")
+            ostype = self.get_argument("operating_system", "")
             if ostype is not None and ostype != box.operating_system:
                 logging.info(
                     "Updated %s's system type %s -> %s"
@@ -611,6 +611,9 @@ class AdminEditHandler(BaseHandler):
                     "Updated %s's box %d -> %d" % (flag.name, flag.box_id, box.id)
                 )
                 flag.box_id = box.id
+                for hint in flag.hints:
+                    hint.box_id = box.id
+                    self.dbsession.add(hint)
             elif box is None:
                 raise ValidationError("Box does not exist")
             self.dbsession.add(flag)
@@ -677,7 +680,7 @@ class AdminEditHandler(BaseHandler):
             if level is None:
                 raise ValidationError("Game level does not exist")
             if int(self.get_argument("number", level.number)) != level.number:
-                level.number = self.get_argument("number")
+                level.number = self.get_argument("number", "")
             level.buyout = self.get_argument("buyout", 1)
             level._type = self.get_argument("type", "buyout")
             level._reward = self.get_argument("reward", 0)
@@ -711,8 +714,8 @@ class AdminEditHandler(BaseHandler):
     def box_level(self):
         """ Changes a boxs level """
         errors = []
-        box = Box.by_uuid(self.get_argument("box_uuid"))
-        level = GameLevel.by_uuid(self.get_argument("level_uuid"))
+        box = Box.by_uuid(self.get_argument("box_uuid", ""))
+        level = GameLevel.by_uuid(self.get_argument("level_uuid", ""))
         if box is not None and level is not None:
             box.game_level_id = level.id
             self.dbsession.add(box)

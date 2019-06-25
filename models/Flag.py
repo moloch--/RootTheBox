@@ -241,10 +241,8 @@ class Flag(DatabaseObject):
     def name(self):
         if self._name and len(self._name) > 0:
             return self._name
-        elif self.order:
-            return "Question %d" % self.order
         else:
-            return "Question %d" % (self.box.flags.index(self) + 1)
+            return "Question %d" % self.order
 
     @name.setter
     def name(self, value):
@@ -254,7 +252,10 @@ class Flag(DatabaseObject):
 
     @property
     def order(self):
-        return self._order
+        if self._order:
+            return self._order
+        else:
+            return self.box.flags.index(self) + 1
 
     @order.setter
     def order(self, value):
@@ -412,7 +413,7 @@ class Flag(DatabaseObject):
         """ Write attributes to XML doc """
         flag_elem = ET.SubElement(parent, "flag")
         flag_elem.set("type", self._type)
-        ET.SubElement(flag_elem, "name").text = self.name
+        ET.SubElement(flag_elem, "name").text = self._name
         ET.SubElement(flag_elem, "token").text = self.token
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
