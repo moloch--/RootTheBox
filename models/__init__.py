@@ -69,6 +69,21 @@ StartSession = lambda: _Session(autoflush=True)
 dbsession = StartSession()
 
 
+chatsession = None
+if options.rocketchat_admin:
+    try:
+        from libs.ChatManager import ChatManager
+        chatsession = ChatManager(
+            username=options.rocketchat_admin,
+            password=options.rocketchat_password,
+            domain=options.chat_url,
+        )
+        logging.info("RocketChat Connection Established")
+    except:
+        chatsession = None
+        logging.error("RocketChat Connection Failed")
+
+
 @contextmanager
 def cxt_dbsession():
     """ Provide a transactional scope around a series of operations. """

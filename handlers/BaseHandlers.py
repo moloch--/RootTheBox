@@ -31,7 +31,7 @@ import memcache
 import traceback
 import datetime, time
 
-from models import dbsession
+from models import dbsession, chatsession
 from models.User import User
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession
@@ -65,6 +65,7 @@ class BaseHandler(RequestHandler):
     }
     _session = None
     dbsession = dbsession
+    chatsession = chatsession
     _memcached = None
     new_events = []
     io_loop = IOLoop.instance()

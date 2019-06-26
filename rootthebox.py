@@ -447,14 +447,6 @@ define(
 )
 
 define(
-    "chat_url",
-    default="",
-    group="game",
-    help="slack/discord/... chat url for menu",
-    type=game_type,
-)
-
-define(
     "restrict_registration",
     default=False,
     group="game",
@@ -723,6 +715,30 @@ define(
     group="game",
     help="interval for rewarding botnets (milliseconds)",
     type=int,
+)
+
+define(
+    "chat_url",
+    default="",
+    group="chat",
+    help="slack/discord/rocket/... chat url for menu",
+    type=game_type,
+)
+
+define(
+    "rocketchat_admin",
+    default="",
+    group="chat",
+    help="admin username for rocket chat",
+    type=game_type,
+)
+
+define(
+    "rocketchat_password",
+    default="",
+    group="chat",
+    help="admin password for rocket chat",
+    type=game_type,
 )
 
 # Process modes/flags

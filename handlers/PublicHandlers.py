@@ -233,6 +233,11 @@ class RegistrationHandler(BaseHandler):
         self.dbsession.add(team)
         self.dbsession.commit()
         self.event_manager.user_joined_team(user)
+
+        # Chat
+        if self.chatsession:
+            self.chatsession.create_user(user, self.get_argument("pass1", ""))
+
         return user
 
     def get_team(self):

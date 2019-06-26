@@ -13,3 +13,4 @@ sqlalchemy
 alembic
 enum34
 mysqlclient
+rocketchat_API
