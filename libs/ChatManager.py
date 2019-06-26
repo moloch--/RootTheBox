@@ -27,23 +27,25 @@ from tornado.options import options
 
 
 class ChatManager(object):
-    def __init__(self, username="", password="", domain=""):
-        self.rocket = RocketChat(username, password, domain)
+    def __init__(self, username="", password="", server_url="", ssl_verify=False):
+        self.rocket = RocketChat(
+            user=username,
+            password=password,
+            server_url=server_url,
+            ssl_verify=ssl_verify,
+        )
 
     def create_user(self, user, password):
-        #Create the user's account on RocketChat
+        # Create the user's account on RocketChat
         if not self.rocket:
             return
         account = self.rocket.users_create(
-            user.email,
-            user.name,
-            password,
-            user.handle,
+            user.email, user.name, password, user.handle
         ).json()
         self.create_team(user.team, account)
 
     def create_team(self, team, account):
-        #Create a private team group
+        # Create a private team group
         if options.teams:
             group = self.has_group(team)
             if not group:
@@ -60,4 +62,3 @@ class ChatManager(object):
                 if group["name"] == team.name:
                     return group
         return False
-

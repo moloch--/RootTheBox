@@ -73,15 +73,17 @@ chatsession = None
 if options.rocketchat_admin:
     try:
         from libs.ChatManager import ChatManager
+
         chatsession = ChatManager(
             username=options.rocketchat_admin,
             password=options.rocketchat_password,
-            domain=options.chat_url,
+            server_url=options.chat_url,
         )
         logging.info("RocketChat Connection Established")
-    except:
+    except Exception as e:
         chatsession = None
         logging.error("RocketChat Connection Failed")
+        logging.error(str(e))
 
 
 @contextmanager
