@@ -16,7 +16,7 @@
 {% from tornado.options import options %}
 {% from libs.XSSImageCheck import filter_avatars %}
 {% from models.Box import Box %}
-{% from models.Flag import Flag %}
+{% from models.Flag import Flag, FLAG_TYPES %}
 {% from models.Flag import FLAG_CHOICE %}
 {% from models.FlagChoice import FlagChoice %}
     {% set avatars = filter_avatars("box") %}
@@ -275,11 +275,23 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="flag-box-uuid">Box</label>
+                    <label class="control-label" for="edit-flag-box">Box</label>
                     <div class="controls">
                         <select id="edit-flag-box" name="box_uuid">
                             {% for box in Box.all() %}
                                 <option value="{{ box.uuid }}">{{ box.name }}</option>
+                            {% end %}
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="edit-flag-type">Flag Type</label>
+                    <div class="controls">
+                        <select id="edit-flag-type" name="flag_type">
+                            {% for item in FLAG_TYPES %}
+                                <option id="edit-type-{{item}}" class="typeoption" value="{{ item }}">
+                                    {{ item }}
+                                </option>
                             {% end %}
                         </select>
                     </div>

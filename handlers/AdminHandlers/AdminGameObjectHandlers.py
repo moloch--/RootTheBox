@@ -583,8 +583,8 @@ class AdminEditHandler(BaseHandler):
                 raise ValidationError("Flag does not exist")
             # Name
             name = self.get_argument("name", "")
-            if flag.name != name:
-                logging.info("Updated flag name %s -> %s" % (flag.name, name))
+            if flag._name != name:
+                logging.info("Updated flag name %s -> %s" % (flag._name, name))
                 flag.name = name
             token = self.get_argument("token", "")
             if flag.token != token:
@@ -602,6 +602,14 @@ class AdminEditHandler(BaseHandler):
             flag.original_value = self.get_argument("value", "")
             flag.capture_message = self.get_argument("capture_message", "")
             flag.case_sensitive = self.get_argument("case-sensitive", 1)
+            # Type
+            flag_type = self.get_argument("flag_type", None)
+            if flag_type and flag_type != flag.type:
+                logging.info(
+                    "Updated %s's type %s -> %s"
+                    % (flag.name, flag.type, flag_type)
+                )
+                flag.type = flag_type
             # Dependency Lock
             lock = Flag.by_uuid(self.get_argument("lock_uuid", ""))
             if lock:

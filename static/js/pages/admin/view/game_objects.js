@@ -99,6 +99,18 @@ function getDetails(obj, uuid) {
     }, 'json');
 }
 
+function setFlagType(flagtype) {
+    var staticval = ["static", "regex", "datetime"]
+    $(".typeoption").hide();
+    if (staticval.includes(flagtype)) {
+        for (i in staticval) {
+            $("#edit-type-" + staticval[i]).show();
+        }
+    } else {
+        $("edit-type-" + flagtype).show();
+    }
+}
+
 function getBoxFlags(box_uuid, flag_uuid) {
     data = {'uuid': box_uuid, 'obj': 'box', '_xsrf': getCookie("_xsrf")}
     $.post('/admin/ajax/objects', data, function(response) { 
@@ -227,10 +239,12 @@ $(document).ready(function() {
     $("a[id^=edit-flag-button]").click(function() {
         getBoxFlags($(this).data("box-uuid"), $(this).data("uuid"));
         getDetails("flag", $(this).data("uuid"));
+        setFlagType($(this).data("flagtype"));
         $("#test-token").val("");
         $("#testtrue").hide();
         $("#testfalse").hide();
         $("#edit-flag-box").val($(this).data("box-uuid"));
+        $("#edit-flag-type").val($(this).data("flagtype"));
         if ($(this).data("flagtype") === "static" || $(this).data("flagtype") === "regex") {
             $("#casegroup").show();
         } else {

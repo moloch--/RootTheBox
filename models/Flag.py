@@ -47,6 +47,7 @@ FLAG_REGEX = u"regex"
 FLAG_FILE = u"file"
 FLAG_DATETIME = u"datetime"
 FLAG_CHOICE = u"choice"
+FLAG_TYPES = [FLAG_STATIC, FLAG_REGEX, FLAG_FILE, FLAG_DATETIME, FLAG_CHOICE]
 
 
 class Flag(DatabaseObject):
