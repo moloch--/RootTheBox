@@ -349,6 +349,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.teams = self.get_bool("teams", True)
         self.config.public_teams = self.get_bool("public_teams")
         self.config.show_mvp = self.get_bool("show_mvp")
+        self.config.mvp_max = self.get_int("mvp_max", 10)
         self.config.team_sharing = self.get_bool("team_sharing")
         self.config.dynamic_flag_value = self.get_bool("dynamic_flag_value", False)
         self.config.max_flag_attempts = self.get_int("max_flag_attempts", 100)

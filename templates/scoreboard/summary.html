@@ -59,31 +59,34 @@
                 </tbody>
             </table>
         </div>
-        {% if len(options.scoreboard_right_image) > 0 %}
+        {% set showimage = len(options.scoreboard_right_image) > 0 %}
+        {% set showmvp = options.teams and options.show_mvp %}
+        {% if showimage or showmvp %}
         <div class="well span3">
-            <img src="{{options.scoreboard_right_image}}">
-        </div>
-        {% elif options.teams and options.show_mvp %}
-        <div class="well span3">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                            MVP
-                        </th>
-                        <th style="text-align: center;">
-                            {% if options.banking %}
-                                Money
-                            {% else %}
-                                Points
-                            {% end %}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="mvp_table">
-                    <!-- AJAX -->
-                </tbody>
-            </table>
+            {% if showimage %}
+                <img id="scoreboard_right_image" src="{{options.scoreboard_right_image}}">
+            {% end %}
+            {% if showmvp %}
+                <table id="scoreboard_mvp" class="table table-striped"{% if showimage %} style="display: none;"{% end %}>
+                    <thead>
+                        <tr>
+                            <th>
+                                MVP
+                            </th>
+                            <th style="text-align: center;">
+                                {% if options.banking %}
+                                    Money
+                                {% else %}
+                                    Points
+                                {% end %}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="mvp_table">
+                        <!-- AJAX -->
+                    </tbody>
+                </table>
+            {% end %}
         </div>
         {% end %}
     </div>

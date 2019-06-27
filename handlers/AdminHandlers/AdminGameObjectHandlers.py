@@ -611,6 +611,7 @@ class AdminEditHandler(BaseHandler):
                     "Updated %s's box %d -> %d" % (flag.name, flag.box_id, box.id)
                 )
                 flag.box_id = box.id
+                flag.order = len(box.flags) #place flag at end
                 for hint in flag.hints:
                     hint.box_id = box.id
                     self.dbsession.add(hint)

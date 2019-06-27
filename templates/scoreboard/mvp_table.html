@@ -1,9 +1,14 @@
 {% from tornado.options import options %}
+<!-- users ranked by money -->
 {% for index, user in enumerate(users) %}
     {% if user.money > 0 %}
     <tr style="padding-top: 5px;">
         <td>{{ user.handle }}</td>
         <td class="summarycolumn" style="font-size: large; text-align: center; width: 75px;">{% if options.banking %}${% end %}{{ user.money }}</td>
     </tr>
+    {% end %}
+    <!-- List only the Top N with money -->
+    {% if index >= options.mvp_max - 1 %}
+        {% break %}
     {% end %}
 {% end %}

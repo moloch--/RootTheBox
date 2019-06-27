@@ -479,10 +479,18 @@ define(
 )
 
 define(
+    "mvp_max",
+    default=10,
+    group="game",
+    help="display the top N players",
+    type=int,
+)
+
+define(
     "scoreboard_right_image",
     default="",
     group="game",
-    help="display image to right of scoreboard (disables show_mvp)",
+    help="display image to right of scoreboard (can fade with show_mvp)",
     type=game_type,
 )
 

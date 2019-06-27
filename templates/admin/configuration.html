@@ -21,6 +21,7 @@
             <i class="fa fa-gear"></i>
             Configuration
         </h1>
+        <div style="font-style: italic;"><strong>Note:</strong> Not all options are accessible in the web configuration.  For more, see <a href="https://github.com/moloch--/RootTheBox/wiki/Configuration-File-Details" target="_blank">rootthebox.cfg</a>.</div>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
@@ -214,6 +215,17 @@
                                 <i id="show-mvp-disable-icon" class="fa fa-fw fa-square-o"></i>
                                 Disable
                             </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="mvp-grouping" class="control-section">
+                    <div class="control-group">
+                        <label class="control-label" for="mvp_max">MVP List Top</label>
+                        <div class="controls">
+                            <input required id="mvp-max" max="100" type="number" name="mvp_max" value="{{ config.mvp_max }}"
+                                rel="popover" pattern="\d*"
+                                data-original-title="MVP - List Top N Payers"
+                                data-content="This is the maximum number of players displayed on the MVP list (default 10) with a score > 0." />
                         </div>
                     </div>
                 </div>

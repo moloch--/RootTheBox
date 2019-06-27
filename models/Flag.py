@@ -252,10 +252,9 @@ class Flag(DatabaseObject):
 
     @property
     def order(self):
-        if self._order:
-            return self._order
-        else:
-            return self.box.flags.index(self) + 1
+        if not self._order:
+            self._order = self.box.flags.index(self) + 1
+        return self._order
 
     @order.setter
     def order(self, value):

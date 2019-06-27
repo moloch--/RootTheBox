@@ -39,6 +39,9 @@ $(document).ready(function() {
     if ($("#team-sharing").val() == "false") {
         $("#teamshare-grouping").hide();
     }
+    if ($("#show-mvp").val() == "false") {
+        $("#mvp-grouping").hide();
+    }
 
     /* Set initial state for buttons */
     if ($("#restrict-registration").val() === "true") {
@@ -216,6 +219,7 @@ $(document).ready(function() {
         $("#show-mvp-enable-icon").addClass("fa-check-square-o");
         $("#show-mvp-disable-icon").removeClass("fa-check-square-o");
         $("#show-mvp-disable-icon").addClass("fa-square-o");
+        $("#mvp-grouping").slideDown();
     });
     $("#show-mvp-disable").click(function() {
         $("#show-mvp").val("false");
@@ -223,6 +227,7 @@ $(document).ready(function() {
         $("#show-mvp-disable-icon").addClass("fa-check-square-o");
         $("#show-mvp-enable-icon").removeClass("fa-check-square-o");
         $("#show-mvp-enable-icon").addClass("fa-square-o");
+        $("#mvp-grouping").slideUp();
     });
 
     $("#team-sharing-enable").click(function() {
@@ -374,6 +379,7 @@ $(document).ready(function() {
     $("#global-notifications-button").popover({placement:'right', trigger:'hover'});
     $("#public-teams-button").popover({placement:'right', trigger:'hover'});
     $("#show-mvp-button").popover({placement:'right', trigger:'hover'});
+    $("#mvp-max").popover({placement:'right', trigger:'hover'});
     $("#team-sharing-button").popover({placement:'right', trigger:'hover'});
     $("#hints-taken-button").popover({placement:'right', trigger:'hover'});
     $("#teams-button").popover({placement:'right', trigger:'hover'});
