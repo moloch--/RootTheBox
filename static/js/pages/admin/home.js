@@ -51,7 +51,10 @@ $(document).ready(function() {
 
     $("#timer-submit").click(function() {
         $("#timer-form").submit();
+    });
 
+    $("#message-submit").click(function() {
+        $("#message-form").submit();
     });
 
     $("#updatebutton").click(function() {

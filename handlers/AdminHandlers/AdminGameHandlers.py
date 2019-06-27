@@ -31,7 +31,6 @@ import xml.etree.cElementTree as ET
 import time
 
 from tempfile import NamedTemporaryFile
-from libs.StringCoding import encode, decode
 from builtins import str
 from models.Flag import Flag
 from models.Box import Box
@@ -47,7 +46,9 @@ from models.Corporation import Corporation
 from models.Category import Category
 from models.Notification import Notification
 from models.RegistrationToken import RegistrationToken
+from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
+from libs.StringCoding import encode, decode
 from libs.ValidationError import ValidationError
 from libs.ConfigHelpers import save_config
 from libs.GameHistory import GameHistory
@@ -72,7 +73,7 @@ class AdminGameHandler(BaseHandler):
         suspend_reg = self.get_argument("suspend_registration", "false")
         freeze_score = self.get_argument("freeze_scoreboard", "false")
         if start_game:
-            if self.get_argument("start_game") == "true":
+            if self.get_argument("start_game", "") == "true":
                 self.start_game()
             else:
                 self.stop_game()
@@ -130,6 +131,20 @@ class AdminGameHandler(BaseHandler):
             self.dbsession.add(user)
         self.dbsession.commit()
 
+
+class AdminMessageHandler(BaseHandler):
+
+    event_manager = EventManager.instance()
+
+    """ Send a global notification message """
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        message = self.get_argument("message", "")
+        if len(message) > 0:
+            self.event_manager.admin_message(message)
+        self.redirect("/user")
 
 class AdminRegTokenHandler(BaseHandler):
 

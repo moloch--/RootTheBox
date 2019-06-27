@@ -163,6 +163,7 @@ urls = [
     (r"/cyberchef/(.*)", StaticFileHandler, {"path": "cyberchef/"}),
     # Admin Handlers
     (r"/admin/game", AdminGameHandler),
+    (r"/admin/message", AdminMessageHandler),
     (r"/admin/ban/(add|clear|config)", AdminBanHammerHandler),
     (r"/admin/regtoken/(.*)", AdminRegTokenHandler),
     (r"/admin/garbage", AdminGarbageCfgHandler),

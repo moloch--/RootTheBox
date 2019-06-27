@@ -37,6 +37,34 @@
         </button>
     </div>
 </div>
+ <!-- Send Global Message -->
+<div id="message-modal" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>
+                <i class="fa fa-envelope"></i>
+                Create Message
+            </h3>
+        </div>
+        <div class="modal-body">
+        <form id="message-form" method="post" action="/admin/message">
+        {% raw xsrf_form_html() %}
+        <div style="margin-left: 50px; vertical-align: middle;">
+            <p>
+                Send a global notification to all players:
+            </p><textarea name="message" rows="10" cols="30" style="width: 425px;"></textarea>
+        </div>
+            
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <button id="message-submit" class="btn btn-primary" type="button">
+                <i class="fa fa-fw fa-save"></i>
+                Send
+            </button>
+        </div>
+    </div>
 {% end %}
 
 {% block content %}
@@ -158,6 +186,13 @@
         </div>
     </div>
     <div class="span8 well">
+        <div class="control-group" style="float: right; padding-top: 20px;">
+                <div class="controls">
+                    <button class="btn btn-primary" data-toggle="modal" href="#message-modal" type="button">
+                        Create Notification
+                    </button>
+                </div>
+        </div>
         <h3 id="notifications-title">
             <i class="fa fa-envelope"></i>
             Notifications
