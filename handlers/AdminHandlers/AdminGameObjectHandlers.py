@@ -614,7 +614,7 @@ class AdminEditHandler(BaseHandler):
                 for fl in box.flags:
                     fl.order
                     self.dbsession.add(fl)
-                flag.order = len(box.flags) + 1 #place flag at end
+                flag.order = len(box.flags) + 1  # place flag at end
                 for hint in flag.hints:
                     hint.box_id = box.id
                     self.dbsession.add(hint)

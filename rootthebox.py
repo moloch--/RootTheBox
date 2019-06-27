@@ -478,13 +478,7 @@ define(
     type=bool,
 )
 
-define(
-    "mvp_max",
-    default=10,
-    group="game",
-    help="display the top N players",
-    type=int,
-)
+define("mvp_max", default=10, group="game", help="display the top N players", type=int)
 
 define(
     "scoreboard_right_image",

@@ -79,10 +79,10 @@ if options.rocketchat_admin:
             password=options.rocketchat_password,
             server_url=options.chat_url,
         )
-        logging.info("RocketChat Connection Established")
+        logging.info("RocketChat connection established...")
     except Exception as e:
         chatsession = None
-        logging.error("RocketChat Connection Failed")
+        logging.error("RocketChat connection failed.")
         logging.error(str(e))
 
 

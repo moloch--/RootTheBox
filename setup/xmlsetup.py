@@ -188,7 +188,9 @@ def create_boxes(parent, corporation):
                 )
 
                 box.description = get_child_text(box_elem, "description")
+                box.capture_message = get_child_text(box_elem, "capture_message")
                 box.operating_system = get_child_text(box_elem, "operatingsystem")
+                box.value = get_child_text(box_elem, "value")
                 box.avatar = bytearray(b64decode(get_child_text(box_elem, "avatar")))
                 box.garbage = get_child_text(box_elem, "garbage")
                 category = get_child_text(box_elem, "category")
