@@ -40,7 +40,7 @@ class ChatManager(object):
         if not self.rocket:
             return
         account = self.rocket.users_create(
-            user.email, user.name, password, user.handle
+            user.email, user.name, password, user.handle.replace(" ", "_")
         ).json()
         self.create_team(user.team, account)
 
@@ -49,7 +49,7 @@ class ChatManager(object):
         if options.teams:
             group = self.has_group(team)
             if not group:
-                groups = self.rocket.groups_create(team.name).json()
+                groups = self.rocket.groups_create(team.name.replace(" ", "_")).json()
                 group = groups["group"]
             self.rocket.groups_invite(group["_id"], account["user"]["_id"])
 
@@ -59,7 +59,7 @@ class ChatManager(object):
         privaterooms = self.rocket.groups_list().json()
         if "groups" in privaterooms:
             for group in privaterooms["groups"]:
-                if group["name"] == team.name:
+                if group["name"] == team.name.replace(" ", "_"):
                     return group
         return False
 
