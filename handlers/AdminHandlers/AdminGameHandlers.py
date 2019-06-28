@@ -137,6 +137,7 @@ class AdminMessageHandler(BaseHandler):
     event_manager = EventManager.instance()
 
     """ Send a global notification message """
+
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
@@ -144,7 +145,10 @@ class AdminMessageHandler(BaseHandler):
         message = self.get_argument("message", "")
         if len(message) > 0:
             self.event_manager.admin_message(message)
+            if self.chatsession:
+                self.chatsession.post_message(message)
         self.redirect("/user")
+
 
 class AdminRegTokenHandler(BaseHandler):
 

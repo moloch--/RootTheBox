@@ -606,8 +606,7 @@ class AdminEditHandler(BaseHandler):
             flag_type = self.get_argument("flag_type", None)
             if flag_type and flag_type != flag.type:
                 logging.info(
-                    "Updated %s's type %s -> %s"
-                    % (flag.name, flag.type, flag_type)
+                    "Updated %s's type %s -> %s" % (flag.name, flag.type, flag_type)
                 )
                 flag.type = flag_type
             # Dependency Lock
