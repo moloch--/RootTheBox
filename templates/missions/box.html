@@ -148,7 +148,7 @@
                 <i class="fa fa-th"></i>
             {% end %}
             {% if box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
-            {% if options.story_mode and len(box.capture_message) > 0 and box.is_complete %}
+            {% if options.story_mode and len(box.capture_message) > 0 and box.is_complete(user) %}
                 <a class="btn playstory" style="margin-left: 8px; float:right; margin-top: 10px;" href="captured?box={{ box.uuid }}">
                     <i class="fa fa-play"></i>
                     Play Story
