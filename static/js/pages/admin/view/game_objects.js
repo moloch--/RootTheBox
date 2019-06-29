@@ -134,7 +134,7 @@ function testToken() {
     submission = $("#test-token").val();
     token = $("#flag-token").val();
     if (submission !== "" && token !== "") {
-        flagtype = $("#flag-flagtype").val();
+        flagtype = $("#edit-flag-type").val();
         casesensitive = $("#flag-case-sensitive").val();
         data = {'token': token, 'submission': submission, 'flagtype': flagtype, 'case': casesensitive, '_xsrf': getCookie("_xsrf")}
         $.post('/admin/tokentest/', data, function(response) { 

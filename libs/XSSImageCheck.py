@@ -14,7 +14,7 @@ http://jklmnn.de/imagejs/
 import os
 from string import printable
 from tornado.options import options
-from random import randint
+from random import randint, sample
 
 MAX_AVATAR_SIZE = 1024 * 1024
 MIN_AVATAR_SIZE = 64
@@ -69,7 +69,7 @@ def filter_avatars(dir):
     for avatar in avatars:
         if avatar.lower().endswith(tuple(IMG_FORMATS)):
             avatarlist.append(dir + "/" + avatar)
-    return avatarlist
+    return sample(avatarlist, len(avatarlist))
 
 
 def existing_avatars(dir):

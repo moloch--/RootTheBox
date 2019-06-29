@@ -17,6 +17,12 @@
   -moz-animation: glow 1s ease-in-out infinite alternate;
   animation: glow 1s ease-in-out infinite alternate;
 }
+.timercount {
+  padding-top: 200px;
+  color: red;
+  text-align: center; 
+  font-size: 500%;
+}
 
 @-webkit-keyframes glow {
   from {

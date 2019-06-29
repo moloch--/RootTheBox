@@ -32,6 +32,7 @@ from builtins import str
 from past.utils import old_div
 
 from libs.SecurityDecorators import authenticated
+from libs.StringCoding import decode, encode
 from handlers.BaseHandlers import BaseHandler
 from models.GameLevel import GameLevel
 from models.Flag import Flag
@@ -68,11 +69,19 @@ class StoryAjaxHandler(BaseHandler):
             if isinstance(options.story_signature, list):
                 dialog.extend(options.story_signature)
             for index, line in enumerate(dialog):
-                dialog[index] = line.replace("$user", str(user.handle)).replace(
-                    "$reward", str(options.bot_reward)
-                )
+                try:
+                    dialog[index] = line.replace("$user", str(user.handle)).replace(
+                        "$reward", str(options.bot_reward)
+                    )
+                except:
+                    dialog[index] = line.replace("$user", encode(user.handle)).replace(
+                        "$reward", ("%d" % options.bot_reward)
+                    )
             dialog.append(" ")
-            self.write(json.dumps(dialog))
+            try:
+                self.write(json.dumps(dialog))
+            except:
+                self.write(json.dumps(dialog, encoding="latin1"))
         else:
             self.render("public/404.html")
 
