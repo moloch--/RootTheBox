@@ -117,8 +117,12 @@ class Theme(DatabaseObject):
             for _file in self.files:
                 yield _file
         except:
-            themefile = relationship("ThemeFile")
+            logging.error("Problem with theme - reloading...")
+            themefile = relationship("ThemeFile", lazy="joined")
             if self.is_sequence(themefile):
                 self.files = themefile
                 for _file in self.files:
                     yield _file
+            else:
+                logging.error("Error with theme relationship. Returning default Cyborg theme")
+                return "cyborg.min.css"
