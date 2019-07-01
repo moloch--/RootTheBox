@@ -125,4 +125,4 @@ class Theme(DatabaseObject):
                     yield _file
             else:
                 logging.error("Error with theme relationship. Returning default Cyborg theme")
-                return "cyborg.min.css"
+                yield "cyborg.min.css"
