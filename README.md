@@ -7,7 +7,7 @@ Like traditional CTF games, each team or player can target challenges of varying
 ![example](static/images/example.png?raw=true)
 
 ## Screenshots
-Additional [Screenshots](https://github.com/moloch--/RootTheBox/wiki/Screenshots)
+Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Screenshots) and game examples
 
 ## Features
 
