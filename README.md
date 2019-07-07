@@ -6,6 +6,9 @@ Like traditional CTF games, each team or player can target challenges of varying
 
 ![example](static/images/example.png?raw=true)
 
+## Screenshots
+Additional [Screenshots](https://github.com/moloch--/RootTheBox/wiki/Screenshots)
+
 ## Features
 
 -   [Distributed under the Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
@@ -31,13 +34,9 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 -   Install scripts are for [Ubuntu](http://www.ubuntu.com/) (or [Debian](https://www.debian.org/)) but the application should work on any Linux, BSD, or OSX system.
 -   Internet Explorer is _NOT_ supported, any compatability with IE is purely coincidental. Please use the latest release of [Firefox](https://www.mozilla.org/en-US/), [Chrome](https://www.google.com/chrome/), [Opera](http://www.opera.com/), or any other browser that supports open standards.
 
-## Questions? Problems?
+## Questions? Problems? Feature Requests?
 
-Open a ticket on GitHub and we'd be happy to help you out with setup/configuration/edits.
-
-## Feature Requests
-
-Open a ticket on GitHub and we'll see what we can do for you.  We're always brainstorming new ideas and looking for cool stuff to add!
+[Create an issue](https://github.com/moloch--/RootTheBox/issues) on GitHub if you have any questions, problems or feature requestions. We're happy to help you out with setup/configuration/edits and we're always brainstorming new ideas and looking for cool stuff to add!
 
 ## Contributing
 
