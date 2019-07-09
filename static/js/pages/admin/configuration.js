@@ -44,6 +44,14 @@ $(document).ready(function() {
     }
 
     /* Set initial state for buttons */
+    if ($("#require-email").val() === "true") {
+        $("#require-email-enable-icon").removeClass("fa-square-o");
+        $("#require-email-enable-icon").addClass("fa-check-square-o");
+    } else {
+        $("#require-email-disable-icon").removeClass("fa-square-o");
+        $("#require-email-disable-icon").addClass("fa-check-square-o");
+    }
+
     if ($("#restrict-registration").val() === "true") {
         $("#restrict-registration-enable-icon").removeClass("fa-square-o");
         $("#restrict-registration-enable-icon").addClass("fa-check-square-o");
@@ -149,6 +157,21 @@ $(document).ready(function() {
     }
 
     /* Button callbacks */
+    $("#require-email-enable").click(function() {
+        $("#require-email").val("true");
+        $("#require-email-enable-icon").removeClass("fa-square-o");
+        $("#require-email-enable-icon").addClass("fa-check-square-o");
+        $("#require-email-disable-icon").removeClass("fa-check-square-o");
+        $("#require-email-disable-icon").addClass("fa-square-o");
+    });
+    $("#require-email-disable").click(function() {
+        $("#require-email").val("false");
+        $("#require-email-disable-icon").removeClass("fa-square-o");
+        $("#require-email-disable-icon").addClass("fa-check-square-o");
+        $("#require-email-enable-icon").removeClass("fa-check-square-o");
+        $("#require-email-enable-icon").addClass("fa-square-o");
+    });
+
     $("#restrict-registration-enable").click(function() {
         $("#restrict-registration").val("true");
         $("#restrict-registration-enable-icon").removeClass("fa-square-o");
@@ -162,6 +185,23 @@ $(document).ready(function() {
         $("#restrict-registration-disable-icon").addClass("fa-check-square-o");
         $("#restrict-registration-enable-icon").removeClass("fa-check-square-o");
         $("#restrict-registration-enable-icon").addClass("fa-square-o");
+    });
+
+    $("#global-notifications-enable").click(function() {
+        $("#global-notifications").val("true");
+        $("#global-notifications-enable-icon").removeClass("fa-square-o");
+        $("#global-notifications-enable-icon").addClass("fa-check-square-o");
+        $("#global-notifications-disable-icon").removeClass("fa-check-square-o");
+        $("#global-notifications-disable-icon").addClass("fa-square-o");
+        $('#global-notifications-grouping').slideDown();
+    });
+    $("#global-notifications-disable").click(function() {
+        $("#global-notifications").val("false");
+        $("#global-notifications-disable-icon").removeClass("fa-square-o");
+        $("#global-notifications-disable-icon").addClass("fa-check-square-o");
+        $("#global-notifications-enable-icon").removeClass("fa-check-square-o");
+        $("#global-notifications-enable-icon").addClass("fa-square-o");
+        $('#global-notifications-grouping').slideUp();
     });
 
     $("#hints-taken-enable").click(function() {
@@ -247,7 +287,6 @@ $(document).ready(function() {
         $("#teamshare-grouping").slideUp();
     });
 
-
     $("#banking-enable").click(function() {
         $("#banking").val("true");
         $("#moneyname").text("Money");
@@ -267,7 +306,6 @@ $(document).ready(function() {
         $("#banking-teams-disable").click();
         $("#bank-grouping").slideUp();
     });
-
 
     $("#use-bots-enable").click(function() {
         $("#use-bots").val("true");
@@ -352,29 +390,13 @@ $(document).ready(function() {
         $('#penalty-grouping').slideUp();
     });
 
-    $("#global-notifications-enable").click(function() {
-        $("#global-notifications").val("true");
-        $("#global-notifications-enable-icon").removeClass("fa-square-o");
-        $("#global-notifications-enable-icon").addClass("fa-check-square-o");
-        $("#global-notifications-disable-icon").removeClass("fa-check-square-o");
-        $("#global-notifications-disable-icon").addClass("fa-square-o");
-        $('#global-notifications-grouping').slideDown();
-    });
-    $("#global-notifications-disable").click(function() {
-        $("#global-notifications").val("false");
-        $("#global-notifications-disable-icon").removeClass("fa-square-o");
-        $("#global-notifications-disable-icon").addClass("fa-check-square-o");
-        $("#global-notifications-enable-icon").removeClass("fa-check-square-o");
-        $("#global-notifications-enable-icon").addClass("fa-square-o");
-        $('#global-notifications-grouping').slideUp();
-    });
-
     $(".penaltyval").change(function() {
         penalty_cost_update();
     });
 
     /* Enable popovers */
     $("#game-name").popover({placement:'right', trigger:'hover'});
+    $("#require-email-button").popover({placement:'right', trigger:'hover'});
     $("#restrict-registration-button").popover({placement:'right', trigger:'hover'});
     $("#global-notifications-button").popover({placement:'right', trigger:'hover'});
     $("#public-teams-button").popover({placement:'right', trigger:'hover'});

@@ -54,6 +54,28 @@
             </div>
             <div class="control-group">
                 <label class="control-label" for="restrict-registration">
+                    <i class="fa fa-envelope"></i>
+                    Registration Email
+                </label>
+                <div class="controls">
+                    <input id="require-email" name="require_email" type="hidden" value="{{ str(config.require_email).lower() }}" />
+                    <div id="require-email-button" class="btn-group" data-toggle="buttons-radio"
+                        rel="popover"
+                        data-original-title="Require Email"
+                        data-content="Enabling this feature will require players to provide an email address in order to create a new account.">
+                        <button id="require-email-enable" type="button" class="btn btn-success">
+                            <i id="require-email-enable-icon" class="fa fa-fw fa-square-o"></i>
+                            Enable
+                        </button>
+                        <button id="require-email-disable" type="button" class="btn btn-danger">
+                            <i id="require-email-disable-icon" class="fa fa-fw fa-square-o"></i>
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="restrict-registration">
                     <i class="fa fa-key"></i>
                     Registration Tokens
                 </label>
@@ -105,8 +127,7 @@
                     <select id="rank_by" name="rank_by" 
                         rel="popover"
                         data-original-title="Rank By"
-                        data-html="true"
-                        data-content="This selection determines the method by which the scoreboard is primarily ranked.<br/><br/>When the primary ranking is equal, other values are used bases on this selection:<br/><br/>1. points/money ▲, hints ▼, flags ▲<br/>2. flags ▲, points/money ▲, hints ▼">
+                        data-content="This selection determines the method by which the scoreboard is primarily ranked.">
                         <option id="moneyname" value="money" {% if config.rank_by == "money" %}selected{% end %}>
                             {% if config.banking %}Money{% else %}Points{% end %}
                         </option>

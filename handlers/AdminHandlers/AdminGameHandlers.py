@@ -358,6 +358,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.restrict_registration = self.get_bool(
             "restrict_registration", False
         )
+        self.config.require_email = self.get_bool("require_email", True)
         self.config.global_notification = self.get_bool("global_notification", True)
         self.config.hints_taken = self.get_bool("hints_taken", False)
         self.config.story_mode = self.get_bool("story_mode", False)

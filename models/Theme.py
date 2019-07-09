@@ -19,6 +19,8 @@ Created on Mar 12, 2012
     limitations under the License.
 """
 
+import logging
+
 
 from uuid import uuid4
 from string import ascii_letters, digits
@@ -124,5 +126,7 @@ class Theme(DatabaseObject):
                 for _file in self.files:
                     yield _file
             else:
-                logging.error("Error with theme relationship. Returning default Cyborg theme")
+                logging.error(
+                    "Error with theme relationship. Returning default Cyborg theme"
+                )
                 yield "cyborg.min.css"
