@@ -3,6 +3,7 @@
 {% block title %}Registration{% end %}
 
 {% block header %}
+    <link rel="stylesheet" href="/static/css/pages/public/registration.css" type="text/css" />
     <script src="/static/js/pages/public/registration.js"></script>
 {% end %}
 
@@ -135,8 +136,34 @@
                 </div>
                 <hr style="margin-right: 400px;">
                 {% if options.teams %}
-                <h5>Join a Team</h5>
-                    <div class="control-group">
+                    {% if options.public_teams %}
+                        <input type="radio" class="teammode" name="teammode" value="join" checked><h5 style="display: inline;">Join Existing Team</h5>
+                        <input type="radio" class="teammode" name="teammode" value="create"><h5 style="display: inline;">Start a New Team</h5>
+                        <br/><br/>
+                        <div id="teammode-create" style="display: none;">
+                            <div class="control-group">
+                                <label class="control-label" for="team_name">Team Name</label>
+                                <div class="controls">
+                                    <input id="team-name" name="team_name" maxlength="24" minlength="3" type="text" placeholder="Team Name"
+                                        rel="popover"
+                                        data-original-title="New Team Name"
+                                        data-content="Choose a name for your new team! [3-24 Characters]" >
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="motto">Motto</label>
+                                <div class="controls">
+                                    <input id="motto" name="motto" maxlength="32" type="text" placeholder="Team Motto"
+                                        rel="popover"
+                                        data-original-title="Team Motto"
+                                        data-content="Optional: What&#x27;s your team&#x27;s motto? [Max: 32 Characters]">
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <h5 style="margin-left: 20px; margin-bottom: 15px;">Join Existing Team</h5>
+                    {% end %}
+                    <div id="teammode-join" class="control-group">
                         <label class="control-label" for="team-code">Team Code</label>
                         <div class="controls">
                             <input id="team-code" name="team-code" type="text" placeholder="Team Code"
@@ -145,29 +172,16 @@
                                 data-content="Provide the code used to join an existing team.  Visible to other team members on their home page." >
                         </div>
                     </div>
-                    {% if options.public_teams %}
-                        <h5>Start a New Team</h5>
-                        <div class="control-group">
-                            <label class="control-label" for="team_name">Team Name</label>
-                            <div class="controls">
-                                <input id="team-name" name="team_name" maxlength="24" minlength="3" type="text" placeholder="Team Name"
-                                    rel="popover"
-                                    data-original-title="New Team Name"
-                                    data-content="Choose a name for your new team![3-24 Characters]" >
-                            </div>
+                {% else %}
+                    <div class="control-group">
+                        <label class="control-label" for="motto">Motto</label>
+                        <div class="controls">
+                            <input id="motto" name="motto" maxlength="32" type="text" placeholder="Motto"
+                                rel="popover"
+                                data-original-title="Motto"
+                                data-content="Optional: What&#x27;s your motto? [Max: 32 Characters]">
                         </div>
-                    {% end %}
-                {% end %}
-                {% if options.public_teams or not options.teams %}
-                <div class="control-group">
-                    <label class="control-label" for="motto">Motto</label>
-                    <div class="controls">
-                        <input id="motto" name="motto" maxlength="32" type="text" placeholder="{% if options.teams %}Team {% end %}Motto"
-                            rel="popover"
-                            data-original-title="{% if options.teams %}Team {% end %}Motto"
-                            data-content="Optional: What&#x27;s your {% if options.teams %}team&#x27;s {% end %}motto? [Max: 32 Characters]">
                     </div>
-                </div>
                 {% end %}
                 <hr style="margin-right: 400px;">
                 <div class="control-group">
