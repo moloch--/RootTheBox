@@ -39,10 +39,10 @@ def upgrade():
     )
 
     with op.batch_alter_table("snapshot_to_snapshot_team") as batch_op:
-        batch_op.drop_constraint("snapshot_to_snapshot_ibfk_1", type_="foreignkey")
-        batch_op.drop_constraint("snapshot_to_snapshot_ibfk_2", type_="foreignkey")
+        batch_op.drop_constraint("snapshot_to_snapshot_team_ibfk_1", type_="foreignkey")
+        batch_op.drop_constraint("snapshot_to_snapshot_team_ibfk_2", type_="foreignkey")
     op.create_foreign_key(
-        "snapshot_to_snapshot_ibfk_1",
+        "snapshot_to_snapshot_team_ibfk_1",
         "snapshot_to_snapshot_team",
         "snapshot",
         ["snapshot_id"],
@@ -50,7 +50,7 @@ def upgrade():
         ondelete="CASCADE",
     )
     op.create_foreign_key(
-        "snapshot_to_snapshot_ibfk_2",
+        "snapshot_to_snapshot_team_ibfk_2",
         "snapshot_to_snapshot_team",
         "snapshot_team",
         ["snapshot_team_id"],
@@ -246,10 +246,10 @@ def downgrade():
     )
 
     with op.batch_alter_table("snapshot_to_snapshot_team") as batch_op:
-        batch_op.drop_constraint("snapshot_to_snapshot_ibfk_1", type_="foreignkey")
-        batch_op.drop_constraint("snapshot_to_snapshot_ibfk_2", type_="foreignkey")
+        batch_op.drop_constraint("snapshot_to_snapshot_team_ibfk_1", type_="foreignkey")
+        batch_op.drop_constraint("snapshot_to_snapshot_team_ibfk_2", type_="foreignkey")
     op.create_foreign_key(
-        "snapshot_to_snapshot_ibfk_1",
+        "snapshot_to_snapshot_team_ibfk_1",
         "snapshot_to_snapshot_team",
         "snapshot",
         ["snapshot_id"],
@@ -257,7 +257,7 @@ def downgrade():
         ondelete="RESTRICT",
     )
     op.create_foreign_key(
-        "snapshot_to_snapshot_ibfk_2",
+        "snapshot_to_snapshot_team_ibfk_2",
         "snapshot_to_snapshot_team",
         "snapshot_team",
         ["snapshot_team_id"],
