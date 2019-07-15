@@ -1,8 +1,10 @@
 $(document).ready(function() {
     /* markdown */
     $(function () {
+        var reader = new commonmark.Parser({smart: true});
+        var writer = new commonmark.HtmlRenderer({safe: true, softbreak: "<br />"});
         $('[data-toggle="tooltip"]').tooltip();
-        $('.toolbar').markdownToolbar(false);
+        $('.toolbar').markdownToolbar(false, reader, writer);
     })
 
     /* Popovers */

@@ -52,6 +52,14 @@ footer {
     margin: 1em 0;
 }
 
+.markdown p {
+    display: inline;
+}
+
+.markdown ul {
+    margin-bottom: 0px;
+}
+
 code,
 pre {
     background-color: #000 !important;

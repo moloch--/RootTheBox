@@ -160,7 +160,7 @@ function testToken() {
 /* Add click events */
 $(document).ready(function() {
     var reader = new commonmark.Parser({smart: true});
-    var writer = new commonmark.HtmlRenderer({safe: true});
+    var writer = new commonmark.HtmlRenderer({safe: true, softbreak: "<br />"});
 
     /* Markdown */
     $(".markdown").each(function() {
@@ -351,9 +351,9 @@ $(document).ready(function() {
         testToken();
     });
     $(function () {
-        $('#hint-description').markdownToolbar(false);
-        $('#box-description').markdownToolbar(false);
-        $('#flag-description').markdownToolbar(false);
+        $('#hint-description').markdownToolbar(false, reader, writer);
+        $('#box-description').markdownToolbar(false, reader, writer);
+        $('#flag-description').markdownToolbar(false, reader, writer);
     })
     /* reorder flags */
     var fixHelperModified = function(e, tr) {

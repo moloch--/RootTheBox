@@ -10,9 +10,17 @@
         factory(jQuery, commonmark);
     }
 }(function($, commonmark) {
-    var MarkdownRenderer = function() {
-        this.reader = new commonmark.Parser();
-        this.writer = new commonmark.HtmlRenderer();
+    var MarkdownRenderer = function(reader, writer) {
+        if (reader == null) {
+            this.reader = new commonmark.Parser();
+        } else {
+            this.reader = reader;
+        }
+        if (writer == null) {
+            this.writer = new commonmark.HtmlRenderer();
+        } else {
+            this.writer = writer;
+        }
         if (typeof emoji !== 'undefined') {
             if (window.STATIC_URL) {
                 emoji.sheet_path = window.STATIC_URL +
@@ -47,8 +55,8 @@
         return rendered;
     };
 
-    var MarkdownPreview = function($textarea, $previewArea) {
-        this.renderer = new MarkdownRenderer();
+    var MarkdownPreview = function($textarea, $previewArea, $reader, $writer) {
+        this.renderer = new MarkdownRenderer($reader, $writer);
         this.$textarea = $textarea;
         this.$previewArea = $previewArea;
         this._startEventHandler();
@@ -213,6 +221,8 @@
         this.markdownPreview = markdownPreview;
         this.lastHotkey = null;
         this.lastText = null;
+        this.lastStart = null;
+        this.lastEnd = null;
         this.init();
     };
 
@@ -226,8 +236,8 @@
             var buttonData = $this.data();
 
             // Get cursor position and textarea's text
-            var selectionStart = me.$textarea[0].selectionStart;
-            var selectionEnd = me.$textarea[0].selectionEnd;
+            buttonData.selectionStart = me.$textarea[0].selectionStart;
+            buttonData.selectionEnd = me.$textarea[0].selectionEnd;
             var text = me.$textarea.val();
             
             if (buttonData.hotkey === 'p') {
@@ -235,30 +245,32 @@
                     me.markdownPreview.refresh(me.$textarea.val());
                     if (me.markdownPreview.$previewArea.attr('auto_preview') === true) {
                         me.markdownPreview.$previewArea.show();
-                        me.markdownPreview.$previewArea.attr('auto_preview', false);
+                        me.markdownPreview.$previewArea.attr('auto_preview', flastEnd = alse);
                     } else {
                         me.markdownPreview.$previewArea.toggle();
                     }
                     me.markdownPreview.$previewArea.width(me.$textarea.outerWidth());
                 }
                 return;
-            } else if (buttonData.hotkey === me.lastHotkey && buttonData.hotkey !== 'h' && me.lastText) {
+            } else if (undo(me, buttonData)) {
                 var diff = text.length - me.lastText.length;
                 if (buttonData.multiline) {
-                    selectionEnd -= diff;
+                    buttonData.selectionEnd -= diff;
                 } else {
-                    selectionStart -= diff / 2;
-                    selectionEnd -= diff / 2;
+                    buttonData.selectionStart -= diff / 2;
+                    buttonData.selectionEnd -= diff / 2;
                 }
                 text = me.lastText;
+                me.lastStart = buttonData.selectionStart;
+                me.lastEnd = buttonData.selectionEnd;
                 me.lastHotkey = null;
             } else {
                 var mtc = new MarkdownToolbarController();
                 me.lastText = text;
                 text = mtc.render(
-                    buttonData, selectionStart, selectionEnd, text);
-                selectionStart = mtc.selectionStart;
-                selectionEnd = mtc.selectionEnd;
+                    buttonData, buttonData.selectionStart, buttonData.selectionEnd, text);
+                me.lastStart = mtc.selectionStart;
+                me.lastEnd = mtc.selectionEnd;
                 me.lastHotkey = buttonData.hotkey;
             }
 
@@ -266,7 +278,7 @@
 
             // Reset cursor to original state
             me.$textarea.focus();
-            me.$textarea[0].setSelectionRange(selectionStart, selectionEnd);
+            me.$textarea[0].setSelectionRange(me.lastStart, me.lastEnd);
             
             // Refresh the preview view if it exists.
             if (me.markdownPreview &&
@@ -276,6 +288,13 @@
                 me.markdownPreview.$previewArea.width(me.$textarea.outerWidth());
             }
         });
+
+        function undo(me, buttonData) {
+            return (buttonData.hotkey === me.lastHotkey &&
+                buttonData.hotkey !== 'h' && me.lastText !== null &&
+                buttonData.selectionStart == me.lastStart &&
+                buttonData.selectionEnd == me.lastEnd);
+        }
 
         this.$textarea.on('keyup', function() {
             me.lastHotkey = null;
@@ -343,6 +362,7 @@
                 'title="Insert a quote"' +
                 'tabindex="-1"' +
                 'data-prefix="> "' +
+                'data-hotkey="q"' +
                 'data-multiline="true"' +
                 'data-ga-click="Markdown Toolbar, click, quote"' +
                 'data-surround-with-newlines="true">' +
@@ -353,6 +373,7 @@
                 'title="Insert code" tabindex="-1"' +
                 'data-prefix="`"' +
                 'data-suffix="`"' +
+                'data-hotkey="c"' +
                 'data-block-prefix="```"' +
                 'data-block-suffix="```"' +
                 'data-ga-click="Markdown Toolbar, click, code">' +
@@ -364,6 +385,7 @@
                 'tabindex="-1"' +
                 'data-multiline="true"' +
                 'data-prefix="- "' +
+                'data-hotkey="u"' +
                 'data-ga-click="Markdown Toolbar, click, unordered list"' +
                 'data-surround-with-newlines="true">' +
             '<svg aria-hidden="true" class="octicon octicon-list-unordered" height="16" role="img" version="1.1" viewBox="0 0 12 16" width="12"><path d="M2 13c0 0.59 0 1-0.59 1H0.59c-0.59 0-0.59-0.41-0.59-1s0-1 0.59-1h0.81c0.59 0 0.59 0.41 0.59 1z m2.59-9h6.81c0.59 0 0.59-0.41 0.59-1s0-1-0.59-1H4.59c-0.59 0-0.59 0.41-0.59 1s0 1 0.59 1zM1.41 7H0.59c-0.59 0-0.59 0.41-0.59 1s0 1 0.59 1h0.81c0.59 0 0.59-0.41 0.59-1s0-1-0.59-1z m0-5H0.59c-0.59 0-0.59 0.41-0.59 1s0 1 0.59 1h0.81c0.59 0 0.59-0.41 0.59-1s0-1-0.59-1z m10 5H4.59c-0.59 0-0.59 0.41-0.59 1s0 1 0.59 1h6.81c0.59 0 0.59-0.41 0.59-1s0-1-0.59-1z m0 5H4.59c-0.59 0-0.59 0.41-0.59 1s0 1 0.59 1h6.81c0.59 0 0.59-0.41 0.59-1s0-1-0.59-1z"></path></svg>' +
@@ -373,6 +395,7 @@
                 'title="Add a numbered list"' +
                 'tabindex="-1"' +
                 'data-prefix="1. "' +
+                'data-hotkey="o"' +
                 'data-multiline="true"' +
                 'data-ga-click="Markdown Toolbar, click, ordered list"' +
                 'data-ordered-list="true">' +
@@ -414,7 +437,7 @@
     '</div>' +
         '</div>';
     if (typeof $.fn !== 'undefined') {
-        $.fn.markdownToolbar = function(auto_preview) {
+        $.fn.markdownToolbar = function(auto_preview, reader, writer) {
             var $this = $(this);
             var $toolbar = $(toolbarMarkup);
             $this.before($toolbar);
@@ -427,7 +450,7 @@
             $preview.attr('auto_preview', auto_preview);
             $this.after($preview);
             var markdownPreview = undefined;
-            markdownPreview = new MarkdownPreview($this, $preview);
+            markdownPreview = new MarkdownPreview($this, $preview, reader, writer);
 
             new MarkdownToolbar($toolbar, $this, markdownPreview);
         };
