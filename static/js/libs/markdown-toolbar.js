@@ -17,7 +17,7 @@
             this.reader = reader;
         }
         if (writer == null) {
-            this.writer = new commonmark.HtmlRenderer();
+            this.writer = new commonmark.HtmlRenderer({safe: true});
         } else {
             this.writer = writer;
         }
@@ -245,14 +245,14 @@
                     me.markdownPreview.refresh(me.$textarea.val());
                     if (me.markdownPreview.$previewArea.attr('auto_preview') === true) {
                         me.markdownPreview.$previewArea.show();
-                        me.markdownPreview.$previewArea.attr('auto_preview', flastEnd = alse);
+                        me.markdownPreview.$previewArea.attr('auto_preview', false);
                     } else {
                         me.markdownPreview.$previewArea.toggle();
                     }
                     me.markdownPreview.$previewArea.width(me.$textarea.outerWidth());
                 }
                 return;
-            } else if (undo(me, buttonData)) {
+            } else if (undoMarkdown(me, buttonData)) {
                 var diff = text.length - me.lastText.length;
                 if (buttonData.multiline) {
                     buttonData.selectionEnd -= diff;
@@ -289,7 +289,7 @@
             }
         });
 
-        function undo(me, buttonData) {
+        function undoMarkdown(me, buttonData) {
             return (buttonData.hotkey === me.lastHotkey &&
                 buttonData.hotkey !== 'h' && me.lastText !== null &&
                 buttonData.selectionStart == me.lastStart &&
