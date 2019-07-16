@@ -362,7 +362,10 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.global_notification = self.get_bool("global_notification", True)
         self.config.hints_taken = self.get_bool("hints_taken", False)
         self.config.story_mode = self.get_bool("story_mode", False)
-        self.config.rank_by = str(self.get_argument("rank_by", "money"))
+        try:
+            self.config.rank_by = str(self.get_argument("rank_by", "money"))
+        except:
+            self.config.rank_by = bytes(self.get_argument("rank_by", "money"))
         self.config.scoreboard_visibility = str(
             self.get_argument("scoreboard_visibility", "public")
         )
