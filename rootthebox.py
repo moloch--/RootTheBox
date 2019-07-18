@@ -300,7 +300,7 @@ define(
 # ReCAPTCHA
 define(
     "use_recaptcha",
-    default=True,
+    default=False,
     help="enable the use of recaptcha for bank passwords",
     group="recaptcha",
     type=bool,

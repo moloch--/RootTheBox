@@ -14,12 +14,13 @@ Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Sc
 ## Features
 
 -   Team Play or Individual Play
--   Real-time scoreboard graphs using websockets
--   Real-time status updates using websockets
+-   Real-time animated scoreboard, graphs, and status updates using websockets
 -   Flag Types: Static, Regex, Datetime, Multiple Choice, File - w/options for case senstivity
 -   Options for Penalties, Hints, Attempts, Level Bonuses, Dynamic Scoring, Categories and more
 -   Built-in team based file/text sharing and Admin game material distirbution
+-   Chat support with [Rocket Chat](https://rocket.chat/) integration
 -   Freeze Scores at a specific time allowing for end game countdown
+-   Optional Story Mode - Supports intro dialog, capture Flag or Section dialog w/graphics
 -   Optional [in-game Botnets](https://github.com/moloch--/RootTheBox/wiki/Features) or wall of sheep displaying cracked passwords
 -   Unlocks and upgrades as users capture flags
 -   Export and share Boxes/Flags
