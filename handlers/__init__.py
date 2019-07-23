@@ -39,6 +39,7 @@ from tornado import netutil
 from tornado.web import Application
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
+from sqlalchemy.exc import OperationalError
 from handlers.BotnetHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
@@ -292,7 +293,14 @@ def start_server():
             )
             sys.exit()
     server.add_sockets(sockets)
-    Scoreboard.now(app)
+    try:
+        Scoreboard.now(app)
+    except OperationalError as err:
+        if "Table definition has changed" in str(err):
+            logging.info("Table definitions have changed -restarting RootTheBox.")
+            return "restart"
+        else:
+            logging.error("There was a problem starting RootTheBox. Error: " + str(err))
     try:
         io_loop.start()
     except KeyboardInterrupt:

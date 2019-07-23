@@ -60,7 +60,9 @@ def start():
     logging.info(
         INFO + "%s : Starting RTB on port %s" % (current_time(), options.listen_port)
     )
-    start_server()
+    result = start_server()
+    if result == "restart":
+        self.restart()
 
 
 def setup():
