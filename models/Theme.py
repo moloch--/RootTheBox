@@ -69,7 +69,7 @@ class Theme(DatabaseObject):
     Holds theme related settings
     """
 
-    uuid = Column(String(36), unique=True, nullable=False, default=lambda: uuid4())
+    uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _name = Column(Unicode(64), unique=True, nullable=False)
     files = relationship("ThemeFile", lazy="joined")
 
