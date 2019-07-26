@@ -62,7 +62,7 @@ def start():
     )
     result = start_server()
     if result == "restart":
-        self.restart()
+        restart()
 
 
 def setup():
