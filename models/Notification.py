@@ -21,8 +21,6 @@ Created on Mar 12, 2012
 
 import logging
 
-from uuid import uuid4
-
 try:
     from urllib.parse import urlparse
 except ImportError:

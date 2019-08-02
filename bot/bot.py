@@ -34,6 +34,7 @@ import json
 import uuid
 import array
 import socket
+import ssl
 import struct
 import base64
 import hashlib
@@ -288,7 +289,7 @@ def decode(s, name="utf-8", *args, **kwargs):
 
 class _SSLSocketWrapper(object):
     def __init__(self, sock):
-        self.ssl = socket.ssl(sock)
+        self.ssl = ssl.wrap_socket(sock)
 
     def recv(self, bufsize):
         return self.ssl.read(bufsize)
