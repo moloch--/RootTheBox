@@ -5,11 +5,11 @@
 {% block content %}
       <div class="container">
           {% if locked %}
-              <h1>403 - Account Locked!</h1>
+              <h1>403 - {{ _("Account Locked!") }}</h1>
           {% elif xsrf %}
-              <h1>403 - Invalid CSRF Token</h1>
+              <h1>403 - {{ _("Invalid CSRF Token") }}</h1>
           {% else %}
-            <h1>403 - Forbidden</h1>
+            <h1>403 - {{ _("Forbidden") }}</h1>
         {% end %}
         <br />
         <p>

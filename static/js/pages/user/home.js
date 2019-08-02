@@ -15,7 +15,7 @@ $(document).ready(function() {
                 marginTop: 55
             },
             title: {
-                text: '<strong>Categories</strong>',
+                text: '<strong>' + $("#spider_skills").data("name") + '</strong>',
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',

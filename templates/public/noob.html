@@ -1,12 +1,12 @@
 {% extends "../main.html" %}
 
-{% block title %}Noob Alert{% end %}
+{% block title %}{{ _("Noob Alert") }}{% end %}
 
 {% block content %}
     <div class="container">
         <h1>
             <i class="fa fa-warning"></i>
-            Noob Alert
+            {{ _("Noob Alert") }}
         </h1>
         <br />
         <div class="row well">
@@ -14,25 +14,25 @@
                 <img src="/static/images/clippy.jpg" class="img-polaroid" />
             </div>
             <div class="span8">
-                <h3>It appears you're an unsophisticated script kiddie!</h3>
+                <h3>{{ _("It appears you're an unsophisticated script kiddie!") }}</h3>
                 <div class="row">
                     <div class="span4">
                         <p>
                             <ul>
                                 <li><a href="https://www.owasp.org/index.php/SQL_Injection" target="_blank">
-                                    Get help with SQL Injection</a></li>
+                                    {{ _("Get help with") }} SQL Injection</a></li>
                                 <li><a href="https://www.owasp.org/index.php/Cross_site_scripting" target="_blank">
-                                    Get help with Cross-site Scripting</a></li>
+                                    {{ _("Get help with") }} Cross-site Scripting</a></li>
                                 <li><a href="https://www.owasp.org/index.php/CSRF" target="_blank">
-                                    Get help with Cross-site Request Forgery</a></li>
+                                    {{ _("Get help with") }} Cross-site Request Forgery</a></li>
                                 <li><a href="https://en.wikipedia.org/wiki/Remote_file_inclusion" target="_blank">
-                                    Get help with Remote File Inclusion</a></li>
+                                    {{ _("Get help with") }} Remote File Inclusion</a></li>
                                 <li><a href="http://www.corelan.be/index.php/2009/07/19/exploit-writing-tutorial-part-1-stack-based-overflows/" target="_blank">
-                                    Get help with Buffer Overflows</a></li>
+                                    {{ _("Get help with") }} Buffer Overflows</a></li>
                                 <li><a href="http://www.offensive-security.com/metasploit-unleashed/Main_Page" target="_blank">
-                                    Get help with Metasploit</a></li>
+                                    {{ _("Get help with") }} Metasploit</a></li>
                                 <li><a href="http://opensecuritytraining.info/Training.html" target="_blank">
-                                    Get help with Reverse Engineering</a></li>
+                                    {{ _("Get help with") }} Reverse Engineering</a></li>
                             </ul>
                         </p>
                     </div>
@@ -40,15 +40,15 @@
                         <p>
                             <ul>
                                 <li><a href="http://docs.python.org/tutorial/" target="_blank">
-                                    Learn Python Programming</a></li>
+                                    {{ _("Learn") }} Python {{ _("Programming") }}</a></li>
                                 <li><a href="http://rubylearning.com/" target="_blank">
-                                    Learn Ruby Programming</a></li>
+                                    {{ _("Learn") }} Ruby {{ _("Programming") }}</a></li>
                                 <li><a href="http://www.cplusplus.com/doc/tutorial/" target="_blank">
-                                    Learn C++ Programming</a></li>
+                                    {{ _("Learn") }} C++ {{ _("Programming") }}</a></li>
                                 <li><a href="http://www.w3schools.com/php/default.asp" target="_blank">
-                                    Learn PHP Programming</a></li>
+                                    {{ _("Learn") }} PHP {{ _("Programming") }}</a></li>
                                 <li><a href="http://www.w3schools.com/js/default.asp" target="_blank">
-                                    Learn JavaScript Programming</a></li>
+                                    {{ _("Learn") }} JavaScript {{ _("Programming") }}</a></li>
                             </ul>
                         </p>
                     </div>

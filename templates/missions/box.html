@@ -25,7 +25,7 @@
     <div id="capture-text-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Submit Flag</h3>
+            <h3>{{ _("Submit Flag") }}</h3>
         </div>
         <div class="modal-body">
             <form id="capture-text-flag-form" class="form-horizontal" method="post" action="/user/missions/capture">
@@ -33,17 +33,17 @@
                 <input id="capture-text-flag-uuid" name="uuid" value="" type="hidden" />
                 <br />
                 <div class="control-group">
-                    <label class="control-label" for="flag-token">Flag</label>
+                    <label class="control-label" for="flag-token">{{ _("Flag") }}</label>
                     <div class="controls">
-                        <input autofocus required id="flag-token" name="token" type="text" placeholder="Flag" autocomplete="off" />
+                        <input autofocus required id="flag-token" name="token" type="text" placeholder="{{ _('Flag') }}" autocomplete="off" />
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="capture-text-flag-submit" class="btn btn-primary" type="button">
-                Submit
+                {{ _("Submit") }}
             </button>
         </div>
     </div>
@@ -51,7 +51,7 @@
     <div id="capture-choice-flag-modal" class="modal hide fade" style="display: none;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3>Submit Flag</h3>
+                <h3>{{ _("Submit Flag") }}</h3>
             </div>
             <div class="modal-body">
                 <form id="capture-choice-flag-form" class="form-horizontal" method="post" action="/user/missions/capture">
@@ -63,9 +63,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn" data-dismiss="modal">Close</a>
+                <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
                 <button id="capture-choice-flag-submit" class="btn btn-primary" type="button">
-                    Submit
+                    {{ _("Submit") }}
                 </button>
             </div>
         </div>
@@ -73,7 +73,7 @@
     <div id="capture-file-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Submit Flag</h3>
+            <h3>{{ _("Submit Flag") }}</h3>
         </div>
         <div class="modal-body">
             <form id="capture-file-flag-form" class="form-horizontal" method="post" action="/user/missions/capture" enctype="multipart/form-data" >
@@ -81,7 +81,7 @@
                 <input autofocus id="capture-file-flag-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
                     <br />
-                    <label class="control-label" for="flag-file">Flag</label>
+                    <label class="control-label" for="flag-file">{{ _("Flag") }}</label>
                     <div class="controls">
                         <input id="flag-file" name="flag" type="file" />
                     </div>
@@ -89,9 +89,9 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="capture-file-flag-submit" class="btn btn-primary" type="button">
-                Submit
+                {{ _("Submit") }}
             </button>
         </div>
     </div>
@@ -99,21 +99,21 @@
     <div id="show-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3 id="showknownname">Flag</h3>
+            <h3 id="showknownname">{{ _("Flag") }}</h3>
         </div>
         <div class="modal-body">
             <br />
             <h5 id="showknownflag" style="text-align: center;"></h5>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
         </div>
     </div>
     
     <div id="purchase-hint-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>{% if options.banking %}Purchase{% else %}Take{% end %} Hint</h3>
+            <h3>{% if options.banking %}{{ _("Purchase") }}{% else %}{{ _("Take") }}{% end %} {{ _("Hint") }}</h3>
         </div>
         <div class="modal-body">
             <br />
@@ -126,7 +126,7 @@
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
             <button id="purchase-hint-submit" class="btn btn-primary" type="button">
-                {% if options.banking %}Buy{% else %}Yes{% end %}
+                {% if options.banking %}{{ _("Buy") }}{% else %}{{ _("Yes") }}{% end %}
             </button>
         </div>
     </div>
@@ -151,13 +151,13 @@
             {% if options.story_mode and len(box.capture_message) > 0 and box.is_complete(user) %}
                 <a class="btn playstory" style="margin-left: 8px; float:right; margin-top: 10px;" href="captured?box={{ box.uuid }}">
                     <i class="fa fa-play"></i>
-                    Play Story
+                    {{ _("Play Story") }}
                 </a>&nbsp;&nbsp;
             {% end %}
             {% if not user.is_admin() %}
-                <a style="float:right; margin-top: 10px;"  class="btn" href="/user/missions">Return to Missions</a>
+                <a style="float:right; margin-top: 10px;"  class="btn" href="/user/missions">{{ _("Return to Missions") }}</a>
             {% else %}
-                <a style="float:right; margin-top: 10px;"  class="btn" href="/admin/view/game_objects#{{ box.uuid }}">Return to Edit</a>
+                <a style="float:right; margin-top: 10px;"  class="btn" href="/admin/view/game_objects#{{ box.uuid }}">{{ _("Return to Edit") }}</a>
             {% end %}
         </h1>
         <div style="margin-top: -5px; margin-bottom: -5px;">
@@ -167,7 +167,7 @@
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">Incorrect</h4>
+                    <h4 class="alert-heading">{{ _("Incorrect") }}</h4>
                     {{ error }}
                 </div>
             {% end %}
@@ -176,7 +176,7 @@
             {% for msg in success %}
                 <div class="alert alert-success">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">Success!</h4>
+                    <h4 class="alert-heading">{{ _("Success!") }}</h4>
                     {{ msg }}
                 </div>
             {% end %}
@@ -185,7 +185,7 @@
             {% for msg in info %}
                 <div class="alert alert-info">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">Information</h4>
+                    <h4 class="alert-heading">{{ _("Information") }}</h4>
                     {{ msg }}
                 </div>
             {% end %}
@@ -198,13 +198,13 @@
                         <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
                         {% if has_materials() and not has_box_materials(box) %}
                             <a style="margin-top: 10px;" class="btn" href="/materials"><i class="fa fa-fw fa-folder-open-o"></i>
-                            Game Materials</a>
+                            {{ _("Game Materials") }}</a>
                         {% end %}
                     </div>
                     {% end %}
-                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}BEGIN SECURE COMMUNIQUE{% else %}DESCRIPTION{% end %} *****************************************************************************************************************************************</div>
+                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}{{ _("BEGIN SECURE COMMUNIQUE") }}{% else %}{{ _("DESCRIPTION") }}{% end %} *****************************************************************************************************************************************</div>
                     <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box.description }}</div>
-                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} END SECURE COMMUNIQUE {% end %}**********************************************************************************************************************************************************************</div>
+                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} {{ _("END SECURE COMMUNIQUE") }} {% end %}**********************************************************************************************************************************************************************</div>
                 </div>
                 <br clear="all" />
             </div>
@@ -248,13 +248,13 @@
             <form id="capture-text-flag-box-form" class="form-horizontal" method="post" action="/user/missions/capture">
                 {% raw xsrf_form_html() %}
                 <input id="capture-text-flag-box-box-id" name="box_id" value="{{ box.id }}" type="hidden" />
-                <h4>Submit a Flag</h4>
+                <h4>{{ _("Submit a Flag") }}</h4>
                 <div class="control-group">
-                    <label class="control-label" for="capture-text-flag-box-token">Flag</label>
+                    <label class="control-label" for="capture-text-flag-box-token">{{ _("Flag") }}</label>
                     <div class="controls">
-                        <input autofocus required id="capture-text-flag-box-token" name="token" type="text" placeholder="Flag" autocomplete="off" size="70" />
+                        <input autofocus required id="capture-text-flag-box-token" name="token" type="text" placeholder="{{ _('Flag') }}" autocomplete="off" size="70" />
                         <button id="capture-text-flag-box-submit" class="btn btn-primary" type="submit">
-                            Submit
+                            {{ _("Submit") }}
                         </button>
                     </div>
                 </div>
@@ -263,18 +263,18 @@
         {% end %}
         <div class="well">
             <table class="table table-hover">
-                <caption><h4> - Flags - </h4></caption>
+                <caption><h4> - {{ _("Flags") }} - </h4></caption>
                 <thead>
                     <tr>
                         <th style="width: 6px; padding: 0px; margin: 0px;"><!-- success bar --></th>
                         <th>#</th>
                         <th><!-- Name --></th>
                         <th><!-- Description --></th>
-                        <th style="text-align: center;">Captures</th>
+                        <th style="text-align: center;">{{ _("Captures") }}</th>
                         {% if team and options.penalize_flag_value and not user.is_admin() %}
-                                <th style="text-align: center;">Attempts</th>
+                                <th style="text-align: center;">{{ _("Attempts") }}</th>
                         {% end %}
-                        <th style="text-align: center;">{% if options.banking %}Reward{% else %}Points{% end %}</th>
+                        <th style="text-align: center;">{% if options.banking %}{{ _("Reward") }}{% else %}{{ _("Points") }}{% end %}</th>
                         {% if team or not user.is_admin() %}
                             <th><!-- Hints --></th>
                             <th><!-- Submit --></th>
@@ -295,7 +295,7 @@
                             <td class="shortcolumn" style="vertical-align: middle;">{{ box.flags.index(flag) +1 }}</td>
                             <td class="shortcolumn" style="vertical-align: middle; padding-right: 20px; font-weight: bold;">{{ flag.name }}</td>
                             {% if team and flag.lock_id and not Flag.by_id(flag.lock_id) in team.flags %}
-                                <td class="descriptioncol"><i class="fa fa-lock"></i> Locked by {{ Flag.by_id(flag.lock_id).name }}</td>
+                                <td class="descriptioncol"><i class="fa fa-lock"></i> {{ _("Locked by") }} {{ Flag.by_id(flag.lock_id).name }}</td>
                                 <td class="shortcolumn" style="text-align: center; vertical-align: middle;">{{ len(Flag.captures(flag.id)) }}</td>
                                 {% if options.penalize_flag_value %}
                                 <td>0</td>
@@ -320,7 +320,7 @@
                                                         {% break %}
                                                     {% elif not hint in team.hints %}
                                                         <a id="purchase-flag-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
-                                                            Hint #{{i}}
+                                                            {{ _("Hint") }} #{{i}}
                                                         </a>
                                                         {% set i += 1 %}
                                                         {% break %}
@@ -332,7 +332,7 @@
                                         {% elif len(flag.capture_message) > 0 %}
                                             <a class="btn btn-mini playstory" href="captured?flag={{ flag.uuid }}&reward={{ flag.value }}">
                                                 <i class="fa fa-play"></i>
-                                                Story
+                                                {{ _("Story") }}
                                             </a>
                                         {% end %}
                                     </td>
@@ -347,7 +347,7 @@
                                             <a id="capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{% end %}-flag-modal" 
                                             data-uuid="{{ flag.uuid }}" data-choices='{{ str(flag.choicelist()) }}'>
                                                 <i class="fa fa-flag"></i>
-                                                Submit
+                                                {{ _("Submit") }}
                                             </a>
                                             {% end %}
                                         </td>
@@ -379,7 +379,7 @@
                                         <a style="float: right;" class="btn btn-mini showflag" data-toggle="modal" href="#show-flag-modal" 
                                         data-flag="{{ flag.token }}" data-name="{{ flag.name }}">
                                             <i class="fa fa-flag"></i>
-                                            Flag
+                                            {{ _("Flag") }}
                                         </a>
                                         {% end %}
                                     </td>
@@ -402,7 +402,7 @@
                                             {% end %}
                                             <td style="text-align: right;"><i class="fa fa-arrow-circle-up"></i><h5 style="display:inline;"> Hint #{{i}}:</h5></td>
                                             <td colspan="{% if team and options.penalize_flag_value %}2{% else %}1{% end %}" class="descriptioncol markdown">{{ hint.description }}</td>
-                                            <td class="shortcolumn" style="text-align: center;"><i>{% if user.is_admin() %}{% elif hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% end %}</i></td>
+                                            <td class="shortcolumn" style="text-align: center;"><i>{% if user.is_admin() %}{% elif hint in team.hints %}{% if options.banking %}{{ _("Purchased") }}{% else %}{{ _("Taken") }}{% end %}{% end %}</i></td>
                                             <td class="shortcolumn" style="text-align: center;">{% if team and hint in team.hints %}-{{ hint.price }}{% end %}</td>
                                             <td colspan="2" style="border-top: 0px;"></td>
                                         </tr>
@@ -418,13 +418,13 @@
         {% if len(box.visable_ips) != 0 %}
             <div class="well">
                 <table class="table table-hover">
-                    <caption><h4> - Known IP Addresses - </h4></caption>
+                    <caption><h4> - {{ _("Known IP Addresses") }} - </h4></caption>
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Address</th>
-                            <th>IP Version</th>
-                            <th>Private</th>
+                            <th>{{ _("Address") }}</th>
+                            <th>{{ _("IP Version") }}</th>
+                            <th>{{ _("Private") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -445,12 +445,12 @@
             {% if len(boxhints) > 0 %}
                 <div class="well">
                     <table class="table table-hover">
-                        <caption><h4> - {{ box.name }} Hints - </h4></caption>
+                        <caption><h4> - {{ box.name }} {{ _("Hints") }} - </h4></caption>
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th style="text-align: center; padding-right: 20px;">{% if options.banking %}Price{% else %}Cost{%end%}</th>
-                                <th>Description</th>
+                                <th style="text-align: center; padding-right: 20px;">{% if options.banking %}{{ _("Price") }}{% else %}{{ _("Cost") }}{%end%}</th>
+                                <th>{{ _("Description") }}</th>
                                 <th><!-- Purchse/View Button --></th>
                             </tr>
                         </thead>
@@ -460,14 +460,14 @@
                                 <tr>
                                     <td class="shortcolumn">{{ index + 1 }}</td>
                                     {% if user.is_admin() or (team and hint in team.hints) or flagcount == len(box.flags) %}
-                                        <td class="shortcolumn"><i>{% if user.is_admin() %}{% elif hint in team.hints %}{% if options.banking %}Purchased{% else %}Taken{% end %}{% else %}Completed {{box.name}}{% end %}</i></td>
+                                        <td class="shortcolumn"><i>{% if user.is_admin() %}{% elif hint in team.hints %}{% if options.banking %}{{ _("Purchased") }}{% else %}{{ _("Taken") }}{% end %}{% else %}{{ _("Completed") }} {{box.name}}{% end %}</i></td>
                                         <td class="descriptioncol markdown">{{ hint.description }}</td>
                                     {% else %}
                                         <td class="shortcolumn" style="text-align: center; padding-right: 20px;">{% if options.banking %}${% end %}{% if hint in team.hints or flagcount != len(box.flags) %}{{ hint.price }}{% else %}0{% end %}</td>
-                                        <td>Hint not yet taken</td>
+                                        <td>{{ _("Hint not yet taken") }}</td>
                                         <td class="shortcolumn">
                                             <a id="purchase-hint-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#purchase-hint-modal" data-price="{{ hint.price }}" data-uuid="{{ hint.uuid }}">
-                                                {% if options.banking %}Purchase{% else %}Take Hint{% end %}
+                                                {% if options.banking %}{{ _("Purchase") }}{% else %}{{ _("Take Hint") }}{% end %}
                                             </a>
                                         </td>
                                     {% end %}

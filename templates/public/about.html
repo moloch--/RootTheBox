@@ -1,9 +1,9 @@
-{% extends "../main.html" %} {% block title %} About {% end %} {% block head %}
+{% extends "../main.html" %} {% block title %} {{ _("About") }} {% end %} {% block head %}
 {% end %} {% block content %}
 <div class="container">
     <h2>
         <i class="fa fa-info-circle"></i>
-        About v{{ handler.application.settings["version"] }}
+        {{ _("About") }} v{{ handler.application.settings["version"] }}
     </h2>
     <br />
     <div class="well">
@@ -12,7 +12,7 @@
                 <!-- Firefox fix -->
                 <!-- Programming -->
 
-                <h2>Programming</h2>
+                <h2>{{ _("Programming") }}</h2>
                 <hr>
                 <h3>
                     <i class="fa fa-trophy"></i> Moloch
@@ -21,7 +21,7 @@
                     ElJeffe
                 </h3>
                 <br />
-                <h2>With contributions from</h2>
+                <h2>{{ _("With contributions from") }}</h2>
                 <table style="width:100%; text-align: center;">
                     <tbody>
                         <tr>
@@ -54,7 +54,7 @@
                 <br />
                 <!-- Special Thanks -->
                 <hr>
-                <h2>Special Thanks</h2>
+                <h2>{{ _("Special Thanks") }}</h2>
                 <hr>
                 <a href="http://www.blackhartfilms.com/" target="_blank">
                     <!-- Morris Image (https://pixabay.com/photos/moody-lighting-dark-grunge-719229/) / Free for commercial use - No attribution required -->

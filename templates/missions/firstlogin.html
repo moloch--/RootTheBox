@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}First Login{% end %}
+{% block title %}{{ _("First Login") }}{% end %}
 
 {% block header %}
 <script src="/static/js/libs/terminal.min.js" type="text/javascript"></script>
@@ -17,7 +17,7 @@
     <span style="float: right; padding-right: 6px; margin-top: -15px;"><button id="closebutton" type="button" class="close"><h2>×</h2></button></span>
         <h3>
             <i class="fa fa-globe"></i>
-            Incoming Transmission
+            {{ _("Incoming Transmission") }}
         </h3>
         <div class="terminalbg">
             <div class="terminalimage c-glitch" style="background-image: url('{{ options.story_character }}');">

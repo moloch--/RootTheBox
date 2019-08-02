@@ -8,7 +8,7 @@
 <link href="/static/css/pages/public/summary.css" rel="stylesheet" />
 {% end %}
 
-{% block title %}Scoreboard{% end %}
+{% block title %}{{ _("Scoreboard") }}{% end %}
 
 {% block content %}
 {% from tornado.options import options %}
@@ -16,7 +16,7 @@
     <div class="row-fluid">
         <h1 class="offset1">
             <i class="fa fa-bar-chart-o"></i>
-            Scoreboard
+            {{ _("Scoreboard") }}
         </h1>
         <br />
     </div>
@@ -30,25 +30,25 @@
             {% set wellspan="span10" %}
         {% end %}
         <div class="well {{wellspan}} offset1" style="padding-left: 30px; padding-right: 30px;">
-            <table id="summary_table" class="table table-striped">
+            <table id="summary_table" class="table table-striped" data-since-score="{{ _('Since Score') }}">
                 <thead>
                     <tr style="font-size: 120%;">
                         <th class="anim:position anim:update" style="text-align: center;"><i class="fa fa-trophy" style="font-size: 140%; margin-left: -10px; margin-top: -10px;"></i></th>
                         <th class="anim:id" style="display:none;"><!-- UUID --></th>
                         <th class="anim:constant">
                             {% if options.teams %}
-                                Team
+                                {{ _("Team") }}
                             {% else %}
-                                Player
+                                {{ _("Player") }}
                             {% end %}
                         </th>
-                        <th class="anim:constant" style="text-align: center;{% if not options.use_bots %} display: none;{% end %}">Bots</th>
-                        <th class="anim:constant" style="text-align: center;">Flags</th>
+                        <th class="anim:constant" style="text-align: center;{% if not options.use_bots %} display: none;{% end %}">{{ _("Bots") }}</th>
+                        <th class="anim:constant" style="text-align: center;">{{ _("Flags") }}</th>
                         <th class="anim:constant" style="text-align: center;">
                             {% if options.banking %}
-                                Bank Account
+                                {{ _("Bank Account") }}
                             {% else %}
-                                Score
+                                {{ _("Score") }}
                             {% end %}
                         </th>
                         <th class="anim:update"><!-- Details --></th>
@@ -71,13 +71,13 @@
                     <thead>
                         <tr>
                             <th>
-                                MVP
+                                {{ _("MVP") }}
                             </th>
                             <th style="text-align: center;">
                                 {% if options.banking %}
-                                    Money
+                                    {{ _("Money") }}
                                 {% else %}
-                                    Points
+                                    {{ _("Points") }}
                                 {% end %}
                             </th>
                         </tr>

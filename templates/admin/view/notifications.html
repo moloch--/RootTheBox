@@ -1,13 +1,13 @@
 {% extends "../../main.html" %}
 
-{% block title %}All Notifications{% end %}
+{% block title %}{{ _("All Notifications") }}{% end %}
 
 {% block content %}
 {% from models.Notification import Notification %}
     <div class="container">
         <h2>
             <i class="fa fa-envelope-o"></i>
-            All Notifications
+            {{ _("All Notifications") }}
         </h2>
         <br />
         <div class="well">

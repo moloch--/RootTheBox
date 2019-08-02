@@ -25,7 +25,7 @@ $(document).ready(function() {
                 backgroundColor:'transparent'
             },
             title: {
-                text: '<strong>Flags Captured</strong>',
+                text: '<strong>' + $("#pie_flags").data("name") + '</strong>',
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -69,7 +69,7 @@ $(document).ready(function() {
                 backgroundColor:'transparent'
             },
             title: {
-                text: '<strong>' + $("#bankname").text() + '</strong>',
+                text: '<strong>' + $("#pie_money").data("name") + '</strong>',
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -79,7 +79,7 @@ $(document).ready(function() {
             tooltip: {
                 enabled: true,
                 formatter: function() {
-                    return $("#banksymbol").text() + htmlEncode(this.point.y) + '<br /><strong>' +
+                    return $("#pie_money").data("symbol") + htmlEncode(this.point.y) + '<br /><strong>' +
                         htmlEncode(this.point.percentage.toFixed(2)) + '%</strong>';
                 }
             },
@@ -126,7 +126,7 @@ function drawBotGraph(state) {
             zoomType: 'x',
         },
         title: {
-                text: 'Botnets',
+                text: $("#history-graph").data("name"),
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -136,7 +136,7 @@ function drawBotGraph(state) {
         xAxis: {
             type: 'datetime',
             title: {
-                text: 'Time',
+                text: $("#history-graph").data("xaxis"),
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 14px "Trebuchet MS", Verdana, sans-serif',
@@ -146,7 +146,7 @@ function drawBotGraph(state) {
         },
         yAxis: {
             title: {
-                text: 'Number of Bots',
+                text: $("#history-graph").data("yaxis"),
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 14px "Trebuchet MS", Verdana, sans-serif',
@@ -192,7 +192,7 @@ function drawMoneyGraph(state) {
         xAxis: {
             type: 'datetime',
             title: {
-                text: 'Time',
+                text: $("#history-graph").data("xaxis"),
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 14px "Trebuchet MS", Verdana, sans-serif',
@@ -241,7 +241,7 @@ function drawFlagGraph(state) {
             zoomType: 'x',
         },
         title: {
-                text: 'Captured Flags',
+                text: $("#pie-flags").data("name"),
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
@@ -251,7 +251,7 @@ function drawFlagGraph(state) {
         xAxis: {
             type: 'datetime',
             title: {
-                text: 'Time',
+                text: $("#history-graph").data("xaxis"),
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 14px "Trebuchet MS", Verdana, sans-serif',
@@ -261,7 +261,7 @@ function drawFlagGraph(state) {
         },
         yAxis: {
             title: {
-                text: 'Flags Captured',
+                text: $("#pie-flags").data("name"),
                 style: {
                     color: '#FFFFFF',
                     font: 'bold 14px "Trebuchet MS", Verdana, sans-serif',

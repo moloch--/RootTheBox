@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}Home{% end %}
+{% block title %}{{ _("Home") }}{% end %}
 
 {% block header %}
 {% from models.Category import Category %}
@@ -25,7 +25,7 @@
     <div class="span6">
         <div class="row">
             <div class="span11 offset1 well">
-                <h2>Welcome {{ user.handle }}</h2>
+                <h2>{{ _("Welcome") }} {{ user.handle }}</h2>
                 <center>
                     {% if options.teams or not team %}
                         <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
@@ -39,16 +39,16 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th><h5 style="display: inline;">{% if options.teams %}Team{% else %}Player{% end %}</h5></th>
-                                <th style="text-align: center;"><h5 style="display: inline;">Current Level</h5></th>
+                                <th><h5 style="display: inline;">{% if options.teams %}{{ _("Team") }}{% else %}{{ _("Player") }}{% end %}</h5></th>
+                                <th style="text-align: center;"><h5 style="display: inline;">{{ _("Current Level") }}</h5></th>
                                 {% if options.use_bots %}
-                                    <th style="text-align: center;"><h5 style="display: inline;">Active Bots</h5></th>
+                                    <th style="text-align: center;"><h5 style="display: inline;">{{ _("Active Bots") }}</h5></th>
                                 {% end %}
                                 {% if hintcount > 0 %}
-                                <th style="text-align: center;"><h5 style="display: inline;">Hints Taken</h5></th>
+                                <th style="text-align: center;"><h5 style="display: inline;">{{ _("Hints Taken") }}</h5></th>
                                 {% end %}
-                                <th style="text-align: center;"><h5 style="display: inline;">Flags Captured</h5></th>
-                                <th style="text-align: right;"><h5 style="display: inline;">{% if options.banking %}Bank Account{% else %}Score{% end %}</h5></th>
+                                <th style="text-align: center;"><h5 style="display: inline;">{{ _("Flags Captured") }}</h5></th>
+                                <th style="text-align: right;"><h5 style="display: inline;">{% if options.banking %}{{ _("Bank Account") }}{% else %}{{ _("Score") }}{% end %}</h5></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,13 +67,13 @@
                         </tbody>
                     </table>
                 {% else %}
-                    <strong>You are not on a team</strong>
+                    <strong>{{ _("You are not on a team") }}</strong>
                 {% end %}
             </div>
         </div>
         <div class="row">
             <div class="span11 offset1 well">
-                <h2>Mission Progress</h2>
+                <h2>{{ _("Mission Progress") }}</h2>
                 <hr style="margin-bottom: 8px;">
                 {% if game_started %}
                     {% for index, level in enumerate(GameLevel.all()) %}
@@ -147,7 +147,7 @@
                             <i class="fa fa-pause" style="font-size: 120%;"></i>
                         </div>
                         <div class="span7 msgdescription">
-                                Waiting for the game to start...
+                                {{ _("Waiting for the game to start...") }}
                         </div>
                     </div>
                 {% end %}
@@ -157,10 +157,10 @@
         <!-- Only looks good if there are at least 3 categories -->
         <div class="row">
             <div class="span11 offset1 well">
-                <h2>Skill Progress</h2>
+                <h2>{{ _("Skill Progress") }}</h2>
                 <hr style="margin-bottom: 8px;">
                 {% if game_started %}
-                    <div id="spider_skills" style="height:400px; max-width: 550px;">
+                    <div id="spider_skills" style="height:400px; max-width: 550px;" data-name="{{ _('Categories') }}">
                         <!-- Spider Chart Here -->
                     </div>
                 {% else %}
@@ -169,7 +169,7 @@
                             <i class="fa fa-pause" style="font-size: 120%;"></i>
                         </div>
                         <div class="span7 msgdescription">
-                                Waiting for the game to start...
+                                {{ _("Waiting for the game to start...") }}
                         </div>
                     </div>
                 {% end %}
@@ -181,11 +181,11 @@
     <div class="span5 well">
         <h2 id="notifications-title">
             <i class="fa fa-envelope-o"></i>
-            Notifications
+            {{ _("Notifications") }}
         </h2>
         <h4 id="notifications">
             <a href="/notifications/all">
-                See All &raquo;
+                {{ _("See All") }} &raquo;
             </a>
         </h4>
         <hr style="margin-bottom: 16px; margin-top: 16px;">
@@ -213,7 +213,7 @@
     <div class="span5 well">
         <h2>
             <i class="fa fa-group"></i>
-            Team Information
+            {{ _("Team Information") }}
         </h2>
         <hr>      
         <div class="row">
@@ -221,7 +221,7 @@
                 <i class="fa fa-key" style="font-size: 180%;"></i>
             </div>
             <div class="span7 msgdescription">
-                    {{ team.code }}<br>Share your team code to allow other players to join {{ team.name }}.
+                    {{ team.code }}<br>{{ _("Share your team code to allow other players to join") }} {{ team.name }}.
             </div>
         </div>
     </div>
@@ -229,7 +229,7 @@
     <div class="span5 well">
         <h2>
             <i class="fa fa-trophy"></i>
-            Game Information
+            {{ _("Game Information") }}
         </h2>
         <hr>
         <div class="row">
@@ -237,8 +237,8 @@
                 <i class="fa fa-sitemap" style="font-size: 180%;"></i>
             </div>
             <div class="span7 msgdescription">
-                    Welcome to the computer wargame where security professionals can practice and learn.  
-                    Each {% if options.teams %}team{% else %}player{% end %} will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!  
+                    {{ _("Welcome to the computer war game where security professionals can practice and learn.") }}  
+                    {{ _("Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!") }}
             </div>
         </div>
         <br/>
@@ -247,8 +247,8 @@
                 <i class="fa fa-crosshairs" style="font-size: 180%;"></i>
             </div>
             <div class="span7 msgdescription">
-                    Rules of Engadgement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective. 
-                    Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.
+                    {{ _("Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.") }}
+                    {{ _("Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.") }}
             </div>
         </div>
         <br/>
@@ -258,7 +258,7 @@
                 <i class="fa fa-bar-chart-o" style="font-size: 180%"></i>
             </div>
             <div class="span7 msgdescription">
-               This game is set up to use dyanmic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!
+                {{ _("This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!") }}
             </div>
         </div>
         <br/>
@@ -269,9 +269,9 @@
                 <i class="fa fa-minus-circle" style="font-size: 180%;"></i>
             </div>
             <div class="span7 msgdescription">
-                Failure has a cost. Be carefule as penalties are applied when incorrect answers are submitted.  
-                The dedecution is {{ options.flag_penalty_cost }}% of the flag's value. It will start on the {% set n = options.flag_start_penalty %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}} 
-                attempt and continue until the {% set n = options.flag_stop_penalty - 1 %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}}. No further pentalty thereafter.  
+                {{ _("Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.") }}  
+                {{ _("The deduction is") }} {{ options.flag_penalty_cost }}% {{ _("of the flag's value. It will start on the") }} {% set n = options.flag_start_penalty %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}} 
+                {{ _("attempt and continue until the") }} {% set n = options.flag_stop_penalty - 1 %}{{str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))}}. {{ _("No further penalty thereafter.") }}
                 <!-- Max loss is {{ (options.flag_stop_penalty - options.flag_start_penalty) * options.flag_penalty_cost }}% of the flag's value. -->
             </div>
         </div>
@@ -283,7 +283,7 @@
                 <i class="fa fa-dollar" style="font-size: 180%;"></i>
             </div>
             <div class="span7 msgdescription">
-                It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.
+                {{ _("It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.") }}
             </div>
         </div>
         <br/>
@@ -294,8 +294,8 @@
                 <i class="fa fa-shopping-cart" style="font-size: 180%;"></i>
             </div>
             <div class="span7 msgdescription">
-                The black market is open and you know a guy. Download a target's source code or "SWAT" other players by bribing the (in-game) police.
-                Player's "bank account passwords" are also available, allowing you to crack each other's passwords and steal the money.
+                {{ _("The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.") }}
+                {{ _("Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.") }}
             </div>
         </div>
         <br/>

@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}Shared Files{% end %}
+{% block title %}{{ _("Shared Files") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/file_upload/shared_files.js"></script>
@@ -12,12 +12,12 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-times-circle-o"></i>
-                Delete File Upload
+                {{ _("Delete File Upload") }}
             </h3>
         </div>
         <div class="modal-body">
         <p>
-            Are you sure you want to delete this file? <br />
+            {{ _("Are you sure you want to delete this file?") }} <br />
         </p>
         <form id="delete-file-upload-form" method="post" action="/user/shares/delete">
             {% raw xsrf_form_html() %}
@@ -25,10 +25,10 @@
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="delete-file-upload-submit" type="button" class="btn btn-danger">
                 <i class="fa fa-times-circle-o"></i>
-                Delete
+                {{ _("Delete") }}
             </button>
         </div>
     </div>
@@ -38,14 +38,14 @@
     <div class="container">
         <h1>
             <i class="fa fa-files-o"></i>
-            File Sharing
+            {{ _("File Sharing") }}
         </h1>
         <br />
         {% if errors != None and len(errors) != 0 %}
           {% for error in errors %}
               <div class="alert alert-error">
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <h4 class="alert-heading">ERROR</h4>
+                <h4 class="alert-heading">{{ _("ERROR") }}</h4>
                 {{ error }}
               </div>
           {% end %}
@@ -55,26 +55,26 @@
                 <form id="share-file" action="/user/share/files" method="post" enctype="multipart/form-data">
                     {% raw xsrf_form_html() %}
                     <fieldset>
-                        <label for="files">File (Max 50Mb)</label>
+                        <label for="files">{{ _("File") }} ({{ _("Max") }} 50Mb)</label>
                         <input required id="files" name="files" multiple="multiple" type="file" />
-                        <label for="description">Description</label>
-                        <textarea id="description" name="description" type="text" placeholder="File Description">
+                        <label for="description">{{ _("Description") }}</label>
+                        <textarea id="description" name="description" type="text" placeholder="{{ _('File Description') }}">
                         </textarea>
                     </fieldset>
                     <button class="btn">
                         <i class="fa fa-fw fa-upload"></i>
-                        Upload File(s)
+                        {{ _("Upload Files") }}
                     </button>
                 </form>
             </div>
             <div class="span6 well">
                 <h3>
                     <i class="fa fa-share-square-o"></i>
-                    Shared Files
+                    {{ _("Shared Files") }}
                 </h3>
                 <div id="accordion">
                     {% if not len(shares) %}
-                        <strong>There are currently no shared files.</strong>
+                        <strong>{{ _("There are currently no shared files.") }}</strong>
                     {% else %}
                         <div class="accordion" id="accordion2">
                             {% for index, share in enumerate(shares) %}
@@ -87,20 +87,20 @@
                                     </div>
                                     <div id="collapse{{ index }}" class="accordion-body collapse">
                                         <div class="accordion-inner">
-                                            <strong>Created: </strong> {{ share.created }}</strong> <br />
-                                            <strong>File Size: </strong> {{ share.byte_size }} bytes <br />
+                                            <strong>{{ _("Created") }}: </strong> {{ share.created }}</strong> <br />
+                                            <strong>{{ _("File Size") }}: </strong> {{ share.byte_size }} {{ _("bytes") }} <br />
                                             <p>
-                                                <strong>Description:</strong>
+                                                <strong>{{ _("Description") }}:</strong>
                                                 {{ share.description }}
                                             </p>
                                             <br />
                                             <button id="file-upload-download{{ index }}" class="btn" data-uuid="{{ share.uuid }}" type="button">
                                                 <i class="fa fa-download"></i>
-                                                Download {{ share.file_name }}
+                                                {{ _("Download") }} {{ share.file_name }}
                                             </button>
                                             <button id="delete-file-upload-button{{ index }}" class="btn btn-danger" href="#delete-file-upload-modal" data-toggle="modal" data-uuid="{{ share.uuid }}" style="float:right;">
                                                 <i class="fa fa-trash-o"></i>
-                                                Delete
+                                                {{ _("Delete") }}
                                             </button>
                                         </div>
                                     </div>

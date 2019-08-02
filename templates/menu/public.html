@@ -11,7 +11,7 @@
             <a class="brand" href="/">
                 {% if options.debug %}
                     <i class="fa fa-fw fa-bug"></i>
-                    DEBUG
+                    {{ _("DEBUG") }}
                 {% else %}
                     {{ options.game_name }}
                 {% end %}
@@ -21,42 +21,42 @@
                     <li>
                         <a href="/login">
                             <i class="fa fa-fw fa-sign-in"></i>
-                            Login
+                            {{ _("Login") }}
                         </a>
                     </li>
                     <li>
                         <a href="/registration">
                             <i class="fa fa-fw fa-pencil"></i>
-                            Registration
+                            {{ _("Registration") }}
                         </a>
                     </li>
                     {% if scoreboard_visible %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-fw fa-bar-chart-o"></i>
-                            Scoreboard
+                            {{ _("Scoreboard") }}
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/scoreboard">
-                                    Summary
+                                    {{ _("Summary") }}
                                 </a>
                             </li>
                             <li>
                                 <a href="/scoreboard/history">
-                                    Charts
+                                    {{ _("Charts") }}
                                 </a>
                             </li>
                             <li>
                                 <a href="/teams">
-                                    {% if options.teams %}Teams{% else %}Players{% end %}
+                                    {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
                               </a>
                             </li>
                             {% if options.use_black_market %}
                                 <li>
                                     <a href="/scoreboard/wall_of_sheep">
-                                        Wall of Sheep
+                                        {{ _("Wall of Sheep") }}
                                     </a>
                                 </li>
                             {% end %}

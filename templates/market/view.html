@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}Black Market{% end %}
+{% block title %}{{ _("Black Market") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/market/view.js"></script>
@@ -12,7 +12,7 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
-                Details
+                {{ _("Details") }}
             </h3>
         </div>
         <div class="modal-body">
@@ -25,11 +25,11 @@
                 <div class="span2">
                     <p>
                         <i class="icon-bookmark"></i>
-                        Price $ <span id="price"></span>
+                        {{ _("Price") }} {{ _("$") }} <span id="price"></span>
                     </p>
                     <p>
                         <i class="icon-book"></i>
-                        Description
+                        {{ _("Description") }}
                     </p>
                     <blockquote>
                         <small id="description"></small>
@@ -42,9 +42,9 @@
             <input id="buy-market-item-uuid" type="hidden" id="uuid" name="uuid" />
         </form>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="buy-market-item-submit" type="button" class="btn btn-primary">
-                Buy Upgrade
+                {{ _("Buy Upgrade") }}
             </button>
         </div>
     </div>
@@ -55,14 +55,14 @@
 <div class="container">
     <h2>
         <i class="fa fa-shopping-cart"></i>
-        Black Market
+        {{ _("Black Market") }}
     </h2>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{ _("ERROR") }}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -72,8 +72,8 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Price</th>
+                    <th>{{ _("Name") }}</th>
+                    <th>{{ _("Price") }}</th>
                     <th>
                         <!-- Button -->
                     </th>
@@ -88,10 +88,10 @@
                     <td>
                         {% if not user.has_item(item.name) %}
                         <a id="item-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#buy-market-item-modal" data-uuid="{{ item.uuid }}">
-                            Details
+                            {{ _("Details") }}
                         </a>
                         {% else %}
-                        <i>Purchased</i>
+                        <i>{{ _("Purchased") }}</i>
                         {% end %}
                     </td>
                 </tr>

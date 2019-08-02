@@ -1,19 +1,19 @@
 {% extends "../main.html" %}
 
-{% block title %}Reset Game{% end %}
+{% block title %}{{ _("Reset Game") }}{% end %}
 
 {% block content %}
 <div class="container">
     <h1>
         <i class="fa fa-undo"></i>
-        Reset Game
+        {{ _("Reset Game") }}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{ _("ERROR") }}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -21,7 +21,7 @@
     {% if success is not None %}
     <div class="alert alert-success">
         <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <h4 class="alert-heading">SUCCESS</h4>
+        <h4 class="alert-heading">{{ _("SUCCESS") }}</h4>
         {{ success }}
     </div>
     {% end %}
@@ -30,29 +30,29 @@
             {% raw xsrf_form_html() %}
             <div class="control-group">
                 <div class="controls">
-                    <h3>Reset Actions</h3>
+                    <h3>{{ _("Reset Actions") }}</h3>
                     <ul>
                         <li>
-                            Clear all team / player flag captures
+                            {{ _("Clear all team / player flag captures") }}
                         </li>
                         <li>
-                            Clear all team pastebin and file shares
+                            {{ _("Clear all team pastebin and file shares") }}
                         </li>
                         <li>
-                            Clear all notifications and game history
+                            {{ _("Clear all notifications and game history") }}
                         </li>
                         <li>
-                            Clear market items or source code purchases
+                            {{ _("Clear market items or source code purchases") }}
                         </li>
                         <li>
-                            Reset player / team starting points / money
+                            {{ _("Reset player / team starting points / money") }}
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn btn-primary" type="submit">Reset Game</button>
+                    <button class="btn btn-primary" type="submit">{{ _("Reset Game") }}</button>
                 </div>
             </div>
         </form>

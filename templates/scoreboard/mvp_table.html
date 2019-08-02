@@ -4,7 +4,7 @@
     {% if user.money > 0 %}
     <tr style="padding-top: 5px;">
         <td>{{ user.handle }}</td>
-        <td class="summarycolumn" style="font-size: large; text-align: center; width: 75px;">{% if options.banking %}${% end %}{{ user.money }}</td>
+        <td class="summarycolumn" style="font-size: large; text-align: center; width: 75px;">{% if options.banking %}{{ _("$") }}{% end %}{{ user.money }}</td>
     </tr>
     {% end %}
     <!-- List only the Top N with money -->

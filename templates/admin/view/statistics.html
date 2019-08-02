@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Statistics{% end %}
+{% block title %}{{ _("Statistics") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/view/statistics.js"></script>
@@ -14,7 +14,7 @@
     <div id="details-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header" style="padding-bottom: 0; margin-bottom: 0;">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-flag"></i> Flag Details</h3>
+            <h3><i class="fa fa-fw fa-flag"></i> {{ _("Flag Details") }}</h3>
             <h5>
                 <table class="table">
                     <tbody id="details-flag"></tbody>
@@ -22,19 +22,19 @@
             </h5>
         </div>
         <div class="modal-body" style="padding-top: 0; margin-top: -20px;">
-            <h4><i class="fa fa-fw fa-check"></i> Captures</h4>
+            <h4><i class="fa fa-fw fa-check"></i> {{ _("Captures") }}</h4>
             <div class="well" style="padding-bottom: 0px;">
                 <table class="table table-striped">
                     <tbody id="details-captures"></tbody>
                 </table>
             </div>
-            <h4><i class="fa fa-fw fa-times"></i> Attempts</h4>
+            <h4><i class="fa fa-fw fa-times"></i> {{ ("Attempts") }}</h4>
             <div class="well" style="padding-bottom: 0px;">
                 <table class="table table-striped">
                     <tbody id="details-attempts"></tbody>
                 </table>
             </div>
-            <h4>&nbsp;<i class="fa fa-fw fa-medkit"></i> Hints</h4>
+            <h4>&nbsp;<i class="fa fa-fw fa-medkit"></i> {{ _("Hints") }}</h4>
             <div class="well" style="padding-bottom: 0px;">
                 <table class="table table-striped">
                     <tbody id="details-hints"></tbody>
@@ -58,7 +58,7 @@
                     <center>
                         <strong>
                             <i class="fa fa-building-o"></i>
-                            Corporations
+                            {{ _("Corporations") }}
                         </strong>
                     </center>
                     <br />
@@ -75,7 +75,7 @@
                 <center>
                     <strong>
                         <i class="fa fa-th"></i>
-                        Boxes
+                        {{ _("Boxes") }}
                     </strong>
                 </center>
                 <br />
@@ -92,14 +92,14 @@
         <div class="span10">
             <h1>
                 <i class="fa fa-star-o"></i>
-                Statistics
+                {{ _("Statistics") }}
             </h1>
             <br />
             {% if errors != None and len(errors) != 0 %}
                 {% for error in errors %}
                     <div class="alert alert-error">
                         <a class="close" data-dismiss="alert" href="#">&times;</a>
-                        <h4 class="alert-heading">ERROR</h4>
+                        <h4 class="alert-heading">{{ _("ERROR") }}</h4>
                         {{ error }}
                     </div>
                 {% end %}
@@ -124,22 +124,22 @@
                                 <div>
                                     <h4 style="display:inline;">
                                         <i class="fa fa-flag-o"></i>
-                                        Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;
+                                        {{ _("Flags on") }} {{ box.name }}&nbsp;&nbsp;&nbsp;
                                     </h4>
-                                    {% if len(Hint.taken_by_box(box.id)) > 0 %}<div style="float: right; vertical-align: bottom;">Box Hints Taken: <span style="color: rgb(200,200,0);">{{ len(Hint.taken_by_box(box.id)) }}</span></div>{% end %}
+                                    {% if len(Hint.taken_by_box(box.id)) > 0 %}<div style="float: right; vertical-align: bottom;">{{ _("Box Hints Taken") }}: <span style="color: rgb(200,200,0);">{{ len(Hint.taken_by_box(box.id)) }}</span></div>{% end %}
                                     <hr>
                                     {% if len(box.flags) != 0 %}
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Box</th>
+                                                    <th>{{ _("Box") }}</th>
                                                     <th><!-- Flag Lock --></th>
-                                                    <th>Name</th>
-                                                    <th class="shortcolumn" style="width: 15%; text-align: center;">Capture Rate</th>
-                                                    <th class="shortcolumn" style="width: 15%; text-align: center;">Successful Captures</th>
-                                                    <th class="shortcolumn" style="width: 15%; text-align: center;">Failed Attempts</th>
-                                                    <th class="shortcolumn" style="width: 15%; text-align: center;">Hints Taken</th>
+                                                    <th>{{ _("Name") }}</th>
+                                                    <th class="shortcolumn" style="width: 15%; text-align: center;">{{ _("Capture Rate") }}</th>
+                                                    <th class="shortcolumn" style="width: 15%; text-align: center;">{{ _("Successful Captures") }}</th>
+                                                    <th class="shortcolumn" style="width: 15%; text-align: center;">{{ _("Failed Attempts") }}</th>
+                                                    <th class="shortcolumn" style="width: 15%; text-align: center;">{{ _("Hints Taken") }}</th>
                                                     <th><!-- Edit Button --></th>
                                                     
                                                 </tr>
@@ -161,7 +161,7 @@
                                                         <td class="shortcolumn">
                                                             <a id="details-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#details-flag-modal" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}" title="{{flag.token}}">
                                                                 <i class="fa fa-fw fa-eye"></i>
-                                                                View Details
+                                                                {{ _("View Details") }}
                                                             </a>
                                                         </td>
                                                        
@@ -170,7 +170,7 @@
                                             </tbody>
                                         </table>
                                     {% else %}
-                                        <strong>No flags on this box yet, <a href="/admin/create/flag">add some</a></strong>
+                                        <strong>{{ _("No flags on this box yet") }}, <a href="/admin/create/flag">{{ _("add some") }}</a></strong>
                                     {% end %}
                                 </div>
                                 
@@ -178,7 +178,7 @@
                             <br />
                         {% end %}
                     {% else %}
-                        <strong>No boxes in this corporation yet, <a href="/admin/create/box">add some</a></strong>
+                        <strong>{{ _("No boxes in this corporation yet") }}, <a href="/admin/create/box">{{ _("add some") }}</a></strong>
                     {% end %}
                 {% if len(Corporation.all()) > 1 %}
                 </div>

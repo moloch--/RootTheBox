@@ -24,4 +24,32 @@ $(document).ready(function() {
             $("#logout-form").submit();
         });
     }
+
+    //Find all the strings
+    doc = $(document);
+    for (item in doc) {
+        var text = $(item).text().trim().split();
+        for (item in text) {
+            if (text[item].length > 0) {
+                var str = text[item].trim().split("\n");
+                for (x in str) {
+                    if (str[x].trim().length > 0) {
+                        console.log(str[x].trim());
+                    }
+                    
+                }
+            }
+            
+        }
+        
+    }
+    var sd = doc.find(':input');
+    for (s in sd) {
+        if (typeof sd[s] !== "function") {
+            var placeholder = $(sd[s]).attr("placeholder");
+            if (placeholder != null && placeholder.trim().length > 0) {
+                console.log(placeholder.trim());
+            }
+        }
+    }
 });

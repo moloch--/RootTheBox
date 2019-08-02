@@ -1,19 +1,19 @@
 {% extends "../main.html" %}
 
-{% block title %}Import XML{% end %}
+{% block title %}{{ _("Import XML") }}{% end %}
 
 {% block content %}
 <div class="container">
     <h1>
         <i class="fa fa-upload"></i>
-        Import XML
+        {{ _("Import XML") }}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{ _("ERROR") }}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -21,7 +21,7 @@
     {% if success is not None %}
     <div class="alert alert-success">
         <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <h4 class="alert-heading">SUCCESS</h4>
+        <h4 class="alert-heading">{{ _("SUCCESS") }}</h4>
         {{ success }}
     </div>
     {% end %}
@@ -29,14 +29,14 @@
         <form class="form-horizontal" action="/admin/import/xml" method="post" enctype="multipart/form-data">
             {% raw xsrf_form_html() %}
             <div class="control-group">
-                <label class="control-label" for="xml_file">XML File</label>
+                <label class="control-label" for="xml_file">{{ _("XML File") }}</label>
                 <div class="controls">
                     <input id="xml_file" name="xml_file" type="file">
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn btn-primary" type="submit">Import File</button>
+                    <button class="btn btn-primary" type="submit">{{ _("Import File") }}</button>
                 </div>
             </div>
         </form>
