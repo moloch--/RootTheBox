@@ -1,0 +1,649 @@
+﻿(stop - start) * cost.,(স্টপ - স্টার্ট) * ব্যয়।
+$,$
+A brief description of the box,বাক্সের একটি সংক্ষিপ্ত বিবরণ
+About,সম্পর্কিত
+Accept,গ্রহণ করা
+Accept Bribe?,ঘুষ গ্রহণ করবেন?
+Accept this bribe?,এই ঘুষ গ্রহণ করবেন?
+Accepted,গৃহীত
+Accepted / In Jail,গৃহীত / কারাগারে
+Account Locked!,হিসাব বন্ধ!
+Account Password,অ্যাকাউন্টের পাসওয়ার্ড
+Active Bots,অ্যাক্টিভ বটস
+Add,যোগ
+Add,যোগ
+add,যোগ
+Add a Category for Boxes.,বক্সগুলির জন্য একটি বিভাগ যুক্ত করুন।
+Add Flags,পতাকা যুক্ত করুন
+Add Hint,ইঙ্গিত যুক্ত করুন
+Add IP address,আইপি ঠিকানা যুক্ত করুন
+Add IP Address,আইপি ঠিকানা যুক্ত করুন
+add some,কিছু যুক্ত কর
+Add Source Code,উত্স কোড যুক্ত করুন
+Add Source Code to Market,বাজারে উত্স কোড যুক্ত করুন
+Add to Market,বাজারে যুক্ত করুন
+Address,ঠিকানা
+Admin,অ্যাডমিন
+Admin Home,অ্যাডমিন হোম
+Administrator Panel,প্রশাসক প্যানেল
+Admins,প্রশাসকদের
+All Notifications,সমস্ত বিজ্ঞপ্তি
+and so on,ইত্যাদি
+Apply penalty on attempt,চেষ্টায় জরিমানা প্রয়োগ করুন
+Are you a Cylon?,তুমি কি কাইলন?
+Are You Elite,তুমি কি অভিজাত?
+Are you sure you want to buy this code?,আপনি কি নিশ্চিত যে আপনি এই কোডটি কিনতে চান?
+Are you sure you want to delete this box?,আপনি কি নিশ্চিত যে আপনি এই বাক্সটি মুছতে চান?
+Are you sure you want to delete this category?,আপনি কি নিশ্চিত যে আপনি এই বিভাগটি মুছতে চান?
+Are you sure you want to delete this corporation?,আপনি কি নিশ্চিত যে আপনি এই কর্পোরেশনটি মুছতে চান?
+Are you sure you want to delete this file?,আপনি কি নিশ্চিত যে আপনি এই ফাইলটি মুছতে চান?
+Are you sure you want to delete this flag?,আপনি কি নিশ্চিত যে আপনি এই পতাকাটি মুছতে চান?
+Are you sure you want to delete this game level?,আপনি কি নিশ্চিত যে আপনি এই গেম স্তরটি মুছতে চান?
+Are you sure you want to delete this hint?,আপনি কি নিশ্চিত যে আপনি এই ইঙ্গিতটি মুছতে চান?
+Are you sure you want to delete this IP address?,আপনি কি নিশ্চিত যে আপনি এই আইপি ঠিকানাটি মুছতে চান?
+Are you sure you want to delete this source code?,আপনি কি এই উত্স কোডটি মুছতে চান?
+Are you sure you want to delete this user?,আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে মুছতে চান?
+Are you sure you want to delete?,আপনি মুছে ফেলতে চান?
+Arrest Player,গ্রেপ্তার প্লেয়ার
+attempt,প্রয়াস
+attempt and continue until the,চেষ্টা করুন এবং অবিরত অবধি
+Attempts,প্রচেষ্টা
+Authenticate,বিশুদ্ধতা প্রমাণ করা
+Authentication Failure,প্রমাণীকরণ ব্যর্থতা
+Authentication Required,প্রমাণীকরণ প্রয়োজন
+Avatar,অবতার
+Backup/Restore,ব্যাকআপ / পুনরুদ্ধার করুন
+Ban IP Address,আইপি ঠিকানা নিষিদ্ধ
+Bank Account,ব্যাংক হিসাব
+Bank Account Balance,ব্যাংক অ্যাকাউন্টের ব্যালেন্স
+Bank Hash Algorithm,ব্যাংক হ্যাশ অ্যালগরিদম
+Bank Password,ব্যাংক পাসওয়ার্ড
+Bank Password Length,ব্যাঙ্কের পাসওয়ার্ড দৈর্ঘ্য
+Banking System,ব্যাংকিং সিস্টেম
+Banned IPs,নিষিদ্ধ আইপি
+BEGIN SECURE COMMUNIQUE,সুরক্ষিত যোগাযোগ শুরু করুন
+Black Market,কালোবাজার
+Bonus reward for those that complete the level.,যারা স্তরটি সম্পূর্ণ করেন তাদের জন্য বোনাস পুরষ্কার।
+Bot,বট
+Bot Reward,বট পুরষ্কার
+Botnet,বটনেট
+Botnet Command & Control,বোটনেট কমান্ড এবং নিয়ন্ত্রণ
+Botnet Monitor,বোটনেট মনিটর
+Botnets,botnets
+Bots,বট
+Box,বক্স
+Box Difficulty,বক্স অসুবিধা
+Box Hints,বক্স ইঙ্গিত
+Box Hints Taken,বক্স ইঙ্গিত নেওয়া হয়েছে
+Box Name,বক্স নাম
+Boxes,বক্স
+Bribe,ঘুষ
+Bribe Amount,ঘুষের পরিমাণ
+Bribe History,ঘুষের ইতিহাস
+Bribe Pending,ঘুষের মুলতুবি রয়েছে
+Bribe Price,ঘুষের দাম
+Bribes in Progress,অগ্রগতিতে ঘুষ
+Buy,কেনা
+Buy Source Code,উত্স কোড কিনুন
+Buy Upgrade,আপগ্রেড কিনুন
+bytes,বাইট
+Capture Message,বার্তা ক্যাপচার করুন
+Capture Rate,ক্যাপচার রেট
+Captures,ধরা
+Case-Sensitive,কেস সংবেদনশীল
+Cash Stolen,নগদ চুরি
+Categories,ধরন
+Category,বিভাগ
+Category box belongs too?,ক্যাটাগরি বক্সও কি?
+Category Name,বিভাগ নাম
+Change,পরিবর্তন
+Change Avatar,অবতারটি পরিবর্তন করুন
+Characters,অক্ষর
+Charts,চার্ট
+Chat,চ্যাট করুন
+Checksum,চেকসাম
+Choose,চয়ন করুন
+Choose a name for your new team!,আপনার নতুন দলের জন্য একটি নাম চয়ন করুন!
+Choose Avatar,অবতারকে বেছে নিন
+Classic,সর্বোত্তম
+Clear,পরিষ্কার
+Clear all notifications and game history,সমস্ত বিজ্ঞপ্তি এবং গেমের ইতিহাস সাফ করুন
+Clear all team / player flag captures,সমস্ত দল / প্লেয়ার পতাকা ক্যাপচার সাফ করুন
+Clear all team pastebin and file shares,সমস্ত টিমের পেস্টবিন এবং ফাইল শেয়ার সাফ করুন
+Clear market items or source code purchases,বাজারের আইটেম বা উত্স কোড ক্রয় সাফ করুন
+Click here to login,লগ - ইন করতে এখানে ক্লিক করুন
+Close,ঘনিষ্ঠ
+Command & Control,কমান্ড এবং নিয়ন্ত্রণ
+Complete,সম্পূর্ণ
+Complete Bribe,সম্পূর্ণ ঘুষ
+Complete this bribe?,এই ঘুষ সম্পূর্ণ?
+Completed,সম্পন্ন
+Completed Bribes,সম্পন্ন ঘুষ
+Completion Message,সমাপ্তির বার্তা
+completion of Level,স্তর সমাপ্তি
+Completion Reward,পুরষ্কার পুরষ্কার
+Configuration,কনফিগারেশন
+Confirm,নিশ্চিত করা
+Confirm Account Password,অ্যাকাউন্টের পাসওয়ার্ড নিশ্চিত করুন
+Confirm New Password,নিশ্চিত কর নতুন গোপননম্বর
+Confirm Password,পাসওয়ার্ড নিশ্চিত করুন
+Content,সন্তুষ্ট
+Content Missing,সামগ্রী অনুপস্থিত
+Corporation,নিগম
+Corporation box belongs too?,কর্পোরেশন বক্সও কি?
+Corporation Name,কর্পোরেশন নাম
+Corporations,করপোরেশনের
+Cost,মূল্য
+Cost to open this level and see flags,এই স্তরটি খোলার জন্য এবং পতাকাগুলি দেখতে ব্যয়
+Cracked by,দ্বারা ফাটল
+Create,সৃষ্টি
+Create Box,বক্স তৈরি করুন
+Create Category,বিভাগ তৈরি করুন
+Create Corporation,কর্পোরেশন তৈরি করুন
+Create Datetime Flag,ডেটটাইম ফ্ল্যাগ তৈরি করুন
+Create File Flag,ফাইল পতাকা তৈরি করুন
+Create Flag,পতাকা তৈরি করুন
+Create Game Level,গেম স্তর তৈরি করুন
+Create Hint,ইঙ্গিত তৈরি করুন
+Create Message,বার্ত তৈরি কর
+Create Multiple Choice Flag,একাধিক পছন্দ পতাকা তৈরি করুন
+Create New Paste,নতুন পেস্ট তৈরি করুন
+Create Notification,বিজ্ঞপ্তি তৈরি করুন
+Create Regex Flag,রেজেক্স পতাকা তৈরি করুন
+Create Static Flag,স্থির পতাকা তৈরি করুন
+Create Team,দল তৈরি
+Created,নির্মিত
+Current algorithm,বর্তমান অ্যালগরিদম
+Current Bank Account Password,কারেন্ট ব্যাঙ্ক অ্যাকাউন্টের পাসওয়ার্ড
+Current Bank Password,বর্তমান ব্যাঙ্কের পাসওয়ার্ড
+Current Level,বর্তমান স্তর
+Current Level,বর্তমান স্তর
+CyberChef,CyberChef
+Data Points,ডেটা পয়েন্টস
+Date,তারিখ
+Datetime Flag,তারিখের সময় পতাকা
+Datetime Token,ডেটটাইম টোকেন
+DEBUG,ডিবাগ
+Decline,পতন
+Decline Bribe?,ঘুষ কমে?
+Decline this bribe?,এই ঘুষ অস্বীকার করবেন?
+Declined,অস্বীকার
+Decrease flag reward by this percent per capture.,ক্যাপচার প্রতি এই শতাংশ দ্বারা পতাকা পুরষ্কার হ্রাস করুন।
+deduct on & after,উপর এবং পরে ছাড়
+defaults to,ডিফল্ট
+Delete,মুছে ফেলা
+Delete Box,বক্স মুছুন
+Delete Category,বিভাগ মুছুন
+Delete Corporation,কর্পোরেশন মুছুন
+Delete File Upload,ফাইল আপলোড মুছুন
+Delete Flag,পতাকা মুছুন
+Delete Game Level,গেম স্তরটি মুছুন
+Delete Hint,ইঙ্গিত মুছুন
+Delete IP Address,আইপি ঠিকানা মুছুন
+Delete Player,প্লেয়ার মুছুন
+Delete Source Code,উত্স কোড মুছুন
+Delete Team,দল মুছুন
+Delete User,ব্যবহারকারী মুছুন
+Dependent Flag,নির্ভরশীল পতাকা
+Description,বিবরণ
+DESCRIPTION,বর্ণনা
+Details,বিস্তারিত
+Difficulty,অসুবিধা
+Difficulty Rating,অসুবিধা রেটিং
+Disable,অক্ষম
+Disabling this option will skip the story line and give the player an instant capture message.,এই বিকল্পটি অক্ষম করা গল্পের পংক্তিটি এড়িয়ে যাবে এবং প্লেয়ারটিকে তাত্ক্ষণিক ক্যাপচার বার্তা দেবে।
+Display Hints Taken,ইঙ্গিতগুলি প্রদর্শন করুন
+Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,নির্দেশনা না দিলে সম্প্রদায়ের পতাকাগুলি মুছুন বা সংশোধন করবেন না। গেমের গোলগুলির মধ্যে উল্লেখ না করা পর্যন্ত অন্যান্য খেলোয়াড়দের আক্রমণ করবেন না।
+Download,ডাউনলোড
+Download File,ডাউনলোড ফাইল
+Download the command line botnet monitor,কমান্ড লাইন বোটনেট মনিটরটি ডাউনলোড করুন
+Dynamic Scoring,গতিশীল স্কোরিং
+Each flag has a submit.  The player will choose the flag they intend to capture.,প্রতিটি পতাকা একটি জমা আছে। প্লেয়ারটি ক্যাপচারের উদ্দেশ্যে তাদের পতাকাটি বেছে নেবে।
+"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",প্রতিটি প্লেয়ার বিভিন্ন অসুবিধা এবং পরিশীলনের চ্যালেঞ্জগুলি লক্ষ্য করে পতাকা সংগ্রহের চেষ্টা করে এবং গৌরব অর্জন করতে পারে। শুভকামনা!
+Edit,সম্পাদন করা
+Edit Account,অ্যাকাউন্ট সম্পাদনা করুন
+Edit Box,সম্পাদনা বাক্স
+Edit Category,বিভাগ সম্পাদনা করুন
+Edit Corporation,সম্পাদনা কর্পোরেশন
+Edit Flag,পতাকা সম্পাদনা করুন
+Edit Flag,পতাকা সম্পাদনা করুন
+Edit Game Level,খেলা স্তর সম্পাদনা করুন
+Edit Hint,ইঙ্গিত সম্পাদনা করুন
+Edit Level,স্তর সম্পাদনা করুন
+Edit Market Item,বাজার আইটেম সম্পাদনা করুন
+Edit Player,প্লেয়ার সম্পাদনা করুন
+Edit Team,দল সম্পাদনা করুন
+Edit User,ব্যবহারকারী সম্পাদনা করুন
+Email,ইমেইল
+EMPTY,খালি
+Enable,সক্ষম করা
+"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",এই বৈশিষ্ট্যটি সক্ষম করা খেলোয়াড়দের নিবন্ধের সময় তাদের নিজস্ব দল তৈরি করতে অনুমতি দেবে। যদি এই বিকল্পটি অক্ষম করা থাকে তবে অ্যাডমিনকে অবশ্যই খেলোয়াড়দের যোগদানের জন্য দল তৈরি করতে হবে।
+Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,এই বৈশিষ্ট্যটি সক্ষম করা খেলোয়াড়দের কোড (পেস্টবিন) এবং ইন-গেমের ফাইলগুলি ভাগ করার অনুমতি দেবে। এই বৈশিষ্ট্যটি অক্ষম করা সরঞ্জাম মেনু থেকে এই বিকল্পগুলি সরিয়ে ফেলবে।
+"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","এই বৈশিষ্ট্যটি সক্ষম করা টিমগুলিকে ফেডারেল রিজার্ভ, সোর্স কোড মার্কেট বা সোয়াট এর মতো আপগ্রেড কেনার অনুমতি দেবে।"
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.","এই বৈশিষ্ট্যটি সক্ষম করা গেমটিকে ফ্ল্যাগ বা বক্স ক্যাপচার বার্তাগুলি প্রদর্শনের অনুমতি দেবে যা যুক্ত হতে পারে। ডিফল্টরূপে, গেমটি মোরিসের কাহিনী অনুসরণ করে, একটি নিয়োগকারী যা মিশনগুলি অর্পণ করে।"
+"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.","এই বৈশিষ্ট্যটি সক্ষম করা ভুল ক্যাপচার প্রচেষ্টার জন্য একটি জরিমানা প্রয়োগ করবে। জরিমানাটি পতাকাঙ্ক্যের মান হ্রাস নয়, স্কোর থেকে তাত্ক্ষণিক ছাড় is"
+"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.","এই বৈশিষ্ট্যটি সক্ষম করা ক্যাপচারের সংখ্যার ভিত্তিতে একটি পতাকার জন্য পুরষ্কার হ্রাস করবে। যদি এই বিকল্পটি অক্ষম করা থাকে, অন্য খেলোয়াড়েরা এটিকে ক্যাপচার করার সাথে সাথে পতাকাটির মানটি সামঞ্জস্য থাকে।"
+Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,এই বৈশিষ্ট্যটি সক্ষম করা কোনও দল বা প্লেয়ার দ্বারা স্কোরবোর্ডে নেওয়া ইঙ্গিতগুলির সংখ্যা প্রদর্শন করবে। ইঙ্গিতগুলি মুক্ত থাকলে দরকারী। স্কোর বা পতাকা সমান হলে বাছাইয়ের জন্য একটি নিম্ন ইঙ্গিত গণনা ব্যবহৃত হয়। এই বিকল্পটি অক্ষম করা স্কোরবোর্ড থেকে ইঙ্গিত গণনা সরিয়ে ফেলবে।
+"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.","এই বৈশিষ্ট্যটি সক্ষম করা প্লেয়ারকে এমভিপি স্কোরবোর্ড প্রদর্শন করবে। যে খেলোয়াড় দলে পয়েন্ট অবদান রেখেছেন তা প্রদর্শিত হবে। যদি এই বিকল্পটি অক্ষম করা হয়, এমভিপি স্কোরবোর্ডটি লুকানো থাকবে।"
+Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,এই বৈশিষ্ট্যটি সক্ষম করার জন্য খেলোয়াড়দের একটি নতুন অ্যাকাউন্ট তৈরি করতে একটি বৈধ নিবন্ধকরণ টোকেন সরবরাহ করতে হবে। অ্যাডমিন ইন্টারফেসে নিবন্ধকরণ টোকেন তৈরি করা হয়।
+Enabling this feature will require players to provide an email address in order to create a new account.,এই বৈশিষ্ট্যটি সক্ষম করার জন্য খেলোয়াড়দের একটি নতুন অ্যাকাউন্ট তৈরি করার জন্য একটি ইমেল ঠিকানা সরবরাহ করা প্রয়োজন।
+Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,এই বৈশিষ্ট্যটি সক্ষম করা গেমের সমস্ত খেলোয়াড়কে পতাকা এবং স্তর আনলক বিজ্ঞপ্তি প্রেরণ করবে। এই বিকল্পটি অক্ষম করা টিম সদস্যদের মধ্যে এই বিজ্ঞপ্তিগুলি সীমাবদ্ধ করবে।
+"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.",এই বৈশিষ্ট্যটি সক্ষম করা টিম প্রতিযোগিতামূলক খেলার জন্য গেম এবং স্কোরবোর্ড সেট করবে। যদি এই বিকল্পটি অক্ষম করা হয় তবে গেমটি পৃথক প্রতিযোগিতামূলক খেলার জন্য সেট আপ করা হয়।
+"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.","এই বৈশিষ্ট্যটি সক্ষম করা গেমটিকে অর্থ ভিত্তিক স্কোরিং সিস্টেমটি ব্যবহার করার জন্য সেট করবে। যদি এই বিকল্পটি অক্ষম করা হয়, গেমটি পয়েন্ট ভিত্তিক স্কোরিং সিস্টেম ব্যবহার করে।"
+"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.",এই বিকল্পটি সক্ষম করা টোকেন কেস সংবেদনশীল হিসাবে সেট করবে। যদি এই বিকল্পটি অক্ষম করা থাকে তবে উত্তর টোকেনটি কেস-সংবেদনশীল।
+"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.",এই বিকল্পটি সক্ষম করা টোকন কেস সংবেদনশীল হিসাবে সেট করবে। যদি এই বিকল্পটি অক্ষম করা থাকে তবে উত্তর টোকেনটি কেস-সংবেদনশীল।
+Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,এই সেটিংটি সক্ষম করা বটনেট বৈশিষ্ট্যগুলিকে সক্রিয় করে। টিমগুলি তাদের বট এক্সিকিউটেবলগুলি বাক্সে চালিত বাক্সগুলিতে চালাতে পারে এবং প্রতিটি বটের জন্য সময়ের সাথে সাথে তাদের অর্থ প্রদান করা হয়।
+END SECURE COMMUNIQUE,সমাপ্তি সুরক্ষা যোগাযোগ
+Enter a complex password of,এর একটি জটিল পাসওয়ার্ড প্রবেশ করান
+Enter a Matching Flag,একটি ম্যাচিং ফ্ল্যাগ প্রবেশ করান
+Enter Choice,চয়েস প্রবেশ করান
+Enter the same password as before,আগের মত একই পাসওয়ার্ড লিখুন
+ERROR,ত্রুটি
+Export Game Objects,গেম অবজেক্টস এক্সপোর্ট করুন
+Export XML,এক্সএমএল রফতানি করুন
+Export XML,এক্সএমএল রফতানি করুন
+Failed Attempts,ব্যর্থ প্রচেষ্টা
+Failed Logins,ব্যর্থ লগইন
+Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,ব্যর্থতার একটি খরচ আছে। ভুল উত্তর জমা দেওয়ার সময় শাস্তি প্রয়োগ হওয়ার কারণে সাবধান হন।
+Federal Reserve,ফেডারেল রিজার্ভ
+Federal Reserve Bank,ফেডারেল রিজার্ভ ব্যাংক
+File,ফাইল
+File Description,নথি বিবরণ
+File Flag,ফাইল পতাকা
+File Name,ফাইলের নাম
+File Sharing,তথ্য ভাগাভাগি
+File Size,ফাইলের আকার
+First Login,প্রথম লগইন
+Flag,পতাকা
+Flag Decrease Value,পতাকা হ্রাস মূল্য
+Flag Details,পতাকা বিবরণ
+Flag File,ফ্ল্যাগ ফাইল
+Flag Hints,পতাকা ইঙ্গিত
+Flag Name,পতাকা নাম
+Flag Penalty % Cost,পতাকা পেনাল্টি% খরচ
+Flag Penalty Cost,পতাকা জরিমানা ব্যয়
+Flag Penalty Start,পেনাল্টি শুরু করুন
+Flag Penalty Stop,পেনাল্টি স্টপ ফ্ল্যাগ করুন
+Flag Submission Type,পতাকা জমা দেওয়ার ধরণ
+Flag Type,পতাকা প্রকার
+Flags,পতাকা
+Flags / Boxes / Corp.,পতাকা / বাক্স / কর্প।
+Flags Captured,পতাকা ক্যাপচার
+Flags on,পতাকা চালু
+for,জন্য
+Forbidden,নিষিদ্ধ
+Game,খেলা
+Game Control,খেলা নিয়ন্ত্রণ
+Game Information,খেলা তথ্য
+Game Level,খেলা স্তর
+Game Levels,খেলা স্তর
+Game Management,গেম ম্যানেজমেন্ট
+Game Materials,খেলা উপকরণ
+Game Name,খেলার নাম
+Game Progress,খেলা অগ্রগতি
+Garbage File,আবর্জনা ফাইল
+Get help with,সাহায্য নিন
+Get your registration token from reception,অভ্যর্থনা থেকে আপনার নিবন্ধকরণ টোকেন পান
+Glitch in the Matrix,ম্যাট্রিক্সে ভুল
+Global Notifications,গ্লোবাল বিজ্ঞপ্তি
+Handle,হাতল
+Hint,ইঙ্গিত
+Hint not yet taken,ইঙ্গিত এখনও নেওয়া হয়নি
+Hints,সংকেতগুলি
+Hints on,ইঙ্গিত অন
+Hints Taken,ইঙ্গিত নেওয়া হয়েছে
+History,ইতিহাস
+Home,বাড়ি
+How should the next level unlock?,পরবর্তী স্তরটি কীভাবে আনলক করা উচিত?
+"If the flag selection is left empty, the hint will be considered a Box Hint.",পতাকা নির্বাচনটি ফাঁকা রেখে গেলে ইঙ্গিত
+"If this option is disabled, there is no cost for submitting incorrect flags.",যদি এই বিকল্পটি অক্ষম করা হয় তবে ভুল পতাকা জমা দেওয়ার জন্য কোনও মূল্য নেই।
+Import File,ফাইল আমদানি
+Import XML,এক্সএমএল আমদানি করুন
+Import XML,এক্সএমএল আমদানি করুন
+In Progress,চলমান
+"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","এই ক্ষেত্রে, পতাকাটি একটি তারিখ / সময়ের স্ট্রিং। এই পতাকা টাইপটি সাধারণ ডেটটাইম ফর্ম্যাট বৈচিত্রের সাথে মিল রাখার চেষ্টা করবে এবং স্ল্যাশ, ড্যাশ, প্যাডিং, 12 ঘন্টা, 24 ঘন্টা ইত্যাদি মত পার্থক্যগুলির সাথে ডিল করবে এটি কোনও তারিখ, সময় বা তারিখের সময় পরিচালনা করতে পারে।"
+"In this case, the flag is a multiple choice question where the selected option is the token.","এই ক্ষেত্রে, পতাকাটি একাধিক পছন্দ প্রশ্ন যেখানে নির্বাচিত বিকল্পটি টোকেন।"
+"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","এই ক্ষেত্রে, পতাকাটি একটি নিয়মিত প্রকাশ। ব্যবহারকারীর অবশ্যই স্ট্রিং জমা দিতে হবে যা পতাকাটি ক্যাপচারের জন্য প্যাটার্নের সাথে মেলে। ম্যাচগুলি সংবেদনশীল হতে পারে। আপনার রেজেক্স পরীক্ষা করার বিষয়ে নিশ্চিত হন এবং এটি খুব বিস্তৃত নয় তা নিশ্চিত করুন।"
+"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.","এই ক্ষেত্রে, পতাকাটি একটি স্ট্যাটিক স্ট্রিং। পতাকাটি ক্যাপচারের জন্য ব্যবহারকারীকে অবশ্যই সঠিক টোকেন জমা দিতে হবে। প্রারম্ভিক এবং শেষে হোয়াইটস্পেস ছিনিয়ে নেওয়া হয়।"
+Income,আয়
+Incoming Transmission,ইনকামিং ট্রান্সমিশন
+Incorrect,ত্রুটিপূর্ণ
+Incorrect Penalty,ভুল দণ্ড
+indicates use by another player,অন্য খেলোয়াড় দ্বারা ব্যবহার নির্দেশ করে
+INFO,তথ্য
+Information,তথ্য
+Invalid CSRF Token,অবৈধ সিএসআরএফ টোকেন
+IP Address,আইপি ঠিকানা
+IP Version,আইপি সংস্করণ
+It appears you're an unsophisticated script kiddie!,মনে হচ্ছে আপনি একটি অপ্রয়োজনীয় স্ক্রিপ্ট কিডি!
+"It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).","এটি সমস্ত দর্শকদের (জনসাধারণের) কাছে, অনুমোদনপ্রাপ্ত ব্যবহারকারীদের (প্লেয়ার), বা কেবল প্রশাসকগণ (প্রশাসকদের) কাছে দৃশ্যমান হতে পারে।"
+"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.",দেখে মনে হচ্ছে আপনি কোনও URL টি ভুলভাবে লিখেছেন বা এমন কিছু সন্ধান করার চেষ্টা করছেন যা আপনার অ্যাক্সেস না করে।
+"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.","এটি অর্থ সম্পর্কে এবং সেই দক্ষতাগুলি নগদ করার সময়! এই গেমটি একটি ব্যাঙ্কিং সিস্টেম ব্যবহার করার জন্য সেট আপ করা হয়েছে, সুতরাং আপনার ভাগ্য গড়তে এবং আপনার জয়ের জন্য যা প্রয়োজন তা কিনতে কোনও সময় নষ্ট করবেন না।"
+Item Cost,আইটেম ব্যয়
+Join Existing Team,বিদ্যমান দলে যোগদান করুন
+Known IP Addresses,পরিচিত আইপি ঠিকানাগুলি
+Last Ping,শেষ পিং
+Learn,শেখা
+Level,উচ্চতা
+Level Name,স্তরের নাম
+Level Number,স্তর সংখ্যা
+Level to put box in?,বাক্সে রাখার স্তর?
+Limit number of players that can be on any one team,যে কোনও একটি দলে থাকতে পারে এমন খেলোয়াড়ের সীমাবদ্ধ করুন
+"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","একটি পতাকা ক্যাপচার করার প্রচেষ্টা সীমাবদ্ধ করে। সীমাটি পৌঁছে গেলে, পতাকাটিতে আর কোনও পদক্ষেপ নেওয়া যাবে না।"
+Linux,লিনাক্স
+Lock,তালা
+Locked by,দ্বারা লকড
+Login,লগইন
+Login Password,প্রবেশের গুপ্তসংকেত
+Logout,প্রস্থান
+MacOS,ম্যাক অপারেটিং সিস্টেম
+Mainframe Console,মেনফ্রেম কনসোল
+Manage Black Market,ব্ল্যাক মার্কেট পরিচালনা করুন
+Manage Categories,বিভাগগুলি পরিচালনা করুন
+Market Objects,মার্কেট অবজেক্টস
+Max,ম্যাক্স
+Max Flag Attempts,সর্বোচ্চ পতাকা চেষ্টা
+Max PasteBin Size,সর্বাধিক পেস্টবিনের আকার
+Max Team Size,সর্বাধিক দলের আকার
+Maximum Flag Attempts,সর্বাধিক পতাকা প্রচেষ্টা
+Maximum Penalty,সর্বোচ্চ শাস্তি
+Maximum Penalty is determined as,সর্বোচ্চ শাস্তি হিসাবে নির্ধারিত হয়
+Min user password length,সর্বনিম্ন ব্যবহারকারীর পাসওয়ার্ডের দৈর্ঘ্য
+Minimum User Password Length,সর্বনিম্ন ব্যবহারকারীর পাসওয়ার্ড দৈর্ঘ্য
+Mission Progress,মিশন অগ্রগতি
+Missions,মিশন
+Modifies the way flag submission are made.,পতাকা জমা দেওয়ার পদ্ধতিটি পরিবর্তন করে।
+Money,টাকা
+money,টাকা
+Motto,নীতিবাক্য
+Multiple Choice,বহু নির্বাচনী
+Multiple Choice Flag,একাধিক চয়েস পতাকা
+Must be unique,অবশ্যই অনন্য হবে
+MVP,সবচেয়ে মূল্যবান খেলোয়াড়
+MVP - List Top N Payers,এমভিপি - শীর্ষস্থানীয় এন পেয়ারদের তালিকা করুন
+MVP List Top,এমভিপি তালিকার শীর্ষে
+MVP Scoreboard,এমভিপি স্কোরবোর্ড
+MVP Scoreboard,এমভিপি স্কোরবোর্ড
+Name,নাম
+Never,না
+New Bank Account Password,নতুন ব্যাঙ্ক অ্যাকাউন্টের পাসওয়ার্ড
+New Bank Password,নতুন ব্যাঙ্কের পাসওয়ার্ড
+New Box,নতুন বাক্স
+New Category,নতুন বিভাগ
+New Corporation,নতুন কর্পোরেশন
+New Flag,নতুন পতাকা
+New Game Level,নতুন গেম স্তর
+New IP Address,নতুন আইপি ঠিকানা
+New Password,নতুন পাসওয়ার্ড
+New Team,নতুন দল
+New Team Name,নতুন দলের নাম
+No,না
+No Avatar,অবতার নেই
+No Boxes,কোনও বাক্স নেই
+No boxes in this corporation yet,এই কর্পোরেশনে এখনও কোনও বাক্স নেই
+No boxes on this level yet,এখনও এই স্তরের কোনও বাক্স নেই
+No Bribes in Progress,অগ্রগতিতে কোন ঘুষ নেই
+No Completed Bribes,সম্পূর্ণ ঘুষ নেই
+No flags captured yet.,এখনও কোনও পতাকা ধরা পড়ে নি।
+No flags on this box yet,এই বাক্সে এখনও কোনও পতাকা নেই
+No further penalty thereafter.,এরপরে আর কোনও জরিমানা নেই।
+No Lock,কোনও লক নেই
+No name,নামহীন
+No Pending Bribes,মুলতুবি নেই
+No sheep yet - check back later.,এখনও কোনও ভেড়া নেই - পরে আবার পরীক্ষা করুন।
+No Source Code For Sale at This Time,এই সময়ে বিক্রয়ের জন্য কোনও উত্স কোড নেই
+No Tokens in Database,ডাটাবেসে টোকেন নেই
+No upgrades left.,কোনও আপগ্রেড বাকি নেই।
+No Users,কোনও ব্যবহারকারী নেই
+None,না
+Noob Alert,নুব সতর্কতা
+"Not all options are accessible in the web configuration.  For more, see","ওয়েব কনফিগারেশনে সমস্ত অপশন অ্যাক্সেসযোগ্য নয়। আরও জন্য, দেখুন"
+Note,বিঃদ্রঃ
+Note: Files or documents for the challenge can be placed in the Game Materials.,দ্রষ্টব্য: চ্যালেঞ্জের জন্য ফাইল বা দস্তাবেজগুলি গেম সামগ্রীগুলিতে স্থাপন করা যেতে পারে।
+Note: Files or documents for the challenge can be placed in the Game Materials.,দ্রষ্টব্য: চ্যালেঞ্জের জন্য ফাইল বা দস্তাবেজগুলি গেম সামগ্রীগুলিতে স্থাপন করা যেতে পারে।
+NOTE: Max attempts and penalties will not be applied in Single Box mode.,দ্রষ্টব্য: একক বক্স মোডে সর্বাধিক প্রচেষ্টা এবং জরিমানা প্রয়োগ করা হবে না।
+NOTE: This setting is ignored if the box flag submission type is set to Single Box.,দ্রষ্টব্য: বক্স পতাকা জমা দেওয়ার ধরণটি একক বাক্সে সেট করা থাকলে এই সেটিংটি উপেক্ষা করা হবে।
+Notification Message,বিজ্ঞপ্তি বার্তা
+Notifications,বিজ্ঞপ্তিগুলি
+Number of Bots,বট সংখ্যা
+Number of Flags,পতাকা সংখ্যা
+Number of new Level,নতুন স্তরের সংখ্যা
+of Flag Value,পতাকা মান
+of the flag's value. It will start on the,পতাকার মান। এটি শুরু হবে
+Old Password,পুরানো পাসওয়ার্ড
+One submission box for any flag.  Compares attempts against all flags in the box.,যে কোনও পতাকার জন্য একটি জমা দেওয়ার বাক্স। বাক্সের সমস্ত পতাকা বিরুদ্ধে প্রচেষ্টা তুলনা করে।
+only,কেবল
+Optional,ঐচ্ছিক
+Or Choose Existing,বা বিদ্যমান নির্বাচন করুন
+Outcome,ফলাফল
+Outcome,ফলাফল
+Password,পাসওয়ার্ড
+Password Cracking Leaderboard,পাসওয়ার্ড ক্র্যাকিং লিডারবোর্ড
+Password Hash,পাসওয়ার্ড হ্যাশ
+Password Security,পাসওয়ার্ড সুরক্ষা
+Password Upgrade Cost,পাসওয়ার্ড আপগ্রেড ব্যয়
+Passwords Cracked,পাসওয়ার্ড ফাটল
+Paste Name,নাম আটকান
+Paste Text Here,এখানে পাঠ্য আটকান
+PasteBin,PasteBin
+Pastebin Character Limit,পেস্টবিন চরিত্রের সীমা
+Pause Registration,নিবন্ধকরণ বিরতি দিন
+Pause Scoreboard,স্কোরবোর্ড বিরতি দিন
+Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,প্রতিটি ভুল প্রয়াসের জন্য পতাকা মানটির এই শতাংশের দ্বারা স্কোরকে পেনালাইজ করুন (সক্ষম করা থাকলে গতিশীল স্কোরিংয়ের পরে প্রয়োগ করা হবে)।
+Pending,মুলতুবী
+Pending Bribes,মুলতুবি থাকা
+Plain Text,সাধারণ পাঠ্য
+Play Story,গল্প খেলুন
+player,খেলোয়াড়
+Player,খেলোয়াড়
+Player Alias,প্লেয়ার উপনাম
+Player Email,প্লেয়ার ইমেল
+Player Name,খেলোয়াড়ের নাম
+"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","প্লেয়ারের ব্যাঙ্ক অ্যাকাউন্টের পাসওয়ার্ডগুলিও উপলব্ধ, আপনাকে একে অপরের পাসওয়ার্ড ক্র্যাক করতে এবং অর্থ চুরি করতে।"
+Players,প্লেয়ার
+Please do NOT enter your real bank account password.,দয়া করে আপনার আসল ব্যাংক অ্যাকাউন্টের পাসওয়ার্ড প্রবেশ করবেন না।
+points,পয়েন্ট
+Points,পয়েন্ট
+points,পয়েন্ট
+Previous Bribes,পূর্ববর্তী ঘুষ
+Price,মূল্য
+Private,ব্যক্তিগত
+Programming,প্রোগ্রামিং
+Provide the code used to join an existing team.  Visible to other team members on their home page.,বিদ্যমান দলে যোগদানের জন্য ব্যবহৃত কোড সরবরাহ করুন। অন্যান্য দলের সদস্যদের তাদের হোম পৃষ্ঠায় দৃশ্যমান।
+Public,প্রকাশ্য
+Public Team Creation,পাবলিক টিম ক্রিয়েশন
+Public Teams,পাবলিক দল
+Purchase,ক্রয়
+Purchase Unlock,ক্রয় আনলক করুন
+Purchased,কেনা
+Rank By,রেঙ্ক বাই
+Regex Flag,রেজেক্স পতাকা
+Regex Pattern,রেজেক্স প্যাটার্ন
+Register Account,অ্যাকাউন্ট নিবন্ধন করুন
+Registration,নিবন্ধন
+Registration Email,নিবন্ধন ইমেল
+Registration Tokens,নিবন্ধন টোকেন
+Regular Expression,নিয়মিত এক্সপ্রেশন
+Require Email,ইমেল প্রয়োজন
+Reset Actions,ক্রিয়াগুলি পুনরায় সেট করুন
+Reset Game,রিসেট গেম
+Reset Game,রিসেট গেম
+Reset player / team starting points / money,প্লেয়ার / দল শুরু করার পয়েন্ট / অর্থ পুনরায় সেট করুন
+Restrict players bank password to this length,খেলোয়াড়দের ব্যাঙ্কের পাসওয়ার্ড এই দৈর্ঘ্যে সীমাবদ্ধ করুন
+Restrict players user password to this length,খেলোয়াড়ের ব্যবহারকারীর পাসওয়ার্ড এই দৈর্ঘ্যে সীমাবদ্ধ করুন
+Resume Registration,পুনরায় নিবন্ধকরণ শুরু করুন
+Resume Scoreboard,স্কোরবোর্ড পুনরায় শুরু করুন
+Return to Edit,সম্পাদনায় ফিরে আসুন
+Return to Missions,মিশনে ফিরে আসুন
+Reward,পুরস্কার
+Role,ভূমিকা
+Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,বাগদানের নিয়ম: গেম স্কোরবোর্ড প্ল্যাটফর্ম আক্রমণ করবেন না। কোনও গেমের উদ্দেশ্য দ্বারা নির্দিষ্ট না করা থাকলে নেটওয়ার্কে বিদ্যমান অ্যাকাউন্টগুলির পাসওয়ার্ডগুলি পরিবর্তন করবেন না।
+S.W.A.T,S.W.A.T
+Save,সংরক্ষণ করুন
+Score,স্কোর
+Scoreboard,স্কোরবোর্ড
+Scoreboard Rank By,স্কোরবোর্ডের র‌্যাঙ্ক দ্বারা
+Scoreboard Visibility,স্কোরবোর্ডের দৃশ্যমানতা
+See All,সবগুলো দেখ
+Select a Theme,একটি থিম নির্বাচন করুন
+Select Avatar,অবতারটি নির্বাচন করুন
+Select New Avatar,নতুন অবতার নির্বাচন করুন
+Send,পাঠান
+Send a global notification to all players,সমস্ত খেলোয়াড়কে একটি বিশ্বব্যাপী বিজ্ঞপ্তি প্রেরণ করুন
+Set Countdown Timer,কাউন্টডাউন টাইমার সেট করুন
+Set the game countdown timer,গেম কাউন্টডাউন টাইমার সেট করুন
+Settings,সেটিংস
+Share your team code to allow other players to join,অন্যান্য খেলোয়াড়দের যোগদানের অনুমতি দেওয়ার জন্য আপনার দলের কোডটি ভাগ করুন
+Shared Files,ভাগ করা ফাইল
+Sheep,মেষ
+Show MVP,এমভিপি দেখান
+Since Score,স্কোর যেহেতু
+Single Box,একক বাক্স
+Skill Progress,দক্ষতা অগ্রগতি
+Source Code,সোর্স কোড
+Source Code Archive,উত্স কোড সংরক্ষণাগার
+Source Code Market,উত্স কোড বাজার
+Special Thanks,বিশেষ ধন্যবাদ
+Start a New Team,একটি নতুন দল শুরু করুন
+Start the Game,খেলা শুরু কর
+start with 0 points,0 পয়েন্ট দিয়ে শুরু করুন
+Starting Money,শুরু টাকা
+Static Flag,স্থির পতাকা
+Static Token,স্ট্যাটিক টোকেন
+Statistics,পরিসংখ্যান
+stop on & after,উপর এবং পরে থামুন
+Stop the Game,খেলা বন্ধ করুন
+Story,গল্প
+Story Mode,বিবরণ মোড
+Submit,জমা দিন
+Submit a Bug,একটি বাগ জমা দিন
+Submit a Flag,একটি পতাকা জমা দিন
+Submit Bribe,ঘুষ জমা দিন
+Submit Bribes,ঘুষ জমা দিন
+Submit Flag,পতাকা জমা দিন
+SUCCESS,SUCCESS টি
+Success!,সফল!
+Successful,সফল
+Successful Captures,সফল ক্যাপচারগুলি
+Successful Registration,সফল নিবন্ধকরণ
+Successfully created a new account for,সাফল্যের জন্য একটি নতুন অ্যাকাউন্ট তৈরি
+Summary,সারাংশ
+Supports,সমর্থন
+Switch Level,স্যুইচ স্তর
+System Type,সিস্টেমের ধরন
+Take,গ্রহণ করা
+Take Hint,ইঙ্গিত নিন
+Taken,ধরা
+Target,লক্ষ্য
+Target Handle,লক্ষ্য হ্যান্ডেল
+Target Management,টার্গেট ম্যানেজমেন্ট
+team,টীম
+Team,টীম
+Team Avatar,দল অবতার
+Team Code,টিম কোড
+Team File Share,দল ফাইল ভাগ
+Team Information,দল তথ্য
+Team Motto,দল মোটো
+Team Name,দলের নাম
+Team PasteBin,টিম পেস্টবিন
+Team Play,টিম খেলার
+Team Shares,দল ভাগ
+Team Sharing,দল ভাগ করে নেওয়া
+Teams,দলসমূহ
+Test Flag,পরীক্ষার পতাকা
+The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,কালো বাজার খোলা এবং আপনি একটি ছেলে জানেন। একটি টার্গেটের সোর্স কোড বা S.W.A.T. ডাউনলোড করুন অন্যান্য খেলোয়াড়দের (ইন-গেম) পুলিশকে ঘুষ দিয়ে।
+The cost to take the hint.  Can be >= 0.,ইঙ্গিত নিতে খরচ। > = 0 হতে পারে।
+The deduction is,ছাড় হয়
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.",কেবলমাত্র অন্য সম্ভাবনাটি হ'ল আমি কোডটি কয়েকটি গণ্ডগোল করে দিয়েছি এবং এটি খুব সম্ভবত বলে মনে হচ্ছে না।
+The starting money for a new,একটি নতুন জন্য শুরু টাকা
+Theme,বিষয়
+There are currently no shared files.,বর্তমানে কোনও ভাগ করা ফাইল নেই।
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","এই পতাকাগুলি ফাইল, ব্যবহারকারীদের পতাকাটি ক্যাপচারের জন্য অবশ্যই একই ফাইলটি জমা দিতে হবে। সার্ভারে কেবলমাত্র ফাইলের একটি হ্যাশ (SHA1) সঞ্চিত রয়েছে।"
+"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","এই গেমটি গতিশীল স্কোরিং ব্যবহারের জন্য সেট আপ করা হয়েছে, অর্থাত অন্যান্য খেলোয়াড়গুলি পতাকা ক্যাপচার করে, এই পতাকাগুলির মান হ্রাস পাবে। সুতরাং তাদের দ্রুত ধরুন বা হারাতে হবে!"
+This is a test flag/string the user could input for credit.,এটি একটি পরীক্ষামূলক পতাকা / স্ট্রিং যা ব্যবহারকারী ক্রেডিটের জন্য ইনপুট দিতে পারে।
+This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,এটি কোনও খেলোয়াড়কে S.W.A.T. কে প্রদান করতে হবে amount অন্য খেলোয়াড়দের অ্যাকাউন্ট। একই প্লেয়ারের পরবর্তী সোয়াতগুলিও প্রতিবার এই পরিমাণে বৃদ্ধি করা হয়।
+This is the amount a player must pay to upgrade their bank passwords hashing algorithm,একজন খেলোয়াড়কে তাদের ব্যাঙ্কের পাসওয়ার্ডগুলি হ্যাশিং অ্যালগরিদম আপগ্রেড করতে এই পরিমাণটি দিতে হবে
+This is the amount awarded for capturing the flag.,পতাকাটি ক্যাপচারের জন্য এই পরিমাণ পুরষ্কার।
+This is the amount awarded for completion of the box.,এই বাক্সটি সমাপ্ত করার জন্য পুরষ্কার প্রাপ্ত পরিমাণ।
+This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually,প্রতি বিরতিতে কোনও দলকে প্রতি বট দেওয়া হয় এটিই। ব্যবধানটি ম্যানুয়ালি .cfg ফাইলে সেট করতে হবে
+This is the box the flag is located on.,পতাকাটি বক্সটিতে অবস্থিত।
+This is the description,এই বর্ণনা
+This is the maximum number of players displayed on the MVP list (default 10) with a score > 0.,এটি এমভিপি তালিকার (ডিফল্ট 10) স্কোর> 0 দিয়ে প্রদর্শিত সর্বাধিক সংখ্যক খেলোয়াড়।
+This is the message displayed to the user once the box is completed.,বাক্সটি শেষ হয়ে গেলে এটি ব্যবহারকারীর কাছে প্রদর্শিত বার্তা।
+This is the message displayed to the user once the flag is captured.,পতাকাটি ক্যাপচার হওয়ার পরে এটি ব্যবহারকারীর কাছে প্রদর্শিত বার্তা।
+This is the name that will appear in the upper left corner,এই নামটি উপরের বাম কোণে প্রদর্শিত হবে
+This is the the limit of characters allowed for a pastebin post.,এটি কোনও পেস্টবিন পোস্টের জন্য অনুমোদিত অক্ষরের সীমা।
+This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,আপনি পতাকাটি হিসাবে প্রদর্শিত হতে চান এটি। অর্ডার দ্বারা স্বয়ংক্রিয়ভাবে নামকরণ করতে ফাঁকা ছেড়ে দিন।
+This selection determines the method by which the scoreboard is primarily ranked.,এই নির্বাচনটি সেই পদ্ধতিটি নির্ধারণ করে যার মাধ্যমে স্কোরবোর্ডটি প্রাথমিকভাবে র‌্যাঙ্ক করা হয়।
+This selection determines the visibility of the scoreboard menu and pages.,এই নির্বাচনটি স্কোরবোর্ড মেনু এবং পৃষ্ঠাগুলির দৃশ্যমানতা নির্ধারণ করে।
+"This will also delete associated IP addresses, boxes, and flags.","এটি সম্পর্কিত আইপি ঠিকানা, বাক্স এবং পতাকাগুলিও মুছে ফেলবে।"
+"This will also delete associated IP addresses, hints, and flags.","এটি সম্পর্কিত আইপি ঠিকানাগুলি, ইঙ্গিতগুলি এবং পতাকাগুলিও মুছে ফেলবে।"
+This will also delete boxes and flags associated with this level.,এটি এই স্তরের সাথে যুক্ত বাক্স এবং পতাকাগুলিও মুছে ফেলবে।
+This will delete the player and the associated user account!,এটি প্লেয়ার এবং সম্পর্কিত ব্যবহারকারী অ্যাকাউন্ট মুছবে!
+This will delete the team and any associated user accounts!,এটি দল এবং কোনও সম্পর্কিত ব্যবহারকারী অ্যাকাউন্ট মুছে ফেলবে!
+Threshold,গোবরাট
+Time,সময়
+"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.","বোটনেট তৈরির সময়। মেশিনগুলিকে লক্ষ্য করতে একটি ছোট বট প্রোগ্রাম আপলোড করে, আপনার বটনেটের প্রতিটি বটের জন্য আপনাকে পর্যায়ক্রমে পুরস্কৃত করা যেতে পারে; যত বড় বটনেট তত বেশি পুরস্কার।"
+to Add,যোগ করতে
+to Add or Subtract,যোগ বা বিয়োগ করতে
+"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.","এই আরটিবি ইনস্ট্যান্সটি পুনরুদ্ধার করতে, আপনারও ফাইল ডিরেক্টরিতে থাকা সামগ্রীগুলির প্রয়োজন হতে পারে, রুটথবক্সসিএফজি অন্তর্ভুক্ত করতে।"
+Token,টোকেন
+Token Value,টোকেন মান
+Tools,সরঞ্জামসমূহ
+Tools & Upgrades,সরঞ্জাম ও আপগ্রেড
+Total Cash Stolen,মোট নগদ চুরি
+Type,আদর্শ
+Unknown,অজানা
+Unlock,আনলক করুন
+Unlock Cost,আনলক ব্যয়
+Unlock Level,আনলক স্তর
+Unlocks,খুলে
+Unlocks after,পরে আনলক হয়
+Unlocks for,জন্য আনলক
+Update Bank Password,ব্যাংক পাসওয়ার্ড আপডেট করুন
+Update Configuration,আপডেট কনফিগারেশন
+Update Password,পাসওয়ার্ড আপডেট করুন
+Update RootTheBox,রুট দোবক্স আপডেট করুন
+Upgrade to,আপগ্রেড করুন
+Upload,আপলোড
+Upload Avatar,অবতারটি আপলোড করুন
+Upload Avatar File,অবতার ফাইল আপলোড করুন
+Upload Files,ফাইল আপলোড কর
+Used,ব্যবহৃত
+Used to secure your (in-game) bank account.,আপনার (ইন-গেম) ব্যাংক অ্যাকাউন্ট সুরক্ষিত করতে ব্যবহৃত।
+User Handle,ব্যবহারকারী হ্যান্ডেল
+User Management,ইউজার ম্যানেজমেন্ট
+Users / Teams,ব্যবহারকারী / দল
+Value,মান
+View,দৃশ্য
+View Box,বক্স দেখুন
+View Details,বিস্তারিত দেখুন
+Visable,Visable
+Visable to Players,খেলোয়াড়দের কাছে দৃশ্যমান
+Waiting for the game to start‚Ä¶,গেমটি শুরু হওয়ার অপেক্ষায় ‚Ä¶
+Wall of Sheep,ওয়াল অফ ভেড়া
+WARNING,সতর্কতামূলক
+Welcome,স্বাগত
+Welcome to the computer war game where security professionals can practice and learn.,সুরক্ষা পেশাদাররা অনুশীলন করতে এবং শিখতে পারে এমন কম্পিউটার ওয়ার গেমটিতে আপনাকে স্বাগতম।
+Welcome to the Scene,দৃশ্যে স্বাগতম
+What is the name of this box?,এই বাক্সটির নাম কী?
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",আপনার কর্পোরেশন নাম কি? যদি আপনি কর্পোরেশনগুলি ব্যবহার করার পরিকল্পনা না করেন তবে কেবল কোনও নাম ছাড়াই একটি তৈরি করুন।
+What is your motto?,আপনার মূলমন্ত্রটি কী?
+What is your teams motto?,আপনার দলগুলির মূলমন্ত্রটি কী?
+What type of system is this?,এটি কোন ধরণের সিস্টেম?
+Whats the difficulty of the box?,বক্সের অসুবিধা কী?
+When banking is disabled,যখন ব্যাংকিং অক্ষম থাকে
+"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.","জরিমানা প্রয়োগ কখন শুরু করবেন। উদাহরণস্বরূপ, আপনি প্রথম ভুল প্রচেষ্টা মুক্ত হতে চাইতে পারেন, তবে পরবর্তী প্রচেষ্টাটিকে শাস্তি দিন।"
+"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","জরিমানা প্রয়োগ কখন বন্ধ করবেন। উদাহরণস্বরূপ, আপনি কেবলমাত্র পতাকাঙ্কের কয়েকটি নির্দিষ্ট মূল্যকে দণ্ডিত করতে এবং আরও কোনও প্রচেষ্টা নিখরচায় করার অনুমতি দিতে পারেন, এইভাবে সমস্ত পতাকার কিছু মূল্য থাকতে পারে।"
+when using banking.,ব্যাংকিং ব্যবহার করার সময়।
+Windows,উইন্ডোজ
+With contributions from,এর অবদানের সাথে
+XML File,এক্সএমএল ফাইল
+Yes,হাঁ
+You are not on a team,আপনি একটি দলে নেই
+You do not have access to this level yet.,আপনার এখনও এই স্তরে অ্যাক্সেস নেই।
+You do not own this upgrade.,আপনি এই আপগ্রেডের মালিক নন।
+You have not submitted any bribes yet.,আপনি এখনও কোন ঘুষ জমা দেন নি।
+"Your email, visible to game administrators.","আপনার ইমেল, গেম প্রশাসকদের কাছে দৃশ্যমান।"
+"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","আপনার হ্যান্ডেলটি অবশ্যই 3-16 আলফা-সংখ্যার অক্ষর হতে হবে। অ্যান্ডস্কোর, ড্যাশ এবং বিন্দু অনুমোদিত।"
+"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","আপনার নাম, গেম প্রশাসকদের কাছে দৃশ্যমান। আপনার নামটি 3-64 আলফা-সংখ্যার অক্ষর হতে পারে"

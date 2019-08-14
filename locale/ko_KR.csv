@@ -1,0 +1,649 @@
+﻿(stop - start) * cost.,(중지-시작) * 비용.
+$,$
+A brief description of the box,상자에 대한 간단한 설명
+About,약
+Accept,수락
+Accept Bribe?,뇌물을 받습니까?
+Accept this bribe?,이 뇌물을 받아?
+Accepted,받아 들여
+Accepted / In Jail,허용 / 감옥에서
+Account Locked!,잠긴 계정!
+Account Password,계정 비밀번호
+Active Bots,활성 봇
+Add,더하다
+Add,더하다
+add,더하다
+Add a Category for Boxes.,박스 카테고리를 추가합니다.
+Add Flags,플래그 추가
+Add Hint,힌트 추가
+Add IP address,IP 주소 추가
+Add IP Address,IP 주소 추가
+add some,약간 추가
+Add Source Code,소스 코드 추가
+Add Source Code to Market,시장에 소스 코드 추가
+Add to Market,시장에 추가
+Address,주소
+Admin,관리자
+Admin Home,관리 홈
+Administrator Panel,관리자 패널
+Admins,관리자
+All Notifications,모든 알림
+and so on,등등
+Apply penalty on attempt,시도시 페널티 적용
+Are you a Cylon?,Cylon입니까?
+Are You Elite,당신은 엘리트입니까
+Are you sure you want to buy this code?,이 코드를 구매 하시겠습니까?
+Are you sure you want to delete this box?,이 상자를 삭제 하시겠습니까?
+Are you sure you want to delete this category?,이 카테고리를 삭제 하시겠습니까?
+Are you sure you want to delete this corporation?,이 회사를 삭제 하시겠습니까?
+Are you sure you want to delete this file?,이 파일을 삭제 하시겠습니까?
+Are you sure you want to delete this flag?,이 플래그를 삭제 하시겠습니까?
+Are you sure you want to delete this game level?,이 게임 레벨을 삭제 하시겠습니까?
+Are you sure you want to delete this hint?,이 힌트를 삭제 하시겠습니까?
+Are you sure you want to delete this IP address?,이 IP 주소를 삭제 하시겠습니까?
+Are you sure you want to delete this source code?,이 소스 코드를 삭제 하시겠습니까?
+Are you sure you want to delete this user?,이 사용자를 삭제 하시겠습니까?
+Are you sure you want to delete?,삭제 하시겠습니까?
+Arrest Player,체포 선수
+attempt,시도
+attempt and continue until the,시도하고 계속할 때까지
+Attempts,시도
+Authenticate,인증
+Authentication Failure,인증 실패
+Authentication Required,인증 필요
+Avatar,화신
+Backup/Restore,백업 / 복원
+Ban IP Address,금지 IP 주소
+Bank Account,은행 계좌
+Bank Account Balance,은행 계좌 잔고
+Bank Hash Algorithm,은행 해시 알고리즘
+Bank Password,은행 비밀번호
+Bank Password Length,은행 비밀번호 길이
+Banking System,금융 시스템
+Banned IPs,금지 된 IP
+BEGIN SECURE COMMUNIQUE,안전한 보안 커뮤니케이션
+Black Market,암시장
+Bonus reward for those that complete the level.,레벨을 완료 한 사람들에게 보너스 보상.
+Bot,봇
+Bot Reward,봇 보상
+Botnet,봇넷
+Botnet Command & Control,봇넷 명령 및 제어
+Botnet Monitor,봇넷 모니터
+Botnets,봇넷
+Bots,봇
+Box,상자
+Box Difficulty,상자 난이도
+Box Hints,박스 힌트
+Box Hints Taken,박스 힌트
+Box Name,박스 이름
+Boxes,박스
+Bribe,뇌물
+Bribe Amount,뇌물 금액
+Bribe History,뇌물 역사
+Bribe Pending,뇌물 보류
+Bribe Price,뇌물 가격
+Bribes in Progress,진행중인 뇌물
+Buy,사다
+Buy Source Code,소스 코드 구매
+Buy Upgrade,구매 업그레이드
+bytes,바이트
+Capture Message,메시지 캡처
+Capture Rate,캡처 속도
+Captures,캡처
+Case-Sensitive,대소 문자 구분
+Cash Stolen,현금 도난
+Categories,카테고리
+Category,범주
+Category box belongs too?,카테고리 상자도 속해 있습니까?
+Category Name,카테고리 이름
+Change,변화
+Change Avatar,아바타 변경
+Characters,캐릭터
+Charts,차트
+Chat,잡담
+Checksum,체크섬
+Choose,고르다
+Choose a name for your new team!,새 팀의 이름을 선택하십시오!
+Choose Avatar,아바타를 선택하십시오
+Classic,권위 있는
+Clear,명확한
+Clear all notifications and game history,모든 알림 및 게임 기록 지우기
+Clear all team / player flag captures,모든 팀 / 플레이어 깃발 캡처 지우기
+Clear all team pastebin and file shares,모든 팀 pastebin 및 파일 공유 지우기
+Clear market items or source code purchases,명확한 시장 품목 또는 소스 코드 구매
+Click here to login,로그인하려면 여기를 클릭하십시오
+Close,닫기
+Command & Control,명령 및 제어
+Complete,완전한
+Complete Bribe,완전한 뇌물
+Complete this bribe?,이 뇌물을 완료 하시겠습니까?
+Completed,완료
+Completed Bribes,완료된 뇌물
+Completion Message,완료 메시지
+completion of Level,레벨 완료
+Completion Reward,완료 보상
+Configuration,구성
+Confirm,확인
+Confirm Account Password,계정 비밀번호 확인
+Confirm New Password,새 암호를 확인합니다
+Confirm Password,비밀번호 확인
+Content,함유량
+Content Missing,내용 누락
+Corporation,법인
+Corporation box belongs too?,회사 상자도 속해 있습니까?
+Corporation Name,법인 명
+Corporations,법인
+Cost,비용
+Cost to open this level and see flags,이 레벨을 열고 깃발을 보는 비용
+Cracked by,금이 간
+Create,몹시 떠들어 대다
+Create Box,상자 만들기
+Create Category,카테고리 만들기
+Create Corporation,회사 만들기
+Create Datetime Flag,날짜 / 시간 플래그 생성
+Create File Flag,파일 플래그 생성
+Create Flag,깃발 만들기
+Create Game Level,게임 레벨 만들기
+Create Hint,힌트 만들기
+Create Message,메시지 작성
+Create Multiple Choice Flag,객관식 깃발 만들기
+Create New Paste,새 붙여 넣기 만들기
+Create Notification,알림 만들기
+Create Regex Flag,정규식 플래그 만들기
+Create Static Flag,정적 플래그 생성
+Create Team,팀 만들기
+Created,만들어진
+Current algorithm,현재 알고리즘
+Current Bank Account Password,현재 은행 계좌 비밀번호
+Current Bank Password,현재 은행 비밀번호
+Current Level,현재 레벨
+Current Level,현재 레벨
+CyberChef,사이버 셰프
+Data Points,데이터 점수
+Date,날짜
+Datetime Flag,날짜 / 시간 플래그
+Datetime Token,날짜 / 시간 토큰
+DEBUG,디버그
+Decline,쇠퇴
+Decline Bribe?,뇌물을 거절 하시겠습니까?
+Decline this bribe?,이 뇌물을 거절 하시겠습니까?
+Declined,거부
+Decrease flag reward by this percent per capture.,깃발 보상을 캡처 당이 퍼센트만큼 줄입니다.
+deduct on & after,공제 후
+defaults to,기본값은
+Delete,지우다
+Delete Box,상자 삭제
+Delete Category,카테고리 삭제
+Delete Corporation,회사 삭제
+Delete File Upload,파일 업로드 삭제
+Delete Flag,플래그 삭제
+Delete Game Level,게임 레벨 삭제
+Delete Hint,힌트 삭제
+Delete IP Address,IP 주소 삭제
+Delete Player,플레이어 삭제
+Delete Source Code,소스 코드 삭제
+Delete Team,팀 삭제
+Delete User,사용자 삭제
+Dependent Flag,종속 플래그
+Description,기술
+DESCRIPTION,기술
+Details,세부
+Difficulty,어려움
+Difficulty Rating,난이도
+Disable,비활성화
+Disabling this option will skip the story line and give the player an instant capture message.,이 옵션을 비활성화하면 스토리 라인을 건너 뛰고 플레이어에게 즉석 캡처 메시지가 표시됩니다.
+Display Hints Taken,찍은 디스플레이 힌트
+Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,지시가없는 한 커뮤니티 플래그를 삭제하거나 수정하지 마십시오. 게임 목표에 설명되어 있지 않은 한 다른 플레이어를 공격하지 마십시오.
+Download,다운로드
+Download File,파일 다운로드
+Download the command line botnet monitor,명령 행 봇넷 모니터 다운로드
+Dynamic Scoring,다이나믹 스코어링
+Each flag has a submit.  The player will choose the flag they intend to capture.,각 플래그에는 제출이 있습니다. 플레이어는 캡처하려는 깃발을 선택합니다.
+"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",각 플레이어는 다양한 난이도와 정교함을 목표로 깃발을 모으고 영광을 얻습니다. 행운을 빕니다!
+Edit,편집하다
+Edit Account,계정 편집
+Edit Box,편집 상자
+Edit Category,카테고리 편집
+Edit Corporation,회사 편집
+Edit Flag,플래그 편집
+Edit Flag,플래그 편집
+Edit Game Level,게임 레벨 편집
+Edit Hint,힌트 편집
+Edit Level,레벨 편집
+Edit Market Item,시장 항목 편집
+Edit Player,플레이어 편집
+Edit Team,팀 편집
+Edit User,사용자 편집
+Email,이메일
+EMPTY,빈
+Enable,사용
+"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",이 기능을 사용하면 플레이어가 등록 중에 자신의 팀을 만들 수 있습니다. 이 옵션을 비활성화하면 관리자가 플레이어가 참가할 팀을 만들어야합니다.
+Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,이 기능을 활성화하면 플레이어가 게임 내에서 코드 (파스트 빈)와 파일을 공유 할 수 있습니다. 이 기능을 비활성화하면 도구 메뉴에서이 옵션이 제거됩니다.
+"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","이 기능을 사용하면 팀이 연방 준비 제도 이사회, 소스 코드 시장 또는 SWAT와 같은 업그레이드를 구입할 수 있습니다."
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.",이 기능을 사용하면 게임에서 추가 될 수있는 플래그 또는 상자 캡처 메시지를 표시 할 수 있습니다. 기본적으로 게임은 임무를 부여하는 고용주 Morris의 스토리를 따릅니다.
+"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",이 기능을 활성화하면 잘못된 캡처 시도에 대해 패널티가 적용됩니다. 페널티는 플래그 값의 감소가 아니라 점수에서 즉시 공제됩니다.
+"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.",이 기능을 사용하면 캡처 수에 따라 플래그에 대한 보상이 줄어 듭니다. 이 옵션을 비활성화하면 다른 플레이어가 캡처 할 때 플래그 값이 일정하게 유지됩니다.
+Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,이 기능을 사용하면 팀이나 플레이어가 점수 판에서 가져온 힌트 수를 표시합니다. 힌트가없는 경우에 유용합니다. 점수 나 플래그가 같은 경우 낮은 힌트 카운트가 정렬에 사용됩니다. 이 옵션을 비활성화하면 점수 판에서 힌트 개수가 제거됩니다.
+"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.",이 기능을 활성화하면 플레이어 MVP 스코어 보드가 표시됩니다. 팀에 포인트를 제공 한 모든 플레이어가 표시됩니다. 이 옵션을 비활성화하면 MVP Scoreboard가 숨겨집니다.
+Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,이 기능을 사용하려면 플레이어가 새 계정을 만들려면 유효한 등록 토큰을 제공해야합니다. 등록 토큰은 관리 인터페이스에서 작성됩니다.
+Enabling this feature will require players to provide an email address in order to create a new account.,이 기능을 사용하려면 플레이어가 새 계정을 만들려면 이메일 주소를 제공해야합니다.
+Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,이 기능을 사용하면 게임의 모든 플레이어에게 플래그 및 레벨 잠금 해제 알림이 전송됩니다. 이 옵션을 비활성화하면 해당 알림이 팀 구성원으로 제한됩니다.
+"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.",이 기능을 사용하면 팀 경쟁 플레이를위한 게임 및 스코어 보드가 설정됩니다. 이 옵션이 비활성화되면 게임은 개별 경쟁 플레이를 위해 설정됩니다.
+"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.",이 기능을 사용하면 게임이 돈 기반 점수 시스템을 사용하도록 설정됩니다. 이 옵션을 비활성화하면 게임은 포인트 기반 점수 시스템을 사용합니다.
+"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.",이 옵션을 활성화하면 토큰이 대소 문자를 구분합니다. 이 옵션을 비활성화하면 응답 토큰은 대소 문자를 구분하지 않습니다.
+"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.",이 옵션을 활성화하면 토큰이 대소 문자를 구분합니다. 이 옵션을 비활성화하면 응답 토큰은 대소 문자를 구분합니다.
+Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,이 설정을 활성화하면 봇넷 기능이 활성화됩니다. 팀은 자신이 소유 한 상자에서 봇 실행 파일을 실행할 수 있으며 시간이 지남에 따라 각 봇에 대해 지불됩니다.
+END SECURE COMMUNIQUE,안전한 통신 종료
+Enter a complex password of,복잡한 비밀번호를 입력하십시오
+Enter a Matching Flag,일치하는 플래그를 입력하십시오
+Enter Choice,초이스 입력
+Enter the same password as before,이전과 동일한 비밀번호를 입력하십시오
+ERROR,오류
+Export Game Objects,게임 오브젝트 내보내기
+Export XML,XML 내보내기
+Export XML,XML 내보내기
+Failed Attempts,실패한 시도
+Failed Logins,로그인 실패
+Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,실패에는 비용이 듭니다. 잘못된 답변을 제출할 때 벌칙이 적용되므로주의하십시오.
+Federal Reserve,연방 준비금
+Federal Reserve Bank,연방 준비 은행
+File,파일
+File Description,파일 설명
+File Flag,파일 플래그
+File Name,파일 이름
+File Sharing,파일 공유
+File Size,파일 크기
+First Login,첫 로그인
+Flag,깃발
+Flag Decrease Value,플래그 감소 값
+Flag Details,플래그 세부 사항
+Flag File,플래그 파일
+Flag Hints,깃발 힌트
+Flag Name,깃발 이름
+Flag Penalty % Cost,페널티 페널티 % 비용
+Flag Penalty Cost,페널티 비용
+Flag Penalty Start,페널티 킥 시작
+Flag Penalty Stop,페널티 스톱
+Flag Submission Type,플래그 제출 유형
+Flag Type,플래그 유형
+Flags,플래그
+Flags / Boxes / Corp.,깃발 / 상자 / 공사
+Flags Captured,캡처 한 플래그
+Flags on,에 플래그
+for,...에 대한
+Forbidden,금지
+Game,경기
+Game Control,게임 컨트롤
+Game Information,게임 정보
+Game Level,게임 레벨
+Game Levels,게임 레벨
+Game Management,게임 관리
+Game Materials,게임 재료
+Game Name,게임 이름
+Game Progress,게임 진행
+Garbage File,쓰레기 파일
+Get help with,도움 받기
+Get your registration token from reception,리셉션에서 등록 토큰 받기
+Glitch in the Matrix,매트릭스의 글리치
+Global Notifications,글로벌 알림
+Handle,핸들
+Hint,힌트
+Hint not yet taken,아직 가져 오지 않은 힌트
+Hints,힌트
+Hints on,힌트
+Hints Taken,힌트
+History,역사
+Home,집
+How should the next level unlock?,다음 레벨은 어떻게 잠금 해제해야합니까?
+"If the flag selection is left empty, the hint will be considered a Box Hint.",플래그 선택이 비어 있으면 힌트가 고려됩니다.
+"If this option is disabled, there is no cost for submitting incorrect flags.",이 옵션을 비활성화하면 잘못된 플래그를 제출하는 데 드는 비용이 없습니다.
+Import File,파일 가져 오기
+Import XML,XML 가져 오기
+Import XML,XML 가져 오기
+In Progress,진행중
+"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","이 경우 플래그는 날짜 / 시간 문자열입니다. 이 플래그 유형은 일반적인 날짜 / 시간 형식 변형과 일치하고 슬래시, 대시, 패딩, 12 시간, 24 시간 등과 같은 차이점을 처리합니다. 날짜, 시간 또는 날짜 / 시간을 처리 할 수 ​​있습니다."
+"In this case, the flag is a multiple choice question where the selected option is the token.",이 경우 플래그는 선택된 옵션이 토큰 인 객관식 질문입니다.
+"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",이 경우 플래그는 정규식입니다. 플래그를 캡처하려면 패턴과 일치하는 문자열을 제출해야합니다. 일치하지 않을 수 있습니다. 정규식을 테스트하고 너무 광범위하지 않은지 확인하십시오.
+"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",이 경우 플래그는 정적 문자열입니다. 사용자는 정확한 토큰을 제출하여 플래그를 캡처해야합니다. 시작과 끝의 공백이 제거됩니다.
+Income,수입
+Incoming Transmission,들어오는 전송
+Incorrect,잘못된
+Incorrect Penalty,잘못된 페널티
+indicates use by another player,다른 플레이어의 사용을 나타냅니다
+INFO,정보
+Information,정보
+Invalid CSRF Token,유효하지 않은 CSRF 토큰
+IP Address,IP 주소
+IP Version,IP 버전
+It appears you're an unsophisticated script kiddie!,당신은 정교하지 않은 스크립트 아동 인 것 같습니다!
+"It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).","모든 방문자 (공개), 인증 된 사용자 (플레이어) 또는 관리자 (관리자) 만 볼 수 있습니다."
+"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.",URL을 잘못 입력했거나 액세스 권한이없는 것을 찾으려고 시도한 것 같습니다.
+"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.",그것은 돈에 관한 것입니다. 그리고 그 기술에 투자 할 시간입니다! 이 게임은 뱅킹 시스템을 사용하도록 설정되었으므로 재산을 쌓고 이길 필요가있는 것을 구매할 시간을 낭비하지 마십시오.
+Item Cost,아이템 비용
+Join Existing Team,기존 팀 가입
+Known IP Addresses,알려진 IP 주소
+Last Ping,마지막 핑
+Learn,배우다
+Level,수평
+Level Name,레벨 이름
+Level Number,레벨 번호
+Level to put box in?,상자를 넣을 수준?
+Limit number of players that can be on any one team,한 팀에 참여할 수있는 플레이어 수 제한
+"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",플래그 캡처 시도 횟수를 제한합니다. 한도에 도달하면 해당 플래그에 대한 추가 조치를 수행 할 수 없습니다.
+Linux,리눅스
+Lock,자물쇠
+Locked by,에 의해 잠겨
+Login,로그인
+Login Password,로그인 비밀번호
+Logout,로그 아웃
+MacOS,맥 OS
+Mainframe Console,메인 프레임 콘솔
+Manage Black Market,암시장 관리
+Manage Categories,카테고리 관리
+Market Objects,시장 객체
+Max,맥스
+Max Flag Attempts,최대 깃발 시도
+Max PasteBin Size,최대 PasteBin 크기
+Max Team Size,최대 팀 규모
+Maximum Flag Attempts,최대 플래그 시도
+Maximum Penalty,최대 페널티
+Maximum Penalty is determined as,최대 페널티는 다음과 같이 결정됩니다
+Min user password length,최소 사용자 비밀번호 길이
+Minimum User Password Length,최소 사용자 비밀번호 길이
+Mission Progress,미션 진행
+Missions,미션
+Modifies the way flag submission are made.,플래그 제출 방식을 수정합니다.
+Money,돈
+money,돈
+Motto,금언
+Multiple Choice,다중 선택
+Multiple Choice Flag,객관식 깃발
+Must be unique,특별해야 해
+MVP,MVP
+MVP - List Top N Payers,MVP-상위 N 명의 지불 인 나열
+MVP List Top,MVP 목록 상단
+MVP Scoreboard,MVP 스코어 보드
+MVP Scoreboard,MVP 스코어 보드
+Name,이름
+Never,못
+New Bank Account Password,새로운 은행 계좌 비밀번호
+New Bank Password,새로운 은행 비밀번호
+New Box,새 상자
+New Category,새 분류
+New Corporation,새로운 회사
+New Flag,새로운 깃발
+New Game Level,새로운 게임 레벨
+New IP Address,새로운 IP 주소
+New Password,새 비밀번호
+New Team,새로운 팀
+New Team Name,새로운 팀 이름
+No,아니
+No Avatar,아바타 없음
+No Boxes,상자 없음
+No boxes in this corporation yet,이 회사에는 아직 상자가 없습니다.
+No boxes on this level yet,이 레벨에 아직 상자가 없습니다
+No Bribes in Progress,진행중인 뇌물 없음
+No Completed Bribes,완료된 뇌물 없음
+No flags captured yet.,아직 캡처 된 플래그가 없습니다.
+No flags on this box yet,이 상자에 아직 깃발이 없습니다
+No further penalty thereafter.,그 이후에는 더 이상 패널티가 없습니다.
+No Lock,잠금 없음
+No name,이름이 없습니다
+No Pending Bribes,보류중인 뇌물 금지
+No sheep yet - check back later.,아직 양이 없습니다. 나중에 다시 확인하십시오.
+No Source Code For Sale at This Time,현재 소스 코드가 없습니다
+No Tokens in Database,데이터베이스에 토큰이 없습니다
+No upgrades left.,남은 업그레이드가 없습니다.
+No Users,사용자 없음
+None,없음
+Noob Alert,멍청한 경고
+"Not all options are accessible in the web configuration.  For more, see",웹 구성에서 모든 옵션에 액세스 할 수있는 것은 아닙니다. 자세한 내용은
+Note,노트
+Note: Files or documents for the challenge can be placed in the Game Materials.,참고 : 챌린지 용 파일 또는 문서는 게임 재료에 배치 할 수 있습니다.
+Note: Files or documents for the challenge can be placed in the Game Materials.,참고 : 챌린지 용 파일 또는 문서는 게임 재료에 배치 할 수 있습니다.
+NOTE: Max attempts and penalties will not be applied in Single Box mode.,참고 : 최대 시도 및 위약금은 단일 상자 모드에서 적용되지 않습니다.
+NOTE: This setting is ignored if the box flag submission type is set to Single Box.,참고 : 박스 플래그 제출 유형이 단일 박스로 설정된 경우이 설정은 무시됩니다.
+Notification Message,알림 메시지
+Notifications,알림
+Number of Bots,봇 수
+Number of Flags,플래그 수
+Number of new Level,새로운 레벨의 수
+of Flag Value,깃발 가치
+of the flag's value. It will start on the,플래그 값. 그것은 시작됩니다
+Old Password,기존 비밀번호
+One submission box for any flag.  Compares attempts against all flags in the box.,모든 플래그에 대한 하나의 제출 상자. 상자의 모든 플래그와 시도를 비교합니다.
+only,만
+Optional,선택 과목
+Or Choose Existing,또는 기존을 선택하십시오
+Outcome,결과
+Outcome,결과
+Password,암호
+Password Cracking Leaderboard,비밀번호 크래킹 리더 보드
+Password Hash,비밀번호 해시
+Password Security,비밀번호 보안
+Password Upgrade Cost,비밀번호 업그레이드 비용
+Passwords Cracked,암호 해독
+Paste Name,붙여 넣기 이름
+Paste Text Here,여기에 텍스트 붙여 넣기
+PasteBin,PasteBin
+Pastebin Character Limit,Pastebin 문자 제한
+Pause Registration,일시 정지 등록
+Pause Scoreboard,스코어 보드 일시 중지
+Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,각 잘못된 시도에 대해 플래그 값의이 백분율만큼 점수를 부과합니다 (활성화 된 경우 동적 스코어링 후 적용).
+Pending,대기 중
+Pending Bribes,보류중인 뇌물
+Plain Text,일반 텍스트
+Play Story,스토리 플레이
+player,플레이어
+Player,플레이어
+Player Alias,플레이어 별명
+Player Email,플레이어 이메일
+Player Name,선수 이름
+"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.",플레이어의 은행 계좌 비밀번호도 사용할 수 있으므로 서로의 비밀번호를 해독하고 돈을 훔칠 수 있습니다.
+Players,선수
+Please do NOT enter your real bank account password.,실제 은행 계좌 비밀번호를 입력하지 마십시오.
+points,전철기
+Points,전철기
+points,전철기
+Previous Bribes,이전 뇌물
+Price,가격
+Private,은밀한
+Programming,프로그램 작성
+Provide the code used to join an existing team.  Visible to other team members on their home page.,기존 팀에 참여하는 데 사용되는 코드를 제공하십시오. 홈 페이지에서 다른 팀 구성원에게 표시됩니다.
+Public,공공의
+Public Team Creation,공개 팀 생성
+Public Teams,공개 팀
+Purchase,매수
+Purchase Unlock,구매 잠금 해제
+Purchased,구입 한
+Rank By,순위
+Regex Flag,정규식 깃발
+Regex Pattern,정규식 패턴
+Register Account,계정 등록
+Registration,기재
+Registration Email,등록 이메일
+Registration Tokens,등록 토큰
+Regular Expression,정규식
+Require Email,이메일 필요
+Reset Actions,조치 재설정
+Reset Game,게임 재설정
+Reset Game,게임 재설정
+Reset player / team starting points / money,선수 / 팀 시작 지점 / 돈 재설정
+Restrict players bank password to this length,플레이어 은행 비밀번호를이 길이로 제한
+Restrict players user password to this length,플레이어 사용자 비밀번호를이 길이로 제한
+Resume Registration,이력서 등록
+Resume Scoreboard,스코어 보드 재개
+Return to Edit,편집으로 돌아 가기
+Return to Missions,임무로 돌아 가기
+Reward,보상
+Role,역할
+Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,참여 규칙 : 게임 스코어 보드 플랫폼을 공격하지 마십시오. 게임 목표로 지정하지 않는 한 네트워크에있는 기존 계정의 비밀번호를 변경하지 마십시오.
+S.W.A.T,구타
+Save,구하다
+Score,점수
+Scoreboard,스코어 보드
+Scoreboard Rank By,점수 판 순위
+Scoreboard Visibility,스코어 보드 가시성
+See All,모두보기
+Select a Theme,테마를 선택하십시오
+Select Avatar,아바타 선택
+Select New Avatar,새로운 아바타를 선택하십시오
+Send,보내다
+Send a global notification to all players,모든 플레이어에게 글로벌 알림 보내기
+Set Countdown Timer,카운트 다운 타이머 설정
+Set the game countdown timer,게임 카운트 다운 타이머 설정
+Settings,설정
+Share your team code to allow other players to join,다른 플레이어가 참여할 수 있도록 팀 코드 공유
+Shared Files,공유 파일
+Sheep,양
+Show MVP,MVP 표시
+Since Score,점수 이후
+Single Box,싱글 박스
+Skill Progress,기술 진보
+Source Code,소스 코드
+Source Code Archive,소스 코드 아카이브
+Source Code Market,소스 코드 시장
+Special Thanks,특별 감사
+Start a New Team,새로운 팀을 시작하십시오
+Start the Game,게임을 시작하다
+start with 0 points,0 점으로 시작
+Starting Money,돈을 시작
+Static Flag,정적 플래그
+Static Token,정적 토큰
+Statistics,통계
+stop on & after,중지 후
+Stop the Game,게임을 중지
+Story,이야기
+Story Mode,스토리 모드
+Submit,제출
+Submit a Bug,버그 제출
+Submit a Flag,깃발 제출
+Submit Bribe,뇌물 제출
+Submit Bribes,뇌물 제출
+Submit Flag,깃발 제출
+SUCCESS,성공
+Success!,성공!
+Successful,성공한
+Successful Captures,성공적인 캡처
+Successful Registration,성공적인 등록
+Successfully created a new account for,에 대한 새 계정을 성공적으로 만들었습니다
+Summary,개요
+Supports,지원
+Switch Level,스위치 레벨
+System Type,시스템 유형
+Take,갖다
+Take Hint,힌트를 받아
+Taken,찍은
+Target,목표
+Target Handle,대상 핸들
+Target Management,대상 관리
+team,팀
+Team,팀
+Team Avatar,팀 아바타
+Team Code,팀 코드
+Team File Share,팀 파일 공유
+Team Information,팀 정보
+Team Motto,팀 모토
+Team Name,팀 이름
+Team PasteBin,팀 PasteBin
+Team Play,팀 플레이
+Team Shares,팀 공유
+Team Sharing,팀 공유
+Teams,팀
+Test Flag,테스트 플래그
+The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,암시장은 열려 있고 당신은 남자를 알고 있습니다. 대상의 소스 코드 또는 S.W.A.T를 다운로드하십시오. (게임 내) 경찰에 뇌물을 줘서
+The cost to take the hint.  Can be >= 0.,힌트를 얻는 데 드는 비용. > = 0 일 수 있습니다.
+The deduction is,공제는
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.",다른 가능성은 내가 일부 코드를 엉망으로 만들었을 가능성이 높지 않다는 것입니다.
+The starting money for a new,새로운 시작 돈
+Theme,테마
+There are currently no shared files.,현재 공유 파일이 없습니다.
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",이 플래그는 파일이므로 사용자는 플래그를 캡처하기 위해 정확히 동일한 파일을 제출해야합니다. 파일의 해시 (SHA1) 만 서버에 저장됩니다.
+"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","이 게임은 다이나믹 스코어링을 사용하도록 설정되었습니다. 즉, 다른 플레이어가 깃발을 캡처 할 때 해당 깃발의 값이 감소합니다. 그래서 빨리 잡아 또는 잃어 버려!"
+This is a test flag/string the user could input for credit.,이것은 사용자가 신용을 위해 입력 할 수있는 테스트 플래그 / 문자열입니다.
+This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,플레이어가 S.W.A.T.에 지불해야하는 금액입니다. 다른 플레이어 계정. 동일한 플레이어의 후속 SWAT도 매번이 양만큼 증가합니다.
+This is the amount a player must pay to upgrade their bank passwords hashing algorithm,은행 비밀번호 해시 알고리즘을 업그레이드하기 위해 플레이어가 지불해야하는 금액입니다.
+This is the amount awarded for capturing the flag.,이것은 깃발을 잡기 위해 수여되는 금액입니다.
+This is the amount awarded for completion of the box.,이것은 상자를 완성하기 위해 수여되는 금액입니다.
+This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually,이것은 간격마다 팀별로 봇당 지불되는 금액입니다. 간격은 .cfg 파일에서 수동으로 설정해야합니다.
+This is the box the flag is located on.,플래그가있는 상자입니다.
+This is the description,이것은 설명입니다
+This is the maximum number of players displayed on the MVP list (default 10) with a score > 0.,점수가 0보다 큰 MVP 목록 (기본 10)에 표시되는 최대 플레이어 수입니다.
+This is the message displayed to the user once the box is completed.,상자가 완료되면 사용자에게 표시되는 메시지입니다.
+This is the message displayed to the user once the flag is captured.,플래그가 캡처되면 사용자에게 표시되는 메시지입니다.
+This is the name that will appear in the upper left corner,왼쪽 상단에 표시되는 이름입니다
+This is the the limit of characters allowed for a pastebin post.,이것은 pastebin 게시물에 허용되는 문자의 제한입니다.
+This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,플래그를 표시하려는 것입니다. 주문 번호로 자동 이름을 지정하려면 비워 두십시오.
+This selection determines the method by which the scoreboard is primarily ranked.,이 선택에 따라 스코어 보드의 순위가 정해지는 방법이 결정됩니다.
+This selection determines the visibility of the scoreboard menu and pages.,이 선택에 따라 스코어 보드 메뉴 및 페이지의 가시성이 결정됩니다.
+"This will also delete associated IP addresses, boxes, and flags.","연관된 IP 주소, 상자 및 플래그도 삭제됩니다."
+"This will also delete associated IP addresses, hints, and flags.","연결된 IP 주소, 힌트 및 플래그도 삭제됩니다."
+This will also delete boxes and flags associated with this level.,이 레벨과 관련된 상자와 플래그도 삭제됩니다.
+This will delete the player and the associated user account!,플레이어와 관련 사용자 계정이 삭제됩니다!
+This will delete the team and any associated user accounts!,팀과 관련 사용자 계정이 삭제됩니다!
+Threshold,문지방
+Time,시각
+"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.",봇넷을 만들 시간입니다. 작은 봇 프로그램을 대상 컴퓨터에 업로드하면 봇넷의 각 봇에 대해 정기적으로 보상을받을 수 있습니다. 봇넷이 클수록 보상도 커집니다.
+to Add,추가
+to Add or Subtract,더하기 또는 빼기
+"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.",이 RTB 인스턴스를 복원하려면 rootthebox.cfg를 포함하기 위해 files 디렉토리에 내용이 필요할 수도 있습니다.
+Token,토큰
+Token Value,토큰 가치
+Tools,도구
+Tools & Upgrades,도구 및 업그레이드
+Total Cash Stolen,총 현금 도난
+Type,유형
+Unknown,알 수 없는
+Unlock,터놓다
+Unlock Cost,비용을 잠금 해제
+Unlock Level,잠금 해제 레벨
+Unlocks,잠금 해제
+Unlocks after,후 잠금 해제
+Unlocks for,잠금 해제
+Update Bank Password,은행 비밀번호 업데이트
+Update Configuration,구성 업데이트
+Update Password,비밀번호 업데이트
+Update RootTheBox,RootTheBox 업데이트
+Upgrade to,로 업그레이드
+Upload,업로드
+Upload Avatar,아바타 업로드
+Upload Avatar File,아바타 파일 업로드
+Upload Files,파일 업로드하다
+Used,익숙한
+Used to secure your (in-game) bank account.,(게임 내) 은행 계좌를 보호하는 데 사용됩니다.
+User Handle,사용자 핸들
+User Management,사용자 관리
+Users / Teams,사용자 / 팀
+Value,값
+View,전망
+View Box,박스보기
+View Details,세부 정보보기
+Visable,보이는
+Visable to Players,플레이어에게 공개
+Waiting for the game to start‚Ä¶,게임이 시작되기를 기다리는 중
+Wall of Sheep,양의 벽
+WARNING,경고
+Welcome,환영
+Welcome to the computer war game where security professionals can practice and learn.,보안 전문가가 연습하고 배울 수있는 컴퓨터 전쟁 게임에 오신 것을 환영합니다.
+Welcome to the Scene,현장에 오신 것을 환영합니다
+What is the name of this box?,이 상자의 이름은 무엇입니까?
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",회사 이름은 무엇입니까? 회사를 사용하지 않으려면 이름이없는 회사를 만드십시오.
+What is your motto?,당신의 좌우명은 무엇입니까?
+What is your teams motto?,당신의 팀 좌우명은 무엇입니까?
+What type of system is this?,이것은 어떤 유형의 시스템입니까?
+Whats the difficulty of the box?,상자의 어려움은 무엇입니까?
+When banking is disabled,은행 업무가 비활성화 된 경우
+"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.","페널티 적용 시작시기 예를 들어, 첫 번째 잘못된 시도는 자유로울 수 있지만 후속 시도에는 불이익을 줄 수 있습니다."
+"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","페널티 적용 중단시기 예를 들어, 특정 총 플래그 값만 불이익을 받고 추가 시도가 자유 로워 지도록 허용하여 모든 플래그가 일부 값을 갖도록 할 수 있습니다."
+when using banking.,뱅킹을 사용할 때.
+Windows,윈도우
+With contributions from,의 기여로
+XML File,XML 파일
+Yes,예
+You are not on a team,당신은 팀에 없습니다
+You do not have access to this level yet.,아직이 레벨에 액세스 할 수 없습니다.
+You do not own this upgrade.,이 업그레이드를 소유하지 않았습니다.
+You have not submitted any bribes yet.,아직 뇌물을 제출하지 않았습니다.
+"Your email, visible to game administrators.",게임 관리자가 볼 수있는 이메일.
+"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","핸들은 3-16 자의 영숫자 문자 여야합니다. 밑줄, 대시 및 점이 허용됩니다."
+"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",게임 관리자에게 공개되는 귀하의 이름. 이름은 3 ~ 64 자의 영숫자 문자 일 수 있습니다
