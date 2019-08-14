@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Create Team{% end %}
+{% block title %}{{_("Create Team")}}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/create/team.js"></script>
@@ -14,11 +14,11 @@
 <div id="change-team-avatar-modal" class="modal hide fade" style="display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3>Team Avatar</h3>
+        <h3>{{_("Team Avatar")}}</h3>
     </div>
     <div class="modal-body">
         {% raw xsrf_form_html() %}
-        <a id="avatarclose" href="#" class="btn" data-dismiss="modal" style="display: none;">Close</a>
+        <a id="avatarclose" href="#" class="btn" data-dismiss="modal" style="display: none;">{{_("Close")}}</a>
         {% for avatar in avatars[::3] %}
             <div class="row">
                 <div class="span3">
@@ -53,14 +53,14 @@
 <div class="container">
     <h1>
         <i class="fa fa-group"></i>
-        Create Team
+        {{_("Create Team")}}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{_("ERROR")}}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -69,36 +69,36 @@
         <form class="form-horizontal" action="/admin/create/team" method="post" enctype="multipart/form-data">
             {% raw xsrf_form_html() %}
             <div class="control-group">
-                <label class="control-label" for="team_name">Team Name</label>
+                <label class="control-label" for="team_name">{{_("Team Name")}}</label>
                 <div class="controls">
-                    <input autofocus required id="team-name" name="team_name" maxlength="24" type="text" placeholder="Team Name"
+                    <input autofocus required id="team-name" name="team_name" maxlength="24" type="text" placeholder="{{_('Team Name')}}"
                             rel="popover"
-                            data-original-title="New Team Name"
-                            data-content="Choose a name for your new team! [3-24 Characters]" >
+                            data-original-title="{{_('New Team Name')}}"
+                            data-content="{{_('Choose a name for your new team!')}} [3-24 {{_('Characters')}}]" >
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="motto">Motto</label>
+                <label class="control-label" for="motto">{{_("Motto")}}</label>
                 <div class="controls">
-                    <input id="motto" name="motto" maxlength="32" type="text" placeholder="Team Motto"
+                    <input id="motto" name="motto" maxlength="32" type="text" placeholder="{{_('Team Motto')}}"
                            rel="popover"
-                           data-original-title="Team Motto"
-                           data-content="What's your team's motto? [Max: 32 Characters]">
+                           data-original-title="{{_('Team Motto')}}"
+                           data-content="{{_('What is your teams motto?')}} [Max: 32 {{_('Characters')}}]">
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="avatar">Avatar</label>
+                <label class="control-label" for="avatar">{{_("Avatar")}}</label>
                 <div class="controls">
-                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                        <a id="uploadbutton" class="btn btn-primary" href="#">{{_("Upload Avatar")}}</a>
                         <input id="team-avatar" name="avatar" type="file" style="display: none;"/>
                         <input id="team_avatar_select" name="team_avatar_select" type="hidden" />
-                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-team-avatar-modal"> Choose Avatar </a>{% end %}
+                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-team-avatar-modal"> {{_("Choose Avatar")}} </a>{% end %}
                         <div id="avatarfilename" style="padding: 5px;"></div>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn btn-primary" type="submit">Create Team</button>
+                    <button class="btn btn-primary" type="submit">{{_("Create Team")}}</button>
                 </div>
             </div>
         </form>

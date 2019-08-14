@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Create Flag{% end %}
+{% block title %}{{_("Create Flag")}}{% end %}
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
@@ -15,14 +15,14 @@
 <div class="container">
     <h1>
         <i class="fa fa-flag"></i>
-        Create Datetime Flag
+        {{_("Create Datetime Flag")}}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{_("ERROR")}}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -34,21 +34,21 @@
                     {% raw xsrf_form_html() %}
                     <input id="flagtype" type="hidden" value="datetime" />
                     <div class="control-group">
-                        <label class="control-label" for="flag_name">Flag Name</label>
+                        <label class="control-label" for="flag_name">{{_("Flag Name")}}</label>
                         <div class="controls">
-                            <input autofocus id="flag-name" maxlength="16" name="flag_name" type="text" placeholder="(Optional)"
+                            <input autofocus id="flag-name" maxlength="16" name="flag_name" type="text" placeholder="({{_('Optional')}})"
                                     rel="popover"
-                                    data-original-title="Flag Name"
-                                    data-content="This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #." />
+                                    data-original-title="{{_('Flag Name')}}"
+                                    data-content="{{_('This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.')}}'" />
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="box_uuid">Box</label>
+                        <label class="control-label" for="box_uuid">{{_("Box")}}</label>
                         <div class="controls">
                             <select id="box-uuid" name="box_uuid"
                                     rel="popover"
-                                    data-original-title="Box"
-                                    data-content="This is the box the flag is located on.">
+                                    data-original-title="{{_('Box')}}"
+                                    data-content="{{_('This is the box the flag is located on.')}}">
                                 <option value=""></option>
                                 {% for thebox in Box.all() %}
                                 <option value="{{ thebox.uuid }}"{% if box and box.uuid == thebox.uuid %} selected{% end %}>
@@ -58,66 +58,66 @@
                             </select>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                     <div class="control-group">
+                        <label class="control-label" for="reward">{% if options.banking %}{{_("Reward")}}{% else %}{{_("Points")}}{% end %}</label>
                         <div class="controls">
-                            <input required id="reward" name="reward" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                            <input required id="reward" name="reward" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}{{_('$')}} {{_('Reward')}}{% else %}{{_('Points')}}{% end %}"
                                    rel="popover"
-                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
-                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
+                                   data-original-title="{% if options.banking %}{{_('Reward')}}{% else %}{{_('Points')}}{% end %}"
+                                   data-content="{{_('This is the amount awarded for capturing the flag.')}}">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="description">Description</label>
+                        <label class="control-label" for="description">{{_("Description")}}</label>
                         <div class="controls">
-                            <textarea required class="toolbar" id="description" name="description" maxlength="1024" rows="5" type="text" placeholder="Description"
+                            <textarea required class="toolbar" id="description" name="description" maxlength="1024" rows="5" type="text" placeholder="{{_('Description')}}"
                                     rel="popover"
                                     data-original-title="Description"
                                     data-html="true"
-                                    data-content="This is the description [Max: 1024 Characters].<br/><br/>Supports Markdown (GitHub Style)">
+                                    data-content="{{_('This is the description')}} [Max: 1024 {{_('Characters')}}].<br/><br/>{{_('Supports')}} Markdown (GitHub Style)">
                             </textarea>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="token">Token</label>
+                        <label class="control-label" for="token">{{_("Token")}}</label>
                         <div class="controls">
-                            <input required id="token" name="token" maxlength="256" type="text" placeholder="Datetime Token" autocomplete="off">
+                            <input required id="token" name="token" maxlength="256" type="text" placeholder="{{_('Datetime Token')}}" autocomplete="off">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="test_token">Test Flag</label>
+                        <label class="control-label" for="test_token">{{_("Test Flag")}}</label>
                         <div class="controls" style="position:relative;">
                             <span style="position: absolute; left: 230px; top: 3px; font-size: 175%;">
                                 <i id="testtrue" class="fa fa-check" style="color: green; display: none;"></i>
                                 <i id="testfalse" class="fa fa-times" style="color: red; display: none;"></i>
                             </span>
-                                <input id="test-token" name="test_token" type="text" placeholder="Enter a Matching Flag" autocomplete="off"
+                                <input id="test-token" name="test_token" type="text" placeholder="{{_('Enter a Matching Flag')}}" autocomplete="off"
                                     rel="popover"
-                                    data-original-title="Token"
-                                    data-content="This is a test flag/string the user could input for credit." />
+                                    data-original-title="{{_('Token')}}"
+                                    data-content="{{_('This is a test flag/string the user could input for credit.')}}" />
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                        <label class="control-label" for="flag-lock-uuid">{{_("Dependent Flag")}}</label>
                         <div class="controls">
                             <select id="edit-flag-lock" name="lock_uuid"></select>
                         </div>
                     </div>
                     {% if options.story_mode %}
                     <div class="control-group">
-                        <label class="control-label" for="capture-message">Capture Message</label>
+                        <label class="control-label" for="capture-message">{{_("Capture Message")}}</label>
                         <div class="controls">
-                            <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)"
+                            <textarea id="capture-message" name="capture_message" type="text" placeholder="({{_('Optional')}})"
                                     rel="popover"
-                                    data-original-title="Capture Message"
-                                    data-content="This is the message displayed to the user once the flag is captured." >
+                                    data-original-title="{{_('Capture Message')}}"
+                                    data-content="{{_('This is the message displayed to the user once the flag is captured.')}}" >
                             </textarea>
                         </div>
                     </div>
                     {% end %}
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary" type="submit">Create Flag</button>
+                            <button class="btn btn-primary" type="submit">{{_("Create Flag")}}</button>
                         </div>
                     </div>
                 </form>
@@ -126,8 +126,8 @@
                 <p>
                     <blockquote>
                         <small>
-                            <strong>Tokens:</strong>
-                            In this case, the "flag" is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.
+                            <strong>{{_("Tokens")}}:</strong>
+                            {{_("In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.")}}
                         </small>
                     </blockquote>
                 </p>

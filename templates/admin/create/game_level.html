@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Create Game Level{% end %}
+{% block title %}{{_("Create Game Level")}}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/create/game_level.js"></script>
@@ -11,14 +11,14 @@
 <div class="container">
     <h1>
         <i class="fa fa-level-up"></i>
-        Create Game Level
+        {{_("Create Game Level")}}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{_("ERROR")}}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -27,57 +27,57 @@
         <form class="form-horizontal" action="/admin/create/game_level" method="post">
             {% raw xsrf_form_html() %}
             <div class="control-group">
-                <label class="control-label" for="level_number">Level Number</label>
+                <label class="control-label" for="level_number">{{_("Level Number")}}</label>
                 <div class="controls">
-                    <input autofocus required id="level-number" name="level_number" type="text" pattern="[0-9]+" placeholder="Level Number"
+                    <input autofocus required id="level-number" name="level_number" type="text" pattern="[0-9]+" placeholder="{{_('Level Number')}}"
                             rel="popover"
-                            data-original-title="Level Number"
-                            data-content="Nuber of new Level [0-9]+ Must be unique" />
+                            data-original-title="{{_('Level Number')}}"
+                            data-content="{{_('Number of new Level')}} [0-9]+ {{_('Must be unique')}}" />
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="game_level-name">Level Name</label>
+                <label class="control-label" for="game_level-name">{{_("Level Name")}}</label>
                 <div class="controls">
-                    <input id="game_level-name" name="name" placeholder="Level Name" maxlength=32  
+                    <input id="game_level-name" name="name" placeholder="{{_('Level Name')}}" maxlength=32 
                         rel="popover"
-                        data-original-title="Level Name"
-                        data-content="(Optional) defaults to &#34;Level #&#34;" />
+                        data-original-title="{{_('Level Name')}}"
+                        data-content="({{_('Optional')}} {{_('defaults to')}} &#34;Level #&#34;" />
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="game_level-reward">Completion Reward</label>
+                <label class="control-label" for="game_level-reward">{{_("Completion Reward")}}</label>
                 <div class="controls">
-                    <input id="game_level-reward" name="reward" pattern="[0-9]+" value=0 placeholder="Reward" type="number" min=0  
+                    <input id="game_level-reward" name="reward" pattern="[0-9]+" value=0 placeholder="{{_('Reward')}}" type="number" min=0  
                         rel="popover"
-                        data-original-title="Completion Reward"
-                        data-content="Bonus reward for those that complete the level." />
+                        data-original-title="{{_('Completion Reward')}}"
+                        data-content="{{_('Bonus reward for those that complete the level.')}}" />
                 </div>
             </div>
             <div id="gametype" class="control-group">
-                <label class="control-label" for="game_level-type">Unlock Level</label>
+                <label class="control-label" for="game_level-type">{{_("Unlock Level")}}</label>
                 <div class="controls">
                     <select id="game_level-type" name="type"
                         rel="popover"
-                        data-original-title="Unlock Level"
-                        data-content="Bonus reward for those that complete the level.">
-                        <option value="none">No Lock</option>
-                        <option value="buyout" selected>Purchase Unlock</option>
-                        <option value="progress">Game Progress</option>
+                        data-original-title="{{_('Unlock Level')}}"
+                        data-content="{{_('How should the next level unlock?')}}">
+                        <option value="none">{{_("No Lock")}}</option>
+                        <option value="buyout" selected>{{_("Purchase Unlock")}}</option>
+                        <option value="progress">{{_("Game Progress")}}</option>
                     </select>
                 </div>
             </div>
             <div id="buyoutcost" class="control-group">
-                <label id="buyoutlabel" class="control-label" for="buyout">Unlock Cost</label>
+                <label id="buyoutlabel" class="control-label" for="buyout">{{_("Unlock Cost")}}</label>
                 <div class="controls">
                     <input id="buyout" name="buyout" type="number" pattern="[0-9]+" placeholder="" type="number" value=50 min=0
                             rel="popover"
-                            data-original-title="Unlock Cost"
-                            data-content="Cost to open this level and see flags [0-9]+" />
+                            data-original-title="{{_('Unlock Cost')}}"
+                            data-content="{{_('Cost to open this level and see flags')}} [0-9]+" />
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn btn-primary" type="submit">Create Game Level</button>
+                    <button class="btn btn-primary" type="submit">{{_("Create Game Level")}}</button>
                 </div>
             </div>
         </form>

@@ -108,8 +108,8 @@
                     <div class="controls">
                         <input required id="handle" name="handle" maxlength="16" minlength="3" placeholder="{{ _('Player Alias') }}" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9_\-\.]{3,16}$"
-                            data-original-title="Player Alias"
-                            data-content="Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed." />
+                            data-original-title="{{ _('Player Alias') }}"
+                            data-content="{{_('Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.')}}" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -120,7 +120,7 @@
                         <input required id="playername" name="playername" maxlength="64" minlength="3" placeholder="Name" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,64}$"
                             data-original-title="{{ _('Player Name') }}"
-                            data-content="Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters" />
+                            data-content="{{_('Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters')}}" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -130,8 +130,8 @@
                     <div class="controls">
                         <input {% if options.require_email %}required {% end %}id="email" name="email" maxlength="64" minlength="3" placeholder="{{ _('Email') }}" type="text"
                             rel="popover" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                            data-original-title="Player&#x27;s Email"
-                            data-content="Your email, visible to game administrators." />
+                            data-original-title="{{_('Player Email')}}"
+                            data-content="{{_('Your email, visible to game administrators.')}}" />
                     </div>
                 </div>
                 <hr style="margin-right: 400px;">
@@ -146,8 +146,8 @@
                                 <div class="controls">
                                     <input id="team-name" name="team_name" maxlength="24" minlength="3" type="text" placeholder="{{ _('Team Name') }}"
                                         rel="popover"
-                                        data-original-title="New Team Name"
-                                        data-content="Choose a name for your new team! [3-24 Characters]" >
+                                        data-original-title="{{_('New Team Name')}}"
+                                        data-content="{{_('Choose a name for your new team!')}}' [3-24 {{_('Characters')}}]" >
                                 </div>
                             </div>
                             <div class="control-group">
@@ -155,8 +155,8 @@
                                 <div class="controls">
                                     <input id="motto" name="motto" maxlength="32" type="text" placeholder="{{ _('Team Motto') }}"
                                         rel="popover"
-                                        data-original-title="Team Motto"
-                                        data-content="Optional: What&#x27;s your team&#x27;s motto? [Max: 32 Characters]">
+                                        data-original-title="{{_('Team Motto')}}"
+                                        data-content="{{_('Optional')}}: {{_('What is your teams motto?')}} [Max: 32 {{_('Characters')}}]">
                                 </div>
                             </div>
                         </div>
@@ -168,8 +168,8 @@
                         <div class="controls">
                             <input id="team-code" name="team-code" type="text" placeholder="{{ _('Team Code') }}"
                                 rel="popover"
-                                data-original-title="Team Code"
-                                data-content="Provide the code used to join an existing team.  Visible to other team members on their home page." >
+                                data-original-title="{{_('Team Code')}}"
+                                data-content="{{_('Provide the code used to join an existing team.  Visible to other team members on their home page.')}}" >
                         </div>
                     </div>
                 {% else %}
@@ -178,8 +178,8 @@
                         <div class="controls">
                             <input id="motto" name="motto" maxlength="32" type="text" placeholder="{{ _('Motto') }}"
                                 rel="popover"
-                                data-original-title="Motto"
-                                data-content="Optional: What&#x27;s your motto? [Max: 32 Characters]">
+                                data-original-title="{{_('Motto')}}"
+                                data-content="{{_('Optional')}}: {{_('What is your motto?')}} [Max: 32 {{_('Characters')}}]">
                         </div>
                     </div>
                 {% end %}
@@ -190,8 +190,8 @@
                         <input required id="pass1" name="pass1" minlength="{{ options.min_user_password_length }}"  placeholder="{{ _('Password') }}" type="password"
                             autocomplete="off"
                             rel="popover"
-                            data-original-title="Password"
-                            data-content="Enter a complex password of {{ options.min_user_password_length }}+ characters" />
+                            data-original-title="{{_('Password')}}"
+                            data-content="{{_('Enter a complex password of')}} {{ options.min_user_password_length }}+ {{_('Characters')}}" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -200,8 +200,8 @@
                         <input required id="pass2" name="pass2" minlength="{{ options.min_user_password_length }}"  placeholder="{{ _('Confirm Password') }}" type="password"
                             autocomplete="off"
                             rel="popover"
-                            data-original-title="Confirm Password"
-                            data-content="Enter the same password as before" />
+                            data-original-title="{{_('Confirm Password')}}"
+                            data-content="{{_('Enter the same password as before')}}" />
                     </div>
                 </div>
                 {% if options.banking %}
@@ -211,8 +211,8 @@
                         <input required id="bpass" name="bpass" maxlength="{{ options.max_password_length }}" placeholder="{{ _('Bank Account Password') }}" type="password"
                             autocomplete="off"
                             rel="popover"
-                            data-original-title="Password"
-                            data-content="Used to secure your (in-game) bank account. [Max: {{ options.max_password_length }} characters].  Please do NOT enter your real bank account password." />
+                            data-original-title="{{_('Password')}}"
+                            data-content="{{_('Used to secure your (in-game) bank account.')}} [Max: {{ options.max_password_length }} {{_('Characters')}}].  {{_('Please do NOT enter your real bank account password.')}}" />
                     </div>
                 </div>
                 {% end %}
@@ -222,8 +222,8 @@
                         <div class="controls">
                             <input required id="regtoken" name="token" placeholder="{{ _('Token') }}" type="text"
                                 rel="popover" pattern="^[a-fA-F0-9]{1,6}$"
-                                data-original-title="Registration Token"
-                                data-content="Get your registration token from reception" />
+                                data-original-title="{{_('Registration Token')}}"
+                                data-content="{{_('Get your registration token from reception')}}" />
                         </div>
                     </div>
                 {% end %}
