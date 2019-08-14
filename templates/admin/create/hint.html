@@ -59,7 +59,7 @@
                                 <select name="box_uuid">
                                     <option value=""></option>
                                     {% for thebox in Box.all() %}
-                                        <option value="{{ thebox.uuid }}">{{ thebox.name }}</opiton>
+                                        <option value="{{ thebox.uuid }}">{{ thebox.name }}</option>
                                     {% end %}
                                 </select>
                             </div>
@@ -74,7 +74,7 @@
                                 <select name="flag_uuid">
                                     <option value=""></option>
                                     {% for flag in box.flags %}
-                                        <option value="{{ flag.uuid }}">{{ flag.name }}</opiton>
+                                        <option value="{{ flag.uuid }}">{{ flag.name }}</option>
                                     {% end %}
                                 </select>
                             </div>
