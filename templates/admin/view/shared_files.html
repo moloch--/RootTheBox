@@ -17,7 +17,7 @@
         </div>
         <div class="modal-body">
         <p>
-            {{ ("Are you sure you want to delete this file?") }} <br />
+            {{ _("Are you sure you want to delete this file?") }} <br />
         </p>
         <form id="delete-file-upload-form" method="post" action="/user/shares/delete">
             {% raw xsrf_form_html() %}
