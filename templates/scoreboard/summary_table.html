@@ -8,7 +8,7 @@
 {% for index, team in enumerate(teams) %}
     {% if len(team.members) > 0 %}
     <tr id="{{ team.uuid }}" style="padding-top: 5px;">
-        <td class="summarycolumn shortcolumn" style="text-align: center; vertical-align: middle; font-size: x-large; padding: 0px 20px 0px 10px;">
+        <td class="summarycolumn shortcolumn centercolumn" style="font-size: x-large; padding: 0px 20px 0px 10px;">
             {{ index + 1 }}
         </td>
         <td style="display:none;">{{ team.uuid }}</td>
