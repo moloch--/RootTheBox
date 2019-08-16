@@ -198,7 +198,7 @@
                 </div>
                 <div class="span7 msgdescription">
                     <p>
-                        <strong>{{ notify.title }}</strong>
+                        <strong>{{ _(notify.title) }}</strong>
                         {{ notify.created.strftime("%I:%M%p") }}
                         <br />{{ notify.message }}
                     </p>
@@ -306,7 +306,7 @@
                 <i class="fa fa-android" style="font-size: 180%;"></i>
             </div>
             <div class="span7 msgdescription">
-                Time to create a "botnet". By uploading a small bot program to target machines, you can be periodically rewarded with {% if options.banking %}(in-game) money{% else %}points{% end %} for each bot in your botnet; the larger the botnet the larger the reward.
+                {{ _("Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.") }}
             </div>
         </div>
         <br/>
