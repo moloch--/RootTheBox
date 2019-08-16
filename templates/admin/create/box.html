@@ -105,7 +105,7 @@
                             data-original-title="{{_('Corporation')}}"
                             data-content="{{_('Corporation box belongs too?')}}">
                         {% for corp in Corporation.all() %}
-                        <option value="{{ corp.uuid }}">{% if corp.name != "" %}{{ corp.name }}{% else %}({{_("No name")}}{% end %}</option>
+                        <option value="{{ corp.uuid }}">{% if corp.name != "" %}{{ corp.name }}{% else %}({{_("No name")}}){% end %}</option>
                         {% end %}
                     </select>
                 </div>
