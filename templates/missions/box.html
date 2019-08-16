@@ -298,7 +298,7 @@
                                 <td class="descriptioncol"><i class="fa fa-lock"></i> {{ _("Locked by") }} {{ Flag.by_id(flag.lock_id).name }}</td>
                                 <td class="shortcolumn centercolumn">{{ len(Flag.captures(flag.id)) }}</td>
                                 {% if options.penalize_flag_value %}
-                                <td class="shortcolumn" style="text-align: center; vertical-align: middle;">0</td>
+                                <td class="shortcolumn centercolumn">0</td>
                                 {% end %}
                                 <td class="shortcolumn centercolumn">{% if options.banking %}${% end %}{{ flag.value }}</td>
                                 <td></td>
