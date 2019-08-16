@@ -1,4 +1,4 @@
-﻿(stop - start) * cost.,(توقف - بدء) * التكلفة.
+(stop - start) * cost.,(توقف - بدء) * التكلفة.
 $,$
 A brief description of the box,وصف موجز للمربع
 About,حول
@@ -25,6 +25,7 @@ Add to Market,أضف إلى السوق
 Address,عنوان
 Admin,مشرف
 Admin Home,الادارية الرئيسية
+Admin Message,رسالة المسؤول
 Administrator Panel,لوحة المسؤول
 Admins,مدراء
 All Notifications,جميع الإخطارات
@@ -65,10 +66,12 @@ BEGIN SECURE COMMUNIQUE,بداية آمنة بيان
 Black Market,السوق السوداء
 Bonus reward for those that complete the level.,مكافأة مكافأة لأولئك الذين يكملون المستوى.
 Bot,بوت
+Bot added,وأضاف بوت
 Bot Reward,بوت مكافأة
 Botnet,الروبوتات
 Botnet Command & Control,Botnet القيادة والسيطرة
 Botnet Monitor,مراقب الشبكة
+Botnet Scored,سجل Botnet
 Botnets,إقناعا
 Bots,السير
 Box,صندوق
@@ -199,7 +202,7 @@ Download File,تحميل الملف
 Download the command line botnet monitor,قم بتنزيل شاشة الروبوتات الموجودة بسطر الأوامر
 Dynamic Scoring,التسجيل الديناميكي
 Each flag has a submit.  The player will choose the flag they intend to capture.,كل العلم لديه تقديم. سيختار اللاعب العلم الذي يعتزم التقاطه.
-"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","سيستهدف كل لاعب تحديات متفاوتة الصعوبة والتطور ، في محاولة لجمع الأعلام والفوز بالمجد. حظا طيبا وفقك الله!"
+"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",سيستهدف كل لاعب تحديات متفاوتة الصعوبة والتطور ، في محاولة لجمع الأعلام والفوز بالمجد. حظا طيبا وفقك الله!
 Edit,تصحيح
 Edit Account,تحرير الحساب
 Edit Box,تحرير مربع
@@ -217,21 +220,21 @@ Edit User,تحرير العضو
 Email,البريد الإلكتروني
 EMPTY,فارغة
 Enable,مكن
-"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.","يتيح تمكين هذه الميزة للاعبين إنشاء فرقهم الخاصة أثناء التسجيل. إذا تم تعطيل هذا الخيار ، يجب على المشرف إنشاء فرق للاعبين للانضمام إليها."
+"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",يتيح تمكين هذه الميزة للاعبين إنشاء فرقهم الخاصة أثناء التسجيل. إذا تم تعطيل هذا الخيار ، يجب على المشرف إنشاء فرق للاعبين للانضمام إليها.
 Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,سيسمح تمكين هذه الميزة للاعبين بمشاركة الكود (pastebin) والملفات الموجودة في اللعبة. سيؤدي تعطيل هذه الميزة إلى إزالة هذه الخيارات من قائمة الأدوات.
-"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","يتيح تمكين هذه الميزة للفرق شراء ترقيات ، مثل Federal Reserve أو Source Code Market أو SWAT."
-"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.","سيتيح تمكين هذه الميزة للعبة عرض رسائل التقاط علامة أو مربعة يمكن إضافتها. تبعًا للإعدادات الافتراضية ، تتبع اللعبة قصة Morris ، صاحب العمل الذي يقوم بتعيين المهام."
-"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.","سيؤدي تمكين هذه الميزة إلى فرض عقوبة على محاولات الالتقاط غير الصحيحة. العقوبة هي خصم فوري من النتيجة ، وليس انخفاضًا في قيمة العلم."
-"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.","سيؤدي تمكين هذه الميزة إلى تقليل مكافأة العلامة بناءً على عدد مرات الالتقاط. إذا تم تعطيل هذا الخيار ، فستبقى قيمة العلامة متسقة مع قيام اللاعبين الآخرين بالتقاطها."
+"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.",يتيح تمكين هذه الميزة للفرق شراء ترقيات ، مثل Federal Reserve أو Source Code Market أو SWAT.
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.",سيتيح تمكين هذه الميزة للعبة عرض رسائل التقاط علامة أو مربعة يمكن إضافتها. تبعًا للإعدادات الافتراضية ، تتبع اللعبة قصة Morris ، صاحب العمل الذي يقوم بتعيين المهام.
+"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",سيؤدي تمكين هذه الميزة إلى فرض عقوبة على محاولات الالتقاط غير الصحيحة. العقوبة هي خصم فوري من النتيجة ، وليس انخفاضًا في قيمة العلم.
+"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.",سيؤدي تمكين هذه الميزة إلى تقليل مكافأة العلامة بناءً على عدد مرات الالتقاط. إذا تم تعطيل هذا الخيار ، فستبقى قيمة العلامة متسقة مع قيام اللاعبين الآخرين بالتقاطها.
 Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,سيؤدي تمكين هذه الميزة إلى عرض عدد التلميحات التي تم التقاطها على لوحة النتائج بواسطة فريق أو لاعب. مفيدة عندما تلميحات مجانية. يتم استخدام عدد تلميحات أقل للفرز عندما تكون النقاط أو العلامات متساوية. سيؤدي تعطيل هذا الخيار إلى إزالة عدد التلميحات من لوحة النتائج.
-"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.","سيؤدي تمكين هذه الميزة إلى عرض لوحة نتائج لاعب MVP. سيتم عرض أي لاعب ساهم في النقاط للفريق. إذا تم تعطيل هذا الخيار ، فسيتم إخفاء لوحة MVP."
+"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.",سيؤدي تمكين هذه الميزة إلى عرض لوحة نتائج لاعب MVP. سيتم عرض أي لاعب ساهم في النقاط للفريق. إذا تم تعطيل هذا الخيار ، فسيتم إخفاء لوحة MVP.
 Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,يتطلب تمكين هذه الميزة من اللاعبين تقديم رمز تسجيل صالح من أجل إنشاء حساب جديد. يتم إنشاء الرموز التسجيل في واجهة المسؤول.
 Enabling this feature will require players to provide an email address in order to create a new account.,يتطلب تمكين هذه الميزة من اللاعبين تقديم عنوان بريد إلكتروني لإنشاء حساب جديد.
 Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,سيؤدي تمكين هذه الميزة إلى إرسال إشعارات إلغاء قفل العلم والمستوى لجميع اللاعبين في اللعبة. سيؤدي تعطيل هذا الخيار إلى قصر هذه الإشعارات على أعضاء الفريق.
-"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.","سيؤدي تمكين هذه الميزة إلى إعداد اللعبة ولوحة النتائج للعب الجماعي. إذا تم تعطيل هذا الخيار ، يتم إعداد اللعبة للعب التنافسي الفردي."
-"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.","سيؤدي تمكين هذه الميزة إلى ضبط اللعبة على استخدام نظام تسجيل الأموال. إذا تم تعطيل هذا الخيار ، تستخدم اللعبة نظام تسجيل النقاط."
-"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.","سيؤدي تمكين هذا الخيار إلى تعيين الرمز المميز ليكون حساسًا لحالة الأحرف. إذا تم تعطيل هذا الخيار ، فإن الرمز المميز للإجابة غير حساس لحالة الأحرف."
-"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.","سيؤدي تمكين هذا الخيار إلى تعيين الرمز المميز ليكون case senstive. إذا تم تعطيل هذا الخيار ، فإن الرمز المميز للإجابة يكون غير متحفظ لحالة الأحرف."
+"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.",سيؤدي تمكين هذه الميزة إلى إعداد اللعبة ولوحة النتائج للعب الجماعي. إذا تم تعطيل هذا الخيار ، يتم إعداد اللعبة للعب التنافسي الفردي.
+"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.",سيؤدي تمكين هذه الميزة إلى ضبط اللعبة على استخدام نظام تسجيل الأموال. إذا تم تعطيل هذا الخيار ، تستخدم اللعبة نظام تسجيل النقاط.
+"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.",سيؤدي تمكين هذا الخيار إلى تعيين الرمز المميز ليكون حساسًا لحالة الأحرف. إذا تم تعطيل هذا الخيار ، فإن الرمز المميز للإجابة غير حساس لحالة الأحرف.
+"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.",سيؤدي تمكين هذا الخيار إلى تعيين الرمز المميز ليكون case senstive. إذا تم تعطيل هذا الخيار ، فإن الرمز المميز للإجابة يكون غير متحفظ لحالة الأحرف.
 Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,تمكين هذا الإعداد ينشط ميزات الروبوتات. يمكن للفرق تشغيل الملفات التنفيذية الخاصة بالبوتات على الصناديق التي يدفعونها ويتم دفعها مقابل كل بوت مع مرور الوقت.
 END SECURE COMMUNIQUE,نهاية الاتصال الآمن
 Enter a complex password of,أدخل كلمة مرور معقدة من
@@ -251,15 +254,18 @@ File,ملف
 File Description,وصف الملف
 File Flag,ملف العلم
 File Name,اسم الملف
+File Share,ملف مشاركة
 File Sharing,مشاركة الملفات
 File Size,حجم الملف
 First Login,تسجيل الدخول الأول
 Flag,علم
+Flag Capture,القبض على العلم
 Flag Decrease Value,علم انخفاض القيمة
 Flag Details,علم التفاصيل
 Flag File,ملف العلم
 Flag Hints,تلميحات العلم
 Flag Name,اسم العلم
+Flag Penalty,علم عقوبة
 Flag Penalty % Cost,العلم عقوبة التكلفة ٪
 Flag Penalty Cost,تكلفة عقوبة العلم
 Flag Penalty Start,علم عقوبة البداية
@@ -289,22 +295,23 @@ Global Notifications,الإخطارات العالمية
 Handle,مقبض
 Hint,ملحوظة
 Hint not yet taken,تلميح لم تتخذ بعد
+Hint Taken,تلميح اتخذت
 Hints,إشارة
 Hints on,تلميحات على
 Hints Taken,تلميحات اتخذت
 History,التاريخ
 Home,الصفحة الرئيسية
 How should the next level unlock?,كيف ينبغي فتح المستوى التالي؟
-"If the flag selection is left empty, the hint will be considered a Box Hint.","إذا تم ترك تحديد العلامة فارغًا ، فسيتم اعتبار التلميح تلميحًا مربعًا."
-"If this option is disabled, there is no cost for submitting incorrect flags.","إذا تم تعطيل هذا الخيار ، فلن تكون هناك تكلفة لإرسال علامات غير صحيحة."
+"If the flag selection is left empty, the hint will be considered a Box Hint.",إذا تم ترك تحديد العلامة فارغًا ، فسيتم اعتبار التلميح تلميحًا مربعًا.
+"If this option is disabled, there is no cost for submitting incorrect flags.",إذا تم تعطيل هذا الخيار ، فلن تكون هناك تكلفة لإرسال علامات غير صحيحة.
 Import File,استيراد ملف
 Import XML,استيراد XML
 Import XML,استيراد XML
 In Progress,في تقدم
-"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","في هذه الحالة ، تكون العلامة سلسلة تاريخ / وقت. سيحاول نوع العلامة هذا التطابق مع صيغ صيغ التاريخ والوقت الشائعة والتعامل مع الاختلافات مثل الشرط المائل ، الشرطات ، الحشو ، 12 ساعة ، 24 ساعة ، إلخ. يمكنه التعامل مع التاريخ أو الوقت أو التاريخ."
-"In this case, the flag is a multiple choice question where the selected option is the token.","في هذه الحالة ، تكون العلامة مسألة اختيار من متعدد حيث يكون الخيار المحدد هو الرمز المميز."
-"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","في هذه الحالة ، تكون العلامة تعبيرًا منتظمًا. يجب على المستخدم إرسال السلسلة التي تطابق النمط لالتقاط العلم. المباريات يمكن أن تكون غير حساسة. يرجى التأكد من اختبار regex الخاص بك ، والتأكد من أنها ليست واسعة للغاية."
-"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.","في هذه الحالة ، تكون العلامة عبارة عن سلسلة ثابتة. يجب على المستخدم إرسال الرمز المميز لالتقاط العلامة. يتم تجريد مساحة بيضاء في البداية والنهاية."
+"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.",في هذه الحالة ، تكون العلامة سلسلة تاريخ / وقت. سيحاول نوع العلامة هذا التطابق مع صيغ صيغ التاريخ والوقت الشائعة والتعامل مع الاختلافات مثل الشرط المائل ، الشرطات ، الحشو ، 12 ساعة ، 24 ساعة ، إلخ. يمكنه التعامل مع التاريخ أو الوقت أو التاريخ.
+"In this case, the flag is a multiple choice question where the selected option is the token.",في هذه الحالة ، تكون العلامة مسألة اختيار من متعدد حيث يكون الخيار المحدد هو الرمز المميز.
+"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",في هذه الحالة ، تكون العلامة تعبيرًا منتظمًا. يجب على المستخدم إرسال السلسلة التي تطابق النمط لالتقاط العلم. المباريات يمكن أن تكون غير حساسة. يرجى التأكد من اختبار regex الخاص بك ، والتأكد من أنها ليست واسعة للغاية.
+"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",في هذه الحالة ، تكون العلامة عبارة عن سلسلة ثابتة. يجب على المستخدم إرسال الرمز المميز لالتقاط العلامة. يتم تجريد مساحة بيضاء في البداية والنهاية.
 Income,الإيرادات
 Incoming Transmission,انتقال الواردة
 Incorrect,غير صحيح
@@ -317,8 +324,8 @@ IP Address,عنوان IP
 IP Version,نسخة IP
 It appears you're an unsophisticated script kiddie!,يبدو أنك مخطوط غير متطور كيدي!
 "It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).",يمكن أن يكون مرئيًا لجميع الزوار (عامًا) أو للمستخدمين المصادق عليهم (اللاعبين) أو فقط للمسؤولين (المشرفين).
-"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.","يبدو أنك كتبت عنوان URL بشكل غير صحيح ، أو كنت تحاول العثور على شيء لا يجب أن يكون لديك حق الوصول إليه."
-"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.","إنه يتعلق بالمال وحان الوقت للاستفادة من تلك المهارات! تم إعداد هذه اللعبة لاستخدام النظام المصرفي ، لذا لا تضيع الوقت لبناء ثروتك وشراء ما تحتاجه للفوز."
+"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.",يبدو أنك كتبت عنوان URL بشكل غير صحيح ، أو كنت تحاول العثور على شيء لا يجب أن يكون لديك حق الوصول إليه.
+"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.",إنه يتعلق بالمال وحان الوقت للاستفادة من تلك المهارات! تم إعداد هذه اللعبة لاستخدام النظام المصرفي ، لذا لا تضيع الوقت لبناء ثروتك وشراء ما تحتاجه للفوز.
 Item Cost,تكلفة البند
 Join Existing Team,انضم إلى الفريق الحالي
 Known IP Addresses,عناوين IP المعروفة
@@ -328,8 +335,9 @@ Level,مستوى
 Level Name,اسم المستوى
 Level Number,رقم المستوى
 Level to put box in?,المستوى لوضع مربع في؟
+Level Unlocked,مستوى مفتوح
 Limit number of players that can be on any one team,الحد من عدد اللاعبين الذين يمكن أن يكونوا في أي فريق واحد
-"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","يحد من عدد محاولات التقاط العلم. بمجرد الوصول إلى الحد ، لا يمكن اتخاذ أي إجراء آخر على هذا العلم."
+"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",يحد من عدد محاولات التقاط العلم. بمجرد الوصول إلى الحد ، لا يمكن اتخاذ أي إجراء آخر على هذا العلم.
 Linux,لينكس
 Lock,قفل
 Locked by,مؤمن من قبل
@@ -376,6 +384,7 @@ New Game Level,لعبة جديدة المستوى
 New IP Address,عنوان IP جديد
 New Password,كلمة السر الجديدة
 New Team,فريق جديد
+New Team Member,عضو فريق جديد
 New Team Name,اسم الفريق الجديد
 No,لا
 No Avatar,لا الرمزية
@@ -397,7 +406,7 @@ No upgrades left.,لا ترقيات اليسار.
 No Users,لا مستخدمين
 None,لا شيء
 Noob Alert,مستجد تنبيه
-"Not all options are accessible in the web configuration.  For more, see","لا يمكن الوصول إلى جميع الخيارات في تكوين الويب. للمزيد ، انظر"
+"Not all options are accessible in the web configuration.  For more, see",لا يمكن الوصول إلى جميع الخيارات في تكوين الويب. للمزيد ، انظر
 Note,ملحوظة
 Note: Files or documents for the challenge can be placed in the Game Materials.,ملاحظة: يمكن وضع ملفات أو مستندات للتحدي في مواد اللعبة.
 Note: Files or documents for the challenge can be placed in the Game Materials.,ملاحظة: يمكن وضع ملفات أو مستندات للتحدي في مواد اللعبة.
@@ -418,6 +427,7 @@ Or Choose Existing,أو اختر القائمة
 Outcome,نتيجة
 Outcome,نتيجة
 Password,كلمه السر
+Password Cracked,كلمة السر متصدع
 Password Cracking Leaderboard,كلمة المرور تكسير المتصدرين
 Password Hash,كلمة المرور تجزئة
 Password Security,كلمة السر الأمن
@@ -437,9 +447,10 @@ Play Story,تلعب قصة
 player,لاعب
 Player,لاعب
 Player Alias,لاعب الاسم المستعار
+Player Arrested!,القبض على لاعب!
 Player Email,لاعب البريد الإلكتروني
 Player Name,اسم اللاعب
-"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","تتوفر أيضًا كلمات مرور الحساب المصرفي للاعب ، مما يتيح لك كسر كلمات مرور بعضهم البعض وسرقة الأموال."
+"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.",تتوفر أيضًا كلمات مرور الحساب المصرفي للاعب ، مما يتيح لك كسر كلمات مرور بعضهم البعض وسرقة الأموال.
 Players,لاعبين
 Please do NOT enter your real bank account password.,الرجاء عدم إدخال كلمة مرور حسابك المصرفي الحقيقي.
 points,نقاط
@@ -484,6 +495,7 @@ Score,أحرز هدفا
 Scoreboard,اللوحة
 Scoreboard Rank By,ترتيب النتائج حسب
 Scoreboard Visibility,رؤية اللوحة
+Security Breach,خرق أمني
 See All,اظهار الكل
 Select a Theme,اختر سمة
 Select Avatar,حدد الصورة الرمزية
@@ -551,15 +563,16 @@ Team Shares,مشاركات الفريق
 Team Sharing,مشاركة الفريق
 Teams,فرق
 Test Flag,اختبار العلم
+Text Share,نص حصة
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,السوق السوداء مفتوحة وأنت تعرف الرجل. قم بتنزيل شفرة مصدر الهدف أو S.W.A.T. لاعبين آخرين برشوة الشرطة (داخل اللعبة).
 The cost to take the hint.  Can be >= 0.,تكلفة اتخاذ التلميح. يمكن أن يكون> ​​= 0.
 The deduction is,الخصم هو
-"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.","الاحتمال الآخر الوحيد هو أنني أفسدت بعض الكود ، وهذا لا يبدو مرجحًا للغاية."
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.",الاحتمال الآخر الوحيد هو أنني أفسدت بعض الكود ، وهذا لا يبدو مرجحًا للغاية.
 The starting money for a new,بدءا المال الجديد
 Theme,موضوع
 There are currently no shared files.,لا يوجد حاليا أي ملفات مشتركة.
-"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","هذه العلامات هي ملفات ، يجب على المستخدمين تقديم نفس الملف بالضبط لالتقاط العلم. يتم تخزين التجزئة فقط (SHA1) من الملف على الخادم."
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","تم إعداد هذه اللعبة لاستخدام التهديف الديناميكي ، بمعنى أنه عندما يلتقط اللاعبون الآخرون الأعلام ، ستنخفض قيمة هذه الأعلام. حتى الاستيلاء عليها بسرعة أو تخسر!"
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",هذه العلامات هي ملفات ، يجب على المستخدمين تقديم نفس الملف بالضبط لالتقاط العلم. يتم تخزين التجزئة فقط (SHA1) من الملف على الخادم.
+"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!",تم إعداد هذه اللعبة لاستخدام التهديف الديناميكي ، بمعنى أنه عندما يلتقط اللاعبون الآخرون الأعلام ، ستنخفض قيمة هذه الأعلام. حتى الاستيلاء عليها بسرعة أو تخسر!
 This is a test flag/string the user could input for credit.,هذه علامة / سلسلة اختبار يمكن للمستخدم إدخالها للحصول على ائتمان.
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,هذا هو المبلغ الذي يجب على اللاعب دفعه لـ S.W.A.T. حساب لاعبين آخرين. يتم زيادة SWAT اللاحقة لنفس اللاعب أيضًا بهذا المبلغ في كل مرة.
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,هذا هو المبلغ الذي يجب على اللاعب دفعه لترقية خوارزمية تجزئة كلمات مرور البنك
@@ -583,10 +596,10 @@ This will delete the player and the associated user account!,سيؤدي هذا �
 This will delete the team and any associated user accounts!,سيؤدي هذا إلى حذف الفريق وأي حسابات مستخدمين مرتبطة به!
 Threshold,عتبة
 Time,زمن
-"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.","الوقت لإنشاء الروبوتات. من خلال تحميل برنامج روبوت صغير لاستهداف الأجهزة ، يمكنك أن تحصل على مكافأة دورية لكل روبوت في روبوتك ؛ أكبر الروبوتات أكبر المكافأة."
+"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.",الوقت لإنشاء الروبوتات. من خلال تحميل برنامج روبوت صغير لاستهداف الأجهزة ، يمكنك أن تحصل على مكافأة دورية لكل روبوت في روبوتك ؛ أكبر الروبوتات أكبر المكافأة.
 to Add,لإضافة
 to Add or Subtract,لإضافة أو طرح
-"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.","لاستعادة مثيل RTB هذا ، قد تحتاج أيضًا إلى محتويات ضمن دليل الملفات ، لتضمين rootthebox.cfg."
+"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.",لاستعادة مثيل RTB هذا ، قد تحتاج أيضًا إلى محتويات ضمن دليل الملفات ، لتضمين rootthebox.cfg.
 Token,رمز
 Token Value,قيمة الرمز
 Tools,أدوات
@@ -604,6 +617,7 @@ Update Bank Password,تحديث كلمة مرور البنك
 Update Configuration,تحديث التكوين
 Update Password,تطوير كلمة السر
 Update RootTheBox,تحديث RootTheBox
+Upgrade Purchased,ترقية تم شراؤها
 Upgrade to,ترقية الى
 Upload,رفع
 Upload Avatar,تحميل الصورة الرمزية
@@ -618,8 +632,8 @@ Value,القيمة
 View,رأي
 View Box,عرض مربع
 View Details,عرض التفاصيل
-Visable,Visable
-Visable to Players,مرئي للاعبين
+Visible,مرئي
+Visible to Players,مرئي للاعبين
 Waiting for the game to start‚Ä¶,في انتظار بدء اللعبة ‚Ä¶
 Wall of Sheep,جدار الأغنام
 WARNING,تحذير
@@ -627,14 +641,14 @@ Welcome,أهلا بك
 Welcome to the computer war game where security professionals can practice and learn.,مرحبًا بك في لعبة الحرب على الكمبيوتر حيث يمكن لمحترفي الأمان التدريب والتعلم
 Welcome to the Scene,مرحبًا بك في المشهد
 What is the name of this box?,ما هو اسم هذا المربع؟
-"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.","ما هو اسم مؤسستك؟ إذا كنت لا تخطط لاستخدام الشركات ، فما عليك سوى إنشاء واحدة بدون اسم."
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",ما هو اسم مؤسستك؟ إذا كنت لا تخطط لاستخدام الشركات ، فما عليك سوى إنشاء واحدة بدون اسم.
 What is your motto?,ما هو شعارك؟
 What is your teams motto?,ما هو شعار فرقك؟
 What type of system is this?,ما نوع النظام هذا؟
 Whats the difficulty of the box?,ما هي صعوبة المربع؟
 When banking is disabled,عندما يتم تعطيل المصرفية
-"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.","متى تبدأ في تطبيق العقوبة. على سبيل المثال ، قد ترغب في أن تكون أول محاولة غير صحيحة مجانية ، ولكن معاقبة المحاولات اللاحقة."
-"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","متى تتوقف عن تطبيق العقوبة. على سبيل المثال ، قد ترغب في معاقبة مجموعة معينة فقط من قيمة العلامات والسماح بأي محاولات أخرى لتكون حرة ، وبالتالي السماح لجميع العلامات أن يكون لها بعض القيمة."
+"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.",متى تبدأ في تطبيق العقوبة. على سبيل المثال ، قد ترغب في أن تكون أول محاولة غير صحيحة مجانية ، ولكن معاقبة المحاولات اللاحقة.
+"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.",متى تتوقف عن تطبيق العقوبة. على سبيل المثال ، قد ترغب في معاقبة مجموعة معينة فقط من قيمة العلامات والسماح بأي محاولات أخرى لتكون حرة ، وبالتالي السماح لجميع العلامات أن يكون لها بعض القيمة.
 when using banking.,عند استخدام الخدمات المصرفية.
 Windows,شبابيك
 With contributions from,مع مساهمات من
@@ -644,6 +658,6 @@ You are not on a team,أنت لست في فريق
 You do not have access to this level yet.,ليس لديك حق الوصول إلى هذا المستوى حتى الآن.
 You do not own this upgrade.,أنت لا تملك هذه الترقية.
 You have not submitted any bribes yet.,لم ترسل أي رشاوى بعد.
-"Your email, visible to game administrators.","بريدك الإلكتروني ، مرئي لمسؤولي اللعبة."
-"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","يجب أن يكون مؤشرك من 3 إلى 16 حرفًا أبجديًا رقميًا. الشرطة السفلية ، الشرطة ، والنقاط المسموح بها."
+"Your email, visible to game administrators.",بريدك الإلكتروني ، مرئي لمسؤولي اللعبة.
+"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",يجب أن يكون مؤشرك من 3 إلى 16 حرفًا أبجديًا رقميًا. الشرطة السفلية ، الشرطة ، والنقاط المسموح بها.
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",اسمك مرئي لمسؤولي اللعبة. يمكن أن يكون اسمك 3-64 حرفًا رقميًا

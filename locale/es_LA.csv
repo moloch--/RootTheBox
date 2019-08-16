@@ -25,6 +25,7 @@ Add to Market,Añadir al mercado
 Address,Dirección
 Admin,Administración
 Admin Home,Inicio del administrador
+Admin Message,Mensaje de administrador
 Administrator Panel,Panel de administrador
 Admins,Administradores
 All Notifications,Todas las notificaciones
@@ -65,10 +66,12 @@ BEGIN SECURE COMMUNIQUE,COMIENCE COMUNICADO SEGURO
 Black Market,Mercado negro
 Bonus reward for those that complete the level.,Recompensa adicional para aquellos que completen el nivel.
 Bot,Larva del moscardón
+Bot added,Bot añadido
 Bot Reward,Recompensa Bot
 Botnet,Botnet
 Botnet Command & Control,Botnet Command & Control
 Botnet Monitor,Monitor de botnet
+Botnet Scored,Botnet anotó
 Botnets,Botnets
 Bots,Bots
 Box,Caja
@@ -251,15 +254,18 @@ File,Expediente
 File Description,Descripción del archivo
 File Flag,Indicador de archivo
 File Name,Nombre del archivo
+File Share,Recurso compartido de archivos
 File Sharing,Compartición de archivos
 File Size,Tamaño del archivo
 First Login,Primer inicio de sesión
 Flag,Bandera
+Flag Capture,Captura de bandera
 Flag Decrease Value,Marcar valor de disminución
 Flag Details,Detalles de la bandera
 Flag File,Archivo de bandera
 Flag Hints,Sugerencias de bandera
 Flag Name,Nombre de la bandera
+Flag Penalty,Penalización de bandera
 Flag Penalty % Cost,Marcar Penalidad% Costo
 Flag Penalty Cost,Marcar costo de penalización
 Flag Penalty Start,Marcar inicio de penalización
@@ -289,6 +295,7 @@ Global Notifications,Notificaciones globales
 Handle,Encargarse de
 Hint,Insinuación
 Hint not yet taken,Sugerencia aún no tomada
+Hint Taken,Sugerencia tomada
 Hints,Consejos
 Hints on,Consejos sobre
 Hints Taken,Consejos tomados
@@ -328,6 +335,7 @@ Level,Nivel
 Level Name,Nombre de nivel
 Level Number,Numero de nivel
 Level to put box in?,¿Nivel para poner la caja?
+Level Unlocked,Nivel desbloqueado
 Limit number of players that can be on any one team,Limite la cantidad de jugadores que pueden estar en un equipo
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Limita el número de intentos de capturar una bandera. Una vez que se alcanza el límite, no se pueden tomar más medidas sobre esa bandera."
 Linux,Linux
@@ -376,6 +384,7 @@ New Game Level,Nuevo nivel de juego
 New IP Address,Nueva dirección IP
 New Password,Nueva contraseña
 New Team,Nuevo equipo
+New Team Member,Nuevo miembro del equipo
 New Team Name,Nuevo nombre del equipo
 No,No
 No Avatar,No avatar
@@ -418,6 +427,7 @@ Or Choose Existing,O elija existente
 Outcome,Salir
 Outcome,Salir
 Password,Contraseña
+Password Cracked,Contraseña descifrada
 Password Cracking Leaderboard,Tabla de clasificación para descifrar contraseñas
 Password Hash,Hash de contraseña
 Password Security,Seguridad de contraseña
@@ -437,6 +447,7 @@ Play Story,Reproducir una historia
 player,jugador
 Player,Jugador
 Player Alias,Alias ​​de jugador
+Player Arrested!,¡Jugador arrestado!
 Player Email,Email del jugador
 Player Name,Nombre del jugador
 "Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","Las contraseñas de las cuentas bancarias del jugador también están disponibles, lo que le permite descifrar las contraseñas de los demás y robar el dinero."
@@ -484,6 +495,7 @@ Score,Puntuación
 Scoreboard,Marcador
 Scoreboard Rank By,Clasificación del marcador por
 Scoreboard Visibility,Visibilidad del marcador
+Security Breach,Violación de la seguridad
 See All,Ver todo
 Select a Theme,Selecciona un tema
 Select Avatar,Seleccionar avatar
@@ -551,6 +563,7 @@ Team Shares,Acciones del equipo
 Team Sharing,Team Sharing
 Teams,Equipos
 Test Flag,Indicador de prueba
+Text Share,Compartir texto
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,El mercado negro está abierto y conoces a un chico. Descargue el código fuente de un objetivo o S.W.A.T. otros jugadores sobornando a la policía (en el juego).
 The cost to take the hint.  Can be >= 0.,El costo de tomar la pista. Puede ser> = 0.
 The deduction is,La deducción es
@@ -604,6 +617,7 @@ Update Bank Password,Actualizar contraseña del banco
 Update Configuration,Actualizar configuración
 Update Password,Actualiza contraseña
 Update RootTheBox,Actualizar RootTheBox
+Upgrade Purchased,Actualización comprada
 Upgrade to,Actualizar a
 Upload,Subir
 Upload Avatar,Subir avatar
@@ -618,8 +632,8 @@ Value,Valor
 View,Ver
 View Box,Ver cuadro
 View Details,Ver detalles
-Visable,Visible
-Visable to Players,Visible para los jugadores
+Visible,Visible
+Visible to Players,Visible para los jugadores
 Waiting for the game to start‚Ä¶,Esperando a que comience el juego ...
 Wall of Sheep,Muro de ovejas
 WARNING,ADVERTENCIA
@@ -628,22 +642,22 @@ Welcome to the computer war game where security professionals can practice and l
 Welcome to the Scene,Bienvenido a la escena
 What is the name of this box?,¿Cuál es el nombre de esta caja?
 "What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.","¿Cuál es el nombre de su corporación? Si no planea usar Corporaciones, solo cree una"
-What is your motto?,
-What is your teams motto?,
-What type of system is this?,
-Whats the difficulty of the box?,
-When banking is disabled,
-"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.",
-"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.",
-when using banking.,
-Windows,
-With contributions from,
-XML File,
-Yes,
-You are not on a team,
-You do not have access to this level yet.,
-You do not own this upgrade.,
-You have not submitted any bribes yet.,
-"Your email, visible to game administrators.",
-"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",
-"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",
+What is your motto?,¿Cuál es su lema?
+What is your teams motto?,¿Cuál es el lema de tu equipo?
+What type of system is this?,¿Qué tipo de sistema es este?
+Whats the difficulty of the box?,¿Cuál es la dificultad de la caja?
+When banking is disabled,Cuando la banca está deshabilitada
+"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.","Cuándo comenzar a aplicar la penalización. Por ejemplo, es posible que desee que el primer intento incorrecto sea gratuito, pero penalice los intentos posteriores."
+"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","Cuándo dejar de aplicar la pena. Por ejemplo, es posible que desee penalizar solo un cierto total del valor de las banderas y permitir que cualquier intento posterior sea libre, permitiendo que todas las banderas tengan algún valor."
+when using banking.,cuando se usa la banca.
+Windows,Ventanas
+With contributions from,Con contribuciones de
+XML File,Archivo XML
+Yes,Sí
+You are not on a team,No estas en un equipo
+You do not have access to this level yet.,Aún no tienes acceso a este nivel.
+You do not own this upgrade.,No eres el propietario de esta actualización.
+You have not submitted any bribes yet.,Aún no ha enviado ningún soborno.
+"Your email, visible to game administrators.","Su correo electrónico, visible para los administradores del juego."
+"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Su identificador debe tener 3-16 caracteres alfanuméricos. Subrayado, guión y puntos permitidos."
+"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Tu nombre, visible para los administradores del juego. Tu nombre puede tener 3-64 caracteres alfanuméricos"

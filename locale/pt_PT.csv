@@ -1,4 +1,4 @@
-﻿(stop - start) * cost.,(parar - começar) * custo.
+(stop - start) * cost.,(parar - começar) * custo.
 $,$
 A brief description of the box,Uma breve descrição da caixa
 About,Sobre
@@ -25,6 +25,7 @@ Add to Market,Adicionar ao mercado
 Address,Endereço
 Admin,Admin
 Admin Home,Página inicial do administrador
+Admin Message,Mensagem Administrativa
 Administrator Panel,Painel Administrador
 Admins,Admins
 All Notifications,Todas as notificações
@@ -65,10 +66,12 @@ BEGIN SECURE COMMUNIQUE,COMECE COMUNICADO SEGURO
 Black Market,Mercado negro
 Bonus reward for those that complete the level.,Recompensa bônus para aqueles que completam o nível.
 Bot,Robô
+Bot added,Bot adicionado
 Bot Reward,Recompensa do bot
 Botnet,Botnet
 Botnet Command & Control,Comando e Controle de Botnet
 Botnet Monitor,Monitor de Botnet
+Botnet Scored,Botnet pontuado
 Botnets,Botnets
 Bots,Botinhas
 Box,Caixa
@@ -251,15 +254,18 @@ File,Arquivo
 File Description,Descrição do arquivo
 File Flag,Flag de arquivo
 File Name,Nome do arquivo
+File Share,Compartilhamento de arquivo
 File Sharing,Compartilhamento de arquivos
 File Size,Tamanho do arquivo
 First Login,Primeiro login
 Flag,Bandeira
+Flag Capture,Captura de bandeira
 Flag Decrease Value,Sinalizar Diminuir Valor
 Flag Details,Detalhes da bandeira
 Flag File,Arquivo de bandeira
 Flag Hints,Dicas de sinalização
 Flag Name,Nome do sinalizador
+Flag Penalty,Penalidade da Bandeira
 Flag Penalty % Cost,Custo de% de penalidade da bandeira
 Flag Penalty Cost,Custo de penalização da bandeira
 Flag Penalty Start,Começo da penalidade da bandeira
@@ -289,6 +295,7 @@ Global Notifications,Notificações Globais
 Handle,Lidar com
 Hint,Sugestão
 Hint not yet taken,Dica ainda não tirada
+Hint Taken,Sugestão Tomada
 Hints,Dicas
 Hints on,Dicas sobre
 Hints Taken,Sugestões tomadas
@@ -328,6 +335,7 @@ Level,Nível
 Level Name,Nome do nível
 Level Number,Número do Nível
 Level to put box in?,Nível para colocar a caixa?
+Level Unlocked,Nível Desbloqueado
 Limit number of players that can be on any one team,Número limite de jogadores que podem estar em qualquer time
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Limita o número de tentativas para capturar um sinalizador. Quando o limite for atingido, nenhuma outra ação poderá ser executada nesse sinalizador."
 Linux,Linux
@@ -376,6 +384,7 @@ New Game Level,Novo nível de jogo
 New IP Address,Novo endereço IP
 New Password,Nova senha
 New Team,Novo time
+New Team Member,Novo membro da equipe
 New Team Name,Novo nome da equipe
 No,Não
 No Avatar,Sem avatar
@@ -418,6 +427,7 @@ Or Choose Existing,Ou escolha existente
 Outcome,Resultado
 Outcome,Resultado
 Password,Senha
+Password Cracked,Senha rachada
 Password Cracking Leaderboard,Tabela de classificação de senha
 Password Hash,Hash de Senha
 Password Security,Segurança de Senha
@@ -437,6 +447,7 @@ Play Story,Jogar história
 player,jogador
 Player,Jogador
 Player Alias,Jogador Alias
+Player Arrested!,Jogador preso!
 Player Email,E-mail do jogador
 Player Name,Nome do jogador
 "Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","As senhas da conta bancária do jogador também estão disponíveis, permitindo que você decifre as senhas umas das outras e roube o dinheiro."
@@ -484,6 +495,7 @@ Score,Ponto
 Scoreboard,Placar
 Scoreboard Rank By,Classificação do placar por
 Scoreboard Visibility,Visibilidade do placar
+Security Breach,Falha de segurança
 See All,Ver tudo
 Select a Theme,Selecione um tema
 Select Avatar,Selecione Avatar
@@ -551,6 +563,7 @@ Team Shares,Ações da equipe
 Team Sharing,Compartilhamento de equipe
 Teams,Equipes
 Test Flag,Bandeira de teste
+Text Share,Compartilhamento de texto
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,O mercado negro está aberto e você conhece um cara. Faça o download do código-fonte de um alvo ou S.W.A.T. outros jogadores subornando a polícia (no jogo).
 The cost to take the hint.  Can be >= 0.,O custo para levar a dica. Pode ser> = 0.
 The deduction is,A dedução é
@@ -604,6 +617,7 @@ Update Bank Password,Atualizar senha do banco
 Update Configuration,Atualizar configuração
 Update Password,Atualizar senha
 Update RootTheBox,Atualizar RootTheBox
+Upgrade Purchased,Upgrade comprado
 Upgrade to,Atualize para
 Upload,Envio
 Upload Avatar,Carregar Avatar
@@ -618,8 +632,8 @@ Value,Valor
 View,Visão
 View Box,Exibir caixa
 View Details,Ver detalhes
-Visable,Visível
-Visable to Players,Visível para os jogadores
+Visible,Visível
+Visible to Players,Visível para os jogadores
 Waiting for the game to start‚Ä¶,Esperando o jogo começar ...
 Wall of Sheep,Parede de ovelhas
 WARNING,AVISO

@@ -1,4 +1,4 @@
-﻿(stop - start) * cost.,（停止 - 开始）*费用。
+(stop - start) * cost.,（停止 - 开始）*费用。
 $,$
 A brief description of the box,盒子的简要说明
 About,关于
@@ -25,6 +25,7 @@ Add to Market,添加到市场
 Address,地址
 Admin,管理员
 Admin Home,管理员主页
+Admin Message,管理员消息
 Administrator Panel,管理员面板
 Admins,管理员
 All Notifications,所有通知
@@ -65,10 +66,12 @@ BEGIN SECURE COMMUNIQUE,开始安全的通信
 Black Market,黑市
 Bonus reward for those that complete the level.,那些完成关卡的奖励奖励。
 Bot,博特
+Bot added,博特补充说
 Bot Reward,Bot奖励
 Botnet,僵尸网络
 Botnet Command & Control,僵尸网络命令与控制
 Botnet Monitor,僵尸网络监视器
+Botnet Scored,僵尸网络得分
 Botnets,僵尸网络
 Bots,机器人
 Box,框
@@ -251,15 +254,18 @@ File,文件
 File Description,文件描述
 File Flag,文件标志
 File Name,文件名
+File Share,文件共享
 File Sharing,文件共享
 File Size,文件大小
 First Login,首次登录
 Flag,旗
+Flag Capture,旗帜捕获
 Flag Decrease Value,国旗减少价值
 Flag Details,国旗细节
 Flag File,标志文件
 Flag Hints,标志提示
 Flag Name,标志名称
+Flag Penalty,国旗罚款
 Flag Penalty % Cost,国旗罚款％成本
 Flag Penalty Cost,国旗罚款
 Flag Penalty Start,国旗罚款开始
@@ -289,6 +295,7 @@ Global Notifications,全球通知
 Handle,处理
 Hint,暗示
 Hint not yet taken,提示尚未采取
+Hint Taken,提示采取
 Hints,提示
 Hints on,提示
 Hints Taken,提示
@@ -328,6 +335,7 @@ Level,水平
 Level Name,级别名称
 Level Number,级别编号
 Level to put box in?,放入盒子的水平？
+Level Unlocked,水平解锁
 Limit number of players that can be on any one team,限制任何一支球队的球员数量
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",限制捕获标志的尝试次数。达到限制后，不能对该标志采取进一步措施。
 Linux,Linux的
@@ -376,6 +384,7 @@ New Game Level,新的游戏关卡
 New IP Address,新的IP地址
 New Password,新密码
 New Team,新团队
+New Team Member,新团队成员
 New Team Name,新团队名称
 No,没有
 No Avatar,没有头像
@@ -418,6 +427,7 @@ Or Choose Existing,或选择现有
 Outcome,结果
 Outcome,结果
 Password,密码
+Password Cracked,密码破解
 Password Cracking Leaderboard,密码破解排行榜
 Password Hash,密码哈希
 Password Security,密码安全
@@ -437,6 +447,7 @@ Play Story,玩故事
 player,播放机
 Player,播放机
 Player Alias,玩家别名
+Player Arrested!,球员被捕！
 Player Email,玩家电邮
 Player Name,选手姓名
 "Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.",玩家的银行账户密码也可用，允许您破解对方的密码并窃取资金。
@@ -484,6 +495,7 @@ Score,得分了
 Scoreboard,记分牌
 Scoreboard Rank By,记分牌排名依据
 Scoreboard Visibility,记分牌可见性
+Security Breach,安全违规
 See All,查看全部
 Select a Theme,选择一个主题
 Select Avatar,选择头像
@@ -551,6 +563,7 @@ Team Shares,团队分享
 Team Sharing,团队分享
 Teams,小组
 Test Flag,测试标志
+Text Share,文字分享
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,黑市是开放的，你知道一个人。下载目标的源代码或S.W.A.T.其他玩家通过贿赂（游戏中）警察。
 The cost to take the hint.  Can be >= 0.,采取提示的成本。可以> = 0。
 The deduction is,扣除是
@@ -604,6 +617,7 @@ Update Bank Password,更新银行密码
 Update Configuration,更新配置
 Update Password,更新密码
 Update RootTheBox,更新RootTheBox
+Upgrade Purchased,升级购买
 Upgrade to,升级到
 Upload,上传
 Upload Avatar,上传头像
@@ -618,8 +632,8 @@ Value,值
 View,视图
 View Box,查看框
 View Details,查看详情
-Visable,Visable
-Visable to Players,可见球员
+Visible,可见
+Visible to Players,玩家可以看到
 Waiting for the game to start‚Ä¶,等待游戏开始，¶¶
 Wall of Sheep,羊墙
 WARNING,警告

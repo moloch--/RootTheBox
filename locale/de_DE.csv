@@ -1,4 +1,4 @@
-﻿(stop - start) * cost.,(Stop - Start) * Kosten.
+(stop - start) * cost.,(Stop - Start) * Kosten.
 $,$
 A brief description of the box,Eine kurze Beschreibung der Box
 About,Über
@@ -25,6 +25,7 @@ Add to Market,Zum Markt hinzufügen
 Address,Adresse
 Admin,Administrator
 Admin Home,Admin-Startseite
+Admin Message,Admin-Nachricht
 Administrator Panel,Administrator Panel
 Admins,Admins
 All Notifications,Alle Benachrichtigungen
@@ -65,10 +66,12 @@ BEGIN SECURE COMMUNIQUE,BEGINNEN SIE SICHERE KOMMUNIKATION
 Black Market,Schwarzmarkt
 Bonus reward for those that complete the level.,"Bonusbelohnung für diejenigen, die das Level abschließen."
 Bot,Bot
+Bot added,Bot fügte hinzu
 Bot Reward,Bot Belohnung
 Botnet,Botnet
 Botnet Command & Control,Botnet Command & Control
 Botnet Monitor,Botnet-Monitor
+Botnet Scored,Botnet erzielt
 Botnets,Botnetze
 Bots,Bots
 Box,Box
@@ -251,15 +254,18 @@ File,Datei
 File Description,Dateibeschreibung
 File Flag,Datei-Flag
 File Name,Dateiname
+File Share,Dateifreigabe
 File Sharing,Datenaustausch
 File Size,Dateigröße
 First Login,Erstes Login
 Flag,Flagge
+Flag Capture,Flaggenerfassung
 Flag Decrease Value,Flag Wert verringern
 Flag Details,Kennzeichnungsdetails
 Flag File,Datei kennzeichnen
 Flag Hints,Hinweise kennzeichnen
 Flag Name,Flag Name
+Flag Penalty,Fahnenstrafe
 Flag Penalty % Cost,Flag Strafe% Kosten
 Flag Penalty Cost,Kosten der Flaggenstrafe
 Flag Penalty Start,Flag Penalty Start
@@ -289,6 +295,7 @@ Global Notifications,Globale Benachrichtigungen
 Handle,Griff
 Hint,Hinweis
 Hint not yet taken,Hinweis noch nicht genommen
+Hint Taken,Hinweis genommen
 Hints,Hinweise
 Hints on,Hinweise auf
 Hints Taken,Tipps gemacht
@@ -328,6 +335,7 @@ Level,Niveau
 Level Name,Ebenenname
 Level Number,Ebenennummer
 Level to put box in?,Level zum Einstecken?
+Level Unlocked,Level freigeschaltet
 Limit number of players that can be on any one team,"Begrenzen Sie die Anzahl der Spieler, die in einem Team sein können"
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Begrenzt die Anzahl der Versuche, ein Flag zu erfassen. Sobald das Limit erreicht ist, kann für dieses Flag keine weitere Aktion ausgeführt werden."
 Linux,Linux
@@ -376,6 +384,7 @@ New Game Level,Neues Spiellevel
 New IP Address,Neue IP-Adresse
 New Password,Neues Kennwort
 New Team,Neues Team
+New Team Member,Neues Teammitglied
 New Team Name,Neuer Teamname
 No,Nein
 No Avatar,Kein Avatar
@@ -418,6 +427,7 @@ Or Choose Existing,Oder wählen Sie Vorhanden
 Outcome,Ergebnis
 Outcome,Ergebnis
 Password,Passwort
+Password Cracked,Passwort geknackt
 Password Cracking Leaderboard,Leaderboard zum Knacken von Passwörtern
 Password Hash,Passwort-Hash
 Password Security,Passwort-Sicherheit
@@ -437,6 +447,7 @@ Play Story,Story spielen
 player,Spieler
 Player,Spieler
 Player Alias,Spieler Alias
+Player Arrested!,Spieler verhaftet!
 Player Email,Spieler E-Mail
 Player Name,Spielername
 "Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","Passwörter für das Bankkonto des Spielers sind ebenfalls verfügbar, sodass Sie die Passwörter des anderen knacken und das Geld stehlen können."
@@ -484,6 +495,7 @@ Score,Ergebnis
 Scoreboard,Anzeigetafel
 Scoreboard Rank By,Anzeigetafel Rang nach
 Scoreboard Visibility,Sichtbarkeit der Anzeigetafel
+Security Breach,Sicherheitslücke
 See All,Alles sehen
 Select a Theme,Wähle ein Thema
 Select Avatar,Wählen Sie Avatar
@@ -551,6 +563,7 @@ Team Shares,Teamanteile
 Team Sharing,Team-Sharing
 Teams,Mannschaften
 Test Flag,Testflag
+Text Share,Text teilen
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,Der Schwarzmarkt ist offen und Sie kennen einen Mann. Laden Sie den Quellcode eines Ziels oder S.W.A.T. andere Spieler durch Bestechung der Polizei (im Spiel).
 The cost to take the hint.  Can be >= 0.,Die Kosten für den Hinweis. Kann> = 0 sein.
 The deduction is,Der Abzug ist
@@ -604,6 +617,7 @@ Update Bank Password,Bankpasswort aktualisieren
 Update Configuration,Konfiguration aktualisieren
 Update Password,Passwort erneuern
 Update RootTheBox,Aktualisieren Sie RootTheBox
+Upgrade Purchased,Upgrade gekauft
 Upgrade to,Upgraden auf
 Upload,Hochladen
 Upload Avatar,Avatar hochladen
@@ -618,8 +632,8 @@ Value,Wert
 View,Aussicht
 View Box,View Box
 View Details,Details anzeigen
-Visable,Sichtbar
-Visable to Players,Sichtbar für Spieler
+Visible,Sichtbar
+Visible to Players,Sichtbar für Spieler
 Waiting for the game to start‚Ä¶,Warten auf den Start des Spiels
 Wall of Sheep,Mauer der Schafe
 WARNING,WARNUNG

@@ -25,6 +25,7 @@ Add to Market,Добавить в Маркет
 Address,Адрес
 Admin,Администратор
 Admin Home,Admin Home
+Admin Message,Сообщение администратора
 Administrator Panel,Панель администратора
 Admins,Админы
 All Notifications,Все уведомления
@@ -65,10 +66,12 @@ BEGIN SECURE COMMUNIQUE,НАЧАТЬ БЕЗОПАСНОЕ СООБЩЕНИЕ
 Black Market,Черный рынок
 Bonus reward for those that complete the level.,"Бонусная награда для тех, кто завершает уровень."
 Bot,Bot
+Bot added,Бот добавил
 Bot Reward,Бот Вознаграждение
 Botnet,Ботнет
 Botnet Command & Control,Botnet командование и управление
 Botnet Monitor,Ботнет Монитор
+Botnet Scored,Ботнет набрал
 Botnets,ботнеты
 Bots,Боты
 Box,коробка
@@ -96,7 +99,7 @@ Categories,категории
 Category,категория
 Category box belongs too?,Категория коробки тоже принадлежит?
 Category Name,Название категории
-Change,"+ Изменить"
+Change,+ Изменить
 Change Avatar,Сменить аватар
 Characters,Персонажи
 Charts,Графики
@@ -251,15 +254,18 @@ File,файл
 File Description,описание файла
 File Flag,Флаг файла
 File Name,Имя файла
+File Share,Файловый ресурс
 File Sharing,Обмен файлами
 File Size,Размер файла
 First Login,Первый вход
 Flag,Флаг
+Flag Capture,Захват флага
 Flag Decrease Value,Флаг Уменьшить значение
 Flag Details,Детали флага
 Flag File,Файл флага
 Flag Hints,Флаг Подсказки
 Flag Name,Имя флага
+Flag Penalty,Штраф
 Flag Penalty % Cost,Флаг Штраф% Стоимость
 Flag Penalty Cost,Флаг Штраф Стоимость
 Flag Penalty Start,Флаг штрафного старта
@@ -289,6 +295,7 @@ Global Notifications,Глобальные уведомления
 Handle,Справиться
 Hint,намек
 Hint not yet taken,Подсказка еще не принята
+Hint Taken,Подсказка
 Hints,Советы
 Hints on,Советы по
 Hints Taken,Советы взяты
@@ -328,6 +335,7 @@ Level,уровень
 Level Name,Название уровня
 Level Number,Номер уровня
 Level to put box in?,"Уровень, чтобы положить коробку в?"
+Level Unlocked,Уровень разблокирован
 Limit number of players that can be on any one team,"Ограничить количество игроков, которые могут быть в одной команде"
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Ограничивает количество попыток захвата флага. Как только предел достигнут, никакие дальнейшие действия с этим флагом не могут быть предприняты."
 Linux,Linux
@@ -376,6 +384,7 @@ New Game Level,Новый игровой уровень
 New IP Address,Новый IP-адрес
 New Password,новый пароль
 New Team,Новая команда
+New Team Member,Новый член команды
 New Team Name,Название новой команды
 No,нет
 No Avatar,Нет аватара
@@ -418,6 +427,7 @@ Or Choose Existing,Или выберите существующий
 Outcome,результат
 Outcome,результат
 Password,пароль
+Password Cracked,Пароль взломан
 Password Cracking Leaderboard,Таблица лидеров взлома паролей
 Password Hash,Хэш пароля
 Password Security,Безопасность пароля
@@ -437,6 +447,7 @@ Play Story,Play Story
 player,игрок
 Player,игрок
 Player Alias,Псевдоним игрока
+Player Arrested!,Игрок арестован!
 Player Email,Электронная почта игрока
 Player Name,Имя игрока
 "Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","Также доступны пароли банковского счета игрока, что позволяет взломать пароли друг друга и украсть деньги."
@@ -484,6 +495,7 @@ Score,Гол
 Scoreboard,Табло
 Scoreboard Rank By,Табло рейтинга по
 Scoreboard Visibility,Видимость табло
+Security Breach,Нарушение безопасности
 See All,Увидеть все
 Select a Theme,Выберите тему
 Select Avatar,Выберите Аватар
@@ -551,6 +563,7 @@ Team Shares,Командные акции
 Team Sharing,Командный обмен
 Teams,Команды
 Test Flag,Тестовый флаг
+Text Share,Текст Поделиться
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,"Черный рынок открыт, и вы знаете парня. Загрузите исходный код цели или S.W.A.T. другие игроки, подкупая (в игре) полицию."
 The cost to take the hint.  Can be >= 0.,"Стоимость, чтобы взять подсказку. Может быть> = 0."
 The deduction is,Вычет
@@ -604,6 +617,7 @@ Update Bank Password,Обновить пароль банка
 Update Configuration,Обновить конфигурацию
 Update Password,Обновить пароль
 Update RootTheBox,Обновление RootTheBox
+Upgrade Purchased,Обновление куплено
 Upgrade to,Обновитесь до
 Upload,Загрузить
 Upload Avatar,Загрузить аватар
@@ -618,8 +632,8 @@ Value,Значение
 View,Посмотреть
 View Box,Окно просмотра
 View Details,Посмотреть детали
-Visable,видимые
-Visable to Players,Доступно для игроков
+Visible,видимый
+Visible to Players,Видно игрокам
 Waiting for the game to start‚Ä¶,В ожидании начала игры…
 Wall of Sheep,Стена овец
 WARNING,ПРЕДУПРЕЖДЕНИЕ

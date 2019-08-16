@@ -1,4 +1,4 @@
-﻿(stop - start) * cost.,（停止-開始）*コスト。
+(stop - start) * cost.,（停止-開始）*コスト。
 $,$
 A brief description of the box,ボックスの簡単な説明
 About,約
@@ -25,6 +25,7 @@ Add to Market,マーケットに追加
 Address,住所
 Admin,管理者
 Admin Home,管理者ホーム
+Admin Message,管理者メッセージ
 Administrator Panel,管理者パネル
 Admins,管理者
 All Notifications,すべての通知
@@ -65,10 +66,12 @@ BEGIN SECURE COMMUNIQUE,セキュアコミュニケ
 Black Market,ブラックマーケット
 Bonus reward for those that complete the level.,レベルを完了した人に対するボーナス報酬。
 Bot,ボット
+Bot added,ボットが追加されました
 Bot Reward,ボット報酬
 Botnet,ボットネット
 Botnet Command & Control,ボットネットコマンド＆コントロール
 Botnet Monitor,ボットネットモニター
+Botnet Scored,採点されたボットネット
 Botnets,ボットネット
 Bots,ボット
 Box,ボックス
@@ -251,15 +254,18 @@ File,ファイル
 File Description,ファイル説明
 File Flag,ファイルフラグ
 File Name,ファイル名
+File Share,ファイル共有
 File Sharing,ファイル共有
 File Size,ファイルサイズ
 First Login,最初のログイン
 Flag,旗
+Flag Capture,旗取り
 Flag Decrease Value,フラグ値を減らす
 Flag Details,フラグの詳細
 Flag File,フラグファイル
 Flag Hints,フラグのヒント
 Flag Name,フラグ名
+Flag Penalty,旗のペナルティ
 Flag Penalty % Cost,旗のペナルティ％コスト
 Flag Penalty Cost,旗のペナルティコスト
 Flag Penalty Start,フラグペナルティスタート
@@ -289,6 +295,7 @@ Global Notifications,グローバル通知
 Handle,ハンドル
 Hint,ヒント
 Hint not yet taken,ヒントはまだ取られていません
+Hint Taken,ヒントを取る
 Hints,ヒント
 Hints on,ヒント
 Hints Taken,撮影のヒント
@@ -328,6 +335,7 @@ Level,レベル
 Level Name,レベル名
 Level Number,レベル番号
 Level to put box in?,箱を入れるレベル？
+Level Unlocked,レベルロック解除
 Limit number of players that can be on any one team,いずれかのチームに所属できるプレイヤーの数を制限する
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",フラグをキャプチャする試行回数を制限します。制限に達すると、そのフラグに対してそれ以上のアクションは実行できません。
 Linux,Linux
@@ -376,6 +384,7 @@ New Game Level,新しいゲームレベル
 New IP Address,新しいIPアドレス
 New Password,新しいパスワード
 New Team,新しいチーム
+New Team Member,新しいチームメンバー
 New Team Name,新しいチーム名
 No,いや
 No Avatar,アバターなし
@@ -418,6 +427,7 @@ Or Choose Existing,または既存を選択
 Outcome,結果
 Outcome,結果
 Password,パスワード
+Password Cracked,パスワードクラック
 Password Cracking Leaderboard,パスワードクラッキングリーダーボード
 Password Hash,パスワードハッシュ
 Password Security,パスワードセキュリティ
@@ -437,6 +447,7 @@ Play Story,プレイストーリー
 player,プレーヤー
 Player,プレーヤー
 Player Alias,プレイヤーエイリアス
+Player Arrested!,プレイヤー逮捕！
 Player Email,プレイヤーのメール
 Player Name,プレーヤの名前
 "Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.",プレイヤーの銀行口座のパスワードも利用できるため、互いのパスワードを解読してお金を盗むことができます。
@@ -484,6 +495,7 @@ Score,スコア
 Scoreboard,スコアボード
 Scoreboard Rank By,スコアボードによるランク付け
 Scoreboard Visibility,スコアボードの可視性
+Security Breach,セキュリティ侵害
 See All,すべてを見る
 Select a Theme,テーマを選択してください
 Select Avatar,アバターを選択
@@ -551,6 +563,7 @@ Team Shares,チームシェア
 Team Sharing,チーム共有
 Teams,チーム
 Test Flag,テストフラグ
+Text Share,テキスト共有
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,闇市場は開かれていて、あなたは男を知っています。ターゲットのソースコードまたはS.W.A.Tをダウンロードします。 （ゲーム内の）警察に賄briを贈ることによる他のプレーヤー。
 The cost to take the hint.  Can be >= 0.,ヒントを取るためのコスト。 0以上にすることができます。
 The deduction is,控除は
@@ -604,6 +617,7 @@ Update Bank Password,銀行のパスワードを更新
 Update Configuration,構成の更新
 Update Password,パスワードを更新
 Update RootTheBox,RootTheBoxを更新する
+Upgrade Purchased,購入したアップグレード
 Upgrade to,へのアップグレード
 Upload,アップロードする
 Upload Avatar,アバターをアップロード
@@ -618,8 +632,8 @@ Value,値
 View,表示する
 View Box,ビューボックス
 View Details,詳細を見る
-Visable,可視
-Visable to Players,プレイヤーに見える
+Visible,見える
+Visible to Players,プレイヤーに見える
 Waiting for the game to start‚Ä¶,ゲームの開始を待つ¶
 Wall of Sheep,羊の壁
 WARNING,警告

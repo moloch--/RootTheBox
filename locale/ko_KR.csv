@@ -1,4 +1,4 @@
-﻿(stop - start) * cost.,(중지-시작) * 비용.
+(stop - start) * cost.,(중지-시작) * 비용.
 $,$
 A brief description of the box,상자에 대한 간단한 설명
 About,약
@@ -25,6 +25,7 @@ Add to Market,시장에 추가
 Address,주소
 Admin,관리자
 Admin Home,관리 홈
+Admin Message,관리자 메시지
 Administrator Panel,관리자 패널
 Admins,관리자
 All Notifications,모든 알림
@@ -65,10 +66,12 @@ BEGIN SECURE COMMUNIQUE,안전한 보안 커뮤니케이션
 Black Market,암시장
 Bonus reward for those that complete the level.,레벨을 완료 한 사람들에게 보너스 보상.
 Bot,봇
+Bot added,봇 추가
 Bot Reward,봇 보상
 Botnet,봇넷
 Botnet Command & Control,봇넷 명령 및 제어
 Botnet Monitor,봇넷 모니터
+Botnet Scored,봇넷 득점
 Botnets,봇넷
 Bots,봇
 Box,상자
@@ -251,15 +254,18 @@ File,파일
 File Description,파일 설명
 File Flag,파일 플래그
 File Name,파일 이름
+File Share,파일 공유
 File Sharing,파일 공유
 File Size,파일 크기
 First Login,첫 로그인
 Flag,깃발
+Flag Capture,플래그 캡처
 Flag Decrease Value,플래그 감소 값
 Flag Details,플래그 세부 사항
 Flag File,플래그 파일
 Flag Hints,깃발 힌트
 Flag Name,깃발 이름
+Flag Penalty,페널티 페널티
 Flag Penalty % Cost,페널티 페널티 % 비용
 Flag Penalty Cost,페널티 비용
 Flag Penalty Start,페널티 킥 시작
@@ -289,6 +295,7 @@ Global Notifications,글로벌 알림
 Handle,핸들
 Hint,힌트
 Hint not yet taken,아직 가져 오지 않은 힌트
+Hint Taken,찍은 힌트
 Hints,힌트
 Hints on,힌트
 Hints Taken,힌트
@@ -328,6 +335,7 @@ Level,수평
 Level Name,레벨 이름
 Level Number,레벨 번호
 Level to put box in?,상자를 넣을 수준?
+Level Unlocked,레벨 잠금 해제
 Limit number of players that can be on any one team,한 팀에 참여할 수있는 플레이어 수 제한
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",플래그 캡처 시도 횟수를 제한합니다. 한도에 도달하면 해당 플래그에 대한 추가 조치를 수행 할 수 없습니다.
 Linux,리눅스
@@ -376,6 +384,7 @@ New Game Level,새로운 게임 레벨
 New IP Address,새로운 IP 주소
 New Password,새 비밀번호
 New Team,새로운 팀
+New Team Member,새로운 팀 멤버
 New Team Name,새로운 팀 이름
 No,아니
 No Avatar,아바타 없음
@@ -418,6 +427,7 @@ Or Choose Existing,또는 기존을 선택하십시오
 Outcome,결과
 Outcome,결과
 Password,암호
+Password Cracked,비밀번호 크랙
 Password Cracking Leaderboard,비밀번호 크래킹 리더 보드
 Password Hash,비밀번호 해시
 Password Security,비밀번호 보안
@@ -437,6 +447,7 @@ Play Story,스토리 플레이
 player,플레이어
 Player,플레이어
 Player Alias,플레이어 별명
+Player Arrested!,체포 된 플레이어!
 Player Email,플레이어 이메일
 Player Name,선수 이름
 "Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.",플레이어의 은행 계좌 비밀번호도 사용할 수 있으므로 서로의 비밀번호를 해독하고 돈을 훔칠 수 있습니다.
@@ -484,6 +495,7 @@ Score,점수
 Scoreboard,스코어 보드
 Scoreboard Rank By,점수 판 순위
 Scoreboard Visibility,스코어 보드 가시성
+Security Breach,보안 위반
 See All,모두보기
 Select a Theme,테마를 선택하십시오
 Select Avatar,아바타 선택
@@ -551,6 +563,7 @@ Team Shares,팀 공유
 Team Sharing,팀 공유
 Teams,팀
 Test Flag,테스트 플래그
+Text Share,텍스트 공유
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,암시장은 열려 있고 당신은 남자를 알고 있습니다. 대상의 소스 코드 또는 S.W.A.T를 다운로드하십시오. (게임 내) 경찰에 뇌물을 줘서
 The cost to take the hint.  Can be >= 0.,힌트를 얻는 데 드는 비용. > = 0 일 수 있습니다.
 The deduction is,공제는
@@ -604,6 +617,7 @@ Update Bank Password,은행 비밀번호 업데이트
 Update Configuration,구성 업데이트
 Update Password,비밀번호 업데이트
 Update RootTheBox,RootTheBox 업데이트
+Upgrade Purchased,구매 한 업그레이드
 Upgrade to,로 업그레이드
 Upload,업로드
 Upload Avatar,아바타 업로드
@@ -618,8 +632,8 @@ Value,값
 View,전망
 View Box,박스보기
 View Details,세부 정보보기
-Visable,보이는
-Visable to Players,플레이어에게 공개
+Visible,명백한
+Visible to Players,플레이어에게 공개
 Waiting for the game to start‚Ä¶,게임이 시작되기를 기다리는 중
 Wall of Sheep,양의 벽
 WARNING,경고
