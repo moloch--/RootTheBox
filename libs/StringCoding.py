@@ -29,7 +29,10 @@ import sys
 def encode(s, name="utf-8", *args, **kwargs):
     if name == "base64":
         if isinstance(s, str):
-            s = bytearray(s, "utf-8")
+            try:
+                s = bytearray(s, "utf-8")
+            except:
+                pass
         return b64encode(s).decode("utf-8").strip()
     codec = codecs.lookup(name)
     rv, length = codec.encode(s, *args, **kwargs)
