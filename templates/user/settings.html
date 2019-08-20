@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}Settings{% end %}
+{% block title %}{{ _("Settings") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/user/settings.js"></script>
@@ -22,19 +22,19 @@
     <div id="change-team-avatar-modal" class="modal hide fade" style="display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Change {% if options.teams %}Team {% end %}Avatar</h3>
+            <h3>{{ _("Change") }} {% if options.teams %}{{ _("Team") }} {% end %}{{ _("Avatar") }}</h3>
         </div>
         <div class="modal-body">
             <form action="/user/settings/team_avatar" method="post" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <div class="modal-footer" style="float: right;">
-                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                    <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
                     <button id="team-avatar-form" class="btn btn-primary" type="submit">
-                        Submit
+                        {{ _("Submit") }}
                     </button>
                 </div>
                 <div class="control-group" style="vertical-align: middle;">
-                    <label class="control-label" for="team_avatar">Upload Avatar File - w500 x h250</label>
+                    <label class="control-label" for="team_avatar">{{ _("Upload Avatar File") }} - w500 x h250</label>
                     <div class="controls" style="display: inline;">
                         <input type="file" name="team_avatar" id="team_avatar" style="color:white;" />
                         <input type="hidden" name="team_avatar_select" id="team_avatar_select" />
@@ -44,8 +44,8 @@
                    
                 {% if len(avatars) > 0 %}
                 <div style="border-top: solid 1px rgb(92, 92, 92); margin-top: 20px; margin-bottom: 20px;"></div>
-                <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> indicates use by another {% if options.teams %}team{% else %}player{% end %}</span>
-                <label class="control-label" for="team_avatar">Or Choose Existing</label>
+                <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> {{ _("indicates use by another") }} {% if options.teams %}{{ _("team") }}{% else %}{{ _("player") }}{% end %}</span>
+                <label class="control-label" for="team_avatar">{{ _("Or Choose Existing") }}</label>
                     {% for avatar in avatars[::3] %}
                         <div class="row">
                             <div class="span3" style="position: relative;">
@@ -84,19 +84,19 @@
     <div id="change-user-avatar-modal" class="modal hide fade" style="display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Change {% if options.teams %}Player {% end %}Avatar</h3>
+            <h3>{{ _("Change") }} {% if options.teams %}{{ _("Player") }} {% end %}{{ _("Avatar") }}</h3>
         </div>
         <div class="modal-body">
             <form action="/user/settings/user_avatar" method="post" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <div class="modal-footer" style="float: right;">
-                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                    <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
                     <button id="user-avatar-form" class="btn btn-primary" type="submit">
-                        Submit
+                        {{ _("Submit") }}
                     </button>
                 </div>
                 <div class="control-group" style="vertical-align: middle;">
-                    <label class="control-label" for="user_avatar">Upload Avatar File - w500 x h250</label>
+                    <label class="control-label" for="user_avatar">{{ _("Upload Avatar File") }} - w500 x h250</label>
                     <div class="controls" style="display: inline;">
                         <input type="file" name="user_avatar" id="user_avatar" style="color:white;" />
                         <input type="hidden" name="user_avatar_select" id="user_avatar_select" />
@@ -106,8 +106,8 @@
                     
                 {% if len(avatars) > 0 %}
                 <div style="border-top: solid 1px rgb(92, 92, 92); margin-top: 20px; margin-bottom: 20px;"></div>
-                <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> indicates use by another player</span>
-                <label class="control-label" for="user_avatar">Or Choose Existing</label>
+                <span style="float: right; padding-right: 10px; margin-top: -15px; font-size: small;"><i class="fa fa-certificate"></i> {{ _("indicates use by another player") }}</span>
+                <label class="control-label" for="user_avatar">{{ _("Or Choose Existing") }}</label>
                     {% for avatar in avatars[::3] %}
                         <div class="row">
                             <div class="span3" style="position: relative;">
@@ -146,14 +146,14 @@
     <div class="container">
         <h1>
             <i class="fa fa-gears"></i>
-            Settings
+            {{ _("Settings") }}
         </h1>
         <br />
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">ERROR</h4>
+                    <h4 class="alert-heading">{{ _("ERROR") }}</h4>
                     {{ error }}
                 </div>
             {% end %}
@@ -162,7 +162,7 @@
             {% for message in success %}
                 <div class="alert alert-success">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">SUCCESS</h4>
+                    <h4 class="alert-heading">{{ _("SUCCESS") }}</h4>
                     {{ message }}
                 </div>
             {% end %}
@@ -173,10 +173,10 @@
             <div class="span3 well" style="width: 260px; padding-bottom: 23px; padding-right: 28px; ">
                 <div class="control-group" style="float:right; margin-right: -8px;">
                     <div class="controls">
-                        <a data-toggle="modal" class="btn btn-primary" href="#change-team-avatar-modal"> Change </a>
+                        <a data-toggle="modal" class="btn btn-primary" href="#change-team-avatar-modal"> {{ _("Change") }} </a>
                     </div>
                 </div>
-                <legend>{% if options.teams %}Team {% end %}Avatar</legend>
+                <legend>{% if options.teams %}{{ _("Team") }} {% end %}{{ _("Avatar") }}</legend>
                 {% if user.team %}
                     <img src="/avatars/{{ user.team.avatar }}" class="img-polaroid" />
                 {% else %}
@@ -190,10 +190,10 @@
 
                 <div class="control-group" style="float:right; margin-right: -8px;">
                     <div class="controls">
-                        <a data-toggle="modal" class="btn btn-primary" href="#change-user-avatar-modal"> Change </a>
+                        <a data-toggle="modal" class="btn btn-primary" href="#change-user-avatar-modal"> {{ _("Change") }} </a>
                     </div>
                 </div>
-                <legend>Avatar</legend>
+                <legend>{{ _("Avatar") }}</legend>
                 {% if user.avatar %}
                     <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
                 {% else %}
@@ -204,16 +204,16 @@
                 <div class="span3 well">
                     <form action="/user/settings/motto" method="post">
                         {% raw xsrf_form_html() %}
-                        <legend>Change Motto</legend>
+                        <legend>{{ _("Change") }} {{ _("Motto") }}</legend>
                         <div class="control-group" style="margin-top: 0px; margin-bottom: 40px;">
-                            <label class="control-label" for="motto">Motto</label>
+                            <label class="control-label" for="motto">{{ _("Motto") }}</label>
                             <div class="controls">
-                                <input id="motto" name="motto" maxlength="32" type="text" placeholder="Motto" value="{{ user.team.motto }}" />
+                                <input id="motto" name="motto" maxlength="32" type="text" placeholder="{{ _('Motto') }}" value="{{ user.team.motto }}" />
                             </div>
                         </div>
                         <div class="control-group" style="float: right;">
                             <div class="controls">
-                                <button class="btn btn-primary" type="submit"> Change Motto </button>
+                                <button class="btn btn-primary" type="submit"> {{ _("Change") }} {{ _("Motto") }} </button>
                             </div>
                         </div>
                     </form>
@@ -223,9 +223,9 @@
             <div class="span3 well">
                 <form action="/user/settings/theme" method="post">
                     {% raw xsrf_form_html() %}
-                    <legend>Change Theme</legend>
+                    <legend>{{ _("Change") }} {{ _("Theme") }}</legend>
                     <div class="control-group" style="margin-top: 0px; margin-bottom: 40px;">
-                        <label class="control-label" for="theme_uuid">Select a Theme</label>
+                        <label class="control-label" for="theme_uuid">{{ _("Select a Theme") }}</label>
                         <div class="controls">
                             <select name="theme_uuid">
                                 <option value="{{ current_theme.uuid }}">{{ current_theme.name }}</option>
@@ -239,7 +239,7 @@
                     </div>
                     <div class="control-group" style="float: right;">
                         <div class="controls">
-                            <button class="btn btn-primary" type="submit"> Change Theme </button>
+                            <button class="btn btn-primary" type="submit"> {{ _("Change") }} {{ _("Theme") }} </button>
                         </div>
                     </div>
                 </form>
@@ -253,29 +253,29 @@
                     {% raw xsrf_form_html() %}
                     <legend>
                         <i class="fa fa-lock"></i>
-                        Login Password
+                        {{ _("Login Password") }}
                     </legend>
                     <div class="control-group">
-                        <label class="control-label" for="old_password">Old Password</label>
+                        <label class="control-label" for="old_password">{{ _("Old Password") }}</label>
                         <div class="controls">
-                            <input required type="password" name="old_password" id="old_password" placeholder="Old Password" />
+                            <input required type="password" name="old_password" id="old_password" placeholder="{{ _('Old Password') }}" />
                         </div>
                     </div>
-                    <label class="control-label" for="new_password">New Password</label>
+                    <label class="control-label" for="new_password">{{ _("New Password") }}</label>
                     <div class="control-group">
                         <div class="controls">
-                            <input required type="password" name="new_password" id="new_password" placeholder="New Password" minlength="{{ options.min_user_password_length }}" />
+                            <input required type="password" name="new_password" id="new_password" placeholder="{{ _('New Password') }}" minlength="{{ options.min_user_password_length }}" />
                         </div>
                     </div>
-                    <label class="control-label" for="new_password2">Confirm New Password</label>
+                    <label class="control-label" for="new_password2">{{ _("Confirm New Password") }}</label>
                     <div class="control-group">
                         <div class="controls">
-                            <input required type="password" name="new_password2" id="new_password2" placeholder="Confirm Password" minlength="{{ options.min_user_password_length }}" />
+                            <input required type="password" name="new_password2" id="new_password2" placeholder="{{ _('Confirm Password') }}" minlength="{{ options.min_user_password_length }}" />
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary" type="submit"> Update Password </button>
+                            <button class="btn btn-primary" type="submit"> {{ _("Update Password") }} </button>
                         </div>
                     </div>
                 </form>
@@ -290,22 +290,22 @@
                         <div class="span6">
                             <legend>
                                 <i class="fa fa-lock"></i>
-                                Bank Password
+                                {{ _("Bank Password") }}
                             </legend>
                             <div class="control-group">
                                 <label class="control-label" for="old-password">
-                                    Current Bank Password
+                                    {{ _("Current Bank Password") }}
                                 </label>
                                 <div class="controls">
-                                    <input required id="old-password" type="password" name="old_bpassword" placeholder="Old Password" />
+                                    <input required id="old-password" type="password" name="old_bpassword" placeholder="{{ _('Old Password') }}" />
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="new_bpassword">
-                                    New Bank Password
+                                    {{ _("New Bank Password") }}
                                 </label>
                                 <div class="controls">
-                                    <input required type="password" name="new_bpassword" id="new_bpassword" placeholder="New Password" />
+                                    <input required type="password" name="new_bpassword" id="new_bpassword" placeholder="{{ _('New Password') }}" />
                                 </div>
                             </div>
                         </div>
@@ -315,7 +315,7 @@
                         <div class="control-group">
                             <div class="controls">
                                 <button class="btn btn-primary" type="submit">
-                                    Update Bank Password
+                                    {{ _("Update Bank Password") }}
                                 </button>
                             </div>
                         </div>

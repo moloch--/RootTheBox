@@ -1,0 +1,663 @@
+(stop - start) * cost.,（停止-開始）*コスト。
+$,$
+A brief description of the box,ボックスの簡単な説明
+About,約
+Accept,受け入れる
+Accept Bribe?,賄Acceptを受け入れますか？
+Accept this bribe?,この賄beを受け入れますか？
+Accepted,受け入れられた
+Accepted / In Jail,受理/刑務所内
+Account Locked!,アカウントがロックされました！
+Account Password,アカウントパスワード
+Active Bots,アクティブボット
+Add,追加する
+Add,追加する
+add,加える
+Add a Category for Boxes.,ボックスのカテゴリを追加します。
+Add Flags,フラグを追加
+Add Hint,ヒントを追加
+Add IP address,IPアドレスを追加
+Add IP Address,IPアドレスを追加
+add some,いくつか追加
+Add Source Code,ソースコードを追加
+Add Source Code to Market,ソースコードを市場に追加する
+Add to Market,マーケットに追加
+Address,住所
+Admin,管理者
+Admin Home,管理者ホーム
+Admin Message,管理者メッセージ
+Administrator Panel,管理者パネル
+Admins,管理者
+All Notifications,すべての通知
+and so on,等々
+Apply penalty on attempt,試行時にペナルティを適用する
+Are you a Cylon?,あなたはサイロンですか？
+Are You Elite,あなたはエリートですか
+Are you sure you want to buy this code?,このコードを購入してもよろしいですか？
+Are you sure you want to delete this box?,このボックスを削除してもよろしいですか？
+Are you sure you want to delete this category?,このカテゴリを削除してもよろしいですか？
+Are you sure you want to delete this corporation?,この法人を削除してもよろしいですか？
+Are you sure you want to delete this file?,このファイルを削除してもよろしいですか？
+Are you sure you want to delete this flag?,このフラグを削除してもよろしいですか？
+Are you sure you want to delete this game level?,このゲームレベルを削除してもよろしいですか？
+Are you sure you want to delete this hint?,このヒントを削除してもよろしいですか？
+Are you sure you want to delete this IP address?,このIPアドレスを削除してもよろしいですか？
+Are you sure you want to delete this source code?,このソースコードを削除してもよろしいですか？
+Are you sure you want to delete this user?,このユーザーを削除してもよろしいですか？
+Are you sure you want to delete?,消去してもよろしいですか？
+Arrest Player,逮捕者
+attempt,試みる
+attempt and continue until the,試行し、
+Attempts,試み
+Authenticate,認証する
+Authentication Failure,認証失敗
+Authentication Required,認証が必要
+Avatar,アバター
+Backup/Restore,復元する
+Ban IP Address,IPアドレスの禁止
+Bank Account,銀行口座
+Bank Account Balance,銀行口座残高
+Bank Hash Algorithm,バンクハッシュアルゴリズム
+Bank Password,銀行パスワード
+Bank Password Length,銀行パスワードの長さ
+Banking System,銀行システム
+Banned IPs,禁止されたIP
+BEGIN SECURE COMMUNIQUE,セキュアコミュニケ
+Black Market,ブラックマーケット
+Bonus reward for those that complete the level.,レベルを完了した人に対するボーナス報酬。
+Bot,ボット
+Bot added,ボットが追加されました
+Bot Reward,ボット報酬
+Botnet,ボットネット
+Botnet Command & Control,ボットネットコマンド＆コントロール
+Botnet Monitor,ボットネットモニター
+Botnet Scored,採点されたボットネット
+Botnets,ボットネット
+Bots,ボット
+Box,ボックス
+Box Difficulty,ボックスの難易度
+Box Hints,ボックスヒント
+Box Hints Taken,撮影されたボックスのヒント
+Box Name,ボックス名
+Boxes,箱
+Bribe,賄賂
+Bribe Amount,賄Bri額
+Bribe History,賄Briの歴史
+Bribe Pending,賄Bri保留
+Bribe Price,賄Priceの価格
+Bribes in Progress,進行中の賄bes
+Buy,購入
+Buy Source Code,ソースコードを購入
+Buy Upgrade,アップグレードを購入
+bytes,バイト
+Capture Message,メッセージをキャプチャする
+Capture Rate,キャプチャ率
+Captures,キャプチャ
+Case-Sensitive,大文字と小文字を区別
+Cash Stolen,盗まれた現金
+Categories,カテゴリー
+Category,カテゴリー
+Category box belongs too?,カテゴリーボックスも属しますか？
+Category Name,種別名
+Change,変化する
+Change Avatar,アバターを変更する
+Characters,キャラクター
+Charts,チャート
+Chat,チャット
+Checksum,チェックサム
+Choose,選ぶ
+Choose a name for your new team!,新しいチームの名前を選択してください！
+Choose Avatar,アバターを選択
+Classic,クラシック
+Clear,クリア
+Clear all notifications and game history,すべての通知とゲーム履歴を消去します
+Clear all team / player flag captures,すべてのチーム/プレイヤーフラグキャプチャをクリアする
+Clear all team pastebin and file shares,すべてのチームのペーストビンとファイル共有をクリアします
+Clear market items or source code purchases,クリアな市場アイテムまたはソースコードの購入
+Click here to login,ここをクリックしてログイン
+Close,閉じる
+Command & Control,コマンド＆コントロール
+Complete,コンプリート
+Complete Bribe,完全な賄be
+Complete this bribe?,この賄beを完了しますか？
+Completed,完成しました
+Completed Bribes,完了した賄bes
+Completion Message,完了メッセージ
+completion of Level,レベルの完了
+Completion Reward,完了報酬
+Configuration,構成
+Confirm,確認する
+Confirm Account Password,アカウントパスワードの確認
+Confirm New Password,新しいパスワードを確認
+Confirm Password,パスワードを認証する
+Content,コンテンツ
+Content Missing,コンテンツがありません
+Corporation,株式会社
+Corporation box belongs too?,株式会社ボックスも所属していますか？
+Corporation Name,法人名
+Corporations,法人
+Cost,コスト
+Cost to open this level and see flags,このレベルを開いてフラグを表示するためのコスト
+Cracked by,ひび割れ
+Create,作成する
+Create Box,ボックスを作成
+Create Category,カテゴリーを作成
+Create Corporation,株式会社クリエイト
+Create Datetime Flag,日時フラグを作成
+Create File Flag,ファイルフラグを作成
+Create Flag,フラグを作成
+Create Game Level,ゲームレベルを作成する
+Create Hint,ヒントを作成する
+Create Message,メッセージを作成
+Create Multiple Choice Flag,複数選択フラグを作成
+Create New Paste,新しい貼り付けを作成
+Create Notification,通知を作成
+Create Regex Flag,正規表現フラグを作成
+Create Static Flag,静的フラグを作成
+Create Team,チームを作成
+Created,作成した
+Current algorithm,現在のアルゴリズム
+Current Bank Account Password,現在の銀行口座のパスワード
+Current Bank Password,現在の銀行パスワード
+Current Level,現在のレベル
+Current Level,現在のレベル
+CyberChef,サイバーシェフ
+Data Points,データポイント
+Date,日付
+Datetime Flag,日時フラグ
+Datetime Token,日時トークン
+DEBUG,デバッグ
+Decline,低下
+Decline Bribe?,賄beを辞退しますか？
+Decline this bribe?,この賄briを辞退しますか？
+Declined,不承認
+Decrease flag reward by this percent per capture.,キャプチャごとにこの割合でフラグ報酬を減らします。
+deduct on & after,控除
+defaults to,デフォルトは
+Delete,削除する
+Delete Box,ボックスを削除
+Delete Category,カテゴリーを削除
+Delete Corporation,株式会社を削除
+Delete File Upload,ファイルのアップロードを削除
+Delete Flag,フラグを削除
+Delete Game Level,ゲームレベルを削除
+Delete Hint,ヒントを削除
+Delete IP Address,IPアドレスを削除
+Delete Player,プレーヤーを削除
+Delete Source Code,ソースコードを削除
+Delete Team,チームを削除
+Delete User,ユーザーを削除
+Dependent Flag,依存フラグ
+Description,説明
+DESCRIPTION,記述
+Details,詳細
+Difficulty,困難
+Difficulty Rating,難易度評価
+Disable,無効にする
+Disabling this option will skip the story line and give the player an instant capture message.,このオプションを無効にすると、ストーリーラインがスキップされ、プレーヤーにインスタントキャプチャメッセージが表示されます。
+Display Hints Taken,撮影したヒントを表示
+Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,指示がない限り、コミュニティフラグを削除または変更しないでください。ゲームの目標に記載されていない限り、他のプレイヤーを攻撃しないでください。
+Download,ダウンロード
+Download File,ダウンロードファイル
+Download the command line botnet monitor,コマンドラインボットネットモニターをダウンロードする
+Dynamic Scoring,動的スコアリング
+Each flag has a submit.  The player will choose the flag they intend to capture.,各フラグには送信があります。プレイヤーは、キャプチャする予定のフラグを選択します。
+"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",各プレイヤーは、さまざまな難易度と洗練度の課題をターゲットにし、旗を集めて栄光を獲得しようとします。がんばろう！
+Edit,編集
+Edit Account,アカウントの編集
+Edit Box,編集ボックス
+Edit Category,カテゴリを編集
+Edit Corporation,株式会社編集
+Edit Flag,フラグを編集
+Edit Flag,フラグを編集
+Edit Game Level,ゲームレベルの編集
+Edit Hint,ヒントを編集
+Edit Level,レベルを編集
+Edit Market Item,マーケットアイテムを編集
+Edit Player,プレイヤーを編集
+Edit Team,チームを編集
+Edit User,ユーザーを編集
+Email,Eメール
+EMPTY,空の
+Enable,有効にする
+"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",この機能を有効にすると、プレイヤーは登録時に独自のチームを作成できます。このオプションが無効になっている場合、管理者はプレイヤーが参加するチームを作成する必要があります。
+Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,この機能を有効にすると、プレイヤーはゲーム内でコード（ペーストビン）とファイルを共有できます。この機能を無効にすると、これらのオプションが[ツール]メニューから削除されます。
+"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.",この機能を有効にすると、チームは連邦準備制度、ソースコードマーケット、SWATなどのアップグレードを購入できます。
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.",この機能を有効にすると、追加される可能性のあるフラグまたはボックスキャプチャメッセージをゲームで表示できます。デフォルトでは、ゲームはミッションを割り当てる雇用主であるモリスのストーリーに沿っています。
+"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",この機能を有効にすると、不正なキャプチャの試行に対してペナルティが適用されます。ペナルティは、スコアからの即時の控除であり、フラグ値の減少ではありません。
+"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.",この機能を有効にすると、キャプチャの数に基づいてフラグの報酬が減少します。このオプションが無効になっている場合、フラグ値は他のプレイヤーがキャプチャしても一貫したままです。
+Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,この機能を有効にすると、チームまたはプレーヤーがスコアボードで取得したヒントの数が表示されます。ヒントが無料の場合に役立ちます。スコアまたはフラグが等しい場合、ソートにはより低いヒントカウントが使用されます。このオプションを無効にすると、スコアボードからヒントカウントが削除されます。
+"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.",この機能を有効にすると、プレーヤーのMVPスコアボードが表示されます。チームにポイントを寄付したプレーヤーが表示されます。このオプションを無効にすると、MVPスコアボードは非表示になります。
+Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,この機能を有効にするには、プレーヤーが新しいアカウントを作成するために有効な登録トークンを提供する必要があります。登録トークンは管理インターフェイスで作成されます。
+Enabling this feature will require players to provide an email address in order to create a new account.,この機能を有効にするには、プレーヤーが新しいアカウントを作成するためにメールアドレスを提供する必要があります。
+Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,この機能を有効にすると、ゲーム内のすべてのプレーヤーにフラグとレベルロック解除の通知が送信されます。このオプションを無効にすると、それらの通知がチームメンバーに制限されます。
+"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.",この機能を有効にすると、チームの対戦プレイ用にゲームとスコアボードが設定されます。このオプションが無効になっている場合、ゲームは個々の競技プレイ用に設定されます。
+"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.",この機能を有効にすると、ゲームがお金ベースのスコアリングシステムを使用するように設定されます。このオプションが無効になっている場合、ゲームはポイントベースのスコアリングシステムを使用します。
+"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.",このオプションを有効にすると、トークンの大文字と小文字が区別されます。このオプションが無効な場合、応答トークンは大文字と小文字を区別しません。
+"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.",このオプションを有効にすると、トークンの大文字と小文字が区別されます。このオプションが無効な場合、応答トークンは大文字と小文字を区別しません。
+Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,この設定を有効にすると、ボットネット機能が有効になります。チームは、自分が所有するボックスでボット実行可能ファイルを実行でき、時間の経過とともにボットごとに支払われます。
+END SECURE COMMUNIQUE,SECURE COMMUNIQUEの終了
+Enter a complex password of,の複雑なパスワードを入力してください
+Enter a Matching Flag,一致するフラグを入力してください
+Enter Choice,選択肢を入力
+Enter the same password as before,以前と同じパスワードを入力してください
+ERROR,エラー
+Export Game Objects,ゲームオブジェクトのエクスポート
+Export XML,XMLをエクスポート
+Export XML,XMLをエクスポート
+Failed Attempts,失敗した試行
+Failed Logins,失敗したログイン
+Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,失敗にはコストがかかります。間違った回答が提出された場合は罰則が適用されるので注意してください。
+Federal Reserve,連邦準備金
+Federal Reserve Bank,連邦準備銀行
+File,ファイル
+File Description,ファイル説明
+File Flag,ファイルフラグ
+File Name,ファイル名
+File Share,ファイル共有
+File Sharing,ファイル共有
+File Size,ファイルサイズ
+First Login,最初のログイン
+Flag,旗
+Flag Capture,旗取り
+Flag Decrease Value,フラグ値を減らす
+Flag Details,フラグの詳細
+Flag File,フラグファイル
+Flag Hints,フラグのヒント
+Flag Name,フラグ名
+Flag Penalty,旗のペナルティ
+Flag Penalty % Cost,旗のペナルティ％コスト
+Flag Penalty Cost,旗のペナルティコスト
+Flag Penalty Start,フラグペナルティスタート
+Flag Penalty Stop,旗のペナルティ停止
+Flag Submission Type,フラグ送信タイプ
+Flag Type,フラグタイプ
+Flags,旗
+Flags / Boxes / Corp.,フラグ/ボックス/株式会社
+Flags Captured,キャプチャされたフラグ
+Flags on,フラグオン
+for,にとって
+Forbidden,禁じられた
+Game,ゲーム
+Game Control,ゲーム制御
+Game Information,ゲーム情報
+Game Level,ゲームレベル
+Game Levels,ゲームレベル
+Game Management,ゲーム管理
+Game Materials,ゲーム素材
+Game Name,ゲーム名
+Game Progress,ゲームの進行
+Garbage File,ごみファイル
+Get help with,で助けを得る
+Get your registration token from reception,レセプションから登録トークンを取得する
+Glitch in the Matrix,マトリックスのグリッチ
+Global Notifications,グローバル通知
+Handle,ハンドル
+Hint,ヒント
+Hint not yet taken,ヒントはまだ取られていません
+Hint Taken,ヒントを取る
+Hints,ヒント
+Hints on,ヒント
+Hints Taken,撮影のヒント
+History,歴史
+Home,ホーム
+How should the next level unlock?,次のレベルはどのようにロックを解除する必要がありますか？
+"If the flag selection is left empty, the hint will be considered a Box Hint.",フラグの選択が空のままの場合、ヒント
+"If this option is disabled, there is no cost for submitting incorrect flags.",このオプションが無効になっている場合、間違ったフラグを送信する費用はかかりません。
+Import File,インポートファイル
+Import XML,XMLをインポート
+Import XML,XMLをインポート
+In Progress,進行中
+"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.",この場合、フラグは日付/時刻文字列です。このフラグタイプは、一般的な日時形式のバリエーションを照合し、スラッシュ、ダッシュ、パディング、12時間、24時間などの違いを処理しようとします。日付、時刻、または日時を処理できます。
+"In this case, the flag is a multiple choice question where the selected option is the token.",この場合、フラグは選択されたオプションがトークンである複数選択の質問です。
+"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",この場合、フラグは正規表現です。ユーザーは、フラグをキャプチャするには、パターンに一致する文字列を送信する必要があります。一致は区別されない場合があります。正規表現を必ずテストし、広すぎないことを確認してください。
+"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",この場合、フラグは静的な文字列です。ユーザーは、フラグをキャプチャするために正確なトークンを送信する必要があります。最初と最後の空白は削除されます。
+Income,所得
+Incoming Transmission,着信送信
+Incorrect,間違っている
+Incorrect Penalty,不適切なペナルティ
+indicates use by another player,別のプレーヤーによる使用を示します
+INFO,情報
+Information,情報
+Invalid CSRF Token,無効なCSRFトークン
+IP Address,IPアドレス
+IP Version,IPバージョン
+It appears you're an unsophisticated script kiddie!,あなたは洗練されていないスクリプトキディだと思われます！
+"It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).",すべての訪問者（公開）、認証されたユーザー（プレイヤー）、または管理者（管理者）のみに表示されます。
+"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.",URLを誤って入力したか、アクセスすべきでないものを見つけようとしたようです。
+"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.",それはお金についてであり、それらのスキルを活用する時です！このゲームは銀行システムを使用するように設定されているため、時間を無駄にせずに富を築き、勝つために必要なものを購入します。
+Item Cost,アイテム費用
+Join Existing Team,既存のチームに参加する
+Known IP Addresses,既知のIPアドレス
+Last Ping,最後のping
+Learn,学ぶ
+Level,レベル
+Level Name,レベル名
+Level Number,レベル番号
+Level to put box in?,箱を入れるレベル？
+Level Unlocked,レベルロック解除
+Limit number of players that can be on any one team,いずれかのチームに所属できるプレイヤーの数を制限する
+"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",フラグをキャプチャする試行回数を制限します。制限に達すると、そのフラグに対してそれ以上のアクションは実行できません。
+Linux,Linux
+Lock,ロック
+Locked by,ロックされています
+Login,ログイン
+Login Password,ログインパスワード
+Logout,ログアウト
+MacOS,マックOS
+Mainframe Console,メインフレームコンソール
+Manage Black Market,ブラックマーケットの管理
+Manage Categories,カテゴリーを管理する
+Market Objects,マーケットオブジェクト
+Max,マックス
+Max Flag Attempts,最大フラグ試行
+Max PasteBin Size,最大貼り付けサイズ
+Max Team Size,最大チームサイズ
+Maximum Flag Attempts,最大フラグ試行
+Maximum Penalty,最大ペナルティ
+Maximum Penalty is determined as,最大ペナルティは次のように決定されます
+Min user password length,ユーザーパスワードの最小長
+Minimum User Password Length,ユーザーパスワードの最小長
+Mission Progress,ミッションの進捗
+Missions,ミッション
+Modifies the way flag submission are made.,フラグの提出方法を変更します。
+Money,お金
+money,お金
+Motto,モットー
+Multiple Choice,複数の選択肢
+Multiple Choice Flag,多肢選択フラグ
+Must be unique,一意でなければなりません
+MVP,MVP
+MVP - List Top N Payers,MVP-トップN支払人のリスト
+MVP List Top,MVPリストトップ
+MVP Scoreboard,MVPスコアボード
+MVP Scoreboard,MVPスコアボード
+Name,名
+Never,決して
+New Bank Account Password,新しい銀行口座のパスワード
+New Bank Password,新しい銀行パスワード
+New Box,新しいボックス
+New Category,新たなカテゴリー
+New Corporation,新会社
+New Flag,新しい旗
+New Game Level,新しいゲームレベル
+New IP Address,新しいIPアドレス
+New Password,新しいパスワード
+New Team,新しいチーム
+New Team Member,新しいチームメンバー
+New Team Name,新しいチーム名
+No,いや
+No Avatar,アバターなし
+No Boxes,箱なし
+No boxes in this corporation yet,この法人にはまだ箱がありません
+No boxes on this level yet,このレベルのボックスはまだありません
+No Bribes in Progress,進行中の賄Briはありません
+No Completed Bribes,未完了の賄besはありません
+No flags captured yet.,フラグはまだキャプチャされていません。
+No flags on this box yet,このボックスにはまだフラグがありません
+No further penalty thereafter.,その後のペナルティはありません。
+No Lock,ロックなし
+No name,ノーネーム
+No Pending Bribes,保留中の賄Briはありません
+No sheep yet - check back later.,羊はまだいません-後でもう一度確認してください。
+No Source Code For Sale at This Time,現在販売中のソースコードはありません
+No Tokens in Database,データベースにトークンがありません
+No upgrades left.,アップグレードは残っていません。
+No Users,ユーザーなし
+None,無し
+Noob Alert,Noob Alert
+"Not all options are accessible in the web configuration.  For more, see",Web設定ですべてのオプションにアクセスできるわけではありません。詳しくは
+Note,注意
+Note: Files or documents for the challenge can be placed in the Game Materials.,注：チャレンジのファイルまたはドキュメントは、ゲーム資料に配置できます。
+Note: Files or documents for the challenge can be placed in the Game Materials.,注：チャレンジのファイルまたはドキュメントは、ゲーム資料に配置できます。
+NOTE: Max attempts and penalties will not be applied in Single Box mode.,注：最大試行とペナルティは、シングルボックスモードでは適用されません。
+NOTE: This setting is ignored if the box flag submission type is set to Single Box.,注：ボックスフラグ送信タイプが[シングルボックス]に設定されている場合、この設定は無視されます。
+Notification Message,通知メッセージ
+Notifications,通知
+Number of Bots,ボットの数
+Number of Flags,フラグの数
+Number of new Level,新しいレベルの数
+of Flag Value,フラグ値の
+of the flag's value. It will start on the,フラグの値の。で始まります
+Old Password,以前のパスワード
+One submission box for any flag.  Compares attempts against all flags in the box.,任意のフラグの1つの提出ボックス。ボックス内のすべてのフラグに対する試行を比較します。
+only,のみ
+Optional,オプショナル
+Or Choose Existing,または既存を選択
+Outcome,結果
+Outcome,結果
+Password,パスワード
+Password Cracked,パスワードクラック
+Password Cracking Leaderboard,パスワードクラッキングリーダーボード
+Password Hash,パスワードハッシュ
+Password Security,パスワードセキュリティ
+Password Upgrade Cost,パスワードのアップグレード費用
+Passwords Cracked,クラックされたパスワード
+Paste Name,名前を貼り付け
+Paste Text Here,ここにテキストを貼り付け
+PasteBin,ペーストビン
+Pastebin Character Limit,ペーストビンの文字数制限
+Pause Registration,登録を一時停止
+Pause Scoreboard,スコアボードを一時停止
+Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,不正な試行ごとにフラグ値のこの割合でスコアにペナルティを課します（有効な場合、動的スコアリング後に適用されます）。
+Pending,保留中
+Pending Bribes,保留中の賄Bri
+Plain Text,プレーンテキスト
+Play Story,プレイストーリー
+player,プレーヤー
+Player,プレーヤー
+Player Alias,プレイヤーエイリアス
+Player Arrested!,プレイヤー逮捕！
+Player Email,プレイヤーのメール
+Player Name,プレーヤの名前
+"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.",プレイヤーの銀行口座のパスワードも利用できるため、互いのパスワードを解読してお金を盗むことができます。
+Players,プレイヤー
+Please do NOT enter your real bank account password.,実際の銀行口座のパスワードを入力しないでください。
+points,ポイント
+Points,ポイント
+points,ポイント
+Previous Bribes,以前の賄bes
+Price,価格
+Private,プライベート
+Programming,プログラミング
+Provide the code used to join an existing team.  Visible to other team members on their home page.,既存のチームに参加するために使用されるコードを提供します。ホームページで他のチームメンバーに表示されます。
+Public,パブリック
+Public Team Creation,公開チームの作成
+Public Teams,パブリックチーム
+Purchase,購入
+Purchase Unlock,ロック解除を購入
+Purchased,購入した
+Rank By,ランク付け
+Regex Flag,正規表現フラグ
+Regex Pattern,正規表現パターン
+Register Account,アカウント登録
+Registration,登録
+Registration Email,登録メール
+Registration Tokens,登録トークン
+Regular Expression,正規表現
+Require Email,メールが必要
+Reset Actions,リセットアクション
+Reset Game,ゲームをリセット
+Reset Game,ゲームをリセット
+Reset player / team starting points / money,プレーヤー/チームの開始ポイント/お金をリセットします
+Restrict players bank password to this length,プレイヤーの銀行パスワードをこの長さに制限します
+Restrict players user password to this length,プレーヤーのユーザーパスワードをこの長さに制限します
+Resume Registration,登録を再開
+Resume Scoreboard,スコアボードを再開
+Return to Edit,編集に戻る
+Return to Missions,ミッションに戻る
+Reward,褒賞
+Role,役割
+Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,約束のルール：ゲームのスコアボードプラットフォームを攻撃しないでください。ゲームの目的で指定されていない限り、ネットワーク内の既存のアカウントのパスワードを変更しないでください。
+S.W.A.T,S.W.A.T
+Save,保存する
+Score,スコア
+Scoreboard,スコアボード
+Scoreboard Rank By,スコアボードによるランク付け
+Scoreboard Visibility,スコアボードの可視性
+Security Breach,セキュリティ侵害
+See All,すべてを見る
+Select a Theme,テーマを選択してください
+Select Avatar,アバターを選択
+Select New Avatar,新しいアバターを選択
+Send,送る
+Send a global notification to all players,すべてのプレイヤーにグローバル通知を送信します
+Set Countdown Timer,カウントダウンタイマーを設定する
+Set the game countdown timer,ゲームのカウントダウンタイマーを設定する
+Settings,設定
+Share your team code to allow other players to join,チームコードを共有して、他のプレイヤーが参加できるようにします
+Shared Files,共有ファイル
+Sheep,羊
+Show MVP,MVPを表示
+Since Score,スコア以来
+Single Box,シングルボックス
+Skill Progress,スキルの進歩
+Source Code,ソースコード
+Source Code Archive,ソースコードアーカイブ
+Source Code Market,ソースコード市場
+Special Thanks,特別な感謝
+Start a New Team,新しいチームを始める
+Start the Game,ゲームを始める
+start with 0 points,0ポイントから開始
+Starting Money,スタートマネー
+Static Flag,静的フラグ
+Static Token,静的トークン
+Statistics,統計
+stop on & after,止まる
+Stop the Game,ゲームを停止する
+Story,ストーリー
+Story Mode,ストーリーモード
+Submit,提出する
+Submit a Bug,バグを提出する
+Submit a Flag,フラグを送信
+Submit Bribe,賄Briを提出する
+Submit Bribes,賄Briを提出する
+Submit Flag,送信フラグ
+SUCCESS,成功
+Success!,成功！
+Successful,成功しました
+Successful Captures,成功したキャプチャ
+Successful Registration,成功した登録
+Successfully created a new account for,の新しいアカウントを作成しました
+Summary,概要
+Supports,サポート
+Switch Level,スイッチレベル
+System Type,システムタイプ
+Take,取る
+Take Hint,ヒントを取る
+Taken,撮影
+Target,ターゲット
+Target Handle,ターゲットハンドル
+Target Management,ターゲット管理
+team,チーム
+Team,チーム
+Team Avatar,チームアバター
+Team Code,チームコード
+Team File Share,チームファイル共有
+Team Information,チーム情報
+Team Motto,チームのモットー
+Team Name,チームの名前
+Team PasteBin,チームPasteBin
+Team Play,チームプレイ
+Team Shares,チームシェア
+Team Sharing,チーム共有
+Teams,チーム
+Test Flag,テストフラグ
+Text Share,テキスト共有
+The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,闇市場は開かれていて、あなたは男を知っています。ターゲットのソースコードまたはS.W.A.Tをダウンロードします。 （ゲーム内の）警察に賄briを贈ることによる他のプレーヤー。
+The cost to take the hint.  Can be >= 0.,ヒントを取るためのコスト。 0以上にすることができます。
+The deduction is,控除は
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.",他の唯一の可能性は、コードの一部を台無しにしてしまったことです。
+The starting money for a new,新しいための開始お金
+Theme,テーマ
+There are currently no shared files.,現在、共有ファイルはありません。
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",これらのフラグはファイルです。ユーザーはフラグをキャプチャするためにまったく同じファイルを送信する必要があります。ファイルのハッシュ（SHA1）のみがサーバーに保存されます。
+"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!",このゲームは動的スコアリングを使用するように設定されています。つまり、他のプレイヤーがフラグをキャプチャすると、それらのフラグの値が減少します。それで、それらを速くつかむか、負けてください！
+This is a test flag/string the user could input for credit.,これは、ユーザーがクレジットのために入力できるテストフラグ/文字列です。
+This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,これは、プレイヤーがS.W.A.Tに支払う必要がある金額です。別のプレイヤーアカウント。同じプレイヤーの後続のSWATも、この量だけ毎回増加します。
+This is the amount a player must pay to upgrade their bank passwords hashing algorithm,これは、プレイヤーが銀行のパスワードハッシュアルゴリズムをアップグレードするために支払う必要がある金額です
+This is the amount awarded for capturing the flag.,これは、フラグをキャプチャするために与えられる量です。
+This is the amount awarded for completion of the box.,これは、ボックスの完成に対して授与される金額です。
+This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually,これは、各間隔でチームがボットごとに支払われる金額です。間隔は.cfgファイルで手動で設定する必要があります
+This is the box the flag is located on.,これは、フラグが置かれているボックスです。
+This is the description,これは説明です
+This is the maximum number of players displayed on the MVP list (default 10) with a score > 0.,これは、MVPリストに表示されるプレーヤーの最大数（デフォルトは10）で、スコアは0以上です。
+This is the message displayed to the user once the box is completed.,これは、ボックスが完成するとユーザーに表示されるメッセージです。
+This is the message displayed to the user once the flag is captured.,これは、フラグがキャプチャされるとユーザーに表示されるメッセージです。
+This is the name that will appear in the upper left corner,これは、左上隅に表示される名前です
+This is the the limit of characters allowed for a pastebin post.,これは、ペーストビンの投稿に許可される文字の制限です。
+This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,これは、フラグを表示するものです。空白のままにして、注文番号で自動的に名前を付けます。
+This selection determines the method by which the scoreboard is primarily ranked.,この選択により、スコアボードが主にランク付けされる方法が決まります。
+This selection determines the visibility of the scoreboard menu and pages.,この選択により、スコアボードメニューとページの可視性が決まります。
+"This will also delete associated IP addresses, boxes, and flags.",これにより、関連するIPアドレス、ボックス、およびフラグも削除されます。
+"This will also delete associated IP addresses, hints, and flags.",これにより、関連するIPアドレス、ヒント、およびフラグも削除されます。
+This will also delete boxes and flags associated with this level.,これにより、このレベルに関連付けられているボックスとフラグも削除されます。
+This will delete the player and the associated user account!,これにより、プレーヤーと関連するユーザーアカウントが削除されます！
+This will delete the team and any associated user accounts!,これにより、チームと関連するユーザーアカウントが削除されます！
+Threshold,しきい値
+Time,時間
+"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.",ボットネットを作成する時間。小さなボットプログラムをターゲットマシンにアップロードすることにより、ボットネット内の各ボットに対して定期的に報酬を受け取ることができます。ボットネットが大きいほど、報酬も大きくなります。
+to Add,たす
+to Add or Subtract,追加または減算する
+"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.",このRTBインスタンスを復元するには、rootsbox.cfgを含めるために、filesディレクトリの下のコンテンツも必要になる場合があります。
+Token,トークン
+Token Value,トークン値
+Tools,道具
+Tools & Upgrades,ツールとアップグレード
+Total Cash Stolen,盗まれた現金の合計
+Type,タイプ
+Unknown,道の
+Unlock,ロック解除
+Unlock Cost,ロック解除費用
+Unlock Level,ロック解除レベル
+Unlocks,ロック解除
+Unlocks after,後にロック解除
+Unlocks for,のロックを解除
+Update Bank Password,銀行のパスワードを更新
+Update Configuration,構成の更新
+Update Password,パスワードを更新
+Update RootTheBox,RootTheBoxを更新する
+Upgrade Purchased,購入したアップグレード
+Upgrade to,へのアップグレード
+Upload,アップロードする
+Upload Avatar,アバターをアップロード
+Upload Avatar File,アバターファイルをアップロード
+Upload Files,ファイルをアップロードする
+Used,中古
+Used to secure your (in-game) bank account.,（ゲーム内の）銀行口座を保護するために使用されます。
+User Handle,ユーザーハンドル
+User Management,ユーザー管理
+Users / Teams,ユーザー/チーム
+Value,値
+View,表示する
+View Box,ビューボックス
+View Details,詳細を見る
+Visible,見える
+Visible to Players,プレイヤーに見える
+Waiting for the game to start‚Ä¶,ゲームの開始を待つ¶
+Wall of Sheep,羊の壁
+WARNING,警告
+Welcome,ようこそ
+Welcome to the computer war game where security professionals can practice and learn.,セキュリティの専門家が練習して学ぶことができるコンピューター戦争ゲームへようこそ。
+Welcome to the Scene,シーンへようこそ
+What is the name of this box?,この箱の名前は何ですか？
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",あなたの会社名は何ですか？会社を使用する予定がない場合は、名前のない会社を作成してください。
+What is your motto?,あなたのモットーは何ですか？
+What is your teams motto?,チームのモットーは何ですか？
+What type of system is this?,これはどのタイプのシステムですか？
+Whats the difficulty of the box?,ボックスの難しさは何ですか？
+When banking is disabled,銀行が無効になっている場合
+"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.",ペナルティの適用を開始するタイミング。たとえば、最初の誤った試行を無料にしたいが、その後の試行にはペナルティを科すことができます。
+"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.",ペナルティの適用を停止するタイミング。たとえば、フラグ値の特定の合計のみにペナルティを課し、それ以上の試行を解放できるようにして、すべてのフラグに何らかの値を持たせることができます。
+when using banking.,銀行を使用する場合。
+Windows,窓
+With contributions from,からの貢献で
+XML File,XMLファイル
+Yes,はい
+You are not on a team,あなたはチームにいません
+You do not have access to this level yet.,このレベルにはまだアクセスできません。
+You do not own this upgrade.,このアップグレードの所有者ではありません。
+You have not submitted any bribes yet.,まだ賄briを提出していません。
+"Your email, visible to game administrators.",ゲーム管理者に表示されるメール。
+"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",ハンドルは3〜16文字の英数字でなければなりません。アンダースコア、ダッシュ、およびドットを使用できます。
+"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",ゲーム管理者に表示されるあなたの名前。名前には3〜64文字の英数字を使用できます

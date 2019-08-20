@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}S.W.A.T.{% end %}
+{% block title %}{{ _("S.W.A.T.") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/upgrades/swat.js"></script>
@@ -10,7 +10,7 @@
 <div id="accept-bribe-modal" class="modal hide fade" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3>Accept Bribe?</h3>
+        <h3>{{ _("Accept Bribe?") }}</h3>
     </div>
     <div class="modal-body">
         <form id="accept-bribe-form" class="form-horizontal" action="/admin/upgrades/swat/accept" method="post">
@@ -18,21 +18,21 @@
             <input id="accept-bribe-uuid" type="hidden" name="uuid" value="" />
         </form>
         <p>
-            Accept this bribe?
+            {{ _("Accept this bribe?") }}
         </p>
         <br />
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
         <button id="accept-bribe-submit" class="btn btn-primary" type="button">
-            Confirm
+            {{ _("Confirm") }}
         </button>
     </div>
 </div>
 <div id="decline-bribe-modal" class="modal hide fade" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3>Decline Bribe?</h3>
+        <h3>{{ _("Decline Bribe?") }}</h3>
     </div>
     <div class="modal-body">
         <form id="decline-bribe-form" class="form-horizontal" action="/admin/upgrades/swat/complete" method="post">
@@ -40,21 +40,21 @@
             <input id="decline-bribe-uuid" type="hidden" name="uuid" value="" />
         </form>
         <p>
-            Decline this bribe?
+            {{ _("Decline this bribe?") }}
         </p>
         <br />
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
         <button id="decline-bribe-submit" class="btn btn-primary" type="button">
-            Confirm
+            {{ _("Confirm") }}
         </button>
     </div>
 </div>
 <div id="complete-bribe-modal" class="modal hide fade" style="display: none;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3>Complete Bribe</h3>
+        <h3>{{ _("Complete Bribe") }}</h3>
     </div>
     <div class="modal-body">
         <form id="complete-bribe-form" class="form-horizontal" action="/admin/upgrades/swat/complete" method="post">
@@ -62,14 +62,14 @@
             <input id="complete-bribe-uuid" type="hidden" name="uuid" value="" />
         </form>
         <p>
-            Complete this bribe?
+            {{ _("Complete this bribe?") }}
         </p>
         <br />
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
         <button id="complete-bribe-submit" class="btn btn-primary" type="button">
-            Confirm
+            {{ _("Confirm") }}
         </button>
     </div>
 </div>
@@ -80,31 +80,31 @@
 <div class="container">
     <h1>
         <i class="fa fa-crosshairs"></i>
-        S.W.A.T.
+        {{ _("S.W.A.T.") }}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{ _("ERROR") }}</h4>
             {{ error }}
         </div>
         {% end %}
     {% end %}
     <div class="well">
-        <h3>Pending Bribes</h3>
+        <h3>{{ _("Pending Bribes") }}</h3>
         <hr>
         {% if len(pending_bribes) != 0 %}
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Created</th>
-                        <th>User Handle</th>
-                        <th>Target Handle</th>
-                        <th>Bribe Amount</th>
-                        <th>Previous Bribes</th>
+                        <th>{{ _("Created") }}</th>
+                        <th>{{ _("User Handle") }}</th>
+                        <th>{{ _("Target Handle") }}</th>
+                        <th>{{ _("Bribe Amount") }}</th>
+                        <th>{{ _("Previous Bribes") }}</th>
                         <th><!-- Accept Button --></th>
                         <th><!-- Decline Button --></th>
                     </tr>
@@ -120,12 +120,12 @@
                         <td>{{ Swat.count_completed_by_target_id(swat.target.id) }}</td>
                         <td>
                             <a id="accept-bribe-button{{ index }}" class="btn btn-mini btn-success" data-toggle="modal" href="#accept-bribe-modal" data-uuid="{{ swat.uuid }}">
-                                Accept
+                                {{ _("Accept") }}
                             </a>
                         </td>
                         <td>
                             <a id="decline-bribe-button{{ index }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#decline-bribe-modal" data-uuid="{{ swat.uuid }}">
-                                Decline
+                                {{ _("Decline") }}
                             </a>
                         </td>
                     </tr>
@@ -133,22 +133,22 @@
                 </tbody>
             </table>
         {% else %}
-            <br />No Pending Bribes...<br />
+            <br />{{ _("No Pending Bribes") }}...<br />
         {% end %}
     </div>
     <br />
     <div class="well">
-        <h3>Bribes in Progress</h3>
+        <h3>{{ _("Bribes in Progress") }}</h3>
         <hr>
         {% if len(in_progress_bribes) != 0 %}
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Created</th>
-                        <th>User Handle</th>
-                        <th>Target Handle</th>
-                        <th>Bribe Amount</th>
+                        <th>{{ _("Created") }}</th>
+                        <th>{{ _("User Handle") }}</th>
+                        <th>{{ _("Target Handle") }}</th>
+                        <th>{{ _("Bribe Amount") }}</th>
                         <th><!-- Complete Button --></th>
                     </tr>
                 </thead>
@@ -162,7 +162,7 @@
                         <td>${{ swat.paid }}</td>
                         <td>
                             <a id="complete-bribe-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#complete-bribe-modal" data-uuid="{{ swat.uuid }}">
-                                Complete
+                                {{ _("Complete") }}
                             </a>
                         </td>
                     </tr>
@@ -170,23 +170,23 @@
                 </tbody>
             </table>
         {% else %}
-            <br />No Bribes in Progress...<br />
+            <br />{{ _("No Bribes in Progress") }}...<br />
         {% end %}
     </div>
     <br />
     <div class="well">
-        <h3>Completed Bribes</h3>
+        <h3>{{ _("Completed Bribes") }}</h3>
         <hr>
         {% if len(completed_bribes) != 0 %}
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Created</td>
-                        <th>User Handle</th>
-                        <th>Target Handle</th>
-                        <th>Bribe Amount</th>
-                        <th>Outcome</th>
+                        <th>{{ _("Created") }}</th>
+                        <th>{{ _("User Handle") }}</th>
+                        <th>{{ _("Target Handle") }}</th>
+                        <th>{{ _("Bribe Amount") }}</th>
+                        <th>{{ _("Outcome") }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -202,16 +202,16 @@
                             <td>{{ swat.target.handle }}</td>
                             <td>${{ swat.paid }}</td>
                             {% if swat.is_declined() %}
-                                <td>Declined</td>
+                                <td>{{ _("Declined") }}</td>
                             {% else %}
-                                <td>Accepted</td>
+                                <td>{{ _("Accepted") }}</td>
                             {% end %}
                         </tr>
                     {% end %}
                 </tbody>
             </table>
         {% else %}
-            <br />No Completed Bribes...<br />
+            <br />{{ _("No Completed Bribes") }}...<br />
         {% end %}
     </div>
 </div>

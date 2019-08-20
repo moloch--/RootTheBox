@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Source Code Market{% end %}
+{% block title %}{{_("Source Code Market")}}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/upgrades/source_code_market.js"></script>
@@ -10,26 +10,26 @@
 <div id="add-source-code-modal" class="modal hide fade" style="display: none; ">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3>Add Source Code to Market</h3>
+        <h3>{{_("Add Source Code to Market")}}</h3>
     </div>
     <div class="modal-body">
         <form id="add-source-code-form" class="form-horizontal" action="/admin/upgrades/source_code_market/add" method="post" enctype="multipart/form-data">
             {% raw xsrf_form_html() %}
             <input id="add-source-code-uuid" type="hidden" name="box_uuid" value="" />
             <div class="control-group">
-                <label class="control-label" for="price">Price</label>
+                <label class="control-label" for="price">{{_("Price")}}</label>
                 <div class="controls">
-                    <input autofocus required id="price" name="price" type="text" pattern="[0-9]+" placeholder="Price ($)">
+                    <input autofocus required id="price" name="price" type="text" pattern="[0-9]+" placeholder="{{_('Price')}} ({{_('$')}})">
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="description">Description</label>
+                <label class="control-label" for="description">{{_("Description")}}</label>
                 <div class="controls">
-                    <input required id="description" name="description" type="text" placeholder="Description">
+                    <input required id="description" name="description" type="text" placeholder="{{_('Description')}}">
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="source_archive">Source Code Archive</label>
+                <label class="control-label" for="source_archive">{{_("Source Code Archive")}}</label>
                 <div class="controls">
                     <input id="source_archive" name="source_archive" type="file">
                 </div>
@@ -37,9 +37,9 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
         <button id="add-source-code-submit" class="btn btn-primary" type="button">
-            Add to Market
+            {{_("Add to Market")}}
         </button>
     </div>
 </div>
@@ -48,12 +48,12 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3>
             <i class="fa fa-times-circle-o"></i>
-            Delete Source Code
+            {{_("Delete Source Code")}}
         </h3>
     </div>
     <div class="modal-body">
         <p>
-            Are you sure you want to delete this source code?
+            {{_("Are you sure you want to delete this source code?")}}
             <br />
         </p>
         <form id="delete-source-code-form" method="post" action="/admin/upgrades/source_code_market/delete">
@@ -62,10 +62,10 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
         <button id="delete-source-code-submit" type="button" class="btn btn-danger">
             <i class="fa fa-times-circle-o"></i>
-            Delete
+            {{_("Delete")}}
         </button>
     </div>
 </div>
@@ -76,30 +76,30 @@
 <div class="container">
     <h1>
         <i class="fa fa-code"></i>
-        Source Code Market
+        {{_("Source Code Market")}}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{_("ERROR")}}</h4>
             {{ error }}
         </div>
         {% end %}
     {% end %}
     <div class="well">
         {% if len(Box.all()) == 0 %}
-            <p><strong>No Boxes</strong></p>
+            <p><strong>{{_("No Boxes")}}</strong></p>
         {% else %}
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Box</th>
-                        <th>File Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
+                        <th>{{_("Box")}}</th>
+                        <th>{{_("File Name")}}</th>
+                        <th>{{_("Description")}}</th>
+                        <th>{{_("Price")}}</th>
                         <th>
                             <!-- Add/Delete Button -->
                         </th>
@@ -116,7 +116,7 @@
                         <td>N / A</td>
                         <td>
                             <a id="add-source-code-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#add-source-code-modal" data-uuid="{{ box.uuid }}">
-                                Add Source Code
+                                {{_("Add Source Code")}}
                             </a>
                         </td>
                         {% else %}
@@ -126,7 +126,7 @@
                         <td>
                             <a id="delete-source-code-button{{ index }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-source-code-modal" data-uuid="{{ box.uuid }}">
                                 <i class="fa fa-times-circle-o"></i>
-                                Delete Source Code
+                                {{_("Delete Source Code")}}
                             </a>
                         </td>
                         {% end %}

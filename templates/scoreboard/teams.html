@@ -5,12 +5,14 @@
 <script src="/static/js/pages/scoreboard/teams.js"></script>
 <script src="/static/js/pages/anchor.js"></script>
 {% end %}
-{% block title %}Teams{% end %}
+{% block title %}
+{% from tornado.options import options %}
+{% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
+{% end %}
 
 {% block content %}
 {% from models.Team import Team %}
 {% from models.GameLevel import GameLevel %}
-{% from tornado.options import options %}
 <div class="row-fluid">
     {% if not timer %}
     <div class="span2" />
@@ -18,7 +20,7 @@
             <center>
                 <strong>
                     <i class="fa fa-group"></i>
-                    {% if options.teams %}Teams{% else %}Players{% end %}
+                    {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
                 </strong>
             </center>
             <br />
@@ -38,7 +40,7 @@
     <div class="span10">
         <h1>
             <i class="fa fa-group"></i>
-            {% if options.teams %}Teams{% else %}Players{% end %}
+            {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
         </h1>
         <br />
         {% for index, team in enumerate(Team.ranks()) %}
@@ -106,9 +108,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Flag</th>
-                                        <th>Box</th>
-                                        {% if len(GameLevel.all()) > 1 %}<th>Game Level</th>{% end %}
+                                        <th>{{ _("Flag") }}</th>
+                                        <th>{{ _("Box") }}</th>
+                                        {% if len(GameLevel.all()) > 1 %}<th>{{ _("Game Level") }}</th>{% end %}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -124,7 +126,7 @@
                             </table>
                         {% else %}
                             <p>
-                                <h4 style="text-align:center;">No flags captured yet.</h4>
+                                <h4 style="text-align:center;">{{ _("No flags captured yet.") }}</h4>
                             </p>
                         {% end %}
                         <br/>

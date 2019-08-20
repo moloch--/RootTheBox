@@ -11,7 +11,7 @@
     <div id="swat-player-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>SWAT Bribe</h3>
+            <h3>S.W.A.T. {{ _("Bribe") }}</h3>
         </div>
         <div class="modal-body">
             <form id="swat-player-form" class="form-horizontal" action="/swat" method="post">
@@ -23,9 +23,9 @@
             <br />
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="swat-player-submit" class="btn btn-primary" type="button">
-                Submit Bribe
+                {{ _("Submit Bribe") }}
             </button>
         </div>
     </div><!-- End Modal -->
@@ -43,21 +43,21 @@
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">ERROR</h4>
+                    <h4 class="alert-heading">{{ _("ERROR") }}</h4>
                     {{ error }}
                 </div>
             {% end %}
         {% end %}
         <div class="well">
-            <h3>Submit Bribes</h3>
+            <h3>{{ _("Submit Bribes") }}</h3>
             <hr>
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Team</th>
-                        <th>Handle</th>
-                        <th>Bribe Amount</th>
+                        <th>{{ _("Team") }}</th>
+                        <th>{{ _("Handle") }}</th>
+                        <th>{{ _("Bribe Amount") }}</th>
                         <th><!-- Button --></th>
                     </tr>
                 </thead>
@@ -75,13 +75,13 @@
                             <td>{{ target.handle }}</td>
                             <td>${{ Swat.get_price(target) }}</td>
                             {% if Swat.user_is_pending(target) %}
-                                <td>Bribe Pending</td>
+                                <td>{{ _("Bribe Pending") }}</td>
                             {% elif Swat.user_is_in_progress(target) %}
-                                <td>Accepted / In Jail</td>
+                                <td>{{ _("Accepted / In Jail") }}</td>
                             {% else %}
                                 <td>
                                     <a id="swat-player-button{{ index }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#swat-player-modal" data-uuid="{{ target.uuid}}" data-price="{{ Swat.get_price(target) }}">
-                                        Arrest Player
+                                        {{ _("Arrest Player") }}
                                     </a>
                                 </td>
                             {% end %}
@@ -92,17 +92,17 @@
         </div>
         <br />
         <div class="well">
-            <h3>Bribe History</h3>
+            <h3>{{ _("Bribe History") }}</h3>
             <hr>
             {% if len(user_bribes) != 0 %}
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Created</th>
-                            <th>Target</th>
-                            <th>Bribe Amount</th>
-                            <th>Outcome</th>
+                            <th>{{ _("Created") }}</th>
+                            <th>{{ _("Target") }}</th>
+                            <th>{{ _("Bribe Amount") }}</th>
+                            <th>{{ _("Outcome") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,13 +122,13 @@
                                 <td>${{ swat.paid }}</td>
                                 <td>
                                     {% if swat.is_pending() %}
-                                        Pending
+                                        {{ _("Pending") }}
                                     {% elif swat.is_in_progress() %}
-                                        In Progress
+                                        {{ _("In Progress") }}
                                     {% elif swat.is_declined() %}
-                                        Declined
+                                        {{ _("Declined") }}
                                     {% elif swat.is_successful() %}
-                                        Successful
+                                        {{ _("Successful") }}
                                     {% end %}
                                 </td>
                             </tr>
@@ -137,7 +137,7 @@
                 </table>
             {% else %}
                 <br />
-                You have not submitted any bribes yet.
+                {{ _("You have not submitted any bribes yet.") }}
                 <br />
             {% end %}
         </div>

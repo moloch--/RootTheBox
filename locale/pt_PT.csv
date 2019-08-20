@@ -1,0 +1,663 @@
+(stop - start) * cost.,(parar - começar) * custo.
+$,$
+A brief description of the box,Uma breve descrição da caixa
+About,Sobre
+Accept,Aceitar
+Accept Bribe?,Aceitar suborno?
+Accept this bribe?,Aceite este suborno?
+Accepted,Aceitaram
+Accepted / In Jail,Aceito / na cadeia
+Account Locked!,Conta bloqueada!
+Account Password,Senha da conta
+Active Bots,Bots Ativos
+Add,Adicionar
+Add,Adicionar
+add,adicionar
+Add a Category for Boxes.,Adicione uma categoria para caixas.
+Add Flags,Adicionar sinalizadores
+Add Hint,Adicionar dica
+Add IP address,Adicione o endereço IP
+Add IP Address,Adicionar endereço IP
+add some,adicione alguns
+Add Source Code,Adicionar código fonte
+Add Source Code to Market,Adicionar código-fonte ao mercado
+Add to Market,Adicionar ao mercado
+Address,Endereço
+Admin,Admin
+Admin Home,Página inicial do administrador
+Admin Message,Mensagem Administrativa
+Administrator Panel,Painel Administrador
+Admins,Admins
+All Notifications,Todas as notificações
+and so on,e assim por diante
+Apply penalty on attempt,Aplicar penalidade na tentativa
+Are you a Cylon?,Você é um Cylon?
+Are You Elite,Você é Elite?
+Are you sure you want to buy this code?,Tem certeza de que deseja comprar este código?
+Are you sure you want to delete this box?,Tem certeza de que deseja excluir esta caixa?
+Are you sure you want to delete this category?,Tem certeza de que deseja excluir esta categoria?
+Are you sure you want to delete this corporation?,Tem certeza de que deseja excluir esta corporação?
+Are you sure you want to delete this file?,Tem certeza de que deseja excluir este arquivo?
+Are you sure you want to delete this flag?,Tem certeza de que deseja excluir este sinalizador?
+Are you sure you want to delete this game level?,Tem certeza de que deseja excluir este nível de jogo?
+Are you sure you want to delete this hint?,Tem certeza de que deseja excluir esta dica?
+Are you sure you want to delete this IP address?,Tem certeza de que deseja excluir este endereço IP?
+Are you sure you want to delete this source code?,Tem certeza de que deseja excluir este código-fonte?
+Are you sure you want to delete this user?,Tem certeza de que deseja excluir este usuário?
+Are you sure you want to delete?,Tem certeza de que deseja excluir?
+Arrest Player,Jogador de detenção
+attempt,tentativa
+attempt and continue until the,tentar e continuar até o
+Attempts,Tentativas
+Authenticate,Autenticar
+Authentication Failure,Falha de autenticação
+Authentication Required,Autentificação requerida
+Avatar,Avatar
+Backup/Restore,Restauração de backup
+Ban IP Address,Banir endereço IP
+Bank Account,Conta bancária
+Bank Account Balance,Saldo da conta bancária
+Bank Hash Algorithm,Algoritmo Hash Bank
+Bank Password,Senha do banco
+Bank Password Length,Comprimento da Senha do Banco
+Banking System,Sistema bancário
+Banned IPs,IPs proibidos
+BEGIN SECURE COMMUNIQUE,COMECE COMUNICADO SEGURO
+Black Market,Mercado negro
+Bonus reward for those that complete the level.,Recompensa bônus para aqueles que completam o nível.
+Bot,Robô
+Bot added,Bot adicionado
+Bot Reward,Recompensa do bot
+Botnet,Botnet
+Botnet Command & Control,Comando e Controle de Botnet
+Botnet Monitor,Monitor de Botnet
+Botnet Scored,Botnet pontuado
+Botnets,Botnets
+Bots,Botinhas
+Box,Caixa
+Box Difficulty,Dificuldade de caixa
+Box Hints,Box Dicas
+Box Hints Taken,Sugestões de Caixa Tomadas
+Box Name,Nome da caixa
+Boxes,Caixas
+Bribe,Suborno
+Bribe Amount,Valor do Suborno
+Bribe History,História do suborno
+Bribe Pending,Suborno pendente
+Bribe Price,Preço do suborno
+Bribes in Progress,Subornos em andamento
+Buy,Comprar
+Buy Source Code,Comprar código fonte
+Buy Upgrade,Compre Upgrade
+bytes,bytes
+Capture Message,Capturar Mensagem
+Capture Rate,Taxa de captura
+Captures,Capturas
+Case-Sensitive,Maiúsculas e Minúsculas
+Cash Stolen,Dinheiro roubado
+Categories,Categorias
+Category,Categoria
+Category box belongs too?,A caixa de categoria também pertence?
+Category Name,Nome da Categoria
+Change,mudança
+Change Avatar,Mudar Avatar
+Characters,Personagens
+Charts,Gráficos
+Chat,Bate-papo
+Checksum,Checksum
+Choose,Escolher
+Choose a name for your new team!,Escolha um nome para sua nova equipe!
+Choose Avatar,Escolher Avatar
+Classic,Clássico
+Clear,Claro
+Clear all notifications and game history,Limpar todas as notificações e histórico do jogo
+Clear all team / player flag captures,Limpar todas as capturas de bandeira de equipe / jogador
+Clear all team pastebin and file shares,Limpar todos os compartilhamentos de pastas e arquivos da equipe
+Clear market items or source code purchases,Limpar itens de mercado ou compras de código-fonte
+Click here to login,Clique aqui para logar
+Close,Fechar
+Command & Control,Comando e Controle
+Complete,Completo
+Complete Bribe,Suborno Completo
+Complete this bribe?,Complete este suborno?
+Completed,Concluído
+Completed Bribes,Subornos concluídos
+Completion Message,Mensagem de conclusão
+completion of Level,conclusão do nível
+Completion Reward,Recompensa de Conclusão
+Configuration,Configuração
+Confirm,confirme
+Confirm Account Password,Confirme a senha da conta
+Confirm New Password,Confirme a nova senha
+Confirm Password,Confirme a Senha
+Content,Conteúdo
+Content Missing,Conteúdo ausente
+Corporation,Corporação
+Corporation box belongs too?,Caixa de corporação pertence também?
+Corporation Name,Nome Corporativo
+Corporations,Corporações
+Cost,Custo
+Cost to open this level and see flags,Custo para abrir este nível e ver bandeiras
+Cracked by,Rachado por
+Create,Crio
+Create Box,Criar caixa
+Create Category,Criar categoria
+Create Corporation,Criar Corporação
+Create Datetime Flag,Criar sinalizador de data e hora
+Create File Flag,Criar sinalizador de arquivo
+Create Flag,Criar sinalizador
+Create Game Level,Criar nível de jogo
+Create Hint,Criar Dica
+Create Message,Criar mensagem
+Create Multiple Choice Flag,Criar sinalizador de múltipla escolha
+Create New Paste,Criar nova pasta
+Create Notification,Criar notificação
+Create Regex Flag,Criar sinalizador de regex
+Create Static Flag,Criar sinalizador estático
+Create Team,Criar equipe
+Created,Criado
+Current algorithm,Algoritmo atual
+Current Bank Account Password,Senha atual da conta bancária
+Current Bank Password,Senha do banco atual
+Current Level,Nível atual
+Current Level,Nível atual
+CyberChef,CyberChef
+Data Points,Os pontos de dados
+Date,Encontro
+Datetime Flag,Bandeira de data e hora
+Datetime Token,Token de data e hora
+DEBUG,DEPURAR
+Decline,Declínio
+Decline Bribe?,Recusar suborno?
+Decline this bribe?,Recusar este suborno?
+Declined,Recusado
+Decrease flag reward by this percent per capture.,Diminua o sinalizador recompensado por essa porcentagem por captura.
+deduct on & after,deduzir no & depois
+defaults to,o padrão é
+Delete,Excluir
+Delete Box,Excluir caixa
+Delete Category,Excluir categoria
+Delete Corporation,Excluir Corporação
+Delete File Upload,Excluir upload de arquivo
+Delete Flag,Excluir sinalizador
+Delete Game Level,Excluir nível do jogo
+Delete Hint,Excluir dica
+Delete IP Address,Excluir endereço IP
+Delete Player,Excluir jogador
+Delete Source Code,Excluir código fonte
+Delete Team,Excluir equipe
+Delete User,Deletar usuário
+Dependent Flag,Bandeira Dependente
+Description,Descrição
+DESCRIPTION,DESCRIÇÃO
+Details,Detalhes
+Difficulty,Dificuldade
+Difficulty Rating,Classificação de dificuldade
+Disable,Desabilitar
+Disabling this option will skip the story line and give the player an instant capture message.,Desativar esta opção irá ignorar a história e dar ao jogador uma mensagem de captura instantânea.
+Display Hints Taken,Dicas de exibição tomadas
+Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,"Não exclua ou modifique as bandeiras da comunidade, a menos que seja instruído. Não ataque outros jogadores a menos que esteja delineado nos objetivos do jogo."
+Download,Baixar
+Download File,⇬ Fazer download do arquivo
+Download the command line botnet monitor,Baixe o monitor da botnet de linha de comando
+Dynamic Scoring,Pontuação Dinâmica
+Each flag has a submit.  The player will choose the flag they intend to capture.,Cada bandeira tem um envio. O jogador escolherá a bandeira que pretendem capturar.
+"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Cada jogador terá como alvo desafios de dificuldade e sofisticação variadas, tentando coletar bandeiras e conquistar a glória. Boa sorte!"
+Edit,Editar
+Edit Account,Editar conta
+Edit Box,Caixa de edição
+Edit Category,Editar categoria
+Edit Corporation,Editar Corporação
+Edit Flag,Editar sinalizador
+Edit Flag,Editar sinalizador
+Edit Game Level,Editar nível do jogo
+Edit Hint,Editar Dica
+Edit Level,Editar nível
+Edit Market Item,Editar item de mercado
+Edit Player,Editar jogador
+Edit Team,Editar equipe
+Edit User,Editar usuário
+Email,O email
+EMPTY,ESVAZIAR
+Enable,Habilitar
+"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.","A ativação desse recurso permitirá que os jogadores criem suas próprias equipes durante o registro. Se esta opção estiver desativada, o administrador deve criar equipes para os jogadores participarem."
+Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,A ativação desse recurso permitirá que os jogadores compartilhem código (pastebin) e arquivos no jogo. Desativar esse recurso removerá essas opções do menu Ferramentas.
+"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","A ativação desse recurso permitirá que as equipes comprem atualizações, como o Federal Reserve, o Source Code Market ou o SWAT."
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.","Habilitar esse recurso permitirá que o jogo exiba mensagens de flag ou box capture que possam ser adicionadas. Por padrão, o jogo segue o enredo de Morris, um empregador que atribui missões."
+"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.","A ativação deste recurso aplicará uma penalidade por tentativas de captura incorretas. A penalidade é uma dedução instantânea da pontuação, não uma diminuição no valor da bandeira."
+"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.","A ativação desse recurso diminuirá a recompensa de um sinalizador com base no número de capturas. Se esta opção estiver desabilitada, o valor do sinalizador permanecerá consistente enquanto outros jogadores o capturam."
+Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,Habilitar esse recurso exibirá o número de dicas tiradas no placar por um time ou jogador. Útil quando as dicas são gratuitas. Uma contagem de dica mais baixa é usada para ordenar quando as pontuações ou bandeiras são iguais. Desativar essa opção removerá a contagem de dicas do placar.
+"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.","Ativar esse recurso exibirá o placar do MVP do jogador. Qualquer jogador que tenha contribuído com pontos para a equipe será exibido. Se esta opção estiver desativada, o placar do MVP ficará oculto."
+Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,A ativação desse recurso exigirá que os jogadores forneçam um token de registro válido para criar uma nova conta. Os tokens de registro são criados na interface administrativa.
+Enabling this feature will require players to provide an email address in order to create a new account.,A ativação desse recurso exigirá que os jogadores forneçam um endereço de e-mail para criar uma nova conta.
+Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,A ativação deste recurso enviará notificações de desbloqueio de nível e bandeira para todos os jogadores no jogo. Desativar essa opção limitará essas notificações aos membros da equipe.
+"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.","Habilitar esse recurso definirá o jogo e o placar para o jogo competitivo da equipe. Se esta opção estiver desabilitada, o jogo está configurado para jogo competitivo individual."
+"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.","A ativação desse recurso definirá o jogo para usar um sistema de pontuação baseado em dinheiro. Se esta opção estiver desabilitada, o jogo usa um sistema de pontuação baseado em pontos."
+"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.","A ativação dessa opção definirá o token para diferenciar maiúsculas de minúsculas. Se essa opção estiver desabilitada, o token de resposta não diferencia maiúsculas de minúsculas."
+"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.","Ativar esta opção irá definir o token para ser caso sensitivo. Se esta opção estiver desabilitada, o token de resposta é insentivo."
+Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,Ativar essa configuração ativa os recursos da botnet. As equipes podem executar seus executáveis ​​de bot em caixas que eles vendem e são pagos por cada bot ao longo do tempo.
+END SECURE COMMUNIQUE,COMUNICADO SEGURO SEGURO
+Enter a complex password of,Digite uma senha complexa de
+Enter a Matching Flag,Insira uma bandeira de correspondência
+Enter Choice,Digite a escolha
+Enter the same password as before,Digite a mesma senha de antes
+ERROR,ERRO
+Export Game Objects,Exportar Objetos do Jogo
+Export XML,Exportar XML
+Export XML,Exportar XML
+Failed Attempts,Tentativas falhas
+Failed Logins,Logins com falha
+Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,"A falha tem um custo. Tenha cuidado, pois as penalidades são aplicadas quando respostas incorretas são enviadas."
+Federal Reserve,Reserva Federal
+Federal Reserve Bank,Banco da Reserva Federal
+File,Arquivo
+File Description,Descrição do arquivo
+File Flag,Flag de arquivo
+File Name,Nome do arquivo
+File Share,Compartilhamento de arquivo
+File Sharing,Compartilhamento de arquivos
+File Size,Tamanho do arquivo
+First Login,Primeiro login
+Flag,Bandeira
+Flag Capture,Captura de bandeira
+Flag Decrease Value,Sinalizar Diminuir Valor
+Flag Details,Detalhes da bandeira
+Flag File,Arquivo de bandeira
+Flag Hints,Dicas de sinalização
+Flag Name,Nome do sinalizador
+Flag Penalty,Penalidade da Bandeira
+Flag Penalty % Cost,Custo de% de penalidade da bandeira
+Flag Penalty Cost,Custo de penalização da bandeira
+Flag Penalty Start,Começo da penalidade da bandeira
+Flag Penalty Stop,Parada de Penalidade da Bandeira
+Flag Submission Type,Tipo de envio de sinalizador
+Flag Type,Tipo de Bandeira
+Flags,Bandeiras
+Flags / Boxes / Corp.,Bandeiras / caixas / Corp
+Flags Captured,Bandeiras capturadas
+Flags on,Sinalizadores
+for,para
+Forbidden,Proibido
+Game,jogos
+Game Control,Controle do jogo
+Game Information,Informação do Jogo
+Game Level,Nível do jogo
+Game Levels,Níveis de jogo
+Game Management,Gestão de Jogos
+Game Materials,Materiais de Jogo
+Game Name,Nome do jogo
+Game Progress,Progresso do Jogo
+Garbage File,Arquivo de lixo
+Get help with,Obtenha ajuda com
+Get your registration token from reception,Obtenha seu token de registro na recepção
+Glitch in the Matrix,Glitch na Matriz
+Global Notifications,Notificações Globais
+Handle,Lidar com
+Hint,Sugestão
+Hint not yet taken,Dica ainda não tirada
+Hint Taken,Sugestão Tomada
+Hints,Dicas
+Hints on,Dicas sobre
+Hints Taken,Sugestões tomadas
+History,História
+Home,Casa
+How should the next level unlock?,Como o próximo nível deve ser desbloqueado?
+"If the flag selection is left empty, the hint will be considered a Box Hint.","Se a seleção do sinalizador for deixada vazia, a dica"
+"If this option is disabled, there is no cost for submitting incorrect flags.","Se esta opção estiver desativada, não há custo para o envio de sinalizadores incorretos."
+Import File,Importar arquivo
+Import XML,Importar XML
+Import XML,Importar XML
+In Progress,Em progresso
+"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","Nesse caso, o sinalizador é uma seqüência de data / hora. Esse tipo de sinalizador tentará corresponder em variações de formato de data e hora comuns e lidar com diferenças como barras, traços, preenchimento, 12 horas, 24 horas, etc. Ele pode manipular uma data, hora ou uma data e hora."
+"In this case, the flag is a multiple choice question where the selected option is the token.","Nesse caso, o sinalizador é uma pergunta de múltipla escolha em que a opção selecionada é o token."
+"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","Nesse caso, o sinalizador é uma expressão regular. O usuário deve enviar uma string que corresponda ao padrão para capturar o sinalizador. As partidas podem ser insensíveis. Por favor, certifique-se de testar seu regex e garantir que ele não seja muito amplo."
+"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.","Nesse caso, o sinalizador é uma string estática. O usuário deve enviar o token exato para capturar a bandeira. Espaços em branco no início e no final são removidos."
+Income,Renda
+Incoming Transmission,Transmissão entrante
+Incorrect,Incorreta
+Incorrect Penalty,Penalidade incorreta
+indicates use by another player,indica uso por outro jogador
+INFO,INFO
+Information,Em formação
+Invalid CSRF Token,Token CSRF inválido
+IP Address,Endereço de IP
+IP Version,Versão IP
+It appears you're an unsophisticated script kiddie!,Parece que você é um script infantil sem sofisticação!
+"It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).","Pode ser visível para todos os visitantes (público), para usuários autenticados (jogadores) ou apenas para administradores (admins)."
+"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.",Parece que você digitou uma URL incorretamente ou estava tentando encontrar algo que não deveria ter acesso.
+"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.","É sobre o dinheiro e é hora de lucrar com essas habilidades! Este jogo está configurado para usar um sistema bancário, por isso não perca tempo para construir sua fortuna e comprar o que você precisa para ganhar."
+Item Cost,Custo do item
+Join Existing Team,Junte-se a equipe existente
+Known IP Addresses,Endereços IP Conhecidos
+Last Ping,Último Ping
+Learn,Aprender
+Level,Nível
+Level Name,Nome do nível
+Level Number,Número do Nível
+Level to put box in?,Nível para colocar a caixa?
+Level Unlocked,Nível Desbloqueado
+Limit number of players that can be on any one team,Número limite de jogadores que podem estar em qualquer time
+"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Limita o número de tentativas para capturar um sinalizador. Quando o limite for atingido, nenhuma outra ação poderá ser executada nesse sinalizador."
+Linux,Linux
+Lock,Bloqueio
+Locked by,Bloqueado por
+Login,Entrar
+Login Password,Senha de login
+Logout,Sair
+MacOS,Mac OS
+Mainframe Console,Console de mainframe
+Manage Black Market,Gerenciar mercado negro
+Manage Categories,Gerenciar categorias
+Market Objects,Objetos de mercado
+Max,Max
+Max Flag Attempts,Tentativas de sinalização máxima
+Max PasteBin Size,Tamanho máximo de pasta
+Max Team Size,Tamanho máximo da equipe
+Maximum Flag Attempts,Máximo de tentativas de bandeira
+Maximum Penalty,Penalidade Máxima
+Maximum Penalty is determined as,Penalidade máxima é determinada como
+Min user password length,Comprimento mínimo da senha do usuário
+Minimum User Password Length,Comprimento mínimo da senha do usuário
+Mission Progress,Progresso da Missão
+Missions,Missões
+Modifies the way flag submission are made.,Modifica a maneira como o envio de sinalizador é feito.
+Money,Dinheiro
+money,dinheiro
+Motto,Lema
+Multiple Choice,Múltipla escolha
+Multiple Choice Flag,Bandeira de múltipla escolha
+Must be unique,Deve ser único
+MVP,MVP
+MVP - List Top N Payers,MVP - Listar Top N Pagadores
+MVP List Top,Top de lista do MVP
+MVP Scoreboard,Placar de MVP
+MVP Scoreboard,Placar de MVP
+Name,Nome
+Never,Nunca
+New Bank Account Password,Nova senha da conta bancária
+New Bank Password,Nova senha do banco
+New Box,Nova caixa
+New Category,Nova categoria
+New Corporation,Nova Corporação
+New Flag,Nova bandeira
+New Game Level,Novo nível de jogo
+New IP Address,Novo endereço IP
+New Password,Nova senha
+New Team,Novo time
+New Team Member,Novo membro da equipe
+New Team Name,Novo nome da equipe
+No,Não
+No Avatar,Sem avatar
+No Boxes,Sem caixas
+No boxes in this corporation yet,Nenhuma caixa nesta corporação ainda
+No boxes on this level yet,Não há caixas neste nível ainda
+No Bribes in Progress,Nenhum suborno em andamento
+No Completed Bribes,Não subornos cumpridos
+No flags captured yet.,Nenhuma bandeira capturada ainda.
+No flags on this box yet,Ainda não há bandeiras nessa caixa
+No further penalty thereafter.,Nenhuma penalidade adicional depois disso.
+No Lock,Não feche
+No name,Sem nome
+No Pending Bribes,Nenhum suborno pendente
+No sheep yet - check back later.,Nenhuma ovelha ainda - volte mais tarde.
+No Source Code For Sale at This Time,Nenhum código-fonte para venda neste momento
+No Tokens in Database,Nenhum token no banco de dados
+No upgrades left.,Não há atualizações à esquerda.
+No Users,Nenhum usuário
+None,Nenhum
+Noob Alert,Alerta Noob
+"Not all options are accessible in the web configuration.  For more, see","Nem todas as opções estão acessíveis na configuração da web. Para mais, veja"
+Note,Nota
+Note: Files or documents for the challenge can be placed in the Game Materials.,Nota: Arquivos ou documentos para o desafio podem ser colocados nos Materiais do Jogo.
+Note: Files or documents for the challenge can be placed in the Game Materials.,Nota: Arquivos ou documentos para o desafio podem ser colocados nos Materiais do Jogo.
+NOTE: Max attempts and penalties will not be applied in Single Box mode.,NOTA: As tentativas máximas e as penalidades não serão aplicadas no modo de caixa única.
+NOTE: This setting is ignored if the box flag submission type is set to Single Box.,NOTA: Esta configuração é ignorada se o tipo de envio do sinalizador de caixa estiver definido como Caixa única.
+Notification Message,Mensagem de Notificação
+Notifications,Notificações
+Number of Bots,Número de bots
+Number of Flags,Número de bandeiras
+Number of new Level,Número de novo nível
+of Flag Value,do valor da bandeira
+of the flag's value. It will start on the,do valor da bandeira. Vai começar no
+Old Password,Senha Antiga
+One submission box for any flag.  Compares attempts against all flags in the box.,Uma caixa de submissão para qualquer bandeira. Compara tentativas contra todos os sinalizadores na caixa.
+only,só
+Optional,Opcional
+Or Choose Existing,Ou escolha existente
+Outcome,Resultado
+Outcome,Resultado
+Password,Senha
+Password Cracked,Senha rachada
+Password Cracking Leaderboard,Tabela de classificação de senha
+Password Hash,Hash de Senha
+Password Security,Segurança de Senha
+Password Upgrade Cost,Custo de atualização de senha
+Passwords Cracked,Senhas rachadas
+Paste Name,Colar Nome
+Paste Text Here,Cole o texto aqui
+PasteBin,PasteBin
+Pastebin Character Limit,Limite de caracteres Pastebin
+Pause Registration,Pausa no registro
+Pause Scoreboard,Painel de Pausa
+Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Penalize a pontuação por essa porcentagem do valor do sinalizador para cada tentativa incorreta (aplicada após a pontuação dinâmica, se ativada)."
+Pending,Pendente
+Pending Bribes,Subornos Pendentes
+Plain Text,Texto simples
+Play Story,Jogar história
+player,jogador
+Player,Jogador
+Player Alias,Jogador Alias
+Player Arrested!,Jogador preso!
+Player Email,E-mail do jogador
+Player Name,Nome do jogador
+"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","As senhas da conta bancária do jogador também estão disponíveis, permitindo que você decifre as senhas umas das outras e roube o dinheiro."
+Players,Jogadoras
+Please do NOT enter your real bank account password.,"Por favor, não insira a senha da sua conta bancária real."
+points,pontos
+Points,Pontos
+points,pontos
+Previous Bribes,Subornos anteriores
+Price,Preço
+Private,Privado
+Programming,Programação
+Provide the code used to join an existing team.  Visible to other team members on their home page.,Forneça o código usado para ingressar em uma equipe existente. Visível para outros membros da equipe em sua home page.
+Public,Público
+Public Team Creation,Criação Pública de Equipes
+Public Teams,Equipes Públicas
+Purchase,Compra
+Purchase Unlock,Desbloqueio de compra
+Purchased,Comprado
+Rank By,Classificação por
+Regex Flag,Bandeira Regex
+Regex Pattern,Padrão de Regex
+Register Account,Registar Conta
+Registration,Cadastro
+Registration Email,E-mail de registro
+Registration Tokens,Tokens de Registro
+Regular Expression,Expressão regular
+Require Email,Solicitar e-mail
+Reset Actions,Redefinir ações
+Reset Game,Redefinir Jogo
+Reset Game,Redefinir Jogo
+Reset player / team starting points / money,Redefinir pontos iniciais / dinheiro do jogador / equipe
+Restrict players bank password to this length,Restringir a senha do banco dos jogadores a esse comprimento
+Restrict players user password to this length,Restringir a senha do usuário dos jogadores a esse comprimento
+Resume Registration,Retomar Registro
+Resume Scoreboard,Retomar o placar
+Return to Edit,Retornar para Edit
+Return to Missions,Retornar às Missões
+Reward,Recompensa
+Role,Função
+Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,"Regras de engajamento: Não ataque a plataforma do placar do jogo. Não altere as senhas das contas existentes na rede, a menos que seja especificado por um objetivo do jogo."
+S.W.A.T,GOLPE
+Save,Salve 
+Score,Ponto
+Scoreboard,Placar
+Scoreboard Rank By,Classificação do placar por
+Scoreboard Visibility,Visibilidade do placar
+Security Breach,Falha de segurança
+See All,Ver tudo
+Select a Theme,Selecione um tema
+Select Avatar,Selecione Avatar
+Select New Avatar,Selecione Novo Avatar
+Send,Mandar
+Send a global notification to all players,Enviar uma notificação global para todos os jogadores
+Set Countdown Timer,Definir temporizador de contagem regressiva
+Set the game countdown timer,Definir o temporizador de contagem regressiva do jogo
+Settings,Definições
+Share your team code to allow other players to join,Compartilhe seu código de equipe para permitir que outros jogadores participem
+Shared Files,Arquivos Compartilhados
+Sheep,Ovelhas
+Show MVP,Mostrar MVP
+Since Score,Desde Pontuação
+Single Box,Caixa única
+Skill Progress,Progresso da Habilidade
+Source Code,Código fonte
+Source Code Archive,Arquivo de código fonte
+Source Code Market,Mercado de código fonte
+Special Thanks,Agradecimentos especiais
+Start a New Team,Comece uma nova equipe
+Start the Game,Comece o jogo
+start with 0 points,começar com 0 pontos
+Starting Money,Começando dinheiro
+Static Flag,Bandeira estática
+Static Token,Token Estático
+Statistics,Estatisticas
+stop on & after,parar e depois
+Stop the Game,Pare o jogo
+Story,História
+Story Mode,Modo história
+Submit,Enviar
+Submit a Bug,Envie um bug
+Submit a Flag,Envie uma bandeira
+Submit Bribe,Subornar suborno
+Submit Bribes,Subornar subornos
+Submit Flag,Enviar sinalizador
+SUCCESS,SUCESSO
+Success!,Sucesso!
+Successful,Bem sucedido
+Successful Captures,Capturas bem sucedidas
+Successful Registration,Registro bem sucedido
+Successfully created a new account for,Criei com sucesso uma nova conta para
+Summary,Resumo
+Supports,Suporta
+Switch Level,Switch Level
+System Type,Tipo de sistema
+Take,Toma
+Take Hint,Tome Sugestão
+Taken,Ocupado
+Target,Alvo
+Target Handle,Alvo Alvo
+Target Management,Gerenciamento de Alvos
+team,equipe
+Team,Equipe
+Team Avatar,Avatar da equipe
+Team Code,Código da equipe
+Team File Share,Compartilhamento de arquivos da equipe
+Team Information,Informação da equipe
+Team Motto,Lema da Equipa
+Team Name,Nome do time
+Team PasteBin,Team PasteBin
+Team Play,Jogo de equipe
+Team Shares,Ações da equipe
+Team Sharing,Compartilhamento de equipe
+Teams,Equipes
+Test Flag,Bandeira de teste
+Text Share,Compartilhamento de texto
+The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,O mercado negro está aberto e você conhece um cara. Faça o download do código-fonte de um alvo ou S.W.A.T. outros jogadores subornando a polícia (no jogo).
+The cost to take the hint.  Can be >= 0.,O custo para levar a dica. Pode ser> = 0.
+The deduction is,A dedução é
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.","A única outra possibilidade é que eu estraguei um pouco do código, e isso não parece muito provável."
+The starting money for a new,O dinheiro inicial para um novo
+Theme,Tema
+There are currently no shared files.,Atualmente não há arquivos compartilhados.
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","Esses sinalizadores são arquivos, os usuários devem enviar exatamente o mesmo arquivo para capturar o sinalizador. Apenas um hash (SHA1) do arquivo é armazenado no servidor."
+"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","Este jogo está configurado para usar pontuação dinâmica, ou seja, quando outros jogadores capturam as bandeiras, o valor dessas bandeiras diminui. Então pegue-os rapidamente ou perca!"
+This is a test flag/string the user could input for credit.,Este é um flag / string de teste que o usuário pode inserir para crédito.
+This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,Esta é a quantia que um jogador deve pagar ao S.W.A.T. outra conta de jogadores. SWATs subseqüentes do mesmo jogador também são aumentados por essa quantia a cada vez.
+This is the amount a player must pay to upgrade their bank passwords hashing algorithm,Esta é a quantia que um jogador deve pagar para atualizar seu algoritmo de hashing de senhas bancárias
+This is the amount awarded for capturing the flag.,Este é o valor concedido para capturar a bandeira.
+This is the amount awarded for completion of the box.,Este é o valor concedido para a conclusão da caixa.
+This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually,Essa é a quantia de dinheiro que uma equipe recebe por bot em cada intervalo. O intervalo deve ser definido no arquivo .cfg manualmente
+This is the box the flag is located on.,Esta é a caixa na qual o sinalizador está localizado.
+This is the description,Esta é a descrição
+This is the maximum number of players displayed on the MVP list (default 10) with a score > 0.,Este é o número máximo de jogadores exibidos na lista de MVPs (padrão 10) com pontuação> 0.
+This is the message displayed to the user once the box is completed.,Esta é a mensagem exibida ao usuário quando a caixa é concluída.
+This is the message displayed to the user once the flag is captured.,Esta é a mensagem exibida ao usuário quando o sinalizador é capturado.
+This is the name that will appear in the upper left corner,Este é o nome que aparecerá no canto superior esquerdo
+This is the the limit of characters allowed for a pastebin post.,Este é o limite de caracteres permitido para uma postagem pastebin.
+This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,Isto é o que você quer que o sinalizador seja exibido como. Deixe em branco para ser nomeado automaticamente pelo pedido #.
+This selection determines the method by which the scoreboard is primarily ranked.,Essa seleção determina o método pelo qual o placar é classificado principalmente.
+This selection determines the visibility of the scoreboard menu and pages.,Esta seleção determina a visibilidade do menu e das páginas do placar.
+"This will also delete associated IP addresses, boxes, and flags.","Isso também excluirá endereços IP, caixas e sinalizadores associados."
+"This will also delete associated IP addresses, hints, and flags.","Isso também excluirá endereços IP, dicas e sinalizadores associados."
+This will also delete boxes and flags associated with this level.,Isso também excluirá caixas e sinalizadores associados a esse nível.
+This will delete the player and the associated user account!,Isso excluirá o player e a conta de usuário associada!
+This will delete the team and any associated user accounts!,Isso excluirá a equipe e todas as contas de usuário associadas!
+Threshold,Limite
+Time,Tempo
+"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.","Hora de criar uma botnet. Ao fazer o upload de um pequeno programa bot para direcionar máquinas, você pode ser periodicamente recompensado por cada bot na sua botnet; quanto maior a botnet, maior a recompensa."
+to Add,adicionar
+to Add or Subtract,adicionar ou subtrair
+"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.","Para restaurar essa instância do RTB, você também pode precisar do conteúdo no diretório de arquivos, para incluir o rootthebox.cfg."
+Token,Símbolo
+Token Value,Valor simbólico
+Tools,Ferramentas
+Tools & Upgrades,Ferramentas & Upgrades
+Total Cash Stolen,Dinheiro Total Roubado
+Type,Tipo
+Unknown,Desconhecido
+Unlock,Desbloquear
+Unlock Cost,Desbloquear custo
+Unlock Level,Desbloquear Nível
+Unlocks,Desbloqueia
+Unlocks after,Desbloqueia após
+Unlocks for,Desbloqueia para
+Update Bank Password,Atualizar senha do banco
+Update Configuration,Atualizar configuração
+Update Password,Atualizar senha
+Update RootTheBox,Atualizar RootTheBox
+Upgrade Purchased,Upgrade comprado
+Upgrade to,Atualize para
+Upload,Envio
+Upload Avatar,Carregar Avatar
+Upload Avatar File,Carregar arquivo de avatar
+Upload Files,Fazer upload de arquivos
+Used,Usava
+Used to secure your (in-game) bank account.,Usado para proteger sua conta bancária (no jogo).
+User Handle,Maçaneta do usuário
+User Management,Gerenciamento de Usuários
+Users / Teams,Usuários / Equipes
+Value,Valor
+View,Visão
+View Box,Exibir caixa
+View Details,Ver detalhes
+Visible,Visível
+Visible to Players,Visível para os jogadores
+Waiting for the game to start‚Ä¶,Esperando o jogo começar ...
+Wall of Sheep,Parede de ovelhas
+WARNING,AVISO
+Welcome,Bem vinda
+Welcome to the computer war game where security professionals can practice and learn.,"Bem-vindo ao jogo de guerra por computador, onde os profissionais de segurança podem praticar e aprender."
+Welcome to the Scene,Bem vindo à cena
+What is the name of this box?,Qual é o nome dessa caixa?
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.","Qual é o seu nome corporativo? Se você não planeja usar Corporações, basta criar uma sem nome."
+What is your motto?,Qual é o seu lema?
+What is your teams motto?,Qual é o lema de sua equipe?
+What type of system is this?,Que tipo de sistema é esse?
+Whats the difficulty of the box?,Qual a dificuldade da caixa?
+When banking is disabled,Quando o setor bancário está desativado
+"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.","Quando começar a aplicar a penalidade. Por exemplo, você pode querer que a primeira tentativa incorreta seja gratuita, mas penalize as tentativas subsequentes."
+"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","Quando parar de aplicar a penalidade. Por exemplo, você pode querer penalizar apenas um determinado total do valor de sinalizadores e permitir que outras tentativas sejam gratuitas, permitindo que todos os sinalizadores tenham algum valor."
+when using banking.,ao usar o banco.
+Windows,janelas
+With contributions from,Com contribuições de
+XML File,Arquivo XML
+Yes,sim
+You are not on a team,Você não está em um time
+You do not have access to this level yet.,Você não tem acesso a este nível ainda.
+You do not own this upgrade.,Você não possui este upgrade.
+You have not submitted any bribes yet.,Você não enviou nenhum suborno ainda.
+"Your email, visible to game administrators.","Seu email, visível para os administradores do jogo."
+"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Sua alça deve ter de 3 a 16 caracteres alfanuméricos. Sublinhado, traço e pontos permitidos."
+"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Seu nome, visível para os administradores do jogo. Seu nome pode ter de 3 a 64 caracteres alfanuméricos"

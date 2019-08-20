@@ -298,6 +298,13 @@ define(
     type=bool,
 )
 
+define(
+    "force_locale",
+    default="",
+    group="application",
+    help="force the application to use this locale instead of the browser's locale.",
+)
+
 
 # ReCAPTCHA
 define(

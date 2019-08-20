@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Game Management{% end %}
+{% block title %}{{ _("Game Management")}}{% end %}
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
@@ -24,7 +24,7 @@
     <div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
         <div class="modal-header">
             <button id="avatarclose" type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Change Avatar</h3>
+            <h3>{{ _("Change Avatar") }}</h3>
         </div>
         <div class="modal-body">
             {% raw xsrf_form_html() %}
@@ -60,38 +60,38 @@
     <div id="edit-corporation-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-pencil"></i> Edit Corporation</h3>
+            <h3><i class="fa fa-fw fa-pencil"></i> {{ _("Edit Corporation") }}</h3>
         </div>
         <div class="modal-body">
             <form id="edit-corporation-form" class="form-horizontal" method="post" action="/admin/edit/corporation">
                 {% raw xsrf_form_html() %}
                 <input id="edit-corporation-uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="corporation_name">Name</label>
+                    <label class="control-label" for="corporation_name">{{ _("Name") }}</label>
                     <div class="controls">
-                        <input id="corporation-name" name="name" type="text" placeholder="Corporation Name" />
+                        <input id="corporation-name" name="name" type="text" placeholder="{{ _('Corporation Name') }}" />
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="edit-corporation-submit" class="btn btn-primary" type="button">
                 <i class="fa fa-save"></i>
-                Save
+                {{_("Save")}}
             </button>
         </div>
     </div>
     <div id="delete-corporation-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-times-circle-o"></i> Delete Corporation</h3>
+            <h3><i class="fa fa-fw fa-times-circle-o"></i> {{ _("Delete Corporation") }}</h3>
         </div>
         <div class="modal-body">
         <p>
-            Are you sure you want to delete this corporation? <br />
+            {{ _("Are you sure you want to delete this corporation?") }} <br />
             <br />
-            <strong>WARNING:</strong> This will also delete associated IP addresses, boxes, and flags.
+            <strong>{{ _("WARNING") }}:</strong> {{ _("This will also delete associated IP addresses, boxes, and flags.") }}
         </p>
         <form id="delete-corporation-form" method="post" action="/admin/delete/corporation">
             {% raw xsrf_form_html() %}
@@ -99,10 +99,10 @@
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="delete-corporation-submit" type="button" class="btn btn-danger">
                 <i class="fa fa-fw fa-times-circle-o"></i>
-                Delete
+                {{ _("Delete") }}
             </button>
         </div>
     </div>
@@ -110,31 +110,31 @@
     <div id="edit-box-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-pencil"></i> Edit Box</h3>
-            <div style="padding-left: 5px;">Note: Files or documents for the challenge can be placed in the Game Materials.</div>
+            <h3><i class="fa fa-fw fa-pencil"></i> {{ _("Edit Box") }}</h3>
+            <div style="padding-left: 5px;">{{ _("Note: Files or documents for the challenge can be placed in the Game Materials.") }}</div>
         </div>
         <div class="modal-body">
             <form id="edit-box-form" class="form-horizontal" method="post" action="/admin/edit/box" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <input id="box-uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="box_name">Box Name</label>
+                    <label class="control-label" for="box_name">{{ _("Box Name") }}</label>
                     <div class="controls">
-                        <input id="box-name" name="name" type="text" placeholder="Box Name" />
+                        <input id="box-name" name="name" type="text" placeholder="{{ _('Box Name') }}" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="box_corporation">Corporation</label>
+                    <label class="control-label" for="box_corporation">{{ _("Corporation") }}</label>
                     <div class="controls">
                         <select id="edit-box-corporation" name="corporation_uuid">
                             {% for corporation in Corporation.all() %}
-                                <option value="{{ corporation.uuid }}">{% if corporation.name != "" %}{{ corporation.name }}{% else %}(No name){% end %}</option>
+                                <option value="{{ corporation.uuid }}">{% if corporation.name != "" %}{{ corporation.name }}{% else %}({{ _("No name") }}{% end %}</option>
                             {% end %}
                         </select>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="box_catetory">Category</label>
+                    <label class="control-label" for="box_catetory">{{ _("Category") }}</label>
                     <div class="controls">
                         <select id="edit-box-category" name="category_uuid">
                             <option value=""></option>
@@ -145,7 +145,7 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="edit-box-operating_system">System Type</label>
+                    <label class="control-label" for="edit-box-operating_system">{{ _("System Type") }}</label>
                     <div class="controls">
                         <select id="edit-box-operating_system" name="operating_system">
                             <option value="linux">
@@ -155,69 +155,69 @@
                                 Windows
                             </option>
                             <option value="apple">
-                                OSX
+                                MacOS
                             </option>
                             <option id="type_unknown" value="?">
-                                Unknown
+                                {{ _("Unknown") }}
                             </option>
                             <option value="none">
-                                None
+                                {{ _("None") }}
                             </option>
                         </select>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="box-value">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                    <label class="control-label" for="box-value">{% if options.banking %}{{ _("Reward") }}{% else %}{{ _("Points") }}{% end %}</label>
                     <div class="controls">
-                        <input id="box-value" name="value" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}" />
+                        <input id="box-value" name="value" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}{{_('$')}} {{_('Reward')}}{% else %}{{_('Points')}}{% end %}" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="box_description">Description</label>
+                    <label class="control-label" for="box_description">{{_("Description")}}</label>
                     <div class="controls">
-                        <textarea rows="4" class="toolbar" id="box-description" name="description" placeholder="Description" ></textarea>
+                        <textarea rows="4" class="toolbar" id="box-description" name="description" placeholder="{{_('Description')}}" ></textarea>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="box_difficulty">Difficulty</label>
+                    <label class="control-label" for="box_difficulty">{{_("Difficulty")}}</label>
                     <div class="controls">
-                        <input id="box-difficulty" name="difficulty" type="text" placeholder="Difficulty Rating" />
+                        <input id="box-difficulty" name="difficulty" type="text" placeholder="{{_('Difficulty Rating')}}" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="flag_submission_type">
-                        Flag Submission Type
+                        {{ _("Flag Submission Type") }}
                     </label>
                     <div class="controls">
                         <input id="box-flag_submission_type" name="flag_submission_type" type="hidden" value="CLASSIC" />
                         <div id="box-flag-submission-type-button" class="btn-group" data-toggle="buttons-radio">
                             <button id="box-flag-submission-type-classic" type="button" class="btn btn-primary">
                                 <i id="box-flag-submission-type-classic-icon" class="fa fa-fw fa-square-o"></i>
-                                Classic
+                                {{ _("Classic") }}
                             </button>
                             <button id="box-flag-submission-type-single-box" type="button" class="btn btn-primary">
                                 <i id="box-flag-submission-type-single-box-icon" class="fa fa-fw fa-square-o"></i>
-                                Single Box
+                                {{ _("Single Box") }}
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="box_avatar">Avatar</label>
+                    <label class="control-label" for="box_avatar">{{ _("Avatar")}}</label>
                     <div class="controls">
-                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload</a>
+                        <a id="uploadbutton" class="btn btn-primary" href="#">{{ _("Upload") }}</a>
                         <input id="box-avatar" name="avatar" type="file" style="display: none;"/>
                         <input id="box_avatar_select" name="box_avatar_select" type="hidden" />
-                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a id="change_avatar_button" data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal">Choose</a>{% end %}
-                        &nbsp;&nbsp;<a id="removeavatar" class="btn btn-primary" href="#">None</a>
+                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a id="change_avatar_button" data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal">{{_("Choose")}}</a>{% end %}
+                        &nbsp;&nbsp;<a id="removeavatar" class="btn btn-primary" href="#">{{ _("None")}}</a>
                         <div id="avatarfilename" style="padding: 5px;"></div>
                     </div>
                 </div>
                 {% if options.story_mode %}
                 <div class="control-group">
-                    <label class="control-label" for="box-capture_message">Capture Message</label>
+                    <label class="control-label" for="box-capture_message">{{_("Capture Message")}}</label>
                     <div class="controls">
-                        <textarea rows="4" id="box-capture_message" name="capture_message" placeholder="(Optional)">
+                        <textarea rows="4" id="box-capture_message" name="capture_message" placeholder="({{_('Optional')}}">
                         </textarea>
                     </div>
                 </div>
@@ -225,23 +225,23 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="edit-box-submit" type="button" class="btn btn-primary">
                 <i class="fa fa-fw fa-save"></i>
-                Save
+                {{_("Save")}}
             </button>
         </div>
     </div>
     <div id="delete-box-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-times-circle-o"></i> Delete Box</h3>
+            <h3><i class="fa fa-fw fa-times-circle-o"></i> {{_("Delete Box")}}</h3>
         </div>
         <div class="modal-body">
         <p>
-            Are you sure you want to delete this box? <br />
+            {{_("Are you sure you want to delete this box?")}} <br />
             <br />
-            <strong>WARNING:</strong> This will also delete associated IP addresses and flags.
+            <strong>{{_("WARNING")}}:</strong> {{_("This will also delete associated IP addresses, hints, and flags.")}}
         </p>
         <form id="delete-box-form" method="post" action="/admin/delete/box">
             {% raw xsrf_form_html() %}
@@ -249,10 +249,10 @@
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="delete-box-submit" type="button" class="btn btn-danger">
                 <i class="fa fa-fw fa-times-circle-o"></i>
-                Delete
+                {{_("Delete")}}
             </button>
         </div>
     </div>
@@ -260,8 +260,8 @@
     <div id="edit-flag-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-pencil"></i> Edit Flag</h3>
-            <div style="padding-left: 5px;">Note: Files or documents for the challenge can be placed in the Game Materials.</div>
+            <h3><i class="fa fa-fw fa-pencil"></i> {{_("Edit Flag")}}</h3>
+            <div style="padding-left: 5px;">{{_("Note: Files or documents for the challenge can be placed in the Game Materials.")}}</div>
         </div>
         <div class="modal-body">
             <form id="edit-flag-form" class="form-horizontal" method="post" action="/admin/edit/flag">
@@ -269,13 +269,13 @@
                 <input id="flag-uuid" name="uuid" type="hidden" />
                 <input id="flag-flagtype" name="flagtype" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="flag-name">Flag Name</label>
+                    <label class="control-label" for="flag-name">{{_("Flag Name")}}</label>
                     <div class="controls">
-                        <input id="flag-name" maxlength="16" name="name" type="text" placeholder="(Optional)" />
+                        <input id="flag-name" maxlength="16" name="name" type="text" placeholder="({{_('Optional')}}" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="edit-flag-box">Box</label>
+                    <label class="control-label" for="edit-flag-box">{{_("Box")}}</label>
                     <div class="controls">
                         <select id="edit-flag-box" name="box_uuid">
                             {% for box in Box.all() %}
@@ -285,7 +285,7 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="edit-flag-type">Flag Type</label>
+                    <label class="control-label" for="edit-flag-type">{{_("Flag Type")}}</label>
                     <div class="controls">
                         <select id="edit-flag-type" name="flag_type">
                             {% for item in FLAG_TYPES %}
@@ -297,60 +297,60 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="flag-value">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                    <label class="control-label" for="flag-value">{% if options.banking %}{{_("Reward")}}{% else %}{{_("Points")}}{% end %}</label>
                     <div class="controls">
                         <input id="flag-value" name="value" type="number" placeholder="{% if options.banking %}($) {% end %}Reward Value" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="flag-description">Description</label>
+                    <label class="control-label" for="flag-description">{{_("Description")}}</label>
                     <div class="controls">
-                        <textarea rows="4" class="toolbar" id="flag-description" name="description" type="text" placeholder="Description"></textarea>
+                        <textarea rows="4" class="toolbar" id="flag-description" name="description" type="text" placeholder="{{_('Description')}}"></textarea>
                     </div>
                 </div>
                 <div id="casegroup" class="control-group">
-                    <label class="control-label" for="case-sensitive">Case-Sensitive</label>
+                    <label class="control-label" for="case-sensitive">{{_("Case-Sensitive")}}</label>
                     <div class="controls">
                         <input id="flag-case-sensitive" name="case-sensitive" type="hidden" value=1 />
                         <div id="case-button" class="btn-group" data-toggle="buttons-radio"
                             rel="popover"
-                            data-original-title="Case-Sensitive"
-                            data-content="Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.">
+                            data-original-title="{{_('Case-Sensitive')}}"
+                            data-content="{{_('Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.')}}">
                             <button id="case-enable" type="button" class="btn btn-success">
                                 <i id="case-enable-icon" class="fa fa-fw fa-check-square-o"></i>
-                                Enable
+                                {{_("Enable")}}
                             </button>
                             <button id="case-disable" type="button" class="btn btn-danger">
                                 <i id="case-disable-icon" class="fa fa-fw fa-square-o"></i>
-                                Disable
+                                {{_("Disable")}}
                             </button>
                         </div>
                     </div>
                 </div>
                 <div id="flagtokengroup" class="control-group">
-                    <label class="control-label" for="flag-token">Token</label>
+                    <label class="control-label" for="flag-token">{{_("Token")}}</label>
                     <div class="controls">
-                        <input id="flag-token" name="token" type="text" maxlength="256" placeholder="Token Value" />
+                        <input id="flag-token" name="token" type="text" maxlength="256" placeholder="{{_('Token Value')}}" />
                     </div>
                 </div>
                 <div id="testflaggroup" class="control-group">
-                    <label class="control-label" for="test_token">Test Flag</label>
+                    <label class="control-label" for="test_token">{{_("Test Flag")}}</label>
                     <div class="controls" style="position:relative;">
                         <span style="position: absolute; left: 230px; top: 3px; font-size: 175%;">
                             <i id="testtrue" class="fa fa-check" style="color: green; display: none;"></i>
                             <i id="testfalse" class="fa fa-times" style="color: red; display: none;"></i>
                         </span>
-                            <input id="test-token" name="test_token" type="text" placeholder="Enter a Matching Flag" autocomplete="off"
+                            <input id="test-token" name="test_token" type="text" placeholder="{{_('Enter a Matching Flag')}}" autocomplete="off"
                                 rel="popover"
-                                data-original-title="Token"
-                                data-content="This is a test flag/string the user could input for credit." />
+                                data-original-title="{{_('Token')}}"
+                                data-content="{{ _('This is a test flag/string the user could input for credit.')}}" />
                     </div>
                 </div>
                 <div id="choicegroup" class="control-group" style="margin-bottom: 10px;">
-                    <label class="control-label" for="token" style="margin-left: -20px;">Multiple Choice</label>
+                    <label class="control-label" for="token" style="margin-left: -20px;">{{_("Multiple Choice") }}</label>
                     <div class="controls">
                         <div class="input-group control-group after-add-more" style="position: relative; margin-bottom: 10px;">
-                            <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" required /><input type="text" name="choice" maxlength="256" class="form-control" placeholder="Enter Choice">
+                            <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" required /><input type="text" name="choice" maxlength="256" class="form-control" placeholder="{{_('Enter Choice')}}">
                             <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
                                 <button class="btn btn-success add-more" type="button"style="padding: 4px 10px 0px; vertical-align: middle;"><i class="fa fa-plus" style="font-size: 160%;"></i></button>
                             </div>
@@ -360,23 +360,23 @@
                  <!-- Copy Fields -->
                 <div class="copy hide">
                     <div class="choice-control-group input-group" style="margin-bottom: 10px; position: relative;">
-                        <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" /><input type="text" name="choice" maxlength="256" class="form-control" placeholder="Enter Choice">
+                        <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" /><input type="text" name="choice" maxlength="256" class="form-control" placeholder="{{_('Enter Choice')}}">
                         <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
                             <button class="btn btn-danger remove" type="button" style="padding: 3px 10px 1px; vertical-align: middle;"><i class="fa fa-times" style="font-size: 160%;"></i></button>
                         </div>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                    <label class="control-label" for="flag-lock-uuid">{{_("Dependent Flag")}}</label>
                     <div class="controls">
                         <select id="edit-flag-lock" name="lock_uuid"></select>
                     </div>
                 </div>
                 {% if options.story_mode %}
                 <div class="control-group">
-                    <label class="control-label" for="flag-capture_message">Capture Message</label>
+                    <label class="control-label" for="flag-capture_message">{{_("Capture Message")}}</label>
                     <div class="controls">
-                        <textarea rows="4" id="flag-capture_message" name="capture_message" placeholder="(Optional)">
+                        <textarea rows="4" id="flag-capture_message" name="capture_message" placeholder="({{_('Optional')}}">
                         </textarea>
                     </div>
                 </div>
@@ -384,21 +384,21 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="edit-flag-submit" type="button" class="btn btn-primary">
                 <i class="fa fa-fw fa-save"></i>
-                Save
+                {{_("Save")}}
             </button>
         </div>
     </div>
     <div id="delete-flag-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-times-circle-o"></i> Delete Flag</h3>
+            <h3><i class="fa fa-fw fa-times-circle-o"></i> {{_("Delete Flag")}}</h3>
         </div>
         <div class="modal-body">
         <p>
-            Are you sure you want to delete this flag? <br />
+            {{_("Are you sure you want to delete this flag?")}} <br />
         </p>
         <form id="delete-flag-form" method="post" action="/admin/delete/flag">
             {% raw xsrf_form_html() %}
@@ -406,10 +406,10 @@
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="delete-flag-submit" type="button" class="btn btn-danger">
                 <i class="fa fa-fw fa-times-circle-o"></i>
-                Delete
+                {{ _("Delete") }}
             </button>
         </div>
     </div>
@@ -417,26 +417,26 @@
     <div id="edit-hint-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-pencil"></i> Edit Hint</h3>
+            <h3><i class="fa fa-fw fa-pencil"></i> {{_("Edit Hint")}}</h3>
         </div>
         <div class="modal-body">
             <form id="edit-hint-form" class="form-horizontal" method="post" action="/admin/edit/hint">
                 {% raw xsrf_form_html() %}
                 <input id="hint-uuid" name="uuid" value="" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="hint-price">{% if options.banking %}Price{% else %}Cost{% end %}</label>
+                    <label class="control-label" for="hint-price">{% if options.banking %}{{_("Price")}}{% else %}{{_("Cost")}}{% end %}</label>
                     <div class="controls">
                         <input id="hint-price" name="price" type="text" placeholder="{% if options.banking %}${% end %}" />
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="hint-description">Description</label>
+                    <label class="control-label" for="hint-description">{{_("Description")}}</label>
                     <div class="controls">
-                        <textarea rows="4" class="toolbar" id="hint-description" name="description" type="text" maxlength="1024" placeholder="Description"></textarea>
+                        <textarea rows="4" class="toolbar" id="hint-description" name="description" type="text" maxlength="1024" placeholder="{{_('Description')}}"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="hint-flag_uuid">Flag</label>
+                    <label class="control-label" for="hint-flag_uuid">{{_("Flag")}}</label>
                     <div class="controls">
                         <select id="hint-flag_uuid" name="hint-flag_uuid"></select>
                     </div>
@@ -444,21 +444,21 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="edit-hint-submit" class="btn btn-primary" type="button">
                 <i class="fa fa-fw fa-save"></i>
-                Save
+                {{_("Save")}}
             </button>
         </div>
     </div>
     <div id="delete-hint-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-times-circle-o"></i> Delete Hint</h3>
+            <h3><i class="fa fa-times-circle-o"></i> {{_("Delete Hint")}}</h3>
         </div>
         <div class="modal-body">
         <p>
-            Are you sure you want to delete this hint? <br />
+            {{_("Are you sure you want to delete this hint?")}} <br />
         </p>
         <form id="delete-hint-form" method="post" action="/admin/delete/hint">
             {% raw xsrf_form_html() %}
@@ -466,10 +466,10 @@
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="delete-hint-submit" type="button" class="btn btn-danger">
                 <i class="fa fa-fw fa-times-circle-o"></i>
-                Delete
+                {{_("Delete") }}
             </button>
         </div>
     </div>
@@ -479,7 +479,7 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-fw fa-plus"></i>
-                Add IP address
+                {{_("Add IP address")}}
             </h3>
         </div>
         <div class="modal-body">
@@ -487,7 +487,7 @@
             {% raw xsrf_form_html() %}
             <input id="add-ip-address-uuid" name="box_uuid" type="hidden" />
             <div class="control-group">
-                <label class="control-label" for="ip-address">New IP Address</label>
+                <label class="control-label" for="ip-address">{{_("New IP Address")}}</label>
                 <div class="controls">
                     <input autofocus id="ip-address" name="ip_address" type="text" placeholder="192.168.1.1" />
                 </div>
@@ -495,17 +495,17 @@
             <div class="control-group">
                 <div class="controls">
                     <label class="checkbox">
-                        <input name="visable" value="true" type="checkbox" checked> Visable to Players
+                        <input name="visable" value="true" type="checkbox" checked> {{_("Visible to Players")}}
                     </label>
                 </div>
             </div>
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="add-ip-address-submit" type="button" class="btn btn-primary">
                 <i class="fa fa-fw fa-plus"></i>
-                Add
+                {{_("Add")}}
             </button>
         </div>
     </div>
@@ -515,12 +515,12 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-fw fa-times-circle-o"></i>
-                Delete IP Address
+                {{_("Delete IP Address") }}
             </h3>
         </div>
         <div class="modal-body">
         <p>
-            Are you sure you want to delete this IP address? <br />
+            {{_("Are you sure you want to delete this IP address?")}} <br />
         </p>
         <form id="delete-ip-address-form" method="post" action="/admin/delete/ip">
             {% raw xsrf_form_html() %}
@@ -528,10 +528,10 @@
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
             <button id="delete-ip-address-submit" type="button" class="btn btn-danger">
                 <i class="fa fa-fw fa-times-circle-o"></i>
-                Delete
+                {{_("Delete")}}
             </button>
         </div>
     </div>
@@ -546,7 +546,7 @@
                     <center>
                         <strong>
                             <i class="fa fa-building-o"></i>
-                            Corporations
+                            {{_("Corporations")}}
                         </strong>
                     </center>
                     <br />
@@ -563,7 +563,7 @@
                 <center>
                     <strong>
                         <i class="fa fa-th"></i>
-                        Boxes
+                        {{_("Boxes")}}
                     </strong>
                 </center>
                 <br />
@@ -580,14 +580,14 @@
         <div class="span10">
             <h1>
                 <i class="fa fa-bullseye"></i>
-                Target Management
+                {{_("Target Management")}}
             </h1>
             <br />
             {% if errors != None and len(errors) != 0 %}
                 {% for error in errors %}
                     <div class="alert alert-error">
                         <a class="close" data-dismiss="alert" href="#">&times;</a>
-                        <h4 class="alert-heading">ERROR</h4>
+                        <h4 class="alert-heading">{{_("ERROR")}}</h4>
                         {{ error }}
                     </div>
                 {% end %}
@@ -600,11 +600,11 @@
                     </h2>
                     <a id="edit-corporation-button{{ corp_index }}" class="btn btn-small" data-toggle="modal" href="#edit-corporation-modal" data-uuid="{{ corporation.uuid }}">
                         <i class="fa fa-fw fa-pencil"></i>
-                        Edit Corp
+                        {{_("Edit Corporation")}}
                     </a>
                     <a id="delete-corporation-button{{ corp_index }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-corporation-modal" data-uuid="{{ corporation.uuid }}">
                         <i class="fa fa-fw fa-times-circle-o"></i>
-                        Delete Corp
+                        {{_("Delete Corporation")}}
                     </a>
                     <br />
                     <br />
@@ -627,19 +627,19 @@
                                 </h3>
                                     <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
                                         <i class="fa fa-pencil"></i>
-                                        Edit Box
+                                        {{_("Edit Box")}}
                                     </a>
                                     <a class="btn btn-small"  data-toggle="modal" href="/user/missions/boxes?uuid={{ box.uuid }}">
                                         <i class="fa fa-fw fa-eye"></i>
-                                        View Box
+                                        {{_("View Box")}}
                                     </a>
                                     <a id="delete-box-button-{{ box.uuid }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-box-modal" data-uuid="{{ box.uuid }}">
                                         <i class="fa fa-times-circle-o"></i>
-                                        Delete Box
+                                        {{_("Delete Box")}}
                                     </a>
                                     <a style="float:right;" class="btn" data-toggle="modal" href="/admin/garbage?uuid={{ box.uuid }}" target="_blank">
                                         <i class="fa fa-fw fa-trash-o"></i>
-                                        {{ box.name }} Garbage File
+                                        {{ box.name }} {{_("Garbage File") }}
                                     </a>
                                     
                                 <br />{% if box.category %}{{ box.category }}<br />{% end %}
@@ -651,20 +651,20 @@
                                         <br /><br />
                                     </div>
                                     {% end %}
-                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}BEGIN SECURE COMMUNIQUE{% else %}DESCRIPTION{% end %} *****************************************************************************************************************************************</div>
+                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}{{_("BEGIN SECURE COMMUNIQUE")}}{% else %}{{_("DESCRIPTION")}}{% end %} *****************************************************************************************************************************************</div>
                                     <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box._description }}</div>
-                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} END SECURE COMMUNIQUE {% end %}**********************************************************************************************************************************************************************</div>
+                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} {{_("END SECURE COMMUNIQUE")}} {% end %}**********************************************************************************************************************************************************************</div>
                                 </div>
                                 <br clear="all" />
                                 <!-- Start Flags -->
                                 <div class="startflags">
                                     <h4 style="display:inline;">
                                         <i class="fa fa-flag-o"></i>
-                                        Flags on {{ box.name }}&nbsp;&nbsp;&nbsp;
+                                        {{_("Flags on") }} {{ box.name }}&nbsp;&nbsp;&nbsp;
                                     </h4>
                                     <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/flag?box={{box.uuid}}">
                                         <i class="fa fa-plus"></i>
-                                        Add Flags
+                                        {{_("Add Flags") }}
                                     </a>
                                     <hr>
                                     {% if len(box.flags) != 0 %}
@@ -673,11 +673,11 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th><!-- Flag Lock --></th>
-                                                    <th>Name</th>
-                                                    <th>Description</th>
-                                                    <th>Token</th>
-                                                    <th>Value</th>
-                                                    <th>Type</th>
+                                                    <th>{{_("Name")}}</th>
+                                                    <th>{{_("Description")}}</th>
+                                                    <th>{{_("Token")}}</th>
+                                                    <th>{{_("Value")}}</th>
+                                                    <th>{{_("Type")}}</th>
                                                     <th style="text-align: center;"><i class="fa fa-paperclip" title="Attachments"></i></th>
                                                     <th><!-- Edit Button --></th>
                                                     <th><!-- Delete Button --></th>
@@ -704,13 +704,13 @@
                                                         <td class="shortcolumn">
                                                             <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-flagtype="{{ str(flag._type) }}" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
-                                                                Edit Flag
+                                                                {{_("Edit Flag") }}
                                                             </a>
                                                         </td>
                                                         <td class="shortcolumn">
                                                             <a id="delete-flag-button-{{ flag.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-flag-modal" data-uuid="{{ flag.uuid }}">
                                                                 <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                Delete
+                                                                {{_("Delete")}}
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -725,11 +725,11 @@
                                 <div class="starthints">
                                     <h4 style="display:inline;">
                                         <i class="fa fa-medkit"></i>
-                                        Hints on {{ box.name }}&nbsp;&nbsp;&nbsp;
+                                        {{_("Hints on")}} {{ box.name }}&nbsp;&nbsp;&nbsp;
                                     </h4>
                                     <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/hint?box={{box.uuid}}">
                                         <i class="fa fa-plus"></i>
-                                        Add Hint
+                                        {{_("Add Hint")}}
                                     </a>
                                     <hr>
                                     {% if len(box.hints) != 0 %}
@@ -744,14 +744,14 @@
                                         {% end %}
                                        
                                         {% if len(flaghints) > 0 %}
-                                        <h5>Flag Hints</h5>
+                                        <h5>{{_("Flag Hints")}}</h5>
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>{% if options.banking %}Price{% else %}Cost{% end %}</th>
-                                                    <th>Flag</th>
-                                                    <th>Description</th>
+                                                    <th>{% if options.banking %}{{_("Price")}}{% else %}{{_("Cost")}}{% end %}</th>
+                                                    <th>{{_("Flag")}}</th>
+                                                    <th>{{_("Description")}}</th>
                                                     <th><!-- Edit Button --></th>
                                                     <th><!-- Delete Button --></th>
                                                 </tr>
@@ -760,19 +760,19 @@
                                                 {% for index, hint in enumerate(flaghints) %}
                                                     <tr>
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
-                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}{{_("$")}}{% end %}{{ hint.price }}</td>
                                                         <td class="shortcolumn flagname" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
                                                         <td class="descriptioncol markdown">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
-                                                                Edit Hint
+                                                                {{_("Edit Hint")}}
                                                             </a>
                                                         </td>
                                                         <td class="shortcolumn">
                                                             <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
                                                                 <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                Delete
+                                                                {{_("Delete")}}
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -781,13 +781,13 @@
                                         </table>
                                         {% end %}
                                         {% if len(boxhints) > 0 %}
-                                        <h5>Box Hints</h5>
+                                        <h5>{{_("Box Hints")}}</h5>
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>{% if options.banking %}Price{% else %}Cost{% end %}</th>
-                                                    <th>Description</th>
+                                                    <th>{% if options.banking %}{{_("Price")}}{% else %}{{_("Cost")}}{% end %}</th>
+                                                    <th>{{_("Description")}}</th>
                                                     <th><!-- Edit Button --></th>
                                                     <th><!-- Delete Button --></th>
                                                 </tr>
@@ -796,18 +796,18 @@
                                                 {% for index, hint in enumerate(boxhints) %}
                                                     <tr>
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
-                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ hint.price }}</td>
+                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}{{_("$")}}{% end %}{{ hint.price }}</td>
                                                         <td class="descriptioncol markdown">{{ hint.description }}</td>
                                                         <td class="shortcolumn">
                                                             <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
                                                                 <i class="fa fa-fw fa-pencil"></i>
-                                                                Edit Hint
+                                                                {{_("Edit Hint")}}
                                                             </a>
                                                         </td>
                                                         <td class="shortcolumn">
                                                             <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
                                                                 <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                Delete
+                                                                {{_("Delete")}}
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -823,11 +823,11 @@
                                 <div class="startips">
                                     <h4 style="display:inline;">
                                         <i class="fa fa-fw fa-globe"></i>
-                                        IP Address&nbsp;&nbsp;
+                                        {{_("IP Address")}}&nbsp;&nbsp;
                                     </h4>
                                     <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-primary btn-mini" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
                                         <i class="fa fa-fw fa-plus"></i>
-                                        Add IP Address
+                                        {{_("Add IP Address")}}
                                     </a>
                                     <br />
                                     <hr>
@@ -836,9 +836,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Address</th>
-                                                    <th>IP Version</th>
-                                                    <th>Visable</th>
+                                                    <th>{{_("Address")}}</th>
+                                                    <th>{{_("IP Version")}}</th>
+                                                    <th>{{_("Visible")}}</th>
                                                     <th><!-- Delete --></th>
                                                 </tr>
                                             </thead>
@@ -848,11 +848,11 @@
                                                         <td>{{ index + 1 }}</td>
                                                         <td>{{ ip.address }}</td>
                                                         <td>{{ ip.version }}</td>
-                                                        <td>{% if ip.visable %} Yes {% else %} No {% end %}</td>
+                                                        <td>{% if ip.visable %} {{_("Yes")}} {% else %} {{_("No")}} {% end %}</td>
                                                         <td class="shortcolumn">
                                                             <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
                                                                 <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                Delete
+                                                                {{_("Delete")}}
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -866,7 +866,7 @@
                             <br />
                         {% end %}
                     {% else %}
-                        <strong>No boxes in this corporation yet, <a href="/admin/create/box">add some</a></strong>
+                        <strong>{{_("No boxes in this corporation yet")}}, <a href="/admin/create/box">{{_("add some")}}</a></strong>
                     {% end %}
                 </div>
             {% end %}

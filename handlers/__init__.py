@@ -26,20 +26,27 @@ This is the main file the defines what URLs get routed to what handlers
 
 
 import sys
+import tornado.locale
 
 from setup import __version__
 from os import urandom, _exit, path as os_path
+from tornado import netutil, locale
+from tornado.web import Application
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop, PeriodicCallback
+from tornado.options import options
+from sqlalchemy.exc import OperationalError
+from alembic.config import Config, command
+from builtins import str
+
 from modules.Menu import Menu
 from modules.Recaptcha import Recaptcha
 from modules.AppTheme import AppTheme
 from libs.ConsoleColors import *
 from libs.Scoreboard import Scoreboard, score_bots
 from libs.GameHistory import GameHistory
-from tornado import netutil
-from tornado.web import Application
-from tornado.httpserver import HTTPServer
-from tornado.ioloop import IOLoop, PeriodicCallback
-from sqlalchemy.exc import OperationalError
+from libs.DatabaseConnection import DatabaseConnection
+from libs.StringCoding import encode
 from handlers.BotnetHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
@@ -55,11 +62,7 @@ from handlers.NotificationHandlers import *
 from handlers.MaterialsHandler import *
 from handlers.ChefHandler import *
 from handlers.StaticFileHandler import StaticFileHandler
-from alembic.config import Config, command
-from libs.DatabaseConnection import DatabaseConnection
-from libs.StringCoding import encode
-from builtins import str
-from tornado.options import options
+
 
 try:
     from urllib.parse import unquote_plus
@@ -266,6 +269,8 @@ def start_server():
         logging.warn(
             "%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (bold + R, W)
         )
+    locale.set_default_locale("en_US")
+    locale.load_translations("locale")
     if options.autostart_game:
         logging.info("The game is about to begin, good hunting!")
         app.settings["history_callback"].start()

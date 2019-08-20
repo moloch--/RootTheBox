@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}Admin Home{% end %}
+{% block title %}{{ _("Admin Home") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/home.js"></script>
@@ -14,7 +14,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3>
             <i class="fa fa-fw fa-clock-o"></i>
-            Set Countdown Timer
+            {{ _("Set Countdown Timer") }}
         </h3>
     </div>
     <div class="modal-body">
@@ -22,7 +22,7 @@
     {% raw xsrf_form_html() %}
     <div style="margin-left: 50px; vertical-align: middle;">
         <p>
-            Set the game countdown timer:
+            {{ _("Set the game countdown timer") }}:
         </p><p><input id="timer-minutes" name="freeze_scoreboard" style="width: 50px;" type="number" value="30" /> Minutes</p>
     </div>
         
@@ -30,10 +30,10 @@
     </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
         <button id="timer-submit" class="btn btn-primary" type="button">
             <i class="fa fa-fw fa-save"></i>
-            Save
+            {{ _("Save") }}
         </button>
     </div>
 </div>
@@ -43,7 +43,7 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-envelope"></i>
-                Create Message
+                {{ _("Create Message") }}
             </h3>
         </div>
         <div class="modal-body">
@@ -51,17 +51,17 @@
         {% raw xsrf_form_html() %}
         <div style="margin-left: 50px; vertical-align: middle;">
             <p>
-                Send a global notification to all players:
+                {{ _("Send a global notification to all players") }}:
             </p><textarea name="message" rows="10" cols="30" style="width: 425px;"></textarea>
         </div>
             
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
             <button id="message-submit" class="btn btn-primary" type="button">
                 <i class="fa fa-fw fa-save"></i>
-                Send
+                {{ _("Send") }}
             </button>
         </div>
     </div>
@@ -74,7 +74,7 @@
         <div class="offset1">
             <h1>
                 <i class="fa fa-home"></i>
-                Administrator Panel
+                {{ _("Administrator Panel") }}
             </h1>
             <br />
         </div>
@@ -82,11 +82,11 @@
     <div class="span3">
         <div class="row">
             <div class="span11 offset1 well">
-                <h3>Game Control</h3>
+                <h3>{{ _("Game Control") }}</h3>
                 <div id="gitstatus"></div>
                 <form class="gitform hide" id="update-rtb">
                     {% raw xsrf_form_html() %}
-                    <a id="updatebutton" class="btn btn-primary" title="Updates RTB to the latest GitHub commits" href="#">Update RootTheBox</a>
+                    <a id="updatebutton" class="btn btn-primary" title="Updates RTB to the latest GitHub commits" href="#">{{ _("Update RootTheBox") }}</a>
                 </form>
                 <hr />
                 <form id="start-game-form" action="/admin/game" method="post">
@@ -108,12 +108,12 @@
                         <button id="start-game-button" class="btn btn-success game_button" type="button">
                             <i class="fa fa-fw fa-play"></i>
                         </button>
-                        <h4 class="game_button_text">Start the Game</h4>
+                        <h4 class="game_button_text">{{ _("Start the Game") }}</h4>
                     {% else %}
                         <button id="stop-game-button" class="btn btn-danger game_button" type="button">
                             <i class="fa fa-fw fa-stop"></i>
                         </button>
-                        <h4 class="game_button_text">Stop the Game</h4>
+                        <h4 class="game_button_text">{{ _("Stop the Game") }}</h4>
                     {% end %}
                 </div>
                 <div class="game_button_area">
@@ -121,12 +121,12 @@
                         <button id="suspend-registration-button" class="btn btn-warning game_button" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
                             <i class="fa fa-fw fa-pause"></i>  
                         </button>
-                        <h4 class="game_button_text">Pause Registration</h4>
+                        <h4 class="game_button_text">{{ _("Pause Registration") }}</h4>
                     {% else %}
                         <button id="resume-registration-button" class="btn btn-success game_button" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
                             <i class="fa fa-fw fa-play"></i>  
                         </button>
-                        <h4 class="game_button_text">Resume Registration</h4>
+                        <h4 class="game_button_text">{{ _("Resume Registration") }}</h4>
                     {% end %}
                 </div>
                 <div class="game_button_area">
@@ -134,12 +134,12 @@
                         <button id="freeze-scoreboard-button" class="btn btn-warning game_button" data-toggle="modal" href="#timer-modal" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
                             <i class="fa fa-fw fa-pause"></i>
                         </button>
-                        <h4 class="game_button_text">Pause Scoreboard</h4>
+                        <h4 class="game_button_text">{{ _("Pause Scoreboard") }}</h4>
                     {% else %}
                         <button id="resume-scoreboard-button" class="btn btn-success game_button" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
                             <i class="fa fa-fw fa-play"></i>
                         </button>
-                        <h4 class="game_button_text">Resume Scoreboard</h4>
+                        <h4 class="game_button_text">{{ _("Resume Scoreboard") }}</h4>
                     {% end %}
                 </div>
 
@@ -147,7 +147,7 @@
         </div>
         <div class="row">
             <div class="span11 offset1 well">
-                <h3>Automatic Ban</h3>
+                <h3>{{_("Automatic Ban")}}</h3>
                 <hr />
                 <form action="/admin/ban/config" method="post">
                     {% raw xsrf_form_html() %}
@@ -157,17 +157,17 @@
                             <div id="automatic-ban-button" class="btn-group" data-toggle="buttons-radio">
                                 <button id="automatic-ban-enable" type="button" class="btn btn-success">
                                     <i id="automatic-ban-enable-icon" class="fa fa-fw fa-square-o"></i>
-                                    Enable
+                                    {{ _("Enable") }}
                                 </button>
                                 <button id="automatic-ban-disable" type="button" class="btn btn-danger">
                                     <i id="automatic-ban-disable-icon" class="fa fa-fw fa-square-o"></i>
-                                    Disable
+                                    {{ _("Disable") }}
                                 </button>
                             </div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="threshold-size">Threshold</label>
+                        <label class="control-label" for="threshold-size">{{ _("Threshold") }}</label>
                         <div class="controls">
                             <input id="threshold-size" type="text" name="threshold_size" value="{{ handler.application.settings['blacklist_threshold'] }}" />
                         </div>
@@ -176,7 +176,7 @@
                         <div class="controls">
                             <button class="btn btn-primary" type="submit">
                                 <i class="fa fa-save"></i>
-                                Save
+                                {{ _("Save") }}
                             </button>
                         </div>
                     </div>
@@ -189,17 +189,17 @@
         <div class="control-group" style="float: right; padding-top: 20px;">
                 <div class="controls">
                     <button class="btn btn-primary" data-toggle="modal" href="#message-modal" type="button">
-                        Create Notification
+                        {{ _("Create Notification") }}
                     </button>
                 </div>
         </div>
         <h3 id="notifications-title">
             <i class="fa fa-envelope"></i>
-            Notifications
+            {{ _("Notifications") }}
         </h3>
         <h4 id="notifications">
             <a href="/admin/view/notifications">
-                See All &raquo;
+                {{ _("See All") }} &raquo;
             </a>
         </h4>
         <hr style="margin-bottom: 16px; margin-top: 16px;">
@@ -212,7 +212,7 @@
                 </div>
                 <div class="span11 msgdescription"  style="margin-left: 5px; padding-top: 5px;">
                     <p>
-                        <strong>{{ notify.title }}</strong>
+                        <strong>{{ _(notify.title) }}</strong>
                         {{ notify.created.strftime("%I:%M%p") }}:&nbsp;&nbsp;{{ notify.message }}
                     </p>
                 </div>
@@ -225,15 +225,15 @@
     <div class="well span8">
         <h3>
             <i class="fa fa-warning"></i>
-            Failed Logins
+            {{ _("Failed Logins") }}
         </h3>
         <hr />
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>IP Address</th>
-                    <th>Failed Logins</th>
+                    <th>{{ _("IP Address") }}</th>
+                    <th>{{ _("Failed Logins") }}</th>
                     <th><!-- Blacklist Button --></th>
                     <th><!-- Clear Button --></th>
                 </tr>
@@ -248,13 +248,13 @@
                         <td>
                             <a id="ban-ip-button" class="btn btn-danger btn-small" data-ip="{{ ip }}" type="button">
                                 <i class="fa fa-fw fa-ban"></i>
-                                Ban IP Address
+                                {{ _("Ban IP Address") }}
                             </a>
                         </td>
                         <td>
                             <a id="clear-ip-button" class="btn btn-warning btn-small" data-ip="{{ ip }}" type="button">
                                 <i class="fa fa-fw fa-eraser"></i>
-                                Clear
+                                {{ _("Clear") }}
                             </a>
                         </td>
                     </tr>
@@ -265,14 +265,14 @@
     <div class="well span8">
         <h3>
             <i class="fa fa-shield"></i>
-            Banned IPs
+            {{ _("Banned IPs") }}
         </h3>
         <hr />
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>IP Address</th>
+                    <th>{{ _("IP Address") }}</th>
                 </tr>
             </thead>
             <tbody id="ip-table">

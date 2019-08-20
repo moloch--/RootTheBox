@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Create Hint{% end %}
+{% block title %}{{_("Create Hint")}}{% end %}
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
@@ -15,14 +15,14 @@
 <div class="container">
     <h1>
         <i class="fa fa-medkit"></i>
-        Create Hint{% if box %} &ndash; {{box.name}}{% end %}
+        {{_("Create Hint")}}{% if box %} &ndash; {{box.name}}{% end %}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{_("ERROR")}}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -33,28 +33,28 @@
                 <form class="form-horizontal" action="/admin/create/hint" method="post">
                     {% raw xsrf_form_html() %}
                     <div class="control-group">
-                        <label class="control-label" for="price">Cost</label>
+                        <label class="control-label" for="price">{{_("Cost")}}</label>
                         <div class="controls">
-                            <input autofocus required id="price" name="price" min="0" type="number" placeholder="{% if options.banking %}$ Price{% else %}Points{% end %}"
+                            <input autofocus required id="price" name="price" min="0" type="number" placeholder="{% if options.banking %}{{_('$')}} {{_('Price')}}{% else %}{{_('Points')}}{% end %}"
                                     rel="popover"
-                                    data-original-title="Cost"
-                                    data-content="The cost to take the hint.  Can be >= 0.">
+                                    data-original-title="{{_('Cost')}}"
+                                    data-content="{{_('The cost to take the hint.  Can be >= 0.')}}">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="description">Description</label>
+                        <label class="control-label" for="description">{{_("Description")}}</label>
                         <div class="controls">
-                            <textarea required class="toolbar" id="description" maxlength="1024" rows="5" name="description" type="text" maxlength="1024" placeholder="Hint"
+                            <textarea required class="toolbar" id="description" maxlength="1024" rows="5" name="description" type="text" maxlength="1024" placeholder="{{_('Hint')}}"
                                     rel="popover"
-                                    data-original-title="Description"
+                                    data-original-title="{{_('Description')}}"
                                     data-html="true"
-                                    data-content="This is the description [Max: 1024 Characters].<br/><br/>Supports Markdown (GitHub Style)">
+                                    data-content="{{_('This is the description')}} [Max: 1024 {{_('Characters')}}].<br/><br/>{{_('Supports')}} Markdown (GitHub Style)">
                             </textarea>
                         </div>
                     </div>
                     {% if not box %}
                         <div class="control-group">
-                            <label class="control-label" for="box_uuid">Box</label>
+                            <label class="control-label" for="box_uuid">{{_("Box")}}</label>
                             <div class="controls">
                                 <select name="box_uuid">
                                     <option value=""></option>
@@ -69,7 +69,7 @@
                     {% end %}
                     {% if box %}
                         <div class="control-group">
-                            <label class="control-label" for="flag_uuid">Flag</label>
+                            <label class="control-label" for="flag_uuid">{{_("Flag")}}</label>
                             <div class="controls">
                                 <select name="flag_uuid">
                                     <option value=""></option>
@@ -82,20 +82,18 @@
                     {% end %}
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary" type="submit">Create Hint</button>
+                            <button class="btn btn-primary" type="submit">{{_("Create Hint")}}</button>
                         </div>
                     </div>
-                    
                 </form>
             </div>
-            
             <div class="offset3 span4">
                 {% if box %}
                 <p>
                     <blockquote>
                         <small>
-                            <strong>Box Hints:</strong>
-                            If the flag selection is left empty, the hint will be considered a Box Hint.
+                            <strong>{{_("Box Hints")}}:</strong>
+                            {{_("If the flag selection is left empty, the hint will be considered a Box Hint.")}}
                         </small>
                     </blockquote>
                 </p>

@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}User Management{% end %}
+{% block title %}{{_("User Management")}}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/users.js"></script>
@@ -22,7 +22,7 @@
     <div id="change-team-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
         <div class="modal-header">
             <button id="team-avatar-form" type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Change {% if options.teams %}Team {% end %}Avatar</h3>
+            <h3>{{_("Change")}} {% if options.teams %}{{_("Team")}} {% end %}{{_("Avatar")}}</h3>
         </div>
         <div class="modal-body">
             <form action="/user/settings/team_avatar" method="post" enctype="multipart/form-data">
@@ -64,7 +64,7 @@
     <div id="change-user-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
         <div class="modal-header">
             <button id="user-avatar-form" type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>Change {% if options.teams %}Player {% end %}Avatar</h3>
+            <h3>{{_("Change")}} {% if options.teams %}{{_("Player")}} {% end %}{{_("Avatar")}}</h3>
         </div>
         <div class="modal-body">
             <form action="/user/settings/user_avatar" method="post" enctype="multipart/form-data">
@@ -108,7 +108,7 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-fw fa-pencil"></i>
-                {% if options.teams %}Edit Team{% else %}Edit Player{% end %}
+                {% if options.teams %}{{_("Edit")}} {{_("Team")}}{% else %}{{_("Edit")}} {{_("Player")}}{% end %}
             </h3>
         </div>
         <div class="modal-body">
@@ -116,29 +116,29 @@
                 {% raw xsrf_form_html() %}
                 <input id="team-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="team-name">{% if options.teams %}Team{% else %}Player{% end %} Name</label>
+                    <label class="control-label" for="team-name">{% if options.teams %}{{_("Team")}}{% else %}{{_("Player")}}{% end %} {{_("Name")}}</label>
                     <div class="controls">
-                        <input required id="team-name" name="name" maxlength="24" type="text" placeholder="Team Name">
+                        <input required id="team-name" name="name" maxlength="24" type="text" placeholder="{{_('Team Name')}}">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team-motto">{% if options.teams %}Team{% else %}Player{% end %} Motto</label>
+                    <label class="control-label" for="team-motto">{% if options.teams %}{{_("Team")}}{% else %}{{_("Player")}}{% end %} {{_("Motto")}}</label>
                     <div class="controls">
-                        <input required id="team-motto" name="motto" maxlength="32" type="text" placeholder="Team Motto">
+                        <input required id="team-motto" name="motto" maxlength="32" type="text" placeholder="{{_('Team Motto')}}">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team-money">{% if options.banking %}Bank Account{% else %}Score{% end %}</label>
+                    <label class="control-label" for="team-money">{% if options.banking %}{{_("Bank Account")}}{% else %}{{_("Score")}}{% end %}</label>
                     <div class="controls">
-                        <input required id="team-money" name="money" type="number" placeholder="Bank Account">
+                        <input required id="team-money" name="money" type="number" placeholder="{% if options.banking %}{{_('Bank Account')}}{% else %}{{_('Score')}}{% end %}">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">
                             <input id="team-avatar" name="avatar" type="hidden" value="" />
                             (w500 x h250)<br/>
-                            {% if len(avatars) > 0 %}<a data-toggle="modal" class="btn btn-primary" href="#change-team-avatar-modal"> Select New Avatar </a><br/><br/>{% end %}
-                            <a id="teamuploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                            {% if len(avatars) > 0 %}<a data-toggle="modal" class="btn btn-primary" href="#change-team-avatar-modal"> {{_("Select New Avatar")}} </a><br/><br/>{% end %}
+                            <a id="teamuploadbutton" class="btn btn-primary" href="#">{{_("Upload Avatar")}}</a>
                             <input id="team-file-avatar" name="avatarfile" type="file" style="display: none;"/>
                     </label>
                     <div class="controls">
@@ -148,10 +148,10 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
             <button id="edit-team-submit" type="button" class="btn btn-primary">
                 <i class="fa fa-fw fa-save"></i>
-                Save
+                {{_("Save")}}
             </button>
         </div>
     </div>
@@ -161,7 +161,7 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-fw fa-pencil"></i>
-                Edit User
+                {{_("Edit User")}}
             </h3>
         </div>
         <div class="modal-body">
@@ -169,26 +169,26 @@
                 {% raw xsrf_form_html() %}
                 <input id="user-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="user-handle">Handle</label>
+                    <label class="control-label" for="user-handle">{{_("Handle")}}</label>
                     <div class="controls">
-                      <input id="user-handle" name="handle" type="text" maxlength="16" minlength="3" placeholder="Handle">
+                      <input id="user-handle" name="handle" type="text" maxlength="16" minlength="3" placeholder="{{_('Handle')}}">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user-name">Name</label>
+                    <label class="control-label" for="user-name">{{_("Name")}}</label>
                     <div class="controls">
-                      <input id="user-name" name="name" type="text" maxlength="64" placeholder="Name">
+                      <input id="user-name" name="name" type="text" maxlength="64" placeholder="{{_('Name')}}">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user-email">Email</label>
+                    <label class="control-label" for="user-email">{{_("Email")}}</label>
                     <div class="controls">
-                      <input id="user-email" name="email" type="text" maxlength="64" placeholder="Email">
+                      <input id="user-email" name="email" type="text" maxlength="64" placeholder="{{_('Email')}}">
                     </div>
                 </div>
                 {% if options.banking %}
                 <div class="control-group">
-                    <label class="control-label" for="user-hash-algorithm">Bank Hash Algorithm</label>
+                    <label class="control-label" for="user-hash-algorithm">{{_("Bank Hash Algorithm")}}</label>
                     <div class="controls">
                         <select id="user-hash-algorithm" name="hash_algorithm">
                             <option value="md5">MD5</option>
@@ -199,30 +199,30 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="bank-password">Bank Password</label>
+                    <label class="control-label" for="bank-password">{{_("Bank Password")}}</label>
                     <div class="controls">
-                        <input id="bank-password" name="bank_password" type="password" placeholder="New Bank Password" maxlength="{{ options.max_password_length }}">
+                        <input id="bank-password" name="bank_password" type="password" placeholder="{{_('New Bank Password')}}" maxlength="{{ options.max_password_length }}">
                     </div>
                 </div>
                 {% end %}
                 <div class="control-group">
-                    <label class="control-label" for="user-password">Account Password</label>
+                    <label class="control-label" for="user-password">{{_("Account Password")}}</label>
                     <div class="controls">
-                        <input id="user-password" name="password" type="password" placeholder="New Password" minlength="{{ options.min_user_password_length}}">
+                        <input id="user-password" name="password" type="password" placeholder="{{_('New Password')}}" minlength="{{ options.min_user_password_length}}">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user-admin">Role</label>
+                    <label class="control-label" for="user-admin">{{_("Role")}}</label>
                     <div class="controls">
                         <select id="user-admin" name="admin">
-                            <option value=false>Player</option>
-                            <option value=true>Admin</option>
+                            <option value=false>{{_("Player")}}</option>
+                            <option value=true>{{_("Admin")}}</option>
                         </select>
                     </div>
                 </div>
                 {% if options.teams %}
                 <div class="control-group">
-                    <label class="control-label" for="user-team-uuid">Team</label>
+                    <label class="control-label" for="user-team-uuid">{{_("Team")}}</label>
                     <div class="controls">
                         <select id="user-team-uuid" name="team_uuid">
                             <option value=""></option>
@@ -238,8 +238,8 @@
                     <label class="control-label">
                             <input id="user-avatar" name="avatar" type="hidden" value="" />
                             (w500 x h250)<br/>
-                            {% if len(avatars) > 0 %}<a data-toggle="modal" class="btn btn-primary" href="#change-user-avatar-modal"> Select New Avatar </a><br/><br/>{% end %}
-                            <a id="useruploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                            {% if len(avatars) > 0 %}<a data-toggle="modal" class="btn btn-primary" href="#change-user-avatar-modal"> {{_("Select New Avatar")}} </a><br/><br/>{% end %}
+                            <a id="useruploadbutton" class="btn btn-primary" href="#">{{_("Upload Avatar")}}</a>
                             <input id="user-file-avatar" name="avatarfile" type="file" style="display: none;"/>
                     </label>
                     <div class="controls">
@@ -250,21 +250,22 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
             <button id="edit-user-submit" type="button" class="btn btn-primary">
                 <i class="fa fa-fw fa-save"></i>
-                Save
+                {{_("Save")}}
             </button>
         </div>
     </div>
     <div id="delete-team-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-times-circle-o"></i> {% if options.teams %}Delete Team{% else %}Delete Player{% end %}</h3>
+            <h3><i class="fa fa-fw fa-times-circle-o"></i> {% if options.teams %}{{_("Delete Team")}}{% else %}{{_("Delete Player")}}{% end %}</h3>
         </div>
         <div class="modal-body">
         <p>
-            This will delete the {% if options.teams %}team{% else %}player{% end %} and any associated user accounts!<br><br>Are you sure you want to delete?<br />
+                {% if options.teams %}{{_("This will delete the team and any associated user accounts!")}}{% else %}
+                {{_("This will delete the player and the associated user account!")}}{% end %}<br><br>{{_("Are you sure you want to delete?")}}<br />
         </p>
         <form id="delete-team-form" method="post" action="/admin/users/delete/team">
             {% raw xsrf_form_html() %}
@@ -272,21 +273,21 @@
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
             <button id="delete-team-submit" type="button" class="btn btn-danger">
                 <i class="fa fa-fw fa-times-circle-o"></i>
-                Delete
+                {{_("Delete")}}
             </button>
         </div>
     </div>
     <div id="delete-user-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-times-circle-o"></i> Delete User</h3>
+            <h3><i class="fa fa-fw fa-times-circle-o"></i> {{_("Delete User")}}</h3>
         </div>
         <div class="modal-body">
         <p>
-            Are you sure you want to delete this user? <br />
+            {{_("Are you sure you want to delete this user?")}} <br />
         </p>
         <form id="delete-user-form" method="post" action="/admin/users/delete/user">
             {% raw xsrf_form_html() %}
@@ -294,10 +295,10 @@
         </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
             <button id="delete-user-submit" type="button" class="btn btn-danger">
                 <i class="fa fa-fw fa-times-circle-o"></i>
-                Delete
+                {{_("Delete")}}
             </button>
         </div>
     </div>
@@ -307,14 +308,14 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>
                 <i class="fa fa-fw fa-plus"></i>
-                Add {% if options.banking %}Money{% else %}Points{% end %}
+                {{_("Add")}} {% if options.banking %}{{_("Money")}}{% else %}{{_("Points")}}{% end %}
             </h3>
         </div>
         <div class="modal-body">
             <form id="edit-scores-form" class="form-horizontal" method="post" action="/admin/users/edit/teams/scores" enctype="multipart/form-data">
                 {% raw xsrf_form_html() %}
                 <div class="control-group">
-                    <label class="control-label" for="team-money-uuid">{% if options.teams %}Team{% else %}Player{% end %}</label>
+                    <label class="control-label" for="team-money-uuid">{% if options.teams %}{{_("Team")}}{% else %}{{_("Player")}}{% end %}</label>
                     <div class="controls">
                         <select id="team-money-uuid" name="team_uuid">
                             <option value="all">All</option>
@@ -325,13 +326,13 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team-money-add">{% if options.banking %}Money{% else %}Points{% end %} to Add</label>
+                    <label class="control-label" for="team-money-add">{% if options.banking %}{{_("Money")}}{% else %}{{_("Points")}}{% end %} {{_("to Add")}}</label>
                     <div class="controls">
-                        <input id="team-money-add" name="money" type="number" placeholder="{% if options.banking %}Money{% else %}Points{% end %} to Add or Subtract">
+                        <input id="team-money-add" name="money" type="number" placeholder="{% if options.banking %}{{_('Money')}}{% else %}{{_('Points')}}{% end %} {{_('to Add or Subtract')}}">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="team-message-add">Notification Message</label>
+                    <label class="control-label" for="team-message-add">{{_("Notification Message")}}</label>
                     <div class="controls">
                         <input id="team-message-add" name="message" type="text" value="Your score has been updated">
                     </div>
@@ -339,10 +340,10 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
             <button id="edit-scores-submit" type="button" class="btn btn-primary">
                 <i class="fa fa-fw fa-save"></i>
-                Save
+                {{_("Save")}}
             </button>
         </div>
     </div>
@@ -360,9 +361,9 @@
         <div class="span10 offset1">
             <h1>
                 <i class="fa fa-fw fa-group"></i>
-                User Management
+                {{_("User Management")}}
                 <a style="float: right; margin-right: 5px; margin-top: 12px;" id="edit-scores-button" class="btn btn-small" data-toggle="modal" href="#edit-scores-modal">
-                    <i class="fa fa-fw fa-plus"></i> add {% if options.banking %}money{% else %}points{% end %}
+                    <i class="fa fa-fw fa-plus"></i> {{_("add")}} {% if options.banking %}{{_("money")}}{% else %}{{_("points")}}{% end %}
                 </a>
             </h1>
             <br />
@@ -370,41 +371,41 @@
                 {% for error in errors %}
                     <div class="alert alert-error">
                         <a class="close" data-dismiss="alert" href="#">&times;</a>
-                        <h4 class="alert-heading">ERROR</h4>
+                        <h4 class="alert-heading">{{_("ERROR")}}</h4>
                         {{ error }}
                     </div>
                 {% end %}
             {% end %}
             {% if len(Team.all()) == 0 %}
-                <p class="well"><strong>No Users</strong></p>
+                <p class="well"><strong>{{_("No Users")}}</strong></p>
             {% end %}
             {% for team_index, team in enumerate(Team.all()) %}
                 {% if options.teams or len(team.members) > 0 %}
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
                     <h4 style="display:inline;">
-                        {% if options.banking %}${% end %}{{ team.money }}{% if not options.banking %} <span style="font-size: small;">points</span>{% end %}
+                        {% if options.banking %}{{_("$")}}{% end %}{{ team.money }}{% if not options.banking %} <span style="font-size: small;">{{_("points")}}</span>{% end %}
                     </h4>
                     <a id="delete-team-button{{ team_index }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-team-modal" data-uuid="{{ team.uuid }}" style="float:right;">
                         <i class="fa fa-fw fa-times-circle-o"></i>
-                        {% if options.teams %}Delete Team{% else %}Delete Player{% end %}
+                        {% if options.teams %}{{_("Delete Team")}}{% else %}{{_("Delete Player")}}{% end %}
                     </a>
                     <a id="edit-team-button{{ team_index }}" class="btn btn-small" data-toggle="modal" href="#edit-team-modal" data-uuid="{{ team.uuid }}" style="float:right; margin-right:10px;">
                         <i class="fa fa-fw fa-pencil"></i>
-                        {% if options.teams %}Edit Team{% else %}Edit Player{% end %}
+                        {% if options.teams %}{{_("Edit Team")}}{% else %}{{_("Edit Player")}}{% end %}
                     </a>
-                    {% if options.teams %}<div style="margin-bottom: -10px;">&nbsp;<strong>Team Code:</strong> {{ team.code }}</div>{% if team.motto %}<span style="margin-top: -10px; float: right;"><strong>Motto:</strong> {{ team.motto }}&nbsp;&nbsp;</span>{% end %}{% end %}
+                    {% if options.teams %}<div style="margin-bottom: -10px;">&nbsp;<strong>{{_("Team Code")}}:</strong> {{ team.code }}</div>{% if team.motto %}<span style="margin-top: -10px; float: right;"><strong>{{_("Motto")}}:</strong> {{ team.motto }}&nbsp;&nbsp;</span>{% end %}{% end %}
                     <hr />
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Handle</th>
-                                <th>Name</th>
-                                <th>Last Login</th>
+                                <th>{{_("Handle")}}</th>
+                                <th>{{_("Name")}}</th>
+                                <th>{{_("Last Login")}}</th>
                                 {% if options.banking %}
-                                    <th>Bank Hash Algorithm</th>
-                                    <th>Password Hash</th>
+                                    <th>{{_("Bank Hash Algorithm")}}</th>
+                                    <th>{{_("Password Hash")}}</th>
                                 {% end %}
                                 <th><!-- Lock Button --></th>
                                 <th><!-- Edit Button --></th>
@@ -420,11 +421,11 @@
                                 {% end %}
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ user.handle }}</td>
-                                    <td>{%if user.name %}{{user.name}}{% else %}Unknown{% end %}</td>
+                                    <td>{%if user.name %}{{user.name}}{% else %}{{_("Unknown")}}{% end %}</td>
                                     {% if 0 < user.logins %}
                                         <td>{{ user.last_login }}</td>
                                     {% else %}
-                                        <td>Never</td>
+                                        <td>{{_("Never")}}</td>
                                     {% end %}
                                     {% if options.banking %}
                                         <td>{{ user.algorithm }}</td>
@@ -442,25 +443,25 @@
                                         {% if user.locked %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
                                                 <i class="fa fa-fw fa-unlock"></i>
-                                                Unlock
+                                                {{_("Unlock")}}
                                             </a>
                                         {% else %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-warning" data-uuid="{{ user.uuid }}">
                                                 <i class="fa fa-fw fa-lock"></i>
-                                                Lock
+                                                {{_("Lock")}}
                                             </a>
                                         {% end %}
                                     </td>
                                     <td class="shortcolumn">
                                         <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}" data-hash-algorithm="{{ user.algorithm }}" data-team-uuid="{{ user.team.uuid }}">
                                             <i class="fa fa-fw fa-pencil"></i>
-                                            Edit Account
+                                            {{_("Edit Account")}}
                                         </a>
                                     </td>
                                     <td class="shortcolumn">
                                         <a id="delete-user-button-{{ user.uuid }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-user-modal" data-uuid="{{ user.uuid }}">
                                             <i class="fa fa-fw fa-times-circle-o"></i>
-                                            Delete
+                                            {{_("Delete")}}
                                         </a>
                                     </td>
                                 </tr>

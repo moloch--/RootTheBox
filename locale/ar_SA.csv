@@ -1,0 +1,664 @@
+(stop - start) * cost.,(توقف - بدء) * التكلفة.
+$,$
+A brief description of the box,وصف موجز للمربع
+About,حول
+Accept,قبول
+Accept Bribe?,تقبل الرشوة؟
+Accept this bribe?,تقبل هذه الرشوة؟
+Accepted,وافقت
+Accepted / In Jail,قبلت / في السجن
+Account Locked!,الحساب مغلق!
+Account Password,كلمة مرور الحساب
+Active Bots,السير النشطة
+Add,إضافة
+Add,إضافة
+add,إضافة
+Add a Category for Boxes.,إضافة فئة للصناديق.
+Add Flags,أضف أعلام
+Add Hint,إضافة تلميح
+Add IP address,إضافة عنوان IP
+Add IP Address,إضافة عنوان IP
+add some,اضف بعض
+Add Source Code,أضف كود المصدر
+Add Source Code to Market,أضف كود المصدر إلى السوق
+Add to Market,أضف إلى السوق
+Address,عنوان
+Admin,مشرف
+Admin Home,الادارية الرئيسية
+Admin Message,رسالة المسؤول
+Administrator Panel,لوحة المسؤول
+Admins,مدراء
+All Notifications,جميع الإخطارات
+and so on,وما إلى ذلك وهلم جرا
+Apply penalty on attempt,تطبق عقوبة على المحاولة
+Are you a Cylon?,هل أنت سيلون؟
+Are You Elite,هل أنت النخبة
+Are you sure you want to buy this code?,هل أنت متأكد أنك تريد شراء هذا الكود؟
+Are you sure you want to delete this box?,هل أنت متأكد أنك تريد حذف هذا المربع؟
+Are you sure you want to delete this category?,هل أنت متأكد أنك تريد حذف هذه الفئة؟
+Are you sure you want to delete this corporation?,هل أنت متأكد أنك تريد حذف هذه الشركة؟
+Are you sure you want to delete this file?,هل أنت متأكد أنك تريد حذف هذا الملف؟
+Are you sure you want to delete this flag?,هل أنت متأكد أنك تريد حذف هذه العلامة؟
+Are you sure you want to delete this game level?,هل أنت متأكد أنك تريد حذف مستوى اللعبة هذا؟
+Are you sure you want to delete this hint?,هل أنت متأكد من أنك تريد حذف هذا التلميح؟
+Are you sure you want to delete this IP address?,هل أنت متأكد من أنك تريد حذف عنوان IP هذا؟
+Are you sure you want to delete this source code?,هل أنت متأكد من أنك تريد حذف الكود المصدري هذا؟
+Are you sure you want to delete this user?,هل أنت متأكد أنك تريد حذف هذا المستخدم؟
+Are you sure you want to delete?,هل أنت متأكد أنك تريد حذف؟
+Arrest Player,القبض على لاعب
+attempt,محاولة
+attempt and continue until the,محاولة والاستمرار حتى
+Attempts,محاولات
+Authenticate,مصادقة
+Authentication Failure,فشل المصادقة
+Authentication Required,يستلزم التوثيق
+Avatar,الصورة الرمزية
+Backup/Restore,اسنرجاع البيانات
+Ban IP Address,حظر عنوان IP
+Bank Account,حساب البنك
+Bank Account Balance,رصيد الحساب البنكي
+Bank Hash Algorithm,خوارزمية بنك التجزئة
+Bank Password,كلمة مرور البنك
+Bank Password Length,طول كلمة مرور البنك
+Banking System,النظام المصرفي
+Banned IPs,عناوين IP المحظورة
+BEGIN SECURE COMMUNIQUE,بداية آمنة بيان
+Black Market,السوق السوداء
+Bonus reward for those that complete the level.,مكافأة مكافأة لأولئك الذين يكملون المستوى.
+Bot,بوت
+Bot added,وأضاف بوت
+Bot Reward,بوت مكافأة
+Botnet,الروبوتات
+Botnet Command & Control,Botnet القيادة والسيطرة
+Botnet Monitor,مراقب الشبكة
+Botnet Scored,سجل Botnet
+Botnets,إقناعا
+Bots,السير
+Box,صندوق
+Box Difficulty,مربع الصعوبة
+Box Hints,تلميحات مربع
+Box Hints Taken,تلميحات مربع اتخذت
+Box Name,اسم الصندوق
+Boxes,مربعات
+Bribe,رشوة
+Bribe Amount,رشوة المبلغ
+Bribe History,تاريخ الرشوة
+Bribe Pending,رشوة معلقة
+Bribe Price,رشوة السعر
+Bribes in Progress,الرشاوى في التقدم
+Buy,يشترى
+Buy Source Code,شراء شفرة المصدر
+Buy Upgrade,شراء ترقية
+bytes,بايت
+Capture Message,التقاط رسالة
+Capture Rate,معدل التقاط
+Captures,يلتقط
+Case-Sensitive,حساسية الموضوع
+Cash Stolen,النقدية المسروقة
+Categories,الاقسام
+Category,الفئة
+Category box belongs too?,مربع الفئة ينتمي أيضا؟
+Category Name,اسم التصنيف
+Change,يتغيرون
+Change Avatar,تغيير الصورة الرمزية
+Characters,الشخصيات
+Charts,الرسوم البيانية
+Chat,دردشة
+Checksum,اختباري
+Choose,أختر
+Choose a name for your new team!,اختر اسمًا لفريقك الجديد!
+Choose Avatar,اختيار الصورة الرمزية
+Classic,كلاسيكي
+Clear,واضح
+Clear all notifications and game history,مسح جميع الإخطارات وتاريخ اللعبة
+Clear all team / player flag captures,مسح جميع يلتقط علم الفريق / اللاعب
+Clear all team pastebin and file shares,قم بإلغاء تحديد كافة المشاركات السابقة في ملف المشاركة
+Clear market items or source code purchases,مسح عناصر السوق أو مشتريات الكود المصدري
+Click here to login,انقر هنا لتسجيل الدخول
+Close,أغلق
+Command & Control,القيادة والسيطرة
+Complete,اكتمال
+Complete Bribe,رشوة كاملة
+Complete this bribe?,أكمل هذه الرشوة؟
+Completed,منجز
+Completed Bribes,الرشاوى المكتملة
+Completion Message,رسالة الإنجاز
+completion of Level,الانتهاء من المستوى
+Completion Reward,مكافأة الانتهاء
+Configuration,ترتيب
+Confirm,تؤكد
+Confirm Account Password,تأكيد كلمة مرور الحساب
+Confirm New Password,تأكيد كلمة المرور الجديدة
+Confirm Password,تأكيد كلمة المرور
+Content,يحتوى
+Content Missing,محتوى مفقود
+Corporation,مؤسسة
+Corporation box belongs too?,صندوق شركة ينتمي أيضا؟
+Corporation Name,اسم الشركة
+Corporations,الشركات
+Cost,كلفة
+Cost to open this level and see flags,تكلفة لفتح هذا المستوى ورؤية الأعلام
+Cracked by,متصدع من قبل
+Create,خلق
+Create Box,إنشاء صندوق
+Create Category,إنشاء فئة
+Create Corporation,إنشاء شركة
+Create Datetime Flag,إنشاء علم Datetime
+Create File Flag,إنشاء ملف العلم
+Create Flag,إنشاء العلم
+Create Game Level,إنشاء مستوى اللعبة
+Create Hint,إنشاء تلميح
+Create Message,إنشاء رسالة
+Create Multiple Choice Flag,إنشاء علم الاختيار من متعدد
+Create New Paste,إنشاء لصق جديد
+Create Notification,إنشاء إعلام
+Create Regex Flag,إنشاء علم Regex
+Create Static Flag,إنشاء علم ثابت
+Create Team,إنشاء فريق
+Created,خلقت
+Current algorithm,الخوارزمية الحالية
+Current Bank Account Password,كلمة مرور الحساب البنكي الحالي
+Current Bank Password,كلمة مرور البنك الحالية
+Current Level,المستوى الحالي
+Current Level,المستوى الحالي
+CyberChef,CyberChef
+Data Points,نقاط البيانات
+Date,تاريخ
+Datetime Flag,علم التاريخ
+Datetime Token,رمز تاريخ
+DEBUG,DEBUG
+Decline,انخفاض
+Decline Bribe?,رفض الرشوة؟
+Decline this bribe?,رفض هذه الرشوة؟
+Declined,رفض
+Decrease flag reward by this percent per capture.,خفض مكافأة العلم بنسبة هذا في المئة لكل لقطة.
+deduct on & after,خصم على & بعد
+defaults to,التخلف عن
+Delete,حذف
+Delete Box,حذف مربع
+Delete Category,حذف الفئة
+Delete Corporation,حذف شركة
+Delete File Upload,حذف ملف تحميل
+Delete Flag,حذف العلم
+Delete Game Level,حذف مستوى اللعبة
+Delete Hint,حذف تلميح
+Delete IP Address,حذف عنوان IP
+Delete Player,حذف المشغل
+Delete Source Code,حذف شفرة المصدر
+Delete Team,حذف الفريق
+Delete User,مسح المستخدم
+Dependent Flag,العلم المعال
+Description,وصف
+DESCRIPTION,وصف
+Details,تفاصيل
+Difficulty,صعوبة
+Difficulty Rating,تقييم الصعوبة
+Disable,تعطيل
+Disabling this option will skip the story line and give the player an instant capture message.,سيؤدي تعطيل هذا الخيار إلى تخطي سطر القصة وإعطاء اللاعب رسالة التقاط فورية.
+Display Hints Taken,عرض تلميحات اتخذت
+Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,لا تحذف أو تعدل أعلام المجتمع ما لم يتم توجيهك. لا تهاجم اللاعبين الآخرين إلا في الأهداف المحددة في اللعبة.
+Download,تحميل
+Download File,تحميل الملف
+Download the command line botnet monitor,قم بتنزيل شاشة الروبوتات الموجودة بسطر الأوامر
+Dynamic Scoring,التسجيل الديناميكي
+Each flag has a submit.  The player will choose the flag they intend to capture.,كل العلم لديه تقديم. سيختار اللاعب العلم الذي يعتزم التقاطه.
+"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",سيستهدف كل لاعب تحديات متفاوتة الصعوبة والتطور ، في محاولة لجمع الأعلام والفوز بالمجد. حظا طيبا وفقك الله!
+Edit,تصحيح
+Edit Account,تحرير الحساب
+Edit Box,تحرير مربع
+Edit Category,تحرير الفئة
+Edit Corporation,تحرير شركة
+Edit Flag,تحرير العلم
+Edit Flag,تحرير العلم
+Edit Game Level,تحرير مستوى اللعبة
+Edit Hint,تحرير تلميح
+Edit Level,تحرير المستوى
+Edit Market Item,تحرير عنصر السوق
+Edit Player,تحرير لاعب
+Edit Team,تحرير الفريق
+Edit User,تحرير العضو
+Email,البريد الإلكتروني
+EMPTY,فارغة
+Enable,مكن
+"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",يتيح تمكين هذه الميزة للاعبين إنشاء فرقهم الخاصة أثناء التسجيل. إذا تم تعطيل هذا الخيار ، يجب على المشرف إنشاء فرق للاعبين للانضمام إليها.
+Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,سيسمح تمكين هذه الميزة للاعبين بمشاركة الكود (pastebin) والملفات الموجودة في اللعبة. سيؤدي تعطيل هذه الميزة إلى إزالة هذه الخيارات من قائمة الأدوات.
+"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.",يتيح تمكين هذه الميزة للفرق شراء ترقيات ، مثل Federal Reserve أو Source Code Market أو SWAT.
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.",سيتيح تمكين هذه الميزة للعبة عرض رسائل التقاط علامة أو مربعة يمكن إضافتها. تبعًا للإعدادات الافتراضية ، تتبع اللعبة قصة Morris ، صاحب العمل الذي يقوم بتعيين المهام.
+"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",سيؤدي تمكين هذه الميزة إلى فرض عقوبة على محاولات الالتقاط غير الصحيحة. العقوبة هي خصم فوري من النتيجة ، وليس انخفاضًا في قيمة العلم.
+"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.",سيؤدي تمكين هذه الميزة إلى تقليل مكافأة العلامة بناءً على عدد مرات الالتقاط. إذا تم تعطيل هذا الخيار ، فستبقى قيمة العلامة متسقة مع قيام اللاعبين الآخرين بالتقاطها.
+Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,سيؤدي تمكين هذه الميزة إلى عرض عدد التلميحات التي تم التقاطها على لوحة النتائج بواسطة فريق أو لاعب. مفيدة عندما تلميحات مجانية. يتم استخدام عدد تلميحات أقل للفرز عندما تكون النقاط أو العلامات متساوية. سيؤدي تعطيل هذا الخيار إلى إزالة عدد التلميحات من لوحة النتائج.
+"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.",سيؤدي تمكين هذه الميزة إلى عرض لوحة نتائج لاعب MVP. سيتم عرض أي لاعب ساهم في النقاط للفريق. إذا تم تعطيل هذا الخيار ، فسيتم إخفاء لوحة MVP.
+Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,يتطلب تمكين هذه الميزة من اللاعبين تقديم رمز تسجيل صالح من أجل إنشاء حساب جديد. يتم إنشاء الرموز التسجيل في واجهة المسؤول.
+Enabling this feature will require players to provide an email address in order to create a new account.,يتطلب تمكين هذه الميزة من اللاعبين تقديم عنوان بريد إلكتروني لإنشاء حساب جديد.
+Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,سيؤدي تمكين هذه الميزة إلى إرسال إشعارات إلغاء قفل العلم والمستوى لجميع اللاعبين في اللعبة. سيؤدي تعطيل هذا الخيار إلى قصر هذه الإشعارات على أعضاء الفريق.
+"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.",سيؤدي تمكين هذه الميزة إلى إعداد اللعبة ولوحة النتائج للعب الجماعي. إذا تم تعطيل هذا الخيار ، يتم إعداد اللعبة للعب التنافسي الفردي.
+"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.",سيؤدي تمكين هذه الميزة إلى ضبط اللعبة على استخدام نظام تسجيل الأموال. إذا تم تعطيل هذا الخيار ، تستخدم اللعبة نظام تسجيل النقاط.
+"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.",سيؤدي تمكين هذا الخيار إلى تعيين الرمز المميز ليكون حساسًا لحالة الأحرف. إذا تم تعطيل هذا الخيار ، فإن الرمز المميز للإجابة غير حساس لحالة الأحرف.
+"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.",سيؤدي تمكين هذا الخيار إلى تعيين الرمز المميز ليكون case senstive. إذا تم تعطيل هذا الخيار ، فإن الرمز المميز للإجابة يكون غير متحفظ لحالة الأحرف.
+Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,تمكين هذا الإعداد ينشط ميزات الروبوتات. يمكن للفرق تشغيل الملفات التنفيذية الخاصة بالبوتات على الصناديق التي يدفعونها ويتم دفعها مقابل كل بوت مع مرور الوقت.
+END SECURE COMMUNIQUE,نهاية الاتصال الآمن
+Enter a complex password of,أدخل كلمة مرور معقدة من
+Enter a Matching Flag,أدخل علم المطابقة
+Enter Choice,أدخل الاختيار
+Enter the same password as before,أدخل نفس كلمة المرور كما كان من قبل
+ERROR,خطأ
+Export Game Objects,كائنات لعبة التصدير
+Export XML,تصدير XML
+Export XML,تصدير XML
+Failed Attempts,محاولات فاشلة
+Failed Logins,عمليات تسجيل الدخول الفاشلة
+Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,الفشل له تكلفة. كن حذرًا حيث يتم تطبيق العقوبات عند تقديم إجابات غير صحيحة.
+Federal Reserve,الاحتياطي الفيدرالي
+Federal Reserve Bank,البنك الإحتياطي الفيدرالي
+File,ملف
+File Description,وصف الملف
+File Flag,ملف العلم
+File Name,اسم الملف
+File Share,ملف مشاركة
+File Sharing,مشاركة الملفات
+File Size,حجم الملف
+First Login,تسجيل الدخول الأول
+Flag,علم
+Flag Capture,القبض على العلم
+Flag Decrease Value,علم انخفاض القيمة
+Flag Details,علم التفاصيل
+Flag File,ملف العلم
+Flag Hints,تلميحات العلم
+Flag Name,اسم العلم
+Flag Penalty,علم عقوبة
+Flag Penalty % Cost,العلم عقوبة التكلفة ٪
+Flag Penalty Cost,تكلفة عقوبة العلم
+Flag Penalty Start,علم عقوبة البداية
+Flag Penalty Stop,وقف عقوبة العلم
+Flag Submission Type,علم تقديم نوع
+Flag Type,نوع العلم
+Flags,أعلام
+Flags / Boxes / Corp.,أعلام / صناديق / شركة
+Flags Captured,الأعلام الملتقطة
+Flags on,أعلام على
+for,إلى عن على
+Forbidden,ممنوع
+Game,لعبه
+Game Control,لعبة التحكم
+Game Information,معلومات اللعبة
+Game Level,مستوى اللعبة
+Game Levels,مستويات اللعبة
+Game Management,إدارة اللعبة
+Game Materials,مواد اللعبة
+Game Name,اسم اللعبة
+Game Progress,تقدم اللعبة
+Garbage File,ملف القمامة
+Get help with,الحصول على مساعدة مع
+Get your registration token from reception,الحصول على رمز التسجيل الخاص بك من الاستقبال
+Glitch in the Matrix,خلل في المصفوفة
+Global Notifications,الإخطارات العالمية
+Handle,مقبض
+Hint,ملحوظة
+Hint not yet taken,تلميح لم تتخذ بعد
+Hint Taken,تلميح اتخذت
+Hints,إشارة
+Hints on,تلميحات على
+Hints Taken,تلميحات اتخذت
+History,التاريخ
+Home,الصفحة الرئيسية
+How should the next level unlock?,كيف ينبغي فتح المستوى التالي؟
+"If the flag selection is left empty, the hint will be considered a Box Hint.",إذا تم ترك تحديد العلامة فارغًا ، فسيتم اعتبار التلميح تلميحًا مربعًا.
+"If this option is disabled, there is no cost for submitting incorrect flags.",إذا تم تعطيل هذا الخيار ، فلن تكون هناك تكلفة لإرسال علامات غير صحيحة.
+Import File,استيراد ملف
+Import XML,استيراد XML
+Import XML,استيراد XML
+In Progress,في تقدم
+"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.",في هذه الحالة ، تكون العلامة سلسلة تاريخ / وقت. سيحاول نوع العلامة هذا التطابق مع صيغ صيغ التاريخ والوقت الشائعة والتعامل مع الاختلافات مثل الشرط المائل ، الشرطات ، الحشو ، 12 ساعة ، 24 ساعة ، إلخ. يمكنه التعامل مع التاريخ أو الوقت أو التاريخ.
+"In this case, the flag is a multiple choice question where the selected option is the token.",في هذه الحالة ، تكون العلامة مسألة اختيار من متعدد حيث يكون الخيار المحدد هو الرمز المميز.
+"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",في هذه الحالة ، تكون العلامة تعبيرًا منتظمًا. يجب على المستخدم إرسال السلسلة التي تطابق النمط لالتقاط العلم. المباريات يمكن أن تكون غير حساسة. يرجى التأكد من اختبار regex الخاص بك ، والتأكد من أنها ليست واسعة للغاية.
+"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",في هذه الحالة ، تكون العلامة عبارة عن سلسلة ثابتة. يجب على المستخدم إرسال الرمز المميز لالتقاط العلامة. يتم تجريد مساحة بيضاء في البداية والنهاية.
+Income,الإيرادات
+Incoming Transmission,انتقال الواردة
+Incorrect,غير صحيح
+Incorrect Penalty,عقوبة غير صحيحة
+indicates use by another player,يشير إلى استخدام من قبل لاعب آخر
+INFO,INFO
+Information,معلومات
+Invalid CSRF Token,رمز CSRF غير صالح
+IP Address,عنوان IP
+IP Version,نسخة IP
+It appears you're an unsophisticated script kiddie!,يبدو أنك مخطوط غير متطور كيدي!
+"It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).",يمكن أن يكون مرئيًا لجميع الزوار (عامًا) أو للمستخدمين المصادق عليهم (اللاعبين) أو فقط للمسؤولين (المشرفين).
+"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.",يبدو أنك كتبت عنوان URL بشكل غير صحيح ، أو كنت تحاول العثور على شيء لا يجب أن يكون لديك حق الوصول إليه.
+"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.",إنه يتعلق بالمال وحان الوقت للاستفادة من تلك المهارات! تم إعداد هذه اللعبة لاستخدام النظام المصرفي ، لذا لا تضيع الوقت لبناء ثروتك وشراء ما تحتاجه للفوز.
+Item Cost,تكلفة البند
+Join Existing Team,انضم إلى الفريق الحالي
+Known IP Addresses,عناوين IP المعروفة
+Last Ping,بينغ الماضي
+Learn,تعلم
+Level,مستوى
+Level Name,اسم المستوى
+Level Number,رقم المستوى
+Level to put box in?,المستوى لوضع مربع في؟
+Level Unlocked,مستوى مفتوح
+Limit number of players that can be on any one team,الحد من عدد اللاعبين الذين يمكن أن يكونوا في أي فريق واحد
+"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",يحد من عدد محاولات التقاط العلم. بمجرد الوصول إلى الحد ، لا يمكن اتخاذ أي إجراء آخر على هذا العلم.
+Linux,لينكس
+Lock,قفل
+Locked by,مؤمن من قبل
+Login,تسجيل الدخول
+Login Password,كلمة سر الدخول
+Logout,الخروج
+MacOS,ماك
+Mainframe Console,المركزية وحدة التحكم
+Manage Black Market,إدارة السوق السوداء
+Manage Categories,إدارة الفئات
+Market Objects,كائنات السوق
+Max,ماكس
+Max Flag Attempts,محاولات العلم ماكس
+Max PasteBin Size,ماكس PasteBin الحجم
+Max Team Size,ماكس فريق الحجم
+Maximum Flag Attempts,محاولات العلم القصوى
+Maximum Penalty,أقصى عقوبة
+Maximum Penalty is determined as,يتم تحديد الحد الأقصى للعقوبة كما
+Min user password length,طول كلمة مرور المستخدم دقيقة
+Minimum User Password Length,الحد الأدنى لطول كلمة المرور للمستخدم
+Mission Progress,تقدم المهمة
+Missions,البعثات
+Modifies the way flag submission are made.,يعدل طريقة تقديم العلم.
+Money,مال
+money,مال
+Motto,شعار
+Multiple Choice,متعدد الخيارات
+Multiple Choice Flag,علم الاختيار من متعدد
+Must be unique,يجب أن تكون فريدة من نوعها
+MVP,MVP
+MVP - List Top N Payers,MVP - قائمة كبار دافعي N
+MVP List Top,قائمة MVP الأعلى
+MVP Scoreboard,MVP لوحة النتائج
+MVP Scoreboard,MVP لوحة النتائج
+Name,اسم
+Never,أبدا
+New Bank Account Password,كلمة مرور حساب بنكي جديد
+New Bank Password,كلمة مرور البنك الجديد
+New Box,صندوق جديد
+New Category,فئة جديدة
+New Corporation,شركة جديدة
+New Flag,العلم الجديد
+New Game Level,لعبة جديدة المستوى
+New IP Address,عنوان IP جديد
+New Password,كلمة السر الجديدة
+New Team,فريق جديد
+New Team Member,عضو فريق جديد
+New Team Name,اسم الفريق الجديد
+No,لا
+No Avatar,لا الرمزية
+No Boxes,لا صناديق
+No boxes in this corporation yet,لا صناديق في هذه الشركة بعد
+No boxes on this level yet,لا صناديق على هذا المستوى بعد
+No Bribes in Progress,لا رشاوى في التقدم
+No Completed Bribes,لا الرشاوى المكتملة
+No flags captured yet.,لم يتم التقاط أعلام بعد.
+No flags on this box yet,لا توجد أعلام في هذا المربع حتى الآن
+No further penalty thereafter.,لا عقوبة أخرى بعد ذلك.
+No Lock,بدون قفل
+No name,لا اسم
+No Pending Bribes,لا في انتظار الرشاوى
+No sheep yet - check back later.,لا غنم بعد - التحقق مرة أخرى في وقت لاحق.
+No Source Code For Sale at This Time,لا شفرة المصدر للبيع في هذا الوقت
+No Tokens in Database,لا الرموز في قاعدة البيانات
+No upgrades left.,لا ترقيات اليسار.
+No Users,لا مستخدمين
+None,لا شيء
+Noob Alert,مستجد تنبيه
+"Not all options are accessible in the web configuration.  For more, see",لا يمكن الوصول إلى جميع الخيارات في تكوين الويب. للمزيد ، انظر
+Note,ملحوظة
+Note: Files or documents for the challenge can be placed in the Game Materials.,ملاحظة: يمكن وضع ملفات أو مستندات للتحدي في مواد اللعبة.
+Note: Files or documents for the challenge can be placed in the Game Materials.,ملاحظة: يمكن وضع ملفات أو مستندات للتحدي في مواد اللعبة.
+NOTE: Max attempts and penalties will not be applied in Single Box mode.,ملاحظة: لن يتم تطبيق أقصى المحاولات والعقوبات في وضع الصندوق المفرد.
+NOTE: This setting is ignored if the box flag submission type is set to Single Box.,"ملاحظة: يتم تجاهل هذا الإعداد إذا تم تعيين نوع إرسال إشارة مربع إلى ""مربع مفرد""."
+Notification Message,رسالة الإخطار
+Notifications,إخطارات
+Number of Bots,عدد السير
+Number of Flags,عدد الأعلام
+Number of new Level,عدد المستوى الجديد
+of Flag Value,قيمة العلم
+of the flag's value. It will start on the,من قيمة العلم. سيبدأ في
+Old Password,كلمة المرور القديمة
+One submission box for any flag.  Compares attempts against all flags in the box.,مربع تقديم واحد لأي علم. يقارن محاولات ضد جميع الأعلام في المربع.
+only,فقط
+Optional,اختياري
+Or Choose Existing,أو اختر القائمة
+Outcome,نتيجة
+Outcome,نتيجة
+Password,كلمه السر
+Password Cracked,كلمة السر متصدع
+Password Cracking Leaderboard,كلمة المرور تكسير المتصدرين
+Password Hash,كلمة المرور تجزئة
+Password Security,كلمة السر الأمن
+Password Upgrade Cost,تكلفة ترقية كلمة المرور
+Passwords Cracked,كلمات السر متصدع
+Paste Name,اسم لصق
+Paste Text Here,لصق النص هنا
+PasteBin,باستبين
+Pastebin Character Limit,Pastebin حرف الحد
+Pause Registration,وقفة التسجيل
+Pause Scoreboard,وقفة لوحة النتائج
+Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,قم باختبار النتيجة بنسبة هذا النسبة المئوية من قيمة العلامة لكل محاولة غير صحيحة (يتم تطبيقها بعد التسجيل الديناميكي في حالة التمكين).
+Pending,قيد الانتظار
+Pending Bribes,في انتظار الرشاوى
+Plain Text,نص عادي
+Play Story,تلعب قصة
+player,لاعب
+Player,لاعب
+Player Alias,لاعب الاسم المستعار
+Player Arrested!,القبض على لاعب!
+Player Email,لاعب البريد الإلكتروني
+Player Name,اسم اللاعب
+"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.",تتوفر أيضًا كلمات مرور الحساب المصرفي للاعب ، مما يتيح لك كسر كلمات مرور بعضهم البعض وسرقة الأموال.
+Players,لاعبين
+Please do NOT enter your real bank account password.,الرجاء عدم إدخال كلمة مرور حسابك المصرفي الحقيقي.
+points,نقاط
+Points,نقاط
+points,نقاط
+Previous Bribes,الرشاوى السابقة
+Price,السعر
+Private,نشر
+Programming,برمجة
+Provide the code used to join an existing team.  Visible to other team members on their home page.,قم بتوفير الكود المستخدم للانضمام إلى فريق حالي. مرئي لأعضاء الفريق الآخرين على صفحتهم الرئيسية.
+Public,عامة
+Public Team Creation,إنشاء فريق عام
+Public Teams,فرق عامة
+Purchase,شراء
+Purchase Unlock,شراء فتح
+Purchased,اشترى
+Rank By,الترتيب حسب
+Regex Flag,ريجكس العلم
+Regex Pattern,ريجكس نمط
+Register Account,تسجيل حساب
+Registration,التسجيل
+Registration Email,تسجيل البريد الإلكتروني
+Registration Tokens,رموز التسجيل
+Regular Expression,تعبير عادي
+Require Email,تتطلب البريد الإلكتروني
+Reset Actions,إعادة ضبط الإجراءات
+Reset Game,أعد اعداد اللعبة
+Reset Game,أعد اعداد اللعبة
+Reset player / team starting points / money,إعادة تعيين لاعب / فريق نقاط البداية / المال
+Restrict players bank password to this length,قصر كلمة مرور بنك اللاعبين على هذا الطول
+Restrict players user password to this length,تقييد كلمة مرور المستخدم اللاعبين على هذا الطول
+Resume Registration,استئناف التسجيل
+Resume Scoreboard,استئناف لوحة النتائج
+Return to Edit,العودة إلى تحرير
+Return to Missions,العودة إلى البعثات
+Reward,مكافأة
+Role,وظيفة
+Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,قواعد الاشتباك: لا تهاجم منصة لوحة اللعبة. لا تقم بتغيير كلمات مرور الحسابات الموجودة في الشبكة إلا إذا حددها هدف اللعبة.
+S.W.A.T,قوات التدخل السريع
+Save,حفظ
+Score,أحرز هدفا
+Scoreboard,اللوحة
+Scoreboard Rank By,ترتيب النتائج حسب
+Scoreboard Visibility,رؤية اللوحة
+Security Breach,خرق أمني
+See All,اظهار الكل
+Select a Theme,اختر سمة
+Select Avatar,حدد الصورة الرمزية
+Select New Avatar,حدد الصورة الرمزية الجديدة
+Send,إرسال
+Send a global notification to all players,إرسال إشعار عالمي لجميع اللاعبين
+Set Countdown Timer,ضبط العد التنازلي الموقت
+Set the game countdown timer,تعيين لعبة العد التنازلي الموقت
+Settings,الإعدادات
+Share your team code to allow other players to join,شارك رمز فريقك للسماح للاعبين الآخرين بالانضمام
+Shared Files,الملفات المشتركة
+Sheep,خروف
+Show MVP,عرض MVP
+Since Score,منذ النتيجة
+Single Box,صندوق واحد
+Skill Progress,تقدم المهارة
+Source Code,مصدر الرمز
+Source Code Archive,مصدر رمز الأرشيف
+Source Code Market,سوق كود المصدر
+Special Thanks,شكر خاص
+Start a New Team,بدء فريق جديد
+Start the Game,ابدأ اللعبة
+start with 0 points,تبدأ مع 0 نقطة
+Starting Money,بدءا المال
+Static Flag,العلم الثابت
+Static Token,رمز ثابت
+Statistics,الإحصاء
+stop on & after,توقف عن & بعد
+Stop the Game,أوقف اللعبة
+Story,قصة
+Story Mode,وضع القصة
+Submit,خضع
+Submit a Bug,تقديم علة
+Submit a Flag,تقديم العلم
+Submit Bribe,إرسال الرشوة
+Submit Bribes,إرسال الرشاوى
+Submit Flag,تقديم العلم
+SUCCESS,نجاح
+Success!,نجاح!
+Successful,ناجح
+Successful Captures,التقاط ناجح
+Successful Registration,التسجيل الناجح
+Successfully created a new account for,تم إنشاء حساب جديد بنجاح لـ
+Summary,ملخص
+Supports,الدعم
+Switch Level,التبديل المستوى
+System Type,نوع النظام
+Take,يأخذ
+Take Hint,خذ تلميح
+Taken,تؤخذ
+Target,استهداف
+Target Handle,الهدف الهدف
+Target Management,الإدارة المستهدفة
+team,الفريق
+Team,الفريق
+Team Avatar,الصورة الرمزية للفريق
+Team Code,رمز الفريق
+Team File Share,فريق ملف حصة
+Team Information,معلومات الفريق
+Team Motto,شعار الفريق
+Team Name,اسم الفريق
+Team PasteBin,فريق PasteBin
+Team Play,فريق اللعب
+Team Shares,مشاركات الفريق
+Team Sharing,مشاركة الفريق
+Teams,فرق
+Test Flag,اختبار العلم
+Text Share,نص حصة
+The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,السوق السوداء مفتوحة وأنت تعرف الرجل. قم بتنزيل شفرة مصدر الهدف أو S.W.A.T. لاعبين آخرين برشوة الشرطة (داخل اللعبة).
+The cost to take the hint.  Can be >= 0.,تكلفة اتخاذ التلميح. يمكن أن يكون> ​​= 0.
+The deduction is,الخصم هو
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.",الاحتمال الآخر الوحيد هو أنني أفسدت بعض الكود ، وهذا لا يبدو مرجحًا للغاية.
+The starting money for a new,بدءا المال الجديد
+Theme,موضوع
+There are currently no shared files.,لا يوجد حاليا أي ملفات مشتركة.
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",هذه العلامات هي ملفات ، يجب على المستخدمين تقديم نفس الملف بالضبط لالتقاط العلم. يتم تخزين التجزئة فقط (SHA1) من الملف على الخادم.
+"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!",تم إعداد هذه اللعبة لاستخدام التهديف الديناميكي ، بمعنى أنه عندما يلتقط اللاعبون الآخرون الأعلام ، ستنخفض قيمة هذه الأعلام. حتى الاستيلاء عليها بسرعة أو تخسر!
+This is a test flag/string the user could input for credit.,هذه علامة / سلسلة اختبار يمكن للمستخدم إدخالها للحصول على ائتمان.
+This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,هذا هو المبلغ الذي يجب على اللاعب دفعه لـ S.W.A.T. حساب لاعبين آخرين. يتم زيادة SWAT اللاحقة لنفس اللاعب أيضًا بهذا المبلغ في كل مرة.
+This is the amount a player must pay to upgrade their bank passwords hashing algorithm,هذا هو المبلغ الذي يجب على اللاعب دفعه لترقية خوارزمية تجزئة كلمات مرور البنك
+This is the amount awarded for capturing the flag.,هذا هو المبلغ الممنوح لالتقاط العلم.
+This is the amount awarded for completion of the box.,هذا هو المبلغ الممنوح لاستكمال الصندوق.
+This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually,هذا هو مبلغ المال الذي يدفعه الفريق لكل روبوت في كل فترة. يجب تعيين الفاصل الزمني في ملف .cfg يدويًا
+This is the box the flag is located on.,هذا هو المربع الذي يقع فيه العلم.
+This is the description,هذا هو الوصف
+This is the maximum number of players displayed on the MVP list (default 10) with a score > 0.,هذا هو الحد الأقصى لعدد اللاعبين المعروضين على قائمة MVP (الافتراضي 10) برصيد> 0.
+This is the message displayed to the user once the box is completed.,هذه هي الرسالة المعروضة للمستخدم بمجرد اكتمال المربع.
+This is the message displayed to the user once the flag is captured.,هذه هي الرسالة التي يتم عرضها للمستخدم بمجرد التقاط العلم.
+This is the name that will appear in the upper left corner,هذا هو الاسم الذي سيظهر في الزاوية اليسرى العليا
+This is the the limit of characters allowed for a pastebin post.,هذا هو الحد المسموح به لعدد الأحرف المسموح بنشرها في لصق آخر.
+This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,هذا هو ما تريد أن يتم عرض العلم عليه. اترك المربع فارغًا ليتم تحديد اسمه تلقائيًا عن طريق الطلب رقم
+This selection determines the method by which the scoreboard is primarily ranked.,يحدد هذا الاختيار الطريقة التي يتم بها ترتيب لوحة النتائج في المقام الأول.
+This selection determines the visibility of the scoreboard menu and pages.,يحدد هذا الاختيار مدى رؤية قائمة لوحة النتائج والصفحات.
+"This will also delete associated IP addresses, boxes, and flags.",سيؤدي ذلك أيضًا إلى حذف عناوين IP والمربعات والأعلام المرتبطة بها.
+"This will also delete associated IP addresses, hints, and flags.",سيؤدي هذا أيضًا إلى حذف عناوين IP والنصائح والأعلام المرتبطة بها.
+This will also delete boxes and flags associated with this level.,سيؤدي ذلك أيضًا إلى حذف الصناديق والأعلام المرتبطة بهذا المستوى.
+This will delete the player and the associated user account!,سيؤدي هذا إلى حذف اللاعب وحساب المستخدم المرتبط به!
+This will delete the team and any associated user accounts!,سيؤدي هذا إلى حذف الفريق وأي حسابات مستخدمين مرتبطة به!
+Threshold,عتبة
+Time,زمن
+"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.",الوقت لإنشاء الروبوتات. من خلال تحميل برنامج روبوت صغير لاستهداف الأجهزة ، يمكنك أن تحصل على مكافأة دورية لكل روبوت في روبوتك ؛ أكبر الروبوتات أكبر المكافأة.
+to Add,لإضافة
+to Add or Subtract,لإضافة أو طرح
+"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.",لاستعادة مثيل RTB هذا ، قد تحتاج أيضًا إلى محتويات ضمن دليل الملفات ، لتضمين rootthebox.cfg.
+Token,رمز
+Token Value,قيمة الرمز
+Tools,أدوات
+Tools & Upgrades,أدوات وترقيات
+Total Cash Stolen,مجموع النقدية المسروقة
+Type,نوع
+Unknown,غير معروف
+Unlock,فتح
+Unlock Cost,فتح التكلفة
+Unlock Level,فتح المستوى
+Unlocks,يفتح
+Unlocks after,يفتح بعد
+Unlocks for,يفتح ل
+Update Bank Password,تحديث كلمة مرور البنك
+Update Configuration,تحديث التكوين
+Update Password,تطوير كلمة السر
+Update RootTheBox,تحديث RootTheBox
+Upgrade Purchased,ترقية تم شراؤها
+Upgrade to,ترقية الى
+Upload,رفع
+Upload Avatar,تحميل الصورة الرمزية
+Upload Avatar File,تحميل ملف الصورة الرمزية
+Upload Files,تحميل الملفات
+Used,مستخدم
+Used to secure your (in-game) bank account.,تستخدم لتأمين حسابك المصرفي (داخل اللعبة).
+User Handle,مقبض المستخدم
+User Management,إدارةالمستخدم
+Users / Teams,المستخدمين / فرق
+Value,القيمة
+View,رأي
+View Box,عرض مربع
+View Details,عرض التفاصيل
+Visible,مرئي
+Visible to Players,مرئي للاعبين
+Waiting for the game to start‚Ä¶,في انتظار بدء اللعبة ‚Ä¶
+Wall of Sheep,جدار الأغنام
+WARNING,تحذير
+Welcome,أهلا بك
+Welcome to the computer war game where security professionals can practice and learn.,مرحبًا بك في لعبة الحرب على الكمبيوتر حيث يمكن لمحترفي الأمان التدريب والتعلم
+Welcome to the Scene,مرحبًا بك في المشهد
+What is the name of this box?,ما هو اسم هذا المربع؟
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",ما هو اسم مؤسستك؟ إذا كنت لا تخطط لاستخدام الشركات ، فما عليك سوى إنشاء واحدة بدون اسم.
+What is your motto?,ما هو شعارك؟
+What is your teams motto?,ما هو شعار فرقك؟
+What type of system is this?,ما نوع النظام هذا؟
+Whats the difficulty of the box?,ما هي صعوبة المربع؟
+When banking is disabled,عندما يتم تعطيل المصرفية
+"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.",متى تبدأ في تطبيق العقوبة. على سبيل المثال ، قد ترغب في أن تكون أول محاولة غير صحيحة مجانية ، ولكن معاقبة المحاولات اللاحقة.
+"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.",متى تتوقف عن تطبيق العقوبة. على سبيل المثال ، قد ترغب في معاقبة مجموعة معينة فقط من قيمة العلامات والسماح بأي محاولات أخرى لتكون حرة ، وبالتالي السماح لجميع العلامات أن يكون لها بعض القيمة.
+when using banking.,عند استخدام الخدمات المصرفية.
+Windows,شبابيك
+With contributions from,مع مساهمات من
+XML File,ملف XML
+Yes,نعم فعلا
+You are not on a team,أنت لست في فريق
+You do not have access to this level yet.,ليس لديك حق الوصول إلى هذا المستوى حتى الآن.
+You do not own this upgrade.,أنت لا تملك هذه الترقية.
+You have not submitted any bribes yet.,لم ترسل أي رشاوى بعد.
+"Your email, visible to game administrators.",بريدك الإلكتروني ، مرئي لمسؤولي اللعبة.
+"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",يجب أن يكون مؤشرك من 3 إلى 16 حرفًا أبجديًا رقميًا. الشرطة السفلية ، الشرطة ، والنقاط المسموح بها.
+"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",اسمك مرئي لمسؤولي اللعبة. يمكن أن يكون اسمك 3-64 حرفًا رقميًا
+Automatic Ban,الحظر التلقائي

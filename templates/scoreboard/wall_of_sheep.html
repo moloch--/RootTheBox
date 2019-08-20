@@ -1,24 +1,24 @@
 {% extends "../main.html" %}
 
-{% block title %}Wall of Sheep{% end %}
+{% block title %}{{ _("Wall of Sheep") }}{% end %}
 
 {% block content %}
 {% from models import WallOfSheep %}
 <div class="container">
-    <h1>Wall of Sheep</h1>
+    <h1>{{ _("Wall of Sheep") }}</h1>
     <br />
     <div class="well">
         {% if len(flock) != 0 %}
-            <h3>Sheep</h3>
+            <h3>{{ _("Sheep") }}</h3>
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Date / Time</th>
-                        <th>Handle</th>
-                        <th>Plaintext</th>
-                        <th>Cash Stolen</th>
-                        <th>Cracked by</th>
+                        <th>{{ _("Date") }} / {{ _("Time") }}</th>
+                        <th>{{ _("Handle") }}</th>
+                        <th>{{ _("Plain Text") }}</th>
+                        <th>{{ _("Cash Stolen") }}</th>
+                        <th>{{ _("Cracked by") }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,29 +28,29 @@
                             <td>{{ sheep.created }}</td>
                             <td>{{ sheep.victim.handle }}</td>
                             <td>{{ sheep.preimage }}</td>
-                            <td>${{ sheep.value }}</td>
+                            <td>{{ _("$") }}{{ sheep.value }}</td>
                             <td>{{ sheep.cracker.handle }}</td>
                         </tr>
                     {% end %}
                 </tbody>
             </table>
         {% else %}
-            <strong>No sheep yet; check back later.</strong>
+            <strong>{{ _("No sheep yet - check back later.") }}</strong>
             <br />
         {% end %}
     </div>
     {% if len(leaderboard) != 0 %}
         <br />
         <div class="well">
-            <h3>Password Cracking Leaderboard</h3>
+            <h3>{{ _("Password Cracking Leaderboard") }}</h3>
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Handle</th>
-                        <th>Team</th>
-                        <th>Passwords Cracked</th>
-                        <th>Total Cash Stolen<th>
+                        <th>{{ _("Handle") }}</th>
+                        <th>{{ _("Team") }}</th>
+                        <th>{{ _("Passwords Cracked") }}</th>
+                        <th>{{ _("Total Cash Stolen") }}<th>
                     </tr>
                 </thead>
                 <tbody>

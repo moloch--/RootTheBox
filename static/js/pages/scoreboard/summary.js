@@ -179,7 +179,7 @@ function updateLastFlag() {
             if (money !== 0) {
                 var now = highlights["now"];
                 var diff = now - money;
-                $("#last-" + game_data[team]["uuid"]).text(timeConversion(diff) + " Since Score");
+                $("#last-" + game_data[team]["uuid"]).text(timeConversion(diff) + " " + $("#summary_table").data("since-score"));
                 highlights["now"] = now + 1000;
             }
         }

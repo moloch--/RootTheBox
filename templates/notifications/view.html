@@ -1,12 +1,12 @@
 {% extends "../main.html" %}
 
-{% block title %}All Notifications{% end %}
+{% block title %}{{ _("All Notifications") }}{% end %}
 
 {% block content %}
     <div class="container">
         <h2>
             <i class="fa fa-envelope-o"></i>
-            All Notifications
+            {{ _("All Notifications") }}
         </h2>
         <br />
         <div class="well">
@@ -19,7 +19,7 @@
             </div>
             <div class="span7">
                 <p>
-                    <strong>{{ notify.title }}</strong>
+                    <strong>{{ _(notify.title) }}</strong>
                     {{ notify.created.strftime("%I:%M%p") }}
                     <br />{{ notify.message }}
                 </p>

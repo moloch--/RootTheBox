@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Create Box{% end %}
+{% block title %}{{_("Create Box")}}{% end %}
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
@@ -20,11 +20,11 @@
 <div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3>Change Avatar</h3>
+        <h3>{{_("Change Avatar")}}</h3>
     </div>
     <div class="modal-body">
         {% raw xsrf_form_html() %}
-        <a id="avatarclose" href="#" class="btn" data-dismiss="modal" style="display: none;">Close</a>
+        <a id="avatarclose" href="#" class="btn" data-dismiss="modal" style="display: none;">{{_("Close")}}</a>
         {% for avatar in avatars[::3] %}
             <div class="row">
                 <div class="span3">
@@ -59,15 +59,15 @@
 <div class="container">
     <h1>
         <i class="fa fa-desktop"></i>
-        Create Box
+        {{_("Create Box")}}
     </h1>
-    <div>Note: Files or documents for the challenge can be placed in the Game Materials.</div>
+    <div>{{_("Note: Files or documents for the challenge can be placed in the Game Materials.")}}</div>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{_("ERROR")}}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -76,21 +76,21 @@
         <form class="form-horizontal" action="/admin/create/box" method="post" enctype="multipart/form-data" autocomplete="on">
             {% raw xsrf_form_html() %}
             <div class="control-group">
-                <label class="control-label" for="box_name">Box Name</label>
+                <label class="control-label" for="box_name">{{_("Box Name")}}</label>
                 <div class="controls">
-                    <input autofocus required id="box-name" name="name" maxlength="32" type="text" placeholder="Box Name"
+                    <input autofocus required id="box-name" name="name" maxlength="32" type="text" placeholder="{{_('Box Name')}}"
                            rel="popover"
-                           data-original-title="Box Name"
-                           data-content="What's the name of this box? [3-32 Characters]">
+                           data-original-title="{{_('Box Name')}}"
+                           data-content="{{_('What is the name of this box?')}} [3-32 {{_('Characters')}}]">
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="game_level">Game Level</label>
+                <label class="control-label" for="game_level">{{_("Game Level")}}</label>
                 <div class="controls">
                     <select id="game-level" name="game_level"
                            rel="popover"
-                           data-original-title="Game Level"
-                           data-content="Level to put box in?">
+                           data-original-title="{{_('Game Level')}}"
+                           data-content="{{_('Level to put box in?')}}">
                         {% for level in GameLevel.all() %}
                         <option value="{{ level.number }}">{{ level.name }}</option>
                         {% end %}
@@ -98,25 +98,25 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="corporation">Corporation</label>
+                <label class="control-label" for="corporation">{{_("Corporation")}}</label>
                 <div class="controls">
                     <select id="corporation" name="corporation_uuid"
                             rel="popover"
-                            data-original-title="Corporation"
-                            data-content="Corporation box belongs too?">
+                            data-original-title="{{_('Corporation')}}"
+                            data-content="{{_('Corporation box belongs too?')}}">
                         {% for corp in Corporation.all() %}
-                        <option value="{{ corp.uuid }}">{% if corp.name != "" %}{{ corp.name }}{% else %}(No name){% end %}</option>
+                        <option value="{{ corp.uuid }}">{% if corp.name != "" %}{{ corp.name }}{% else %}({{_("No name")}}){% end %}</option>
                         {% end %}
                     </select>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="category">Category</label>
+                <label class="control-label" for="category">{{_("Category")}}</label>
                 <div class="controls">
                     <select id="category" name="category_uuid"
                             rel="popover"
-                            data-original-title="Category"
-                            data-content="Category box belongs too?">
+                            data-original-title="{{_('Category')}}"
+                            data-content="{{_('Category box belongs too?')}}">
                         <option value=""></option>
                         {% for category in Category.all() %}
                         <option value="{{ category.uuid }}">{{ category.category }}</option>
@@ -125,13 +125,13 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="operating_system">System Type</label>
+                <label class="control-label" for="operating_system">{{_("System Type")}}</label>
                 <div class="controls">
                     <input id="operating_system" name="operating_system" type="hidden" value="?" />
                     <div id="operating-system" class="btn-group" data-toggle="buttons-radio"
                             rel="popover"
-                            data-original-title="System Type"
-                            data-content="What type of system is this?">
+                            data-original-title="{{_('System Type')}}"
+                            data-content="{{_('What type of system is this?')}}">
                         <button id="os-button1" class="btn osbutton" type="button" data-os="linux">
                             <i class="fa fa-linux"></i>
                             Linux
@@ -142,96 +142,96 @@
                         </button>
                         <button id="os-button2" class="btn osbutton" type="button" data-os="apple">
                             <i class="fa fa-apple"></i>
-                            OSX
+                            MacOS
                         </button>
                         <button id="os-button3" class="btn osbutton active" type="button" data-os="?">
                             <i class="fa fa-desktop"></i>
-                            Unknown
+                             {{ _("Unknown") }}
                         </button>
                         <button id="os-button4" class="btn osbutton" type="button" data-os="none">
                             <i class="fa fa-th"></i>
-                            None
+                            {{ _("None") }}
                         </button>
                     </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                <label class="control-label" for="reward">{% if options.banking %}{{_("Reward")}}{% else %}{{_("Points")}}{% end %}</label>
                 <div class="controls">
-                    <input id="reward" name="reward" type="number" pattern="[0-9]+" value="0" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                    <input id="reward" name="reward" type="number" pattern="[0-9]+" value="0" placeholder="{% if options.banking %}{{_('$')}} {{_('Reward')}}{% else %}{{_('Points')}}{% end %}"
                            rel="popover"
-                           data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
-                           data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for completion of the box.">
+                           data-original-title="{% if options.banking %}{{_('Reward')}}{% else %}{{_('Points')}}{% end %}"
+                           data-content="{{_('This is the amount awarded for completion of the box.')}}">
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="description">Description</label>
+                <label class="control-label" for="description">{{_("Description")}}</label>
                 <div class="controls">
-                    <textarea class="toolbar" id="description" style="width: 60%;" rows="5" name="description" maxlength="1024" placeholder="Description"
+                    <textarea class="toolbar" id="description" style="width: 60%;" rows="5" name="description" maxlength="1024" placeholder="{{_('Description')}}"
                               rel="popover"
-                              data-original-title="Description"
+                              data-original-title="{{_('Description')}}"
                               data-html="true"
-                              data-content="A brief description of the box [Max: 1024 Characters].<br/><br/>Supports Markdown (GitHub Style)">
+                              data-content="{{_('A brief description of the box')}} [Max: 1024 {{_('Characters')}}].<br/><br/>{{_('Supports')}} Markdown (GitHub Style)">
                     </textarea>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="flag_submission_type">
-                    Flag Submission Type
+                    {{_("Flag Submission Type")}}
                 </label>
                 <div class="controls">
                     <input id="flag_submission_type" name="flag_submission_type" type="hidden" value="CLASSIC" />
                     <div id="flag-submission-type-button" class="btn-group" data-toggle="buttons-radio"
                          rel="popover"
-                         data-original-title="Flag Submission Type"
+                         data-original-title="{{_('Flag Submission Type')}}"
                          data-html="true"
-                         data-content="Modifies the way flag submission are made.<br/><br/>'<strong>Classic</strong>': Each flag has a submit.  The player will choose the flag they intend to capture.<br/><br/>'<strong>Single Box</strong>': One submission box for any flag.  Compares attempts against all flags in the box.<br/><br/>NOTE: Max attempts and penalties will not be applied in 'Single Box' mode.">
+                         data-content="{{_('Modifies the way flag submission are made.')}}<br/><br/>'<strong>{{_('Classic')}}</strong>': {{_('Each flag has a submit.  The player will choose the flag they intend to capture.')}}<br/><br/>'<strong>{{_('Single Box')}}</strong>': {{_('One submission box for any flag.  Compares attempts against all flags in the box.')}}<br/><br/>{{_('NOTE: Max attempts and penalties will not be applied in Single Box mode.')}}">
                         <button id="flag-submission-type-classic" type="button" class="btn btn-primary">
                             <i id="flag-submission-type-classic-icon" class="fa fa-fw fa-check-square-o"></i>
-                            Classic
+                            {{_("Classic")}}
                         </button>
                         <button id="flag-submission-type-single-box" type="button" class="btn btn-primary">
                             <i id="flag-submission-type-single-box-icon" class="fa fa-fw fa-square-o"></i>
-                            Single Box
+                            {{_("Single Box")}}
                         </button>
                     </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="difficulty">Difficulty</label>
+                <label class="control-label" for="difficulty">{{_("Difficulty")}}</label>
                 <div class="controls">
-                    <input id="difficulty" name="difficulty" maxlength="16" type="text" placeholder="Difficulty"
+                    <input id="difficulty" name="difficulty" maxlength="16" type="text" placeholder="({{_('Optional')}})"
                         rel="popover"
-                        data-original-title="Box Difficulty"
-                        data-content="What's the difficulty of the box? [Max: 16 Characters]">
+                        data-original-title="{{_('Box Difficulty')}}"
+                        data-content="{{_('Whats the difficulty of the box?')}} [Max: 16 {{_('Characters')}}]">
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="avatar">Avatar</label>
+                <label class="control-label" for="avatar">{{_("Avatar")}}</label>
                 <div class="controls">
-                        <a id="uploadbutton" class="btn btn-primary" href="#">Upload Avatar</a>
+                        <a id="uploadbutton" class="btn btn-primary" href="#">{{_("Upload Avatar")}}</a>
                         <input id="box-avatar" name="avatar" type="file" style="display: none;"/>
                         <input id="box_avatar_select" name="box_avatar_select" type="hidden" />
-                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal"> Choose Avatar </a>{% end %}
-                        &nbsp;&nbsp;<a id="removeavatar" class="btn btn-primary" href="#">No Avatar</a>
+                        {% if len(avatars) > 0 %}&nbsp;&nbsp;<a data-toggle="modal" class="btn btn-primary" href="#change-box-avatar-modal"> {{_("Choose Avatar")}} </a>{% end %}
+                        &nbsp;&nbsp;<a id="removeavatar" class="btn btn-primary" href="#">{{_("No Avatar")}}</a>
                         <div id="avatarfilename" style="padding: 5px;"></div>
                 </div>
             </div>
             {% if options.story_mode %}
             <div class="control-group">
-                <label class="control-label" for="capture-message">Completion Message</label>
+                <label class="control-label" for="capture-message">{{_("Completion Message")}}</label>
                 <div class="controls">
-                    <textarea class="toolbar" id="capture-message" name="capture_message" style="width: 60%;" rows="5" maxlength="1024" type="text" placeholder="(Optional)"
+                    <textarea class="toolbar" id="capture-message" name="capture_message" style="width: 60%;" rows="5" maxlength="1024" type="text" placeholder="({{_('Optional')}})"
                             rel="popover"
-                            data-original-title="Completion Message"
-                            data-content="This is the message displayed to the user once the box is completed." >
+                            data-original-title="{{_('Completion Message')}}"
+                            data-content="{{_('This is the message displayed to the user once the box is completed.')}}" >
                     </textarea>
                 </div>
             </div>
             {% end %}
             <div class="control-group">
                 <div class="controls">
-                    <button class="btn btn-primary" type="submit">Create Box</button>
+                    <button class="btn btn-primary" type="submit">{{_("Create Box")}}</button>
                 </div>
             </div>
         </form>

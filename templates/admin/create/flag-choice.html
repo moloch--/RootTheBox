@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Create Flag{% end %}
+{% block title %}{{_("Create Flag")}}{% end %}
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
@@ -15,14 +15,14 @@
 <div class="container">
     <h1>
         <i class="fa fa-flag"></i>
-        Create Multiple Choice Flag
+        {{_("Create Multiple Choice Flag")}}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{_("ERROR")}}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -35,21 +35,21 @@
                     <input id="flagtype" type="hidden" value="choice" />
                     <input id="choices" type="hidden" name="choices" />
                     <div class="control-group">
-                        <label class="control-label" for="flag_name">Flag Name</label>
+                        <label class="control-label" for="flag_name">{{_("Flag Name")}}</label>
                         <div class="controls">
-                            <input autofocus id="flag-name" maxlength="16" name="flag_name" type="text" placeholder="(Optional)"
+                            <input autofocus id="flag-name" maxlength="16" name="flag_name" type="text" placeholder="({{_('Optional')}})"
                                     rel="popover"
-                                    data-original-title="Flag Name"
-                                    data-content="This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #." />
+                                    data-original-title="{{_('Flag Name')}}"
+                                    data-content="{{_('This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.')}}" />
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="box_uuid">Box</label>
+                        <label class="control-label" for="box_uuid">{{_("Box")}}</label>
                         <div class="controls">
                             <select id="box-uuid" name="box_uuid"
                                     rel="popover"
-                                    data-original-title="Box"
-                                    data-content="This is the box the flag is located on.">
+                                    data-original-title="{{_('Box')}}"
+                                    data-content="{{_('This is the box the flag is located on.')}}">
                                 <option value=""></option>
                                 {% for thebox in Box.all() %}
                                 <option value="{{ thebox.uuid }}"{% if box and box.uuid == thebox.uuid %} selected{% end %}>
@@ -60,58 +60,58 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="reward">{% if options.banking %}Reward{% else %}Points{% end %}</label>
+                        <label class="control-label" for="reward">{% if options.banking %}{{_("Reward")}}{% else %}{{_("Points")}}{% end %}</label>
                         <div class="controls">
-                            <input required id="reward" name="reward" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}$ Reward{% else %}Points{% end %}"
+                            <input required id="reward" name="reward" type="number" pattern="[0-9]+" placeholder="{% if options.banking %}{{_('$')}} {{_('Reward')}}{% else %}{{_('Points')}}{% end %}"
                                    rel="popover"
-                                   data-original-title="{% if options.banking %}Reward{% else %}Points{% end %}"
-                                   data-content="This is the amount of {% if options.banking %}money rewarded{% else %}points awarded{% end %} for capturing the flag.">
+                                   data-original-title="{% if options.banking %}{{_('Reward')}}{% else %}{{_('Points')}}{% end %}"
+                                   data-content="{{_('This is the amount awarded for capturing the flag.')}}">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="description">Description</label>
+                        <label class="control-label" for="description">{{_("Description")}}</label>
                         <div class="controls">
-                            <textarea required class="toolbar" id="description" name="description" maxlength="1024" rows="5" type="text" placeholder="Description"
+                            <textarea required class="toolbar" id="description" name="description" maxlength="1024" rows="5" type="text" placeholder="{{_('Description')}}"
                                     rel="popover"
-                                    data-original-title="Description"
+                                    data-original-title="{{_('Description')}}"
                                     data-html="true"
-                                    data-content="This is the description [Max: 1024 Characters].<br/><br/>Supports Markdown (GitHub Style)">
+                                    data-content="{{_('This is the description')}} [Max: 1024 {{_('Characters')}}].<br/><br/>{{_('Supports')}} Markdown (GitHub Style)">
                             </textarea>
                         </div>
                     </div>
                     <div class="control-group" style="margin-bottom: 10px;">
-                        <label class="control-label" for="token" style="margin-left: -20px;">Multiple Choice</label>
+                        <label class="control-label" for="token" style="margin-left: -20px;">{{_("Multiple Choice")}}</label>
                         <div class="controls">
                                 <div class="input-group control-group after-add-more" style="position: relative; margin-bottom: 10px;">
-                                    <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" required /><input type="text" name="addmore[]" maxlength="256" class="form-control" placeholder="Enter Choice">
+                                    <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" required /><input type="text" name="addmore[]" maxlength="256" class="form-control" placeholder="{{_('Enter Choice')}}">
                                     <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
                                         <button class="btn btn-success add-more" type="button"style="padding: 4px 10px 0px; vertical-align: middle;"><i class="fa fa-plus" style="font-size: 160%;"></i></button>
                                     </div>
                                 </div>
-                            <input required id="token" name="token" type="hidden" placeholder="Multiple Choice Token" autocomplete="off">
+                            <input required id="token" name="token" type="hidden" placeholder="{{_('Multiple Choice Flag')}}" autocomplete="off">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="flag-lock-uuid">Dependent Flag</label>
+                        <label class="control-label" for="flag-lock-uuid">{{_("Dependent Flag")}}</label>
                         <div class="controls">
                             <select id="edit-flag-lock" name="lock_uuid"></select>
                         </div>
                     </div>
                     {% if options.story_mode %}
                     <div class="control-group">
-                        <label class="control-label" for="capture-message">Capture Message</label>
+                        <label class="control-label" for="capture-message">{{_("Capture Message")}}</label>
                         <div class="controls">
-                            <textarea id="capture-message" name="capture_message" type="text" placeholder="(Optional)"
+                            <textarea id="capture-message" name="capture_message" type="text" placeholder="({{_('Optional')}})"
                                     rel="popover"
-                                    data-original-title="Capture Message"
-                                    data-content="This is the message displayed to the user once the flag is captured." >
+                                    data-original-title="{{_('Capture Message')}}"
+                                    data-content="{{_('This is the message displayed to the user once the flag is captured.')}}" >
                             </textarea>
                         </div>
                     </div>
                     {% end %}
                     <div class="control-group">
                         <div class="controls">
-                            <button id="createflag" class="btn btn-primary" type="submit">Create Flag</button>
+                            <button id="createflag" class="btn btn-primary" type="submit">{{_("Create Flag")}}</button>
                         </div>
                     </div>
                 </form>
@@ -119,7 +119,7 @@
             <!-- Copy Fields -->
             <div class="copy hide">
                 <div class="choice-control-group input-group" style="margin-bottom: 10px; position: relative;">
-                    <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" /><input type="text" name="addmore[]" maxlength="256" class="form-control" placeholder="Enter Choice">
+                    <input type="radio" name="multichoice" style="position: absolute; left: -22px; top: 4px;" /><input type="text" name="addmore[]" maxlength="256" class="form-control" placeholder="{{_('Enter Choice')}}">
                     <div class="input-group-btn" style="position: absolute; left: 228px; top: 0px;"> 
                         <button class="btn btn-danger remove" type="button" style="padding: 3px 10px 1px; vertical-align: middle;"><i class="fa fa-times" style="font-size: 160%;"></i></button>
                     </div>
@@ -129,8 +129,8 @@
                 <p>
                     <blockquote>
                         <small>
-                            <strong>Tokens:</strong>
-                            In this case, the "flag" is a multiple choice question where the selected option is the token.
+                            <strong>{{_("Tokens")}}:</strong>
+                            {{_("In this case, the flag is a multiple choice question where the selected option is the token.")}}
                         </small>
                     </blockquote>
                 </p>

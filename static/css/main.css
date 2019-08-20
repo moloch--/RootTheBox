@@ -20,6 +20,10 @@ footer {
     word-wrap: break-word; 
     max-width: 350px;
 }
+.centercolumn {
+    text-align: center; 
+    vertical-align: middle;
+}
 .wordbreak {
     word-wrap: break-word; 
 }

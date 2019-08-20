@@ -24,6 +24,7 @@ Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Sc
 -   Optional [in-game Botnets](https://github.com/moloch--/RootTheBox/wiki/Features) or wall of sheep displaying cracked passwords
 -   Unlocks and upgrades as users capture flags
 -   Export and share Boxes/Flags
+-   Multiple Language Support
 -   Site Themes and other cool stuff
 
 ## Setup

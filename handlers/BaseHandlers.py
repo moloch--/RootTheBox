@@ -42,6 +42,7 @@ try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
+from tornado import locale
 from tornado.web import RequestHandler
 from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketHandler
@@ -243,6 +244,15 @@ class BaseHandler(RequestHandler):
                 timerdiff = 0
             timer = str(timerdiff)
         return timer
+
+    def get_user_locale(self):
+        """
+        Get user lang value from config.
+        If None is returned, Tornado fall back to get_browser_locale()
+        """
+        if len(self.config.force_locale) > 0:
+            return locale.get(self.config.force_locale)
+        return None
 
 
 class BaseWebSocketHandler(WebSocketHandler):

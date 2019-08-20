@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}Export XML{% end %}
+{% block title %}{{ _("Export XML") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/export.js"></script>
@@ -10,14 +10,14 @@
 <div class="container">
     <h1>
         <i class="fa fa-download"></i>
-        Export XML
+        {{ _("Export XML") }}
     </h1>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
         <div class="alert alert-error">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">ERROR</h4>
+            <h4 class="alert-heading">{{ _("ERROR") }}</h4>
             {{ error }}
         </div>
         {% end %}
@@ -37,18 +37,18 @@
                 </div>
             </div>
             -->
-            <h3>&nbsp;&nbsp;Export Game Objects</h3>
+            <h3>&nbsp;&nbsp;{{ _("Export Game Objects") }}</h3>
             <hr />
             <div class="control-group">
                 <div class="controls">
                     <button class="btn btn-primary" type="submit">
                         <i class="fa fa-download"></i>
-                        Download File
+                        {{ _("Download File") }}
                     </button>
                 </div>
             </div>
             <hr />
-            <strong>Note:</strong> To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg. 
+            <strong>{{ _("Note") }}:</strong> {{ _("To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.")}}
         </form>
     </div>
 </div>

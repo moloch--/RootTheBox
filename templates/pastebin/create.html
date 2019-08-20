@@ -1,8 +1,8 @@
 <div class="navbar navbar-inverse">
     <div class="navbar-inner">
-        <a class="brand">PasteBin</a>
+        <a class="brand">{{ _("PasteBin") }}</a>
         <ul class="nav">
-            <li><a href="#">Create</a></li>
+            <li><a href="#">{{ _("Create") }}</a></li>
         </ul>
     </div>
 </div>
@@ -12,7 +12,7 @@
             {% for error in errors %}
                 <div class="alert alert-error">
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">ERROR</h4>
+                    <h4 class="alert-heading">{{ _("ERROR") }}</h4>
                     {{ error }}
                 </div>
             {% end %}
@@ -21,19 +21,19 @@
             {% raw xsrf_form_html() %}
             {% from tornado.options import options %}
             <fieldset>
-            <legend>Create New Paste</legend>
+            <legend>{{ _("Create New Paste") }}</legend>
                 <p>
-                    <label for="name">Name</label>
-                    <input autofocus required name="name" id="name" maxlength="32" placeholder="Paste Name" type="text" />
+                    <label for="name">{{ _("Name") }}</label>
+                    <input autofocus required name="name" id="name" maxlength="32" placeholder="{{ _('Paste Name') }}" type="text" />
                 </p>
                 <p>
-                    <label for="content">Content</label>
-                    <textarea required name="content" maxlength="{{ options.max_pastebin_size }}" placeholder="Paste Text Here" style="width:auto;" rows="10" cols="60">
+                    <label for="content">{{ _("Content") }}</label>
+                    <textarea required name="content" maxlength="{{ options.max_pastebin_size }}" placeholder="{{ _('Paste Text Here') }}" style="width:auto;" rows="10" cols="60">
                     </textarea>
                 </p>
             </fieldset>
             <p >
-                <button class="btn btn-primary">Create New Paste</button>
+                <button class="btn btn-primary">{{ _("Create New Paste") }}</button>
             </p>
         </form>
     </div>

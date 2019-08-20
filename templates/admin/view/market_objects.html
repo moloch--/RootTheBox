@@ -1,6 +1,6 @@
 {% extends "../../main.html" %}
 
-{% block title %}Market Objects{% end %}
+{% block title %}{{ _("Market Objects") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/admin/view/market_objects.js"></script>
@@ -14,7 +14,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3>
             <i class="fa fa-pencil"></i>
-            Edit Market Item
+            {{ _("Edit Market Item") }}
         </h3>
     </div>
     <div class="modal-body">
@@ -23,18 +23,18 @@
             {% raw xsrf_form_html() %}
             <input type="hidden" id="edit-market-item-uuid" name="item_uuid" value="" />
             <div class="control-group">
-                <label class="control-label" for="price">Item Cost</label>
+                <label class="control-label" for="price">{{ _("Item Cost") }}</label>
                 <div class="controls">
-                    <input required pattern="[0-9]+" id="edit-market-item-price" name="price" type="text" placeholder="Item Price ($)">
+                    <input required pattern="[0-9]+" id="edit-market-item-price" name="price" type="text" placeholder="{{ _('Item Price')}})">
                 </div>
             </div>
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
         <button id="edit-market-item-submit" type="button" class="btn btn-primary">
             <i class="fa fa-save"></i>
-            Save
+            {{ _("Save") }}
         </button>
     </div>
 </div>
@@ -45,14 +45,14 @@
 <div class="container">
     <h2>
         <i class="fa fa-shopping-cart"></i>
-        Manage Black Market
+        {{ _("Manage Black Market") }}
     </h2>
     <br />
     {% if errors is not None and len(errors) != 0 %}
         {% for error in errors %}
               <div class="alert alert-error">
                 <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <h4 class="alert-heading">ERROR</h4>
+                <h4 class="alert-heading">{{ _("ERROR") }}</h4>
                 {{ error }}
               </div>
         {% end %}
@@ -62,8 +62,8 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th style="text-align: center; padding-right: 20px;">{% if options.banking %}Price{% else %}Points{% end %}</th>
+                    <th>{{ _("Name") }}</th>
+                    <th style="text-align: center; padding-right: 20px;">{% if options.banking %}{{ _("Price") }}{% else %}{{ _("Points") }}{% end %}</th>
                     <th><!-- Button --></th>
                 </tr>
             </thead>
@@ -76,7 +76,7 @@
                         <td class="shortcolumn">
                             <a id="edit-market-item-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#edit-market-item-modal" data-uuid="{{ item.uuid }}" data-price="{{ item.price }}">
                                 <i class="fa fa-pencil"></i>
-                                Edit
+                                {{ _("Edit") }}
                             </a>
                         </td>
                     </tr>

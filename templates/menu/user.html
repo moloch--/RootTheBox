@@ -12,7 +12,7 @@
             <a class="brand" href="/">
                 {% if options.debug %}
                     <i class="fa fa-fw fa-bug"></i>
-                    DEBUG
+                    {{ _("DEBUG") }}
                 {% else %}
                     {{ options.game_name }}
                 {% end %}
@@ -21,27 +21,27 @@
                 <ul class="nav">
                     <li>
                         <a href="/user">
-                            <i class="fa fa-fw fa-home" title="home"></i>
+                            <i class="fa fa-fw fa-home" title="{{ _('Home') }}"></i>
                         </a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-fw fa-gamepad"></i>
-                            Game
+                            {{ _("Game") }}
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/user/missions">
                                     <i class="fa fa-fw fa-terminal"></i>
-                                    Missions
+                                    {{ _("Missions") }}
                                 </a>
                             </li>
                             {% if options.use_black_market %}
                                 <li>
                                     <a href="/user/market">
                                         <i class="fa fa-fw fa-shopping-cart"></i>
-                                        Black Market
+                                        {{ _("Black Market") }}
                                     </a>
                                 </li>
                             {% end %}
@@ -49,17 +49,17 @@
                                 <li class="dropdown-submenu">
                                     <a tabindex="-1" href="/user/bots/webmonitor">
                                         <i class="fa fa-fw fa-android"></i>
-                                        Botnet
+                                        {{ _("Botnet") }}
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="/user/bots/webmonitor">Command &amp; Control</a>
+                                            <a href="/user/bots/webmonitor">{{ _("Command & Control") }}</a>
                                         </li>
                                         <li>
-                                            <a href="/user/bots/download/windows" target="_blank">Download Windows Bot</a>
+                                            <a href="/user/bots/download/windows" target="_blank">{{ _("Download") }} Windows {{ _("Bot") }}</a>
                                         </li>
                                         <li>
-                                            <a href="/user/bots/download/linux" target="_blank">Download Linux / BSD Bot</a>
+                                            <a href="/user/bots/download/linux" target="_blank">{{ _("Download") }} Linux / BSD {{ _("Bot") }}</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -69,21 +69,21 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-fw fa-wrench"></i>
-                            Tools
+                            {{ _("Tools") }}
                             <b class="caret"></b>
                       </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/cyberchef/" target="_blank">
                                     <i class="fa fa-fw fa-link"></i>
-                                    CyberChef
+                                    {{ _("CyberChef") }}
                                 </a>
                             </li>
                             {% if has_materials() %}
                             <li>
                                 <a href="/materials">
                                     <i class="fa fa-fw fa-folder-open-o"></i>
-                                    Game Materials
+                                    {{ _("Game Materials") }}
                                 </a>
                             </li>
                             {% end %}
@@ -91,13 +91,13 @@
                             <li>
                                 <a href="/user/share/files">
                                     <i class="fa fa-fw fa-files-o"></i>
-                                    Team File Sharing
+                                    {{ _("Team File Share") }}
                               </a>
                             </li>
                             <li>
                                 <a href="/user/share/pastebin">
                                     <i class="fa fa-fw fa-clipboard"></i>
-                                    Team PasteBin
+                                    {{ _("Team PasteBin") }}
                               </a>
                             </li>
                             {% end %}
@@ -108,7 +108,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-fw fa-dashboard"></i>
-                                Unlocks
+                                {{ _("Unlocks") }}
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
@@ -116,7 +116,7 @@
                                 <li>
                                     <a href="/source_code_market">
                                         <i class="fa fa-fw fa-code"></i>
-                                        Source Code Market
+                                        {{ _("Source Code Market") }}
                                     </a>
                                 </li>
                                 {% end %}
@@ -124,7 +124,7 @@
                                 <li>
                                     <a href="/password_security">
                                         <i class="fa fa-fw fa-lock"></i>
-                                        Password Security
+                                        {{ _("Password Security") }}
                                     </a>
                                 </li>
                                 {% end %}
@@ -132,7 +132,7 @@
                                 <li>
                                     <a href="/federal_reserve">
                                         <i class="fa fa-fw fa-dollar"></i>
-                                        Federal Reserve
+                                        {{ _("Federal Reserve") }}
                                     </a>
                                 </li>
                                 {% end %}
@@ -140,7 +140,7 @@
                                 <li>
                                     <a href="/swat">
                                         <i class="fa fa-fw fa-crosshairs"></i>
-                                        S.W.A.T.
+                                        {{ _("S.W.A.T.") }}
                                     </a>
                                 </li>
                                 {% end %}
@@ -152,34 +152,34 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-fw fa-bar-chart-o"></i>
-                            Scoreboard
+                            {{ _("Scoreboard") }}
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/scoreboard">
                                     <i class="fa fa-fw fa-list"></i>
-                                    Summary
+                                    {{ _("Summary") }}
                               </a>
                             </li>
                             <li>
                                 <a href="/scoreboard/history">
                                     <i class="fa fa-fw fa-calendar"></i>
-                                    Charts
+                                    {{ _("Charts") }}
                               </a>
                             </li>
                             {% if options.use_black_market %}
                             <li>
                                 <a href="/scoreboard/wall_of_sheep">
                                     <i class="fa fa-fw fa-key"></i>
-                                    Wall of Sheep
+                                    {{ _("Wall of Sheep") }}
                                 </a>
                             </li>
                             {% end %}
                             <li>
                                 <a href="/teams">
                                     <i class="fa fa-fw fa-users"></i>
-                                    {% if options.teams %}Teams{% else %}Players{% end %}
+                                    {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
                                 </a>
                             </li>
                         </ul>
@@ -188,7 +188,7 @@
                     {% if len(options.chat_url) > 0 %}
                     <li>
                         <a href="{{options.chat_url}}" target="_blank">
-                            <i class="fa fa-fw fa-comment" title="chat"></i>
+                            <i class="fa fa-fw fa-comment" title="{{ _('Chat') }}"></i>
                         </a>
                     </li>
                     {% end %}
@@ -205,13 +205,13 @@
                     <li>
                         <a href="/user/settings">
                             <i class="fa fa-fw fa-gears"></i>
-                            Settings
+                            {{ _("Settings") }}
                         </a>
                     </li>
                     <li>
                         <a href="/about">
                             <i class="fa fa-fw fa-info-circle"></i>
-                            &nbsp;About
+                            &nbsp;{{ _("About") }}
                         </a>
                     </li>
                     <li class="divider"></li>
@@ -221,7 +221,7 @@
                         </form>
                         <a id="logout">
                             <i class="fa fa-fw fa-sign-out"></i>
-                            Logout
+                            {{ _("Logout") }}
                         </a>
                     </li>
                 </ul>

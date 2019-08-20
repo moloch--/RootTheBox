@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}Botnet C &amp; C{% end %}
+{% block title %}{{ _("Botnet") }} C &amp; C{% end %}
 {% block header %}
 <script src="/static/js/pages/botnet/monitor.js"></script>
     {% if not teamname %}
@@ -17,25 +17,25 @@
     <div class="container">
         <h1>
             <i class="fa fa-globe"></i>
-            Botnet Command &amp; Control
+            {{ _("Botnet Command & Control") }}
         </h1>
         <br />
         <div class="alert alert-info">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
-            <h4 class="alert-heading">Are You Elite?</h4>
+            <h4 class="alert-heading">{{ _("Are You Elite") }}?</h4>
             <a href="/user/bots/download/monitor" target="_blank">
-            Download the command line botnet monitor</a> (Linux / BSD only)
+            {{ _("Download the command line botnet monitor") }}</a> (Linux / BSD)
         </div>
         <div class="well">
             <table id="monitor-table" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th class='teamname'>{% if options.teams %}Team{% else %}Player{% end %}</th>
-                        <th>Box Name</th>
-                        <th>IP Address</th>
-                        <th>Income</th>
-                        <th>Last Ping</th>
+                        <th class='teamname'>{% if options.teams %}{{ _("Team") }}{% else %}{{ _("Player") }}{% end %}</th>
+                        <th>{{ _("Box Name") }}</th>
+                        <th>{{ _("IP Address") }}</th>
+                        <th>{{ _("Income") }}</th>
+                        <th>{{ _("Last Ping") }}</th>
                     </tr>
                 </thead>
                 <tbody id="box-table">

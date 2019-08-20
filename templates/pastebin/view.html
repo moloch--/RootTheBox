@@ -1,6 +1,6 @@
 {% extends "../main.html" %}
 
-{% block title %}PasteBin{% end %}
+{% block title %}{{ _("PasteBin") }}{% end %}
 
 {% block header %}
 <script src="/static/js/pages/pastebin.js"></script>
@@ -15,7 +15,7 @@
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-                <li class="nav-header">Team Shares</li>
+                <li class="nav-header">{{ _("Team Shares") }}</li>
                 {% if user.team.pastes != 0 %}
                     {% for index, paste in enumerate(user.team.pastes) %}
                         <li>
@@ -25,7 +25,7 @@
                         </li>
                     {% end %}
                 {% else %}
-                    <li><a href="#">EMPTY</a></li>
+                    <li><a href="#">{{ _("EMPTY") }}</a></li>
                 {% end %}
             </ul>
           </div><!--/.well -->
@@ -33,9 +33,9 @@
         <div id="display-paste" class="span9">
             <div class="navbar navbar-inverse">
                 <div class="navbar-inner">
-                    <a class="brand">PasteBin</a>
+                    <a class="brand">{{ _("PasteBin") }}</a>
                     <ul class="nav">
-                        <li><a id="create-paste" href="#">Create</a></li>
+                        <li><a id="create-paste" href="#">{{ _("Create") }}</a></li>
                     </ul>
                 </div>
             </div>

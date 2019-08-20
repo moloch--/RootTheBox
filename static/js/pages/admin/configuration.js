@@ -6,12 +6,13 @@ function penalty_cost_update() {
         stop_penalty = parseInt($("#flag_stop_penalty").val());
     }
     var max_cost = (stop_penalty - start_penalty) * parseInt($("#flag_penalty_cost").val());
-    $("#current_max_penalty").text("Maximum Penalty: " + max_cost + "% of Flag Value");
-    var penalty_attempt = "s " + start_penalty + " through " + (stop_penalty - 1);
+    $("#current_max_penalty").text($("#penalty_description").data("maxpenalty") + 
+        ": " + max_cost + "% " + $("#penalty_description").data("flagvalue"));
+    var penalty_attempt = "s " + start_penalty + " – " + (stop_penalty - 1);
     if (start_penalty == (stop_penalty - 1)) {
         penalty_attempt = " " + start_penalty;
     }
-    $("#penalty_description").text("Apply penalty on attempt" + penalty_attempt);
+    $("#penalty_description").text($("#penalty_description").data("applytext") + penalty_attempt);
 }
 
 $(document).ready(function() {

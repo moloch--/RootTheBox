@@ -22,6 +22,9 @@ files/*.cfg
 #Alembic
 alembic/alembic.ini
 
+#Locale
+locale/.~*
+
 # Packages
 *.egg
 *.egg-info
