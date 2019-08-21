@@ -1,0 +1,12 @@
+# Docker test for Travis
+sudo: required
+language: python
+
+services:
+ - docker
+
+install:
+ - docker build --build-arg MODE=dev -t="rtb_w_sqlite" .
+
+script:
+ - docker run -d -p 80:8888 --name="rtb_w_sqlite" rtb_w_sqlite

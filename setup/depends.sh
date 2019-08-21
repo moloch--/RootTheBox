@@ -30,26 +30,28 @@ SKIP=""
 while getopts "y" OPTION; do
   case $OPTION in
     y)
-      SKIP=" -y"
+      SKIP="-y"
       ;;
   esac
 done
 
-if [[ "$SKIP" == " -y" ]]; then
-  echo "[*] Non-interactive setup - Setting mysql password to 'your_password'"
-  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
-  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
-fi
+# if [[ "$SKIP" == "-y" ]]; then
+#   echo "[*] Non-interactive setup - Setting mysql password to 'rtb'"
+#   debconf-set-selections <<< 'mysql-server mysql-server/root_password password rtb'
+#   debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
+# fi
 
 python_version="$(python -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
 python3_version="$(python3 -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
 
-if [[ $OSTYPE == "linux-gnu" ]]; then
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
   echo -e "\t#########################"
   echo -e "\t   Linux Configuration"
   echo -e "\t#########################"
-
+  
   echo "[*] Add Universe Repo..."
+  apt-get update
+  apt-get install software-properties-common $SKIP
   add-apt-repository universe
 
   echo "Update package list..."
@@ -58,17 +60,25 @@ if [[ $OSTYPE == "linux-gnu" ]]; then
   echo "[*] Installing pip/gcc..."
   if [[ "$python_version" == "2" ]]; then
       echo "[*] Installing Python 2.x depends..."
-      apt-get install python-pip python-dev python-mysqldb python-mysqldb-dbg python-pycurl "$SKIP"
+      apt-get install python-pip python-dev python-mysqldb python-mysqldb-dbg python-pycurl $SKIP
   fi
   if [[ "$python3_version" == "3" ]]; then
       echo "[*] Installing Python 3.x depends..."
-      apt-get install python3-pip python3-dev python3-mysqldb python3-mysqldb-dbg python3-pycurl "$SKIP"
+      apt-get install python3-pip python3-dev python3-mysqldb python3-mysqldb-dbg python3-pycurl $SKIP
   fi
 
-  echo "[*] Installing packages..."
-  apt-get install build-essential mysql-server zlib1g-dev libmysqlclient-dev memcached libmemcached-dev "$SKIP"
+  echo "[*] Installing common packages..."
+  apt-get install build-essential zlib1g-dev memcached libmemcached-dev $SKIP
 
-elif [[ ${OSTYPE} == "darwin14" ]]; then
+  echo "[*] Installing db packages..."
+  if [[ "$SKIP" == "-y" ]]; then
+    echo "[*] Non-interactive setup - Using sqlite"
+    apt-get install sqlite3 libsqlite3-dev $SKIP
+  else
+    apt-get install default-mysql-server default-libmysqlclient-dev $SKIP
+  fi
+
+elif [[ "${OSTYPE}" == "darwin14" ]]; then
   echo -e "\t#########################"
   echo -e "\t   OSX Configuration"
   echo -e "\t#########################"

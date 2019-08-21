@@ -79,6 +79,8 @@ def setup():
         resp = input(PROMPT + 'Please type "%s": ' % message)
         if resp.replace('"', "").lower().strip() != message.lower():
             os._exit(1)
+    else:
+        is_devel = options.setup.startswith("test")
     print(INFO + "%s : Creating the database ..." % current_time())
     from setup.create_database import create_tables, engine, metadata
 
@@ -89,7 +91,7 @@ def setup():
     # Display Details
     if is_devel:
         environ = bold + R + "Development boot strap" + W
-        details = ", admin password is 'nimda123'."
+        details = ", admin password is 'nimda123456789'."
     else:
         environ = bold + "Production boot strap" + W
         details = "."
@@ -781,6 +783,12 @@ if __name__ == "__main__":
 
     if options.version:
         version()
+    elif options.setup.startswith("test"):
+        save_config()
+        logging.info("Running Test Setup")
+        setup()
+        logging.info("Running Test Start")
+        options.start = True
     elif options.save or not os.path.isfile(options.config):
         save_config()
         logging.info(

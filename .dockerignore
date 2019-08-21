@@ -1,0 +1,15 @@
+.git/
+.gitignore
+
+docker-compose.yml
+setup/Dockerfile
+
+README.md
+LICENSE
+
+files/*.cfg
+files/*.db
+files/*.state
+files/*.key
+files/*.log
+files/data/*-*

@@ -40,9 +40,9 @@ from tornado.options import options
 # Fills the database with some startup data.
 password = ""
 
-if options.setup.lower().startswith("dev"):
+if options.setup.lower().startswith("dev") or options.setup.lower().startswith("test"):
     admin_handle = "admin"
-    password = "nimda123"
+    password = "nimda123456789"
     print("Admin Username: %s, Password: %s" % (admin_handle, password))
 else:
     admin_handle = str(input(PROMPT + "RootTheBox Admin Username [admin]: ")) or "admin"
