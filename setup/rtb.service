@@ -1,0 +1,15 @@
+[Unit]
+Description=Root The Box daemon
+After=network-online.target
+ 
+[Service]
+Type=simple
+User=rtb
+Group=rtb
+
+ExecStart=/opt/CTF/RootTheBox/rootthebox.py --start
+Restart=always
+RestartSec=1
+ 
+[Install]
+WantedBy=multi-user.target
