@@ -335,7 +335,7 @@ class FlagSubmissionHandler(BaseHandler):
                     )
             success.append(
                 "Congratulations! You have completed "
-                + str(level.name)
+                + level.name
                 + ". "
                 + reward_dialog
             )
@@ -355,7 +355,7 @@ class FlagSubmissionHandler(BaseHandler):
             self.dbsession.add(user.team)
             self.dbsession.commit()
             self.event_manager.level_unlocked(user, next_level)
-            success.append("Congratulations! You have unlocked " + str(next_level.name))
+            success.append("Congratulations! You have unlocked " + next_level.name)
 
         return success
 
@@ -549,7 +549,7 @@ class MissionsHandler(BaseHandler):
         if level is not None and user is not None:
             if level.buyout <= user.team.money:
                 logging.info(
-                    "%s (%s) payed buyout for %d"
+                    "%s (%s) payed buyout for %s"
                     % (user.handle, user.team.name, level.name)
                 )
                 user.team.game_levels.append(level)

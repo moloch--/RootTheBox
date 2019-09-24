@@ -119,7 +119,7 @@ class GameLevel(DatabaseObject):
     @property
     def name(self):
         if self._name:
-            return self._name
+            return str(self._name)
         else:
             return "Level #" + str(self.number)
 
