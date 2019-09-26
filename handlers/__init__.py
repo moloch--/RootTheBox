@@ -65,9 +65,9 @@ from handlers.StaticFileHandler import StaticFileHandler
 
 
 try:
-    from urllib.parse import unquote_plus
+    from urllib.parse import unquote
 except ImportError:
-    from urllib import unquote_plus
+    from urllib import unquote
 
 # Singletons
 io_loop = IOLoop.instance()
@@ -255,7 +255,7 @@ def update_db(update=True):
     )
     alembic_cfg = Config("alembic/alembic.ini")
     alembic_cfg.attributes["configure_logger"] = False
-    alembic_cfg.set_main_option("sqlalchemy.url", unquote_plus(str(db_connection)))
+    alembic_cfg.set_main_option("sqlalchemy.url", unquote(str(db_connection)))
     if update:
         command.upgrade(alembic_cfg, "head")
     else:
