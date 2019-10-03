@@ -2,13 +2,13 @@
 .gitignore
 
 docker-compose.yml
-setup/Dockerfile
+Dockerfile
 
 README.md
 LICENSE
 
+*.db
 files/*.cfg
-files/*.db
 files/*.state
 files/*.key
 files/*.log

@@ -52,6 +52,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   echo "[*] Add Universe Repo..."
   apt-get update
   apt-get install software-properties-common $SKIP
+  apt-get update
   add-apt-repository universe
 
   echo "Update package list..."

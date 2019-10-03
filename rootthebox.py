@@ -57,9 +57,14 @@ def start():
     """ Starts the application """
     from handlers import start_server
 
-    logging.info(
-        INFO + "%s : Starting RTB on port %s" % (current_time(), options.listen_port)
-    )
+    if options.setup.startswith("docker"):
+        # Would be nice to grab this info from the container in case it is changed
+        port = "80:8888"
+        listenport = "Docker port mapping " + port
+    else:
+        listenport = "port " + options.listen_port
+    print(INFO + bold + G + "Starting RTB on %s" % listenport)
+
     result = start_server()
     if result == "restart":
         restart()
@@ -80,7 +85,7 @@ def setup():
         if resp.replace('"', "").lower().strip() != message.lower():
             os._exit(1)
     else:
-        is_devel = options.setup.startswith("test")
+        is_devel = options.setup.startswith("docker")
     print(INFO + "%s : Creating the database ..." % current_time())
     from setup.create_database import create_tables, engine, metadata
 
@@ -90,15 +95,15 @@ def setup():
 
     # Display Details
     if is_devel:
-        environ = bold + R + "Development boot strap" + W
-        details = ", admin password is 'nimda123456789'."
+        environ = bold + R + "Development boot strap:" + G
+        details = "Admin Password is 'rootthebox'" + W
     else:
         environ = bold + "Production boot strap" + W
-        details = "."
+        details = "" + W
     from handlers import update_db
 
     update_db(False)
-    print(INFO + "%s completed successfully%s" % (environ, details))
+    print(INFO + "%s %s" % (environ, details))
 
 
 def recovery():
@@ -549,7 +554,7 @@ define(
 
 define(
     "min_user_password_length",
-    default=12,
+    default=10,
     group="game",
     help="min user password length",
     type=int,
@@ -755,7 +760,7 @@ define(
 )
 
 # Process modes/flags
-define("setup", default="", help="setup a database (prod|devel)")
+define("setup", default="", help="setup a database (prod|devel|docker)")
 
 define("xml", multiple=True, default=[], help="import xml file(s)")
 
@@ -783,11 +788,11 @@ if __name__ == "__main__":
 
     if options.version:
         version()
-    elif options.setup.startswith("test"):
-        save_config()
-        logging.info("Running Test Setup")
-        setup()
-        logging.info("Running Test Start")
+    elif options.setup.startswith("docker"):
+        if not os.path.isfile(options.sql_database + ".db"):
+            logging.info("Running Docker Setup")
+            save_config()
+            setup()
         options.start = True
     elif options.save or not os.path.isfile(options.config):
         save_config()

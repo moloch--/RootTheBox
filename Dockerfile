@@ -10,4 +10,4 @@ ADD . /opt/rtb
 RUN /opt/rtb/setup/depends.sh -y
 
 VOLUME ["/opt/rtb/files"]
-ENTRYPOINT ["/opt/rtb/rootthebox.py", "--setup=test", "--sql_dialect=sqlite"]
+ENTRYPOINT ["/opt/rtb/rootthebox.py", "--setup=docker", "--sql_dialect=sqlite"]
