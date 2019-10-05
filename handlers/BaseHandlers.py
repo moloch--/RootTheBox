@@ -240,10 +240,42 @@ class BaseHandler(RequestHandler):
         timer = None
         if self.application.settings["freeze_scoreboard"]:
             timerdiff = self.application.settings["freeze_scoreboard"] - time.time()
-            if timerdiff < 0:
+            if timerdiff <= 0:
                 timerdiff = 0
+                if self.application.settings["stop_timer"]:
+                    self.stop_game()
             timer = str(timerdiff)
         return timer
+
+    def start_game(self):
+        """ Start the game and any related callbacks """
+        if not self.application.settings["game_started"]:
+            logging.info("The game is about to begin, good hunting!")
+            self.application.settings["game_started"] = True
+            self.application.settings["history_callback"].start()
+            if self.config.use_bots:
+                self.application.settings["score_bots_callback"].start()
+            self.set_all_users_lock(False)
+
+    def stop_game(self):
+        """ Stop the game and all callbacks """
+        if self.application.settings["game_started"]:
+            logging.info("The game is stopping ...")
+            self.application.settings["game_started"] = False
+            self.application.settings["suspend_registration"] = False
+            self.application.settings["freeze_scoreboard"] = False
+            if self.application.settings["history_callback"]._running:
+                self.application.settings["history_callback"].stop()
+            if self.application.settings["score_bots_callback"]._running:
+                self.application.settings["score_bots_callback"].stop()
+            self.set_all_users_lock(True)
+
+    def set_all_users_lock(self, lock):
+        """ Set the lock attribute on all accounts """
+        for user in User.all_users():
+            user.locked = lock
+            self.dbsession.add(user)
+        self.dbsession.commit()
 
     def get_user_locale(self):
         """

@@ -72,11 +72,17 @@ class AdminGameHandler(BaseHandler):
         start_game = self.get_argument("start_game", None)
         suspend_reg = self.get_argument("suspend_registration", "false")
         freeze_score = self.get_argument("freeze_scoreboard", "false")
+        stop_timer = self.get_argument("stop_timer", "off")
+        
         if start_game:
             if self.get_argument("start_game", "") == "true":
                 self.start_game()
             else:
                 self.stop_game()
+        if stop_timer == "on":
+            self.application.settings["stop_timer"] = True
+        else:
+            self.application.settings["stop_timer"] = False
         if suspend_reg == "true":
             self.application.settings["suspend_registration"] = True
         elif suspend_reg == "false":
@@ -100,36 +106,6 @@ class AdminGameHandler(BaseHandler):
             self.event_manager.push_scoreboard()
 
         self.redirect("/user")
-
-    def start_game(self):
-        """ Start the game and any related callbacks """
-        if not self.application.settings["game_started"]:
-            logging.info("The game is about to begin, good hunting!")
-            self.application.settings["game_started"] = True
-            self.application.settings["history_callback"].start()
-            if self.config.use_bots:
-                self.application.settings["score_bots_callback"].start()
-            self.set_all_users_lock(False)
-
-    def stop_game(self):
-        """ Stop the game and all callbacks """
-        if self.application.settings["game_started"]:
-            logging.info("The game is stopping ...")
-            self.application.settings["game_started"] = False
-            self.application.settings["suspend_registration"] = False
-            self.application.settings["freeze_scoreboard"] = False
-            if self.application.settings["history_callback"]._running:
-                self.application.settings["history_callback"].stop()
-            if self.application.settings["score_bots_callback"]._running:
-                self.application.settings["score_bots_callback"].stop()
-            self.set_all_users_lock(True)
-
-    def set_all_users_lock(self, lock):
-        """ Set the lock attribute on all accounts """
-        for user in User.all_users():
-            user.locked = lock
-            self.dbsession.add(user)
-        self.dbsession.commit()
 
 
 class AdminMessageHandler(BaseHandler):

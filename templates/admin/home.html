@@ -24,6 +24,9 @@
         <p>
             {{ _("Set the game countdown timer") }}:
         </p><p><input id="timer-minutes" name="freeze_scoreboard" style="width: 50px;" type="number" value="30" /> Minutes</p>
+        <p>
+            <input name="stop_timer" type="checkbox" style="margin-top: -5px; margin-right: 5px;"> {{ _("Stop the game after timer ends") }}.
+        </p>
     </div>
         
         
@@ -72,6 +75,7 @@
 <div class="row-fluid">
     <div class="row">
         <div class="offset1">
+            <h3 id="timercount" title="Scoreboard Countdown" style="float: right; color: red; margin-right: 150px;"></h3>
             <h1>
                 <i class="fa fa-home"></i>
                 {{ _("Administrator Panel") }}
