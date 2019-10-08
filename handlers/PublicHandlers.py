@@ -69,30 +69,7 @@ class LoginHandler(BaseHandler):
         password_attempt = self.get_argument("password", "")
         if user is not None:
             if user.validate_password(password_attempt):
-                if not user.locked:
-                    self.successful_login(user)
-                    if (
-                        self.config.story_mode
-                        and user.logins == 1
-                        and not user.is_admin()
-                    ):
-                        self.redirect("/user/missions/firstlogin")
-                    elif user.is_admin() and not self.allowed_ip():
-                        self.render(
-                            "public/login.html",
-                            info=[
-                                "Succesfull credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
-                            ],
-                            errors=None,
-                        )
-                    else:
-                        self.redirect("/user")
-                else:
-                    self.render(
-                        "public/login.html",
-                        info=None,
-                        errors=["Your account has been locked"],
-                    )
+                self.valid_login(user)
             else:
                 self.failed_login()
         else:
@@ -104,6 +81,32 @@ class LoginHandler(BaseHandler):
         return (
             len(options.admin_ips) == 0 or self.request.remote_ip in options.admin_ips
         )
+
+    def valid_login(self, user):
+        if user.locked:
+            self.render(
+                    "public/login.html",
+                    info=None,
+                    errors=["Your account has been locked"],
+                )
+        elif user.is_admin() and not self.allowed_ip():   
+            self.render(
+                "public/login.html",
+                info=[
+                    "Succesfull credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
+                ],
+                errors=None,
+            )
+        else:
+            self.successful_login(user)
+            if (
+                self.config.story_mode
+                and user.logins == 1
+                and not user.is_admin()
+            ):
+                self.redirect("/user/missions/firstlogin")
+            else:
+                self.redirect("/user")
 
     def successful_login(self, user):
         """ Called when a user successfully logs in """
