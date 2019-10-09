@@ -91,12 +91,12 @@ class LoginHandler(BaseHandler):
                 )
         elif user.is_admin() and not self.allowed_ip():   
             self.render(
-                "public/login.html",
-                info=[
-                    "Succesfull credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
-                ],
-                errors=None,
-            )
+                    "public/login.html",
+                    info=[
+                        "Succesfull credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
+                    ],
+                    errors=None,
+                )
         else:
             self.successful_login(user)
             if (

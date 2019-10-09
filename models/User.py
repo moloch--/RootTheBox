@@ -162,7 +162,7 @@ class User(DatabaseObject):
 
     @password.setter
     def password(self, value):
-        _password = [char for char in value if char in printable[:-6]]
+        _password = "".join([char for char in value if char in printable[:-6]])
         if len(_password) >= int(options.min_user_password_length):
             self._password = self._hash_password(value)
         else:
@@ -184,7 +184,7 @@ class User(DatabaseObject):
                 for _ in range(options.max_password_length)
             )
         else:
-            _password = [char for char in value if char in printable[:-6]]
+            _password = "".join([char for char in value if char in printable[:-6]])
         if 0 < len(_password) <= options.max_password_length:
             self._bank_password = self._hash_bank_password(self.algorithm, _password)
         else:
