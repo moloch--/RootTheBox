@@ -179,6 +179,7 @@ class FlagSubmissionHandler(BaseHandler):
                 return
         if flag and flag in user.team.flags:
             self.render_page_by_flag(flag)
+            return
         elif (
             flag is None
             or flag.game_level.type == "none"
@@ -194,6 +195,7 @@ class FlagSubmissionHandler(BaseHandler):
                 self.render_page_by_flag(
                     flag, info=["No flag was provided - try again."]
                 )
+                return
             old_reward = flag.value if flag is not None else 0
             if flag is not None and self.attempt_capture(flag, submission):
                 self.add_content_policy("script", "'unsafe-eval'")
@@ -215,6 +217,7 @@ class FlagSubmissionHandler(BaseHandler):
                         )
                         return
                 self.render_page_by_flag(flag, success=success)
+                return
             else:
                 if (
                     flag is None
@@ -253,6 +256,7 @@ class FlagSubmissionHandler(BaseHandler):
                         self.render_page_by_box_id(box_id, errors=[penalty_dialog])
                     else:
                         self.render_page_by_flag(flag, errors=[penalty_dialog])
+                    return
                 else:
                     if self.config.teams:
                         teamdup = " by your team.  Try Again"
@@ -265,6 +269,7 @@ class FlagSubmissionHandler(BaseHandler):
                             + teamdup
                         ],
                     )
+                    return
         else:
             self.render("public/404.html")
 
