@@ -65,7 +65,7 @@ class EventManager(object):
 
     def remove_connection(self, connection):
         """ Remove connection """
-        if connection.team_id is None:
+        if connection.team_id is None or connection.user_id is None:
             self.public_connections.remove(connection)
         else:
             team_connections = self.auth_connections[connection.team_id]
