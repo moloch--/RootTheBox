@@ -231,6 +231,7 @@ app = Application(
     game_started=options.autostart_game,
     suspend_registration=False,
     freeze_scoreboard=False,
+    stop_timer=False,
     temp_global_notifications=None,
     # Callback functions
     score_bots_callback=PeriodicCallback(score_bots, options.bot_reward_interval),

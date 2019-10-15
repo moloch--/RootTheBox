@@ -62,7 +62,7 @@ db_connection = DatabaseConnection(
 
 
 ### Setup the database session
-engine = create_engine(str(db_connection))
+engine = create_engine(str(db_connection), pool_pre_ping=True)
 _Session = sessionmaker(bind=engine)
 StartSession = lambda: _Session(autoflush=True)
 

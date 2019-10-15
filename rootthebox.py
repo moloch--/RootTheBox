@@ -99,7 +99,7 @@ def setup():
         details = "Admin Password is 'rootthebox'" + W
     else:
         environ = bold + "Production boot strap" + W
-        details = "" + W
+        details = ""
     from handlers import update_db
 
     update_db(False)

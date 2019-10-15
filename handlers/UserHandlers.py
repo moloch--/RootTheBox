@@ -220,7 +220,7 @@ class SettingsHandler(BaseHandler):
         old_bankpw = self.get_argument("old_bpassword")
         user = self.get_current_user()
         if user.validate_bank_password(old_bankpw):
-            if self.config.recaptcha_enabled:
+            if self.config.use_recaptcha:
                 self.verify_recaptcha()
             else:
                 self.set_bankpassword()

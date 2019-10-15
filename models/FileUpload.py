@@ -73,7 +73,7 @@ class FileUpload(DatabaseObject):
     @file_name.setter
     def file_name(self, value):
         fname = str(os.path.basename(value))[:64]
-        fname = [char for char in fname if char in printable[:-6]]
+        fname = "".join([char for char in fname if char in printable[:-6]])
         if len(fname) <= 2:
             raise ValidationError("File name is too short")
         self._file_name = fname
