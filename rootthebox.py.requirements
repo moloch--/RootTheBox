@@ -1,3 +1,4 @@
+# sudo -iu rtb pip2 install --user --requirement /opt/RootTheBox/rootthebox.py.requirements
 nose
 tornado
 future
