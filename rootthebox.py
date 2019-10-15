@@ -62,7 +62,7 @@ def start():
         port = "80:8888"
         listenport = "Docker port mapping " + port
     else:
-        listenport = "port " + options.listen_port
+        listenport = "port " + str(options.listen_port)
     print(INFO + bold + G + "Starting RTB on %s" % listenport)
 
     result = start_server()
