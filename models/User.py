@@ -41,6 +41,7 @@ from models import dbsession
 from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
+from models.Theme import Theme
 from libs.XSSImageCheck import MAX_AVATAR_SIZE, MIN_AVATAR_SIZE, IMG_FORMATS
 from libs.XSSImageCheck import is_xss_image, get_new_avatar, default_avatar
 from libs.ValidationError import ValidationError
@@ -170,6 +171,13 @@ class User(DatabaseObject):
                 "Invalid password length (min %d chars)"
                 % (options.min_user_password_length,)
             )
+
+    @property
+    def theme(self):
+        if self.theme_id:
+            return Theme.by_id(self.theme_id).name
+        else:
+            return options.default_theme
 
     @property
     def bank_password(self):

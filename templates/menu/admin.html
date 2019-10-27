@@ -147,7 +147,8 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="/cyberchef/" target="_blank">
+                                <a href="/cyberchef/{% if user.theme == 'Cyborg' or user.theme == 'Slate' %}?theme=dark{% end %}" 
+                                    target="_blank">
                                     <i class="fa fa-fw fa-link"></i>
                                     {{ _("CyberChef") }}
                                 </a>
