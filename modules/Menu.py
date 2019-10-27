@@ -40,16 +40,19 @@ class Menu(UIModule):
         if self.handler.session is not None:
             if self.handler.session["menu"] == "user":
                 return self.render_string(
-                    "menu/user.html", user=user, scoreboard_visible=scoreboard_visible
+                    "menu/user.html", 
+                    user=user, 
+                    scoreboard_visible=scoreboard_visible
                 )
             elif self.handler.session["menu"] == "admin":
                 return self.render_string(
                     "menu/admin.html",
-                    handle=user.handle,
-                    scoreboard_visible=scoreboard_visible,
+                    user=user,
+                    scoreboard_visible=scoreboard_visible
                 )
         return self.render_string(
-            "menu/public.html", scoreboard_visible=scoreboard_visible
+            "menu/public.html", 
+            scoreboard_visible=scoreboard_visible
         )
 
     def scoreboard_visible(self, user):
