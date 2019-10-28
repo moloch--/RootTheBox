@@ -50,5 +50,5 @@ def decode(s, name="utf-8", *args, **kwargs):
     codec = codecs.lookup(name)
     rv, length = codec.decode(s, *args, **kwargs)
     if not isinstance(rv, (str, bytes, bytearray)):
-        raise TypeError("Not a string or byte codec")
+        raise TypeError("Not a string or byte codec: type %s" % type(rv))
     return rv

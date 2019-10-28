@@ -423,18 +423,18 @@ class Flag(DatabaseObject):
             ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
         ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
         attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
-        attachements_elem.set("count", str(len(self.flag_attachments)))
+        attachements_elem.set("count", "%s" % str(len(self.flag_attachments)))
         for attachement in self.flag_attachments:
             attachement.to_xml(attachements_elem)
         choice_elem = ET.SubElement(flag_elem, "flag_choices")
-        choice_elem.set("count", str(len(self.flag_choice)))
+        choice_elem.set("count", "%s" % str(len(self.flag_choice)))
         for choice in self.flag_choice:
             ET.SubElement(choice_elem, "choice").text = choice.choice
         from models.Hint import Hint
 
         xml_hints = Hint.by_flag_id(self.id)
         hints_elem = ET.SubElement(flag_elem, "hints")
-        hints_elem.set("count", str(len(xml_hints)))
+        hints_elem.set("count", "%s" % str(len(xml_hints)))
         for hint in xml_hints:
             if not hint.flag_id is None:
                 hint.to_xml(hints_elem)

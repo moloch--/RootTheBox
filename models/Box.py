@@ -311,7 +311,7 @@ class Box(DatabaseObject):
     def to_xml(self, parent):
         """ Convert object to XML """
         box_elem = ET.SubElement(parent, "box")
-        box_elem.set("gamelevel", str(self.game_level.number))
+        box_elem.set("gamelevel", "%s" % str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
         ET.SubElement(box_elem, "operatingsystem").text = self._operating_system
         ET.SubElement(box_elem, "description").text = self._description
@@ -327,7 +327,7 @@ class Box(DatabaseObject):
                 self.category_id
             ).category
         flags_elem = ET.SubElement(box_elem, "flags")
-        flags_elem.set("count", str(len(self.flags)))
+        flags_elem.set("count", "%s" % str(len(self.flags)))
         for flag in self.flags:
             flag.to_xml(flags_elem)
         hints_elem = ET.SubElement(box_elem, "hints")
@@ -336,9 +336,9 @@ class Box(DatabaseObject):
             if hint.flag_id is None:
                 hint.to_xml(hints_elem)
                 count += 1
-        hints_elem.set("count", str(count))
+        hints_elem.set("count", "%s" % str(count))
         ips_elem = ET.SubElement(box_elem, "ipaddresses")
-        ips_elem.set("count", str(len(self.ip_addresses)))
+        ips_elem.set("count", "%s" % str(len(self.ip_addresses)))
         for ip in self.ip_addresses:
             ip.to_xml(ips_elem)
         avatarfile = os.path.join(options.avatar_dir, self.avatar)

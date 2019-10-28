@@ -256,7 +256,7 @@ class Team(DatabaseObject):
         ET.SubElement(team_elem, "name").text = self.name
         ET.SubElement(team_elem, "motto").text = self.motto
         users_elem = ET.SubElement(team_elem, "users")
-        users_elem.set("count", str(len(self.members)))
+        users_elem.set("count", "%s" % str(len(self.members)))
         for user in self.members:
             user.to_xml(users_elem)
 

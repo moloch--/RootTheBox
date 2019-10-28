@@ -92,7 +92,7 @@ class Corporation(DatabaseObject):
         corp_elem = ET.SubElement(parent, "corporation")
         ET.SubElement(corp_elem, "name").text = self.name
         boxes_elem = ET.SubElement(corp_elem, "boxes")
-        boxes_elem.set("count", str(len(self.boxes)))
+        boxes_elem.set("count", "%s" % str(len(self.boxes)))
         for box in self.boxes:
             box.to_xml(boxes_elem)
 

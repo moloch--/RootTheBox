@@ -504,15 +504,15 @@ class AdminExportHandler(BaseHandler):
         For the record, I hate XML with a passion.
         """
         levels_elem = ET.SubElement(root, "gamelevels")
-        levels_elem.set("count", str(GameLevel.count()))
+        levels_elem.set("count", "%s" % str(GameLevel.count()))
         for level in GameLevel.all()[1:]:
             level.to_xml(levels_elem)
         category_elem = ET.SubElement(root, "categories")
-        category_elem.set("count", str(Category.count()))
+        category_elem.set("count", "%s" % str(Category.count()))
         for category in Category.all():
             category.to_xml(category_elem)
         corps_elem = ET.SubElement(root, "corporations")
-        corps_elem.set("count", str(Corporation.count()))
+        corps_elem.set("count", "%s" % str(Corporation.count()))
         for corp in Corporation.all():
             corp.to_xml(corps_elem)
 
