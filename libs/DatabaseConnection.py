@@ -102,37 +102,20 @@ class DatabaseConnection(object):
         logging.debug("Configured to use MySQL for a database")
         db_server, db_name, db_user, db_password = self._db_credentials()
         db_charset = "utf8mb4"
+        db_connection = "%s:%s@%s/%s?charset=%s" % (
+            db_user,
+            db_password,
+            db_server,
+            db_name,
+            db_charset,
+        )
         codecs.register(
             lambda name: codecs.lookup("utf8") if name == "utf8mb4" else None
         )
-        __mysql = "mysql://%s:%s@%s/%s?charset=%s" % (
-            db_user,
-            db_password,
-            db_server,
-            db_name,
-            db_charset,
-        )
-        __mysqlclient = "mysql+mysqldb://%s:%s@%s/%s?charset=%s" % (
-            db_user,
-            db_password,
-            db_server,
-            db_name,
-            db_charset,
-        )
-        __pymysql = "mysql+pymysql://%s:%s@%s/%s?charset=%s" % (
-            db_user,
-            db_password,
-            db_server,
-            db_name,
-            db_charset,
-        )
-        __mysqlconnector = "mysql+mysqlconnector://%s:%s@%s/%s?charset=%s" % (
-            db_user,
-            db_password,
-            db_server,
-            db_name,
-            db_charset,
-        )
+        __mysql = "mysql://%s" % db_connection
+        __mysqlclient = "mysql+mysqldb://%s" % db_connection
+        __pymysql = "mysql+pymysql://%s" % db_connection
+        __mysqlconnector = "mysql+mysqlconnector://%s" % db_connection
         if self._test_connection(__mysql):
             return __mysql
         elif self._test_connection(__mysqlclient):

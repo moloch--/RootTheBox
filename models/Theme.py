@@ -30,7 +30,6 @@ from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from builtins import str
-from tornado.options import options
 
 
 class ThemeFile(DatabaseObject):
