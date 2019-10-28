@@ -73,7 +73,7 @@ class AdminGameHandler(BaseHandler):
         suspend_reg = self.get_argument("suspend_registration", "false")
         freeze_score = self.get_argument("freeze_scoreboard", "false")
         stop_timer = self.get_argument("stop_timer", "off")
-        
+
         if start_game:
             if self.get_argument("start_game", "") == "true":
                 self.start_game()

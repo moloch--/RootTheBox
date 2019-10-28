@@ -301,9 +301,13 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
                     content_type = "unknown/data"
                 self.set_header("Content-Type", content_type)
                 self.set_header("Content-Length", len(box.source_code.data))
-                fname = "".join([
-                    char for char in box.source_code.file_name if char in self.goodchars
-                ])
+                fname = "".join(
+                    [
+                        char
+                        for char in box.source_code.file_name
+                        if char in self.goodchars
+                    ]
+                )
                 self.set_header(
                     "Content-Disposition", "attachment; filename=%s" % fname
                 )

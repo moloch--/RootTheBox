@@ -85,25 +85,19 @@ class LoginHandler(BaseHandler):
     def valid_login(self, user):
         if user.locked:
             self.render(
-                    "public/login.html",
-                    info=None,
-                    errors=["Your account has been locked"],
-                )
-        elif user.is_admin() and not self.allowed_ip():   
+                "public/login.html", info=None, errors=["Your account has been locked"]
+            )
+        elif user.is_admin() and not self.allowed_ip():
             self.render(
-                    "public/login.html",
-                    info=[
-                        "Succesfull credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
-                    ],
-                    errors=None,
-                )
+                "public/login.html",
+                info=[
+                    "Succesfull credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
+                ],
+                errors=None,
+            )
         else:
             self.successful_login(user)
-            if (
-                self.config.story_mode
-                and user.logins == 1
-                and not user.is_admin()
-            ):
+            if self.config.story_mode and user.logins == 1 and not user.is_admin():
                 self.redirect("/user/missions/firstlogin")
             else:
                 self.redirect("/user")
@@ -126,6 +120,7 @@ class LoginHandler(BaseHandler):
         self.session["handle"] = user.handle
         self.session["theme"] = [str(f) for f in theme.files]
         self.session["theme_id"] = int(theme.id)
+        print(self.session["theme"])
         if user.is_admin():
             self.session["menu"] = "admin"
         else:

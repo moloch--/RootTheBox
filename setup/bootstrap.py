@@ -40,7 +40,9 @@ from tornado.options import options
 # Fills the database with some startup data.
 password = ""
 
-if options.setup.lower().startswith("dev") or options.setup.lower().startswith("docker"):
+if options.setup.lower().startswith("dev") or options.setup.lower().startswith(
+    "docker"
+):
     admin_handle = "admin"
     password = "rootthebox"
     print("Admin Username: %s, Password: %s" % (admin_handle, password))
