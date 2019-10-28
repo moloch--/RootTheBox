@@ -76,3 +76,6 @@ class MarketItem(DatabaseObject):
     def __ne__(self, other):
         """ Not Equivalent """
         return not self == other
+
+    def __hash__(self):
+        return hash(self.name)
