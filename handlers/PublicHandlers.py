@@ -120,7 +120,6 @@ class LoginHandler(BaseHandler):
         self.session["handle"] = user.handle
         self.session["theme"] = [str(f) for f in theme.files]
         self.session["theme_id"] = int(theme.id)
-        print(self.session["theme"])
         if user.is_admin():
             self.session["menu"] = "admin"
         else:

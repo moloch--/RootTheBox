@@ -30,6 +30,7 @@ from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from builtins import str
+from tornado.options import options
 
 
 class ThemeFile(DatabaseObject):
@@ -107,26 +108,13 @@ class Theme(DatabaseObject):
     def name(self, value):
         self._name = self._filter_string(value, ".")
 
-    def is_sequence(self, arg):
-        return (
-            not hasattr(arg, "strip")
-            and hasattr(arg, "__getitem__")
-            or hasattr(arg, "__iter__")
-        )
-
     def __iter__(self):
         try:
             for _file in self.files:
                 yield _file
         except:
-            logging.error("Problem with theme - reloading...")
-            themefile = relationship("ThemeFile", lazy="joined")
-            if self.is_sequence(themefile):
-                self.files = themefile
-                for _file in self.files:
-                    yield _file
+            logging.error("Error with theme relationship. Returning default theme.")
+            if self.name == "386":
+                yield "386.js"
             else:
-                logging.error(
-                    "Error with theme relationship. Returning default Cyborg theme"
-                )
-                yield "cyborg.min.css"
+                yield "%s.min.css" % self.name.lower()
