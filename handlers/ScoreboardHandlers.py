@@ -65,6 +65,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
+            Scoreboard.update_gamestate(self)
             self.write_message(Scoreboard.now(self))
 
     def on_close(self):
@@ -105,7 +106,10 @@ class ScoreboardAjaxHandler(BaseHandler):
 
     def summary_table(self):
         """ Render the "leaderboard" snippit """
-        self.render("scoreboard/summary_table.html", teams=Team.ranks())
+        self.render(
+            "scoreboard/summary_table.html",
+            game_state=self.settings["scoreboard_state"],
+        )
 
     def mvp_table(self):
         """ Render the "leaderboard" snippit """

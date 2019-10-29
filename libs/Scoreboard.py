@@ -28,6 +28,10 @@ import time
 
 from models import dbsession
 from models.Team import Team
+from models.Box import Box
+from models.Flag import Flag
+from models.Hint import Hint
+from models.GameLevel import GameLevel
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from tornado.options import options
@@ -40,19 +44,37 @@ class Scoreboard(object):
     @classmethod
     def now(self, app):
         """ Returns the current game state """
-        game_state = {}
-        for team in Team.all():
+        return json.dumps(app.settings["scoreboard_state"].get("teams"))
+
+    @classmethod
+    def update_gamestate(self, app):
+        game_state = {
+            "teams": {},
+            "levels": {},
+            "boxes": {},
+            "hint_count": len(Hint.all()),
+            "flag_count": len(Flag.all()),
+            "box_count": len(Box.all()),
+            "level_count": len(GameLevel.all()),
+        }
+        teams = Team.ranks()
+        for team in teams:
             if len(team.members) > 0:
                 millis = int(round(time.time() * 1000))
-                game_state[team.name] = {
+                game_state["teams"][team.name] = {
                     "uuid": team.uuid,
                     "flags": [str(flag) for flag in team.flags],
                     "game_levels": [str(lvl) for lvl in team.game_levels],
+                    "members_count": len(team.members),
+                    "hints_count": len(team.hints),
+                    "bot_count": BotManager.instance().count_by_team(team.name),
+                    "money": team.money,
                 }
+
                 highlights = {"money": 0, "flag": 0, "bot": 0, "hint": 0}
                 for item in highlights:
                     value = team.get_score(item)
-                    game_state[team.name][item] = value
+                    game_state["teams"][team.name][item] = value
                     game_history = app.settings["scoreboard_history"]
                     if team.name in game_history:
                         prev = game_history[team.name][item]
@@ -63,11 +85,35 @@ class Scoreboard(object):
                                 item
                             ]
                 highlights["now"] = millis
-                game_state[team.name]["highlights"] = highlights
-                app.settings["scoreboard_history"][team.name] = game_state.get(
+                game_state["teams"][team.name]["highlights"] = highlights
+                app.settings["scoreboard_history"][team.name] = game_state["teams"].get(
                     team.name
                 )
-        return json.dumps(game_state)
+        for level in GameLevel.all():
+            game_state["levels"][level.name] = {
+                "type": level.type,
+                "number": level.number,
+                "teams": {},
+                "boxes": {},
+                "box_count": len(level.boxes),
+                "flag_count": len(level.flags),
+            }
+            for team in teams:
+                game_state["levels"][level.name]["teams"][team.name] = {
+                    "lvl_count": len(team.level_flags(level.number)),
+                    "lvl_unlock": level in team.game_levels,
+                }
+            for box in level.boxes:
+                game_state["levels"][level.name]["boxes"][box.uuid] = {
+                    "name": box.name,
+                    "teams": {},
+                    "flag_count": len(box.flags),
+                }
+                for team in teams:
+                    game_state["levels"][level.name]["boxes"][box.uuid]["teams"][
+                        team.name
+                    ] = {"box_count": len(team.box_flags(box))}
+        app.settings["scoreboard_state"] = game_state
 
 
 def score_bots():

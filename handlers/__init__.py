@@ -240,6 +240,7 @@ app = Application(
     ),
     # Scoreboard Hightlights
     scoreboard_history={},
+    scoreboard_state={},
     # Application version
     version=__version__,
 )
@@ -300,7 +301,7 @@ def start_server():
             sys.exit()
     server.add_sockets(sockets)
     try:
-        Scoreboard.now(app)
+        Scoreboard.update_gamestate(app)
     except OperationalError as err:
         if "Table definition has changed" in str(err):
             logging.info("Table definitions have changed -restarting RootTheBox.")
