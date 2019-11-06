@@ -112,8 +112,13 @@ class Theme(DatabaseObject):
             for _file in self.files:
                 yield _file
         except:
-            logging.error("Error with theme relationship. Returning default theme.")
-            if self.name == "386":
-                yield "386.js"
-            else:
-                yield "%s.min.css" % self.name.lower()
+            try:
+                self.files = relationship("ThemeFile")
+                for _file in self.files:
+                    yield _file
+            except:
+                logging.error("Error with theme relationship. Returning default theme.")
+                if self.name == "386":
+                    yield "386.js"
+                else:
+                    yield "%s.min.css" % self.name.lower()
