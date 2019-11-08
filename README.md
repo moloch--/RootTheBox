@@ -3,6 +3,7 @@
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg?raw=true&sanitize=true)](https://github.com/moloch--/RootTheBox/blob/master/LICENSE)
 [![Code style:
 black](https://img.shields.io/badge/code%20style-black-000000.svg?raw=true&sanitize=true)](https://github.com/ambv/black)
+[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/apsdehal/awesome-ctf)
 
 Root the Box is a real-time capture the flag (CTF) scoring engine for computer wargames where hackers can practice and learn. The application can be easily configured and modified for any CTF style game. The platform allows you to engage novice and experienced players alike by combining a fun game-like environment with realistic challenges that convey knowledge applicable to the real-world, such as penetration testing, incident response, digital forensics and threat hunting.
 
