@@ -20,6 +20,11 @@ footer {
     word-wrap: break-word; 
     max-width: 350px;
 }
+.statcolumn {
+    text-align: center !important;
+    vertical-align: middle  !important;
+    width: 100px;
+}
 .centercolumn {
     text-align: center; 
     vertical-align: middle;

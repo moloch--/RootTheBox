@@ -394,15 +394,16 @@ class FlagSubmissionHandler(BaseHandler):
     def attempt_capture(self, flag, submission):
         """ Compares a user provided token to the token in the db """
         user = self.get_current_user()
+        team = user.team
         logging.info(
-            "%s (%s) capture the flag '%s'" % (user.handle, user.team.name, flag.name)
+            "%s (%s) capture the flag '%s'" % (user.handle, team.name, flag.name)
         )
-        if submission is not None and flag not in user.team.flags:
+        if submission is not None and flag not in team.flags:
             if flag.capture(submission):
-                user.team.flags.append(flag)
-                user.team.money += flag.value
+                team.flags.append(flag)
+                team.money += flag.value
                 user.money += flag.value
-                self.dbsession.add(user.team)
+                self.dbsession.add(team)
                 if self.config.dynamic_flag_value:
                     depreciation = float(
                         old_div(self.config.flag_value_decrease, 100.0)
@@ -410,23 +411,21 @@ class FlagSubmissionHandler(BaseHandler):
                     flag.value = int(flag.value - (flag.value * depreciation))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
-                self.event_manager.flag_captured(user, flag)
-                self._check_level(flag)
+                self.event_manager.flag_captured(team, flag)
+                self._check_level(flag, team)
                 self.dbsession.commit()
                 return True
         return False
 
-    def _check_level(self, flag):
-        user = self.get_current_user()
-        if len(user.team.level_flags(flag.game_level.number)) == len(
-            flag.game_level.flags
-        ):
+    def _check_level(self, flag, team):
+        if len(team.level_flags(flag.game_level.number)) == len(flag.game_level.flags):
             next_level = next(flag.game_level)
-            logging.info("Next level is %r" % next_level)
-            if next_level is not None and next_level not in user.team.game_levels:
-                logging.info("Team completed level, unlocking the next level")
-                user.team.game_levels.append(next_level)
-                self.dbsession.add(user.team)
+            if next_level is not None:
+                logging.info("Next level is %r" % next_level)
+                if next_level not in team.game_levels:
+                    logging.info("Team completed level, unlocking the next level")
+                    team.game_levels.append(next_level)
+                    self.dbsession.add(team)
 
     def render_page_by_flag(self, flag, errors=[], success=[], info=[]):
         self.render_page_by_box_id(flag.box_id, errors, success, info)

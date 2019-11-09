@@ -167,22 +167,22 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
-    def flag_captured(self, user, flag):
+    def flag_captured(self, team, flag):
         """ Callback for when a flag is captured """
         if len(GameLevel.all()) > 1:
             message = "%s has captured the '%s' flag in %s (Lvl %s)" % (
-                user.team.name,
+                team.name,
                 flag.name,
                 flag.box.name,
                 GameLevel.by_id(flag.box.game_level_id).number,
             )
         else:
             message = "%s has captured the '%s' flag in %s" % (
-                user.team.name,
+                team.name,
                 flag.name,
                 flag.box.name,
             )
-        Notification.create_broadcast(user.team, "Flag Capture", message, SUCCESS)
+        Notification.create_broadcast(team, "Flag Capture", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
