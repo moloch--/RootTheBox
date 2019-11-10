@@ -18,7 +18,7 @@ Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Sc
 
 -   Team Play or Individual Play
 -   Real-time animated scoreboard, graphs, and status updates using websockets
--   Flag Types: Static, Regex, Datetime, Multiple Choice, File - w/options for case senstivity
+-   Flag Types: Static, Regex, Datetime, Multiple Choice, File - w/options for case sensitivity
 -   Options for Penalties, Hints, Attempts, Level Bonuses, Dynamic Scoring, Categories and more
 -   Built-in team based file/text sharing and Admin game material distirbution
 -   Chat support with [Rocket Chat](https://rocket.chat/) integration
