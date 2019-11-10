@@ -90,16 +90,20 @@ function changeDisplay() {
             $(".hintcol").fadeOut("slow", function() {
                 $(".lastflagcol").fadeIn("slow");
             });
-            $("#scoreboard_right_image").fadeOut("slow", function() {
-                $("#scoreboard_mvp").fadeIn("slow");
-            });
+            if ($("#mvp_table").length > 0) {
+                $("#scoreboard_right_image").fadeOut("slow", function() {
+                    $("#scoreboard_mvp").fadeIn("slow");
+                });
+            }
         } else {
             $(".lastflagcol").fadeOut("slow", function() {
                 $(".hintcol").fadeIn("slow");
             });
-            $("#scoreboard_mvp").fadeOut("slow", function() {
-                $("#scoreboard_right_image").fadeIn("slow");
-            });
+            if ($("#mvp_table").length > 0) {
+                $("#scoreboard_mvp").fadeOut("slow", function() {
+                    $("#scoreboard_right_image").fadeIn("slow");
+                });
+            }
         }
         scoretext = !scoretext;
     }
