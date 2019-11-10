@@ -1,11 +1,11 @@
 <div class="span5 offset1">
-    <script src="https://www.google.com/recaptcha/api/js/recaptcha_ajax.js" type="text/javascript"></script>
-    <script src="/static/js/libs/recaptcha.js" type="text/javascript"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <br />
     <br />
+
     <label for="recaptch_div">
         <i class="fa fa-android"></i>
         {{ _("Are you a Cylon?") }}
     </label>
-    <div id="recaptcha_div"></div>
+    <div id="recaptcha_div" class="g-recaptcha" data-theme="dark" data-sitekey="{{recaptcha_site_key}}"></div>
 </div>

@@ -323,10 +323,17 @@ define(
 )
 
 define(
-    "recaptcha_api_key",
-    default="6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf",
+    "recaptcha_site_key",
+    default="6LdF5MEUAAAAABRPbP6Tb5uq2-AM2kkkNRVNGLdV",
     group="recaptcha",
-    help="recaptcha api key",
+    help="recaptcha site api key",
+)
+
+define(
+    "recaptcha_secret_key",
+    default="6LdF5MEUAAAAALWOhgMr8Wx4nzF4qhS-ZLw-FPk7",
+    group="recaptcha",
+    help="recaptcha secret server key",
 )
 
 # Database settings
