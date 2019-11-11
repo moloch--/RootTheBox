@@ -324,14 +324,14 @@ define(
 
 define(
     "recaptcha_site_key",
-    default="6LdF5MEUAAAAABRPbP6Tb5uq2-AM2kkkNRVNGLdV",
+    default="",
     group="recaptcha",
-    help="recaptcha site api key",
+    help="recaptcha site client api key",
 )
 
 define(
     "recaptcha_secret_key",
-    default="6LdF5MEUAAAAALWOhgMr8Wx4nzF4qhS-ZLw-FPk7",
+    default="",
     group="recaptcha",
     help="recaptcha secret server key",
 )

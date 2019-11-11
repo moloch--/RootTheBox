@@ -26,7 +26,11 @@ from tornado.options import options
 
 class Recaptcha(UIModule):
     def render(self, *args, **kwargs):
-        if options.use_recaptcha:
+        if (
+            options.use_recaptcha
+            and len(options.recaptcha_site_key) > 0
+            and len(options.recaptcha_secret_key) > 0
+        ):
             return self.render_string(
                 "recaptcha/captcha.html", recaptcha_site_key=options.recaptcha_site_key
             )
