@@ -98,21 +98,38 @@ class ScoreboardAjaxHandler(BaseHandler):
             "skills": self.team_skills,
             "mvp": self.mvp_table,
             "timer": self.timediff,
+            "feed": self.json_feed,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
             self.render("public/404.html")
 
+    def json_feed(self):
+        """ Render the "leaderboard" json feed - CTFtime """
+        self.set_header("Content-Type", "application/json")
+        feed = {}
+        user = self.get_current_user()
+        if options.scoreboard_visibility == "public" or user.is_admin():
+            feed["standings"] = []
+            teams = self.settings["scoreboard_state"]["teams"]
+            for index, team in enumerate(teams):
+                feed["standings"].append(
+                    {"pos": index + 1, "team": team, "score": teams[team].get("money")}
+                )
+        else:
+            feed["error"] = "scoreboard is not set to public."
+        self.write(json.dumps(feed, sort_keys=True, indent=4))
+
     def summary_table(self):
-        """ Render the "leaderboard" snippit """
+        """ Render the "leaderboard" team snippit """
         self.render(
             "scoreboard/summary_table.html",
             game_state=self.settings["scoreboard_state"],
         )
 
     def mvp_table(self):
-        """ Render the "leaderboard" snippit """
+        """ Render the "leaderboard" mvp snippit """
         self.render("scoreboard/mvp_table.html", users=User.ranks())
 
     def timediff(self):
@@ -178,6 +195,13 @@ class ScoreboardHistoryHandler(BaseHandler):
             self.redirect("/login")
         else:
             self.render("public/404.html")
+
+
+class ScoreboardFeedHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        """ Renders the scoreboard feed page """
+        hostname = "%s://%s" % (self.request.protocol, self.request.host)
+        self.render("scoreboard/feed.html", hostname=hostname)
 
 
 class ScoreboardHistorySocketHandler(WebSocketHandler):

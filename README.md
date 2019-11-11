@@ -22,6 +22,7 @@ Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Sc
 -   Options for Penalties, Hints, Attempts, Level Bonuses, Dynamic Scoring, Categories and more
 -   Built-in team based file/text sharing and Admin game material distirbution
 -   Chat support with [Rocket Chat](https://rocket.chat/) integration
+-   [CTF Time](https://ctftime.org/) compatible JSON scoreboard feed
 -   Freeze scoreboard at a specific time allowing for end game countdown
 -   Optional Story Mode - Supports intro dialog, capture Flag or Section dialog w/graphics
 -   Optional [in-game Botnets](https://github.com/moloch--/RootTheBox/wiki/Features) or wall of sheep displaying cracked passwords
