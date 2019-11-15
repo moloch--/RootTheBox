@@ -4,7 +4,7 @@ memcache:
 rtb:
   build: .
   ports:
-    - "80:8888"
+    - "8888:8888"
   volumes:
     - ./files:/opt/rtb/files:rw
   links:

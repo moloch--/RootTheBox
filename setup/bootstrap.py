@@ -45,7 +45,6 @@ if options.setup.lower().startswith("dev") or options.setup.lower().startswith(
 ):
     admin_handle = "admin"
     password = "rootthebox"
-    print("Admin Username: %s, Password: %s" % (admin_handle, password))
 else:
     admin_handle = str(input(PROMPT + "RootTheBox Admin Username [admin]: ")) or "admin"
     sys.stdout.write(PROMPT + "New Admin ")
