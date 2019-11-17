@@ -248,7 +248,9 @@ class Flag(DatabaseObject):
     @name.setter
     def name(self, value):
         if not len(value) <= 16:
-            raise ValidationError("Flag name must be less than 16 characters")
+            raise ValidationError(
+                "Flag name must be less than 16 characters: %s" % value
+            )
         self._name = str(value)
 
     @property
@@ -259,7 +261,8 @@ class Flag(DatabaseObject):
 
     @order.setter
     def order(self, value):
-        self._order = int(value)
+        if value:
+            self._order = int(value)
 
     @property
     def description(self):

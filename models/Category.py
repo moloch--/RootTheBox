@@ -38,7 +38,7 @@ class Category(DatabaseObject):
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
-    _category = Column(Unicode(24), unique=True, nullable=False)
+    _category = Column(Unicode(64), unique=True, nullable=False)
 
     boxes = relationship("Box", backref=backref("category", lazy="select"))
 
@@ -81,8 +81,8 @@ class Category(DatabaseObject):
 
     @category.setter
     def category(self, value):
-        if not len(value) <= 24:
-            raise ValidationError("Category name must be 0 - 24 characters")
+        if not len(value) <= 64:
+            raise ValidationError("Category name must be 0 - 64 characters")
         self._category = str(value)
 
     def to_dict(self):

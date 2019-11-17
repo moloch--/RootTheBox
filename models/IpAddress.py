@@ -85,7 +85,10 @@ class IpAddress(DatabaseObject):
 
     @address.setter
     def address(self, value):
-        ip = IPAddress(self.ipformat(value))
+        try:
+            ip = IPAddress(self.ipformat(value))
+        except:
+            raise ValidationError("Invalid IP Address")
         if ip.is_loopback():
             raise ValidationError("You cannot use a loopback address")
         if ip.is_multicast():

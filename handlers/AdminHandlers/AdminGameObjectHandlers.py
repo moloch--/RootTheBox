@@ -520,7 +520,9 @@ class AdminEditHandler(BaseHandler):
                 self.dbsession.commit()
             self.redirect("/admin/view/game_objects")
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[str(error)])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=[str(error)]
+            )
 
     def edit_category(self):
         """ Updates category object in the database """
@@ -641,7 +643,9 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[str(error)])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=[str(error)]
+            )
 
     def edit_flag_order(self):
         """ Edit flag order in the database """
@@ -716,7 +720,9 @@ class AdminEditHandler(BaseHandler):
                 self.edit_choices(flag, self.request.arguments)
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=["%s" % error])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=["%s" % error]
+            )
 
     def edit_choices(self, flag, arguments):
         """ Edit flag multiple choice items """
@@ -765,7 +771,9 @@ class AdminEditHandler(BaseHandler):
             else:
                 raise ValidationError("IP address is already in use")
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[str(error)])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=[str(error)]
+            )
 
     def edit_game_level(self):
         """ Update game level objects """
@@ -843,7 +851,9 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[str(error)])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=[str(error)]
+            )
 
     def edit_market_item(self):
         """ Change a market item's price """
@@ -898,7 +908,9 @@ class AdminDeleteHandler(BaseHandler):
                 % (self.get_argument("ip_uuid", ""),)
             )
             self.render(
-                "admin/view/game_objects.html", errors=["IP does not exist in database"]
+                "admin/view/game_objects.html",
+                success=None,
+                errors=["IP does not exist in database"],
             )
 
     def del_flag(self):
@@ -916,6 +928,7 @@ class AdminDeleteHandler(BaseHandler):
             )
             self.render(
                 "admin/view/game_objects.html",
+                success=None,
                 errors=["Flag does not exist in database."],
             )
 
@@ -930,6 +943,7 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render(
                 "admin/view/game_objects.html",
+                success=None,
                 errors=["Hint does not exist in database."],
             )
 
@@ -944,6 +958,7 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render(
                 "admin/view/game_objects.html",
+                success=None,
                 errors=["Corporation does not exist in database."],
             )
 
@@ -972,6 +987,7 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render(
                 "admin/view/game_objects.html",
+                success=None,
                 errors=["Box does not exist in database."],
             )
 

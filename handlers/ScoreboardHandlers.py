@@ -106,7 +106,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             self.render("public/404.html")
 
     def json_feed(self):
-        """ Render the "leaderboard" json feed - CTFtime """
+        """ Render the "leaderboard" json feed - CTFtime: https://ctftime.org/json-scoreboard-feed """
         self.set_header("Content-Type", "application/json")
         feed = {}
         user = self.get_current_user()
