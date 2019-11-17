@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
     Copyright 2012 Root the Box
 
@@ -24,7 +24,7 @@ command line arguments it calls various components setup/start/etc.
 from __future__ import print_function
 
 
-import os
+import os, sys
 import nose
 import random
 import logging
@@ -56,14 +56,14 @@ def start():
 
     """ Starts the application """
     from handlers import start_server
-
-    if options.setup.startswith("docker"):
-        # Would be nice to grab this info from the container in case it is changed
-        port = "80:8888"
-        listenport = "Docker port mapping " + port
-    else:
-        listenport = "port " + str(options.listen_port)
-    print(INFO + bold + G + "Starting RTB on %s" % listenport)
+    prefix = "https://" if options.ssl else "http://"
+    # TODO For docker, it would be nice to grab the mapped docker port
+    listenport = C + "%slocalhost:%s" % (prefix, str(options.listen_port)) + W
+    sys.stdout.flush()
+    try:
+        print(INFO + bold + R + "Starting RTB on %s" % listenport, flush=True)
+    except:
+        print(INFO + bold + R + "Starting RTB on %s"  % listenport)
 
     result = start_server()
     if result == "restart":
@@ -89,21 +89,26 @@ def setup():
     print(INFO + "%s : Creating the database ..." % current_time())
     from setup.create_database import create_tables, engine, metadata
 
-    create_tables(engine, metadata, is_devel)
+    create_tables(engine, metadata, options.log_sql)
+    sys.stdout.flush()
     print(INFO + "%s : Bootstrapping the database ..." % current_time())
     import setup.bootstrap
 
     # Display Details
     if is_devel:
-        environ = bold + R + "Development boot strap:" + G
-        details = "Admin Password is 'rootthebox'" + W
+        environ = bold + R + "Development bootstrap:"
+        details = C + "Admin Username: admin, Password: rootthebox" + W
     else:
-        environ = bold + "Production boot strap" + W
+        environ = bold + "Production bootstrap" + W
         details = ""
     from handlers import update_db
 
     update_db(False)
-    print(INFO + "%s %s" % (environ, details))
+    sys.stdout.flush()
+    try:
+        print(INFO + "%s %s" % (environ, details), flush=True)
+    except:
+        print(INFO + "%s %s" % (environ, details))
 
 
 def recovery():
