@@ -3,11 +3,12 @@ import logging, os
 from tornado.options import options
 from datetime import datetime
 from past.builtins import basestring
+from builtins import str, input
 from .ConsoleColors import *
 
 
 def save_config():
-    if os.path.isfile(options.config):
+    if os.path.isfile(options.config) and not options.setup.startswith("docker"):
         resp = (
             str(
                 input(
