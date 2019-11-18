@@ -56,6 +56,7 @@ def start():
 
     """ Starts the application """
     from handlers import start_server
+
     prefix = "https://" if options.ssl else "http://"
     # TODO For docker, it would be nice to grab the mapped docker port
     listenport = C + "%slocalhost:%s" % (prefix, str(options.listen_port)) + W
@@ -63,7 +64,7 @@ def start():
     try:
         print(INFO + bold + R + "Starting RTB on %s" % listenport, flush=True)
     except:
-        print(INFO + bold + R + "Starting RTB on %s"  % listenport)
+        print(INFO + bold + R + "Starting RTB on %s" % listenport)
 
     result = start_server()
     if result == "restart":
@@ -176,6 +177,24 @@ def check_cwd():
     if app_root != os.getcwd():
         print(INFO + "Switching CWD to '%s'" % app_root)
         os.chdir(app_root)
+
+
+def help():
+    help_response = [
+        "\tNo options specified. Examples: 'rootthebox.py --setup=prod' or 'rootthebox.py --start'"
+    ]
+    help_response.append("\t\t--recovery\tstart the recovery console")
+    help_response.append("\t\t--restart\trestart the server")
+    help_response.append("\t\t--save\t\tsave the current configuration to file")
+    help_response.append("\t\t--setup\t\tsetup a database (prod|devel|docker)")
+    help_response.append("\t\t--start\t\tstart the server")
+    help_response.append("\t\t--update\tpull the latest code via github")
+    help_response.append("\t\t--version\tdisplay version information and exit")
+    help_response.append("\t\t--xml\t\timport xml file(s)")
+    help_response.append(
+        "\t\t--config\tconfiguration file location (default: files/rootthebox.cfg)"
+    )
+    return "\n".join(help_response)
 
 
 ########################################################################
@@ -801,9 +820,6 @@ if __name__ == "__main__":
         options.start = True
     elif options.save or not os.path.isfile(options.config):
         save_config()
-        logging.info(
-            "Please add the db username and password to the cfg and set any advanced configuration options."
-        )
         os._exit(1)
     else:
         logging.debug("Parsing config file `%s`" % (os.path.abspath(options.config),))
@@ -823,6 +839,4 @@ if __name__ == "__main__":
     elif options.update:
         update()
     else:
-        print(
-            "\tNo options specified. Examples: 'rootthebox.py --setup=prod' or 'rootthebox.py --start'"
-        )
+        print(help())
