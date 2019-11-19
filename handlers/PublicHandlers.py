@@ -95,6 +95,10 @@ class LoginHandler(BaseHandler):
                 ],
                 errors=None,
             )
+            logging.warning(
+                "Admin login - invalid IP %s.  Valid: %s"
+                % (self.request.remote_ip, ",".join(options.admin_ips))
+            )
         else:
             self.successful_login(user)
             if self.config.story_mode and user.logins == 1 and not user.is_admin():

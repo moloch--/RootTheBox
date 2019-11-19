@@ -30,6 +30,7 @@ from sqlalchemy.types import Unicode, Integer, Boolean, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from builtins import str
+from tornado.options import options
 
 
 class ThemeFile(DatabaseObject):
@@ -101,7 +102,10 @@ class Theme(DatabaseObject):
 
     @property
     def name(self):
-        return self._name
+        try:
+            return self._name
+        except:
+            return options.default_theme
 
     @name.setter
     def name(self, value):
@@ -112,13 +116,10 @@ class Theme(DatabaseObject):
             for _file in self.files:
                 yield _file
         except:
-            try:
-                self.files = relationship("ThemeFile")
-                for _file in self.files:
-                    yield _file
-            except:
-                logging.error("Error with theme relationship. Returning default theme.")
-                if self.name == "386":
-                    yield "386.js"
-                else:
-                    yield "%s.min.css" % self.name.lower()
+            logging.error(
+                "Session Expired - returning default theme: %s" % options.default_theme
+            )
+            if self.name == "386":
+                yield "386.js"
+            else:
+                yield "%s.min.css" % self.name.lower()
