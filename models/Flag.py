@@ -247,9 +247,9 @@ class Flag(DatabaseObject):
 
     @name.setter
     def name(self, value):
-        if not len(value) <= 16:
+        if not len(value) <= 64:
             raise ValidationError(
-                "Flag name must be less than 16 characters: %s" % value
+                "Flag name must be less than 64 characters: %s" % value
             )
         self._name = str(value)
 

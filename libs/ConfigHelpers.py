@@ -1,12 +1,29 @@
-import logging
+import logging, os
 
 from tornado.options import options
 from datetime import datetime
 from past.builtins import basestring
+from builtins import str, input
+from .ConsoleColors import *
 
 
 def save_config():
-    logging.info("Saving current config to: %s" % options.config)
+    if os.path.isfile(options.config) and not options.setup.startswith("docker"):
+        resp = (
+            str(
+                input(
+                    PROMPT
+                    + "A configuration file already exists.  Do you want to overwrite this configuration [N/y]? "
+                )
+            )
+            or "N"
+        )
+        if (
+            resp.replace('"', "").lower().strip() != "y"
+            and resp.replace('"', "").lower().strip() != "yes"
+        ):
+            return
+    print(INFO + "Saving current config to: %s" % options.config)
     with open(options.config, "w") as fp:
         fp.write("##########################")
         fp.write(" Root the Box Config File ")
@@ -35,3 +52,9 @@ def save_config():
                 else:
                     # Int/Bool/List use __str__
                     fp.write("%s = %s\n" % (key, value))
+    if options.save:
+        print(
+            INFO
+            + bold
+            + "If necessary, update the db username and password in the cfg and set any advanced configuration options."
+        )
