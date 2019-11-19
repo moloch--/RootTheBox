@@ -65,7 +65,7 @@ class BaseSession(collections.MutableMapping):
         return "<Session id: %s, Expires: %s>" % (self.session_id, self.expires)
 
     def __str__(self):
-        return self.session_id
+        return str(self.session_id)
 
     def __getitem__(self, key):
         return self.data[key]
