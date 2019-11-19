@@ -1,4 +1,0 @@
-
-# set the line endings for docker
-*.sh text eol=lf
-rootthebox.py text eol=lf
