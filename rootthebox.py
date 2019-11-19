@@ -823,8 +823,11 @@ if __name__ == "__main__":
         if not os.path.isfile(options.sql_database + ".db"):
             logging.info("Running Docker Setup")
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
+            options.memcached = "memcache"
             save_config()
             setup()
+        else:
+            options.parse_config_file(options.config)
         options.start = True
     elif options.save or not os.path.isfile(options.config):
         save_config()
