@@ -815,7 +815,7 @@ if __name__ == "__main__":
     elif options.setup.startswith("docker"):
         if not os.path.isfile(options.sql_database + ".db"):
             logging.info("Running Docker Setup")
-            options.admin_ips = [] #Remove admin ips due to docker 127.0.0.1 mapping
+            options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
             save_config()
             setup()
         options.start = True
