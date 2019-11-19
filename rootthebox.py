@@ -821,6 +821,11 @@ if __name__ == "__main__":
         options.start = True
     elif options.save or not os.path.isfile(options.config):
         save_config()
+        print(
+            INFO
+            + bold
+            + "If necessary, update the db username and password in the cfg and set any advanced configuration options."
+        )
         os._exit(1)
     else:
         logging.debug("Parsing config file `%s`" % (os.path.abspath(options.config),))
