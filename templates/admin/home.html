@@ -189,6 +189,13 @@
             
         </div>
     </div>
+    {% if user.password == "$p5k2$2bad$hvCaKAvO$77kHcM6nYQO5RK057xsaVTJPO64XArGu" %}
+    <div class="span8 alert alert-warning">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <h4 class="alert-heading">{{ _("WARNING") }}</h4>
+        Default password - please update in <a href="/user/settings" style="color: #000">User Settings</a>
+    </div>
+    {% end %}
     <div class="span8 well">
         <div class="control-group" style="float: right; padding-top: 20px;">
                 <div class="controls">
