@@ -27,12 +27,15 @@ It reads an XML file(s) and calls the API based on the it's contents.
 import logging
 import defusedxml.cElementTree as ET
 from os import urandom, path, listdir
+from tornado.options import options
+from shutil import copyfile
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *
 from models import dbsession
 from models.Box import FlagsSubmissionType
 from libs.StringCoding import encode, decode
+from libs.ConfigHelpers import save_config, save_config_image
 from base64 import b64decode
 
 
@@ -226,6 +229,29 @@ def create_corps(corps):
             logging.exception("Faild to create corporation #%d (%s)" % (index + 1, e))
 
 
+def update_configuration(config):
+    """ Update Configuration options based on XML data """
+    if config is None:
+        return
+    else:
+        """ Backup configuration """
+        copyfile(options.config, options.config + ".bak")
+    images = ["ctf_logo", "story_character", "scoreboard_right_image"]
+    for config_elem in config:
+        try:
+            if options[config_elem.tag] is not None:
+                if config_elem.tag in images:
+                    value = save_config_image(get_child_text(config, config_elem.tag))
+                else:
+                    value = get_child_text(config, config_elem.tag)
+                if type(value) == type(options[config_elem.tag]):
+                    logging.info("Configuration (%s): %s" % (config_elem.tag, value))
+                    options[config_elem.tag] = value
+        except BaseException as e:
+            logging.exception("Faild to update configuration (%s)" % e)
+    save_config()
+
+
 def _xml_file_import(filename):
     """ Parse and import a single XML file """
     logging.debug("Processing: %s" % filename)
@@ -238,6 +264,8 @@ def _xml_file_import(filename):
         create_categories(categories)
         corporations = get_child_by_tag(xml_root, "corporations")
         create_corps(corporations)
+        configuration = get_child_by_tag(xml_root, "configuration")
+        update_configuration(configuration)
         logging.debug("Done processing: %s" % filename)
         dbsession.commit()
         return True
