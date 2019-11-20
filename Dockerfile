@@ -18,4 +18,4 @@ ADD ./setup/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt --upgrade
 
 VOLUME ["/opt/rtb/files"]
-ENTRYPOINT ["/opt/rtb/rootthebox.py", "--setup=docker", "--sql_dialect=sqlite"]
+ENTRYPOINT ["python3", "/opt/rtb/rootthebox.py", "--setup=docker", "--sql_dialect=sqlite"]
