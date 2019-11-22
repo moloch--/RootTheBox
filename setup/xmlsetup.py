@@ -244,7 +244,7 @@ def update_configuration(config):
                     value = save_config_image(get_child_text(config, config_elem.tag))
                 else:
                     value = get_child_text(config, config_elem.tag)
-                if type(value) == type(options[config_elem.tag]):
+                if isinstance(value, type(options[config_elem.tag])):
                     logging.info("Configuration (%s): %s" % (config_elem.tag, value))
                     options[config_elem.tag] = value
         except BaseException as e:

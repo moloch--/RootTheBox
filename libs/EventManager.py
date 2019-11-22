@@ -55,11 +55,11 @@ class EventManager(object):
             self.public_connections.add(connection)
         else:
             # Create team dictionary is none exists
-            if not connection.team_id in self.auth_connections:
+            if connection.team_id not in self.auth_connections:
                 self.auth_connections[connection.team_id] = {}
             # Create a set() of user connections, and/or add connection
             team_connections = self.auth_connections[connection.team_id]
-            if not connection.user_id in team_connections:
+            if connection.user_id not in team_connections:
                 team_connections[connection.user_id] = set()
             team_connections[connection.user_id].add(connection)
 

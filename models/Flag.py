@@ -439,7 +439,7 @@ class Flag(DatabaseObject):
         hints_elem = ET.SubElement(flag_elem, "hints")
         hints_elem.set("count", "%s" % str(len(xml_hints)))
         for hint in xml_hints:
-            if not hint.flag_id is None:
+            if hint.flag_id is not None:
                 hint.to_xml(hints_elem)
 
     def to_dict(self):

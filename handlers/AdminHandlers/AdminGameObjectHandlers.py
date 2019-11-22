@@ -318,7 +318,7 @@ class AdminCreateHandler(BaseHandler):
         if box is None:
             raise ValidationError("Box does not exist")
         if is_file:
-            if not hasattr(self.request, "files") or not "flag" in self.request.files:
+            if not hasattr(self.request, "files") or "flag" not in self.request.files:
                 raise ValidationError("No file in request")
             token = self.request.files["flag"][0]["body"]
         else:
@@ -352,7 +352,7 @@ class AdminCreateHandler(BaseHandler):
     def add_attachments(self, flag):
         """ Add uploaded files as attachments to flags """
         if hasattr(self.request, "files"):
-            if not "attachments" in self.request.files:
+            if "attachments" not in self.request.files:
                 return
             for attachment in self.request.files["attachments"]:
                 flag_attachment = FlagAttachment(file_name=attachment["name"])

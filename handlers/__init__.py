@@ -246,6 +246,7 @@ app = Application(
     version=__version__,
 )
 
+
 # Update the database schema
 def update_db(update=True):
     db_connection = DatabaseConnection(

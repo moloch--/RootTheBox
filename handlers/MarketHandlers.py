@@ -49,7 +49,7 @@ class MarketViewHandler(BaseHandler):
         """ Called to purchase an item """
         uuid = self.get_argument("uuid", "")
         item = MarketItem.by_uuid(uuid)
-        if not item is None:
+        if item is not None:
             user = self.get_current_user()
             team = Team.by_id(user.team.id)  # Refresh object
             if user.has_item(item.name):

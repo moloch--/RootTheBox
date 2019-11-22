@@ -157,7 +157,7 @@ class MemcachedSession(BaseSession):
     def __init__(self, connection, **kwargs):
         super(MemcachedSession, self).__init__(**kwargs)
         self.connection = connection
-        if not "session_id" in kwargs:
+        if "session_id" not in kwargs:
             self.save()
 
     @staticmethod

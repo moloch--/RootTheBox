@@ -29,7 +29,8 @@ from these base classes.
 import logging
 import memcache
 import traceback
-import datetime, time
+import datetime
+import time
 
 from models import dbsession, chatsession
 from models.User import User

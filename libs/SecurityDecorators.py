@@ -34,8 +34,8 @@ def authenticated(method):
         if self.session is not None:
             if self.session.ip_address == self.request.remote_ip:
                 if (
-                    not self.request.remote_ip
-                    in self.application.settings["blacklisted_ips"]
+                    self.request.remote_ip
+                    not in self.application.settings["blacklisted_ips"]
                 ):
                     user = self.get_current_user()
                     if user is None:

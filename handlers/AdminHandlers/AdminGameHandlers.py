@@ -196,7 +196,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         box = Box.by_uuid(self.get_argument("box_uuid", ""))
         if box is not None:
             file_count = len(self.request.files["source_archive"])
-            if not "source_archive" in self.request.files and 0 < file_count:
+            if "source_archive" not in self.request.files and 0 < file_count:
                 raise ValidationError("No file data")
             else:
                 price = self.get_argument("price", "")

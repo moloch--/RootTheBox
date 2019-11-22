@@ -24,7 +24,8 @@ command line arguments it calls various components setup/start/etc.
 from __future__ import print_function
 
 
-import os, sys
+import os
+import sys
 import nose
 import random
 import logging
