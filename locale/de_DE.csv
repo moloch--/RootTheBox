@@ -62,7 +62,7 @@ Bank Password,Bankkennwort
 Bank Password Length,Länge des Bankkennworts
 Banking System,Bankensystem
 Banned IPs,Gebannte IPs
-BEGIN SECURE COMMUNIQUE,SICHERE KOMMUNIKATION BEGINNEN
+BEGIN SECURE COMMUNIQUE,BEGINN SICHERER KOMMUNIKATION
 Black Market,Schwarzmarkt
 Bonus reward for those that complete the level.,"Bonusbelohnung für diejenigen, die das Level abschließen."
 Bot,Bot
@@ -202,18 +202,18 @@ Download File,Datei Herunterladen
 Download the command line botnet monitor,Laden Sie den Kommandozeilen-Botnet-Monitor herunter
 Dynamic Scoring,Dynamisches Punkten
 Each flag has a submit.  The player will choose the flag they intend to capture.,"Jede Flagge hat ein Submit. Der Spieler wählt die Flagge, die er erobern möchte."
-"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Jeder Spieler zielt auf Herausforderungen mit unterschiedlichen Schwierigkeitsgraden und Fähigkeiten ab und versucht, Flaggen zu sammeln und Ruhm zu erlangen. Viel Glück!"
+"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Jeder Spieler visiert Herausforderungen unterschiedlicher Schwierigkeit und Rafinesse an und versucht, Flaggen zu sammeln und Ruhm zu erlangen. Viel Glück!"
 Edit,Bearbeiten
 Edit Account,Konto bearbeiten
-Edit Box,Bearbeitungsfeld
+Edit Box,Box bearbeiten
 Edit Category,Kategorie bearbeiten
-Edit Corporation,Corporation bearbeiten
-Edit Flag,Flag bearbeiten
-Edit Flag,Flag bearbeiten
+Edit Corporation,Konzern bearbeiten
+Edit Flag,Flagge bearbeiten
+Edit Flag,Flagge bearbeiten
 Edit Game Level,Spiellevel bearbeiten
 Edit Hint,Hinweis bearbeiten
-Edit Level,Ebene bearbeiten
-Edit Market Item,Marktelement bearbeiten
+Edit Level,Level bearbeiten
+Edit Market Item,Markt-Gegenstand bearbeiten
 Edit Player,Spieler bearbeiten
 Edit Team,Team bearbeiten
 Edit User,Benutzer bearbeiten
@@ -221,7 +221,7 @@ Email,Email
 EMPTY,LEEREN
 Enable,Aktivieren
 "Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.","Wenn Sie diese Funktion aktivieren, können die Spieler während der Registrierung ihre eigenen Teams erstellen. Wenn diese Option deaktiviert ist, muss der Administrator Teams erstellen, denen Spieler beitreten können."
-Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,Durch Aktivieren dieser Funktion können Spieler Code (Pastebin) und Dateien im Spiel freigeben. Durch Deaktivieren dieser Funktion werden diese Optionen aus dem Menü Extras entfernt.
+Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,Durch Aktivieren dieser Funktion können Spieler Code (Pastebin) und Dateien im Spiel teilen. Durch Deaktivieren dieser Funktion werden diese Optionen aus dem Menü Extras entfernt.
 "Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","Wenn Sie diese Funktion aktivieren, können Teams Upgrades wie die Federal Reserve, den Source Code Market oder SWAT erwerben."
 "Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.","Durch Aktivieren dieser Funktion kann das Spiel Flaggen- oder Box-Capture-Meldungen anzeigen, die hinzugefügt werden können. Standardmäßig folgt das Spiel der Handlung von Morris, einem Arbeitgeber, der Missionen zuweist."
 "Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.","Durch Aktivieren dieser Funktion werden falsche Erfassungsversuche bestraft. Die Strafe ist ein sofortiger Abzug von der Punktzahl, keine Abnahme des Flaggenwerts."
@@ -236,10 +236,10 @@ Enabling this feature will send flag and level unlock notifications to all playe
 "Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.","Wenn Sie diese Option aktivieren, unterscheidet das Token zwischen Groß- und Kleinschreibung. Wenn diese Option deaktiviert ist, wird beim Antwort-Token nicht zwischen Groß- und Kleinschreibung unterschieden."
 "Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.","Durch Aktivieren dieser Option wird das Token auf Groß- und Kleinschreibung eingestellt. Wenn diese Option deaktiviert ist, wird beim Antwort-Token die Groß- und Kleinschreibung nicht berücksichtigt."
 Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,Durch Aktivieren dieser Einstellung werden die Botnet-Funktionen aktiviert. Teams können ihre Bot-Programme auf von ihnen selbst erstellten Boxen ausführen und werden für jeden Bot im Laufe der Zeit bezahlt.
-END SECURE COMMUNIQUE,ENDE SICHERE KOMMUNIKATION
-Enter a complex password of,Geben Sie ein komplexes Passwort von ein
+END SECURE COMMUNIQUE,ENDE SICHERER KOMMUNIKATION
+Enter a complex password of,Geben Sie ein komplexes Passwort ein mit
 Enter a Matching Flag,Geben Sie eine passende Flagge ein
-Enter Choice,Geben Sie Choice ein
+Enter Choice,Auswahl eingeben
 Enter the same password as before,Geben Sie dasselbe Passwort wie zuvor ein
 ERROR,ERROR
 Export Game Objects,Spielobjekte exportieren
@@ -249,40 +249,40 @@ Failed Attempts,Fehlgeschlagene Versuche
 Failed Logins,Fehlgeschlagene Anmeldungen
 Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,"Misserfolg hat Kosten. Seien Sie vorsichtig, da Strafen verhängt werden, wenn falsche Antworten eingereicht werden."
 Federal Reserve,Federal Reserve
-Federal Reserve Bank,Bundesreservebank
+Federal Reserve Bank,Federal Reserve Bank
 File,Datei
 File Description,Dateibeschreibung
-File Flag,Datei-Flag
+File Flag,Datei-Flagge
 File Name,Dateiname
 File Share,Dateifreigabe
 File Sharing,Datenaustausch
 File Size,Dateigröße
 First Login,Erstes Login
 Flag,Flagge
-Flag Capture,Flaggenerfassung
-Flag Decrease Value,Flag Wert verringern
-Flag Details,Kennzeichnungsdetails
-Flag File,Datei kennzeichnen
-Flag Hints,Hinweise kennzeichnen
-Flag Name,Flag Name
-Flag Penalty,Fahnenstrafe
-Flag Penalty % Cost,Flag Strafe% Kosten
+Flag Capture,Flaggeneroberung
+Flag Decrease Value,Flaggenwert verringern
+Flag Details,Flaggendetails
+Flag File,Flaggendatei
+Flag Hints,Flaggenhinweise
+Flag Name,Flaggenname
+Flag Penalty,Flaggenstrafe
+Flag Penalty % Cost,%-Kosten der Flaggenstrafe
 Flag Penalty Cost,Kosten der Flaggenstrafe
-Flag Penalty Start,Flag Penalty Start
-Flag Penalty Stop,Flag Penalty Stop
-Flag Submission Type,Übermittlungstyp kennzeichnen
-Flag Type,Flag-Typ
+Flag Penalty Start,Flaggenstrafe Start
+Flag Penalty Stop,Flaggenstrafe Stop
+Flag Submission Type,Übermittlungstyp der Flagge
+Flag Type,Flaggentyp
 Flags,Flaggen
-Flags / Boxes / Corp.,Fahnen / Boxen / Corp.
-Flags Captured,Flaggen erfasst
-Flags on,Fahnen auf
+Flags / Boxes / Corp.,Flaggen / Boxen / Konzerne
+Flags Captured,Eroberte Flaggen
+Flags on,Flaggen auf
 for,zum
 Forbidden,verboten
 Game,Spiel
 Game Control,Spielsteuerung
 Game Information,Spielinformationen
 Game Level,Spiellevel
-Game Levels,Spielstufen
+Game Levels,Spiellevels
 Game Management,Spielverwaltung
 Game Materials,Spielmaterialien
 Game Name,Spielname
@@ -292,37 +292,37 @@ Get help with,Holen Sie sich Hilfe bei
 Get your registration token from reception,Holen Sie sich Ihren Registrierungs-Token an der Rezeption
 Glitch in the Matrix,Glitch in der Matrix
 Global Notifications,Globale Benachrichtigungen
-Handle,Griff
+Handle,Identifikator
 Hint,Hinweis
-Hint not yet taken,Hinweis noch nicht genommen
-Hint Taken,Hinweis genommen
+Hint not yet taken,Hinweis noch nicht genutzt
+Hint Taken,Hinweis genutzt
 Hints,Hinweise
 Hints on,Hinweise auf
-Hints Taken,Tipps gemacht
-History,Geschichte
-Home,Zuhause
+Hints Taken,Genutzte Hinweise
+History,Historie
+Home,Startseite
 How should the next level unlock?,Wie soll das nächste Level freigeschaltet werden?
-"If the flag selection is left empty, the hint will be considered a Box Hint.","Wenn die Flag-Auswahl leer gelassen wird, wird der Hinweis berücksichtigt"
-"If this option is disabled, there is no cost for submitting incorrect flags.","Wenn diese Option deaktiviert ist, fallen keine Kosten für die Übermittlung falscher Flags an."
+"If the flag selection is left empty, the hint will be considered a Box Hint.","Wenn die Flaggen-Auswahl leer gelassen wird, wird der Hinweis berücksichtigt"
+"If this option is disabled, there is no cost for submitting incorrect flags.","Wenn diese Option deaktiviert ist, fallen keine Kosten für die Übermittlung falscher Flaggen an."
 Import File,Datei importieren
 Import XML,XML importieren
 Import XML,XML importieren
 In Progress,In Bearbeitung
-"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","In diesem Fall ist das Flag eine Datums- / Uhrzeitzeichenfolge. Dieser Flag-Typ versucht, mit gängigen Datums- / Uhrzeit-Formatvariationen übereinzustimmen und behandelt Unterschiede wie Schrägstriche, Bindestriche, Auffüllungen, 12 Stunden, 24 Stunden usw. Er kann ein Datum, eine Uhrzeit oder eine Datums- / Uhrzeitangabe verarbeiten."
-"In this case, the flag is a multiple choice question where the selected option is the token.","In diesem Fall ist das Flag eine Multiple-Choice-Frage, bei der die ausgewählte Option das Token ist."
-"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","In diesem Fall ist das Flag ein regulärer Ausdruck. Der Benutzer muss eine Zeichenfolge übermitteln, die mit dem Muster übereinstimmt, um das Flag zu erfassen. Übereinstimmungen können unempfindlich sein. Bitte stellen Sie sicher, dass Sie Ihren regulären Ausdruck testen, und stellen Sie sicher, dass er nicht zu breit ist."
-"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.","In diesem Fall ist das Flag eine statische Zeichenfolge. Der Benutzer muss das genaue Token senden, um das Flag zu erfassen. Leerzeichen am Anfang und Ende werden entfernt."
+"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","In diesem Fall ist die Flagge eine Datums- / Uhrzeitzeichenfolge. Dieser Flaggentyp versucht, mit gängigen Datums- / Uhrzeit-Formatvariationen übereinzustimmen und behandelt Unterschiede wie Schrägstriche, Bindestriche, Auffüllungen, 12 Stunden, 24 Stunden usw. Er kann ein Datum, eine Uhrzeit oder eine Datums- / Uhrzeitangabe verarbeiten."
+"In this case, the flag is a multiple choice question where the selected option is the token.","In diesem Fall ist die Flagge eine Multiple-Choice-Frage, bei der die ausgewählte Option das Token ist."
+"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","In diesem Fall ist die Flagge ein regulärer Ausdruck. Der Benutzer muss eine Zeichenfolge übermitteln, die mit dem Muster übereinstimmt, um die Flagge zu erobern. Übereinstimmungen können unempfindlich sein. Bitte stellen Sie sicher, dass Sie Ihren regulären Ausdruck testen, und stellen Sie sicher, dass er nicht zu breit angelegt ist."
+"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.","In diesem Fall ist die Flagge eine statische Zeichenfolge. Der Benutzer muss das genaue Token senden, um die Flagge zu erobern. Leerzeichen am Anfang und Ende werden entfernt."
 Income,Einkommen
 Incoming Transmission,Eingehende Übertragung
 Incorrect,Falsch
-Incorrect Penalty,Falsche Strafe
+Incorrect Penalty,Strafe für falsche Lösung
 indicates use by another player,Zeigt die Verwendung durch einen anderen Spieler an
 INFO,INFO
 Information,Information
 Invalid CSRF Token,Ungültiges CSRF-Token
 IP Address,IP Adresse
 IP Version,IP-Version
-It appears you're an unsophisticated script kiddie!,"Es sieht so aus, als wärst du ein ungekünstelter Drehbuchkind!"
+It appears you're an unsophisticated script kiddie!,"Es sieht so aus, als wären Sie ein einfaches Skript-Kiddie!"
 "It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).","Es kann für alle Besucher (öffentlich), für authentifizierte Benutzer (Spieler) oder nur für Administratoren (Administratoren) sichtbar sein."
 "It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.","Anscheinend haben Sie eine URL falsch eingegeben oder versucht, etwas zu finden, auf das Sie keinen Zugriff haben sollten."
 "It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.","Es geht um das Geld und es ist Zeit, diese Fähigkeiten zu nutzen! Dieses Spiel ist für die Verwendung eines Banksystems eingerichtet. Verschwenden Sie also keine Zeit, um Ihr Vermögen aufzubauen und das zu kaufen, was Sie zum Gewinnen benötigen."
@@ -331,13 +331,13 @@ Join Existing Team,Treten Sie dem bestehenden Team bei
 Known IP Addresses,Bekannte IP-Adressen
 Last Ping,Letzter Ping
 Learn,Lernen
-Level,Niveau
-Level Name,Ebenenname
-Level Number,Ebenennummer
-Level to put box in?,Level zum Einstecken?
+Level,Level
+Level Name,Level-Name
+Level Number,Level-Nummer
+Level to put box in?,Level um Box hineinzutun?
 Level Unlocked,Level freigeschaltet
 Limit number of players that can be on any one team,"Begrenzen Sie die Anzahl der Spieler, die in einem Team sein können"
-"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Begrenzt die Anzahl der Versuche, ein Flag zu erfassen. Sobald das Limit erreicht ist, kann für dieses Flag keine weitere Aktion ausgeführt werden."
+"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Begrenzt die Anzahl der Versuche, eine Flagge zu erobern. Sobald das Limit erreicht ist, kann für dieses Flag keine weitere Aktion ausgeführt werden."
 Linux,Linux
 Lock,Sperren
 Locked by,Gesperrt von
@@ -350,22 +350,22 @@ Manage Black Market,Schwarzmarkt verwalten
 Manage Categories,Kategorien verwalten
 Market Objects,Marktobjekte
 Max,Max
-Max Flag Attempts,Max. Flag-Versuche
+Max Flag Attempts,Max. Flaggen-Versuche
 Max PasteBin Size,Max PasteBin Size
 Max Team Size,Maximale Teamgröße
-Maximum Flag Attempts,Maximale Flag-Versuche
+Maximum Flag Attempts,Maximale Flaggen-Versuche
 Maximum Penalty,Maximale Strafe
 Maximum Penalty is determined as,Die maximale Strafe wird bestimmt als
 Min user password length,Min. Länge des Benutzerpassworts
 Minimum User Password Length,Minimale Länge des Benutzerpassworts
 Mission Progress,Missionsfortschritt
 Missions,Missionen
-Modifies the way flag submission are made.,"Ändert die Art und Weise, in der die Flagübermittlung erfolgt."
+Modifies the way flag submission are made.,"Ändert die Art und Weise, in der die Flaggenübermittlung erfolgt."
 Money,Geld
 money,Geld
 Motto,Motto
 Multiple Choice,Mehrfachauswahl
-Multiple Choice Flag,Multiple Choice Flag
+Multiple Choice Flag,Multiple-Choice-Flagge
 Must be unique,Muss einzigartig sein
 MVP,MVP
 MVP - List Top N Payers,MVP - Liste der Top N Zahler
@@ -471,7 +471,7 @@ Rank By,Rang nach
 Regex Flag,Regex Flagge
 Regex Pattern,Regex-Muster
 Register Account,Account registrieren
-Registration,Anmeldung
+Registration,Registrierung
 Registration Email,Registrierungs-E-Mail
 Registration Tokens,Registrierungs-Tokens
 Regular Expression,Regulären Ausdruck
