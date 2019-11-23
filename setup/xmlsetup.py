@@ -24,15 +24,18 @@ It reads an XML file(s) and calls the API based on the it's contents.
 # pylint: disable=unused-wildcard-import
 
 
-import os
 import logging
 import defusedxml.cElementTree as ET
+from os import urandom, path, listdir
+from tornado.options import options
+from shutil import copyfile
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *
 from models import dbsession
 from models.Box import FlagsSubmissionType
-from libs.StringCoding import decode
+from libs.StringCoding import encode, decode
+from libs.ConfigHelpers import save_config, save_config_image
 from base64 import b64decode
 
 
@@ -87,8 +90,8 @@ def create_levels(levels):
                 game_level.number = number
                 game_level.name = get_child_text(level_elem, "name")
                 game_level.type = get_child_text(level_elem, "type")
-                game_level.reward = get_child_text(level_elem, "reward")
-                game_level.buyout = get_child_text(level_elem, "buyout")
+                game_level.reward = get_child_text(level_elem, "reward", 0)
+                game_level.buyout = get_child_text(level_elem, "buyout", 0)
                 dbsession.add(game_level)
             else:
                 logging.info("GameLevel %d already exists, skipping" % int(number))
@@ -106,51 +109,53 @@ def create_levels(levels):
 
 def create_hints(parent, box, flag=None):
     """ Create flag objects for a box """
-    logging.info("Found %s hint(s)" % parent.get("count"))
-    for index, hint_elem in enumerate(parent.getchildren()):
-        try:
-            flag_id = None
-            if flag:
-                flag_id = flag.id
-            hint = Hint(box_id=box.id, flag_id=flag_id)
-            hint.price = get_child_text(hint_elem, "price")
-            hint.description = get_child_text(hint_elem, "description")
-            dbsession.add(hint)
-        except:
-            logging.exception("Failed to import hint #%d" % (index + 1))
+    if parent:
+        logging.info("Found %s hint(s)" % parent.get("count"))
+        for index, hint_elem in enumerate(parent.getchildren()):
+            try:
+                flag_id = None
+                if flag:
+                    flag_id = flag.id
+                hint = Hint(box_id=box.id, flag_id=flag_id)
+                hint.price = get_child_text(hint_elem, "price", 0)
+                hint.description = get_child_text(hint_elem, "description")
+                dbsession.add(hint)
+            except:
+                logging.exception("Failed to import hint #%d" % (index + 1))
 
 
 def create_flags(parent, box):
     """ Create flag objects for a box """
-    logging.info("Found %s flag(s)" % parent.get("count"))
-    flag_dependency = []
-    for index, flag_elem in enumerate(parent.getchildren()):
-        try:
-            name = get_child_text(flag_elem, "name")
-            flag = Flag(box_id=box.id)
-            flag.name = name
-            flag.token = get_child_text(flag_elem, "token")
-            flag.value = get_child_text(flag_elem, "value")
-            flag.case_sensitive = get_child_text(flag_elem, "case_sensitive")
-            flag.description = get_child_text(flag_elem, "description")
-            flag.capture_message = get_child_text(flag_elem, "capture_message")
-            flag.type = flag_elem.get("type")
-            dbsession.add(flag)
-            dbsession.flush()
-            depend = get_child_text(flag_elem, "depends_on")
-            if depend:
-                flag_dependency.append({"flag": flag, "name": depend})
-            if flag.type == "choice":
-                create_choices(get_child_by_tag(flag_elem, "flag_choices"), flag)
-            create_hints(get_child_by_tag(flag_elem, "hints"), box, flag)
-        except:
-            logging.exception("Failed to import flag #%d" % (index + 1))
-    if len(flag_dependency) > 0:
-        for item in flag_dependency:
-            for flag in box.flags:
-                if item["name"] == flag.name:
-                    item["flag"].lock_id = flag.id
-                    continue
+    if parent:
+        logging.info("Found %s flag(s)" % parent.get("count"))
+        flag_dependency = []
+        for index, flag_elem in enumerate(parent.getchildren()):
+            try:
+                flag = Flag(box_id=box.id)
+                flag.name = get_child_text(flag_elem, "name")
+                flag.token = get_child_text(flag_elem, "token")
+                flag.value = get_child_text(flag_elem, "value", 10)
+                flag.case_sensitive = get_child_text(flag_elem, "case_sensitive", 0)
+                flag.description = get_child_text(flag_elem, "description")
+                flag.capture_message = get_child_text(flag_elem, "capture_message")
+                flag.type = get_child_text(flag_elem, "type", "static")
+                flag.order = get_child_text(flag_elem, "order", None)
+                dbsession.add(flag)
+                dbsession.flush()
+                depend = get_child_text(flag_elem, "depends_on", None)
+                if depend:
+                    flag_dependency.append({"flag": flag, "name": depend})
+                if flag.type == "choice":
+                    create_choices(get_child_by_tag(flag_elem, "flag_choices"), flag)
+                create_hints(get_child_by_tag(flag_elem, "hints"), box, flag)
+            except:
+                logging.exception("Failed to import flag #%d" % (index + 1))
+        if len(flag_dependency) > 0:
+            for item in flag_dependency:
+                for flag in box.flags:
+                    if item["name"] == flag.name:
+                        item["flag"].lock_id = flag.id
+                        continue
 
 
 def create_choices(parent, flag):
@@ -171,7 +176,7 @@ def create_boxes(parent, corporation):
     for index, box_elem in enumerate(parent.getchildren()):
         try:
             name = get_child_text(box_elem, "name")
-            game_level = GameLevel.by_number(box_elem.get("gamelevel"))
+            game_level = GameLevel.by_number(get_child_text(box_elem, "gamelevel", "0"))
             if game_level is None:
                 logging.warning("GameLevel does not exist for box %s, skipping" % name)
             elif Box.by_name(name) is None:
@@ -179,23 +184,21 @@ def create_boxes(parent, corporation):
                 box.name = name
                 box.game_level_id = game_level.id
                 box.difficulty = get_child_text(box_elem, "difficulty")
-                box.flag_submission_type = (
-                    FlagsSubmissionType[
-                        get_child_text(box_elem, "flag_submission_type")
-                    ]
-                    if get_child_text(box_elem, "flag_submission_type") is not None
-                    else FlagsSubmissionType.CLASSIC
-                )
+                box.flag_submission_type = FlagsSubmissionType[
+                    get_child_text(box_elem, "flag_submission_type", "CLASSIC")
+                ]
 
                 box.description = get_child_text(box_elem, "description")
                 box.capture_message = get_child_text(box_elem, "capture_message")
                 box.operating_system = get_child_text(box_elem, "operatingsystem")
-                box.value = get_child_text(box_elem, "value")
-                if get_child_text(box_elem, "avatar") != "none":
+                box.value = get_child_text(box_elem, "value", "0")
+                if get_child_text(box_elem, "avatar", "none") != "none":
                     box.avatar = bytearray(
                         b64decode(get_child_text(box_elem, "avatar"))
                     )
-                box.garbage = get_child_text(box_elem, "garbage")
+                box.garbage = get_child_text(
+                    box_elem, "garbage", encode(urandom(16), "hex")
+                )
                 category = get_child_text(box_elem, "category")
                 if category:
                     box.category_id = Category.by_category(category).id
@@ -226,6 +229,29 @@ def create_corps(corps):
             logging.exception("Faild to create corporation #%d (%s)" % (index + 1, e))
 
 
+def update_configuration(config):
+    """ Update Configuration options based on XML data """
+    if config is None:
+        return
+    else:
+        """ Backup configuration """
+        copyfile(options.config, options.config + ".bak")
+    images = ["ctf_logo", "story_character", "scoreboard_right_image"]
+    for config_elem in config:
+        try:
+            if options[config_elem.tag] is not None:
+                if config_elem.tag in images:
+                    value = save_config_image(get_child_text(config, config_elem.tag))
+                else:
+                    value = get_child_text(config, config_elem.tag)
+                if isinstance(value, type(options[config_elem.tag])):
+                    logging.info("Configuration (%s): %s" % (config_elem.tag, value))
+                    options[config_elem.tag] = value
+        except BaseException as e:
+            logging.exception("Faild to update configuration (%s)" % e)
+    save_config()
+
+
 def _xml_file_import(filename):
     """ Parse and import a single XML file """
     logging.debug("Processing: %s" % filename)
@@ -238,6 +264,8 @@ def _xml_file_import(filename):
         create_categories(categories)
         corporations = get_child_by_tag(xml_root, "corporations")
         create_corps(corporations)
+        configuration = get_child_by_tag(xml_root, "configuration")
+        update_configuration(configuration)
         logging.debug("Done processing: %s" % filename)
         dbsession.commit()
         return True
@@ -251,13 +279,13 @@ def _xml_file_import(filename):
 
 def import_xml(target):
     """ Import XML file or directory of files """
-    target = os.path.abspath(target)
-    if not os.path.exists(target):
+    target = path.abspath(target)
+    if not path.exists(target):
         logging.error("Error: Target does not exist (%s) " % target)
-    elif os.path.isdir(target):
+    elif path.isdir(target):
         # Import any .xml files in the target directory
         logging.debug("%s is a directory ..." % target)
-        ls = [fname for fname in os.listdir(target) if fname.lower().endswith(".xml")]
+        ls = [fname for fname in listdir(target) if fname.lower().endswith(".xml")]
         logging.debug("Found %d XML file(s) ..." % len(ls))
         results = [_xml_file_import(target + "/" + fxml) for fxml in ls]
         return False not in results

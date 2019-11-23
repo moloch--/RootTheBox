@@ -65,7 +65,7 @@ class BaseSession(collections.MutableMapping):
         return "<Session id: %s, Expires: %s>" % (self.session_id, self.expires)
 
     def __str__(self):
-        return self.session_id
+        return str(self.session_id)
 
     def __getitem__(self, key):
         return self.data[key]
@@ -157,7 +157,7 @@ class MemcachedSession(BaseSession):
     def __init__(self, connection, **kwargs):
         super(MemcachedSession, self).__init__(**kwargs)
         self.connection = connection
-        if not "session_id" in kwargs:
+        if "session_id" not in kwargs:
             self.save()
 
     @staticmethod

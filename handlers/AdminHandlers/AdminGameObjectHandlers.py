@@ -33,6 +33,7 @@ import logging
 import re
 import json
 
+from past.utils import old_div
 from handlers.BaseHandlers import BaseHandler
 from models.Box import Box, FlagsSubmissionType
 from models.Corporation import Corporation
@@ -179,7 +180,15 @@ class AdminCreateHandler(BaseHandler):
             if Box.by_name(self.get_argument("name", "")) is not None:
                 raise ValidationError("Box name already exists")
             elif Corporation.by_uuid(corp_uuid) is None:
-                raise ValidationError("Corporation does not exist")
+                if len(Corporation.all()) == 0:
+                    # Create a empty Corp
+                    corporation = Corporation()
+                    corporation.name = ""
+                    self.dbsession.add(corporation)
+                    self.dbsession.commit()
+                    corp_uuid = corporation.uuid
+                else:
+                    raise ValidationError("Corporation does not exist")
             elif GameLevel.by_number(game_level) is None:
                 raise ValidationError("Game level does not exist")
             else:
@@ -309,7 +318,7 @@ class AdminCreateHandler(BaseHandler):
         if box is None:
             raise ValidationError("Box does not exist")
         if is_file:
-            if not hasattr(self.request, "files") or not "flag" in self.request.files:
+            if not hasattr(self.request, "files") or "flag" not in self.request.files:
                 raise ValidationError("No file in request")
             token = self.request.files["flag"][0]["body"]
         else:
@@ -343,7 +352,7 @@ class AdminCreateHandler(BaseHandler):
     def add_attachments(self, flag):
         """ Add uploaded files as attachments to flags """
         if hasattr(self.request, "files"):
-            if not "attachments" in self.request.files:
+            if "attachments" not in self.request.files:
                 return
             for attachment in self.request.files["attachments"]:
                 flag_attachment = FlagAttachment(file_name=attachment["name"])
@@ -373,9 +382,88 @@ class AdminViewHandler(BaseHandler):
             "notifications": "admin/view/notifications.html",
         }
         if len(args) and args[0] in uri:
-            self.render(uri[args[0]], errors=None)
+            self.render(uri[args[0]], errors=None, success=None)
         else:
             self.render("public/404.html")
+
+        """ Restore points or update tokens from an failed attempt """
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        if args[0] == "statistics" or args[0] == "game_objects":
+            uri = {
+                "game_objects": "admin/view/game_objects.html",
+                "statistics": "admin/view/statistics.html",
+            }
+            flag_uuid = self.get_argument("flag_uuid", "")
+            team_uuid = self.get_argument("team_uuid", "")
+            flag = Flag.by_uuid(flag_uuid)
+            team = Team.by_uuid(team_uuid)
+            errors = []
+            success = []
+            if flag:
+                point_restore = self.get_argument("point_restore", "")
+                accept_answer = self.get_argument("accept_answer", "")
+                answer_token = self.get_argument("answer_token", "")
+                if point_restore == "on" and options.penalize_flag_value and team:
+                    value = int(flag.value * (options.flag_penalty_cost * 0.01))
+                    team.money += value
+                    penalty = Penalty.by_team_token(flag, team, answer_token)
+                    if penalty:
+                        self.dbsession.delete(penalty)
+                    self.dbsession.add(team)
+                    self.event_manager.admin_score_update(
+                        team,
+                        "%s penalty reversed - score has been updated." % team.name,
+                        value,
+                    )
+                    if flag not in team.flags:
+                        team.flags.append(flag)
+                        team.money += flag.value
+                        self.dbsession.add(team)
+                        if self.config.dynamic_flag_value:
+                            depreciation = float(
+                                old_div(self.config.flag_value_decrease, 100.0)
+                            )
+                            flag.value = int(flag.value - (flag.value * depreciation))
+                            self.dbsession.add(flag)
+                        self.event_manager.flag_captured(team, flag)
+                        self._check_level(flag, team)
+                    success.append("%s awarded %d" % (team.name, value))
+                if (
+                    accept_answer == "on"
+                    and (flag.type == "static" or flag.type == "regex")
+                    and not flag.capture(answer_token)
+                ):
+                    flag.type = "regex"
+                    if flag.token.startswith("(") and flag.token.endwith(")"):
+                        token = "%s|(%s)" % (flag.token, answer_token)
+                    else:
+                        token = "(%s)|(%s)" % (flag.token, answer_token)
+                    if len(token) < 256:
+                        flag.token = token
+                        self.dbsession.add(flag)
+                        success.append(
+                            "Token succesfully added for Flag %s" % flag.name
+                        )
+                    else:
+                        errors.append("Flag token too long. Can not expand token.")
+                self.dbsession.commit()
+            self.render(uri[args[0]], errors=errors, success=success)
+        else:
+            self.render("public/404.html")
+
+    def _check_level(self, flag, team):
+        if len(team.level_flags(flag.game_level.number)) == len(flag.game_level.flags):
+            next_level = next(flag.game_level)
+            if next_level is not None:
+                logging.info("Next level is %r" % next_level)
+                if next_level not in team.game_levels:
+                    logging.info("Team completed level, unlocking the next level")
+                    team.game_levels.append(next_level)
+                    self.dbsession.add(team)
 
 
 class AdminEditHandler(BaseHandler):
@@ -440,7 +528,9 @@ class AdminEditHandler(BaseHandler):
                 self.dbsession.commit()
             self.redirect("/admin/view/game_objects")
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[str(error)])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=[str(error)]
+            )
 
     def edit_category(self):
         """ Updates category object in the database """
@@ -561,7 +651,9 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[str(error)])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=[str(error)]
+            )
 
     def edit_flag_order(self):
         """ Edit flag order in the database """
@@ -636,7 +728,9 @@ class AdminEditHandler(BaseHandler):
                 self.edit_choices(flag, self.request.arguments)
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=["%s" % error])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=["%s" % error]
+            )
 
     def edit_choices(self, flag, arguments):
         """ Edit flag multiple choice items """
@@ -685,7 +779,9 @@ class AdminEditHandler(BaseHandler):
             else:
                 raise ValidationError("IP address is already in use")
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[str(error)])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=[str(error)]
+            )
 
     def edit_game_level(self):
         """ Update game level objects """
@@ -763,7 +859,9 @@ class AdminEditHandler(BaseHandler):
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
-            self.render("admin/view/game_objects.html", errors=[str(error)])
+            self.render(
+                "admin/view/game_objects.html", success=None, errors=[str(error)]
+            )
 
     def edit_market_item(self):
         """ Change a market item's price """
@@ -818,7 +916,9 @@ class AdminDeleteHandler(BaseHandler):
                 % (self.get_argument("ip_uuid", ""),)
             )
             self.render(
-                "admin/view/game_objects.html", errors=["IP does not exist in database"]
+                "admin/view/game_objects.html",
+                success=None,
+                errors=["IP does not exist in database"],
             )
 
     def del_flag(self):
@@ -836,6 +936,7 @@ class AdminDeleteHandler(BaseHandler):
             )
             self.render(
                 "admin/view/game_objects.html",
+                success=None,
                 errors=["Flag does not exist in database."],
             )
 
@@ -850,6 +951,7 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render(
                 "admin/view/game_objects.html",
+                success=None,
                 errors=["Hint does not exist in database."],
             )
 
@@ -864,6 +966,7 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render(
                 "admin/view/game_objects.html",
+                success=None,
                 errors=["Corporation does not exist in database."],
             )
 
@@ -892,6 +995,7 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render(
                 "admin/view/game_objects.html",
+                success=None,
                 errors=["Box does not exist in database."],
             )
 
@@ -949,6 +1053,7 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                     flaginfo = [
                         {
                             "name": flag.name,
+                            "description": flag.description,
                             "token": flag.token,
                             "price": "$" + str(flag.value),
                         }
@@ -966,11 +1071,7 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                     team = Team.by_id(item[0])
                     if team:
                         captures.append({"name": team.name})
-                attempts = []
-                for item in Penalty.by_flag_id(flag.id):
-                    team = Team.by_id(item.team_id)
-                    if team:
-                        attempts.append({"name": team.name, "token": item.token})
+                attempts = self.attempts(flag)
                 hints = []
                 for item in Hint.taken_by_flag(flag.id):
                     team = Team.by_id(item.team_id)
@@ -999,6 +1100,44 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
         else:
             self.write({"Error": "Invalid object type."})
         self.finish()
+
+    def attempts(self, flag):
+        attempts = []
+        teamcount = {}
+        for item in Penalty.by_flag_id(flag.id):
+            team = Team.by_id(item.team_id)
+            if team.id in teamcount:
+                teamcount.update({team.id: teamcount[team.id] + 1})
+            else:
+                teamcount.update({team.id: 1})
+            if team:
+                if team.id in teamcount:
+                    teamcount.update({team.id: teamcount[team.id] + 1})
+                else:
+                    teamcount.update({team.id: 1})
+                entries = {
+                    "name": team.name,
+                    "token": item.token,
+                    "flag": flag.uuid,
+                    "team": team.uuid,
+                    "type": flag.type,
+                }
+                if options.penalize_flag_value:
+                    penalty = "-"
+                    if options.banking:
+                        penalty += "$"
+                    if (
+                        teamcount[team.id] < options.flag_start_penalty
+                        or teamcount[team.id] > options.flag_stop_penalty
+                    ):
+                        penalty += "0"
+                    else:
+                        penalty += str(
+                            int(flag.value * (options.flag_penalty_cost * 0.01))
+                        )
+                    entries.update({"penalty": penalty})
+                attempts.append(entries)
+        return attempts
 
 
 class AdminTestTokenHandler(BaseHandler):

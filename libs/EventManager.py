@@ -55,11 +55,11 @@ class EventManager(object):
             self.public_connections.add(connection)
         else:
             # Create team dictionary is none exists
-            if not connection.team_id in self.auth_connections:
+            if connection.team_id not in self.auth_connections:
                 self.auth_connections[connection.team_id] = {}
             # Create a set() of user connections, and/or add connection
             team_connections = self.auth_connections[connection.team_id]
-            if not connection.user_id in team_connections:
+            if connection.user_id not in team_connections:
                 team_connections[connection.user_id] = set()
             team_connections[connection.user_id].add(connection)
 
@@ -167,22 +167,22 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
-    def flag_captured(self, user, flag):
+    def flag_captured(self, team, flag):
         """ Callback for when a flag is captured """
         if len(GameLevel.all()) > 1:
             message = "%s has captured the '%s' flag in %s (Lvl %s)" % (
-                user.team.name,
+                team.name,
                 flag.name,
                 flag.box.name,
                 GameLevel.by_id(flag.box.game_level_id).number,
             )
         else:
             message = "%s has captured the '%s' flag in %s" % (
-                user.team.name,
+                team.name,
                 flag.name,
                 flag.box.name,
             )
-        Notification.create_broadcast(user.team, "Flag Capture", message, SUCCESS)
+        Notification.create_broadcast(team, "Flag Capture", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 

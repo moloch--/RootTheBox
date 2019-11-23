@@ -1,0 +1,51 @@
+{% extends "../main.html" %}
+
+{% block title %}{{ _("Scoreboard Feed") }}{% end %}
+{% block header %}
+<script src="/static/js/pages/scoreboard/feed.js"></script>
+<link rel="stylesheet" href="/static/css/pages/public/feed.css">
+{% end %}
+{% block content %}
+{% from tornado.options import options %}
+<div class="container">
+    <h1><i class="fa fa-fw fa-rss"></i>{{ _("Scoreboard Feed") }}
+    <a href="https://ctftime.org/" target="_blank"><img src="/static/images/ctftime.svg" alt="CTFtime.org" style="border: 0px; width: 180px; float: right;"></a>
+    </h1>
+    <br />
+    {% if options.scoreboard_visibility != "public" %}
+        <h4 style="color: red;">NOTE: The scoreboard must be set to "public" visibility in the configuration to use the Feed URL with CTFtime.</h4>
+    {% end %}
+    <div class="well">
+        <div>
+            This Scoreboard feed can be used to update <a href="https://ctftime.org/" target="_blank">CTFtime</a> for real-time (feed url) or archive (copy json) purposes.  
+            <div style="margin-left: 30px; margin-top: 8px;">
+            
+                <strong>Feed URL: </strong><i>As a CTF organizer you can provide CTFtime a scoreboard feed, so they can parse it in realtime and provide more information to CTF teams.
+                In your CTF management panel you can specify the URLs for the feeds. Feed polling interval is 60 sec.</i>
+            </div>    
+            <div style="margin-left: 30px; margin-top: 8px;">
+                <strong>Copy JSON: </strong><i>You can upload the scoreboard after the CTF is finish. Copy the below JSON and submit the final results via form available at: Manage CTFs -> Existing CTF events -> Manage results.</i> 
+            </div>
+        </div>
+        <div id="ctftime-target" class="ctftime">
+            <div class="input-group" style="text-align: center">
+                <input id="ctftime_feed_link" type="text" value="{{hostname}}/scoreboard/ajax/feed">
+                <span class="input-group-button">
+                    <button class="btn" type="button" data-clipboard-btn="" data-clipboard-target="#ctftime_feed_link">
+                    <img class="clippy" src="/static/images/clippy.svg" alt="Copy to clipboard" width="14">
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div id="snippet" class="snippet"><button class="btn" data-clipboard-snippet=""><img class="clippy" src="/static/images/clippy.svg" alt="Copy to clipboard" width="14"></button>
+           <pre></pre>
+        </div>   
+    </div>
+</div>
+{% block footer %}
+<script src="/static/js/libs/clipboard/clipboard.min.js"></script>
+<script src="/static/js/libs/clipboard/tooltips.js"></script>
+<script src="/static/js/libs/clipboard/snippets.js"></script>
+<script src="/static/js/libs/clipboard/clipfeed.js"></script>
+{% end %}
+{% end %}

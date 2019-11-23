@@ -39,8 +39,11 @@ class ChatManager(object):
         # Create the user's account on RocketChat
         if not self.rocket:
             return
+        email = user.email
+        if email is None:
+            email = "%s@rocketchat.com" % user.uuid
         account = self.rocket.users_create(
-            user.email, user.name, password, user.handle.replace(" ", "_")
+            email, user.name, password, user.handle.replace(" ", "_")
         ).json()
         self.create_team(user.team, account)
 

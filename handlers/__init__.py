@@ -93,6 +93,7 @@ urls = [
     # Scoreboard Handlers - ScoreboardHandlers.py
     (r"/scoreboard", ScoreboardHandler),
     (r"/scoreboard/history", ScoreboardHistoryHandler),
+    (r"/scoreboard/feed", ScoreboardFeedHandler),
     (r"/scoreboard/ajax/(.*)", ScoreboardAjaxHandler),
     (r"/scoreboard/wsocket/game_data", ScoreboardDataSocketHandler),
     (r"/scoreboard/wsocket/game_history", ScoreboardHistorySocketHandler),
@@ -240,9 +241,11 @@ app = Application(
     ),
     # Scoreboard Hightlights
     scoreboard_history={},
+    scoreboard_state={},
     # Application version
     version=__version__,
 )
+
 
 # Update the database schema
 def update_db(update=True):
@@ -300,7 +303,7 @@ def start_server():
             sys.exit()
     server.add_sockets(sockets)
     try:
-        Scoreboard.now(app)
+        Scoreboard.update_gamestate(app)
     except OperationalError as err:
         if "Table definition has changed" in str(err):
             logging.info("Table definitions have changed -restarting RootTheBox.")

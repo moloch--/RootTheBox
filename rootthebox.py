@@ -24,7 +24,8 @@ command line arguments it calls various components setup/start/etc.
 from __future__ import print_function
 
 
-import os, sys
+import os
+import sys
 import nose
 import random
 import logging
@@ -347,10 +348,17 @@ define(
 )
 
 define(
-    "recaptcha_api_key",
-    default="6LcJJ88SAAAAAFzcmQqDPWGKRQXmJ0DCiZoPWTZf",
+    "recaptcha_site_key",
+    default="",
     group="recaptcha",
-    help="recaptcha api key",
+    help="recaptcha site client api key",
+)
+
+define(
+    "recaptcha_secret_key",
+    default="",
+    group="recaptcha",
+    help="recaptcha secret server key",
 )
 
 # Database settings

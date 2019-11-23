@@ -84,6 +84,21 @@ class Penalty(DatabaseObject):
         )
 
     @classmethod
+    def by_team_token(cls, flag, team, submission):
+        """ Return result for existing team token """
+        return (
+            dbsession.query(cls)
+            .filter(
+                and_(
+                    cls.flag_id == flag.id,
+                    cls.team_id == team.id,
+                    cls._token == submission,
+                )
+            )
+            .first()
+        )
+
+    @classmethod
     def by_token_count(cls, flag, team, submission):
         """ Return count for existing team token """
         return (

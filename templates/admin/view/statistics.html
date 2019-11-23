@@ -11,35 +11,111 @@
 {% from tornado.options import options %}
 {% from models.Flag import Flag %}
     <!-- View Details -->
-    <div id="details-flag-modal" class="modal hide fade" style="display: none;">
+    <div id="details-flag-modal" class="modal hide fade" style="display: none; width:760px; margin-left:-380px;">
         <div class="modal-header" style="padding-bottom: 0; margin-bottom: 0;">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3><i class="fa fa-fw fa-flag"></i> {{ _("Flag Details") }}</h3>
+            <h3><i class="fa fa-fw fa-flag"></i> {{ _("Flag Details") }}<span id="flag_value" style="float: right; font-size: 80%; padding-right: 50px; margin-top: 6px;"></span></h3>
+            <h5>
+                <table class="table">
+                    <tbody id="details-flag">
+                        <tr>
+                            <td class="shortcolumn" style="padding-left: 30px;">
+                                <br><strong>Name:&nbsp;&nbsp;</strong><span id="details_flag_name"></span>
+                            </td>
+                            <td class="descriptioncol" style="float: right; padding-right: 30px;">
+                                <strong>Description:&nbsp;&nbsp;</strong><span id="details_flag_description"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="descriptioncol" style="padding-top: 0 !important; padding-left: 30px;">
+                                <strong>Token:&nbsp;&nbsp;</strong><span id="details_flag_token"></span></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table" style="margin-left: -25px;">
+                    <tr>
+                        <td class='shortcolumn' style='width 50px; text-align: center;'>
+                            <i class='fa fa-fw fa-times' style='color: rgb(200, 0, 0);'></i>
+                            <strong>Attempts:&nbsp;&nbsp;</strong><span id="count_attempts"></span>
+                        </td>
+                        <td class='shortcolumn' style='width 50px; text-align: center;'>
+                            <i class="fa fa-fw fa-check" style="color: green;"></i>
+                            <strong>Captures:&nbsp;&nbsp;</strong><span id="count_captures"></span>
+                        </td>
+                        <td class='shortcolumn' style='width 50px; text-align: center;'>
+                            <i class="fa fa-fw fa-medkit" style="color: rgb(200, 200, 0);"></i>
+                            <strong>Hintes:&nbsp;&nbsp;</strong><span id="count_hints"></span>
+                        </td>
+                    </tr>
+                </table>
+            </h5>
+        </div>
+        <hr  style="border-top: 1px solid #333; margin-top: -5px; margin-bottom: 21px; margin-left: 15px; margin-right: 30px;"/>
+        <div class="modal-body" style="padding-top: 0; margin-top: -20px;">
+            <h4><i class="fa fa-fw fa-times" style="color: rgb(200, 0, 0);"></i> {{ _("Attempts") }}</h4>
+            <div class="well" style="padding-bottom: 0px;">
+                <table class="table table-striped">
+                    <tbody id="details-attempts" style="width: 700px;"></tbody>
+                </table>
+            </div>
+            <h4><i class="fa fa-fw fa-check" style="color: green;"></i> {{ _("Captures") }}</h4>
+            <div class="well" style="padding-bottom: 0px;">
+                <table class="table table-striped">
+                    <tbody id="details-captures"></tbody>
+                </table>
+            </div>
+            <h4>&nbsp;<i class="fa fa-fw fa-medkit" style="color: rgb(200, 200, 0);"></i> {{ _("Hints") }}</h4>
+            <div class="well" style="padding-bottom: 0px;">
+                <table class="table table-striped">
+                    <tbody id="details-hints"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Accept Answer -->
+    <div id="details-answer-modal" class="modal hide fade" style="display: none; width:560px; margin-left:-280px;">
+        <div class="modal-header" style="padding-bottom: 0; margin-bottom: 0;">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3><i class="fa fa-fw fa-flag"></i> {{ _("Accept Answer") }}</h3>
             <h5>
                 <table class="table">
                     <tbody id="details-flag"></tbody>
                 </table>
             </h5>
         </div>
-        <div class="modal-body" style="padding-top: 0; margin-top: -20px;">
-            <h4><i class="fa fa-fw fa-check"></i> {{ _("Captures") }}</h4>
-            <div class="well" style="padding-bottom: 0px;">
-                <table class="table table-striped">
-                    <tbody id="details-captures"></tbody>
-                </table>
+        <div class="modal-body">
+            <div style="margin: 10px 0 30px 25px; vertical-align: middle;">
+                <h4>
+                    <div id="answer-team" style="margin-left: 25px;"></div>
+                </h4>
+                <div class="descriptioncol" id="answer-flag" style="margin-left: 25px;text-align: center;"></div>
             </div>
-            <h4><i class="fa fa-fw fa-times"></i> {{ _("Attempts") }}</h4>
-            <div class="well" style="padding-bottom: 0px;">
-                <table class="table table-striped">
-                    <tbody id="details-attempts"></tbody>
-                </table>
+            <div id="flagtypenote" style="display: none; text-align: center;">{{ _("Note: Can only update answers on static and regex flag types") }}.<br/><br/></div>
+            <form id="stat-answer-form" method="post" action="/admin/view/statistics">
+            {% raw xsrf_form_html() %}
+            <div style="margin-left: 50px; vertical-align: middle;">
+                <input type="hidden" id="answer-flag-uuid" name="flag_uuid" value="" />
+                <input type="hidden" id="answer-team-uuid" name="team_uuid" value="" />
+                <input type="hidden" id="answer-token" name="answer_token" value="" />
+                <p>
+                    <input id="acceptanswer" name="accept_answer" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> {{ _("Add the answer as an acceptable flag token") }}.
+                </p>
+                {% if options.penalize_flag_value %}
+                <p id="pointrestore">
+                    <input name="point_restore" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> {{ _("Restore the penalty loss to the ") }}
+                    {% if options.teams %}team{% else %}player{% end %} ({% if options.banking %}${% end %}<span id="answer-penalty"></span>{% if not options.banking %} points{% end %}).
+                </p>
+                {% end %}
             </div>
-            <h4>&nbsp;<i class="fa fa-fw fa-medkit"></i> {{ _("Hints") }}</h4>
-            <div class="well" style="padding-bottom: 0px;">
-                <table class="table table-striped">
-                    <tbody id="details-hints"></tbody>
-                </table>
-            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">{{_("Close")}}</a>
+            <button id="stat-answer-submit" class="btn btn-primary" type="button">
+                <i class="fa fa-fw fa-save"></i>
+                {{ _("Save") }}
+            </button>
         </div>
     </div>
 {% end %}
@@ -95,6 +171,15 @@
                 {{ _("Statistics") }}
             </h1>
             <br />
+            {% if success is not None and len(success) != 0  %}
+                {% for message in success %}
+                    <div class="alert alert-success">
+                        <a class="close" data-dismiss="alert" href="#">&times;</a>
+                        <h4 class="alert-heading">{{ _("SUCCESS") }}</h4>
+                        {{ message }}
+                    </div>
+                {% end %}
+            {% end %}
             {% if errors != None and len(errors) != 0 %}
                 {% for error in errors %}
                     <div class="alert alert-error">

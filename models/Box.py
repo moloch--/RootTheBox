@@ -53,7 +53,7 @@ class FlagsSubmissionType(str, enum.Enum):
     SINGLE_SUBMISSION_BOX = "SINGLE_SUBMISSION_BOX"
 
 
-from builtins import (
+from builtins import (  # noqa: E402
     str,
 )  # TODO Python2/3 compatibility issue if imported before FlagSubmissionType
 
@@ -303,7 +303,7 @@ class Box(DatabaseObject):
     def is_complete(self, user):
         boxcomplete = True
         for boxflag in self.flags:
-            if user.team and not boxflag in user.team.flags:
+            if user.team and boxflag not in user.team.flags:
                 boxcomplete = False
                 break
         return boxcomplete

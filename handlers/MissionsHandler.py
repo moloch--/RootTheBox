@@ -24,7 +24,8 @@ This file contains the code for displaying flags / recv flag submissions
 """
 
 
-import logging, json
+import logging
+import json
 
 from tornado.options import options
 from builtins import next
@@ -219,59 +220,57 @@ class FlagSubmissionHandler(BaseHandler):
                 self.render_page_by_flag(flag, success=success)
                 return
             else:
-                if (
-                    flag is None
-                    or Penalty.by_token_count(flag, user.team, submission) == 0
-                ):
-                    if self.config.teams:
-                        teamval = "team's "
-                    else:
-                        teamval = ""
-                    penalty = (
-                        self.failed_capture(flag, submission) if flag is not None else 0
-                    )
-                    penalty_dialog = "Sorry - Try Again"
-                    if penalty:
-                        if self.config.banking:
-                            penalty_dialog = (
-                                "$"
-                                + str(penalty)
-                                + " has been deducted from your "
-                                + teamval
-                                + "account."
-                            )
-                        else:
-                            if penalty == 1:
-                                point = " point has"
-                            else:
-                                point = " points have"
-                            penalty_dialog = (
-                                str(penalty)
-                                + point
-                                + " been deducted from your "
-                                + teamval
-                                + "score."
-                            )
-                    if flag is None:
-                        self.render_page_by_box_id(box_id, errors=[penalty_dialog])
-                    else:
-                        self.render_page_by_flag(flag, errors=[penalty_dialog])
-                    return
-                else:
-                    if self.config.teams:
-                        teamdup = " by your team.  Try Again"
-                    else:
-                        teamdup = " by you.  Try Again"
-                    self.render_page_by_flag(
-                        flag,
-                        info=[
-                            "Duplicate submission - this answer has already been attempted"
-                            + teamdup
-                        ],
-                    )
-                    return
+                self.failed_attempt(flag, user, submission, box_id)
         else:
             self.render("public/404.html")
+
+    def failed_attempt(self, flag, user, submission, box_id):
+        if flag is None or Penalty.by_token_count(flag, user.team, submission) == 0:
+            if self.config.teams:
+                teamval = "team's "
+            else:
+                teamval = ""
+            penalty = self.failed_capture(flag, submission) if flag is not None else 0
+            penalty_dialog = "Sorry - Try Again"
+            if penalty:
+                if self.config.banking:
+                    penalty_dialog = (
+                        "$"
+                        + str(penalty)
+                        + " has been deducted from your "
+                        + teamval
+                        + "account."
+                    )
+                else:
+                    if penalty == 1:
+                        point = " point has"
+                    else:
+                        point = " points have"
+                    penalty_dialog = (
+                        str(penalty)
+                        + point
+                        + " been deducted from your "
+                        + teamval
+                        + "score."
+                    )
+            if flag is None:
+                self.render_page_by_box_id(box_id, errors=[penalty_dialog])
+            else:
+                self.render_page_by_flag(flag, errors=[penalty_dialog])
+            return
+        else:
+            if self.config.teams:
+                teamdup = " by your team.  Try Again"
+            else:
+                teamdup = " by you.  Try Again"
+            self.render_page_by_flag(
+                flag,
+                info=[
+                    "Duplicate submission - this answer has already been attempted"
+                    + teamdup
+                ],
+            )
+            return
 
     def success_capture(self, flag, old_reward=None):
         if self.config.teams:
@@ -394,15 +393,16 @@ class FlagSubmissionHandler(BaseHandler):
     def attempt_capture(self, flag, submission):
         """ Compares a user provided token to the token in the db """
         user = self.get_current_user()
+        team = user.team
         logging.info(
-            "%s (%s) capture the flag '%s'" % (user.handle, user.team.name, flag.name)
+            "%s (%s) capture the flag '%s'" % (user.handle, team.name, flag.name)
         )
-        if submission is not None and flag not in user.team.flags:
+        if submission is not None and flag not in team.flags:
             if flag.capture(submission):
-                user.team.flags.append(flag)
-                user.team.money += flag.value
+                team.flags.append(flag)
+                team.money += flag.value
                 user.money += flag.value
-                self.dbsession.add(user.team)
+                self.dbsession.add(team)
                 if self.config.dynamic_flag_value:
                     depreciation = float(
                         old_div(self.config.flag_value_decrease, 100.0)
@@ -410,23 +410,21 @@ class FlagSubmissionHandler(BaseHandler):
                     flag.value = int(flag.value - (flag.value * depreciation))
                 self.dbsession.add(flag)
                 self.dbsession.flush()
-                self.event_manager.flag_captured(user, flag)
-                self._check_level(flag)
+                self.event_manager.flag_captured(team, flag)
+                self._check_level(flag, team)
                 self.dbsession.commit()
                 return True
         return False
 
-    def _check_level(self, flag):
-        user = self.get_current_user()
-        if len(user.team.level_flags(flag.game_level.number)) == len(
-            flag.game_level.flags
-        ):
+    def _check_level(self, flag, team):
+        if len(team.level_flags(flag.game_level.number)) == len(flag.game_level.flags):
             next_level = next(flag.game_level)
-            logging.info("Next level is %r" % next_level)
-            if next_level is not None and next_level not in user.team.game_levels:
-                logging.info("Team completed level, unlocking the next level")
-                user.team.game_levels.append(next_level)
-                self.dbsession.add(user.team)
+            if next_level is not None:
+                logging.info("Next level is %r" % next_level)
+                if next_level not in team.game_levels:
+                    logging.info("Team completed level, unlocking the next level")
+                    team.game_levels.append(next_level)
+                    self.dbsession.add(team)
 
     def render_page_by_flag(self, flag, errors=[], success=[], info=[]):
         self.render_page_by_box_id(flag.box_id, errors, success, info)

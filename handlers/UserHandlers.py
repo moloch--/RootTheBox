@@ -26,11 +26,16 @@ This file contains code for managing user accounts
 
 
 try:
-    from urllib.parse import urlparse
+    from urllib.parse import urlencode
 except ImportError:
-    from urlparse import urlparse
+    from urllib import urlencode
+try:
+    import urllib.request as urlrequest
+except ImportError:
+    import urllib2 as urlrequest
 import logging
 import tornado
+import json
 
 from models.Theme import Theme
 from libs.EventManager import EventManager
@@ -42,7 +47,7 @@ from .BaseHandlers import BaseHandler
 from tornado.options import options
 
 
-RECAPTCHA_URL = "https://www.google.com/recaptcha/api/verify"
+RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
 
 
 class HomeHandler(BaseHandler):
@@ -101,8 +106,8 @@ class SettingsHandler(BaseHandler):
         Saves avatar - Reads file header an only allows approved formats
         """
         user = self.get_current_user()
-        if self.get_argument("user_avatar_select"):
-            avatar = self.get_argument("user_avatar_select")
+        if self.get_argument("user_avatar_select", None):
+            avatar = self.get_argument("user_avatar_select", "")
             if avatar.lower().endswith(tuple(IMG_FORMATS)):
                 user._avatar = avatar
                 self.dbsession.add(user)
@@ -126,8 +131,8 @@ class SettingsHandler(BaseHandler):
         user = self.get_current_user()
         if not user.team:
             self.render_page(errors=["Not assigned to a team"])
-        elif self.get_argument("team_avatar_select"):
-            avatar = self.get_argument("team_avatar_select")
+        elif self.get_argument("team_avatar_select", None):
+            avatar = self.get_argument("team_avatar_select", "")
             if avatar.lower().endswith(tuple(IMG_FORMATS)):
                 user.team._avatar = avatar
                 self.dbsession.add(user)
@@ -186,9 +191,9 @@ class SettingsHandler(BaseHandler):
         """ Called on POST request for password change """
         self.set_password(
             self.get_current_user(),
-            self.get_argument("old_password"),
-            self.get_argument("new_password"),
-            self.get_argument("new_password2"),
+            self.get_argument("old_password", ""),
+            self.get_argument("new_password", ""),
+            self.get_argument("new_password2", ""),
         )
 
     def set_password(self, user, old_password, new_password, new_password2):
@@ -217,7 +222,7 @@ class SettingsHandler(BaseHandler):
 
     def post_bankpassword(self):
         """ Update user's bank password """
-        old_bankpw = self.get_argument("old_bpassword")
+        old_bankpw = self.get_argument("old_bpassword", "")
         user = self.get_current_user()
         if user.validate_bank_password(old_bankpw):
             if self.config.use_recaptcha:
@@ -229,44 +234,52 @@ class SettingsHandler(BaseHandler):
 
     def set_bankpassword(self):
         user = self.get_current_user()
-        user.bank_password = self.get_argument("new_bpassword")
-        self.dbsession.add(user)
-        self.dbsession.commit()
-        self.render_page(success=["Successfully updated bank password"])
+        new_bankpw = self.get_argument("new_bpassword", "")
+        if 0 < len(new_bankpw) <= options.max_password_length:
+            user.bank_password = new_bankpw
+            self.dbsession.add(user)
+            self.dbsession.commit()
+            self.render_page(success=["Successfully updated bank password"])
+        else:
+            self.render_page(
+                errors=[
+                    "Invalid password - max length %s."
+                    % str(options.max_password_length)
+                ]
+            )
 
     def verify_recaptcha(self):
         """ Checks recaptcha """
-        recaptcha_challenge = self.get_argument("recaptcha_challenge_field", "")
-        recaptcha_response = self.get_argument("recaptcha_response_field", "")
-        recaptcha_req_data = {
-            "privatekey": self.config.recaptcha_private_key,
-            "remoteip": self.request.remote_ip,
-            "challenge": recaptcha_challenge,
-            "response": recaptcha_response,
-        }
-        try:
-            recaptcha_http = tornado.httpclient.AsyncHTTPClient()
-            recaptcha_req_body = urlparse.urlencode(recaptcha_req_data)
-            recaptcha_http.fetch(
-                RECAPTCHA_URL,
-                self.recaptcha_callback,
-                method="POST",
-                body=recaptcha_req_body,
-            )
-        except tornado.httpclient.HTTPError:
-            logging.exception("Recaptcha AsyncHTTP request threw an exception")
-            self.recaptcha_callback(None)
-            self.render_page(errors=["Error making backend recaptcha request"])
+        recaptcha_response = self.get_argument("g-recaptcha-response", None)
+        if recaptcha_response:
+            recaptcha_req_data = {
+                "secret": self.config.recaptcha_secret_key,
+                "remoteip": self.request.remote_ip,
+                "response": recaptcha_response,
+            }
+            try:
+                recaptcha_req_body = urlencode(recaptcha_req_data).encode("utf-8")
+                reqquest = urlrequest.Request(RECAPTCHA_URL, recaptcha_req_body)
+                response = urlrequest.urlopen(reqquest)
+                self.recaptcha_callback(response)
+            except tornado.httpclient.HTTPError:
+                logging.exception("Recaptcha AsyncHTTP request threw an exception")
+                self.recaptcha_callback(None)
+                self.render_page(errors=["Error making backend recaptcha request"])
+        else:
+            self.render_page(errors=["Invalid captcha, try again"])
 
     def recaptcha_callback(self, response):
         """
         Validates recaptcha response
         Recaptcha docs: https://developers.google.com/recaptcha/docs/verify
         """
-        if response and response.body.startswith("true"):
-            self.set_bankpassword()
-        else:
-            self.render_page(errors=["Invalid captcha, try again"])
+        if response:
+            result = json.loads(response.read())
+            if result["success"]:
+                self.set_bankpassword()
+                return
+        self.render_page(errors=["Invalid captcha, try again"])
 
 
 class LogoutHandler(BaseHandler):

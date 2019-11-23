@@ -48,7 +48,7 @@ def get_new_avatar(dir, forceteam=False):
         if item._avatar:
             dblist.append(item._avatar)
     for image in avatars:
-        if not image in dblist:
+        if image not in dblist:
             return image
     return avatars[randint(0, len(avatars) - 1)]
 
