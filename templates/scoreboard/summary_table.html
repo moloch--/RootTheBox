@@ -45,7 +45,7 @@
                                     {% else %}
                                         <i class="fa fa-lock" style="color: #424242; font-size: small; float:left; padding-right: 4px; margin-top: -3px;"></i>
                                     {% end %}
-                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if level_count_all > 1 %}{{ level.name }} &ndash; {% end %}{% if level.get('number') >= 0 and team_count_lvl != 0 %}{{ int(( team_count_lvl /  float(level.get('flag_count')) ) * 100) }}%{% else %}0%{% end %}">
+                                    <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if level_count_all > 1 %}{{ level_name }} &ndash; {% end %}{% if level.get('number') >= 0 and team_count_lvl != 0 %}{{ int(( team_count_lvl /  float(level.get('flag_count')) ) * 100) }}%{% else %}0%{% end %}">
                                         {% if level.get("number") >= 0 and team_count_lvl != 0 %}
                                             <div class="bar minibar" style="width: {{ ( team_count_lvl /  float(level.get('flag_count')) ) * 100.0 }}%;"></div>
                                         {% else %}
