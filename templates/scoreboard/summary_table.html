@@ -82,7 +82,7 @@
                                             {% end %}
                                             <div class="summarycolumn" style="display: table-cell;">
                                                 <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{{ flag.get('name') }}">
-                                                    {% if team.get("uuid") in flag.get("teams") %}
+                                                    {% if flaguuid in team.get("flags") %}
                                                         <div class="bar minibar" style="width: 100%;"></div>
                                                     {% else %}
                                                         <div class="bar minibar" style="width: 0%;"></div>

@@ -63,7 +63,7 @@ class Scoreboard(object):
                 millis = int(round(time.time() * 1000))
                 game_state["teams"][team.name] = {
                     "uuid": team.uuid,
-                    "flags": [str(flag) for flag in team.flags],
+                    "flags": [flag.uuid for flag in team.flags],
                     "game_levels": [str(lvl) for lvl in team.game_levels],
                     "members_count": len(team.members),
                     "hints_count": len(team.hints),
@@ -117,12 +117,7 @@ class Scoreboard(object):
                 for flag in box.flags:
                     game_state["levels"][level.name]["boxes"][box.uuid]["flags"][
                         flag.uuid
-                    ] = {"name": flag.name, "teams": []}
-                    for team in teams:
-                        if flag in team.flags:
-                            game_state["levels"][level.name]["boxes"][box.uuid][
-                                "flags"
-                            ][flag.uuid]["teams"].append(team.uuid)
+                    ] = {"name": flag.name}
         app.settings["scoreboard_state"] = game_state
 
 
