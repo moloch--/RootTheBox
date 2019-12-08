@@ -30,6 +30,7 @@ import logging
 from netaddr import IPAddress
 from libs.SecurityDecorators import blacklist_ips
 from libs.ValidationError import ValidationError
+from libs.Scoreboard import Scoreboard
 from builtins import str
 from models.Team import Team
 from models.Theme import Theme
@@ -233,6 +234,7 @@ class RegistrationHandler(BaseHandler):
         self.dbsession.add(user)
         self.dbsession.add(team)
         self.dbsession.commit()
+        Scoreboard.update_gamestate(self)
         self.event_manager.user_joined_team(user)
 
         # Chat

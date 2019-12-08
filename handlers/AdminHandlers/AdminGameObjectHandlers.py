@@ -57,6 +57,7 @@ from models.Flag import (
 )
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import *
+from libs.Scoreboard import Scoreboard
 from builtins import str
 
 
@@ -138,6 +139,7 @@ class AdminCreateHandler(BaseHandler):
                 team.avatar = self.request.files["avatar"][0]["body"]
             self.dbsession.add(team)
             self.dbsession.commit()
+            Scoreboard.update_gamestate(self)
             self.redirect("/admin/users")
         except ValidationError as error:
             self.render("admin/create/team.html", errors=[str(error)])
