@@ -74,13 +74,15 @@
                                             </div>    
                                         </div>
                                     {% elif flag_count_box > 0 %}
-                                        {% for index, flag in enumerate(box.flags) %}
+                                        {% set flags = box.get("flags") %}
+                                        {% for index, flaguuid in enumerate(flags) %}
+                                            {% set flag = flags[flaguuid] %}
                                             {% if index > 0 %}
                                                 <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
                                             {% end %}
                                             <div class="summarycolumn" style="display: table-cell;">
-                                                <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{{ flag.name }}">
-                                                    {% if flag in team.flags %}
+                                                <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{{ flag.get('name') }}">
+                                                    {% if team.get("uuid") in flag.get("teams") %}
                                                         <div class="bar minibar" style="width: 100%;"></div>
                                                     {% else %}
                                                         <div class="bar minibar" style="width: 0%;"></div>

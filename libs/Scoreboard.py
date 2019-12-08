@@ -107,12 +107,22 @@ class Scoreboard(object):
                 game_state["levels"][level.name]["boxes"][box.uuid] = {
                     "name": box.name,
                     "teams": {},
+                    "flags": {},
                     "flag_count": len(box.flags),
                 }
                 for team in teams:
                     game_state["levels"][level.name]["boxes"][box.uuid]["teams"][
                         team.name
                     ] = {"box_count": len(team.box_flags(box))}
+                for flag in box.flags:
+                    game_state["levels"][level.name]["boxes"][box.uuid]["flags"][
+                        flag.uuid
+                    ] = {"name": flag.name, "teams": []}
+                    for team in teams:
+                        if flag in team.flags:
+                            game_state["levels"][level.name]["boxes"][box.uuid][
+                                "flags"
+                            ][flag.uuid]["teams"].append(team.uuid)
         app.settings["scoreboard_state"] = game_state
 
 
