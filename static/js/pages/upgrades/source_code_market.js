@@ -3,7 +3,7 @@ $(document).ready(function() {
     $("a[id^='buy-source-code-button']").click(function() {
         $("#buy-source-code-uuid").val($(this).data("uuid"));
         $("#buy-source-code-dialog").text(
-            "Are you sure you want to buy this code for $" + $(this).data("price") + "?"
+            "Are you sure you want to buy this code for " + $(this).data("price") + "?"
         );
     });
 

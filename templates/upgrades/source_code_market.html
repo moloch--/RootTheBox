@@ -4,6 +4,7 @@
 
 {% block header %}
 <script src="/static/js/pages/upgrades/source_code_market.js"></script>
+{% from tornado.options import options %}
 {% end %}
 
 {% block modals %}
@@ -59,7 +60,7 @@
                             <th>#</th>
                             <th>{{ _("Box") }}</th>
                             <th>{{ _("Level") }}</th>
-                            <th>{{ _("Price") }}</th>
+                            <th>{% if options.banking %}{{ _("Price") }}{% else %}{{ _("Cost") }}{% end %}</th>
                             <th>{{ _("File Name") }}</th>
                             <th>{{ _("Checksum") }}</th>
                             <th><!-- Buy/Download --></th>
@@ -71,7 +72,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ box.name }}</td>
                                 <td>{{ box.game_level.name }}</td>
-                                <td>${{ box.source_code.price }}</td>
+                                <td>{% if options.banking %}{{ _("$") }}{% end %}{{ box.source_code.price }}</td>
                                 {% if len(box.source_code.file_name) < 25 %}
                                     <td>{{ box.source_code.file_name }}</td>
                                 {% else %}
@@ -87,7 +88,7 @@
                                     </td>
                                 {% else %}
                                     <td>
-                                        <a id="buy-source-code-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#buy-source-code-modal" data-uuid="{{ box.uuid }}" data-price="{{ box.source_code.price }}">
+                                        <a id="buy-source-code-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#buy-source-code-modal" data-uuid="{{ box.uuid }}" data-price="{% if options.banking %}{{ _('$') }}{{ box.source_code.price }}{% else %}{{ box.source_code.price }} points{% end %}">
                                             {{ _("Buy Source Code") }}
                                         </a>
                                     </td>

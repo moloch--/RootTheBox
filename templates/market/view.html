@@ -4,6 +4,7 @@
 
 {% block header %}
 <script src="/static/js/pages/market/view.js"></script>
+{% from tornado.options import options %}
 {% end %}
 
 {% block modals %}
@@ -25,11 +26,11 @@
                 <div class="span2">
                     <p>
                         <i class="icon-bookmark"></i>
-                        {{ _("Price") }} {{ _("$") }} <span id="price"></span>
+                        {% if options.banking %}{{ _("Price") }}: {{ _("$") }}{% else %}{{ _("Cost") }}:{% end %} <span id="price"></span>
                     </p>
                     <p>
                         <i class="icon-book"></i>
-                        {{ _("Description") }}
+                        {{ _("Description") }}:
                     </p>
                     <blockquote>
                         <small id="description"></small>
@@ -73,7 +74,7 @@
                 <tr>
                     <th>#</th>
                     <th>{{ _("Name") }}</th>
-                    <th>{{ _("Price") }}</th>
+                    <th>{% if options.banking %}{{ _("Price") }}{% else %}{{ _("Cost") }}{% end %}</th>
                     <th>
                         <!-- Button -->
                     </th>
@@ -84,7 +85,7 @@
                 <tr>
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.name }}</td>
-                    <td>${{ item.price }}</td>
+                    <td>{% if options.banking %}{{ _("$") }}{% end %}{{ item.price }}</td>
                     <td>
                         {% if not user.has_item(item.name) %}
                         <a id="item-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#buy-market-item-modal" data-uuid="{{ item.uuid }}">

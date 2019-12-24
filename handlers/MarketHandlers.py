@@ -26,6 +26,7 @@ This file contains handlers related to the "Black Market" functionality
 
 import logging
 
+from tornado.options import options
 from .BaseHandlers import BaseHandler
 from models.MarketItem import MarketItem
 from models.Team import Team
@@ -59,7 +60,11 @@ class MarketViewHandler(BaseHandler):
                     errors=["You have already purchased this item."],
                 )
             elif team.money < item.price:
-                message = "You only have $%d" % (team.money,)
+                if options.banking:
+                    money = "$%d" % team.money
+                else:
+                    money = "%d points" % team.money
+                message = "You only have %s" % (money)
                 self.render("market/view.html", user=user, errors=[message])
             else:
                 logging.info(

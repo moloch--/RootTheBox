@@ -4,6 +4,7 @@
 
 {% block header %}
 <script src="/static/js/pages/admin/upgrades/source_code_market.js"></script>
+{% from tornado.options import options %}
 {% end %}
 
 {% block modals %}
@@ -17,9 +18,9 @@
             {% raw xsrf_form_html() %}
             <input id="add-source-code-uuid" type="hidden" name="box_uuid" value="" />
             <div class="control-group">
-                <label class="control-label" for="price">{{_("Price")}}</label>
+                <label class="control-label" for="price">{% if options.banking %}{{ _("Price") }}{% else %}{{ _("Cost") }}{% end %}</label>
                 <div class="controls">
-                    <input autofocus required id="price" name="price" type="text" pattern="[0-9]+" placeholder="{{_('Price')}} ({{_('$')}})">
+                    <input autofocus required id="price" name="price" type="text" pattern="[0-9]+" placeholder="{% if options.banking %}{{ _('Price') }} ({{_('$')}}){% else %}{{ _('Cost') }}{% end %}">
                 </div>
             </div>
             <div class="control-group">
@@ -99,7 +100,7 @@
                         <th>{{_("Box")}}</th>
                         <th>{{_("File Name")}}</th>
                         <th>{{_("Description")}}</th>
-                        <th>{{_("Price")}}</th>
+                        <th>{% if options.banking %}{{ _("Price") }}{% else %}{{ _("Cost") }}{% end %}</th>
                         <th>
                             <!-- Add/Delete Button -->
                         </th>
@@ -122,7 +123,7 @@
                         {% else %}
                         <td>{{ box.source_code.file_name }}</td>
                         <td>{{ box.source_code.description }}</td>
-                        <td>${{ box.source_code.price }}</td>
+                        <td>{% if options.banking %}{{ _("$") }}{% end %}{{ box.source_code.price }}</td>
                         <td>
                             <a id="delete-source-code-button{{ index }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-source-code-modal" data-uuid="{{ box.uuid }}">
                                 <i class="fa fa-times-circle-o"></i>

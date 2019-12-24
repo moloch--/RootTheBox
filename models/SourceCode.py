@@ -88,7 +88,7 @@ class SourceCode(DatabaseObject):
         self.byte_size = len(value)
         self.checksum = sha1(value).hexdigest()
         with open(options.source_code_market_dir + "/" + self.uuid, "wb") as fp:
-            fp.write(encode(value, "base64"))
+            fp.write(bytearray(encode(value, "base64"), "utf-8"))
 
     def delete_data(self):
         """ Remove the file from the file system, if it exists """
