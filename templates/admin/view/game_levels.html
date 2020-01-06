@@ -24,15 +24,15 @@
                 <input id="game_level-uuid" name="uuid" type="hidden" />
                 <input id="game_level-last_level" name="last_level" type="hidden" />
                 <div class="control-group">
-                    <label class="control-label" for="game_level-name">{{ _("Level Name") }}</label>
-                    <div class="controls">
-                        <input id="game_level-name" name="name" placeholder="{{ _('Level Name') }}" maxlength=32 />
-                    </div>
-                </div>
-                <div class="control-group">
                     <label class="control-label" for="game_level-number">{{ _("Game Level") }}</label>
                     <div class="controls">
                         <input required id="game_level-number" name="number" pattern="[0-9]+" placeholder="{{ _('Level Number') }}" type="number" min=0 />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="game_level-name">{{ _("Level Name") }}</label>
+                    <div class="controls">
+                        <input id="game_level-name" name="name" placeholder="{{ _('Level Name') }}" maxlength=32 type="text" />
                     </div>
                 </div>
                 <div class="control-group">

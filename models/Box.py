@@ -321,7 +321,7 @@ class Box(DatabaseObject):
             self.flag_submission_type
         ).name
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
-        ET.SubElement(box_elem, "garbage").text = self.garbage
+        ET.SubElement(box_elem, "garbage").text = str(self.garbage)
         if self.category_id:
             ET.SubElement(box_elem, "category").text = Category.by_id(
                 self.category_id

@@ -29,7 +29,7 @@
             <div class="control-group">
                 <label class="control-label" for="level_number">{{_("Level Number")}}</label>
                 <div class="controls">
-                    <input autofocus required id="level-number" name="level_number" type="text" pattern="[0-9]+" placeholder="{{_('Level Number')}}"
+                    <input autofocus required id="level-number" name="level_number" type="number" min=1 pattern="[0-9]+" placeholder="{{_('Level Number')}}"
                             rel="popover"
                             data-original-title="{{_('Level Number')}}"
                             data-content="{{_('Number of new Level')}} [0-9]+ {{_('Must be unique')}}" />
@@ -38,7 +38,7 @@
             <div class="control-group">
                 <label class="control-label" for="game_level-name">{{_("Level Name")}}</label>
                 <div class="controls">
-                    <input id="game_level-name" name="name" placeholder="{{_('Level Name')}}" maxlength=32 
+                    <input id="game_level-name" name="name" placeholder="{{_('Level Name')}}" maxlength=32 type="text"
                         rel="popover"
                         data-original-title="{{_('Level Name')}}"
                         data-content="({{_('Optional')}}) {{_('defaults to')}} &#34;Level #&#34;" />
