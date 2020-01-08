@@ -292,15 +292,21 @@ def start_server():
     try:
         sockets = netutil.bind_sockets(options.listen_port, options.listen_interface)
     except (OSError, IOError) as err:
+        logging.error("Problem binding socket to port %s", str(options.listen_port))
         if err.errno == 13:
             pypath = sys.executable
             if os_path.islink(pypath):
                 pypath = os_path.realpath(pypath)
-            logging.error("Problem binding to port %s", str(options.listen_port))
             logging.error(
                 "Possible Fix: sudo setcap CAP_NET_BIND_SERVICE=+eip %s", pypath
             )
-            sys.exit()
+        elif err.errno == 98:
+            logging.error(
+                "The port may be in use by an existing service.  RTB already running?"
+            )
+        else:
+            logging.error(err)
+        sys.exit()
     server.add_sockets(sockets)
     try:
         Scoreboard.update_gamestate(app)
