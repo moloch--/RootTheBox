@@ -377,4 +377,4 @@ class Box(DatabaseObject):
         return "<Box - name: %s>" % (self.name,)
 
     def __str__(self):
-        return encode(self.name, "ascii", "ignore")
+        return self.name

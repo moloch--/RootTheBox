@@ -264,7 +264,7 @@ class Team(DatabaseObject):
         return "<Team - name: %s, money: %d>" % (self.name, self.money)
 
     def __str__(self):
-        return encode(self.name, "ascii", "ignore")
+        return self.name
 
     def __eq__(self, other):
         return self.id == other.id
