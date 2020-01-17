@@ -57,7 +57,6 @@ from models.Flag import (
 )
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import *
-from libs.Scoreboard import Scoreboard
 from builtins import str
 
 
@@ -139,7 +138,7 @@ class AdminCreateHandler(BaseHandler):
                 team.avatar = self.request.files["avatar"][0]["body"]
             self.dbsession.add(team)
             self.dbsession.commit()
-            Scoreboard.update_gamestate(self)
+            self.event_manager.push_score_update()
             self.redirect("/admin/users")
         except ValidationError as error:
             self.render("admin/create/team.html", errors=[str(error)])
@@ -416,6 +415,7 @@ class AdminViewHandler(BaseHandler):
                     if penalty:
                         self.dbsession.delete(penalty)
                     self.dbsession.add(team)
+                    self.dbsession.commit()
                     self.event_manager.admin_score_update(
                         team,
                         "%s penalty reversed - score has been updated." % team.name,
@@ -431,6 +431,7 @@ class AdminViewHandler(BaseHandler):
                             )
                             flag.value = int(flag.value - (flag.value * depreciation))
                             self.dbsession.add(flag)
+                        self.dbsession.commit()
                         self.event_manager.flag_captured(team, flag)
                         self._check_level(flag, team)
                     success.append("%s awarded %d" % (team.name, value))
@@ -447,12 +448,12 @@ class AdminViewHandler(BaseHandler):
                     if len(token) < 256:
                         flag.token = token
                         self.dbsession.add(flag)
+                        self.dbsession.commit()
                         success.append(
                             "Token succesfully added for Flag %s" % flag.name
                         )
                     else:
                         errors.append("Flag token too long. Can not expand token.")
-                self.dbsession.commit()
             self.render(uri[args[0]], errors=errors, success=success)
         else:
             self.render("public/404.html")

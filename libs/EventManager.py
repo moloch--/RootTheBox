@@ -161,6 +161,9 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_team, team.id)
         self.io_loop.add_callback(self.push_scoreboard)
 
+    def push_score_update(self):
+        self.io_loop.add_callback(self.push_scoreboard)
+
     def admin_message(self, message):
         """ Callback for when admin point change is made """
         Notification.create_broadcast(None, "Admin Message", message, INFO)
@@ -267,6 +270,7 @@ class EventManager(object):
             message = "%s has joined the game" % (user.handle,)
             Notification.create_team(user.team, "New Player", message, INFO)
         self.io_loop.add_callback(self.push_team, user.team.id)
+        self.io_loop.add_callback(self.push_scoreboard)
 
     def team_file_shared(self, user, file_upload):
         """ Callback when a team file share is created """

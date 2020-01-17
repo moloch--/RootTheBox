@@ -61,13 +61,12 @@ class AdminEditTeamsHandler(BaseHandler):
                 for team in teams:
                     team.money += value
                     self.dbsession.add(team)
-                    self.event_manager.admin_score_update(team, message, value)
             else:
                 team = Team.by_uuid(group)
                 team.money += value
                 self.dbsession.add(team)
-                self.event_manager.admin_score_update(team, message, value)
             self.dbsession.commit()
+            self.event_manager.admin_score_update(team, message, value)
             self.redirect("/admin/users")
         except ValidationError as error:
             self.render("admin/view/users.html", errors=[str(error)])
@@ -102,6 +101,7 @@ class AdminEditUsersHandler(BaseHandler):
                     team._avatar = avatar
             self.dbsession.add(team)
             self.dbsession.commit()
+            self.event_manager.push_score_update()
             self.redirect("/admin/users")
         except ValidationError as error:
             self.render("admin/view/users.html", errors=[str(error)])
@@ -179,6 +179,7 @@ class AdminEditUsersHandler(BaseHandler):
                         self.dbsession.delete(permission)
 
             self.dbsession.commit()
+            self.event_manager.push_score_update()
             self.redirect("/admin/users")
         except ValidationError as error:
             self.render("admin/view/users.html", errors=[str(error)])
@@ -202,8 +203,10 @@ class AdminDeleteUsersHandler(BaseHandler):
         user = User.by_uuid(self.get_argument("uuid", ""))
         if user is not None and user != self.get_current_user():
             logging.info("Deleted User: '%s'" % str(user.handle))
+            EventManager.instance().deauth(user)
             self.dbsession.delete(user)
             self.dbsession.commit()
+            self.event_manager.push_score_update()
             self.redirect("/admin/users")
         else:
             self.render("admin/view/users.html", errors=["User does not exist"])
@@ -225,8 +228,10 @@ class AdminDeleteUsersHandler(BaseHandler):
             logging.info("Deleted Team: '%s'" % str(team.name))
             self.dbsession.delete(team)
             self.dbsession.commit()
+            self.event_manager.push_score_update()
             self.redirect("/admin/users")
         else:
+            self.event_manager.push_score_update()
             self.render("admin/view/users.html", errors=["Team does not exist"])
 
 

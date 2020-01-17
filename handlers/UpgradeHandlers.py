@@ -69,6 +69,7 @@ class PasswordSecurityHandler(BaseHandler):
             user.team.money -= self.config.password_upgrade_cost
             self.dbsession.add(user.team)
             self.dbsession.commit()
+            self.event_manager.push_score_update()
             self.update_password(passwd)
             self.render_page()
         else:
@@ -134,7 +135,7 @@ class FederalReserveAjaxHandler(BaseHandler):
 
     def ls(self):
         current_user = self.get_current_user()
-        if self.get_argument("data").lower() == "accounts":
+        if self.get_argument("data", "").lower() == "accounts":
             data = {}
             for team in Team.all():
                 if team == current_user.team:
@@ -146,7 +147,7 @@ class FederalReserveAjaxHandler(BaseHandler):
                         "bots": team.bot_count,
                     }
             self.write({"accounts": data})
-        elif self.get_argument("data").lower() == "users":
+        elif self.get_argument("data", "").lower() == "users":
             data = {}
             target_users = User.not_team(current_user.team.id)
             for user in target_users:
@@ -161,7 +162,7 @@ class FederalReserveAjaxHandler(BaseHandler):
         self.finish()
 
     def info(self):
-        team_name = self.get_argument("account")
+        team_name = self.get_argument("account", "")
         team = Team.by_name(team_name)
         if team is not None:
             self.write(
@@ -271,6 +272,7 @@ class SourceCodeMarketHandler(BaseHandler):
         )
         self.dbsession.add(team)
         self.dbsession.commit()
+        self.event_manager.push_score_update()
 
     def render_page(self, errors=None):
         """ Addes extra params to render() """
@@ -362,6 +364,7 @@ class SwatHandler(BaseHandler):
         self.dbsession.add(swat)
         self.dbsession.add(user.team)
         self.dbsession.commit()
+        self.event_manager.push_score_update()
 
     def render_page(self, errors=None):
         """ Render page with extra arguments """

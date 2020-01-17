@@ -64,7 +64,7 @@ class MarketViewHandler(BaseHandler):
                     money = "$%d" % team.money
                 else:
                     money = "%d points" % team.money
-                message = "You only have %s" % (money)
+                message = "You only have %s" % money
                 self.render("market/view.html", user=user, errors=[message])
             else:
                 logging.info(
@@ -87,6 +87,7 @@ class MarketViewHandler(BaseHandler):
         team.items.append(item)
         self.dbsession.add(team)
         self.dbsession.commit()
+        self.event_manager.push_score_update()
 
 
 class MarketDetailsHandler(BaseHandler):

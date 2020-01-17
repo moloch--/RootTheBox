@@ -31,7 +31,6 @@ from tornado.options import options
 from builtins import next
 from builtins import str
 from past.utils import old_div
-
 from libs.SecurityDecorators import authenticated
 from libs.StringCoding import decode, encode
 from handlers.BaseHandlers import BaseHandler
@@ -360,7 +359,7 @@ class FlagSubmissionHandler(BaseHandler):
             self.dbsession.commit()
             self.event_manager.level_unlocked(user, next_level)
             success.append("Congratulations! You have unlocked " + next_level.name)
-
+        self.event_manager.push_score_update()
         return success
 
     def failed_capture(self, flag, submission):
@@ -490,12 +489,12 @@ class PurchaseHintHandler(BaseHandler):
     def _purchase_hint(self, hint, team):
         """ Add hint to team object """
         if hint not in team.hints:
+            user = self.get_current_user()
             team.money -= abs(hint.price)
             team.hints.append(hint)
-            user = self.get_current_user()
-            self.event_manager.hint_taken(user, hint)
             self.dbsession.add(team)
             self.dbsession.commit()
+            self.event_manager.hint_taken(user, hint)
 
     def render_page(self, box, errors=[], success=[], info=[]):
         """ Wrapper to .render() to avoid duplicate code """
