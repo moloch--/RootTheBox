@@ -64,8 +64,8 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         if self.application.settings["freeze_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
-            self.last_message = datetime.now()
             Scoreboard.update_gamestate(self)
+            self.last_message = datetime.now()
             self.write_message(Scoreboard.now(self))
 
     def on_close(self):
@@ -82,6 +82,7 @@ class ScoreboardHandler(BaseHandler):
     def get(self, *args, **kargs):
         user = self.get_current_user()
         if scoreboard_visible(user):
+            Scoreboard.update_gamestate(self)
             self.render("scoreboard/summary.html", timer=self.timer())
         elif not user:
             self.redirect("/login")
