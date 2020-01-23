@@ -180,19 +180,19 @@ class AdminCreateHandler(BaseHandler):
             corp_uuid = self.get_argument("corporation_uuid", "")
             if Box.by_name(self.get_argument("name", "")) is not None:
                 raise ValidationError("Box name already exists")
-            elif Corporation.by_uuid(corp_uuid) is None:
-                if len(Corporation.all()) == 0:
-                    # Create a empty Corp
-                    corporation = Corporation()
-                    corporation.name = ""
-                    self.dbsession.add(corporation)
-                    self.dbsession.commit()
-                    corp_uuid = corporation.uuid
-                else:
-                    raise ValidationError("Corporation does not exist")
             elif GameLevel.by_number(game_level) is None:
                 raise ValidationError("Game level does not exist")
             else:
+                if Corporation.by_uuid(corp_uuid) is None:
+                    if len(Corporation.all()) == 0:
+                        # Create a empty Corp
+                        corporation = Corporation()
+                        corporation.name = ""
+                        self.dbsession.add(corporation)
+                        self.dbsession.commit()
+                        corp_uuid = corporation.uuid
+                    else:
+                        raise ValidationError("Corporation does not exist")
                 corp = Corporation.by_uuid(corp_uuid)
                 level = GameLevel.by_number(game_level)
                 box = Box(corporation_id=corp.id, game_level_id=level.id)

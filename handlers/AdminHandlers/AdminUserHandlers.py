@@ -216,22 +216,21 @@ class AdminDeleteUsersHandler(BaseHandler):
         Delete team objects in the database.
         """
         team = Team.by_uuid(self.get_argument("uuid", ""))
-        for user in team.members:
-            if user == self.get_current_user():
-                self.render(
-                    "admin/view/users.html",
-                    errors=["Unable to delete user %s" % user.handle],
-                )
-                return
-            EventManager.instance().deauth(user)
         if team is not None:
             logging.info("Deleted Team: '%s'" % str(team.name))
+            for user in team.members:
+                if user == self.get_current_user():
+                    self.render(
+                        "admin/view/users.html",
+                        errors=["Unable to delete user %s" % user.handle],
+                    )
+                    return
+                EventManager.instance().deauth(user)
             self.dbsession.delete(team)
             self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
         else:
-            self.event_manager.push_score_update()
             self.render("admin/view/users.html", errors=["Team does not exist"])
 
 
