@@ -227,35 +227,35 @@ class AdminCreateHandler(BaseHandler):
         try:
             self._mkflag(FLAG_STATIC)
         except ValidationError as error:
-            self.render("admin/create/flag-static.html", errors=[str(error)])
+            self.render("admin/create/flag-static.html", errors=[str(error)], box=None)
 
     def create_flag_regex(self):
         """ Create a regex flag """
         try:
             self._mkflag(FLAG_REGEX)
         except ValidationError as error:
-            self.render("admin/create/flag-regex.html", errors=[str(error)])
+            self.render("admin/create/flag-regex.html", errors=[str(error)], box=None)
 
     def create_flag_file(self):
         """ Create a flag flag """
         try:
             self._mkflag(FLAG_FILE, is_file=True)
         except ValidationError as error:
-            self.render("admin/create/flag-file.html", errors=[str(error)])
+            self.render("admin/create/flag-file.html", errors=[str(error)], box=None)
 
     def create_flag_choice(self):
         """ Create a multiple choice flag """
         try:
             self._mkflag(FLAG_CHOICE)
         except ValidationError as error:
-            self.render("admin/create/flag-choice.html", errors=[str(error)])
+            self.render("admin/create/flag-choice.html", errors=[str(error)], box=None)
 
     def create_flag_datetime(self):
         """ Create a datetime flag """
         try:
             self._mkflag(FLAG_DATETIME)
         except ValidationError as error:
-            self.render("admin/create/flag-datetime.html", errors=[str(error)])
+            self.render("admin/create/flag-datetime.html", errors=[str(error)], box=None)
 
     def create_game_level(self):
         """
