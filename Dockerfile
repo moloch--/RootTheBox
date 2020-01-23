@@ -9,8 +9,6 @@ RUN mkdir /opt/rtb
 ADD . /opt/rtb
 
 RUN apt-get update
-RUN apt-get install software-properties-common -y
-RUN apt-get update
 RUN apt-get install build-essential zlib1g-dev memcached libmemcached-dev -y
 RUN apt-get install python3-pycurl sqlite3 libsqlite3-dev -y
 
