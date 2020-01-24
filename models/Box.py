@@ -297,7 +297,7 @@ class Box(DatabaseObject):
     def get_garbage_cfg(self):
         return "[Bot]\nname = %s\ngarbage = %s\n" % (
             encode(self.name, "hex"),
-            self.garbage,
+            encode(self.garbage),
         )
 
     def is_complete(self, user):
@@ -321,7 +321,7 @@ class Box(DatabaseObject):
             self.flag_submission_type
         ).name
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
-        ET.SubElement(box_elem, "garbage").text = str(self.garbage)
+        ET.SubElement(box_elem, "garbage").text = encode(self.garbage)
         if self.category_id:
             ET.SubElement(box_elem, "category").text = Category.by_id(
                 self.category_id
