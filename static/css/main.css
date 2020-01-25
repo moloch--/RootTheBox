@@ -26,8 +26,8 @@ footer {
     width: 100px;
 }
 .centercolumn {
-    text-align: center; 
-    vertical-align: middle;
+    text-align: center !important;
+    vertical-align: middle  !important;
 }
 .wordbreak {
     word-wrap: break-word; 
