@@ -12,7 +12,7 @@
 <div class="row-fluid">
     <div class="span12 well animated fadeIn">
         {% if paste is not None %}
-            <h3>{{ paste.name }} - {{ paste.created.strftime("%I:%M%p") }}</h3>
+            <h3>{{ paste.name }} - {{ paste.created.strftime("%I:%M%p %x") }}</h3>
             <div class="navbar-inverse">
                 <pre class="navbar-inner" style="color: unset; min-height: unset;">
                 {{ paste.contents }}
