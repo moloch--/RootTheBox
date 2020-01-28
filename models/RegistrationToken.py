@@ -56,4 +56,4 @@ class RegistrationToken(DatabaseObject):
     @classmethod
     def by_value(cls, value):
         """ Returns a the object with value of value """
-        return dbsession.query(cls).filter_by(value=str(value)).first()
+        return dbsession.query(cls).filter_by(value=encode(value)).first()

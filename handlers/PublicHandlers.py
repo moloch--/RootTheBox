@@ -133,7 +133,7 @@ class LoginHandler(BaseHandler):
     def failed_login(self):
         """ Called if username/password is invalid """
         ip = self.request.remote_ip
-        logging.info("[BAN HAMMER] Failed login attempt from: %s" % ip)
+        logging.info("*** Failed login attempt from: %s" % ip)
         failed_logins = self.application.settings["failed_logins"]
         if ip in failed_logins:
             failed_logins[ip] += 1
