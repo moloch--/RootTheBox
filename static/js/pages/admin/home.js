@@ -105,22 +105,24 @@ function padDigits(number, digits) {
 }
 
 function updateGitStatus() {
-    $.get("/admin/gitstatus", function(status) {
-        if (status.includes("Your branch is behind")) {
-            status = '<hr /><i class="fa fa-info-circle gitstatus info"></i>&nbsp;&nbsp;' +
-                '<span title="commands: git fetch ; git status">' + status + '</span>';
-            $("#update-rtb").show();
-        } else if (status.includes("Your branch is up to date")) {
-            status = '<hr /><i class="fa fa-check-circle gitstatus ok"></i>&nbsp;&nbsp;Root the Box is up to date.';
-        } else {
-            if (status.indexOf(":") > 0) {
-                status = status.slice(0,status.indexOf(":")) + "."
+    if ($("#gitstatus").length == 1) {
+        $.get("/admin/gitstatus", function(status) {
+            if (status.includes("Your branch is behind")) {
+                status = '<hr /><i class="fa fa-info-circle gitstatus info"></i>&nbsp;&nbsp;' +
+                    '<span title="commands: git fetch ; git status">' + status + '</span>';
+                $("#update-rtb").show();
+            } else if (status.includes("Your branch is up to date")) {
+                status = '<hr /><i class="fa fa-check-circle gitstatus ok"></i>&nbsp;&nbsp;Root the Box is up to date.';
+            } else {
+                if (status.indexOf(":") > 0) {
+                    status = status.slice(0,status.indexOf(":")) + "."
+                }
+                status = '<hr /><i class="fa fa-exclamation-circle gitstatus warn"></i>&nbsp;&nbsp;' +
+                    '<span title="commands: git fetch ; git status">git: ' + status + '</span>';
             }
-            status = '<hr /><i class="fa fa-exclamation-circle gitstatus warn"></i>&nbsp;&nbsp;' +
-                '<span title="commands: git fetch ; git status">git: ' + status + '</span>';
-        }
-        $("#gitstatus").html(status);
-    });
+            $("#gitstatus").html(status);
+        });
+    }
 }
 
 function setTimer(distance) {

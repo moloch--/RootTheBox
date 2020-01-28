@@ -72,6 +72,7 @@
 
 {% block content %}
 {% from models.Notification import Notification %}
+{% from tornado.options import options %}
 <div class="row-fluid">
     <div class="row">
         <div class="offset1">
@@ -87,12 +88,14 @@
         <div class="row">
             <div class="span11 offset1 well">
                 <h3>{{ _("Game Control") }}</h3>
-                <div id="gitstatus"></div>
-                <form class="gitform hide" id="update-rtb">
-                    {% raw xsrf_form_html() %}
-                    <a id="updatebutton" class="btn btn-primary" title="Updates RTB to the latest GitHub commits" href="#">{{ _("Update RootTheBox") }}</a>
-                </form>
-                <hr />
+                {% if not options.setup.startswith("docker") %}
+                    <div id="gitstatus"></div>
+                    <form class="gitform hide" id="update-rtb">
+                        {% raw xsrf_form_html() %}
+                        <a id="updatebutton" class="btn btn-primary" title="Updates RTB to the latest GitHub commits" href="#">{{ _("Update RootTheBox") }}</a>
+                    </form>
+                    <hr />
+                {% end %}
                 <form id="start-game-form" action="/admin/game" method="post">
                     {% raw xsrf_form_html() %}
                     <input id="start-game" name="start_game" type="hidden" />
