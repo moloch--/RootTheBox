@@ -509,7 +509,7 @@ class AdminExportHandler(BaseHandler):
         images = ["ctf_logo", "story_character", "scoreboard_right_image"]
         for key in game_list:
             value = game_list[key]
-            if key in images and value:
+            if key in images and len(value) > 0:
                 if os.path.isfile(value):
                     path = value
                 elif os.path.isfile(os.path.join("files", value)):
@@ -526,7 +526,7 @@ class AdminExportHandler(BaseHandler):
                 game_elem.append(child)
                 for item in value:
                     ET.SubElement(child, "line").text = str(item)
-            else:
+            elif len(str(value)) > 0:
                 ET.SubElement(game_elem, key).text = str(value)
 
     def export_game_objects(self, root):
