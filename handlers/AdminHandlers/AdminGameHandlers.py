@@ -481,6 +481,8 @@ class AdminExportHandler(BaseHandler):
         """ Include the requests exports in the xml dom """
         root = ET.Element("rootthebox")
         root.set("api", self.API_VERSION)
+        if self.get_argument("game_config", "") == "true":
+            self.export_game_config(root)
         if self.get_argument("game_objects", "") == "true":
             self.export_game_objects(root)
         xml_dom = defusedxml.minidom.parseString(ET.tostring(root))
@@ -497,6 +499,35 @@ class AdminExportHandler(BaseHandler):
         self.set_header("Content-Length", len(encode(xml_doc, "utf-8")))
         self.write(encode(xml_doc, "utf-8"))
         self.finish()
+
+    def export_game_config(self, root):
+        """
+        Exports the game configuration options to an XML doc.
+        """
+        game_elem = ET.SubElement(root, "configuration")
+        game_list = options.group_dict("game")
+        images = ["ctf_logo", "story_character", "scoreboard_right_image"]
+        for key in game_list:
+            value = game_list[key]
+            if key in images and value:
+                if os.path.isfile(value):
+                    path = value
+                elif os.path.isfile(os.path.join("files", value)):
+                    path = os.path.join("files", value)
+                elif value[0] == "/" and os.path.isfile(value[1:]):
+                    path = value[1:]
+                else:
+                    continue
+                with open(path, mode="rb") as logo:
+                    data = logo.read()
+                    ET.SubElement(game_elem, key).text = encode(data, "base64")
+            elif isinstance(value, list):
+                child = ET.Element(key)
+                game_elem.append(child)
+                for item in value:
+                    ET.SubElement(child, "line").text = str(item)
+            else:
+                ET.SubElement(game_elem, key).text = str(value)
 
     def export_game_objects(self, root):
         """

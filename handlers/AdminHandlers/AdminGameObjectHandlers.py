@@ -255,7 +255,9 @@ class AdminCreateHandler(BaseHandler):
         try:
             self._mkflag(FLAG_DATETIME)
         except ValidationError as error:
-            self.render("admin/create/flag-datetime.html", errors=[str(error)], box=None)
+            self.render(
+                "admin/create/flag-datetime.html", errors=[str(error)], box=None
+            )
 
     def create_game_level(self):
         """

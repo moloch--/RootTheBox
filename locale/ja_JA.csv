@@ -662,3 +662,7 @@ You have not submitted any bribes yet.,まだ賄briを提出していません�
 "Your email, visible to game administrators.",ゲーム管理者に表示されるメール。
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",ハンドルは3〜16文字の英数字でなければなりません。アンダースコア、ダッシュ、およびドットを使用できます。
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",ゲーム管理者に表示されるあなたの名前。名前には3〜64文字の英数字を使用できます
+Automatic Ban,自動禁止
+Export of gameplay settings does not include the entire server and database configuration.,ゲームプレイ設定のエクスポートには、サーバーとデータベースの構成全体は含まれません。
+Include gameplay settings (such as those under ,ゲームプレイの設定を含める（以下の設定など）
+and logos in export.,およびエクスポートのロゴ。

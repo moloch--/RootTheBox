@@ -662,3 +662,7 @@ You have not submitted any bribes yet.,Você não enviou nenhum suborno ainda.
 "Your email, visible to game administrators.","Seu email, visível para os administradores do jogo."
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Sua alça deve ter de 3 a 16 caracteres alfanuméricos. Sublinhado, traço e pontos permitidos."
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Seu nome, visível para os administradores do jogo. Seu nome pode ter de 3 a 64 caracteres alfanuméricos"
+Automatic Ban,Proibição automática
+Export of gameplay settings does not include the entire server and database configuration.,A exportação de configurações de jogabilidade não inclui toda a configuração do servidor e do banco de dados.
+Include gameplay settings (such as those under ,Inclua configurações de jogabilidade (como aquelas em
+and logos in export.,e logotipos na exportação.

@@ -39,6 +39,8 @@
             -->
             <h3>&nbsp;&nbsp;{{ _("Export Game Objects") }}</h3>
             <hr />
+            <input style="margin-bottom: 4px" type="checkbox" name="game_config" value="true" checked="checked"> {{ _("Include gameplay settings (such as those under ") }} <a href='/admin/configuration'>{{ _("configuration") }}</a>{{ _(") and logos in export.") }}
+            <br /><br />
             <div class="control-group">
                 <div class="controls">
                     <button class="btn btn-primary" type="submit">
@@ -48,7 +50,7 @@
                 </div>
             </div>
             <hr />
-            <strong>{{ _("Note") }}:</strong> {{ _("To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.")}}
+            <strong>{{ _("Note") }}:</strong> {{ _("Export of gameplay settings does not include the entire server and database configuration.")}} {{ _("To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.")}}
         </form>
     </div>
 </div>

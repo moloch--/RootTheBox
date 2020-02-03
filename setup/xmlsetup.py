@@ -34,7 +34,7 @@ from shutil import copyfile
 from setup.create_database import *
 from models import dbsession
 from models.Box import FlagsSubmissionType
-from libs.StringCoding import encode, decode
+from libs.StringCoding import encode, decode, set_type
 from libs.ConfigHelpers import save_config, save_config_image
 from base64 import b64decode
 
@@ -242,11 +242,27 @@ def update_configuration(config):
             if options[config_elem.tag] is not None:
                 if config_elem.tag in images:
                     value = save_config_image(get_child_text(config, config_elem.tag))
+                elif isinstance(options[config_elem.tag], list):
+                    lines = []
+                    for line in get_child_by_tag(config, config_elem.tag):
+                        lines.append(line.text)
+                    value = lines
                 else:
                     value = get_child_text(config, config_elem.tag)
+                value = set_type(value, options[config_elem.tag])
                 if isinstance(value, type(options[config_elem.tag])):
                     logging.info("Configuration (%s): %s" % (config_elem.tag, value))
                     options[config_elem.tag] = value
+                else:
+                    logging.error(
+                        "Confirguation (%s): unable to convert type %s to %s for %s"
+                        % (
+                            config_elem.tag,
+                            type(value),
+                            type(options[config_elem.tag]),
+                            value,
+                        )
+                    )
         except BaseException as e:
             logging.exception("Faild to update configuration (%s)" % e)
     save_config()

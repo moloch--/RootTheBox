@@ -52,3 +52,28 @@ def decode(s, name="utf-8", *args, **kwargs):
     if not isinstance(rv, (str, bytes, bytearray)):
         raise TypeError("Not a string or byte codec: type %s" % type(rv))
     return rv
+
+
+def unicode(s, name="utf-8", *args, **kwargs):
+    # used in python2 to return a unicode type from string
+    codec = codecs.lookup(name)
+    rv, length = codec.decode(s, *args, **kwargs)
+    return rv
+
+
+def set_type(value, basevalue):
+    # try to set value to basevalue type
+    basetype = type(basevalue)
+    if type(value) == basetype:
+        return value
+    elif isinstance(basevalue, bool):
+        return bool(value)
+    elif isinstance(basevalue, int):
+        return int(value)
+    elif type(unicode(value)) == basetype:
+        return unicode(value)
+    elif type(str(value)) == basetype:
+        return str(value)
+    elif type(bytes(value)) == basetype:
+        return bytes(value)
+    return value
