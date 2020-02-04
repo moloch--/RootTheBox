@@ -439,10 +439,10 @@ define(
 )
 
 define(
-    "gdpr_link",
+    "privacy_policy_link",
     default=False,
     group="game",
-    help="Link to the GDPR Page",
+    help="Link to the privacy policy",
     type=game_type
 )
 

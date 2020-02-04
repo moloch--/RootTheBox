@@ -36,7 +36,7 @@
             {% from tornado.options import options %}
             <hr style="margin-bottom: -1px;">
             <div class="navbar-inner footernav">
-                Powered by <a href="https://github.com/moloch--/RootTheBox" target="_blank">Root the Box</a> &copy; {{ datetime.date.today().year }} {% if options.gdpr_link %}; <a href="{{ options.gdpr_link }}">{{ _("GDPR Policy") }}</a>{% end%}
+                Powered by <a href="https://github.com/moloch--/RootTheBox" target="_blank">Root the Box</a> &copy; {{ datetime.date.today().year }}{% if options.privacy_policy_link %} ; <a href="{{ options.privacy_policy_link }}">{{ _("Privacy Policy") }}</a>{% end%}
                 <span style="float:right; padding-right: 5px;">{% raw options.org_footer %}</span>
             </div>
          </footer>

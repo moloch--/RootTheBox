@@ -227,11 +227,11 @@
                         </div>
                     </div>
                 {% end %}
-                {% if options.gdpr_link %}
+                {% if options.privacy_policy_link %}
                     <div class="control-group">
-                        <label class="control-label" for="gdpr_accept">{{ _("I accept the") }} <a href="{{ options.gdpr_link }}">{{ _("GDPR Policy") }}</a></label>
+                        <label class="control-label" for="privacy_policy_accept">{{ _("I accept the") }} <a href="{{ options.privacy_policy_link }}">{{ _("Privacy Policy") }}</a></label>
                         <div class="controls">
-                            <input required id="gdpr_accept" name="gdpr_accept" type="checkbox" />
+                            <input required id="privacy_policy_accept" name="privacy_policy_accept" type="checkbox" />
                         </div>
                     </div>
                 {% end %}
