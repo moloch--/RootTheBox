@@ -439,6 +439,14 @@ define(
 )
 
 define(
+    "gdpr_link",
+    default=False,
+    group="game",
+    help="Link to the GDPR Page",
+    type=game_type
+)
+
+define(
     "story_character",
     default="/static/images/morris.jpg",
     group="game",
