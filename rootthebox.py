@@ -440,7 +440,7 @@ define(
 
 define(
     "privacy_policy_link",
-    default=False,
+    default="",
     group="game",
     help="Link to the privacy policy",
     type=game_type
