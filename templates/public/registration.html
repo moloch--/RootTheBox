@@ -227,6 +227,14 @@
                         </div>
                     </div>
                 {% end %}
+                {% if options.privacy_policy_link %}
+                    <div class="control-group">
+                        <label class="control-label" for="privacy_policy_accept">{{ _("I accept the") }} <a href="{{ options.privacy_policy_link }}">{{ _("Privacy Policy") }}</a></label>
+                        <div class="controls">
+                            <input required id="privacy_policy_accept" name="privacy_policy_accept" type="checkbox" />
+                        </div>
+                    </div>
+                {% end %}
                 <br />
                 <div class="control-group">
                     <div class="controls">

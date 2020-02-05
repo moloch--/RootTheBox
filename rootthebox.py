@@ -439,6 +439,14 @@ define(
 )
 
 define(
+    "privacy_policy_link",
+    default=False,
+    group="game",
+    help="Link to the privacy policy",
+    type=game_type
+)
+
+define(
     "story_character",
     default="/static/images/morris.jpg",
     group="game",
