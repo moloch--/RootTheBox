@@ -302,6 +302,7 @@ Hints Taken,Genutzte Hinweise
 History,Historie
 Home,Startseite
 How should the next level unlock?,Wie soll das nächste Level freigeschaltet werden?
+I accept the,Ich akzeptiere die 
 "If the flag selection is left empty, the hint will be considered a Box Hint.","Wenn die Flaggen-Auswahl leer gelassen wird, wird der Hinweis berücksichtigt"
 "If this option is disabled, there is no cost for submitting incorrect flags.","Wenn diese Option deaktiviert ist, fallen keine Kosten für die Übermittlung falscher Flaggen an."
 Import File,Datei importieren
@@ -459,6 +460,7 @@ points,Punkte
 Previous Bribes,Vorherige Bestechungsgelder
 Price,Preis
 Private,Privatgelände
+Privacy Policy,Datenschutz Richtlinie
 Programming,Programmierung
 Provide the code used to join an existing team.  Visible to other team members on their home page.,"Geben Sie den Code an, mit dem Sie einem vorhandenen Team beitreten. Sichtbar für andere Teammitglieder auf ihrer Homepage."
 Public,Öffentlichkeit
