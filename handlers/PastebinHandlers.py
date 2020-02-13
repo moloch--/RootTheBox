@@ -26,6 +26,7 @@ This file contains handlers related to the pastebin functionality
 
 from handlers.BaseHandlers import BaseHandler
 from models.PasteBin import PasteBin
+from models.Team import Team
 from libs.SecurityDecorators import authenticated
 from tornado.options import options
 
@@ -51,7 +52,7 @@ class CreatePasteHandler(BaseHandler):
     def get(self, *args, **kwargs):
         if options.team_sharing:
             """ AJAX // Display team text shares """
-            self.render("pastebin/create.html", errors=None)
+            self.render("pastebin/create.html", errors=None, user=self.get_current_user())
         else:
             self.redirect("/404")
 
@@ -61,17 +62,30 @@ class CreatePasteHandler(BaseHandler):
             """ Creates a new text share """
             name = self.get_argument("name", "")
             content = self.get_argument("content", "")
+            user = self.get_current_user()
             if 0 < len(name) and 0 < len(content):
-                user = self.get_current_user()
-                paste = PasteBin(team_id=user.team.id)
-                paste.name = name
-                paste.contents = content
-                self.dbsession.add(paste)
+                teams = []
+                if user.is_admin():
+                    teamval = self.get_argument("team_uuid", "")
+                    if teamval == "all":
+                        teams = Team.all()
+                    elif teamval != "":
+                        teams = [Team.by_uuid(teamval)]
+                else:
+                    teams = [user.team]
+                for team in teams:
+                    paste = PasteBin(team_id=team.id)
+                    paste.name = name
+                    paste.contents = content
+                    self.dbsession.add(paste)
+                    self.event_manager.team_paste_shared(user, team, paste)
                 self.dbsession.commit()
-                self.event_manager.team_paste_shared(user, paste)
-                self.redirect("/user/share/pastebin")
+                if user.is_admin():
+                    self.redirect("/admin/view/pastebin")
+                else:
+                    self.redirect("/user/share/pastebin")
             else:
-                self.render("pastebin/create.html", errors=["Missing name or content"])
+                self.render("pastebin/create.html", errors=["Missing name or content"], user=user)
         else:
             self.redirect("/404")
 
@@ -84,23 +98,22 @@ class DisplayPasteHandler(BaseHandler):
     def get(self, *args, **kwargs):
         if options.team_sharing:
             """ AJAX // Retrieves a paste from the database """
-            paste_uuid = self.get_argument("paste_uuid")
+            paste_uuid = self.get_argument("paste_uuid", "")
             user = self.get_current_user()
             paste = PasteBin.by_uuid(paste_uuid)
             if user.is_admin():
                 self.render(
-                    "pastebin/display.html", errors=None, paste=paste, nocreate=True
+                    "pastebin/display.html", errors=None, paste=paste
                 )
             elif paste is None or paste not in user.team.pastes:
                 self.render(
                     "pastebin/display.html",
                     errors=["Paste does not exist."],
                     paste=None,
-                    nocreate=None,
                 )
             else:
                 self.render(
-                    "pastebin/display.html", errors=None, paste=paste, nocreate=False
+                    "pastebin/display.html", errors=None, paste=paste
                 )
         else:
             self.redirect("/404")

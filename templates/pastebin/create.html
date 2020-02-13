@@ -22,6 +22,20 @@
             {% from tornado.options import options %}
             <fieldset>
             <legend>{{ _("Create New Paste") }}</legend>
+                {% if user.is_admin() %}
+                {% from models.Team import Team %}
+                <p>
+                    <label class="control-label" for="team-uuid">{% if options.teams %}{{_("Team")}}{% else %}{{_("Player")}}{% end %}</label>
+                    <div class="controls">
+                        <select id="team-uuid" name="team_uuid">
+                            <option value="all">All</option>
+                            {% for team in Team.all() %}
+                                <option value="{{ team.uuid }}">{{ team.name }}</option>
+                            {% end %}
+                        </select>
+                    </div>
+                </p>
+                {% end %}
                 <p>
                     <label for="name">{{ _("Name") }}</label>
                     <input autofocus required name="name" id="name" maxlength="32" placeholder="{{ _('Paste Name') }}" type="text" />

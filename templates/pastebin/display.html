@@ -2,9 +2,7 @@
     <div class="navbar-inner">
         <a class="brand">{{ _("PasteBin") }}</a>
         <ul class="nav">
-            {% if not nocreate %}
             <li><a id="create-paste" href="#">{{ _("Create") }}</a></li>
-            {% end %}
             <li><a id="delete-paste" style="cursor: pointer;" data-uuid="{{ paste.uuid }}">{{ _("Delete") }}</a></li>
         </ul>
     </div>

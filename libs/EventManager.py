@@ -278,11 +278,11 @@ class EventManager(object):
         Notification.create_team(team, "File Share", message, INFO)
         self.io_loop.add_callback(self.push_team, team.id)
 
-    def team_paste_shared(self, user, paste_bin):
+    def team_paste_shared(self, user, team, paste_bin):
         """ Callback when a pastebin is created """
         message = "%s posted '%s' to the team paste bin" % (user.handle, paste_bin.name)
-        Notification.create_team(user.team, "Text Share", message, INFO)
-        self.io_loop.add_callback(self.push_team, user.team.id)
+        Notification.create_team(team, "Text Share", message, INFO)
+        self.io_loop.add_callback(self.push_team, team.id)
 
     # [ Misc Events ] ------------------------------------------------------
     def cracked_password(self, cracker, victim, password, value):
