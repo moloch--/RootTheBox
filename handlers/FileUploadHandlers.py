@@ -27,6 +27,7 @@ This file conatains handlers related to the file sharing functionality
 import logging
 
 from models.FileUpload import FileUpload
+from models.Team import Team
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
 from .BaseHandlers import BaseHandler
@@ -58,33 +59,50 @@ class FileUploadHandler(BaseHandler):
             """ Shit form validation """
             user = self.get_current_user()
             self.errors = []
+            shares = []
+            if user.team:
+                shares = user.team.files
             if hasattr(self.request, "files"):
-                for shared_file in self.request.files["files"][:MAX_UPLOADS]:
-                    file_upload = self.create_file(user, shared_file)
-                    if file_upload is not None:
-                        self.event_manager.team_file_shared(user, file_upload)
+                teams = []
+                if user.is_admin():
+                    teamval = self.get_argument("team_uuid", "")
+                    if teamval == "all":
+                        teams = Team.all()
+                    elif teamval != "":
+                        teams = [Team.by_uuid(teamval)]
+                        shares = Team.by_uuid(teamval).files
+                else:
+                    teams = [user.team]
+                for team in teams:
+                    for shared_file in self.request.files["files"][:MAX_UPLOADS]:
+                        file_upload = self.create_file(team, shared_file)
+                        if file_upload is not None:
+                            self.event_manager.team_file_shared(user, team, file_upload)
                 if not len(self.errors):
-                    self.redirect("/user/share/files")
+                    if user.is_admin():
+                        self.redirect("/admin/view/fileshare")
+                    else:
+                        self.redirect("/user/share/files")
                 else:
                     self.render(
                         "file_upload/shared_files.html",
                         errors=self.errors,
-                        shares=user.team.files,
+                        shares=shares,
                     )
             else:
                 self.render(
                     "file_upload/shared_files.html",
                     errors=["No files in request"],
-                    shares=user.team.files,
+                    shares=shares,
                 )
         else:
             self.redirect("/404")
 
-    def create_file(self, user, shared_file):
+    def create_file(self, team, shared_file):
         if options.team_sharing:
             """ Saves uploaded file """
             try:
-                file_upload = FileUpload(team_id=user.team.id)
+                file_upload = FileUpload(team_id=team.id)
                 file_upload.file_name = shared_file["filename"]
                 file_upload.data = shared_file["body"]
                 file_upload.description = self.get_argument("description", "")
@@ -140,7 +158,7 @@ class FileDeleteHandler(BaseHandler):
                 self.dbsession.delete(shared_file)
                 self.dbsession.commit()
                 self.redirect("/admin/view/fileshare")
-            if shared_file is not None and shared_file in user.team.files:
+            elif shared_file is not None and shared_file in user.team.files:
                 logging.info(
                     "%s deleted a shared file %s" % (user.handle, shared_file.uuid)
                 )

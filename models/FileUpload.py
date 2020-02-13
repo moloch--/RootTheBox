@@ -107,7 +107,7 @@ class FileUpload(DatabaseObject):
             self.uuid = str(uuid4())
         self.byte_size = len(value)
         with open(options.share_dir + "/" + self.uuid, "wb") as fp:
-            fp.write(encode(value, "base64"))
+            fp.write(str(encode(value, "base64")).encode())
 
     def delete_data(self):
         if os.path.exists(options.share_dir + "/" + self.uuid):

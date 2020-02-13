@@ -443,7 +443,7 @@ define(
     default="",
     group="game",
     help="Link to the privacy policy",
-    type=game_type
+    type=game_type,
 )
 
 define(

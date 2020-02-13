@@ -272,11 +272,11 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_team, user.team.id)
         self.io_loop.add_callback(self.push_scoreboard)
 
-    def team_file_shared(self, user, file_upload):
+    def team_file_shared(self, user, team, file_upload):
         """ Callback when a team file share is created """
         message = "%s has shared the file '%s'" % (user.handle, file_upload.file_name)
-        Notification.create_team(user.team, "File Share", message, INFO)
-        self.io_loop.add_callback(self.push_team, user.team.id)
+        Notification.create_team(team, "File Share", message, INFO)
+        self.io_loop.add_callback(self.push_team, team.id)
 
     def team_paste_shared(self, user, paste_bin):
         """ Callback when a pastebin is created """

@@ -62,7 +62,7 @@ class FlagAttachment(DatabaseObject):
             self.uuid = str(uuid4())
         self.byte_size = len(value)
         with open(options.flag_attachment_dir + "/" + self.uuid, "wb") as fp:
-            fp.write(encode(value, "base64"))
+            fp.write(str(encode(value, "base64")).encode())
 
     def delete_data(self):
         """ Remove the file from the file system, if it exists """

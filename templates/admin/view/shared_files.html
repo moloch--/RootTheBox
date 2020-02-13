@@ -1,12 +1,13 @@
 {% extends "../../main.html" %}
 
-{% block title %}{{ _("Shared Files") }}{% end %}
-
+{% block title %}{{ _("Shared Files") }}{% end %}    
 {% block header %}
 <script src="/static/js/pages/file_upload/shared_files.js"></script>
 {% end %}
 
 {% block modals %}
+{% from models.Team import Team %}
+{% from tornado.options import options %}
     <div id="delete-file-upload-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -52,6 +53,46 @@
           {% end %}
         {% end %}
         <div class="row">
+            <div class="well">
+                <form id="share-file" action="/user/share/files" method="post" enctype="multipart/form-data">
+                    {% raw xsrf_form_html() %}
+                    <div class="control-group">
+                        <h4>
+                            {% if options.teams %}{{_("Team")}}{% else %}{{_("Player")}}{% end %} {{ _("File")}} {{ _("Upload") }}
+                        </h4>
+                        <table style="width: 100%"> 
+                        <tr>
+                            <td>
+                                <label class="control-label" for="team-uuid">{% if options.teams %}{{_("Team")}}{% else %}{{_("Player")}}{% end %}</label>
+                                <div class="controls">
+                                    <select id="team-uuid" name="team_uuid">
+                                        <option value="all">All</option>
+                                        {% for team in Team.all() %}
+                                            <option value="{{ team.uuid }}">{{ team.name }}</option>
+                                        {% end %}
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <fieldset>
+                                    <label for="files">{{ _("File") }} ({{ _("Max") }} 50Mb)</label>
+                                    <input required id="files" name="files" multiple="multiple" type="file" />
+                                </fieldset>
+                            </td>
+                            <td>
+                                <label for="description">{{ _("Description") }}</label>
+                                <textarea id="description" name="description" type="text" placeholder="{{ _('File Description') }}">
+                                </textarea>
+                            </td>
+                        </tr>
+                        </table>
+                        <button class="btn">
+                            <i class="fa fa-fw fa-upload"></i>
+                            {{ _("Upload Files") }}
+                        </button>
+                    </form>
+                </div>
+            </div>
             <div class="well">
                 {% set teams = Team.all() %}
                 {% set index = 0 %}
