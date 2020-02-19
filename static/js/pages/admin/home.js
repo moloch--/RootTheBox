@@ -107,6 +107,7 @@ function padDigits(number, digits) {
 function updateGitStatus() {
     if ($("#gitstatus").length == 1) {
         $.get("/admin/gitstatus", function(status) {
+            status = status.replace("b'", "").replace(/\\n/g, "; ");
             if (status.includes("Your branch is behind")) {
                 status = '<hr /><i class="fa fa-info-circle gitstatus info"></i>&nbsp;&nbsp;' +
                     '<span title="commands: git fetch ; git status">' + status + '</span>';

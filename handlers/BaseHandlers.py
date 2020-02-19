@@ -27,7 +27,6 @@ from these base classes.
 
 
 import logging
-import memcache
 import traceback
 import datetime
 import time
@@ -35,7 +34,7 @@ import time
 from models import dbsession, chatsession
 from models.User import User
 from libs.SecurityDecorators import *
-from libs.Sessions import MemcachedSession
+from libs.Sessions import MemcachedSession, MemcachedConnect
 from libs.EventManager import EventManager
 from builtins import str
 
@@ -135,7 +134,7 @@ class BaseHandler(RequestHandler):
     def memcached(self):
         """ Connects to Memcached instance """
         if self._memcached is None:
-            self._memcached = memcache.Client([self.config.memcached], debug=0)
+            self._memcached = MemcachedConnect()
         return self._memcached
 
     def _create_session(self):
@@ -315,7 +314,7 @@ class BaseWebSocketHandler(WebSocketHandler):
     def memcached(self):
         """ Connects to Memcached instance """
         if self._memcached is None:
-            self._memcached = memcache.Client([self.config.memcached], debug=0)
+            self._memcached = MemcachedConnect()
         return self._memcached
 
     @property

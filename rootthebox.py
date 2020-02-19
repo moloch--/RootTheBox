@@ -180,6 +180,14 @@ def check_cwd():
         os.chdir(app_root)
 
 
+def parse_env_options():
+    # Used for defining vars in cloud environment
+    if os.environ.get("ORIGIN", None) is not None:
+        options.origin = os.environ.get("ORIGIN")
+    if os.environ.get("PORT", None) is not None:
+        options.listen_port = int(os.environ.get("PORT"))
+
+
 def help():
     help_response = [
         "\tNo options specified. Examples: 'rootthebox.py --setup=prod' or 'rootthebox.py --start'"
@@ -391,10 +399,22 @@ define(
 define("log_sql", default=False, group="database", help="Log SQL queries for debugging")
 
 # Memcached settings
-define("memcached", default="127.0.0.1", group="cache", help="memcached sever hostname")
+define(
+    "memcached",
+    default="127.0.0.1:11211",
+    group="cache",
+    help="memcached servers comma separated - hostname:port",
+)
 
 define(
-    "memcached_port", default=11011, group="cache", help="memcached tcp port", type=int
+    "memcached_user", default="", group="cache", help="memcached SASL server username"
+)
+
+define(
+    "memcached_password",
+    default="",
+    group="cache",
+    help="memcached SASL server password",
 )
 
 
@@ -832,7 +852,7 @@ if __name__ == "__main__":
         if not os.path.isfile(options.sql_database + ".db"):
             logging.info("Running Docker Setup")
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
-            options.memcached = "memcache"
+            options.memcached = "memcached"
             save_config()
             setup()
         else:
@@ -852,6 +872,8 @@ if __name__ == "__main__":
 
     # Make sure that cli args always have president over the file
     options.parse_command_line()
+    # Make sure that env vars always have president over the file
+    parse_env_options()
 
     if options.setup.lower()[:3] in ["pro", "dev"]:
         setup()

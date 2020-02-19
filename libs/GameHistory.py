@@ -30,6 +30,7 @@ from models.SnapshotTeam import SnapshotTeam
 from sqlalchemy import desc
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
+from libs.Sessions import MemcachedConnect
 from libs.Singleton import Singleton
 from tornado.options import options
 from builtins import object, range
@@ -45,7 +46,7 @@ class GameHistory(object):
     def __init__(self):
         self.config = options
         self.dbsession = dbsession
-        self.cache = memcache.Client([self.config.memcached], debug=0)
+        self.cache = MemcachedConnect()
         self.epoch = None  # Date/time of first snapshot
         self._load()
         self.event_manager = EventManager.instance()

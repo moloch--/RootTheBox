@@ -1,13 +1,16 @@
-memcache:
-  image: memcached:latest
-
-rtb:
-  build: .
-  ports:
-    - "8888:8888"
-  volumes:
-    - ./files:/opt/rtb/files:rw
-  links:
-    - memcache
-  environment:
-    - COMPOSE_CONVERT_WINDOWS_PATHS=1
+version: "3.0"
+services:
+  memcached:
+    image: memcached:latest
+    ports:
+      - "11211:11211"
+  webapp:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./files:/opt/rtb/files:rw
+    links:
+      - memcached
+    environment:
+      - COMPOSE_CONVERT_WINDOWS_PATHS=1

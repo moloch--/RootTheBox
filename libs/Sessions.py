@@ -13,6 +13,11 @@ import json
 import logging
 import collections
 
+try:
+    import pylibmc as memcache
+except ImportError:
+    import memcache
+
 from builtins import str
 from datetime import datetime, timedelta
 from tornado.options import options
@@ -199,3 +204,49 @@ class MemcachedSession(BaseSession):
     def delete(self):
         """Delete the session from storage."""
         self.connection.delete(str(self.session_id))
+
+
+def MemcachedConnect():
+    try:
+        if os.environ.get("MEMCACHIER_SERVERS", None) is not None:
+            servers = os.environ.get("MEMCACHIER_SERVERS", "").split(",")
+            user = os.environ.get("MEMCACHIER_USERNAME", "")
+            passw = os.environ.get("MEMCACHIER_PASSWORD", "")
+        elif os.environ.get("MEMCACHEDCLOUD_SERVERS", None) is not None:
+            servers = os.environ.get("MEMCACHEDCLOUD_SERVERS", "")
+            user = os.environ.get("MEMCACHEDCLOUD_USERNAME", "")
+            passw = os.environ.get("MEMCACHEDCLOUD_PASSWORD", "")
+        else:
+            servers = options.memcached.split(",")
+            user = None if options.memcached_user == "" else options.memcached_user
+            passw = (
+                None if options.memcached_password == "" else options.memcached_password
+            )
+
+        client = memcache.Client(
+            servers,
+            binary=True,
+            username=user,
+            password=passw,
+            behaviors={
+                # Faster IO
+                "tcp_nodelay": True,
+                # Keep connection alive
+                "tcp_keepalive": True,
+                # Timeout for set/get requests
+                "connect_timeout": 2000,  # ms
+                "send_timeout": 750 * 1000,  # us
+                "receive_timeout": 750 * 1000,  # us
+                "_poll_timeout": 2000,  # ms
+                # Better failover
+                "ketama": True,
+                "remove_failed": 1,
+                "retry_timeout": 2,
+                "dead_timeout": 30,
+            },
+        )
+    except TypeError:
+        client = memcache.Client(options.memcached.split(","), debug=0)
+        if len(client.get_stats()) == 0:
+            raise ValueError("Unable to connect to memcached")
+    return client
