@@ -187,7 +187,7 @@ def parse_env_options():
     if os.environ.get("PORT", None) is not None:
         # Heroku uses $PORT to define listen_port
         options.listen_port = int(os.environ.get("PORT"))
-    if os.environ.get("DEMO") or True:
+    if os.environ.get("DEMO"):
         setup_xml(["setup/demo_juiceshop.xml"])
         from libs.ConfigHelpers import create_demo_user
 
