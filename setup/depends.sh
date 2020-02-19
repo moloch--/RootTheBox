@@ -69,7 +69,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   fi
 
   echo "[*] Installing common packages..."
-  apt-get install build-essential zlib1g-dev memcached libmemcached-dev $SKIP
+  apt-get install build-essential zlib1g-dev memcached $SKIP
 
   echo "[*] Installing db packages..."
   if [[ "$SKIP" == "-y" ]]; then
@@ -94,7 +94,7 @@ elif [[ "${OSTYPE}" == "darwin14" ]]; then
   brew update
 
   echo "Brew install package..."
-  brew install python mysql memcached libmemcached zlib	
+  brew install python mysql memcached zlib
 
 fi	
 
