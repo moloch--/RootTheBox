@@ -853,6 +853,7 @@ if __name__ == "__main__":
             logging.info("Running Docker Setup")
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
             options.memcached = "memcached"
+            options.x_headers = True
             save_config()
             setup()
         else:

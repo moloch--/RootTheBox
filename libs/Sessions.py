@@ -223,11 +223,7 @@ def MemcachedConnect():
                 None if options.memcached_password == "" else options.memcached_password
             )
 
-        client = memcache.Client(
-            servers,
-            username=user,
-            password=passw,
-        )
+        client = memcache.Client(servers, username=user, password=passw,)
     except TypeError:
         client = memcache.Client(options.memcached.split(","), debug=0)
         if len(client.get_stats()) == 0:
