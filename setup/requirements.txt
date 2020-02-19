@@ -2,7 +2,7 @@ tornado==5.*; python_version < '3.0'
 tornado; python_version >= '3.0'
 pbkdf2
 PyMySQL
-pylibmc
+python-binary-memcached
 python-dateutil
 defusedxml
 netaddr
