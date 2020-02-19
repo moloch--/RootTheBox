@@ -20,7 +20,6 @@ Created on Nov 11, 2012
 # pylint: disable=no-member
 
 
-import memcache
 import logging
 
 from models import dbsession
