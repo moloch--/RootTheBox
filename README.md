@@ -12,8 +12,11 @@ Root the Box is a real-time capture the flag (CTF) scoring engine for computer w
 Like traditional CTF games, each team or player can target challenges of varying difficulty and sophistication, attempting to collect flags. But Root the Box brings additional options to the game.  It has built-in support for "botnets", allowing players to upload a small bot program to target machines that grant periodic rewards for each bot in the botnet.  You have the option to use a banking system, where (in-game) money can be used instead of points to unlock new levels, buy hints to flags, download a target's source code, or even "SWAT" other players.  Password hashes for player bank accounts can also be publicly displayed, allowing competitors to crack them and steal each other's money.
 
 ## Screenshots & Demo
-Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Screenshots) and game examples
-[RootTheBox Demo](https://rootthebox.herokuapp.com/) Admin Username `admin` Player Username `player` Passwords `rootthebox` _(please don't change passwords on the example accounts, but feel free to register a new user)_
+Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Screenshots) and game examples.
+
+[RootTheBox Demo](https://rootthebox.herokuapp.com/) _(please don't change passwords on the example accounts, but feel free to register a new user)_
+-   Admin Username `admin` Password `rootthebox`
+-   Player Username `player` Password `rootthebox`
 
 ## Features
 
