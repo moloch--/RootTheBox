@@ -277,6 +277,7 @@ def start_server():
     locale.load_translations("locale")
     if options.autostart_game:
         logging.info("The game is about to begin, good hunting!")
+        app.settings["game_started"] = True
         app.settings["history_callback"].start()
         if options.use_bots:
             app.settings["score_bots_callback"].start()

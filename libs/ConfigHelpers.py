@@ -47,9 +47,9 @@ def save_config_image(b64_data):
     image_data = bytearray(b64decode(b64_data))
     if len(image_data) < (2048 * 2048):
         ext = imghdr.what("", h=image_data)
-        file_name = "story/%s.%s" % (hashlib.sha1(image_data).hexdigest(), ext)
+        file_name = "/story/%s.%s" % (hashlib.sha1(image_data).hexdigest(), ext)
         if ext in ["png", "jpeg", "gif", "bmp"] and not is_xss_image(image_data):
-            with open("files/" + file_name, "wb") as fp:
+            with open("files" + file_name, "wb") as fp:
                 fp.write(image_data)
             return file_name
         else:
@@ -58,3 +58,26 @@ def save_config_image(b64_data):
             )
     else:
         raise ValidationError("The image is too large")
+
+
+def create_demo_user():
+    from models.Team import Team
+    from models.User import User
+    from models.GameLevel import GameLevel
+    from models import dbsession
+
+    if Team.by_name("player") is None:
+        user = User()
+        user.handle = "player"
+        user.password = "rootthebox"
+        user.name = "player"
+        user.email = "player@rootthebox.com"
+        team = Team()
+        team.name = "player"
+        team.motto = "Don't hate the player"
+        team.money = 0
+        team.game_levels.append(GameLevel.all()[0])
+        team.members.append(user)
+        dbsession.add(user)
+        dbsession.add(team)
+        dbsession.commit()

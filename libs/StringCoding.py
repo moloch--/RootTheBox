@@ -67,7 +67,10 @@ def set_type(value, basevalue):
     if type(value) == basetype:
         return value
     elif isinstance(basevalue, bool):
-        return bool(value)
+        if str(value).upper() == "TRUE":
+            return True
+        else:
+            return False
     elif isinstance(basevalue, int):
         return int(value)
     elif type(unicode(value)) == basetype:

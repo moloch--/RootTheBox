@@ -64,7 +64,7 @@ def start():
     sys.stdout.flush()
     try:
         print(INFO + bold + R + "Starting RTB on %s" % listenport, flush=True)
-    except:
+    except TypeError:
         print(INFO + bold + R + "Starting RTB on %s" % listenport)
 
     result = start_server()
@@ -185,7 +185,14 @@ def parse_env_options():
     if os.environ.get("ORIGIN", None) is not None:
         options.origin = os.environ.get("ORIGIN")
     if os.environ.get("PORT", None) is not None:
+        # Heroku uses $PORT to define listen_port
         options.listen_port = int(os.environ.get("PORT"))
+    if os.environ.get("DEMO") or True:
+        setup_xml(["setup/demo_juiceshop.xml"])
+        from libs.ConfigHelpers import create_demo_user
+
+        create_demo_user()
+        options.autostart_game = True
 
 
 def help():
