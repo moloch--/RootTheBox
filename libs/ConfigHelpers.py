@@ -47,9 +47,9 @@ def save_config_image(b64_data):
     image_data = bytearray(b64decode(b64_data))
     if len(image_data) < (2048 * 2048):
         ext = imghdr.what("", h=image_data)
-        file_name = "story/%s.%s" % (hashlib.sha1(image_data).hexdigest(), ext)
+        file_name = "/story/%s.%s" % (hashlib.sha1(image_data).hexdigest(), ext)
         if ext in ["png", "jpeg", "gif", "bmp"] and not is_xss_image(image_data):
-            with open("files/" + file_name, "wb") as fp:
+            with open("files" + file_name, "wb") as fp:
                 fp.write(image_data)
             return file_name
         else:
