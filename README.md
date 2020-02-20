@@ -14,7 +14,7 @@ Like traditional CTF games, each team or player can target challenges of varying
 ## Screenshots & Demo
 Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Screenshots) and game examples.
 
-[RootTheBox Demo](https://rootthebox.herokuapp.com/) _Note it may take a second to wake up. Also, please don't change passwords on the example accounts, but feel free to register a new user_
+[RootTheBox Demo](https://rootthebox.herokuapp.com/) _Note it may take a few seconds to wake up. Also, please don't change passwords on the example accounts, but feel free to register a new user._
 -   Admin Username `admin` Password `rootthebox`
 -   Player Username `player` Password `rootthebox`
 
