@@ -79,7 +79,9 @@ class Flag(DatabaseObject):
     _type = Column(Unicode(16), default=False)
 
     flag_attachments = relationship(
-        "FlagAttachment", backref=backref("flag", lazy="select")
+        "FlagAttachment",
+        backref=backref("flag", lazy="select"),
+        cascade="all,delete,delete-orphan",
     )
 
     flag_choice = relationship(

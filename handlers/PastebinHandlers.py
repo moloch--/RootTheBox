@@ -52,7 +52,9 @@ class CreatePasteHandler(BaseHandler):
     def get(self, *args, **kwargs):
         if options.team_sharing:
             """ AJAX // Display team text shares """
-            self.render("pastebin/create.html", errors=None, user=self.get_current_user())
+            self.render(
+                "pastebin/create.html", errors=None, user=self.get_current_user()
+            )
         else:
             self.redirect("/404")
 
@@ -85,7 +87,11 @@ class CreatePasteHandler(BaseHandler):
                 else:
                     self.redirect("/user/share/pastebin")
             else:
-                self.render("pastebin/create.html", errors=["Missing name or content"], user=user)
+                self.render(
+                    "pastebin/create.html",
+                    errors=["Missing name or content"],
+                    user=user,
+                )
         else:
             self.redirect("/404")
 
@@ -102,9 +108,7 @@ class DisplayPasteHandler(BaseHandler):
             user = self.get_current_user()
             paste = PasteBin.by_uuid(paste_uuid)
             if user.is_admin():
-                self.render(
-                    "pastebin/display.html", errors=None, paste=paste
-                )
+                self.render("pastebin/display.html", errors=None, paste=paste)
             elif paste is None or paste not in user.team.pastes:
                 self.render(
                     "pastebin/display.html",
@@ -112,9 +116,7 @@ class DisplayPasteHandler(BaseHandler):
                     paste=None,
                 )
             else:
-                self.render(
-                    "pastebin/display.html", errors=None, paste=paste
-                )
+                self.render("pastebin/display.html", errors=None, paste=paste)
         else:
             self.redirect("/404")
 

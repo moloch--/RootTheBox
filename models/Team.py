@@ -64,8 +64,16 @@ class Team(DatabaseObject):
     _code = Column(
         "code", String(16), unique=True, default=lambda: str(uuid4().hex)[:16]
     )
-    files = relationship("FileUpload", backref=backref("team", lazy="select"))
-    pastes = relationship("PasteBin", backref=backref("team", lazy="select"))
+    files = relationship(
+        "FileUpload",
+        backref=backref("team", lazy="select"),
+        cascade="all,delete,delete-orphan",
+    )
+    pastes = relationship(
+        "PasteBin",
+        backref=backref("team", lazy="select"),
+        cascade="all,delete,delete-orphan",
+    )
     money = Column(Integer, default=options.starting_team_money, nullable=False)
 
     members = relationship(
