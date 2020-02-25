@@ -70,6 +70,8 @@ class GameHistory(object):
                     )
                     self.cache.set(snapshot.key, snapshot.to_dict())
             logging.info("History load complete.")
+        except TypeError:
+            logging.error("Error Loading Cache (try to restart memcached)")
         except KeyboardInterrupt:
             logging.info("History load stopped by user.")
 
