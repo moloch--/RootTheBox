@@ -216,6 +216,16 @@ def MemcachedConnect():
             servers = os.environ.get("MEMCACHEDCLOUD_SERVERS", "").split(",")
             user = os.environ.get("MEMCACHEDCLOUD_USERNAME", None)
             passw = os.environ.get("MEMCACHEDCLOUD_PASSWORD", None)
+        elif (
+            os.environ.get("memcached", None) is not None
+            or os.environ.get("memcached_servers", None) is not None
+        ):
+            if os.environ.get("memcached", None) is not None:
+                servers = os.environ.get("memcached", "").split(",")
+            else:
+                servers = os.environ.get("memcached_servers").split(",")
+            user = os.environ.get("memcached_user", None)
+            passw = os.environ.get("memcached_password", None)
         else:
             servers = options.memcached.split(",")
             user = None if options.memcached_user == "" else options.memcached_user
