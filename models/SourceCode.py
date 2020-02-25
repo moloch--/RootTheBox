@@ -42,7 +42,7 @@ class SourceCode(DatabaseObject):
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
-    box_id = Column(Integer, ForeignKey("box.id"), nullable=False)
+    box_id = Column(Integer, ForeignKey("box.id", ondelete="CASCADE"), nullable=False)
     _price = Column(Integer, nullable=False)
     _description = Column(Unicode(1024), nullable=False)
     checksum = Column(String(40))

@@ -355,12 +355,12 @@ class AdminCreateHandler(BaseHandler):
     def add_attachments(self, flag):
         """ Add uploaded files as attachments to flags """
         if hasattr(self.request, "files"):
-            if "attachments" not in self.request.files:
+            if "flag" not in self.request.files:
                 return
-            for attachment in self.request.files["attachments"]:
-                flag_attachment = FlagAttachment(file_name=attachment["name"])
+            for attachment in self.request.files["flag"]:
+                flag_attachment = FlagAttachment(file_name=attachment["filename"])
                 flag_attachment.data = attachment["body"]
-                flag.attachments.append(flag_attachment)
+                flag.flag_attachments.append(flag_attachment)
                 self.dbsession.add(flag_attachment)
             self.dbsession.flush()
 
@@ -1157,6 +1157,7 @@ class AdminTestTokenHandler(BaseHandler):
         submission = self.get_argument("submission", "")
         flagtype = self.get_argument("flagtype", "static")
         case = int(self.get_argument("case", 1))
+        test = None
         if flagtype == FLAG_STATIC:
             if case == 0:
                 test = str(token).lower().strip() == str(submission).lower().strip()
