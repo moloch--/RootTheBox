@@ -54,8 +54,6 @@ class AdminUserStatsHandler(BaseHandler):
     def get(self, *args, **kwargs):
         uuid = self.get_argument("uuid", None)
         user = User.by_uuid(uuid)
-        print(uuid)
-        print(user)
         self.render("admin/view/user_stats.html", user=user, errors=None)
 
 
