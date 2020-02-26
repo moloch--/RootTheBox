@@ -47,6 +47,18 @@ class AdminManageUsersHandler(BaseHandler):
         self.render("admin/view/users.html", errors=None)
 
 
+class AdminUserStatsHandler(BaseHandler):
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        uuid = self.get_argument("uuid", None)
+        user = User.by_uuid(uuid)
+        print(uuid)
+        print(user)
+        self.render("admin/view/user_stats.html", user=user, errors=None)
+
+
 class AdminEditTeamsHandler(BaseHandler):
     @restrict_ip_address
     @authenticated
