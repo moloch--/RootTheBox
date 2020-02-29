@@ -60,7 +60,7 @@ from builtins import range, object, chr
 
 
 ### Settings
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __domain__ = "game.rootthebox.com"
 __desc__ = "Root the Box: Botnet"
 __port__ = "80"
@@ -729,7 +729,7 @@ class WebSocket(object):
         """
         if status < 0 or status >= ABNF.LENGTH_16:
             raise ValueError("code is invalid range")
-        self.send(struct.pack("!H", status) + reason, ABNF.OPCODE_CLOSE)
+        self.send("%s%s" % (struct.pack("!H", status), reason), ABNF.OPCODE_CLOSE)
 
     def close(self, status=STATUS_NORMAL, reason=""):
         """
