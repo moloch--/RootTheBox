@@ -189,6 +189,7 @@ def help():
     help_response.append("\t\t--save\t\tsave the current configuration to file")
     help_response.append("\t\t--setup\t\tsetup a database (prod|devel|docker)")
     help_response.append("\t\t--start\t\tstart the server")
+    help_response.append("\t\t--tests\t\trun the unit tests")
     help_response.append("\t\t--update\tpull the latest code via github")
     help_response.append("\t\t--version\tdisplay version information and exit")
     help_response.append("\t\t--xml\t\timport xml file(s)")
@@ -818,6 +819,8 @@ define("save", default=False, help="save the current configuration to file", typ
 
 define("config", default="files/rootthebox.cfg", help="root the box configuration file")
 
+define("tests", default=False, help="runs the unit tests", type=bool)
+
 
 if __name__ == "__main__":
 
@@ -863,5 +866,7 @@ if __name__ == "__main__":
         recovery()
     elif options.update:
         update()
+    elif options.tests:
+        tests()
     else:
         print(help())

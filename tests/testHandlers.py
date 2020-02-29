@@ -2,7 +2,7 @@
 """
 Unit tests for everything in handlers/
 """
-
+import logging
 from models import dbsession
 from models.User import User
 from models.Team import Team
@@ -17,7 +17,7 @@ class TestPublicHandlers(ApplicationTest):
     def test_home_page_get(self):
         self.get("/")(self.stop)
         rsp, body = self.wait()
-        assert "<h2>A Game of Hackers</h2>" in body
+        assert "home_container" in body
 
     def test_login_get(self):
         self.get("/login")(self.stop)
@@ -32,11 +32,12 @@ class TestPublicHandlers(ApplicationTest):
         dbsession.commit()
 
     def _login_success(self):
+        options.story_mode = True
         form = {"account": "HacKer", "password": "TestPassword"}
         self.post("/login", data=form)(self.stop)
         rsp, body = self.wait()
-        # Sould redirect to firstlogin
-        print(rsp, body)
+        # Should redirect to firstlogin
+        logging.info(body)
         assert "Incoming Transmission" in body
 
     def _login_failure(self):
@@ -51,6 +52,7 @@ class TestPublicHandlers(ApplicationTest):
         assert '<form class="form-horizontal" action="/registration"' in body
 
     def test_registration_post(self):
+        options.teams = True
         form = {
             "handle": "foobar",
             "team_name": "TestTeam",
@@ -71,14 +73,16 @@ class TestPublicHandlers(ApplicationTest):
         options.restrict_registration = False
 
     def _registration_post_team_name(self, form):
+        options.public_teams = True
         form["team_name"] = ""
         self.post("/registration", data=form)(self.stop)
         rsp, body = self.wait()
-        assert "Team name must be 3 - 16 characters" in body
-        form["team_name"] = "A" * 17
+        assert "Team name must be 3 - 24 characters" in body
+        form["team_name"] = "A" * 25
         self.post("/registration", data=form)(self.stop)
         rsp, body = self.wait()
-        assert "Team name must be 3 - 16 characters" in body
+        assert "Team name must be 3 - 24 characters" in body
+        options.public_teams = False
 
     def test_fake_robots_get(self):
         self.get("/robots")(self.stop)
@@ -91,7 +95,7 @@ class TestPublicHandlers(ApplicationTest):
     def test_about_get(self):
         self.get("/about")(self.stop)
         rsp, body = self.wait()
-        assert "<h1>About" in body
+        assert "<title> About" in body
 
 
 # class TestMissionHandlers(ApplicationTest):

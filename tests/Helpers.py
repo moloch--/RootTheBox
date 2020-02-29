@@ -4,6 +4,7 @@ from models.User import User
 from models.Corporation import Corporation
 from models.Box import Box
 from models.GameLevel import GameLevel
+from tornado.options import options
 
 
 def create_team():
@@ -18,6 +19,7 @@ def create_team():
 def create_user():
     user = User.by_handle("HacKer")
     if user is None:
+        options.banking = True
         user = User()
         user.handle = "HacKer"
         user.password = "TestPassword"

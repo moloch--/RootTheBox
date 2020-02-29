@@ -35,7 +35,7 @@ def setup_database(db_name):
     logging.debug("Setting up the test database connection ...")
 
     options.sql_dialect = "sqlite"
-    options.sql_database = "%s.db" % db_name
+    options.sql_database = db_name
 
     # Create the default tables
     logging.debug("Creating tables ... ")

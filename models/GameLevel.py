@@ -89,7 +89,7 @@ class GameLevel(DatabaseObject):
         try:
             if self.by_number(value) is None:
                 self._number = abs(int(value))
-            else:
+            elif self.uuid != self.by_number(value).uuid:
                 raise ValidationError("Game level number must be unique")
         except ValueError:
             raise ValidationError("Game level number must be an integer")

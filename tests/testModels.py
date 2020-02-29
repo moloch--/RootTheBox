@@ -20,6 +20,8 @@ from models.Flag import (
     FLAG_DATETIME,
     FLAG_CHOICE,
 )
+from libs.ValidationError import ValidationError
+from libs.StringCoding import encode
 from tests.Helpers import *
 
 
@@ -33,14 +35,14 @@ class TestTeam(unittest.TestCase):
 
     def test_name(self):
         assert self.team.name == "TestTeam"
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.team.name = ""
-        with self.assertRaises(ValueError):
-            self.team.name = "A" * 20
+        with self.assertRaises(ValidationError):
+            self.team.name = "A" * 25
 
     def test_motto(self):
         assert self.team.motto == "TestMotto"
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.team.motto = "A" * 35
 
 
@@ -54,9 +56,9 @@ class TestUser(unittest.TestCase):
 
     def test_handle(self):
         assert self.user.handle == "HacKer"
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.user.handle = ""
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.user.handle = "A" * 20
 
     def test_password(self):
@@ -67,7 +69,7 @@ class TestUser(unittest.TestCase):
     def test_bank_password(self):
         assert self.user.validate_bank_password("Test123")
         assert not self.user.validate_password("Wrong")
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.user.bank_password = "A" * 100
 
 
@@ -84,14 +86,13 @@ class TestGameLevel(unittest.TestCase):
         dbsession.commit()
 
     def test_number(self):
-        assert 0 <= self.game_level.number
-        self.game_level.number = -1
+
         assert 0 <= self.game_level.number
         self.game_level.number = "1"
         assert self.game_level.number == 1
         self.game_level.number = " 1 "
         assert self.game_level.number == 1
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.game_level.number = "A"
 
     def test_buyout(self):
@@ -100,7 +101,7 @@ class TestGameLevel(unittest.TestCase):
         assert 0 <= self.game_level.buyout
         self.game_level.buyout = "1000"
         assert self.game_level.buyout == 1000
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.game_level.buyout = "A"
 
 
@@ -114,9 +115,7 @@ class TestCorporation(unittest.TestCase):
 
     def test_name(self):
         assert self.corp.name == "TestCorp"
-        with self.assertRaises(ValueError):
-            self.corp.name = ""
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.corp.name = "A" * 35
 
 
@@ -130,13 +129,13 @@ class TestBox(unittest.TestCase):
 
     def test_name(self):
         assert self.box.name == "TestBox"
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.box.name = ""
-        with self.assertRaises(ValueError):
-            self.box.name = "A" * 20
+        with self.assertRaises(ValidationError):
+            self.box.name = "A" * 35
 
     def test_description(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             self.box.description = "A" * 1030
 
 
@@ -163,7 +162,7 @@ class TestFlag(unittest.TestCase):
             _type=FLAG_FILE,
             box=self.box,
             name="File Flag",
-            raw_token="fdata",
+            raw_token=encode("fdata"),
             description="A file test token",
             value=300,
         )
@@ -171,7 +170,7 @@ class TestFlag(unittest.TestCase):
             _type=FLAG_CHOICE,
             box=self.box,
             name="Choice Flag",
-            raw_token="fdata",
+            raw_token=encode("fdata"),
             description="A choice test token",
             value=400,
         )
@@ -196,10 +195,8 @@ class TestFlag(unittest.TestCase):
         dbsession.commit()
 
     def test_name(self):
-        with self.assertRaises(ValueError):
-            self.static_flag.name = ""
-        with self.assertRaises(ValueError):
-            self.static_flag.name = "A" * 20
+        with self.assertRaises(ValidationError):
+            self.static_flag.name = "A" * 65
 
     def test_static_capture(self):
         assert self.static_flag.capture("statictoken")
@@ -211,12 +208,12 @@ class TestFlag(unittest.TestCase):
         assert not self.regex_flag.capture("asdf")
 
     def test_file_capture(self):
-        assert self.file_flag.capture("fdata")
-        assert not self.file_flag.capture("other")
+        assert self.file_flag.capture(encode("fdata"))
+        assert not self.file_flag.capture(encode("other"))
 
     def test_choice_capture(self):
-        assert self.file_flag.capture("fdata")
-        assert not self.file_flag.capture("other")
+        assert self.file_flag.capture(encode("fdata"))
+        assert not self.file_flag.capture(encode("other"))
 
     def test_datetime_capture(self):
         assert self.datetime_flag.capture("2018-06-22 18:00:00")
