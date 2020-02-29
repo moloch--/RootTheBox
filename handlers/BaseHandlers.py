@@ -136,6 +136,8 @@ class BaseHandler(RequestHandler):
         """ Connects to Memcached instance """
         if self._memcached is None:
             self._memcached = memcache.Client([self.config.memcached], debug=0)
+            if len(self._memcached.get_stats()) == 0:
+                raise ValueError("Unable to connect to memcached")
         return self._memcached
 
     def _create_session(self):
@@ -316,6 +318,8 @@ class BaseWebSocketHandler(WebSocketHandler):
         """ Connects to Memcached instance """
         if self._memcached is None:
             self._memcached = memcache.Client([self.config.memcached], debug=0)
+            if len(self._memcached.get_stats()) == 0:
+                raise ValueError("Unable to connect to memcached")
         return self._memcached
 
     @property
