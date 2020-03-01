@@ -34,7 +34,7 @@
                         <th class='teamname'>{% if options.teams %}{{ _("Team") }}{% else %}{{ _("Player") }}{% end %}</th>
                         <th>{{ _("Box Name") }}</th>
                         <th>{{ _("IP Address") }}</th>
-                        <th>{{ _("Income") }}</th>
+                        <th>{% if options.banking %}{{ _("Income") }}{% else %}{{ _("Points") }}{% end %}</th>
                         <th>{{ _("Last Ping") }}</th>
                     </tr>
                 </thead>
