@@ -299,10 +299,7 @@ class Box(DatabaseObject):
             hex_name = encode(self.name).hex()
         except AttributeError:
             hex_name = encode(self.name, "hex")
-        return "[Bot]\nname = %s\ngarbage = %s\n" % (
-            hex_name,
-            self.garbage,
-        )
+        return "[Bot]\nname = %s\ngarbage = %s\n" % (hex_name, self.garbage)
 
     def is_complete(self, user):
         boxcomplete = True

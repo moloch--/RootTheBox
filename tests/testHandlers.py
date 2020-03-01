@@ -37,7 +37,7 @@ class TestPublicHandlers(ApplicationTest):
         self.post("/login", data=form)(self.stop)
         rsp, body = self.wait()
         # Should redirect to firstlogin
-        #logging.info(body)
+        # logging.info(body)
         assert "Incoming Transmission" in body
 
     def _login_failure(self):

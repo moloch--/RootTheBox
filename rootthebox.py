@@ -33,7 +33,8 @@ import logging
 from datetime import datetime
 from tornado.options import define, options
 from libs.ConsoleColors import *
-from libs.ConfigHelpers import save_config
+from libs.ConfigHelpers import save_config, save_config_image
+from libs.StringCoding import set_type
 from builtins import str, input
 from setup import __version__
 
@@ -180,17 +181,35 @@ def check_cwd():
         os.chdir(app_root)
 
 
-def parse_env_options():
+def options_parse_environment():
     # Used for defining vars in cloud environment
-    if os.environ.get("ORIGIN", None) is not None:
-        options.origin = os.environ.get("ORIGIN")
+    # Takes priority over rootthebox.cfg variables
     if os.environ.get("PORT", None) is not None:
         # Heroku uses $PORT to define listen_port
         options.listen_port = int(os.environ.get("PORT"))
+        logging.info("Environment Configuration (PORT): %d" % options.listen_port)
+    images = ["ctf_logo", "story_character", "scoreboard_right_image"]
+    for item in options.as_dict():
+        config = os.environ.get(item.upper(), os.environ.get(item, None))
+        if config is not None:
+            if item in images:
+                value = save_config_image(config)
+            else:
+                value = config
+            value = set_type(value, options[item])
+            if isinstance(value, type(options[item])):
+                logging.info("Environment Configuration (%s): %s" % (item, value))
+                options[item] = value
+            else:
+                logging.error(
+                    "Environment Confirguation (%s): unable to convert type %s to %s for %s"
+                    % (item, type(value), type(options[item]), value)
+                )
     if os.environ.get("DEMO"):
         setup_xml(["setup/demo_juiceshop.xml"])
         from libs.ConfigHelpers import create_demo_user
 
+        logging.info("Setting Up Demo Environment...")
         create_demo_user()
         options.autostart_game = True
 
@@ -881,10 +900,11 @@ if __name__ == "__main__":
         logging.debug("Parsing config file `%s`" % (os.path.abspath(options.config),))
         options.parse_config_file(options.config)
 
-    # Make sure that cli args always have president over the file
-    options.parse_command_line()
     # Make sure that env vars always have president over the file
-    parse_env_options()
+    options_parse_environment()
+
+    # Make sure that cli args always have president over the file and env
+    options.parse_command_line()
 
     if options.setup.lower()[:3] in ["pro", "dev"]:
         setup()
