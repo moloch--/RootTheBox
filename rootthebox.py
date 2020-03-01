@@ -198,12 +198,12 @@ def options_parse_environment():
                 value = config
             value = set_type(value, options[item])
             if isinstance(value, type(options[item])):
-                logging.info("Environment Configuration (%s): %s" % (item, value))
+                logging.info("Environment Configuration (%s): %s" % (item.upper(), value))
                 options[item] = value
             else:
                 logging.error(
                     "Environment Confirguation (%s): unable to convert type %s to %s for %s"
-                    % (item, type(value), type(options[item]), value)
+                    % (item.upper(), type(value), type(options[item]), value)
                 )
     if os.environ.get("DEMO"):
         setup_xml(["setup/demo_juiceshop.xml"])
