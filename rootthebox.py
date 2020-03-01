@@ -33,7 +33,8 @@ import logging
 from datetime import datetime
 from tornado.options import define, options
 from libs.ConsoleColors import *
-from libs.ConfigHelpers import save_config
+from libs.ConfigHelpers import save_config, save_config_image
+from libs.StringCoding import set_type
 from builtins import str, input
 from setup import __version__
 
@@ -64,7 +65,7 @@ def start():
     sys.stdout.flush()
     try:
         print(INFO + bold + R + "Starting RTB on %s" % listenport, flush=True)
-    except:
+    except TypeError:
         print(INFO + bold + R + "Starting RTB on %s" % listenport)
 
     result = start_server()
@@ -178,6 +179,39 @@ def check_cwd():
     if app_root != os.getcwd():
         print(INFO + "Switching CWD to '%s'" % app_root)
         os.chdir(app_root)
+
+
+def options_parse_environment():
+    # Used for defining vars in cloud environment
+    # Takes priority over rootthebox.cfg variables
+    if os.environ.get("PORT", None) is not None:
+        # Heroku uses $PORT to define listen_port
+        options.listen_port = int(os.environ.get("PORT"))
+        logging.info("Environment Configuration (PORT): %d" % options.listen_port)
+    images = ["ctf_logo", "story_character", "scoreboard_right_image"]
+    for item in options.as_dict():
+        config = os.environ.get(item.upper(), os.environ.get(item, None))
+        if config is not None:
+            if item in images:
+                value = save_config_image(config)
+            else:
+                value = config
+            value = set_type(value, options[item])
+            if isinstance(value, type(options[item])):
+                logging.info("Environment Configuration (%s): %s" % (item.upper(), value))
+                options[item] = value
+            else:
+                logging.error(
+                    "Environment Confirguation (%s): unable to convert type %s to %s for %s"
+                    % (item.upper(), type(value), type(options[item]), value)
+                )
+    if os.environ.get("DEMO"):
+        setup_xml(["setup/demo_juiceshop.xml"])
+        from libs.ConfigHelpers import create_demo_user
+
+        logging.info("Setting Up Demo Environment...")
+        create_demo_user()
+        options.autostart_game = True
 
 
 def help():
@@ -392,10 +426,22 @@ define(
 define("log_sql", default=False, group="database", help="Log SQL queries for debugging")
 
 # Memcached settings
-define("memcached", default="127.0.0.1", group="cache", help="memcached sever hostname")
+define(
+    "memcached",
+    default="127.0.0.1:11211",
+    group="cache",
+    help="memcached servers comma separated - hostname:port",
+)
 
 define(
-    "memcached_port", default=11011, group="cache", help="memcached tcp port", type=int
+    "memcached_user", default="", group="cache", help="memcached SASL server username"
+)
+
+define(
+    "memcached_password",
+    default="",
+    group="cache",
+    help="memcached SASL server password",
 )
 
 
@@ -835,7 +881,8 @@ if __name__ == "__main__":
         if not os.path.isfile(options.sql_database + ".db"):
             logging.info("Running Docker Setup")
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
-            options.memcached = "memcache"
+            options.memcached = "memcached"
+            options.x_headers = True
             save_config()
             setup()
         else:
@@ -853,7 +900,10 @@ if __name__ == "__main__":
         logging.debug("Parsing config file `%s`" % (os.path.abspath(options.config),))
         options.parse_config_file(options.config)
 
-    # Make sure that cli args always have president over the file
+    # Make sure that env vars always have president over the file
+    options_parse_environment()
+
+    # Make sure that cli args always have president over the file and env
     options.parse_command_line()
 
     if options.setup.lower()[:3] in ["pro", "dev"]:

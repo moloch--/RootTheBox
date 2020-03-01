@@ -13,6 +13,11 @@ import json
 import logging
 import collections
 
+try:
+    import bmemcached as memcache
+except ImportError:
+    import memcache
+
 from builtins import str
 from datetime import datetime, timedelta
 from tornado.options import options
@@ -199,3 +204,38 @@ class MemcachedSession(BaseSession):
     def delete(self):
         """Delete the session from storage."""
         self.connection.delete(str(self.session_id))
+
+
+def MemcachedConnect():
+    try:
+        if os.environ.get("MEMCACHIER_SERVERS", None) is not None:
+            servers = os.environ.get("MEMCACHIER_SERVERS", "").split(",")
+            user = os.environ.get("MEMCACHIER_USERNAME", None)
+            passw = os.environ.get("MEMCACHIER_PASSWORD", None)
+        elif os.environ.get("MEMCACHEDCLOUD_SERVERS", None) is not None:
+            servers = os.environ.get("MEMCACHEDCLOUD_SERVERS", "").split(",")
+            user = os.environ.get("MEMCACHEDCLOUD_USERNAME", None)
+            passw = os.environ.get("MEMCACHEDCLOUD_PASSWORD", None)
+        elif (
+            os.environ.get("MEMCACHED", None) is not None
+            or os.environ.get("MEMCACHED_SERVERS", None) is not None
+        ):
+            if os.environ.get("MEMCACHED", None) is not None:
+                servers = os.environ.get("MEMCACHED", "").split(",")
+            else:
+                servers = os.environ.get("MEMCACHED_SERVERS").split(",")
+            user = os.environ.get("MEMCACHED_USER", None)
+            passw = os.environ.get("MEMCACHED_PASSWORD", None)
+        else:
+            servers = options.memcached.split(",")
+            user = None if options.memcached_user == "" else options.memcached_user
+            passw = (
+                None if options.memcached_password == "" else options.memcached_password
+            )
+
+        client = memcache.Client(servers, username=user, password=passw)
+    except TypeError:
+        client = memcache.Client(options.memcached.split(","), debug=0)
+        if len(client.get_stats()) == 0:
+            raise ValueError("Unable to connect to memcached")
+    return client
