@@ -76,7 +76,11 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
     remote_ip = None
 
     def initialize(self):
-        self.xid = decode(encode(os.urandom(16), "hex"))
+        try:
+            hex_random = os.urandom(16).hex()
+        except AttributeError:
+            hex_random = encode(os.urandom(16), "hex")
+        self.xid = hex_random
         if not self.config.use_bots:
             self.close()
         else:

@@ -755,11 +755,12 @@
                                         <i class="fa fa-times-circle-o"></i>
                                         {{_("Delete Box")}}
                                     </a>
+                                    {% if options.use_bots %}
                                     <a style="float:right;" class="btn" data-toggle="modal" href="/admin/garbage?uuid={{ box.uuid }}" target="_blank">
                                         <i class="fa fa-fw fa-trash-o"></i>
-                                        {{ box.name }} {{_("Garbage File") }}
+                                        {{ box.name }} Bot {{_("Garbage File") }}
                                     </a>
-                                    
+                                    {% end %}
                                 <br />{% if box.category %}{{ box.category }}<br />{% end %}
                                 <br />
                                 <div>                   

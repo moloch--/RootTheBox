@@ -160,7 +160,7 @@
                 <h2>{{ _("Skill Progress") }}</h2>
                 <hr style="margin-bottom: 8px;">
                 {% if game_started %}
-                    <div id="spider_skills" style="height:400px; max-width: 550px;" data-name="{{ _('Categories') }}">
+                    <div id="spider_skills" style="height:400px; max-width: 550px;" data-uuid="{{ team.uuid }}" data-name="{{ _('Categories') }}">
                         <!-- Spider Chart Here -->
                     </div>
                 {% else %}

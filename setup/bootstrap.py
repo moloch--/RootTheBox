@@ -42,7 +42,7 @@ password = ""
 
 if options.setup.lower().startswith("dev") or options.setup.lower().startswith(
     "docker"
-):
+) or options.tests:
     admin_handle = "admin"
     password = "rootthebox"
 else:

@@ -102,7 +102,7 @@ class ApplicationTest(AsyncHTTPTestCase):
         return "&".join(_data)
 
     def _parse(self, response, callback):
-        body = decode(response.body, "utf-8")
+        body = response.body
         if callback == self.stop:
             callback([response, body])
         else:

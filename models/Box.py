@@ -295,8 +295,12 @@ class Box(DatabaseObject):
         return SourceCode.by_box_id(self.id)
 
     def get_garbage_cfg(self):
+        try:
+            hex_name = encode(self.name).hex()
+        except AttributeError:
+            hex_name = encode(self.name, "hex")
         return "[Bot]\nname = %s\ngarbage = %s\n" % (
-            encode(self.name, "hex"),
+            hex_name,
             self.garbage,
         )
 

@@ -48,6 +48,7 @@ develop-eggs
 
 # SQLite3 databases
 *.db
+*.db-journal
 
 # Screen files
 *.0

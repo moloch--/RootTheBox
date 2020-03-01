@@ -58,7 +58,7 @@ $(document).ready(function() {
     if ($("#spider_skills").length > 0) {
         skill_chart.xAxis[0].setCategories($.parseJSON(categories));
         /* Update Graph */
-        $.get("/scoreboard/ajax/skills", function(skillvalues) {
+        $.get("/scoreboard/ajax/skills?uuid=" + $("#spider_skills").data("uuid"), function(skillvalues) {
             skill_chart.series[0].setData($.parseJSON(skillvalues), true);
         });
     }

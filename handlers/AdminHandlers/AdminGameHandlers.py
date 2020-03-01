@@ -402,7 +402,7 @@ class AdminGarbageCfgHandler(BaseHandler):
             self.set_header(
                 "Content-disposition",
                 "attachment; filename=%s.garbage"
-                % (filter(lambda char: char in printable[:-38], box.name),),
+                % "".join(list(filter(lambda char: char in printable[:-38], box.name),)),
             )
             self.set_header("Content-Length", len(data))
             self.write(data)
