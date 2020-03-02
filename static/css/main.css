@@ -11,6 +11,9 @@ footer {
 .footernav {
     padding: 5px 20px;
 }
+.img-polaroid {
+    width: 500px;
+}
 .shortcolumn {
     width: 1px;
     white-space: nowrap;

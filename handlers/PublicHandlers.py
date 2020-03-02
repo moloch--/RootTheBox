@@ -28,8 +28,10 @@ any authentication) with the exception of error handlers and the scoreboard
 import logging
 
 from netaddr import IPAddress
+from libs.Identicon import identicon
 from libs.SecurityDecorators import blacklist_ips
 from libs.ValidationError import ValidationError
+from libs.XSSImageCheck import filter_avatars
 from builtins import str
 from models.Team import Team
 from models.Theme import Theme
@@ -224,12 +226,16 @@ class RegistrationHandler(BaseHandler):
             user._avatar = avatar_select
         elif hasattr(self.request, "files") and "avatar" in self.request.files:
             user.avatar = self.request.files["avatar"][0]["body"]
+        else:
+            user._avatar = identicon(user.handle, 6)
         team.members.append(user)
         if not options.teams:
             if avatar_select and len(avatar_select) > 0:
-                team._avatar = avatar_select
+                team.avatar = avatar_select
             elif hasattr(self.request, "files") and "avatar" in self.request.files:
                 team.avatar = self.request.files["avatar"][0]["body"]
+            else:
+                team._avatar = identicon(user.handle, 6)
         self.dbsession.add(user)
         self.dbsession.add(team)
         self.dbsession.commit()
@@ -271,6 +277,7 @@ class RegistrationHandler(BaseHandler):
                 team.game_levels = []
                 team.purchased_source_code = []
             team.motto = self.get_argument("motto", "")
+            team._avatar = identicon(team.name, 6)
             if self.config.banking:
                 team.money = self.config.starting_team_money
             else:
@@ -288,6 +295,8 @@ class RegistrationHandler(BaseHandler):
             team = Team()
             team.name = self.get_argument("team_name", "")
             team.motto = self.get_argument("motto", "")
+            if len(filter_avatars("team")) == 0:
+                team._avatar = identicon(team.name, 6)
             if not self.config.banking:
                 team.money = 0
             level_0 = GameLevel.by_number(0)

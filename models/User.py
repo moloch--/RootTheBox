@@ -298,7 +298,8 @@ class User(DatabaseObject):
                     raise ValidationError(e)
             else:
                 raise ValidationError(
-                    "Invalid image format, avatar must be: %s" % (" ".join(IMG_FORMATS))
+                    "Invalid image format, avatar must be: %s"
+                    % (", ".join(IMG_FORMATS))
                 )
         else:
             raise ValidationError(
