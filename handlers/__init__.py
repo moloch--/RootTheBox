@@ -151,7 +151,7 @@ urls = [
         {"path": "static/"},
     ),
     (
-        r"/avatars/(.*\.(png|jpeg|jpg|gif|bmp))",
+        r"/avatars/(.*\.(png|jpeg|jpg|gif|bmp|svg))",
         StaticFileHandler,
         {"path": "files/avatars/"},
     ),

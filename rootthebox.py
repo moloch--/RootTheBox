@@ -198,7 +198,9 @@ def options_parse_environment():
                 value = config
             value = set_type(value, options[item])
             if isinstance(value, type(options[item])):
-                logging.info("Environment Configuration (%s): %s" % (item.upper(), value))
+                logging.info(
+                    "Environment Configuration (%s): %s" % (item.upper(), value)
+                )
                 options[item] = value
             else:
                 logging.error(

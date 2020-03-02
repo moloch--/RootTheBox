@@ -218,7 +218,8 @@ class Team(DatabaseObject):
 
             else:
                 raise ValidationError(
-                    "Invalid image format, avatar must be: %s" % (" ".join(IMG_FORMATS))
+                    "Invalid image format, avatar must be: %s"
+                    % (", ".join(IMG_FORMATS))
                 )
         else:
             raise ValidationError(
