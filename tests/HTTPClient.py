@@ -67,7 +67,7 @@ class ApplicationTest(AsyncHTTPTestCase):
         """ Login to the web app and obtain a session_id cookie """
         try:
             form = {"username": username, "password": password}
-            self.post("/login", data=form, follow_redirects=False)(self.stop)
+            self.post("/login", data=form, follow_redirects=False)
             auth_cookie = "%s;" % self.wait()[0].headers["Set-Cookie"].split(";")[0]
             self.cookies.append("session_id=%s" % auth_cookie)
         except:
@@ -84,10 +84,8 @@ class ApplicationTest(AsyncHTTPTestCase):
             path = "%s?%s" % (path, data)
         elif method.upper() == "POST":
             kwargs["body"] = data
-        return lambda callback: self.http_client.fetch(
-            HTTPRequest(self.get_url(path), headers=self.get_headers(), **kwargs),
-            lambda response: self._parse(response, callback),
-        )
+        response = self.fetch(self.get_url(path), headers=self.get_headers(), **kwargs)
+        return response, response.body
 
     def get_headers(self):
         _headers = self.headers
@@ -100,10 +98,3 @@ class ApplicationTest(AsyncHTTPTestCase):
         for name, param in list(data.items()):
             _data.append("%s=%s" % (quote_plus(name), quote_plus(param)))
         return "&".join(_data)
-
-    def _parse(self, response, callback):
-        body = response.body
-        if callback == self.stop:
-            callback([response, body])
-        else:
-            callback(response, body)

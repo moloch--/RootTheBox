@@ -15,14 +15,12 @@ class TestPublicHandlers(ApplicationTest):
     """ Test functionality in handlers/PublicHandlers.py """
 
     def test_home_page_get(self):
-        self.get("/")(self.stop)
-        rsp, body = self.wait()
-        assert "home_container" in body
+        rsp, body = self.get("/")
+        self.assertIn(b"home_container", body)
 
     def test_login_get(self):
-        self.get("/login")(self.stop)
-        rsp, body = self.wait()
-        assert '<form class="form-signin" action="/login"' in body
+        rsp, body = self.get("/login")
+        self.assertIn(b'<form class="form-signin" action="/login"', body)
 
     def test_login_post(self):
         user = create_user()
@@ -34,22 +32,19 @@ class TestPublicHandlers(ApplicationTest):
     def _login_success(self):
         options.story_mode = True
         form = {"account": "HacKer", "password": "TestPassword"}
-        self.post("/login", data=form)(self.stop)
-        rsp, body = self.wait()
+        rsp, body = self.post("/login", data=form)
         # Should redirect to firstlogin
         # logging.info(body)
-        assert "Incoming Transmission" in body
+        self.assertIn(b"Incoming Transmission", body)
 
     def _login_failure(self):
         form = {"account": "HacKer", "password": "A" * 16}
-        self.post("/login", data=form)(self.stop)
-        rsp, body = self.wait()
-        assert "Bad username and/or password, try again" in body
+        rsp, body = self.post("/login", data=form)
+        self.assertIn(b"Bad username and/or password, try again", body)
 
     def test_registration_get(self):
-        self.get("/registration")(self.stop)
-        rsp, body = self.wait()
-        assert '<form class="form-horizontal" action="/registration"' in body
+        rsp, body = self.get("/registration")
+        self.assertIn(b'<form class="form-horizontal" action="/registration"', body)
 
     def test_registration_post(self):
         options.teams = True
@@ -67,35 +62,29 @@ class TestPublicHandlers(ApplicationTest):
     def _registration_post_token(self, form):
         options.restrict_registration = True
         form["token"] = "NotARealRegToken"
-        self.post("/registration", data=form)(self.stop)
-        rsp, body = self.wait()
-        assert "Invalid registration token" in body
+        rsp, body = self.post("/registration", data=form)
+        self.assertIn(b"Invalid registration token", body)
         options.restrict_registration = False
 
     def _registration_post_team_name(self, form):
         options.public_teams = True
         form["team_name"] = ""
-        self.post("/registration", data=form)(self.stop)
-        rsp, body = self.wait()
-        assert "Team name must be 3 - 24 characters" in body
+        rsp, body = self.post("/registration", data=form)
+        self.assertIn(b"Team name must be 3 - 24 characters", body)
         form["team_name"] = "A" * 25
-        self.post("/registration", data=form)(self.stop)
-        rsp, body = self.wait()
-        assert "Team name must be 3 - 24 characters" in body
+        rsp, body = self.post("/registration", data=form)
+        self.assertIn(b"Team name must be 3 - 24 characters", body)
         options.public_teams = False
 
     def test_fake_robots_get(self):
-        self.get("/robots")(self.stop)
-        rsp, body = self.wait()
-        assert "User-agent: *" in body
-        self.get("/robots.txt")(self.stop)
-        rsp, body = self.wait()
-        assert "User-agent: *" in body
+        rsp, body = self.get("/robots")
+        self.assertIn(b"User-agent: *", body)
+        rsp, body = self.get("/robots.txt")
+        self.assertIn(b"User-agent: *", body)
 
     def test_about_get(self):
-        self.get("/about")(self.stop)
-        rsp, body = self.wait()
-        assert "<title> About" in body
+        rsp, body = self.get("/about")
+        self.assertIn(b"<title> About", body)
 
 
 # class TestMissionHandlers(ApplicationTest):
