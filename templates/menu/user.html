@@ -73,13 +73,25 @@
                             <b class="caret"></b>
                       </a>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="/cyberchef/{% if user.theme == 'Cyborg' or user.theme == 'Slate' %}?theme=dark{% end %}" 
-                                    target="_blank">
-                                    <i class="fa fa-fw fa-link"></i>
-                                    {{ _("CyberChef") }}
-                                </a>
-                            </li>
+                            {% for link in options.tool_links %}
+                                {% if link.get("name") and link.get("url") %}
+                                {% if not link.get("target") %}
+                                    {% set link["target"] = "_blank" %}
+                                {% end %}
+                                {% if link.get('name') == 'CyberChef' and (user.theme == 'Cyborg' or user.theme == 'Slate') %}
+                                    {% set theme="?theme=dark" %}
+                                {% else %}
+                                    {% set theme="" %}
+                                {% end %}
+                                <li>
+                                    <a href="{{ link.get('url') }}{{ theme }}" 
+                                        target="{{ link.get('target') }}">
+                                        <i class="fa fa-fw fa-link"></i>
+                                        {{ link.get('name') }}
+                                    </a>
+                                </li>
+                                {% end %}
+                            {% end %}
                             {% if has_materials() %}
                             <li>
                                 <a href="/materials">
