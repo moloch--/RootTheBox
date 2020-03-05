@@ -374,13 +374,6 @@ define(
     help="force the application to use this locale instead of the browser's locale.",
 )
 
-define(
-    "tool_links",
-    multiple=True,
-    default=[{"name": "CyberChef", "url": "/cyberchef/", "target": "_blank"}],
-    group="application",
-    help="links to add to the tool menu",
-)
 
 # ReCAPTCHA
 define(
