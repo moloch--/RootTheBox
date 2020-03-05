@@ -453,12 +453,6 @@
                                         {% end %}
                                     </td>
                                     <td class="shortcolumn">
-                                        <a class="btn btn-mini" href="/admin/user_stats?uuid={{ user.uuid }}">
-                                            <i class="fa fa-fw fa-pencil"></i>
-                                            {{_("Statistics")}}
-                                        </a>
-                                    </td>
-                                    <td class="shortcolumn">
                                         <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}" data-hash-algorithm="{{ user.algorithm }}" data-team-uuid="{{ user.team.uuid }}">
                                             <i class="fa fa-fw fa-pencil"></i>
                                             {{_("Edit Account")}}
