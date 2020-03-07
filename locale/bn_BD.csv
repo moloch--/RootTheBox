@@ -26,6 +26,7 @@ Address,ঠিকানা
 Admin,অ্যাডমিন
 Admin Home,অ্যাডমিন হোম
 Admin Message,প্রশাসন বার্তা
+Admin Notes,অ্যাডমিন নোটস
 Administrator Panel,প্রশাসক প্যানেল
 Admins,প্রশাসকদের
 All Notifications,সমস্ত বিজ্ঞপ্তি
@@ -59,6 +60,7 @@ Bank Account,ব্যাংক হিসাব
 Bank Account Balance,ব্যাংক অ্যাকাউন্টের ব্যালেন্স
 Bank Hash Algorithm,ব্যাংক হ্যাশ অ্যালগরিদম
 Bank Password,ব্যাংক পাসওয়ার্ড
+Bank Password Hash,ব্যাঙ্কের পাসওয়ার্ড হ্যাশ
 Bank Password Length,ব্যাঙ্কের পাসওয়ার্ড দৈর্ঘ্য
 Banking System,ব্যাংকিং সিস্টেম
 Banned IPs,নিষিদ্ধ আইপি

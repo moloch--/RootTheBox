@@ -76,6 +76,7 @@ class User(DatabaseObject):
     _email = Column(Unicode(64), unique=False, nullable=True)
     _password = Column("password", String(64))
     _bank_password = Column("bank_password", String(128))
+    _notes = Column(Unicode(512))
     money = Column(Integer, default=0, nullable=False)
 
     theme_id = Column(Integer, ForeignKey("theme.id"), default=3, nullable=False)
@@ -233,6 +234,18 @@ class User(DatabaseObject):
         self._email = str(new_email)
 
     @property
+    def notes(self):
+        if self._notes is None:
+            self._notes = ""
+        return self._notes
+
+    @notes.setter
+    def notes(self, new_notes):
+        if len(new_notes) > 512:
+            raise ValidationError("Notes must be 0 - 512 characters")
+        self._notes = str(new_notes)
+
+    @property
     def permissions_all(self):
         """ Return a set with all permissions granted to the user """
         return dbsession.query(Permission).filter_by(user_id=self.id)
@@ -381,6 +394,7 @@ class User(DatabaseObject):
             "hash_algorithm": self.algorithm,
             "team_uuid": self.team.uuid,
             "avatar": self.avatar,
+            "notes": self.notes,
         }
 
     def to_xml(self, parent):
@@ -394,6 +408,7 @@ class User(DatabaseObject):
             ET.SubElement(user_elem, "name").text = self.name
             ET.SubElement(user_elem, "email").text = self.email
             ET.SubElement(user_elem, "password").text = self._password
+            ET.SubElement(user_elem, "notes").text = self.notes
             bpass_elem = ET.SubElement(user_elem, "bankpassword")
             bpass_elem.text = self._bank_password
             bpass_elem.set("algorithm", self.algorithm)

@@ -23,6 +23,10 @@ footer {
     word-wrap: break-word; 
     max-width: 350px;
 }
+.levelheader {
+    display: inline;
+    vertical-align: middle;
+}
 .statcolumn {
     text-align: center !important;
     vertical-align: middle  !important;

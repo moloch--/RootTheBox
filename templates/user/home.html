@@ -79,14 +79,15 @@
                     {% for index, level in enumerate(GameLevel.all()) %}
                         {% if len(level.boxes) > 0 and team %}
                             {% if len(GameLevel.all()) > 1 %}
-                            <h3 style="display:inline;">
+                            <h3 class="levelheader">
                                 {% if level.type == 'none' or level in team.game_levels %}
                                     <i class="fa fa-unlock-alt"></i>
                                 {% else %}
                                     <i class="fa fa-lock"></i>
                                 {% end %}
-                                {{ level.name }}&nbsp;&nbsp;&nbsp;
+                                {{ level.name }}&nbsp;
                             </h3>{% end %}
+                            {% if level.description %}<h4 class="levelheader">({{ level.description }})<h4>{% end %}
                             {% if len(team.level_flags(level.number)) != 0 %}
                                 <div class="progress" style="height: 8px; margin-bottom: 15px; background-color: #424242;">
                                     <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">

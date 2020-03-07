@@ -70,7 +70,13 @@
                 <div class="control-group">
                     <label class="control-label" for="corporation_name">{{ _("Name") }}</label>
                     <div class="controls">
-                        <input id="corporation-name" name="name" type="text" placeholder="{{ _('Corporation Name') }}" />
+                        <input id="corporation-name" name="name" type="text" maxlength="32" placeholder="{{ _('Corporation Name') }}" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="corporation_description">{{ _("Description") }}</label>
+                    <div class="controls">
+                        <textarea id="corporation-description" name="description" maxlength="512" type="text" placeholder="{{ _('Optional') }} {{ _('Description') }}"></textarea>
                     </div>
                 </div>
             </form>
@@ -724,7 +730,7 @@
                         <i class="fa fa-fw fa-times-circle-o"></i>
                         {{_("Delete Corporation")}}
                     </a>
-                    <br />
+                    <br />{% if corporation.description %}<br>&nbsp;&nbsp;{{ corporation.description }}<br />{% end %}
                     <br />
                     {% if len(corporation.boxes) != 0 %}
                         {% for box in corporation.boxes %}

@@ -133,6 +133,14 @@
                         <input required id="team-money" name="money" type="number" placeholder="{% if options.banking %}{{_('Bank Account')}}{% else %}{{_('Score')}}{% end %}">
                     </div>
                 </div>
+                {% if options.teams %}
+                 <div class="control-group">
+                    <label class="control-label" for="team-notes">{{_("Admin Notes")}}</label>
+                    <div class="controls">
+                        <textarea id="team-notes" name="notes" type="text" placeholder="{{_('Optional')}}" maxlength="512"></textarea>
+                    </div>
+                </div>
+                {% end %}
                 <div class="control-group">
                     <label class="control-label">
                             <input id="team-avatar" name="avatar" type="hidden" value="" />
@@ -233,6 +241,12 @@
                     </div>
                 </div>
                 {% end %}
+                <div class="control-group">
+                    <label class="control-label" for="user-notes">{{_("Admin Notes")}}</label>
+                    <div class="controls">
+                        <textarea id="user-notes" name="notes" type="text" placeholder="{{_('Optional')}}" maxlength="512"></textarea>
+                    </div>
+                </div>
                 {% if options.teams %}
                 <div class="control-group">
                     <label class="control-label">
@@ -394,7 +408,8 @@
                         <i class="fa fa-fw fa-pencil"></i>
                         {% if options.teams %}{{_("Edit Team")}}{% else %}{{_("Edit Player")}}{% end %}
                     </a>
-                    {% if options.teams %}<div style="margin-bottom: -10px;">&nbsp;<strong>{{_("Team Code")}}:</strong> {{ team.code }}</div>{% if team.motto %}<span style="margin-top: -10px; float: right;"><strong>{{_("Motto")}}:</strong> {{ team.motto }}&nbsp;&nbsp;</span>{% end %}{% end %}
+                    {% if options.teams %}<div style="margin-bottom: -10px;">&nbsp;<strong>{{_("Team Code")}}:</strong> {{ team.code }}{% if team.notes %}
+                        <span style="padding-left: 15px;"><strong>{{ _("Admin Notes")}}:</strong> {{ team.notes }}</span>{% end %}</div>{% if team.motto %}<span style="margin-top: -10px; float: right;"><strong>{{_("Motto")}}:</strong> {{ team.motto }}&nbsp;&nbsp;</span>{% end %}{% end %}
                     <hr />
                     <table class="table table-striped">
                         <thead>
@@ -404,10 +419,11 @@
                                 <th>{{_("Name")}}</th>
                                 <th>{{_("Last Login")}}</th>
                                 {% if options.banking %}
-                                    <th>{{_("Bank Hash Algorithm")}}</th>
-                                    <th>{{_("Password Hash")}}</th>
+                                    <th>{{_("Bank Password Hash")}}</th>
                                 {% end %}
+                                <th>{{_("Admin Notes")}}</th>
                                 <th><!-- Lock Button --></th>
+                                <th><!-- Stats Button --></th>
                                 <th><!-- Edit Button --></th>
                                 <th><!-- Delete Button --></th>
                             </tr>
@@ -428,17 +444,17 @@
                                         <td>{{_("Never")}}</td>
                                     {% end %}
                                     {% if options.banking %}
-                                        <td>{{ user.algorithm }}</td>
                                         {% if 40 < len(user.bank_password) %}
                                             <td>
                                                 <a id="reveal-hash-button-{{ user.uuid }}" data-bank-hash="{{ user.bank_password }}">
-                                                    {{ user.bank_password[:40] }}...
+                                                    {{ user.algorithm }}: {{ user.bank_password[:40] }}...
                                                 </a>
                                             </td>
                                         {% else %}
-                                            <td>{{ user.bank_password }}</td>
+                                            <td>{{ user.algorithm }}: {{ user.bank_password }}</td>
                                         {% end %}
                                     {% end %}
+                                    <td>{% if user.notes %}{{ user.notes }}{% end %}</td>
                                     <td class="shortcolumn">
                                         {% if user.locked %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
@@ -454,7 +470,7 @@
                                     </td>
                                     <td class="shortcolumn">
                                         <a class="btn btn-mini" href="/admin/user_stats?uuid={{ user.uuid }}">
-                                            <i class="fa fa-fw fa-pencil"></i>
+                                            <i class="fa fa-fw fa-bar-chart-o"></i>
                                             {{_("Statistics")}}
                                         </a>
                                     </td>

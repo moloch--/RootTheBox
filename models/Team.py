@@ -61,6 +61,7 @@ class Team(DatabaseObject):
     _name = Column(Unicode(24), unique=True, nullable=False)
     _motto = Column(Unicode(32))
     _avatar = Column(String(64))
+    _notes = Column(Unicode(512))
     _code = Column(
         "code", String(16), unique=True, default=lambda: str(uuid4().hex)[:16]
     )
@@ -178,6 +179,18 @@ class Team(DatabaseObject):
             self._motto = str(value)
 
     @property
+    def notes(self):
+        if self._notes is None:
+            self._notes = ""
+        return self._notes
+
+    @notes.setter
+    def notes(self, new_notes):
+        if len(new_notes) > 512:
+            raise ValidationError("Notes must be 0 - 512 characters")
+        self._notes = str(new_notes)
+
+    @property
     def code(self):
         return self._code
 
@@ -258,12 +271,14 @@ class Team(DatabaseObject):
             "motto": self.motto,
             "money": self.money,
             "avatar": self.avatar,
+            "notes": self.notes,
         }
 
     def to_xml(self, parent):
         team_elem = ET.SubElement(parent, "team")
         ET.SubElement(team_elem, "name").text = self.name
         ET.SubElement(team_elem, "motto").text = self.motto
+        ET.SubElement(team_elem, "notes").text = self.notes
         users_elem = ET.SubElement(team_elem, "users")
         users_elem.set("count", "%s" % str(len(self.members)))
         for user in self.members:

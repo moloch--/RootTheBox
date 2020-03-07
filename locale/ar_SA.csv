@@ -26,6 +26,7 @@ Address,عنوان
 Admin,مشرف
 Admin Home,الادارية الرئيسية
 Admin Message,رسالة المسؤول
+Admin Notes,ملاحظات المسؤول
 Administrator Panel,لوحة المسؤول
 Admins,مدراء
 All Notifications,جميع الإخطارات
@@ -59,6 +60,7 @@ Bank Account,حساب البنك
 Bank Account Balance,رصيد الحساب البنكي
 Bank Hash Algorithm,خوارزمية بنك التجزئة
 Bank Password,كلمة مرور البنك
+Bank Password Hash,كلمة مرور البنك
 Bank Password Length,طول كلمة مرور البنك
 Banking System,النظام المصرفي
 Banned IPs,عناوين IP المحظورة

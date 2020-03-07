@@ -35,6 +35,12 @@
 
 {% block content %}
 {% from models.GameLevel import GameLevel %}
+{% from models.Corporation import Corporation %}
+{% if options.group_by_corp %}
+    {% set corps = Corporation.all() %}
+{% else %}
+    {% set corps = [""] %}
+{% end %}
     <!-- Visable -->
     <div class="container">
         <h1>{{ _("Missions") }}</h1>
@@ -48,18 +54,27 @@
             </div>
             {% end %}
         {% end %}
+        {% for corp in corps %}
+            {% if options.group_by_corp and len(corp.boxes) == 0 %}
+                {% continue %}
+            {% end %}
         {% for index, level in enumerate(GameLevel.all()) %}
             {% if len(level.boxes) > 0 %}
+                {% if options.group_by_corp %}
+                    <h2>{{ corp.name }}&nbsp;</h2>
+                    {% if corp.description %}<h4 class="levelheader">{{ corp.description }}<h4>{% end %}
+                {% end %}
             <div class="well">
                 {% if len(GameLevel.all()) > 1 %}
-                    <h3 style="display:inline; vertical-align: middle;">
+                    <h3 class="levelheader">
                         {% if not team or level.type == 'none' or level in team.game_levels %}
                             <i class="fa fa-unlock-alt"></i>
                         {% else %}
                             <i class="fa fa-lock"></i>
                         {% end %}
-                        {{ level.name }}&nbsp;&nbsp;&nbsp;
+                        {{ level.name }}&nbsp;
                     </h3>
+                    {% if level.description %}<h4 class="levelheader">({{ level.description }})<h4>{% end %}
                     {% if team and (level.type == 'none' or level in team.game_levels) %}
                         <div class="progress" style="height: 10px; background-color: #424242;">
                         {% if len(level.flags) == 0 %}
@@ -78,7 +93,14 @@
                         {% for box in level.boxes %}
                             <!-- Only show boxes that have flags -->
                             {% if len(box.flags) > 0 %}
-                                {% set boxes.append(box) %}
+                                {% if options.group_by_corp %}
+                                    {% set boxcorp = Corporation.by_id(box.corporation_id) %}
+                                    {% if boxcorp == corp %}
+                                        {% set boxes.append(box) %}
+                                    {% end %}
+                                {% else %}
+                                    {% set boxes.append(box) %}
+                                {% end %}
                             {% end %}
                         {% end %}
                         {% for box in boxes[::3] %}
@@ -98,7 +120,7 @@
                                                 {% else %}
                                                     <i class="fa fa-th"></i>
                                                 {% end %}
-                                                {% if box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
+                                                {% if options.group_by_corp is False and box.corporation.name != "" %}{{ box.corporation.name }} - {% end %}{{ box.name }}
                                             </h5>
                                             {% if team %}
                                                 {% set flagcount=0 %}
@@ -138,7 +160,7 @@
                                                     {% else %}
                                                         <i class="fa fa-th"></i>
                                                     {% end %}
-                                                    {% if box.corporation.name != "" %}{{ box1.corporation.name }} - {% end %}{{ box1.name }}
+                                                    {% if options.group_by_corp is False and box.corporation.name != "" %}{{ box1.corporation.name }} - {% end %}{{ box1.name }}
                                                 </h5>
                                                 {% if team %}
                                                     {% set flagcount=0 %}
@@ -179,7 +201,7 @@
                                                     {% else %}
                                                         <i class="fa fa-th"></i>
                                                     {% end %}
-                                                    {% if box.corporation.name != "" %}{{ box2.corporation.name }} - {% end %}{{ box2.name }}
+                                                    {% if options.group_by_corp is False and box.corporation.name != "" %}{{ box2.corporation.name }} - {% end %}{{ box2.name }}
                                                 </h5>
                                                 {% if team %}
                                                     {% set flagcount=0 %}
@@ -224,6 +246,7 @@
                 {% end %}
             </div>
             {% end %}
+        {% end %}
         {% end %}
     </div>
 {% end %}

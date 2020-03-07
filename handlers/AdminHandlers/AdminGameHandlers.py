@@ -456,7 +456,7 @@ class AdminGitStatusHandler(BaseHandler):
         pid = os.getpid()
         print(INFO + "%s : Restarting the service (%i)..." % (self.current_time(), pid))
         self.finish()
-        os.execl("./setup/restart.sh", "--restart")
+        os.execl("./setup/restart.sh", "./setup/restart.sh")
 
     def current_time(self):
         """ Nicely formatted current time as a string """

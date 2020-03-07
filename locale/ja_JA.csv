@@ -26,6 +26,7 @@ Address,住所
 Admin,管理者
 Admin Home,管理者ホーム
 Admin Message,管理者メッセージ
+Admin Notes,管理者メモ
 Administrator Panel,管理者パネル
 Admins,管理者
 All Notifications,すべての通知
@@ -59,6 +60,7 @@ Bank Account,銀行口座
 Bank Account Balance,銀行口座残高
 Bank Hash Algorithm,バンクハッシュアルゴリズム
 Bank Password,銀行パスワード
+Bank Password Hash,銀行パスワードハッシュ
 Bank Password Length,銀行パスワードの長さ
 Banking System,銀行システム
 Banned IPs,禁止されたIP

@@ -38,6 +38,7 @@ class Corporation(DatabaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
     _name = Column(Unicode(32), unique=True, nullable=False)
+    _description = Column(Unicode(512))
 
     boxes = relationship(
         "Box",
@@ -79,11 +80,24 @@ class Corporation(DatabaseObject):
             raise ValidationError("Corporation name must be 0 - 32 characters")
         self._name = str(value)
 
+    @property
+    def description(self):
+        if self._description is None:
+            return ""
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        if 512 < len(value):
+            raise ValidationError("Description cannot be greater than 512 characters")
+        self._description = str(value)
+
     def to_dict(self):
         """ Returns editable data as a dictionary """
         return {
             "uuid": self.uuid,
             "name": self.name,
+            "description": self.description,
             # "boxes": [box.uuid for box in self.boxes],
         }
 
@@ -91,6 +105,7 @@ class Corporation(DatabaseObject):
         """ Add to XML dom """
         corp_elem = ET.SubElement(parent, "corporation")
         ET.SubElement(corp_elem, "name").text = self.name
+        ET.SubElement(corp_elem, "description").text = self.description
         boxes_elem = ET.SubElement(corp_elem, "boxes")
         boxes_elem.set("count", "%s" % str(len(self.boxes)))
         for box in self.boxes:

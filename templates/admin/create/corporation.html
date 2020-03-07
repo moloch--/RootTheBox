@@ -34,6 +34,14 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="corporation_description">{{_("Description")}}</label>
+                <div class="controls">
+                    <textarea autofocus id="corporation-description" name="corporation_description" maxlength="512" type="text" placeholder="{{_('Optional')}} {{_('Description')}}"
+                           data-original-title="{{_('Description')}}">
+                    </textarea>
+                </div>
+            </div>
+            <div class="control-group">
                 <div class="controls">
                     <button class="btn btn-primary" type="submit">{{_("Create Corporation")}}</button>
                 </div>

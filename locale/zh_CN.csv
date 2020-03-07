@@ -26,6 +26,7 @@ Address,地址
 Admin,管理员
 Admin Home,管理员主页
 Admin Message,管理员消息
+Admin Notes,管理员须知
 Administrator Panel,管理员面板
 Admins,管理员组
 All Notifications,所有通知
@@ -59,6 +60,7 @@ Bank Account,银行账户
 Bank Account Balance,银行账户余额
 Bank Hash Algorithm,银行哈希算法
 Bank Password,银行密码
+Bank Password Hash,银行密码哈希
 Bank Password Length,银行密码长度
 Banking System,银行系统
 Banned IPs,禁止的IP

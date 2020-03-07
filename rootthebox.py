@@ -156,7 +156,7 @@ def restart():
     """
     pid = os.getpid()
     print(INFO + "%s : Restarting the service (%i)..." % (current_time(), pid))
-    os.execl("./setup/restart.sh", "")
+    os.execl("./setup/restart.sh", "./setup/restart.sh")
 
 
 def update():
@@ -814,6 +814,14 @@ define(
 define("rank_by", default="money", group="game", help="rank teams by (flags or money)")
 
 define("max_pastebin_size", default=4096, group="game", help="Pastebin Character limit")
+
+define(
+    "group_by_corp",
+    default=False,
+    group="game",
+    type=bool,
+    help="Group the missions by Corporation first.  Default is to group by Levels first.",
+)
 
 # I/O Loop Settings
 define(

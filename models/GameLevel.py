@@ -44,6 +44,7 @@ class GameLevel(DatabaseObject):
     _type = Column(Unicode(16), nullable=False, default=u"buyout")
     _reward = Column(Integer, nullable=False, default=0)
     _name = Column(Unicode(32), nullable=True)
+    _description = Column(Unicode(512))
 
     boxes = relationship(
         "Box",
@@ -131,6 +132,18 @@ class GameLevel(DatabaseObject):
             raise ValidationError("Max name length is 32")
 
     @property
+    def description(self):
+        if self._description is None:
+            return ""
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        if 512 < len(value):
+            raise ValidationError("Description cannot be greater than 512 characters")
+        self._description = str(value)
+
+    @property
     def type(self):
         return self._type
 
@@ -158,6 +171,7 @@ class GameLevel(DatabaseObject):
         ET.SubElement(level_elem, "type").text = str(self._type)
         ET.SubElement(level_elem, "reward").text = str(self._reward)
         ET.SubElement(level_elem, "name").text = str(self._name)
+        ET.SubElement(level_elem, "description").text = str(self._description)
 
     def to_dict(self):
         """ Return public data as dict """
@@ -173,6 +187,7 @@ class GameLevel(DatabaseObject):
             "buyout": self.buyout,
             "type": self.type,
             "reward": self.reward,
+            "description": self.description,
             "last_level": last_level,
         }
 

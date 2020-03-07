@@ -102,6 +102,7 @@ class AdminEditUsersHandler(BaseHandler):
             team.name = self.get_argument("name", team.name)
             team.motto = self.get_argument("motto", team.motto)
             team.money = self.get_argument("money", team.money)
+            team.notes = self.get_argument("notes", "")
             if hasattr(self.request, "files") and "avatarfile" in self.request.files:
                 team.avatar = self.request.files["avatarfile"][0]["body"]
             else:
@@ -131,12 +132,16 @@ class AdminEditUsersHandler(BaseHandler):
                     raise ValidationError("Handle is already in use")
             name = self.get_argument("name", "")
             email = self.get_argument("email", "")
+            notes = self.get_argument("notes", "")
             if user.name != name:
                 logging.info("Updated user Name %s -> %s" % (user.name, name))
                 user.name = name
             if user.email != email:
                 logging.info("Updated user Email %s -> %s" % (user.email, email))
                 user.email = email
+            if user.notes != notes:
+                logging.info("Updated user Notes %s -> %s" % (user.notes, notes))
+                user.notes = notes
             if options.banking:
                 hash_algorithm = self.get_argument("hash_algorithm", "")
                 if hash_algorithm != user.algorithm:

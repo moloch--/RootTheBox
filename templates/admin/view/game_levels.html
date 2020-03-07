@@ -32,7 +32,7 @@
                 <div class="control-group">
                     <label class="control-label" for="game_level-name">{{ _("Level Name") }}</label>
                     <div class="controls">
-                        <input id="game_level-name" name="name" placeholder="{{ _('Level Name') }}" maxlength=32 type="text" />
+                        <input id="game_level-name" name="name" placeholder="{{ _('Level Name') }}" maxlength="32" type="text" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -55,6 +55,12 @@
                     <label id="buyoutlabel" class="control-label" for="game_level-buyout">{{ _("Unlock Cost") }}</label>
                     <div class="controls">
                         <input id="game_level-buyout" name="buyout" pattern="[0-9]+" placeholder="" type="number" min=0 />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="game_level-description">{{ _("Description") }}</label>
+                    <div class="controls">
+                        <textarea id="game_level-description" name="description" placeholder="{{_('Optional')}}" type="text"></textarea>
                     </div>
                 </div>
             </form>
@@ -145,10 +151,10 @@
         <br />
         {% for index, level in enumerate(GameLevel.all()) %}
             <div class="well">
-                <h2 style="display:inline;">
-                    {{ level.name }}
+                <h2 class="levelheader">
+                    {{ level.name }}&nbsp;
                 </h2>
-                {% if level._name %}<h4 style="display:inline;">({{ _("Level") }} #{{ level.number }})</h4>{% end %}
+                {% if level.description %}<h4 class="levelheader">({{ level.description }})</h4>{% end %}
                 <a id="delete-game-level-button{{ index }}" style="float: right; margin-top: 5px; margin-right: 10px;" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-game-level-modal" data-uuid="{{ level.uuid }}">
                     <i class="fa fa-times-circle-o"></i>
                     {{ _("Delete Game Level") }}
@@ -158,6 +164,7 @@
                     {{ _("Edit Game Level") }}
                 </a>
                 <div style="padding-left: 3px; margin-bottom: -10px;">
+                {% if level._name  and level._name != level.name %}<strong>{{ _("Level") }} #{{ level.number }}</strong>&nbsp;&nbsp;&ndash;&nbsp;{% end %}
                     {% if level._type == "none" or level.buyout == 0 %}
                         <i class="fa fa-unlock-alt"></i> {{ _("No Lock") }}
                     {% elif level._type == "buyout" %}

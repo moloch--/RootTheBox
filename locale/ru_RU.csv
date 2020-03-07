@@ -26,6 +26,7 @@ Address,Адрес
 Admin,Администратор
 Admin Home,Admin Home
 Admin Message,Сообщение администратора
+Admin Notes,Замечания администратора
 Administrator Panel,Панель администратора
 Admins,Админы
 All Notifications,Все уведомления
@@ -59,6 +60,7 @@ Bank Account,Банковский счет
 Bank Account Balance,Баланс банковского счета
 Bank Hash Algorithm,Банковский хэш-алгоритм
 Bank Password,Пароль банка
+Bank Password Hash,Хэш банковского пароля
 Bank Password Length,Длина банковского пароля
 Banking System,Банковская система
 Banned IPs,Забаненные IP-адреса

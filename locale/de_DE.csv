@@ -26,6 +26,7 @@ Address,Adresse
 Admin,Administrator
 Admin Home,Admin-Startseite
 Admin Message,Admin-Nachricht
+Admin Notes,Admin-Hinweise
 Administrator Panel,Administrator Panel
 Admins,Admins
 All Notifications,Alle Benachrichtigungen
@@ -59,6 +60,7 @@ Bank Account,Bankkonto
 Bank Account Balance,Kontostand
 Bank Hash Algorithm,Bank-Hash-Algorithmus
 Bank Password,Bankkennwort
+Bank Password Hash,Bankwachtwoord Hash
 Bank Password Length,Länge des Bankkennworts
 Banking System,Bankensystem
 Banned IPs,Gebannte IPs

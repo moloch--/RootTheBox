@@ -147,11 +147,13 @@ class AdminCreateHandler(BaseHandler):
         """ Add a new corporation to the database """
         try:
             corp_name = self.get_argument("corporation_name", "")
+            corp_desc = self.get_argument("corporation_description", "")
             if Corporation.by_name(corp_name) is not None:
                 raise ValidationError("Corporation name already exists")
             else:
                 corporation = Corporation()
                 corporation.name = corp_name
+                corporation.description = corp_desc
                 self.dbsession.add(corporation)
                 self.dbsession.commit()
                 self.redirect("/admin/view/game_objects")
@@ -271,6 +273,7 @@ class AdminCreateHandler(BaseHandler):
             new_level.number = self.get_argument("level_number", "")
             new_level.buyout = self.get_argument("buyout", 0)
             new_level.name = self.get_argument("name", None)
+            new_level.description = self.get_argument("description", "")
             new_level._type = self.get_argument("type", "buyout")
             new_level._reward = self.get_argument("reward", 0)
             if new_level._type == "progress":
@@ -526,11 +529,17 @@ class AdminEditHandler(BaseHandler):
             if corp is None:
                 raise ValidationError("Corporation does not exist")
             name = self.get_argument("name", "")
+            desc = self.get_argument("description", "")
             if name != corp.name:
                 logging.info("Updated corporation name %s -> %s" % (corp.name, name))
                 corp.name = name
-                self.dbsession.add(corp)
-                self.dbsession.commit()
+            if desc != corp.description:
+                logging.info(
+                    "Updated corporation name %s -> %s" % (corp.description, desc)
+                )
+                corp.description = desc
+            self.dbsession.add(corp)
+            self.dbsession.commit()
             self.redirect("/admin/view/game_objects")
         except ValidationError as error:
             self.render(
@@ -800,6 +809,7 @@ class AdminEditHandler(BaseHandler):
             level._type = self.get_argument("type", "buyout")
             level._reward = self.get_argument("reward", 0)
             level.name = self.get_argument("name", None)
+            level.description = self.get_argument("description", "")
             if level._type == "progress":
                 level.buyout = min(level.buyout, 100)
             elif level._type == "none":

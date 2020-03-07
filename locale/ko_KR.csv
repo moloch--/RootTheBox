@@ -26,6 +26,7 @@ Address,주소
 Admin,관리자
 Admin Home,관리 홈
 Admin Message,관리자 메시지
+Admin Notes,관리자 노트
 Administrator Panel,관리자 패널
 Admins,관리자
 All Notifications,모든 알림
@@ -59,6 +60,7 @@ Bank Account,은행 계좌
 Bank Account Balance,은행 계좌 잔고
 Bank Hash Algorithm,은행 해시 알고리즘
 Bank Password,은행 비밀번호
+Bank Password Hash,은행 비밀번호 해시
 Bank Password Length,은행 비밀번호 길이
 Banking System,금융 시스템
 Banned IPs,금지 된 IP

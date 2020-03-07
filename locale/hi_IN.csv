@@ -26,6 +26,7 @@ Address,पता
 Admin,व्यवस्थापक
 Admin Home,व्यवस्थापक होम
 Admin Message,व्यवस्थापक संदेश
+Admin Notes,व्यवस्थापक नोट
 Administrator Panel,प्रशासक पैनल
 Admins,व्यवस्थापक
 All Notifications,सभी सूचनाएं
@@ -59,6 +60,7 @@ Bank Account,बैंक खाता
 Bank Account Balance,बैंक खाता शेष
 Bank Hash Algorithm,बैंक हैश एल्गोरिथम
 Bank Password,बैंक का पासवर्ड
+Bank Password Hash,बैंक पासवर्ड हैश
 Bank Password Length,बैंक पासवर्ड लंबाई
 Banking System,बैंकिंग सिस्टम
 Banned IPs,प्रतिबंधित आईपी
