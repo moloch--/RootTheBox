@@ -28,6 +28,7 @@ Handlers for user-related tasks.
 import logging
 
 from models.Team import Team
+from models.Box import Box
 from models.User import User, ADMIN_PERMISSION
 from models.Permission import Permission
 from handlers.BaseHandlers import BaseHandler
@@ -300,6 +301,14 @@ class AdminLockHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
+        """ Calls an lock based on URL """
+        uri = {"user": self.lock_user, "box": self.lock_box}
+        if len(args) and args[0] in uri:
+            uri[args[0]]()
+        else:
+            self.render("public/404.html")
+
+    def lock_user(self):
         """ Toggle account lock """
         user = User.by_uuid(self.get_argument("uuid", ""))
         if user is not None:
@@ -307,6 +316,15 @@ class AdminLockHandler(BaseHandler):
             self.dbsession.add(user)
             self.dbsession.commit()
         self.redirect("/admin/users")
+
+    def lock_box(self):
+        uuid = self.get_argument("uuid", "")
+        box = Box.by_uuid(uuid)
+        if box is not None:
+            box.locked = False if box.locked else True
+            self.dbsession.add(box)
+            self.dbsession.commit()
+        self.redirect("/admin/view/game_objects#%s" % str(uuid))
 
 
 class AdminAjaxUserHandler(BaseHandler):

@@ -75,6 +75,7 @@ class Box(DatabaseObject):
     game_level_id = Column(Integer, ForeignKey("game_level.id"), nullable=False)
     _avatar = Column(String(64))
     _value = Column(Integer, nullable=True)
+    _locked = Column(Boolean, default=False, nullable=False)
 
     garbage = Column(
         String(32),
@@ -235,6 +236,17 @@ class Box(DatabaseObject):
             self._value = abs(int(value))
         except ValueError:
             raise ValidationError("Reward value must be an integer")
+
+    @property
+    def locked(self):
+        """ Determines if an admin has locked an box. """
+        return self._locked
+
+    @locked.setter
+    def locked(self, value):
+        """ Setter method for _lock """
+        assert isinstance(value, bool)
+        self._locked = value
 
     @property
     def avatar(self):

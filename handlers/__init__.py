@@ -186,7 +186,7 @@ urls = [
     (r"/admin/users/edit/teams/scores", AdminEditTeamsHandler),
     (r"/admin/users/delete/(.*)", AdminDeleteUsersHandler),
     (r"/admin/ajax/(user|team)", AdminAjaxUserHandler),
-    (r"/admin/lock", AdminLockHandler),
+    (r"/admin/lock/(user|box)", AdminLockHandler),
     (r"/admin/configuration", AdminConfigurationHandler),
     (r"/admin/gitstatus", AdminGitStatusHandler),
     (r"/admin/export/(.*)", AdminExportHandler),

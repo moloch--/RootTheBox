@@ -108,15 +108,22 @@ class BoxHandler(BaseHandler):
         if box is not None:
             user = self.get_current_user()
             if self.application.settings["game_started"] or user.is_admin():
-                self.render(
-                    "missions/box.html",
-                    box=box,
-                    user=user,
-                    team=user.team,
-                    errors=[],
-                    success=[],
-                    info=[],
-                )
+                if box.locked:
+                    self.render(
+                        "missions/status.html",
+                        errors=None,
+                        info=["This box is currently locked by the Admin."],
+                    )
+                else:
+                    self.render(
+                        "missions/box.html",
+                        box=box,
+                        user=user,
+                        team=user.team,
+                        errors=[],
+                        success=[],
+                        info=[],
+                    )
             else:
                 self.render(
                     "missions/status.html",
@@ -162,6 +169,15 @@ class FlagSubmissionHandler(BaseHandler):
                 "missions/status.html",
                 errors=None,
                 info=["The game has not started yet"],
+            )
+            return
+        elif (box_id and Box.by_id(box_id).locked) or (
+            uuid and Flag.by_uuid(uuid).box.locked
+        ):
+            self.render(
+                "missions/status.html",
+                errors=None,
+                info=["This box is currently locked by the Admin."],
             )
             return
         if box_id is not None and token is not None:

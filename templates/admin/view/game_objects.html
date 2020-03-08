@@ -3,6 +3,7 @@
 {% block title %}{{ _("Game Management")}}{% end %}
 
 {% block header %}
+<link rel="stylesheet" href="/static/css/pages/admin/game_objects.css" type="text/css" />
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
 <script src="/static/js/libs/commonmark.min.js"></script>
 <script src="/static/js/libs/markdown-toolbar.js"></script>
@@ -21,6 +22,11 @@
 {% from models.Flag import FLAG_CHOICE %}
 {% from models.FlagChoice import FlagChoice %}
     {% set avatars = filter_avatars("box") %}
+    <!-- Lock Form -->
+    <form id="lock-box-form" action="/admin/lock/box" method="post">
+        {% raw xsrf_form_html() %}
+        <input id="lock-box-uuid" name="uuid" type="hidden" />
+    </form>
     <!-- Select Avatars -->
     <div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
         <div class="modal-header">
@@ -734,7 +740,7 @@
                     <br />
                     {% if len(corporation.boxes) != 0 %}
                         {% for box in corporation.boxes %}
-                            <div id="{{ box.uuid }}" class="well">
+                            <div id="{{ box.uuid }}" class="well{% if box.locked %} locked{% end %}">
                                 <h3 style="display:inline;">
                                     {% if box.operating_system.lower() == 'windows' %}
                                         <i class="fa fa-windows"></i>
@@ -749,6 +755,17 @@
                                     {% end %}
                                     {{ box.name }}&nbsp;&nbsp;
                                 </h3>
+                                    {% if box.locked %}
+                                        <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-success" data-uuid="{{ box.uuid }}">
+                                            <i class="fa fa-fw fa-unlock"></i>
+                                            {{_("Unlock")}}
+                                        </a>
+                                    {% else %}
+                                        <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-warning" data-uuid="{{ box.uuid }}">
+                                            <i class="fa fa-fw fa-lock"></i>
+                                            {{_("Lock")}}
+                                        </a>
+                                    {% end %}
                                     <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
                                         <i class="fa fa-pencil"></i>
                                         {{_("Edit Box")}}

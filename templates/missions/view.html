@@ -92,7 +92,7 @@
                         {% set boxes = [] %}
                         {% for box in level.boxes %}
                             <!-- Only show boxes that have flags -->
-                            {% if len(box.flags) > 0 %}
+                            {% if len(box.flags) > 0 and not box.locked %}
                                 {% if options.group_by_corp %}
                                     {% set boxcorp = Corporation.by_id(box.corporation_id) %}
                                     {% if boxcorp == corp %}

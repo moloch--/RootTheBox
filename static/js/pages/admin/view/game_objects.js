@@ -220,6 +220,11 @@ $(document).ready(function() {
         $("#delete-box-form").submit();
     });
 
+    $("a[id^=lock-box-button]").click(function() {
+        $("#lock-box-uuid").val($(this).data("uuid"));
+        $("#lock-box-form").submit();
+    });
+
     /* IP Address */
     $("#add-ip-address-submit").click(function() {
         $("#add-ip-address-form").submit();

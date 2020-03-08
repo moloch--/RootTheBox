@@ -366,7 +366,7 @@
 {% block content %}
 {% from models.Team import Team %}
     <!-- Lock Form -->
-    <form id="lock-user-form" action="/admin/lock" method="post">
+    <form id="lock-user-form" action="/admin/lock/user" method="post">
         {% raw xsrf_form_html() %}
         <input id="lock-user-uuid" name="uuid" type="hidden" />
     </form>
