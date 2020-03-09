@@ -85,28 +85,30 @@ $(document).ready(function() {
 });
 
 function changeDisplay() {
-    if ($(".lastflagcol").text().length > 0) {
-        if (scoretext) {
+    if (scoretext) {
+        if ($(".lastflagcol").text().length > 0) {
             $(".hintcol").fadeOut("slow", function() {
                 $(".lastflagcol").fadeIn("slow");
             });
-            if ($("#mvp_table").length > 0) {
-                $("#scoreboard_right_image").fadeOut("slow", function() {
-                    $("#scoreboard_mvp").fadeIn("slow");
-                });
-            }
-        } else {
+        }
+        if ($("#mvp_table").length > 0) {
+            $("#scoreboard_right_image").fadeOut("slow", function() {
+                $("#scoreboard_mvp").fadeIn("slow");
+            });
+        }
+    } else {
+        if ($(".lastflagcol").text().length > 0) {
             $(".lastflagcol").fadeOut("slow", function() {
                 $(".hintcol").fadeIn("slow");
             });
-            if ($("#mvp_table").length > 0) {
-                $("#scoreboard_mvp").fadeOut("slow", function() {
-                    $("#scoreboard_right_image").fadeIn("slow");
-                });
-            }
         }
-        scoretext = !scoretext;
+        if ($("#scoreboard_right_image").length > 0) {
+            $("#scoreboard_mvp").fadeOut("slow", function() {
+                $("#scoreboard_right_image").fadeIn("slow");
+            });
+        }
     }
+    scoretext = !scoretext;
     setTimeout(function () {     
         changeDisplay();
     }, fadetext);
