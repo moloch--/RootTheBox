@@ -105,4 +105,8 @@ $(document).ready(function() {
             });
         });
     }
+    if ( window.history.replaceState ) {
+        location.hash = location.hash;
+        window.history.replaceState( null, null, window.location.href );
+    }
 });

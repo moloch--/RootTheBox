@@ -134,30 +134,6 @@ class BoxHandler(BaseHandler):
         else:
             self.render("public/404.html")
 
-
-class FlagSubmissionHandler(BaseHandler):
-    @authenticated
-    def get(self, *args, **kwargs):
-        fuuid = self.get_argument("flag", None)
-        buuid = self.get_argument("box", None)
-        reward = self.get_argument("reward", None)
-        user = self.get_current_user()
-        box = Box.by_uuid(buuid)
-        flag = Flag.by_uuid(fuuid)
-        if box is not None and box.is_complete(user):
-            if self.config.story_mode and len(box.capture_message) > 0:
-                self.add_content_policy("script", "'unsafe-eval'")
-                self.render("missions/captured.html", box=box, flag=None, reward=reward)
-                return
-        elif flag is not None and flag in user.team.flags:
-            if self.config.story_mode and len(flag.capture_message) > 0:
-                self.add_content_policy("script", "'unsafe-eval'")
-                self.render(
-                    "missions/captured.html", box=None, flag=flag, reward=reward
-                )
-                return
-        self.render("public/404.html")
-
     @authenticated
     def post(self, *args, **kwargs):
         """ Check validity of flag submissions """
@@ -468,6 +444,30 @@ class FlagSubmissionHandler(BaseHandler):
             success=success,
             info=info,
         )
+
+
+class FlagCaptureMessageHandler(BaseHandler):
+    @authenticated
+    def get(self, *args, **kwargs):
+        fuuid = self.get_argument("flag", None)
+        buuid = self.get_argument("box", None)
+        reward = self.get_argument("reward", None)
+        user = self.get_current_user()
+        box = Box.by_uuid(buuid)
+        flag = Flag.by_uuid(fuuid)
+        if box is not None and box.is_complete(user):
+            if self.config.story_mode and len(box.capture_message) > 0:
+                self.add_content_policy("script", "'unsafe-eval'")
+                self.render("missions/captured.html", box=box, flag=None, reward=reward)
+                return
+        elif flag is not None and flag in user.team.flags:
+            if self.config.story_mode and len(flag.capture_message) > 0:
+                self.add_content_policy("script", "'unsafe-eval'")
+                self.render(
+                    "missions/captured.html", box=None, flag=flag, reward=reward
+                )
+                return
+        self.render("public/404.html")
 
 
 class PurchaseHintHandler(BaseHandler):

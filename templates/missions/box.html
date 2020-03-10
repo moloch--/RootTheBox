@@ -28,7 +28,7 @@
             <h3>{{ _("Submit Flag") }}</h3>
         </div>
         <div class="modal-body">
-            <form id="capture-text-flag-form" class="form-horizontal" method="post" action="/user/missions/capture">
+            <form id="capture-text-flag-form" class="form-horizontal" method="post" action="/user/missions/boxes?uuid={{ box.uuid }}">
                 {% raw xsrf_form_html() %}
                 <input id="capture-text-flag-uuid" name="uuid" value="" type="hidden" />
                 <br />
@@ -54,7 +54,7 @@
                 <h3>{{ _("Submit Flag") }}</h3>
             </div>
             <div class="modal-body">
-                <form id="capture-choice-flag-form" class="form-horizontal" method="post" action="/user/missions/capture">
+                <form id="capture-choice-flag-form" class="form-horizontal" method="post" action="/user/missions/boxes?uuid={{ box.uuid }}">
                     {% raw xsrf_form_html() %}
                     <input id="capture-choice-flag-uuid" name="uuid" value="" type="hidden" />
                     <input id="choice-flag-token" name="token" type="hidden" />
@@ -76,7 +76,7 @@
             <h3>{{ _("Submit Flag") }}</h3>
         </div>
         <div class="modal-body">
-            <form id="capture-file-flag-form" class="form-horizontal" method="post" action="/user/missions/capture" enctype="multipart/form-data" >
+            <form id="capture-file-flag-form" class="form-horizontal" method="post" action="/user/missions/boxes?uuid={{ box.uuid }}" enctype="multipart/form-data" >
                 {% raw xsrf_form_html() %}
                 <input autofocus id="capture-file-flag-uuid" name="uuid" type="hidden" />
                 <div class="control-group">
@@ -245,7 +245,7 @@
 
         {% if box.flag_submission_type == FlagsSubmissionType.SINGLE_SUBMISSION_BOX %}
         <div id="capture-text-flag-box" class="well">
-            <form id="capture-text-flag-box-form" class="form-horizontal" method="post" action="/user/missions/capture">
+            <form id="capture-text-flag-box-form" class="form-horizontal" method="post" action="/user/missions/boxes?uuid={{ box.uuid }}">
                 {% raw xsrf_form_html() %}
                 <input id="capture-text-flag-box-box-id" name="box_id" value="{{ box.id }}" type="hidden" />
                 <h4>{{ _("Submit a Flag") }}</h4>
