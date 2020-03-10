@@ -170,6 +170,15 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
+    def flag_decayed(self, team, flag):
+        """ Callback for when a bot is added """
+        message = (
+            "The value of Flag %s has decreased due to other team captures - score adjusted."
+            % (flag.name,)
+        )
+        Notification.create_team(team, "Flag Value Decreased", message, INFO)
+        self.io_loop.add_callback(self.push_team, team.id)
+
     def flag_captured(self, team, flag):
         """ Callback for when a flag is captured """
         if len(GameLevel.all()) > 1:

@@ -32,6 +32,7 @@ from models.Relationships import team_to_flag
 from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.Box import Box
+from models.Team import Team
 from models.FlagAttachment import FlagAttachment  # Fix object mapper
 from models.FlagChoice import FlagChoice
 from models.Penalty import Penalty
@@ -40,6 +41,7 @@ from libs.ValidationError import ValidationError
 from builtins import str
 from tornado.options import options
 from dateutil.parser import parse
+from past.utils import old_div
 
 ### Constants
 FLAG_STATIC = u"static"
@@ -167,12 +169,7 @@ class Flag(DatabaseObject):
         """ Check flag file specific parameters """
         token = cls.digest(raw_token)
         return cls(
-            box_id=box.id,
-            name=name,
-            token=token,
-            description=description,
-            value=value,
-            original_value=value,
+            box_id=box.id, name=name, token=token, description=description, value=value
         )
 
     @classmethod
@@ -188,7 +185,6 @@ class Flag(DatabaseObject):
             token=raw_token,
             description=description,
             value=value,
-            original_value=value,
         )
 
     @classmethod
@@ -200,7 +196,6 @@ class Flag(DatabaseObject):
             token=raw_token,
             description=description,
             value=value,
-            original_value=value,
         )
 
     @classmethod
@@ -216,7 +211,6 @@ class Flag(DatabaseObject):
             token=raw_token,
             description=description,
             value=value,
-            original_value=value,
         )
 
     @classmethod
@@ -228,13 +222,36 @@ class Flag(DatabaseObject):
             token=raw_token,
             description=description,
             value=value,
-            original_value=value,
         )
 
     @classmethod
     def digest(self, data):
         """ Token is SHA1 of data """
         return hashlib.sha1(data).hexdigest()
+
+    def dynamic_value(self, team=None):
+        if options.dynamic_flag_value is False:
+            return self.value
+        elif len(self.captures(self.id)) == 0:
+            return self.value
+        elif team and self in team.flags:
+            depreciation = float(old_div(options.flag_value_decrease, 100.0))
+            deduction = self.value * depreciation
+            if options.dynamic_flag_type == "decay_all":
+                reduction = (len(self.captures(self.id)) - 1) * deduction
+                return max(options.flag_value_minimum, int(self.value - reduction))
+            else:
+                for index, item in enumerate(self.captures(self.id)):
+                    if team == Team.by_id(item[0]):
+                        reduction = index * deduction
+                        return max(
+                            options.flag_value_minimum, int(self.value - reduction)
+                        )
+        else:
+            depreciation = float(old_div(options.flag_value_decrease, 100.0))
+            deduction = self.value * depreciation
+            reduction = len(self.captures(self.id)) * deduction
+            return max(options.flag_value_minimum, int(self.value - reduction))
 
     @property
     def game_level(self):
@@ -313,26 +330,18 @@ class Flag(DatabaseObject):
 
     @property
     def value(self):
+        if self._original_value and self._original_value > self._value:
+            """ Since value itself is no longer decreased in dynamic scoring
+            there is no need for original_value, but for backward compatibility
+            if _original_value is GT the value, update the value. 
+            At some point, we can remove original_value column. """
+            self.value = self._original_value
         return self._value
 
     @value.setter
     def value(self, value):
         try:
             self._value = abs(int(value))
-        except ValueError:
-            raise ValidationError("Reward value must be an integer")
-
-    @property
-    def original_value(self):
-        if self._original_value:
-            return self._original_value
-        else:
-            return self._value
-
-    @original_value.setter
-    def original_value(self, value):
-        try:
-            self._original_value = abs(int(value))
         except ValueError:
             raise ValidationError("Reward value must be an integer")
 
@@ -423,7 +432,6 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
-        ET.SubElement(flag_elem, "original_value").text = str(self.original_value)
         if self.lock_id:
             ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
         ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
@@ -460,7 +468,6 @@ class Flag(DatabaseObject):
             "description": self.description,
             "capture_message": self.capture_message,
             "value": self.value,
-            "original_value": self.original_value,
             "box": box.uuid,
             "token": self.token,
             "lock_uuid": lock_uuid,

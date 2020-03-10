@@ -410,7 +410,9 @@ $(document).ready(function() {
     $("#min-user-password-length").popover({placement:'right', trigger:'hover'});
     $("#max-flag-attempts").popover({placement:'right', trigger:'hover'});
     $("#dynamic_flag-button").popover({placement:'right', trigger:'hover'});
+    $("#dynamic_flag_type").popover({placement:'right', trigger:'hover'});
     $("#flag_value_decrease").popover({placement:'right', trigger:'hover'});
+    $("#flag_value_minimum").popover({placement:'right', trigger:'hover'});
     $("#penalty-button").popover({placement:'right', trigger:'hover'});
     $("#flag_start_penalty").popover({placement:'right', trigger:'hover'});
     $("#flag_penalty_cost").popover({placement:'right', trigger:'hover'});

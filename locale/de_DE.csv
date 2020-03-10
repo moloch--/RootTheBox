@@ -30,6 +30,7 @@ Admin Notes,Admin-Hinweise
 Administrator Panel,Administrator Panel
 Admins,Admins
 All Notifications,Alle Benachrichtigungen
+and logos in export.,und Logos im Export.
 and so on,und so weiter
 Apply penalty on attempt,Bestrafung beim Versuch
 Are you a Cylon?,Bist du ein Zylon?
@@ -53,6 +54,7 @@ Attempts,Versuche
 Authenticate,Authentifizieren
 Authentication Failure,Authentifizierungsfehler
 Authentication Required,Authentifizierung erforderlich
+Automatic Ban,Automatisches Verbot
 Avatar,Benutzerbild
 Backup/Restore,Backup wiederherstellen
 Ban IP Address,IP-Adresse sperren
@@ -173,7 +175,12 @@ Decline,Ablehnen
 Decline Bribe?,Bestechung ablehnen?
 Decline this bribe?,Diese Bestechung ablehnen?
 Declined,Abgelehnt
+Decrease All Captures,Verlaag alle vastleggingen
 Decrease flag reward by this percent per capture.,Verringere die Flaggenbelohnung um diesen Prozentsatz pro Eroberung.
+Decrease flag until it reaches this minimum value.,Vlag verkleinen totdat deze minimumwaarde is bereikt.
+Decrease Future Captures,Verlaag toekomstige vastleggingen
+Decreases the flag value for future captures - this method rewards speed of capture.,Verlaagt de vlagwaarde voor toekomstige opnamen - deze methode beloont de snelheid van opname.
+Decreases the flag value for past and future team captures - this method rewards difficulty.,Verlaagt de vlagwaarde voor het vastleggen van teamleden in het verleden en de toekomst - deze methode beloont moeilijkheid.
 deduct on & after,Abzug bei & nach
 defaults to,Standardeinstellung ist
 Delete,Löschen
@@ -202,6 +209,7 @@ Do not delete or modify community flags unless instructed. Do not attack other p
 Download,Herunterladen
 Download File,Datei Herunterladen
 Download the command line botnet monitor,Laden Sie den Kommandozeilen-Botnet-Monitor herunter
+Dynamic Decay Type,Dynamisch vervaltype
 Dynamic Scoring,Dynamisches Punkten
 Each flag has a submit.  The player will choose the flag they intend to capture.,"Jede Flagge hat ein Submit. Der Spieler wählt die Flagge, die er erobern möchte."
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Jeder Spieler visiert Herausforderungen unterschiedlicher Schwierigkeit und Rafinesse an und versucht, Flaggen zu sammeln und Ruhm zu erlangen. Viel Glück!"
@@ -245,6 +253,7 @@ Enter Choice,Auswahl eingeben
 Enter the same password as before,Geben Sie dasselbe Passwort wie zuvor ein
 ERROR,ERROR
 Export Game Objects,Spielobjekte exportieren
+Export of gameplay settings does not include the entire server and database configuration.,Der Export der Gameplay-Einstellungen umfasst nicht die gesamte Server- und Datenbankkonfiguration.
 Export XML,XML exportieren
 Export XML,XML exportieren
 Failed Attempts,Fehlgeschlagene Versuche
@@ -266,6 +275,7 @@ Flag Decrease Value,Flaggenwert verringern
 Flag Details,Flaggendetails
 Flag File,Flaggendatei
 Flag Hints,Flaggenhinweise
+Flag Minimum Value,Vlag Minimumwaarde
 Flag Name,Flaggenname
 Flag Penalty,Flaggenstrafe
 Flag Penalty % Cost,%-Kosten der Flaggenstrafe
@@ -315,6 +325,7 @@ In Progress,In Bearbeitung
 "In this case, the flag is a multiple choice question where the selected option is the token.","In diesem Fall ist die Flagge eine Multiple-Choice-Frage, bei der die ausgewählte Option das Token ist."
 "In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","In diesem Fall ist die Flagge ein regulärer Ausdruck. Der Benutzer muss eine Zeichenfolge übermitteln, die mit dem Muster übereinstimmt, um die Flagge zu erobern. Übereinstimmungen können unempfindlich sein. Bitte stellen Sie sicher, dass Sie Ihren regulären Ausdruck testen, und stellen Sie sicher, dass er nicht zu breit angelegt ist."
 "In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.","In diesem Fall ist die Flagge eine statische Zeichenfolge. Der Benutzer muss das genaue Token senden, um die Flagge zu erobern. Leerzeichen am Anfang und Ende werden entfernt."
+Include gameplay settings (such as those under ,Das Einbeziehen von Gameplay-Einstellungen (z. B. beim Exportieren von Gameplay-Einstellungen) umfasst nicht die gesamte Server- und Datenbankkonfiguration.
 Income,Einkommen
 Incoming Transmission,Eingehende Übertragung
 Incorrect,Falsch
@@ -461,8 +472,8 @@ Points,Punkte
 points,Punkte
 Previous Bribes,Vorherige Bestechungsgelder
 Price,Preis
-Private,Privatgelände
 Privacy Policy,Datenschutz Richtlinie
+Private,Privatgelände
 Programming,Programmierung
 Provide the code used to join an existing team.  Visible to other team members on their home page.,"Geben Sie den Code an, mit dem Sie einem vorhandenen Team beitreten. Sichtbar für andere Teammitglieder auf ihrer Homepage."
 Public,Öffentlichkeit
@@ -592,6 +603,7 @@ This is the message displayed to the user once the flag is captured.,"Dies ist d
 This is the name that will appear in the upper left corner,"Dies ist der Name, der in der oberen linken Ecke angezeigt wird"
 This is the the limit of characters allowed for a pastebin post.,Dies ist die maximale Zeichenanzahl für einen Pastebin-Beitrag.
 This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,"So soll die Flagge angezeigt werden. Lassen Sie das Feld leer, um automatisch nach der Bestellnummer benannt zu werden."
+This selection determines the method by which dynamic scoring is applied.,Deze selectie bepaalt de methode waarmee dynamisch scoren wordt toegepast.
 This selection determines the method by which the scoreboard is primarily ranked.,"Diese Auswahl bestimmt, nach welcher Methode der Anzeiger in erster Linie eingestuft wird."
 This selection determines the visibility of the scoreboard menu and pages.,Diese Auswahl bestimmt die Sichtbarkeit des Scoreboard-Menüs und der Seiten.
 "This will also delete associated IP addresses, boxes, and flags.","Dadurch werden auch die zugehörigen IP-Adressen, Boxen und Flags gelöscht."
@@ -666,7 +678,3 @@ You have not submitted any bribes yet.,Sie haben noch keine Bestechungsgelder ei
 "Your email, visible to game administrators.","Deine E-Mail, sichtbar für Spieladministratoren."
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Ihr Handle muss aus 3 bis 16 alphanumerischen Zeichen bestehen. Unterstreichen, Bindestrich und Punkte sind zulässig."
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Dein Name, sichtbar für Spieladministratoren. Ihr Name kann aus 3-64 alphanumerischen Zeichen bestehen"
-Automatic Ban,Automatisches Verbot
-Export of gameplay settings does not include the entire server and database configuration.,Der Export der Gameplay-Einstellungen umfasst nicht die gesamte Server- und Datenbankkonfiguration.
-Include gameplay settings (such as those under ,Das Einbeziehen von Gameplay-Einstellungen (z. B. beim Exportieren von Gameplay-Einstellungen) umfasst nicht die gesamte Server- und Datenbankkonfiguration.
-and logos in export.,und Logos im Export.

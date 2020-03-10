@@ -30,6 +30,7 @@ Admin Notes,管理员须知
 Administrator Panel,管理员面板
 Admins,管理员组
 All Notifications,所有通知
+and logos in export.,和出口徽标。
 and so on,等等
 Apply penalty on attempt,在尝试时应用惩罚
 Are you a Cylon?,你是赛隆人吗？
@@ -53,6 +54,7 @@ Attempts,尝试
 Authenticate,认证
 Authentication Failure,认证失败
 Authentication Required,需要认证
+Automatic Ban,自动禁用
 Avatar,头像
 Backup/Restore,备份/恢复
 Ban IP Address,禁止IP地址
@@ -173,7 +175,12 @@ Decline,拒绝
 Decline Bribe?,拒绝赞助？
 Decline this bribe?,拒绝这种赞助？
 Declined,已拒绝
-Decrease flag reward by this percent per capture.,Flag奖励随解出数量按比例减少。
+Decrease All Captures,减少所有捕获
+Decrease flag reward by this percent per capture.,每次捕获将标志奖励降低此百分比。
+Decrease flag until it reaches this minimum value.,减小标志，直到达到该最小值。
+Decrease Future Captures,减少未来的捕获量
+Decreases the flag value for future captures - this method rewards speed of capture.,减少标记值以供将来捕获-此方法可提高捕获速度。
+Decreases the flag value for past and future team captures - this method rewards difficulty.,降低过去和将来团队捕获的标志值-这种方法会奖励难度。
 deduct on & after,扣除之后
 defaults to,默认为
 Delete,删除
@@ -202,6 +209,7 @@ Do not delete or modify community flags unless instructed. Do not attack other p
 Download,下载
 Download File,下载文件
 Download the command line botnet monitor,下载命令行僵尸网络监视器
+Dynamic Decay Type,动态衰减类型
 Dynamic Scoring,动态评分
 Each flag has a submit.  The player will choose the flag they intend to capture.,每次提交都有不同Flag。玩家将选择他们应该获得的Flag。
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",每个玩家都将面对不同难度和复杂程度的挑战，尝试收集Flag并赢得荣耀。祝好运！
@@ -245,6 +253,7 @@ Enter Choice,输入选择
 Enter the same password as before,输入与以前相同的密码
 ERROR,错误
 Export Game Objects,导出游戏对象
+Export of gameplay settings does not include the entire server and database configuration.,导出游戏设置不包括整个服务器和数据库配置。
 Export XML,导出XML
 Export XML,导出XML
 Failed Attempts,失败尝试
@@ -266,6 +275,7 @@ Flag Decrease Value,Flag分值减少
 Flag Details,Flag细节
 Flag File,Flag文件
 Flag Hints,Flag提示
+Flag Minimum Value,标记最小值
 Flag Name,Flag名称
 Flag Penalty,Flag惩罚
 Flag Penalty % Cost,Flag惩罚％值
@@ -304,6 +314,7 @@ Hints Taken,提示已获取
 History,历史
 Home,首页
 How should the next level unlock?,下一级如何解锁？
+I accept the,我接受
 "If the flag selection is left empty, the hint will be considered a Box Hint.",如果Flag选择为空，则提示将被视为题目提示。
 "If this option is disabled, there is no cost for submitting incorrect flags.",如果禁用此选项，则提交错误Flag无花费。
 Import File,导入文件
@@ -314,6 +325,7 @@ In Progress,进行中
 "In this case, the flag is a multiple choice question where the selected option is the token.",在这种情况下，Flag是一个多项选择问题，其中所选选项是Flag。
 "In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",在这种情况下，Flag是正则表达式。用户必须提交与模式匹配的字符串以捕获标志。匹配可能不敏感。请务必测试你的正则表达式，并确保它不太宽泛。
 "In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",在这种情况下，Flag是静态字符串。用户必须提交确切的Flag才能捕获该Flag。开头和结尾的空格会自动去掉。
+Include gameplay settings (such as those under ,包括游戏设置（例如
 Income,收入
 Incoming Transmission,接入通信
 Incorrect,不正确
@@ -460,6 +472,7 @@ Points,分值
 points,分值
 Previous Bribes,以前的赞助
 Price,价钱
+Privacy Policy,私隐政策
 Private,私有
 Programming,程序设计
 Provide the code used to join an existing team.  Visible to other team members on their home page.,提供用于加入现有团队的代码。在主页上可以看到其他团队成员。
@@ -590,6 +603,7 @@ This is the message displayed to the user once the flag is captured.,这是获�
 This is the name that will appear in the upper left corner,这是将出现在左上角的名称
 This is the the limit of characters allowed for a pastebin post.,这是剪贴板帖子允许的字符数限制。
 This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,这就是您希望将Flag显示为的内容。留空以通过订单＃自动命名。
+This selection determines the method by which dynamic scoring is applied.,此选择确定应用动态评分的方法。
 This selection determines the method by which the scoreboard is primarily ranked.,此选择确定主要对记分板进行排名的方法。
 This selection determines the visibility of the scoreboard menu and pages.,此选择确定记分板菜单和页面的可见性。
 "This will also delete associated IP addresses, boxes, and flags.",这也将删除关联的IP地址，题目和flag。
@@ -664,9 +678,3 @@ You have not submitted any bribes yet.,你还没有提交任何赞助。
 "Your email, visible to game administrators.",您的电子邮件，对游戏管理员可见。
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",您的密码必须是3-16个字母数字字符。允许下划线，短划线和点。
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",您的名字，游戏管理员可以看到。您的姓名可以是3-64个字母数字字符
-Automatic Ban,自动禁用
-Export of gameplay settings does not include the entire server and database configuration.,导出游戏设置不包括整个服务器和数据库配置。
-Include gameplay settings (such as those under ,包括游戏设置（例如
-and logos in export.,和出口徽标。
-I accept the,我接受
-Privacy Policy,私隐政策

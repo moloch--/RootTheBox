@@ -754,6 +754,13 @@ define(
 )
 
 define(
+    "dynamic_flag_type",
+    default="decay_future",
+    group="game",
+    help="determines the type of dynamic scoring used",
+)
+
+define(
     "max_flag_attempts",
     default=100,
     group="game",
@@ -765,7 +772,15 @@ define(
     "flag_value_decrease",
     default=10,
     group="game",
-    help="decrease flag reward by this percent per capture",
+    help="decrease flag reward by this percent per capture until minimum",
+    type=int,
+)
+
+define(
+    "flag_value_minimum",
+    default=1,
+    group="game",
+    help="minimum value for flag decay",
     type=int,
 )
 

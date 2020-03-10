@@ -414,7 +414,9 @@ class AdminViewHandler(BaseHandler):
                 accept_answer = self.get_argument("accept_answer", "")
                 answer_token = self.get_argument("answer_token", "")
                 if point_restore == "on" and options.penalize_flag_value and team:
-                    value = int(flag.value * (options.flag_penalty_cost * 0.01))
+                    value = int(
+                        flag.dynamic_value(team) * (options.flag_penalty_cost * 0.01)
+                    )
                     team.money += value
                     penalty = Penalty.by_team_token(flag, team, answer_token)
                     if penalty:
@@ -427,19 +429,24 @@ class AdminViewHandler(BaseHandler):
                         value,
                     )
                     if flag not in team.flags:
+                        flag_value = flag.dynamic_value(team)
+                        if (
+                            self.config.dynamic_flag_value
+                            and self.config.dynamic_flag_type == "decay_all"
+                        ):
+                            for item in Flag.captures(flag.id):
+                                tm = Team.by_id(item[0])
+                                deduction = flag.dynamic_value(tm) - flag_value
+                                tm.money = int(tm.money - deduction)
+                                self.dbsession.add(tm)
+                                self.event_manager.flag_decayed(tm, flag)
+                        team.money += flag_value
                         team.flags.append(flag)
-                        team.money += flag.value
                         self.dbsession.add(team)
-                        if self.config.dynamic_flag_value:
-                            depreciation = float(
-                                old_div(self.config.flag_value_decrease, 100.0)
-                            )
-                            flag.value = int(flag.value - (flag.value * depreciation))
-                            self.dbsession.add(flag)
                         self.dbsession.commit()
                         self.event_manager.flag_captured(team, flag)
                         self._check_level(flag, team)
-                    success.append("%s awarded %d" % (team.name, value))
+                    success.append("%s awarded %d" % (team.name, flag_value))
                 if (
                     accept_answer == "on"
                     and (flag.type == "static" or flag.type == "regex")
@@ -705,7 +712,6 @@ class AdminEditHandler(BaseHandler):
                 flag.description = description
             # Value
             flag.value = self.get_argument("value", "")
-            flag.original_value = self.get_argument("value", "")
             flag.capture_message = self.get_argument("capture_message", "")
             flag.case_sensitive = self.get_argument("case-sensitive", 1)
             # Type
@@ -1148,7 +1154,10 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                         penalty += "0"
                     else:
                         penalty += str(
-                            int(flag.value * (options.flag_penalty_cost * 0.01))
+                            int(
+                                flag.dynamic_value(team)
+                                * (options.flag_penalty_cost * 0.01)
+                            )
                         )
                     entries.update({"penalty": penalty})
                 attempts.append(entries)

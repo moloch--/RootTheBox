@@ -351,8 +351,12 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.mvp_max = self.get_int("mvp_max", 10)
         self.config.team_sharing = self.get_bool("team_sharing")
         self.config.dynamic_flag_value = self.get_bool("dynamic_flag_value", False)
+        self.config.dynamic_flag_type = self.get_argument(
+            "dynamic_flag_type", "decay_future"
+        )
         self.config.max_flag_attempts = self.get_int("max_flag_attempts", 100)
         self.config.flag_value_decrease = self.get_int("flag_value_decrease")
+        self.config.flag_value_minimum = self.get_int("flag_value_minimum", 1)
         self.config.penalize_flag_value = self.get_bool("penalize_flag_value", False)
         self.config.flag_penalty_cost = self.get_int("flag_penalty_cost")
         self.config.flag_stop_penalty = self.get_int("flag_stop_penalty")
@@ -646,9 +650,10 @@ class AdminResetHandler(BaseHandler):
             game_history.take_snapshot()  # Take starting snapshot
             flags = Flag.all()
             for flag in flags:
-                flag.value = (
-                    flag._original_value if flag._original_value else flag.value
-                )
+                # flag.value = flag.value allows a fallback to when original_value was used
+                # Allows for the flag value to be reset if dynamic scoring was used
+                # Can be removed after depreciation timeframe
+                flag.value = flag.value
                 self.dbsession.add(flag)
             self.dbsession.commit()
             self.dbsession.flush()

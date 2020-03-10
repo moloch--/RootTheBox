@@ -30,6 +30,7 @@ Admin Notes,관리자 노트
 Administrator Panel,관리자 패널
 Admins,관리자
 All Notifications,모든 알림
+and logos in export.,수출 로고.
 and so on,등등
 Apply penalty on attempt,시도시 페널티 적용
 Are you a Cylon?,Cylon입니까?
@@ -53,6 +54,7 @@ Attempts,시도
 Authenticate,인증
 Authentication Failure,인증 실패
 Authentication Required,인증 필요
+Automatic Ban,자동 금지
 Avatar,화신
 Backup/Restore,백업 / 복원
 Ban IP Address,금지 IP 주소
@@ -173,7 +175,12 @@ Decline,쇠퇴
 Decline Bribe?,뇌물을 거절 하시겠습니까?
 Decline this bribe?,이 뇌물을 거절 하시겠습니까?
 Declined,거부
+Decrease All Captures,모든 캡처 감소
 Decrease flag reward by this percent per capture.,깃발 보상을 캡처 당이 퍼센트만큼 줄입니다.
+Decrease flag until it reaches this minimum value.,이 최소값에 도달 할 때까지 플래그를 줄이십시오.
+Decrease Future Captures,향후 캡처 감소
+Decreases the flag value for future captures - this method rewards speed of capture.,향후 캡처의 플래그 값을 줄입니다.이 방법은 캡처 속도를 보상합니다.
+Decreases the flag value for past and future team captures - this method rewards difficulty.,과거와 미래의 팀 캡처에 대한 플래그 값을 줄입니다.이 방법은 어려움을 보상합니다.
 deduct on & after,공제 후
 defaults to,기본값은
 Delete,지우다
@@ -202,6 +209,7 @@ Do not delete or modify community flags unless instructed. Do not attack other p
 Download,다운로드
 Download File,파일 다운로드
 Download the command line botnet monitor,명령 행 봇넷 모니터 다운로드
+Dynamic Decay Type,동적 부패 유형
 Dynamic Scoring,다이나믹 스코어링
 Each flag has a submit.  The player will choose the flag they intend to capture.,각 플래그에는 제출이 있습니다. 플레이어는 캡처하려는 깃발을 선택합니다.
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",각 플레이어는 다양한 난이도와 정교함을 목표로 깃발을 모으고 영광을 얻습니다. 행운을 빕니다!
@@ -245,6 +253,7 @@ Enter Choice,초이스 입력
 Enter the same password as before,이전과 동일한 비밀번호를 입력하십시오
 ERROR,오류
 Export Game Objects,게임 오브젝트 내보내기
+Export of gameplay settings does not include the entire server and database configuration.,게임 플레이 설정 내보내기에는 전체 서버 및 데이터베이스 구성이 포함되지 않습니다.
 Export XML,XML 내보내기
 Export XML,XML 내보내기
 Failed Attempts,실패한 시도
@@ -266,6 +275,7 @@ Flag Decrease Value,플래그 감소 값
 Flag Details,플래그 세부 사항
 Flag File,플래그 파일
 Flag Hints,깃발 힌트
+Flag Minimum Value,최소값 플래그
 Flag Name,깃발 이름
 Flag Penalty,페널티 페널티
 Flag Penalty % Cost,페널티 페널티 % 비용
@@ -304,6 +314,7 @@ Hints Taken,힌트
 History,역사
 Home,집
 How should the next level unlock?,다음 레벨은 어떻게 잠금 해제해야합니까?
+I accept the,동의합니다
 "If the flag selection is left empty, the hint will be considered a Box Hint.",플래그 선택이 비어 있으면 힌트가 고려됩니다.
 "If this option is disabled, there is no cost for submitting incorrect flags.",이 옵션을 비활성화하면 잘못된 플래그를 제출하는 데 드는 비용이 없습니다.
 Import File,파일 가져 오기
@@ -314,6 +325,7 @@ In Progress,진행중
 "In this case, the flag is a multiple choice question where the selected option is the token.",이 경우 플래그는 선택된 옵션이 토큰 인 객관식 질문입니다.
 "In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",이 경우 플래그는 정규식입니다. 플래그를 캡처하려면 패턴과 일치하는 문자열을 제출해야합니다. 일치하지 않을 수 있습니다. 정규식을 테스트하고 너무 광범위하지 않은지 확인하십시오.
 "In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",이 경우 플래그는 정적 문자열입니다. 사용자는 정확한 토큰을 제출하여 플래그를 캡처해야합니다. 시작과 끝의 공백이 제거됩니다.
+Include gameplay settings (such as those under ,게임 플레이 설정 포함 (예 :
 Income,수입
 Incoming Transmission,들어오는 전송
 Incorrect,잘못된
@@ -460,6 +472,7 @@ Points,전철기
 points,전철기
 Previous Bribes,이전 뇌물
 Price,가격
+Privacy Policy,개인 정보 보호 정책
 Private,은밀한
 Programming,프로그램 작성
 Provide the code used to join an existing team.  Visible to other team members on their home page.,기존 팀에 참여하는 데 사용되는 코드를 제공하십시오. 홈 페이지에서 다른 팀 구성원에게 표시됩니다.
@@ -590,6 +603,7 @@ This is the message displayed to the user once the flag is captured.,플래그�
 This is the name that will appear in the upper left corner,왼쪽 상단에 표시되는 이름입니다
 This is the the limit of characters allowed for a pastebin post.,이것은 pastebin 게시물에 허용되는 문자의 제한입니다.
 This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,플래그를 표시하려는 것입니다. 주문 번호로 자동 이름을 지정하려면 비워 두십시오.
+This selection determines the method by which dynamic scoring is applied.,이 선택에 따라 동적 스코어링이 적용되는 방법이 결정됩니다.
 This selection determines the method by which the scoreboard is primarily ranked.,이 선택에 따라 스코어 보드의 순위가 정해지는 방법이 결정됩니다.
 This selection determines the visibility of the scoreboard menu and pages.,이 선택에 따라 스코어 보드 메뉴 및 페이지의 가시성이 결정됩니다.
 "This will also delete associated IP addresses, boxes, and flags.","연관된 IP 주소, 상자 및 플래그도 삭제됩니다."
@@ -664,9 +678,3 @@ You have not submitted any bribes yet.,아직 뇌물을 제출하지 않았습�
 "Your email, visible to game administrators.",게임 관리자가 볼 수있는 이메일.
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","핸들은 3-16 자의 영숫자 문자 여야합니다. 밑줄, 대시 및 점이 허용됩니다."
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",게임 관리자에게 공개되는 귀하의 이름. 이름은 3 ~ 64 자의 영숫자 문자 일 수 있습니다
-Automatic Ban,자동 금지
-Export of gameplay settings does not include the entire server and database configuration.,게임 플레이 설정 내보내기에는 전체 서버 및 데이터베이스 구성이 포함되지 않습니다.
-Include gameplay settings (such as those under ,게임 플레이 설정 포함 (예 :
-and logos in export.,수출 로고.
-I accept the,동의합니다
-Privacy Policy,개인 정보 보호 정책

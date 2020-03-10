@@ -339,13 +339,43 @@
                     </div>
                 </div>
             </div>
-            <div id="dynamic_flag-grouping" class="control-group control-section">
-                <label class="control-label" for="flag_value_decrease">{{ _("Flag Decrease Value") }}</label>
-                <div class="controls">
-                    <input required id="flag_value_decrease" type="number" min="0" max="100" name="flag_value_decrease" value="{{ config.flag_value_decrease }}"
-                        rel="popover" pattern="\d*"
-                        data-original-title="{{ _('Flag Decrease Value') }}"
-                        data-content="{{ _('Decrease flag reward by this percent per capture.') }}" />
+            <div id="dynamic_flag-grouping">
+                <div class="control-group control-section">
+                    <label class="control-label" for="dynamic_flag_type">{{ _("Dynamic Decay Type") }}</label>
+                    <div class="controls">
+                        <select id="dynamic_flag_type" name="dynamic_flag_type" 
+                            rel="popover"
+                            data-original-title="{{ _('Dynamic Decay Type') }}"
+                            data-html="true"
+                            data-content="{{ _('This selection determines the method by which dynamic scoring is applied.') }}<br><br>
+                                <strong>{{_('Decrease Future Captures')}}</strong><br>{{ _('Decreases the flag value for future captures - this method rewards speed of capture.') }}<br><br>
+                                <strong>{{ _('Decrease All Captures') }}</strong><br>{{ _('Decreases the flag value for past and future team captures - this method rewards difficulty.') }}">
+                            <option value="decay_future" {% if config.dynamic_flag_type == "decay_future" %}selected{% end %}>
+                                {{_("Decrease Future Captures")}}
+                            </option>
+                            <option value="decay_all" {% if config.dynamic_flag_type == "decay_all" %}selected{% end %}>
+                                {{ _("Decrease All Captures") }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group control-section">
+                    <label class="control-label" for="flag_value_decrease">{{ _("Flag Decrease Value") }}</label>
+                    <div class="controls">
+                        <input required id="flag_value_decrease" type="number" min="0" max="100" name="flag_value_decrease" value="{{ config.flag_value_decrease }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="{{ _('Flag Decrease Value') }}"
+                            data-content="{{ _('Decrease flag reward by this percent per capture.') }}" />
+                    </div>
+                </div>
+                <div class="control-group control-section">
+                    <label class="control-label" for="flag_value_minimum">{{ _("Flag Minimum Value") }}</label>
+                    <div class="controls">
+                        <input required id="flag_value_minimum" type="number" name="flag_value_minimum" value="{{ config.flag_value_minimum }}"
+                            rel="popover" pattern="\d*"
+                            data-original-title="{{ _('Flag Minimum Value') }}"
+                            data-content="{{ _('Decrease flag until it reaches this minimum value.') }}" />
+                    </div>
                 </div>
             </div>
             <hr />

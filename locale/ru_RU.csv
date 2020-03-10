@@ -1,672 +1,680 @@
-(stop - start) * cost.,(стоп - старт) * стоимость.
-$,$
-A brief description of the box,Краткое описание коробки
-About,Около
-Accept,принимать
-Accept Bribe?,Принять взятку?
-Accept this bribe?,Принять эту взятку?
-Accepted,Принято
-Accepted / In Jail,Принят / в тюрьме
-Account Locked!,Учетная запись заблокирована!
-Account Password,Пароль от аккаунта
-Active Bots,Активные Боты
-Add,добавлять
-Add,добавлять
-add,добавлять
-Add a Category for Boxes.,Добавить категорию для ящиков.
-Add Flags,Добавить флаги
-Add Hint,Добавить подсказку
-Add IP address,Добавить IP-адрес
-Add IP Address,Добавить IP-адрес
-add some,Добавь немного
-Add Source Code,Добавить исходный код
-Add Source Code to Market,Добавить исходный код на рынок
-Add to Market,Добавить в Маркет
-Address,Адрес
-Admin,Администратор
-Admin Home,Admin Home
-Admin Message,Сообщение администратора
-Admin Notes,Замечания администратора
-Administrator Panel,Панель администратора
-Admins,Админы
-All Notifications,Все уведомления
-and so on,и так далее
-Apply penalty on attempt,Применить штраф при попытке
-Are you a Cylon?,Вы Сайлон?
-Are You Elite,Вы элита?
-Are you sure you want to buy this code?,"Вы уверены, что хотите купить этот код?"
-Are you sure you want to delete this box?,"Вы уверены, что хотите удалить это поле?"
-Are you sure you want to delete this category?,"Вы уверены, что хотите удалить эту категорию?"
-Are you sure you want to delete this corporation?,"Вы уверены, что хотите удалить эту корпорацию?"
-Are you sure you want to delete this file?,"Вы уверены, что хотите удалить этот файл?"
-Are you sure you want to delete this flag?,"Вы уверены, что хотите удалить этот флаг?"
-Are you sure you want to delete this game level?,"Вы уверены, что хотите удалить этот игровой уровень?"
-Are you sure you want to delete this hint?,"Вы уверены, что хотите удалить эту подсказку?"
-Are you sure you want to delete this IP address?,"Вы уверены, что хотите удалить этот IP-адрес?"
-Are you sure you want to delete this source code?,"Вы уверены, что хотите удалить этот исходный код?"
-Are you sure you want to delete this user?,"Вы уверены, что хотите удалить этого пользователя?"
-Are you sure you want to delete?,"Вы уверены, что хотите удалить?"
-Arrest Player,Арестовать игрока
-attempt,попытка
-attempt and continue until the,"попытаться и продолжить, пока"
-Attempts,попытки
-Authenticate,проверять подлинность
-Authentication Failure,Ошибка аутентификации
-Authentication Required,Требуется авторизация
-Avatar,Аватар
-Backup/Restore,Восстановления резервной копии
-Ban IP Address,Запретить IP-адрес
-Bank Account,Банковский счет
-Bank Account Balance,Баланс банковского счета
-Bank Hash Algorithm,Банковский хэш-алгоритм
-Bank Password,Пароль банка
-Bank Password Hash,Хэш банковского пароля
-Bank Password Length,Длина банковского пароля
-Banking System,Банковская система
-Banned IPs,Забаненные IP-адреса
-BEGIN SECURE COMMUNIQUE,НАЧАТЬ БЕЗОПАСНОЕ СООБЩЕНИЕ
-Black Market,Черный рынок
-Bonus reward for those that complete the level.,"Бонусная награда для тех, кто завершает уровень."
-Bot,Bot
-Bot added,Бот добавил
-Bot Reward,Бот Вознаграждение
-Botnet,Ботнет
-Botnet Command & Control,Botnet командование и управление
-Botnet Monitor,Ботнет Монитор
-Botnet Scored,Ботнет набрал
-Botnets,ботнеты
-Bots,Боты
-Box,коробка
-Box Difficulty,Сложность коробки
-Box Hints,Подсказки
-Box Hints Taken,Подсказки на коробке
-Box Name,Имя ящика
-Boxes,Ящики
-Bribe,взятка
-Bribe Amount,Сумма взятки
-Bribe History,История взятки
-Bribe Pending,Взятка в ожидании
-Bribe Price,Цена взятки
-Bribes in Progress,Взятки в процессе
-Buy,купить
-Buy Source Code,Купить исходный код
-Buy Upgrade,Купить обновление
-bytes,байтов
-Capture Message,Захват сообщения
-Capture Rate,Скорость захвата
-Captures,Захватывает
-Case-Sensitive,С учетом регистра
-Cash Stolen,Наличные украдены
-Categories,категории
-Category,категория
-Category box belongs too?,Категория коробки тоже принадлежит?
-Category Name,Название категории
-Change,+ Изменить
-Change Avatar,Сменить аватар
-Characters,Персонажи
-Charts,Графики
-Chat,чат
-Checksum,Контрольная сумма
-Choose,выберите
-Choose a name for your new team!,Выберите название для вашей новой команды!
-Choose Avatar,Выберите Аватар
-Classic,классический
-Clear,Очистить
-Clear all notifications and game history,Очистить все уведомления и историю игр
-Clear all team / player flag captures,Очистить все захваты флага команды / игрока
-Clear all team pastebin and file shares,Очистить все команды pastebin и общие файлы
-Clear market items or source code purchases,Очистить позиции на рынке или покупки исходного кода
-Click here to login,"Нажмите здесь, чтобы войти"
-Close,близко
-Command & Control,Командование и управление
-Complete,полный
-Complete Bribe,Полная взятка
-Complete this bribe?,Завершить эту взятку?
-Completed,Завершенный
-Completed Bribes,Завершенные взятки
-Completion Message,Завершение сообщения
-completion of Level,прохождение уровня
-Completion Reward,Завершение Награда
-Configuration,конфигурация
-Confirm,подтвердить
-Confirm Account Password,Подтвердите пароль учетной записи
-Confirm New Password,Подтвердите новый пароль
-Confirm Password,Подтвердите Пароль
-Content,содержание
-Content Missing,Содержание отсутствует
-Corporation,корпорация
-Corporation box belongs too?,Корпоративная коробка тоже принадлежит?
-Corporation Name,Название корпорации
-Corporations,корпорации
-Cost,Стоимость
-Cost to open this level and see flags,Стоит открыть этот уровень и посмотреть флаги
-Cracked by,Взломан
-Create,Создайте
-Create Box,Создать коробку
-Create Category,Создать категорию
-Create Corporation,Создать Корпорацию
-Create Datetime Flag,Создать флаг даты и времени
-Create File Flag,Флаг создания файла
-Create Flag,Создать флаг
-Create Game Level,Создать игровой уровень
-Create Hint,Создать подсказку
-Create Message,Создать сообщение
-Create Multiple Choice Flag,Создать флаг с множественным выбором
-Create New Paste,Создать новую вставку
-Create Notification,Создать уведомление
-Create Regex Flag,Создать флаг регулярного выражения
-Create Static Flag,Создать статический флаг
-Create Team,Создать команду
-Created,созданный
-Current algorithm,Текущий алгоритм
-Current Bank Account Password,Пароль текущего банковского счета
-Current Bank Password,Текущий банковский пароль
-Current Level,Текущий уровень
-Current Level,Текущий уровень
-CyberChef,CyberChef
-Data Points,Точки данных
-Date,Дата
-Datetime Flag,Флаг даты и времени
-Datetime Token,Токен
-DEBUG,DEBUG
-Decline,снижение
-Decline Bribe?,Отклонить взятку?
-Decline this bribe?,Отклонить эту взятку?
-Declined,Отклонено
-Decrease flag reward by this percent per capture.,Уменьшите награду за флаг на этот процент за захват.
-deduct on & after,вычитать на и после
-defaults to,по умолчанию
-Delete,удалять
-Delete Box,Удалить поле
-Delete Category,Удалить категорию
-Delete Corporation,Удалить корпорацию
-Delete File Upload,Удалить файл Загрузить
-Delete Flag,Удалить флаг
-Delete Game Level,Удалить игровой уровень
-Delete Hint,Удалить подсказку
-Delete IP Address,Удалить IP-адрес
-Delete Player,Удалить игрока
-Delete Source Code,Удалить исходный код
-Delete Team,Удалить команду
-Delete User,Удалить пользователя
-Dependent Flag,Зависимый флаг
-Description,Описание
-DESCRIPTION,ОПИСАНИЕ
-Details,подробности
-Difficulty,трудность
-Difficulty Rating,Рейтинг сложности
-Disable,запрещать
-Disabling this option will skip the story line and give the player an instant capture message.,Отключение этой опции пропустит сюжетную линию и даст игроку мгновенное сообщение о захвате.
-Display Hints Taken,Показать подсказки
-Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,"Не удаляйте и не изменяйте флаги сообщества без соответствующего указания. Не атакуйте других игроков, если они не обозначены в игровых целях."
-Download,Скачать
-Download File,Скачать файл
-Download the command line botnet monitor,Загрузите монитор ботнета из командной строки
-Dynamic Scoring,Динамический скоринг
-Each flag has a submit.  The player will choose the flag they intend to capture.,"Каждый флаг имеет отправку. Игрок выберет флаг, который намерен захватить."
-"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Каждый игрок будет решать задачи различной сложности и сложности, пытаясь собрать флаги и завоевать славу. Удачи!"
-Edit,редактировать
-Edit Account,Редактировать аккаунт
-Edit Box,Редактировать окно
-Edit Category,Изменить категорию
-Edit Corporation,Редактировать Корпорацию
-Edit Flag,Редактировать флаг
-Edit Flag,Редактировать флаг
-Edit Game Level,Изменить уровень игры
-Edit Hint,Изменить подсказку
-Edit Level,Изменить уровень
-Edit Market Item,Редактировать товар
-Edit Player,Изменить игрока
-Edit Team,Редактировать команду
-Edit User,Редактировать пользователя
-Email,Эл. адрес
-EMPTY,EMPTY
-Enable,включить
-"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.","Включение этой функции позволит игрокам создавать свои собственные команды во время регистрации. Если эта опция отключена, администратор должен создавать команды для игроков, чтобы присоединиться."
-Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,Включение этой функции позволит игрокам обмениваться кодом (pastebin) и файлами в игре. Отключение этой функции удалит эти параметры из меню инструментов.
-"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","Включение этой функции позволит командам приобретать обновления, такие как Федеральная резервная система, Рынок исходного кода или SWAT."
-"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.","Включение этой функции позволит игре отображать флажки или сообщения о захвате полей, которые могут быть добавлены. По умолчанию игра следует сюжетной линии Морриса, работодателя, который назначает миссии."
-"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.","Включение этой функции приведет к штрафу за неправильные попытки захвата. Наказанием является мгновенное вычитание из оценки, а не уменьшение значения флага."
-"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.","Включение этой функции уменьшит вознаграждение за флаг в зависимости от количества захватов. Если эта опция отключена, значение флага остается неизменным, поскольку другие игроки фиксируют его."
-Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,"Включение этой функции покажет количество подсказок, взятых на табло командой или игроком. Полезно, когда подсказки бесплатны. Меньшее количество подсказок используется для сортировки, когда баллы или флаги равны. Отключение этой опции удалит количество подсказок с табло."
-"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.","Включение этой функции отобразит табло игрока MVP. Любой игрок, который принес очки в команду, будет отображаться. Если эта опция отключена, табло MVP будет скрыто."
-Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,Включение этой функции потребует от игроков предоставить действительный регистрационный токен для создания новой учетной записи. Регистрационные токены создаются в интерфейсе администратора.
-Enabling this feature will require players to provide an email address in order to create a new account.,Включение этой функции потребует от игроков предоставления адреса электронной почты для создания новой учетной записи.
-Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,Включение этой функции отправит уведомления о разблокировке флага и уровня всем игрокам в игре. Отключение этой опции ограничит эти уведомления членами команды.
-"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.","Включение этой функции позволит настроить игру и табло для командных соревнований. Если эта опция отключена, игра настраивается для индивидуальной соревновательной игры."
-"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.","Включение этой функции заставит игру использовать систему начисления денег. Если эта опция отключена, игра использует систему начисления очков."
-"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.","Включение этой опции установит токен чувствительным к регистру. Если эта опция отключена, токен ответа не учитывает регистр."
-"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.","Включение этой опции установит, что токен будет чувствительным к регистру. Если эта опция отключена, токен ответа не учитывает регистр."
-Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,"Включение этого параметра активирует функции ботнета. Команды могут запускать исполняемые файлы своих ботов на своих боксах, и со временем им платят за каждого бота."
-END SECURE COMMUNIQUE,КОНЕЦ БЕЗОПАСНОГО СООБЩЕНИЯ
-Enter a complex password of,Введите сложный пароль
-Enter a Matching Flag,Введите соответствующий флаг
-Enter Choice,Введите выбор
-Enter the same password as before,"Введите тот же пароль, что и раньше"
-ERROR,ОШИБКА
-Export Game Objects,Экспорт игровых объектов
-Export XML,Экспорт XML
-Export XML,Экспорт XML
-Failed Attempts,Неудачные попытки
-Failed Logins,Неудачные логины
-Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,"Отказ имеет цену. Будьте осторожны, так как штрафные санкции применяются при отправке неправильных ответов."
-Federal Reserve,Федеральный резерв
-Federal Reserve Bank,Федеральный резервный банк
-File,файл
-File Description,описание файла
-File Flag,Флаг файла
-File Name,Имя файла
-File Share,Файловый ресурс
-File Sharing,Обмен файлами
-File Size,Размер файла
-First Login,Первый вход
-Flag,Флаг
-Flag Capture,Захват флага
-Flag Decrease Value,Флаг Уменьшить значение
-Flag Details,Детали флага
-Flag File,Файл флага
-Flag Hints,Флаг Подсказки
-Flag Name,Имя флага
-Flag Penalty,Штраф
-Flag Penalty % Cost,Флаг Штраф% Стоимость
-Flag Penalty Cost,Флаг Штраф Стоимость
-Flag Penalty Start,Флаг штрафного старта
-Flag Penalty Stop,Флаг штрафной остановки
-Flag Submission Type,Тип представления флага
-Flag Type,Тип флага
-Flags,Флаги
-Flags / Boxes / Corp.,Флаги / Коробки / Корп.
-Flags Captured,Захваченные флаги
-Flags on,Флаги на
-for,за
-Forbidden,запрещено
-Game,Игра
-Game Control,Управление игрой
-Game Information,Информация об игре
-Game Level,Уровень игры
-Game Levels,Уровни игры
-Game Management,Управление игрой
-Game Materials,Игровые материалы
-Game Name,Название игры
-Game Progress,Прогресс игры
-Garbage File,Файл мусора
-Get help with,Получить помощь с
-Get your registration token from reception,Получите регистрационный токен на стойке регистрации
-Glitch in the Matrix,Глюк в матрице
-Global Notifications,Глобальные уведомления
-Handle,Справиться
-Hint,намек
-Hint not yet taken,Подсказка еще не принята
-Hint Taken,Подсказка
-Hints,Советы
-Hints on,Советы по
-Hints Taken,Советы взяты
-History,история
-Home,Главная
-How should the next level unlock?,Как разблокировать следующий уровень?
-"If the flag selection is left empty, the hint will be considered a Box Hint.","Если флажок оставлен пустым, подсказка"
-"If this option is disabled, there is no cost for submitting incorrect flags.","Если эта опция отключена, отправка неправильных флагов бесплатна."
-Import File,Импортировать файл
-Import XML,Импорт XML
-Import XML,Импорт XML
-In Progress,В ходе выполнения
-"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","В этом случае флаг является строкой даты / времени. Этот тип флага будет пытаться соответствовать обычным вариантам формата даты и времени и учитывать такие различия, как косая черта, тире, заполнение, 12 часов, 24 часа и т. Д. Он может обрабатывать дату, время или дату и время."
-"In this case, the flag is a multiple choice question where the selected option is the token.","В этом случае флаг является вопросом с несколькими вариантами ответов, где выбранный параметр является токеном."
-"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","В этом случае флаг является регулярным выражением. Пользователь должен отправить строку, которая соответствует шаблону, чтобы захватить флаг. Совпадения могут быть нечувствительными. Пожалуйста, не забудьте проверить свое регулярное выражение и убедитесь, что оно не слишком широкое."
-"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",В этом случае флаг является статической строкой. Пользователь должен предоставить точный токен для захвата флага. Пробелы в начале и в конце удаляются.
-Income,доход
-Incoming Transmission,Входящая передача
-Incorrect,некорректный
-Incorrect Penalty,Неверный штраф
-indicates use by another player,указывает на использование другим игроком
-INFO,ИНФОРМАЦИЯ
-Information,Информация
-Invalid CSRF Token,Неверный токен CSRF
-IP Address,Айпи адрес
-IP Version,IP версия
-It appears you're an unsophisticated script kiddie!,"Похоже, вы неискушенный сценарист, детка!"
-"It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).","Он может быть виден всем посетителям (общедоступным), аутентифицированным пользователям (игрокам) или только администраторам (администраторам)."
-"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.","Похоже, вы неправильно ввели URL или пытались найти то, к чему у вас не должно быть доступа."
-"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.","Речь идет о деньгах, и пришло время заработать на этих навыках! Эта игра настроена на использование банковской системы, поэтому не теряйте времени, чтобы накопить свое состояние и купить то, что вам нужно, чтобы выиграть."
-Item Cost,Стоимость предмета
-Join Existing Team,Присоединиться к существующей команде
-Known IP Addresses,Известные IP-адреса
-Last Ping,Последний пинг
-Learn,Учить
-Level,уровень
-Level Name,Название уровня
-Level Number,Номер уровня
-Level to put box in?,"Уровень, чтобы положить коробку в?"
-Level Unlocked,Уровень разблокирован
-Limit number of players that can be on any one team,"Ограничить количество игроков, которые могут быть в одной команде"
-"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Ограничивает количество попыток захвата флага. Как только предел достигнут, никакие дальнейшие действия с этим флагом не могут быть предприняты."
-Linux,Linux
-Lock,Замок
-Locked by,Закрыто
-Login,Авторизоваться
-Login Password,Логин Пароль
-Logout,Выйти
-MacOS,MacOS
-Mainframe Console,Консоль мейнфрейма
-Manage Black Market,Управление черным рынком
-Manage Categories,Управление категориями
-Market Objects,Объекты рынка
-Max,Максимум
-Max Flag Attempts,Макс флаг пытается
-Max PasteBin Size,Максимальный размер PasteBin
-Max Team Size,Максимальный размер команды
-Maximum Flag Attempts,Максимальные попытки флага
-Maximum Penalty,Максимальный штраф
-Maximum Penalty is determined as,Максимальный штраф определяется как
-Min user password length,Минимальная длина пароля пользователя
-Minimum User Password Length,Минимальная длина пароля пользователя
-Mission Progress,Миссия Прогресс
-Missions,Миссии
-Modifies the way flag submission are made.,Изменяет способ отправки флага.
-Money,Деньги
-money,Деньги
-Motto,девиз
-Multiple Choice,Большой выбор
-Multiple Choice Flag,Флаг множественного выбора
-Must be unique,Должно быть уникальным
-MVP,MVP
-MVP - List Top N Payers,MVP - Список лучших N плательщиков
-MVP List Top,Топ списка MVP
-MVP Scoreboard,Табло MVP
-MVP Scoreboard,Табло MVP
-Name,название
-Never,Никогда
-New Bank Account Password,Пароль нового банковского счета
-New Bank Password,Новый банковский пароль
-New Box,Новая коробка
-New Category,Новая категория
-New Corporation,Новая Корпорация
-New Flag,Новый флаг
-New Game Level,Новый игровой уровень
-New IP Address,Новый IP-адрес
-New Password,новый пароль
-New Team,Новая команда
-New Team Member,Новый член команды
-New Team Name,Название новой команды
-No,нет
-No Avatar,Нет аватара
-No Boxes,Нет коробки
-No boxes in this corporation yet,В этой корпорации пока нет коробок
-No boxes on this level yet,На этом уровне еще нет коробок
-No Bribes in Progress,Никаких взяток в процессе
-No Completed Bribes,Нет взятки
-No flags captured yet.,Нет захваченных флагов.
-No flags on this box yet,Нет флажков на этом поле
-No further penalty thereafter.,Никаких дополнительных штрафов после этого.
-No Lock,Нет блокировки
-No name,Без имени
-No Pending Bribes,Нет ожидающих взяток
-No sheep yet - check back later.,Овец пока нет - зайдите позже.
-No Source Code For Sale at This Time,В настоящее время нет исходного кода для продажи
-No Tokens in Database,В базе данных нет токенов
-No upgrades left.,Нет обновлений не осталось.
-No Users,Нет пользователей
-None,Никто
-Noob Alert,Noob Alert
-"Not all options are accessible in the web configuration.  For more, see",Не все параметры доступны в веб-конфигурации. Для получения дополнительной информации см.
-Note,Заметка
-Note: Files or documents for the challenge can be placed in the Game Materials.,Примечание: файлы или документы для участия в конкурсе могут быть размещены в игровых материалах.
-Note: Files or documents for the challenge can be placed in the Game Materials.,Примечание: файлы или документы для участия в конкурсе могут быть размещены в игровых материалах.
-NOTE: Max attempts and penalties will not be applied in Single Box mode.,ПРИМЕЧАНИЕ. Максимальное количество попыток и штрафов не будут применяться в режиме единого ящика.
-NOTE: This setting is ignored if the box flag submission type is set to Single Box.,"ПРИМЕЧАНИЕ. Этот параметр игнорируется, если для типа отправки флажка задано значение «Один ящик»."
-Notification Message,Уведомление
-Notifications,Уведомления
-Number of Bots,Количество ботов
-Number of Flags,Количество флагов
-Number of new Level,Номер нового уровня
-of Flag Value,значения флага
-of the flag's value. It will start on the,значения флага. Это начнется на
-Old Password,Прежний пароль
-One submission box for any flag.  Compares attempts against all flags in the box.,Один ящик для представления для любого флага. Сравнивает попытки против всех флагов в окне.
-only,только
-Optional,Необязательный
-Or Choose Existing,Или выберите существующий
-Outcome,результат
-Outcome,результат
-Password,пароль
-Password Cracked,Пароль взломан
-Password Cracking Leaderboard,Таблица лидеров взлома паролей
-Password Hash,Хэш пароля
-Password Security,Безопасность пароля
-Password Upgrade Cost,Стоимость обновления пароля
-Passwords Cracked,Взломанные пароли
-Paste Name,Вставить имя
-Paste Text Here,Вставить текст сюда
-PasteBin,Pastebin
-Pastebin Character Limit,Pastebin Character Limit
-Pause Registration,Пауза Регистрация
-Pause Scoreboard,Пауза Табло
-Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Штрафуйте счет этим процентом от значения флага за каждую неверную попытку (применяется после динамического подсчета, если он включен)"
-Pending,в ожидании
-Pending Bribes,В ожидании взятки
-Plain Text,Простой текст
-Play Story,Play Story
-player,игрок
-Player,игрок
-Player Alias,Псевдоним игрока
-Player Arrested!,Игрок арестован!
-Player Email,Электронная почта игрока
-Player Name,Имя игрока
-"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","Также доступны пароли банковского счета игрока, что позволяет взломать пароли друг друга и украсть деньги."
-Players,игроки
-Please do NOT enter your real bank account password.,"Пожалуйста, НЕ вводите пароль вашего реального банковского счета."
-points,точки
-Points,Точки
-points,точки
-Previous Bribes,Предыдущие взятки
-Price,Цена
-Private,Частный
-Programming,программирование
-Provide the code used to join an existing team.  Visible to other team members on their home page.,"Укажите код, используемый для присоединения к существующей команде. Доступно для других членов команды на их домашней странице."
-Public,общественного
-Public Team Creation,Создание публичной команды
-Public Teams,Общественные Команды
-Purchase,покупка
-Purchase Unlock,Купить разблокировать
-Purchased,купленный
-Rank By,Рейтинг по
-Regex Flag,Флаг регулярных выражений
-Regex Pattern,Шаблон регулярных выражений
-Register Account,Регистрация Аккаунта
-Registration,Постановка на учет
-Registration Email,Электронный адрес регистрации
-Registration Tokens,Жетоны регистрации
-Regular Expression,Регулярное выражение
-Require Email,Требовать электронную почту
-Reset Actions,Сбросить действия
-Reset Game,Сбросить игру
-Reset Game,Сбросить игру
-Reset player / team starting points / money,"Сбросить игрока / команды, стартовые очки / деньги"
-Restrict players bank password to this length,Ограничьте пароль банка игроков этой длиной
-Restrict players user password to this length,Ограничьте пароль пользователя игроками этой длиной
-Resume Registration,Резюме Регистрация
-Resume Scoreboard,Табло резюме
-Return to Edit,Вернуться к редактированию
-Return to Missions,Вернуться к миссиям
-Reward,Вознаграждение
-Role,Роль
-Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,"Правила участия: не атакуйте игровое табло платформы. Не меняйте пароли существующих учетных записей в сети, если это не указано в игровой задаче."
-S.W.A.T,S.W.A.T
-Save,Сохранить
-Score,Гол
-Scoreboard,Табло
-Scoreboard Rank By,Табло рейтинга по
-Scoreboard Visibility,Видимость табло
-Security Breach,Нарушение безопасности
-See All,Увидеть все
-Select a Theme,Выберите тему
-Select Avatar,Выберите Аватар
-Select New Avatar,Выберите новый аватар
-Send,послать
-Send a global notification to all players,Отправить глобальное уведомление всем игрокам
-Set Countdown Timer,Установить таймер обратного отсчета
-Set the game countdown timer,Установите таймер обратного отсчета игры
-Settings,настройки
-Share your team code to allow other players to join,"Поделитесь кодом своей команды, чтобы позволить другим игрокам присоединиться"
-Shared Files,Общие файлы
-Sheep,Овца
-Show MVP,Показать MVP
-Since Score,С балла
-Single Box,Одиночная коробка
-Skill Progress,Умение Прогресс
-Source Code,Исходный код
-Source Code Archive,Архив исходного кода
-Source Code Market,Исходный код Market
-Special Thanks,Особая благодарность
-Start a New Team,Начать новую команду
-Start the Game,Начать игру
-start with 0 points,начать с 0 баллов
-Starting Money,Начальные деньги
-Static Flag,Статический флаг
-Static Token,Статический токен
-Statistics,Статистика
-stop on & after,остановиться на и после
-Stop the Game,Остановить игру
-Stop the game after timer ends,Остановить игру после окончания таймера
-Story,История
-Story Mode,Режим истории
-Submit,Отправить
-Submit a Bug,Отправить ошибку
-Submit a Flag,Отправить флаг
-Submit Bribe,Подать взятку
-Submit Bribes,Подавать взятки
-Submit Flag,Отправить флаг
-SUCCESS,УСПЕХ
-Success!,Успех!
-Successful,успешный
-Successful Captures,Успешные захваты
-Successful Registration,Успешная регистрация
-Successfully created a new account for,Успешно создан новый аккаунт для
-Summary,Резюме
-Supports,опоры
-Switch Level,Уровень переключателя
-System Type,Тип системы
-Take,принимать
-Take Hint,Принять подсказку
-Taken,взятый
-Target,цель
-Target Handle,Целевая ручка
-Target Management,Целевое управление
-team,команда
-Team,команда
-Team Avatar,Командный Аватар
-Team Code,Код команды
-Team File Share,Командный файл Поделиться
-Team Information,Информация о команде
-Team Motto,Девиз команды
-Team Name,Название команды
-Team PasteBin,Команда PasteBin
-Team Play,Командная игра
-Team Shares,Командные акции
-Team Sharing,Командный обмен
-Teams,Команды
-Test Flag,Тестовый флаг
-Text Share,Текст Поделиться
-The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,"Черный рынок открыт, и вы знаете парня. Загрузите исходный код цели или S.W.A.T. другие игроки, подкупая (в игре) полицию."
-The cost to take the hint.  Can be >= 0.,"Стоимость, чтобы взять подсказку. Может быть> = 0."
-The deduction is,Вычет
-"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.","Единственная другая возможность состоит в том, что я испортил часть кода, и это не очень вероятно."
-The starting money for a new,Стартовые деньги для нового
-Theme,тема
-There are currently no shared files.,В настоящее время нет общих файлов.
-"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","Эти флаги являются файлами, пользователи должны предоставить один и тот же файл для захвата флага. Только хэш (SHA1) файла хранится на сервере."
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","Эта игра настроена на использование динамического подсчета очков, то есть, когда другие игроки захватывают флаги, значение этих флагов будет уменьшаться. Так что хватай их быстро или проиграй!"
-This is a test flag/string the user could input for credit.,"Это тестовый флаг / строка, которую пользователь может ввести для кредита."
-This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,"Это сумма, которую игрок должен заплатить S.W.A.T. аккаунт другого игрока. Последующие спецназы того же игрока также увеличиваются на эту сумму каждый раз."
-This is the amount a player must pay to upgrade their bank passwords hashing algorithm,"Это сумма, которую игрок должен заплатить, чтобы обновить алгоритм хэширования своих банковских паролей."
-This is the amount awarded for capturing the flag.,"Это сумма, присуждаемая за захват флага."
-This is the amount awarded for completion of the box.,"Это сумма, присужденная за заполнение коробки."
-This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually,"Это сумма денег, которую команда получает за каждого бота за каждый интервал. Интервал должен быть установлен в файле .cfg вручную"
-This is the box the flag is located on.,"Это коробка, на которой находится флаг."
-This is the description,Это описание
-This is the maximum number of players displayed on the MVP list (default 10) with a score > 0.,"Это максимальное количество игроков, отображаемых в списке MVP (по умолчанию 10) со счетом> 0."
-This is the message displayed to the user once the box is completed.,"Это сообщение, отображаемое пользователю после заполнения окна."
-This is the message displayed to the user once the flag is captured.,Это сообщение отображается пользователю после захвата флага.
-This is the name that will appear in the upper left corner,"Это имя, которое появится в верхнем левом углу"
-This is the the limit of characters allowed for a pastebin post.,"Это предел символов, разрешенных для поста вставки."
-This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,"Это то, что вы хотите, чтобы флаг отображался как. Оставьте пустым, чтобы имя автоматически указывалось по номеру заказа."
-This selection determines the method by which the scoreboard is primarily ranked.,Этот выбор определяет метод ранжирования табло.
-This selection determines the visibility of the scoreboard menu and pages.,Этот выбор определяет видимость меню и страниц табло.
-"This will also delete associated IP addresses, boxes, and flags.","Это также приведет к удалению связанных IP-адресов, полей и флагов."
-"This will also delete associated IP addresses, hints, and flags.","Это также приведет к удалению связанных IP-адресов, подсказок и флагов."
-This will also delete boxes and flags associated with this level.,"Это также удалит поля и флаги, связанные с этим уровнем."
-This will delete the player and the associated user account!,Это удалит игрока и связанную учетную запись пользователя!
-This will delete the team and any associated user accounts!,Это удалит команду и все связанные учетные записи пользователей!
-Threshold,порог
-Time,Время
-"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.","Время создать ботнет. Загружая небольшую бот-программу на целевые машины, вы можете периодически получать вознаграждение за каждого бота в вашей бот-сети; чем больше ботнет, тем больше награда."
-to Add,добавить
-to Add or Subtract,сложить или вычесть
-"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.","Чтобы восстановить этот экземпляр RTB, вам также может понадобиться содержимое в каталоге files, чтобы включить rootthebox.cfg."
-Token,знак
-Token Value,Значение токена
-Tools,инструменты
-Tools & Upgrades,Инструменты и обновления
-Total Cash Stolen,Всего украдено
-Type,Тип
-Unknown,неизвестный
-Unlock,отпереть
-Unlock Cost,Стоимость разблокировки
-Unlock Level,Уровень разблокировки
-Unlocks,Отпирает
-Unlocks after,Разблокирует после
-Unlocks for,Разблокирует для
-Update Bank Password,Обновить пароль банка
-Update Configuration,Обновить конфигурацию
-Update Password,Обновить пароль
-Update RootTheBox,Обновление RootTheBox
-Upgrade Purchased,Обновление куплено
-Upgrade to,Обновитесь до
-Upload,Загрузить
-Upload Avatar,Загрузить аватар
-Upload Avatar File,Загрузить файл аватара
-Upload Files,Загрузить файлы
-Used,Используемый
-Used to secure your (in-game) bank account.,Используется для защиты вашего (внутриигрового) банковского счета.
-User Handle,Дескриптор пользователя
-User Management,Управление пользователями
-Users / Teams,Пользователи / Команды
-Value,Значение
-View,Посмотреть
-View Box,Окно просмотра
-View Details,Посмотреть детали
-Visible,видимый
-Visible to Players,Видно игрокам
-Waiting for the game to start‚Ä¶,В ожидании начала игры…
-Wall of Sheep,Стена овец
-WARNING,ПРЕДУПРЕЖДЕНИЕ
-Welcome,желанный
-Welcome to the computer war game where security professionals can practice and learn.,"Добро пожаловать в компьютерную военную игру, где специалисты по безопасности могут практиковаться и учиться"
-Welcome to the Scene,Добро пожаловать на сцену
-What is the name of this box?,Как называется эта коробка?
-"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.","Как называется ваша корпорация? Если вы не планируете использовать корпорации, просто создайте без названия."
-What is your motto?,Какой у тебя девиз?
-What is your teams motto?,Какой девиз вашей команды?
-What type of system is this?,Что это за система?
-Whats the difficulty of the box?,В чем сложность коробки?
-When banking is disabled,Когда банкинг отключен
-"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.","Когда начинать применять штраф Например, вы можете захотеть, чтобы первая неправильная попытка была бесплатной, но оштрафовать последующие попытки."
-"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","Когда прекратить применять штраф. Например, вы можете захотеть оштрафовать только определенную сумму от значения флагов и разрешить любые дальнейшие попытки быть свободными, таким образом позволяя всем флагам иметь некоторое значение."
-when using banking.,при использовании банковского дела.
-Windows,Windows
-With contributions from,С взносами от
-XML File,XML-файл
-Yes,да
-You are not on a team,Вы не в команде
-You do not have access to this level yet.,У вас еще нет доступа к этому уровню.
-You do not own this upgrade.,Вы не являетесь владельцем этого обновления.
-You have not submitted any bribes yet.,Вы еще не предоставили взятки.
-"Your email, visible to game administrators.","Ваш электронный адрес, видимый для администраторов игр."
-"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Ваш дескриптор должен состоять из 3-16 буквенно-цифровых символов. Подчеркивание, тире и точки разрешены."
-"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Ваше имя, видимое для администраторов игр. Ваше имя может состоять из 3-64 буквенно-цифровых символов"
-Automatic Ban,Автоматический бан
-Export of gameplay settings does not include the entire server and database configuration.,Экспорт настроек игрового процесса не включает в себя всю конфигурацию сервера и базы данных.
-Include gameplay settings (such as those under ,"Включите настройки игры (например, в рамках"
-and logos in export.,и логотипы в экспорте.
-I accept the,Я принимаю
-Privacy Policy,Политика конфиденциальности
+(stop - start) * cost.,(стоп - старт) * стоимость.,
+$,$,
+A brief description of the box,Краткое описание коробки,
+About,Около,
+Accept,принимать,
+Accept Bribe?,Принять взятку?,
+Accept this bribe?,Принять эту взятку?,
+Accepted,Принято,
+Accepted / In Jail,Принят / в тюрьме,
+Account Locked!,Учетная запись заблокирована!,
+Account Password,Пароль от аккаунта,
+Active Bots,Активные Боты,
+Add,добавлять,
+Add,добавлять,
+add,добавлять,
+Add a Category for Boxes.,Добавить категорию для ящиков.,
+Add Flags,Добавить флаги,
+Add Hint,Добавить подсказку,
+Add IP address,Добавить IP-адрес,
+Add IP Address,Добавить IP-адрес,
+add some,Добавь немного,
+Add Source Code,Добавить исходный код,
+Add Source Code to Market,Добавить исходный код на рынок,
+Add to Market,Добавить в Маркет,
+Address,Адрес,
+Admin,Администратор,
+Admin Home,Admin Home,
+Admin Message,Сообщение администратора,
+Admin Notes,Замечания администратора,
+Administrator Panel,Панель администратора,
+Admins,Админы,
+All Notifications,Все уведомления,
+and logos in export.,и логотипы в экспорте.,
+and so on,и так далее,
+Apply penalty on attempt,Применить штраф при попытке,
+Are you a Cylon?,Вы Сайлон?,
+Are You Elite,Вы элита?,
+Are you sure you want to buy this code?,"Вы уверены, что хотите купить этот код?",
+Are you sure you want to delete this box?,"Вы уверены, что хотите удалить это поле?",
+Are you sure you want to delete this category?,"Вы уверены, что хотите удалить эту категорию?",
+Are you sure you want to delete this corporation?,"Вы уверены, что хотите удалить эту корпорацию?",
+Are you sure you want to delete this file?,"Вы уверены, что хотите удалить этот файл?",
+Are you sure you want to delete this flag?,"Вы уверены, что хотите удалить этот флаг?",
+Are you sure you want to delete this game level?,"Вы уверены, что хотите удалить этот игровой уровень?",
+Are you sure you want to delete this hint?,"Вы уверены, что хотите удалить эту подсказку?",
+Are you sure you want to delete this IP address?,"Вы уверены, что хотите удалить этот IP-адрес?",
+Are you sure you want to delete this source code?,"Вы уверены, что хотите удалить этот исходный код?",
+Are you sure you want to delete this user?,"Вы уверены, что хотите удалить этого пользователя?",
+Are you sure you want to delete?,"Вы уверены, что хотите удалить?",
+Arrest Player,Арестовать игрока,
+attempt,попытка,
+attempt and continue until the,"попытаться и продолжить, пока",
+Attempts,попытки,
+Authenticate,проверять подлинность,
+Authentication Failure,Ошибка аутентификации,
+Authentication Required,Требуется авторизация,
+Automatic Ban,Автоматический бан,
+Avatar,Аватар,
+Backup/Restore,Восстановления резервной копии,
+Ban IP Address,Запретить IP-адрес,
+Bank Account,Банковский счет,
+Bank Account Balance,Баланс банковского счета,
+Bank Hash Algorithm,Банковский хэш-алгоритм,
+Bank Password,Пароль банка,
+Bank Password Hash,Хэш банковского пароля,
+Bank Password Length,Длина банковского пароля,
+Banking System,Банковская система,
+Banned IPs,Забаненные IP-адреса,
+BEGIN SECURE COMMUNIQUE,НАЧАТЬ БЕЗОПАСНОЕ СООБЩЕНИЕ,
+Black Market,Черный рынок,
+Bonus reward for those that complete the level.,"Бонусная награда для тех, кто завершает уровень.",
+Bot,Bot,
+Bot added,Бот добавил,
+Bot Reward,Бот Вознаграждение,
+Botnet,Ботнет,
+Botnet Command & Control,Botnet командование и управление,
+Botnet Monitor,Ботнет Монитор,
+Botnet Scored,Ботнет набрал,
+Botnets,ботнеты,
+Bots,Боты,
+Box,коробка,
+Box Difficulty,Сложность коробки,
+Box Hints,Подсказки,
+Box Hints Taken,Подсказки на коробке,
+Box Name,Имя ящика,
+Boxes,Ящики,
+Bribe,взятка,
+Bribe Amount,Сумма взятки,
+Bribe History,История взятки,
+Bribe Pending,Взятка в ожидании,
+Bribe Price,Цена взятки,
+Bribes in Progress,Взятки в процессе,
+Buy,купить,
+Buy Source Code,Купить исходный код,
+Buy Upgrade,Купить обновление,
+bytes,байтов,
+Capture Message,Захват сообщения,
+Capture Rate,Скорость захвата,
+Captures,Захватывает,
+Case-Sensitive,С учетом регистра,
+Cash Stolen,Наличные украдены,
+Categories,категории,
+Category,категория,
+Category box belongs too?,Категория коробки тоже принадлежит?,
+Category Name,Название категории,
+Change,+ Изменить,
+Change Avatar,Сменить аватар,
+Characters,Персонажи,
+Charts,Графики,
+Chat,чат,
+Checksum,Контрольная сумма,
+Choose,выберите,
+Choose a name for your new team!,Выберите название для вашей новой команды!,
+Choose Avatar,Выберите Аватар,
+Classic,классический,
+Clear,Очистить,
+Clear all notifications and game history,Очистить все уведомления и историю игр,
+Clear all team / player flag captures,Очистить все захваты флага команды / игрока,
+Clear all team pastebin and file shares,Очистить все команды pastebin и общие файлы,
+Clear market items or source code purchases,Очистить позиции на рынке или покупки исходного кода,
+Click here to login,"Нажмите здесь, чтобы войти",
+Close,близко,
+Command & Control,Командование и управление,
+Complete,полный,
+Complete Bribe,Полная взятка,
+Complete this bribe?,Завершить эту взятку?,
+Completed,Завершенный,
+Completed Bribes,Завершенные взятки,
+Completion Message,Завершение сообщения,
+completion of Level,прохождение уровня,
+Completion Reward,Завершение Награда,
+Configuration,конфигурация,
+Confirm,подтвердить,
+Confirm Account Password,Подтвердите пароль учетной записи,
+Confirm New Password,Подтвердите новый пароль,
+Confirm Password,Подтвердите Пароль,
+Content,содержание,
+Content Missing,Содержание отсутствует,
+Corporation,корпорация,
+Corporation box belongs too?,Корпоративная коробка тоже принадлежит?,
+Corporation Name,Название корпорации,
+Corporations,корпорации,
+Cost,Стоимость,
+Cost to open this level and see flags,Стоит открыть этот уровень и посмотреть флаги,
+Cracked by,Взломан,
+Create,Создайте,
+Create Box,Создать коробку,
+Create Category,Создать категорию,
+Create Corporation,Создать Корпорацию,
+Create Datetime Flag,Создать флаг даты и времени,
+Create File Flag,Флаг создания файла,
+Create Flag,Создать флаг,
+Create Game Level,Создать игровой уровень,
+Create Hint,Создать подсказку,
+Create Message,Создать сообщение,
+Create Multiple Choice Flag,Создать флаг с множественным выбором,
+Create New Paste,Создать новую вставку,
+Create Notification,Создать уведомление,
+Create Regex Flag,Создать флаг регулярного выражения,
+Create Static Flag,Создать статический флаг,
+Create Team,Создать команду,
+Created,созданный,
+Current algorithm,Текущий алгоритм,
+Current Bank Account Password,Пароль текущего банковского счета,
+Current Bank Password,Текущий банковский пароль,
+Current Level,Текущий уровень,
+Current Level,Текущий уровень,
+CyberChef,CyberChef,
+Data Points,Точки данных,
+Date,Дата,
+Datetime Flag,Флаг даты и времени,
+Datetime Token,Токен,
+DEBUG,DEBUG,
+Decline,снижение,
+Decline Bribe?,Отклонить взятку?,
+Decline this bribe?,Отклонить эту взятку?,
+Declined,Отклонено,
+Decrease All Captures,Уменьшить все захваты,
+Decrease flag reward by this percent per capture.,Уменьшите награду за флаг на этот процент за захват.,
+Decrease flag until it reaches this minimum value.,"Уменьшайте флаг, пока он не достигнет этого минимального значения.",
+Decrease Future Captures,Уменьшить будущие захваты,
+Decreases the flag value for future captures - this method rewards speed of capture.,Уменьшает значение флага для будущих захватов - этот метод поощряет скорость захвата.,
+Decreases the flag value for past and future team captures - this method rewards difficulty.,Уменьшает значение флага для прошлых и будущих захватов команды - этот метод вознаграждает за сложность.,
+deduct on & after,вычитать на и после,
+defaults to,по умолчанию,
+Delete,удалять,
+Delete Box,Удалить поле,
+Delete Category,Удалить категорию,
+Delete Corporation,Удалить корпорацию,
+Delete File Upload,Удалить файл Загрузить,
+Delete Flag,Удалить флаг,
+Delete Game Level,Удалить игровой уровень,
+Delete Hint,Удалить подсказку,
+Delete IP Address,Удалить IP-адрес,
+Delete Player,Удалить игрока,
+Delete Source Code,Удалить исходный код,
+Delete Team,Удалить команду,
+Delete User,Удалить пользователя,
+Dependent Flag,Зависимый флаг,
+Description,Описание,
+DESCRIPTION,ОПИСАНИЕ,
+Details,подробности,
+Difficulty,трудность,
+Difficulty Rating,Рейтинг сложности,
+Disable,запрещать,
+Disabling this option will skip the story line and give the player an instant capture message.,Отключение этой опции пропустит сюжетную линию и даст игроку мгновенное сообщение о захвате.,
+Display Hints Taken,Показать подсказки,
+Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,"Не удаляйте и не изменяйте флаги сообщества без соответствующего указания. Не атакуйте других игроков, если они не обозначены в игровых целях.",
+Download,Скачать,
+Download File,Скачать файл,
+Download the command line botnet monitor,Загрузите монитор ботнета из командной строки,
+Dynamic Decay Type,Тип динамического распада,
+Dynamic Scoring,Динамический скоринг,
+Each flag has a submit.  The player will choose the flag they intend to capture.,"Каждый флаг имеет отправку. Игрок выберет флаг, который намерен захватить.",
+"Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Каждый игрок будет решать задачи различной сложности и сложности, пытаясь собрать флаги и завоевать славу. Удачи!",
+Edit,редактировать,
+Edit Account,Редактировать аккаунт,
+Edit Box,Редактировать окно,
+Edit Category,Изменить категорию,
+Edit Corporation,Редактировать Корпорацию,
+Edit Flag,Редактировать флаг,
+Edit Flag,Редактировать флаг,
+Edit Game Level,Изменить уровень игры,
+Edit Hint,Изменить подсказку,
+Edit Level,Изменить уровень,
+Edit Market Item,Редактировать товар,
+Edit Player,Изменить игрока,
+Edit Team,Редактировать команду,
+Edit User,Редактировать пользователя,
+Email,Эл. адрес,
+EMPTY,EMPTY,
+Enable,включить,
+"Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.","Включение этой функции позволит игрокам создавать свои собственные команды во время регистрации. Если эта опция отключена, администратор должен создавать команды для игроков, чтобы присоединиться.",
+Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,Включение этой функции позволит игрокам обмениваться кодом (pastebin) и файлами в игре. Отключение этой функции удалит эти параметры из меню инструментов.,
+"Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","Включение этой функции позволит командам приобретать обновления, такие как Федеральная резервная система, Рынок исходного кода или SWAT.",
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.","Включение этой функции позволит игре отображать флажки или сообщения о захвате полей, которые могут быть добавлены. По умолчанию игра следует сюжетной линии Морриса, работодателя, который назначает миссии.",
+"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.","Включение этой функции приведет к штрафу за неправильные попытки захвата. Наказанием является мгновенное вычитание из оценки, а не уменьшение значения флага.",
+"Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.","Включение этой функции уменьшит вознаграждение за флаг в зависимости от количества захватов. Если эта опция отключена, значение флага остается неизменным, поскольку другие игроки фиксируют его.",
+Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,"Включение этой функции покажет количество подсказок, взятых на табло командой или игроком. Полезно, когда подсказки бесплатны. Меньшее количество подсказок используется для сортировки, когда баллы или флаги равны. Отключение этой опции удалит количество подсказок с табло.",
+"Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.","Включение этой функции отобразит табло игрока MVP. Любой игрок, который принес очки в команду, будет отображаться. Если эта опция отключена, табло MVP будет скрыто.",
+Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,Включение этой функции потребует от игроков предоставить действительный регистрационный токен для создания новой учетной записи. Регистрационные токены создаются в интерфейсе администратора.,
+Enabling this feature will require players to provide an email address in order to create a new account.,Включение этой функции потребует от игроков предоставления адреса электронной почты для создания новой учетной записи.,
+Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,Включение этой функции отправит уведомления о разблокировке флага и уровня всем игрокам в игре. Отключение этой опции ограничит эти уведомления членами команды.,
+"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.","Включение этой функции позволит настроить игру и табло для командных соревнований. Если эта опция отключена, игра настраивается для индивидуальной соревновательной игры.",
+"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.","Включение этой функции заставит игру использовать систему начисления денег. Если эта опция отключена, игра использует систему начисления очков.",
+"Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.","Включение этой опции установит токен чувствительным к регистру. Если эта опция отключена, токен ответа не учитывает регистр.",
+"Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.","Включение этой опции установит, что токен будет чувствительным к регистру. Если эта опция отключена, токен ответа не учитывает регистр.",
+Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,"Включение этого параметра активирует функции ботнета. Команды могут запускать исполняемые файлы своих ботов на своих боксах, и со временем им платят за каждого бота.",
+END SECURE COMMUNIQUE,КОНЕЦ БЕЗОПАСНОГО СООБЩЕНИЯ,
+Enter a complex password of,Введите сложный пароль,
+Enter a Matching Flag,Введите соответствующий флаг,
+Enter Choice,Введите выбор,
+Enter the same password as before,"Введите тот же пароль, что и раньше",
+ERROR,ОШИБКА,
+Export Game Objects,Экспорт игровых объектов,
+Export of gameplay settings does not include the entire server and database configuration.,Экспорт настроек игрового процесса не включает в себя всю конфигурацию сервера и базы данных.,
+Export XML,Экспорт XML,
+Export XML,Экспорт XML,
+Failed Attempts,Неудачные попытки,
+Failed Logins,Неудачные логины,
+Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,"Отказ имеет цену. Будьте осторожны, так как штрафные санкции применяются при отправке неправильных ответов.",
+Federal Reserve,Федеральный резерв,
+Federal Reserve Bank,Федеральный резервный банк,
+File,файл,
+File Description,описание файла,
+File Flag,Флаг файла,
+File Name,Имя файла,
+File Share,Файловый ресурс,
+File Sharing,Обмен файлами,
+File Size,Размер файла,
+First Login,Первый вход,
+Flag,Флаг,
+Flag Capture,Захват флага,
+Flag Decrease Value,Флаг Уменьшить значение,
+Flag Details,Детали флага,
+Flag File,Файл флага,
+Flag Hints,Флаг Подсказки,
+Flag Minimum Value,Минимальное значение флага,
+Flag Name,Имя флага,
+Flag Penalty,Штраф,
+Flag Penalty % Cost,Флаг Штраф% Стоимость,
+Flag Penalty Cost,Флаг Штраф Стоимость,
+Flag Penalty Start,Флаг штрафного старта,
+Flag Penalty Stop,Флаг штрафной остановки,
+Flag Submission Type,Тип представления флага,
+Flag Type,Тип флага,
+Flags,Флаги,
+Flags / Boxes / Corp.,Флаги / Коробки / Корп.,
+Flags Captured,Захваченные флаги,
+Flags on,Флаги на,
+for,за,
+Forbidden,запрещено,
+Game,Игра,
+Game Control,Управление игрой,
+Game Information,Информация об игре,
+Game Level,Уровень игры,
+Game Levels,Уровни игры,
+Game Management,Управление игрой,
+Game Materials,Игровые материалы,
+Game Name,Название игры,
+Game Progress,Прогресс игры,
+Garbage File,Файл мусора,
+Get help with,Получить помощь с,
+Get your registration token from reception,Получите регистрационный токен на стойке регистрации,
+Glitch in the Matrix,Глюк в матрице,
+Global Notifications,Глобальные уведомления,
+Handle,Справиться,
+Hint,намек,
+Hint not yet taken,Подсказка еще не принята,
+Hint Taken,Подсказка,
+Hints,Советы,
+Hints on,Советы по,
+Hints Taken,Советы взяты,
+History,история,
+Home,Главная,
+How should the next level unlock?,Как разблокировать следующий уровень?,
+I accept the,Я принимаю,
+"If the flag selection is left empty, the hint will be considered a Box Hint.","Если флажок оставлен пустым, подсказка",
+"If this option is disabled, there is no cost for submitting incorrect flags.","Если эта опция отключена, отправка неправильных флагов бесплатна.",
+Import File,Импортировать файл,
+Import XML,Импорт XML,
+Import XML,Импорт XML,
+In Progress,В ходе выполнения,
+"In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","В этом случае флаг является строкой даты / времени. Этот тип флага будет пытаться соответствовать обычным вариантам формата даты и времени и учитывать такие различия, как косая черта, тире, заполнение, 12 часов, 24 часа и т. Д. Он может обрабатывать дату, время или дату и время.",
+"In this case, the flag is a multiple choice question where the selected option is the token.","В этом случае флаг является вопросом с несколькими вариантами ответов, где выбранный параметр является токеном.",
+"In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","В этом случае флаг является регулярным выражением. Пользователь должен отправить строку, которая соответствует шаблону, чтобы захватить флаг. Совпадения могут быть нечувствительными. Пожалуйста, не забудьте проверить свое регулярное выражение и убедитесь, что оно не слишком широкое.",
+"In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",В этом случае флаг является статической строкой. Пользователь должен предоставить точный токен для захвата флага. Пробелы в начале и в конце удаляются.,
+Include gameplay settings (such as those under ,"Включите настройки игры (например, в рамках",
+Income,доход,
+Incoming Transmission,Входящая передача,
+Incorrect,некорректный,
+Incorrect Penalty,Неверный штраф,
+indicates use by another player,указывает на использование другим игроком,
+INFO,ИНФОРМАЦИЯ,
+Information,Информация,
+Invalid CSRF Token,Неверный токен CSRF,
+IP Address,Айпи адрес,
+IP Version,IP версия,
+It appears you're an unsophisticated script kiddie!,"Похоже, вы неискушенный сценарист, детка!",
+"It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).","Он может быть виден всем посетителям (общедоступным), аутентифицированным пользователям (игрокам) или только администраторам (администраторам).",
+"It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.","Похоже, вы неправильно ввели URL или пытались найти то, к чему у вас не должно быть доступа.",
+"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.","Речь идет о деньгах, и пришло время заработать на этих навыках! Эта игра настроена на использование банковской системы, поэтому не теряйте времени, чтобы накопить свое состояние и купить то, что вам нужно, чтобы выиграть.",
+Item Cost,Стоимость предмета,
+Join Existing Team,Присоединиться к существующей команде,
+Known IP Addresses,Известные IP-адреса,
+Last Ping,Последний пинг,
+Learn,Учить,
+Level,уровень,
+Level Name,Название уровня,
+Level Number,Номер уровня,
+Level to put box in?,"Уровень, чтобы положить коробку в?",
+Level Unlocked,Уровень разблокирован,
+Limit number of players that can be on any one team,"Ограничить количество игроков, которые могут быть в одной команде",
+"Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Ограничивает количество попыток захвата флага. Как только предел достигнут, никакие дальнейшие действия с этим флагом не могут быть предприняты.",
+Linux,Linux,
+Lock,Замок,
+Locked by,Закрыто,
+Login,Авторизоваться,
+Login Password,Логин Пароль,
+Logout,Выйти,
+MacOS,MacOS,
+Mainframe Console,Консоль мейнфрейма,
+Manage Black Market,Управление черным рынком,
+Manage Categories,Управление категориями,
+Market Objects,Объекты рынка,
+Max,Максимум,
+Max Flag Attempts,Макс флаг пытается,
+Max PasteBin Size,Максимальный размер PasteBin,
+Max Team Size,Максимальный размер команды,
+Maximum Flag Attempts,Максимальные попытки флага,
+Maximum Penalty,Максимальный штраф,
+Maximum Penalty is determined as,Максимальный штраф определяется как,
+Min user password length,Минимальная длина пароля пользователя,
+Minimum User Password Length,Минимальная длина пароля пользователя,
+Mission Progress,Миссия Прогресс,
+Missions,Миссии,
+Modifies the way flag submission are made.,Изменяет способ отправки флага.,
+Money,Деньги,
+money,Деньги,
+Motto,девиз,
+Multiple Choice,Большой выбор,
+Multiple Choice Flag,Флаг множественного выбора,
+Must be unique,Должно быть уникальным,
+MVP,MVP,
+MVP - List Top N Payers,MVP - Список лучших N плательщиков,
+MVP List Top,Топ списка MVP,
+MVP Scoreboard,Табло MVP,
+MVP Scoreboard,Табло MVP,
+Name,название,
+Never,Никогда,
+New Bank Account Password,Пароль нового банковского счета,
+New Bank Password,Новый банковский пароль,
+New Box,Новая коробка,
+New Category,Новая категория,
+New Corporation,Новая Корпорация,
+New Flag,Новый флаг,
+New Game Level,Новый игровой уровень,
+New IP Address,Новый IP-адрес,
+New Password,новый пароль,
+New Team,Новая команда,
+New Team Member,Новый член команды,
+New Team Name,Название новой команды,
+No,нет,
+No Avatar,Нет аватара,
+No Boxes,Нет коробки,
+No boxes in this corporation yet,В этой корпорации пока нет коробок,
+No boxes on this level yet,На этом уровне еще нет коробок,
+No Bribes in Progress,Никаких взяток в процессе,
+No Completed Bribes,Нет взятки,
+No flags captured yet.,Нет захваченных флагов.,
+No flags on this box yet,Нет флажков на этом поле,
+No further penalty thereafter.,Никаких дополнительных штрафов после этого.,
+No Lock,Нет блокировки,
+No name,Без имени,
+No Pending Bribes,Нет ожидающих взяток,
+No sheep yet - check back later.,Овец пока нет - зайдите позже.,
+No Source Code For Sale at This Time,В настоящее время нет исходного кода для продажи,
+No Tokens in Database,В базе данных нет токенов,
+No upgrades left.,Нет обновлений не осталось.,
+No Users,Нет пользователей,
+None,Никто,
+Noob Alert,Noob Alert,
+"Not all options are accessible in the web configuration.  For more, see",Не все параметры доступны в веб-конфигурации. Для получения дополнительной информации см.,
+Note,Заметка,
+Note: Files or documents for the challenge can be placed in the Game Materials.,Примечание: файлы или документы для участия в конкурсе могут быть размещены в игровых материалах.,
+Note: Files or documents for the challenge can be placed in the Game Materials.,Примечание: файлы или документы для участия в конкурсе могут быть размещены в игровых материалах.,
+NOTE: Max attempts and penalties will not be applied in Single Box mode.,ПРИМЕЧАНИЕ. Максимальное количество попыток и штрафов не будут применяться в режиме единого ящика.,
+NOTE: This setting is ignored if the box flag submission type is set to Single Box.,"ПРИМЕЧАНИЕ. Этот параметр игнорируется, если для типа отправки флажка задано значение «Один ящик».",
+Notification Message,Уведомление,
+Notifications,Уведомления,
+Number of Bots,Количество ботов,
+Number of Flags,Количество флагов,
+Number of new Level,Номер нового уровня,
+of Flag Value,значения флага,
+of the flag's value. It will start on the,значения флага. Это начнется на,
+Old Password,Прежний пароль,
+One submission box for any flag.  Compares attempts against all flags in the box.,Один ящик для представления для любого флага. Сравнивает попытки против всех флагов в окне.,
+only,только,
+Optional,Необязательный,
+Or Choose Existing,Или выберите существующий,
+Outcome,результат,
+Outcome,результат,
+Password,пароль,
+Password Cracked,Пароль взломан,
+Password Cracking Leaderboard,Таблица лидеров взлома паролей,
+Password Hash,Хэш пароля,
+Password Security,Безопасность пароля,
+Password Upgrade Cost,Стоимость обновления пароля,
+Passwords Cracked,Взломанные пароли,
+Paste Name,Вставить имя,
+Paste Text Here,Вставить текст сюда,
+PasteBin,Pastebin,
+Pastebin Character Limit,Pastebin Character Limit,
+Pause Registration,Пауза Регистрация,
+Pause Scoreboard,Пауза Табло,
+Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Штрафуйте счет этим процентом от значения флага за каждую неверную попытку (применяется после динамического подсчета, если он включен)",
+Pending,в ожидании,
+Pending Bribes,В ожидании взятки,
+Plain Text,Простой текст,
+Play Story,Play Story,
+player,игрок,
+Player,игрок,
+Player Alias,Псевдоним игрока,
+Player Arrested!,Игрок арестован!,
+Player Email,Электронная почта игрока,
+Player Name,Имя игрока,
+"Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","Также доступны пароли банковского счета игрока, что позволяет взломать пароли друг друга и украсть деньги.",
+Players,игроки,
+Please do NOT enter your real bank account password.,"Пожалуйста, НЕ вводите пароль вашего реального банковского счета.",
+points,точки,
+Points,Точки,
+points,точки,
+Previous Bribes,Предыдущие взятки,
+Price,Цена,
+Privacy Policy,Политика конфиденциальности,
+Private,Частный,
+Programming,программирование,
+Provide the code used to join an existing team.  Visible to other team members on their home page.,"Укажите код, используемый для присоединения к существующей команде. Доступно для других членов команды на их домашней странице.",
+Public,общественного,
+Public Team Creation,Создание публичной команды,
+Public Teams,Общественные Команды,
+Purchase,покупка,
+Purchase Unlock,Купить разблокировать,
+Purchased,купленный,
+Rank By,Рейтинг по,
+Regex Flag,Флаг регулярных выражений,
+Regex Pattern,Шаблон регулярных выражений,
+Register Account,Регистрация Аккаунта,
+Registration,Постановка на учет,
+Registration Email,Электронный адрес регистрации,
+Registration Tokens,Жетоны регистрации,
+Regular Expression,Регулярное выражение,
+Require Email,Требовать электронную почту,
+Reset Actions,Сбросить действия,
+Reset Game,Сбросить игру,
+Reset Game,Сбросить игру,
+Reset player / team starting points / money,"Сбросить игрока / команды, стартовые очки / деньги",
+Restrict players bank password to this length,Ограничьте пароль банка игроков этой длиной,
+Restrict players user password to this length,Ограничьте пароль пользователя игроками этой длиной,
+Resume Registration,Резюме Регистрация,
+Resume Scoreboard,Табло резюме,
+Return to Edit,Вернуться к редактированию,
+Return to Missions,Вернуться к миссиям,
+Reward,Вознаграждение,
+Role,Роль,
+Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,"Правила участия: не атакуйте игровое табло платформы. Не меняйте пароли существующих учетных записей в сети, если это не указано в игровой задаче.",
+S.W.A.T,S.W.A.T,
+Save,Сохранить,
+Score,Гол,
+Scoreboard,Табло,
+Scoreboard Rank By,Табло рейтинга по,
+Scoreboard Visibility,Видимость табло,
+Security Breach,Нарушение безопасности,
+See All,Увидеть все,
+Select a Theme,Выберите тему,
+Select Avatar,Выберите Аватар,
+Select New Avatar,Выберите новый аватар,
+Send,послать,
+Send a global notification to all players,Отправить глобальное уведомление всем игрокам,
+Set Countdown Timer,Установить таймер обратного отсчета,
+Set the game countdown timer,Установите таймер обратного отсчета игры,
+Settings,настройки,
+Share your team code to allow other players to join,"Поделитесь кодом своей команды, чтобы позволить другим игрокам присоединиться",
+Shared Files,Общие файлы,
+Sheep,Овца,
+Show MVP,Показать MVP,
+Since Score,С балла,
+Single Box,Одиночная коробка,
+Skill Progress,Умение Прогресс,
+Source Code,Исходный код,
+Source Code Archive,Архив исходного кода,
+Source Code Market,Исходный код Market,
+Special Thanks,Особая благодарность,
+Start a New Team,Начать новую команду,
+Start the Game,Начать игру,
+start with 0 points,начать с 0 баллов,
+Starting Money,Начальные деньги,
+Static Flag,Статический флаг,
+Static Token,Статический токен,
+Statistics,Статистика,
+stop on & after,остановиться на и после,
+Stop the Game,Остановить игру,
+Stop the game after timer ends,Остановить игру после окончания таймера,
+Story,История,
+Story Mode,Режим истории,
+Submit,Отправить,
+Submit a Bug,Отправить ошибку,
+Submit a Flag,Отправить флаг,
+Submit Bribe,Подать взятку,
+Submit Bribes,Подавать взятки,
+Submit Flag,Отправить флаг,
+SUCCESS,УСПЕХ,
+Success!,Успех!,
+Successful,успешный,
+Successful Captures,Успешные захваты,
+Successful Registration,Успешная регистрация,
+Successfully created a new account for,Успешно создан новый аккаунт для,
+Summary,Резюме,
+Supports,опоры,
+Switch Level,Уровень переключателя,
+System Type,Тип системы,
+Take,принимать,
+Take Hint,Принять подсказку,
+Taken,взятый,
+Target,цель,
+Target Handle,Целевая ручка,
+Target Management,Целевое управление,
+team,команда,
+Team,команда,
+Team Avatar,Командный Аватар,
+Team Code,Код команды,
+Team File Share,Командный файл Поделиться,
+Team Information,Информация о команде,
+Team Motto,Девиз команды,
+Team Name,Название команды,
+Team PasteBin,Команда PasteBin,
+Team Play,Командная игра,
+Team Shares,Командные акции,
+Team Sharing,Командный обмен,
+Teams,Команды,
+Test Flag,Тестовый флаг,
+Text Share,Текст Поделиться,
+The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,"Черный рынок открыт, и вы знаете парня. Загрузите исходный код цели или S.W.A.T. другие игроки, подкупая (в игре) полицию.",
+The cost to take the hint.  Can be >= 0.,"Стоимость, чтобы взять подсказку. Может быть> = 0.",
+The deduction is,Вычет,
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.","Единственная другая возможность состоит в том, что я испортил часть кода, и это не очень вероятно.",
+The starting money for a new,Стартовые деньги для нового,
+Theme,тема,
+There are currently no shared files.,В настоящее время нет общих файлов.,
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","Эти флаги являются файлами, пользователи должны предоставить один и тот же файл для захвата флага. Только хэш (SHA1) файла хранится на сервере.",
+"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","Эта игра настроена на использование динамического подсчета очков, то есть, когда другие игроки захватывают флаги, значение этих флагов будет уменьшаться. Так что хватай их быстро или проиграй!",
+This is a test flag/string the user could input for credit.,"Это тестовый флаг / строка, которую пользователь может ввести для кредита.",
+This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,"Это сумма, которую игрок должен заплатить S.W.A.T. аккаунт другого игрока. Последующие спецназы того же игрока также увеличиваются на эту сумму каждый раз.",
+This is the amount a player must pay to upgrade their bank passwords hashing algorithm,"Это сумма, которую игрок должен заплатить, чтобы обновить алгоритм хэширования своих банковских паролей.",
+This is the amount awarded for capturing the flag.,"Это сумма, присуждаемая за захват флага.",
+This is the amount awarded for completion of the box.,"Это сумма, присужденная за заполнение коробки.",
+This is the amount of money a team is paid per-bot on every interval.  The interval must be set in the .cfg file manually,"Это сумма денег, которую команда получает за каждого бота за каждый интервал. Интервал должен быть установлен в файле .cfg вручную",
+This is the box the flag is located on.,"Это коробка, на которой находится флаг.",
+This is the description,Это описание,
+This is the maximum number of players displayed on the MVP list (default 10) with a score > 0.,"Это максимальное количество игроков, отображаемых в списке MVP (по умолчанию 10) со счетом> 0.",
+This is the message displayed to the user once the box is completed.,"Это сообщение, отображаемое пользователю после заполнения окна.",
+This is the message displayed to the user once the flag is captured.,Это сообщение отображается пользователю после захвата флага.,
+This is the name that will appear in the upper left corner,"Это имя, которое появится в верхнем левом углу",
+This is the the limit of characters allowed for a pastebin post.,"Это предел символов, разрешенных для поста вставки.",
+This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,"Это то, что вы хотите, чтобы флаг отображался как. Оставьте пустым, чтобы имя автоматически указывалось по номеру заказа.",
+This selection determines the method by which dynamic scoring is applied.,Этот выбор определяет метод применения динамического скоринга.,
+This selection determines the method by which the scoreboard is primarily ranked.,Этот выбор определяет метод ранжирования табло.,
+This selection determines the visibility of the scoreboard menu and pages.,Этот выбор определяет видимость меню и страниц табло.,
+"This will also delete associated IP addresses, boxes, and flags.","Это также приведет к удалению связанных IP-адресов, полей и флагов.",
+"This will also delete associated IP addresses, hints, and flags.","Это также приведет к удалению связанных IP-адресов, подсказок и флагов.",
+This will also delete boxes and flags associated with this level.,"Это также удалит поля и флаги, связанные с этим уровнем.",
+This will delete the player and the associated user account!,Это удалит игрока и связанную учетную запись пользователя!,
+This will delete the team and any associated user accounts!,Это удалит команду и все связанные учетные записи пользователей!,
+Threshold,порог,
+Time,Время,
+"Time to create a botnet. By uploading a small bot program to target machines, you can be periodically rewarded for each bot in your botnet; the larger the botnet the larger the reward.","Время создать ботнет. Загружая небольшую бот-программу на целевые машины, вы можете периодически получать вознаграждение за каждого бота в вашей бот-сети; чем больше ботнет, тем больше награда.",
+to Add,добавить,
+to Add or Subtract,сложить или вычесть,
+"To restore this RTB instance, you may also need the contents under the files directory, to include the rootthebox.cfg.","Чтобы восстановить этот экземпляр RTB, вам также может понадобиться содержимое в каталоге files, чтобы включить rootthebox.cfg.",
+Token,знак,
+Token Value,Значение токена,
+Tools,инструменты,
+Tools & Upgrades,Инструменты и обновления,
+Total Cash Stolen,Всего украдено,
+Type,Тип,
+Unknown,неизвестный,
+Unlock,отпереть,
+Unlock Cost,Стоимость разблокировки,
+Unlock Level,Уровень разблокировки,
+Unlocks,Отпирает,
+Unlocks after,Разблокирует после,
+Unlocks for,Разблокирует для,
+Update Bank Password,Обновить пароль банка,
+Update Configuration,Обновить конфигурацию,
+Update Password,Обновить пароль,
+Update RootTheBox,Обновление RootTheBox,
+Upgrade Purchased,Обновление куплено,
+Upgrade to,Обновитесь до,
+Upload,Загрузить,
+Upload Avatar,Загрузить аватар,
+Upload Avatar File,Загрузить файл аватара,
+Upload Files,Загрузить файлы,
+Used,Используемый,
+Used to secure your (in-game) bank account.,Используется для защиты вашего (внутриигрового) банковского счета.,
+User Handle,Дескриптор пользователя,
+User Management,Управление пользователями,
+Users / Teams,Пользователи / Команды,
+Value,Значение,
+View,Посмотреть,
+View Box,Окно просмотра,
+View Details,Посмотреть детали,
+Visible,видимый,
+Visible to Players,Видно игрокам,
+Waiting for the game to start‚Ä¶,В ожидании начала игры…,
+Wall of Sheep,Стена овец,
+WARNING,ПРЕДУПРЕЖДЕНИЕ,
+Welcome,желанный,
+Welcome to the computer war game where security professionals can practice and learn.,"Добро пожаловать в компьютерную военную игру, где специалисты по безопасности могут практиковаться и учиться",
+Welcome to the Scene,Добро пожаловать на сцену,
+What is the name of this box?,Как называется эта коробка?,
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.","Как называется ваша корпорация? Если вы не планируете использовать корпорации, просто создайте без названия.",
+What is your motto?,Какой у тебя девиз?,
+What is your teams motto?,Какой девиз вашей команды?,
+What type of system is this?,Что это за система?,
+Whats the difficulty of the box?,В чем сложность коробки?,
+When banking is disabled,Когда банкинг отключен,
+"When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.","Когда начинать применять штраф Например, вы можете захотеть, чтобы первая неправильная попытка была бесплатной, но оштрафовать последующие попытки.",
+"When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","Когда прекратить применять штраф. Например, вы можете захотеть оштрафовать только определенную сумму от значения флагов и разрешить любые дальнейшие попытки быть свободными, таким образом позволяя всем флагам иметь некоторое значение.",
+when using banking.,при использовании банковского дела.,
+Windows,Windows,
+With contributions from,С взносами от,
+XML File,XML-файл,
+Yes,да,
+You are not on a team,Вы не в команде,
+You do not have access to this level yet.,У вас еще нет доступа к этому уровню.,
+You do not own this upgrade.,Вы не являетесь владельцем этого обновления.,
+You have not submitted any bribes yet.,Вы еще не предоставили взятки.,
+"Your email, visible to game administrators.","Ваш электронный адрес, видимый для администраторов игр.",
+"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Ваш дескриптор должен состоять из 3-16 буквенно-цифровых символов. Подчеркивание, тире и точки разрешены.",
+"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Ваше имя, видимое для администраторов игр. Ваше имя может состоять из 3-64 буквенно-цифровых символов",

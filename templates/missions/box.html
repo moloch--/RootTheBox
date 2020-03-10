@@ -309,7 +309,7 @@
                                 {% if team and options.penalize_flag_value and not user.is_admin() %}
                                     <td class="shortcolumn centercolumn">{% if flag in team.flags %}{{ penalty + 1 }}{% else %}{{ penalty }}{% end %}</td>
                                 {% end %}
-                                <td class="shortcolumn centercolumn">{% if options.banking %}${% end %}{{ flag.value }}</td>
+                                <td class="shortcolumn centercolumn">{% if options.banking %}${% end %}{{ flag.dynamic_value(team) }}</td>
                                 {% if team and not user.is_admin() %}
                                     <td class="shortcolumn"{% if not flag in team.flags %} style="padding-right: 10px;"{% end %}>
                                         {% if not flag in team.flags %}

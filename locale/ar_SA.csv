@@ -30,6 +30,7 @@ Admin Notes,ملاحظات المسؤول
 Administrator Panel,لوحة المسؤول
 Admins,مدراء
 All Notifications,جميع الإخطارات
+and logos in export.,والشعارات في التصدير.
 and so on,وما إلى ذلك وهلم جرا
 Apply penalty on attempt,تطبق عقوبة على المحاولة
 Are you a Cylon?,هل أنت سيلون؟
@@ -53,6 +54,7 @@ Attempts,محاولات
 Authenticate,مصادقة
 Authentication Failure,فشل المصادقة
 Authentication Required,يستلزم التوثيق
+Automatic Ban,الحظر التلقائي
 Avatar,الصورة الرمزية
 Backup/Restore,اسنرجاع البيانات
 Ban IP Address,حظر عنوان IP
@@ -173,7 +175,12 @@ Decline,انخفاض
 Decline Bribe?,رفض الرشوة؟
 Decline this bribe?,رفض هذه الرشوة؟
 Declined,رفض
+Decrease All Captures,تقليل جميع يلتقط
 Decrease flag reward by this percent per capture.,خفض مكافأة العلم بنسبة هذا في المئة لكل لقطة.
+Decrease flag until it reaches this minimum value.,إنقاص العلامة حتى تصل إلى هذه القيمة الدنيا.
+Decrease Future Captures,تقليل التقاط المستقبل
+Decreases the flag value for future captures - this method rewards speed of capture.,يقلل من قيمة العلامة للالتقاطات المستقبلية - هذه الطريقة تكافئ سرعة الالتقاط.
+Decreases the flag value for past and future team captures - this method rewards difficulty.,يقلل من قيمة العلامة لالتقاطات الفريق في الماضي والمستقبل - هذه الطريقة تكافئ الصعوبة.
 deduct on & after,خصم على & بعد
 defaults to,التخلف عن
 Delete,حذف
@@ -202,6 +209,7 @@ Do not delete or modify community flags unless instructed. Do not attack other p
 Download,تحميل
 Download File,تحميل الملف
 Download the command line botnet monitor,قم بتنزيل شاشة الروبوتات الموجودة بسطر الأوامر
+Dynamic Decay Type,نوع الاضمحلال الديناميكي
 Dynamic Scoring,التسجيل الديناميكي
 Each flag has a submit.  The player will choose the flag they intend to capture.,كل العلم لديه تقديم. سيختار اللاعب العلم الذي يعتزم التقاطه.
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",سيستهدف كل لاعب تحديات متفاوتة الصعوبة والتطور ، في محاولة لجمع الأعلام والفوز بالمجد. حظا طيبا وفقك الله!
@@ -245,6 +253,7 @@ Enter Choice,أدخل الاختيار
 Enter the same password as before,أدخل نفس كلمة المرور كما كان من قبل
 ERROR,خطأ
 Export Game Objects,كائنات لعبة التصدير
+Export of gameplay settings does not include the entire server and database configuration., لا يتضمن تصدير إعدادات اللعب تكوين الخادم وقاعدة البيانات بالكامل.
 Export XML,تصدير XML
 Export XML,تصدير XML
 Failed Attempts,محاولات فاشلة
@@ -266,6 +275,7 @@ Flag Decrease Value,علم انخفاض القيمة
 Flag Details,علم التفاصيل
 Flag File,ملف العلم
 Flag Hints,تلميحات العلم
+Flag Minimum Value,علم القيمة الدنيا
 Flag Name,اسم العلم
 Flag Penalty,علم عقوبة
 Flag Penalty % Cost,العلم عقوبة التكلفة ٪
@@ -304,6 +314,7 @@ Hints Taken,تلميحات اتخذت
 History,التاريخ
 Home,الصفحة الرئيسية
 How should the next level unlock?,كيف ينبغي فتح المستوى التالي؟
+I accept the,أنا أقبل ال
 "If the flag selection is left empty, the hint will be considered a Box Hint.",إذا تم ترك تحديد العلامة فارغًا ، فسيتم اعتبار التلميح تلميحًا مربعًا.
 "If this option is disabled, there is no cost for submitting incorrect flags.",إذا تم تعطيل هذا الخيار ، فلن تكون هناك تكلفة لإرسال علامات غير صحيحة.
 Import File,استيراد ملف
@@ -314,6 +325,7 @@ In Progress,في تقدم
 "In this case, the flag is a multiple choice question where the selected option is the token.",في هذه الحالة ، تكون العلامة مسألة اختيار من متعدد حيث يكون الخيار المحدد هو الرمز المميز.
 "In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",في هذه الحالة ، تكون العلامة تعبيرًا منتظمًا. يجب على المستخدم إرسال السلسلة التي تطابق النمط لالتقاط العلم. المباريات يمكن أن تكون غير حساسة. يرجى التأكد من اختبار regex الخاص بك ، والتأكد من أنها ليست واسعة للغاية.
 "In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",في هذه الحالة ، تكون العلامة عبارة عن سلسلة ثابتة. يجب على المستخدم إرسال الرمز المميز لالتقاط العلامة. يتم تجريد مساحة بيضاء في البداية والنهاية.
+Include gameplay settings (such as those under , تتضمن إعدادات اللعبة (مثل تلك الموجودة 
 Income,الإيرادات
 Incoming Transmission,انتقال الواردة
 Incorrect,غير صحيح
@@ -460,6 +472,7 @@ Points,نقاط
 points,نقاط
 Previous Bribes,الرشاوى السابقة
 Price,السعر
+Privacy Policy,الخصوصية
 Private,نشر
 Programming,برمجة
 Provide the code used to join an existing team.  Visible to other team members on their home page.,قم بتوفير الكود المستخدم للانضمام إلى فريق حالي. مرئي لأعضاء الفريق الآخرين على صفحتهم الرئيسية.
@@ -590,6 +603,7 @@ This is the message displayed to the user once the flag is captured.,هذه هي
 This is the name that will appear in the upper left corner,هذا هو الاسم الذي سيظهر في الزاوية اليسرى العليا
 This is the the limit of characters allowed for a pastebin post.,هذا هو الحد المسموح به لعدد الأحرف المسموح بنشرها في لصق آخر.
 This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,هذا هو ما تريد أن يتم عرض العلم عليه. اترك المربع فارغًا ليتم تحديد اسمه تلقائيًا عن طريق الطلب رقم
+This selection determines the method by which dynamic scoring is applied.,يحدد هذا الاختيار الطريقة التي يتم بها تطبيق التسجيل الديناميكي.
 This selection determines the method by which the scoreboard is primarily ranked.,يحدد هذا الاختيار الطريقة التي يتم بها ترتيب لوحة النتائج في المقام الأول.
 This selection determines the visibility of the scoreboard menu and pages.,يحدد هذا الاختيار مدى رؤية قائمة لوحة النتائج والصفحات.
 "This will also delete associated IP addresses, boxes, and flags.",سيؤدي ذلك أيضًا إلى حذف عناوين IP والمربعات والأعلام المرتبطة بها.
@@ -664,9 +678,3 @@ You have not submitted any bribes yet.,لم ترسل أي رشاوى بعد.
 "Your email, visible to game administrators.",بريدك الإلكتروني ، مرئي لمسؤولي اللعبة.
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",يجب أن يكون مؤشرك من 3 إلى 16 حرفًا أبجديًا رقميًا. الشرطة السفلية ، الشرطة ، والنقاط المسموح بها.
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",اسمك مرئي لمسؤولي اللعبة. يمكن أن يكون اسمك 3-64 حرفًا رقميًا
-Automatic Ban,الحظر التلقائي
-Export of gameplay settings does not include the entire server and database configuration., لا يتضمن تصدير إعدادات اللعب تكوين الخادم وقاعدة البيانات بالكامل.
-Include gameplay settings (such as those under , تتضمن إعدادات اللعبة (مثل تلك الموجودة 
-and logos in export.,والشعارات في التصدير.
-I accept the,أنا أقبل ال
-Privacy Policy,الخصوصية

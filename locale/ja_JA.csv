@@ -30,6 +30,7 @@ Admin Notes,管理者メモ
 Administrator Panel,管理者パネル
 Admins,管理者
 All Notifications,すべての通知
+and logos in export.,およびエクスポートのロゴ。
 and so on,等々
 Apply penalty on attempt,試行時にペナルティを適用する
 Are you a Cylon?,あなたはサイロンですか？
@@ -53,6 +54,7 @@ Attempts,試み
 Authenticate,認証する
 Authentication Failure,認証失敗
 Authentication Required,認証が必要
+Automatic Ban,自動禁止
 Avatar,アバター
 Backup/Restore,復元する
 Ban IP Address,IPアドレスの禁止
@@ -173,7 +175,12 @@ Decline,低下
 Decline Bribe?,賄beを辞退しますか？
 Decline this bribe?,この賄briを辞退しますか？
 Declined,不承認
+Decrease All Captures,すべてのキャプチャを減らす
 Decrease flag reward by this percent per capture.,キャプチャごとにこの割合でフラグ報酬を減らします。
+Decrease flag until it reaches this minimum value.,この最小値に達するまでフラグを減らします。
+Decrease Future Captures,将来のキャプチャを減らす
+Decreases the flag value for future captures - this method rewards speed of capture.,将来のキャプチャのフラグ値を減らします-この方法はキャプチャの速度に報います。
+Decreases the flag value for past and future team captures - this method rewards difficulty.,過去および将来のチームキャプチャのフラグ値を減らします-この方法は難易度に報います。
 deduct on & after,控除
 defaults to,デフォルトは
 Delete,削除する
@@ -202,6 +209,7 @@ Do not delete or modify community flags unless instructed. Do not attack other p
 Download,ダウンロード
 Download File,ダウンロードファイル
 Download the command line botnet monitor,コマンドラインボットネットモニターをダウンロードする
+Dynamic Decay Type,動的減衰タイプ
 Dynamic Scoring,動的スコアリング
 Each flag has a submit.  The player will choose the flag they intend to capture.,各フラグには送信があります。プレイヤーは、キャプチャする予定のフラグを選択します。
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",各プレイヤーは、さまざまな難易度と洗練度の課題をターゲットにし、旗を集めて栄光を獲得しようとします。がんばろう！
@@ -245,6 +253,7 @@ Enter Choice,選択肢を入力
 Enter the same password as before,以前と同じパスワードを入力してください
 ERROR,エラー
 Export Game Objects,ゲームオブジェクトのエクスポート
+Export of gameplay settings does not include the entire server and database configuration.,ゲームプレイ設定のエクスポートには、サーバーとデータベースの構成全体は含まれません。
 Export XML,XMLをエクスポート
 Export XML,XMLをエクスポート
 Failed Attempts,失敗した試行
@@ -266,6 +275,7 @@ Flag Decrease Value,フラグ値を減らす
 Flag Details,フラグの詳細
 Flag File,フラグファイル
 Flag Hints,フラグのヒント
+Flag Minimum Value,フラグの最小値
 Flag Name,フラグ名
 Flag Penalty,旗のペナルティ
 Flag Penalty % Cost,旗のペナルティ％コスト
@@ -304,6 +314,7 @@ Hints Taken,撮影のヒント
 History,歴史
 Home,ホーム
 How should the next level unlock?,次のレベルはどのようにロックを解除する必要がありますか？
+I accept the,私は受け入れます
 "If the flag selection is left empty, the hint will be considered a Box Hint.",フラグの選択が空のままの場合、ヒント
 "If this option is disabled, there is no cost for submitting incorrect flags.",このオプションが無効になっている場合、間違ったフラグを送信する費用はかかりません。
 Import File,インポートファイル
@@ -314,6 +325,7 @@ In Progress,進行中
 "In this case, the flag is a multiple choice question where the selected option is the token.",この場合、フラグは選択されたオプションがトークンである複数選択の質問です。
 "In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",この場合、フラグは正規表現です。ユーザーは、フラグをキャプチャするには、パターンに一致する文字列を送信する必要があります。一致は区別されない場合があります。正規表現を必ずテストし、広すぎないことを確認してください。
 "In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",この場合、フラグは静的な文字列です。ユーザーは、フラグをキャプチャするために正確なトークンを送信する必要があります。最初と最後の空白は削除されます。
+Include gameplay settings (such as those under ,ゲームプレイの設定を含める（以下の設定など）
 Income,所得
 Incoming Transmission,着信送信
 Incorrect,間違っている
@@ -460,6 +472,7 @@ Points,ポイント
 points,ポイント
 Previous Bribes,以前の賄bes
 Price,価格
+Privacy Policy,プライバシーポリシー
 Private,プライベート
 Programming,プログラミング
 Provide the code used to join an existing team.  Visible to other team members on their home page.,既存のチームに参加するために使用されるコードを提供します。ホームページで他のチームメンバーに表示されます。
@@ -590,6 +603,7 @@ This is the message displayed to the user once the flag is captured.,これは�
 This is the name that will appear in the upper left corner,これは、左上隅に表示される名前です
 This is the the limit of characters allowed for a pastebin post.,これは、ペーストビンの投稿に許可される文字の制限です。
 This is what you want the flag to be displayed as.  Leave blank to be named automatically by order #.,これは、フラグを表示するものです。空白のままにして、注文番号で自動的に名前を付けます。
+This selection determines the method by which dynamic scoring is applied.,この選択により、動的スコアリングが適用される方法が決まります。
 This selection determines the method by which the scoreboard is primarily ranked.,この選択により、スコアボードが主にランク付けされる方法が決まります。
 This selection determines the visibility of the scoreboard menu and pages.,この選択により、スコアボードメニューとページの可視性が決まります。
 "This will also delete associated IP addresses, boxes, and flags.",これにより、関連するIPアドレス、ボックス、およびフラグも削除されます。
@@ -664,9 +678,3 @@ You have not submitted any bribes yet.,まだ賄briを提出していません�
 "Your email, visible to game administrators.",ゲーム管理者に表示されるメール。
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",ハンドルは3〜16文字の英数字でなければなりません。アンダースコア、ダッシュ、およびドットを使用できます。
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",ゲーム管理者に表示されるあなたの名前。名前には3〜64文字の英数字を使用できます
-Automatic Ban,自動禁止
-Export of gameplay settings does not include the entire server and database configuration.,ゲームプレイ設定のエクスポートには、サーバーとデータベースの構成全体は含まれません。
-Include gameplay settings (such as those under ,ゲームプレイの設定を含める（以下の設定など）
-and logos in export.,およびエクスポートのロゴ。
-I accept the,私は受け入れます
-Privacy Policy,プライバシーポリシー

@@ -36,6 +36,7 @@ from libs.StringCoding import decode, encode
 from handlers.BaseHandlers import BaseHandler
 from models.GameLevel import GameLevel
 from models.Flag import Flag
+from models.Team import Team
 from models.Box import Box, FlagsSubmissionType
 from models.Hint import Hint
 from models.Penalty import Penalty
@@ -212,7 +213,7 @@ class FlagSubmissionHandler(BaseHandler):
                     flag, info=["No flag was provided - try again."]
                 )
                 return
-            old_reward = flag.value if flag is not None else 0
+            old_reward = flag.dynamic_value(user.team) if flag is not None else 0
             if flag is not None and self.attempt_capture(flag, submission):
                 self.add_content_policy("script", "'unsafe-eval'")
                 success = self.success_capture(flag, old_reward)
@@ -293,7 +294,7 @@ class FlagSubmissionHandler(BaseHandler):
         else:
             teamval = ""
         user = self.get_current_user()
-        old_reward = flag.value if old_reward is None else old_reward
+        old_reward = flag.dynamic_value(user.team) if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
         if self.config.banking:
             reward_dialog += (
@@ -391,7 +392,9 @@ class FlagSubmissionHandler(BaseHandler):
                 return False
             if attempts >= self.config.flag_stop_penalty:
                 return False
-            penalty = int(flag.value * self.config.flag_penalty_cost * 0.01)
+            penalty = int(
+                flag.dynamic_value(user.team) * self.config.flag_penalty_cost * 0.01
+            )
             logging.info(
                 "%s (%s) capture failed '%s' - lost %s"
                 % (user.handle, user.team.name, flag.name, penalty)
@@ -414,20 +417,25 @@ class FlagSubmissionHandler(BaseHandler):
         )
         if submission is not None and flag not in team.flags:
             if flag.capture(submission):
+                flag_value = flag.dynamic_value(team)
+                if (
+                    self.config.dynamic_flag_value
+                    and self.config.dynamic_flag_type == "decay_all"
+                ):
+                    for item in Flag.captures(flag.id):
+                        tm = Team.by_id(item[0])
+                        deduction = flag.dynamic_value(tm) - flag_value
+                        tm.money = int(tm.money - deduction)
+                        self.dbsession.add(tm)
+                        self.event_manager.flag_decayed(tm, flag)
+                team.money += flag_value
+                user.money += flag_value
                 team.flags.append(flag)
-                team.money += flag.value
-                user.money += flag.value
+                self.dbsession.add(user)
                 self.dbsession.add(team)
-                if self.config.dynamic_flag_value:
-                    depreciation = float(
-                        old_div(self.config.flag_value_decrease, 100.0)
-                    )
-                    flag.value = int(flag.value - (flag.value * depreciation))
-                self.dbsession.add(flag)
-                self.dbsession.flush()
+                self.dbsession.commit()
                 self.event_manager.flag_captured(team, flag)
                 self._check_level(flag, team)
-                self.dbsession.commit()
                 return True
         return False
 
