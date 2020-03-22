@@ -47,7 +47,6 @@ class GameHistory(object):
         self.dbsession = dbsession
         self.cache = MemcachedConnect()
         self.epoch = None  # Date/time of first snapshot
-        self._load()
         self.event_manager = EventManager.instance()
 
     def _load(self):

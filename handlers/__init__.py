@@ -250,6 +250,7 @@ app = Application(
 
 # Update the database schema
 def update_db(update=True):
+    logging.info("Checking for Database Updates...")
     db_connection = DatabaseConnection(
         database=options.sql_database,
         hostname=options.sql_host,
@@ -266,6 +267,8 @@ def update_db(update=True):
     else:
         command.stamp(alembic_cfg, "head")
 
+def load_history():
+    game_history._load()
 
 # Main entry point
 def start_server():

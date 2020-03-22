@@ -211,6 +211,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
     game_history = GameHistory.instance()
 
     def initialize(self):
+        self.game_history._load()
         self.last_message = datetime.now()
 
     def open(self):

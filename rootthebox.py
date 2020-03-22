@@ -57,8 +57,9 @@ def start():
             os._exit(1)
 
     """ Starts the application """
-    from handlers import start_server
-
+    from handlers import start_server, load_history
+    load_history()
+    
     prefix = "https://" if options.ssl else "http://"
     # TODO For docker, it would be nice to grab the mapped docker port
     listenport = C + "%slocalhost:%s" % (prefix, str(options.listen_port)) + W
