@@ -64,7 +64,7 @@ class GameHistory(object):
             start_index = snap.id if len(self) <= (snap.id + 9) else max_index - 9
             for index in range(start_index, max_index + 1):
                 snapshot = Snapshot.by_id(index)
-                if self.cache.get(snapshot.key) is None:
+                if snapshot and self.cache.get(snapshot.key) is None:
                     logging.info(
                         "Cached snapshot (%d of %d)" % (snapshot.id, max_index)
                     )
@@ -78,8 +78,9 @@ class GameHistory(object):
     def take_snapshot(self, *args):
         """ Take a snapshot of the current game data """
         snapshot = self.__now__()
-        self.cache.set(snapshot.key, snapshot.to_dict())
-        self.event_manager.push_history(snapshot.to_dict())
+        if snapshot is not None:
+            self.cache.set(snapshot.key, snapshot.to_dict())
+            self.event_manager.push_history(snapshot.to_dict())
 
     def get_flag_history_by_name(self, name, start, stop=None):
         """ Retrieves flag capture history for a team """

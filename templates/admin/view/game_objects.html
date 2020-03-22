@@ -141,7 +141,7 @@
                     <div class="controls">
                         <select id="edit-box-corporation" name="corporation_uuid">
                             {% for corporation in Corporation.all() %}
-                                <option value="{{ corporation.uuid }}">{% if corporation.name != "" %}{{ corporation.name }}{% else %}({{ _("No name") }}{% end %}</option>
+                                <option value="{{ corporation.uuid }}">{% if corporation.name != "" %}{{ corporation.name }}{% else %}({{ _("No name") }}){% end %}</option>
                             {% end %}
                         </select>
                     </div>
