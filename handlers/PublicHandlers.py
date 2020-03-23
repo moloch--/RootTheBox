@@ -231,7 +231,7 @@ class RegistrationHandler(BaseHandler):
         team.members.append(user)
         if not options.teams:
             if avatar_select and len(avatar_select) > 0:
-                team.avatar = avatar_select
+                team._avatar = avatar_select
             elif hasattr(self.request, "files") and "avatar" in self.request.files:
                 team.avatar = self.request.files["avatar"][0]["body"]
             else:
