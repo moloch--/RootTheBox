@@ -183,7 +183,7 @@ class BoxHandler(BaseHandler):
                 if hasattr(self.request, "files") and "flag" in self.request.files:
                     submission = self.request.files["flag"][0]["body"]
             else:
-                submission = self.get_argument("token", "")
+                submission = self.get_argument("token", "").replace("__quote__", '"')
             if len(submission) == 0:
                 self.render_page_by_flag(
                     flag, info=["No flag was provided - try again."]

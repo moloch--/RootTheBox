@@ -30,7 +30,7 @@ $(document).ready(function() {
         $("#choiceinput").empty();
         var choices = $(this).data("choices");
         for (choice in choices) {
-            $("#choiceinput").append('<div><input required name="multichoice" type="radio" style="margin-top: 0;" value="' + choices[choice] + '" />&nbsp;&nbsp;' + choices[choice] + "</div><br/>");
+            $("#choiceinput").append('<div><input required name="multichoice" type="radio" style="margin-top: 0;" value="' + choices[choice].replace(/"/g, "__quote__") + '" />&nbsp;&nbsp;' + choices[choice] + "</div><br/>");
         }
     });
 
