@@ -1071,22 +1071,17 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
             flag = Flag.by_uuid(uuid)
             if flag is not None:
                 if options.banking:
-                    flaginfo = [
-                        {
-                            "name": flag.name,
-                            "description": flag.description,
-                            "token": flag.token,
-                            "price": "$" + str(flag.value),
-                        }
-                    ]
+                    price = "$" + str(flag.value)
                 else:
-                    flaginfo = [
-                        {
-                            "name": flag.name,
-                            "token": flag.token,
-                            "price": str(flag.value) + " points",
-                        }
-                    ]
+                    price = str(flag.value) + " points"
+                flaginfo = [
+                    {
+                        "name": flag.name,
+                        "description": flag.description,
+                        "token": flag.token,
+                        "price": price,
+                    }
+                ]
                 captures = []
                 for item in Flag.captures(flag.id):
                     team = Team.by_id(item[0])
@@ -1099,16 +1094,12 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                     hint = Hint.by_id(item.hint_id)
                     if team:
                         if options.banking:
-                            hints.append(
-                                {"name": team.name, "price": "$" + str(hint.price)}
-                            )
+                            price = "$" + str(hint.price)
                         else:
-                            hints.append(
-                                {
-                                    "name": team.name,
-                                    "price": str(hint.price) + " points",
-                                }
-                            )
+                            price = str(hint.price) + " points"
+                        hints.append(
+                            {"name": team.name, "price": price}
+                        )
                 obj = {
                     "flag": flaginfo,
                     "captures": captures,

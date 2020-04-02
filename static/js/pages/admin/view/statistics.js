@@ -40,7 +40,6 @@ function getStatDetails(obj, uuid) {
                     } else {
                         table = "None";
                     }
-                    console.log(table);
                     return table;
                 });
             }
