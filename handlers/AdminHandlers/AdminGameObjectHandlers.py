@@ -1097,9 +1097,7 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                             price = "$" + str(hint.price)
                         else:
                             price = str(hint.price) + " points"
-                        hints.append(
-                            {"name": team.name, "price": price}
-                        )
+                        hints.append({"name": team.name, "price": price})
                 obj = {
                     "flag": flaginfo,
                     "captures": captures,

@@ -267,8 +267,10 @@ def update_db(update=True):
     else:
         command.stamp(alembic_cfg, "head")
 
+
 def load_history():
     game_history._load()
+
 
 # Main entry point
 def start_server():

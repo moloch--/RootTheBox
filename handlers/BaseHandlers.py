@@ -284,6 +284,19 @@ class BaseHandler(RequestHandler):
         """
         if len(self.config.force_locale) > 0:
             return locale.get(self.config.force_locale)
+        else:
+            """
+            This is a work around as Tornado get_browser_locale() is not returning the closest match.
+            https://github.com/tornadoweb/tornado/issues/1858
+            https://github.com/moloch--/RootTheBox/issues/367
+            """
+            codes = self.request.headers.get("Accept-Language")
+            if codes:
+                for code in codes.split(","):
+                    code = code.split(";")[0]
+                    for l in locale.get_supported_locales():
+                        if code.lower() == l.split("_")[0]:
+                            return locale.get(l)
         return None
 
 
