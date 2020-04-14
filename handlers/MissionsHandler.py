@@ -338,20 +338,20 @@ class BoxHandler(BaseHandler):
 
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
-        if (
-            next_level
-            and next_level._type == "progress"
-            and level_progress * 100 >= next_level.buyout
-            and next_level not in user.team.game_levels
-        ):
-            logging.info(
-                "%s (%s) unlocked %s" % (user.handle, user.team.name, next_level.name)
-            )
-            user.team.game_levels.append(next_level)
-            self.dbsession.add(user.team)
-            self.dbsession.commit()
-            self.event_manager.level_unlocked(user, next_level)
-            success.append("Congratulations! You have unlocked " + next_level.name)
+        if next_level and next_level not in user.team.game_levels:
+            if level_progress == 1.0 or (
+                next_level._type == "progress"
+                and level_progress * 100 >= next_level.buyout
+            ):
+                logging.info(
+                    "%s (%s) unlocked %s"
+                    % (user.handle, user.team.name, next_level.name)
+                )
+                user.team.game_levels.append(next_level)
+                self.dbsession.add(user.team)
+                self.dbsession.commit()
+                self.event_manager.level_unlocked(user, next_level)
+                success.append("Congratulations! You have unlocked " + next_level.name)
         self.event_manager.push_score_update()
         return success
 
@@ -411,19 +411,8 @@ class BoxHandler(BaseHandler):
                 self.dbsession.add(team)
                 self.dbsession.commit()
                 self.event_manager.flag_captured(team, flag)
-                self._check_level(flag, team)
                 return True
         return False
-
-    def _check_level(self, flag, team):
-        if len(team.level_flags(flag.game_level.number)) == len(flag.game_level.flags):
-            next_level = next(flag.game_level)
-            if next_level is not None:
-                logging.info("Next level is %r" % next_level)
-                if next_level not in team.game_levels:
-                    logging.info("Team completed level, unlocking the next level")
-                    team.game_levels.append(next_level)
-                    self.dbsession.add(team)
 
     def render_page_by_flag(self, flag, errors=[], success=[], info=[]):
         self.render_page_by_box_id(flag.box_id, errors, success, info)
@@ -575,7 +564,7 @@ class MissionsHandler(BaseHandler):
         if level is not None and user is not None:
             if level.buyout <= user.team.money:
                 logging.info(
-                    "%s (%s) payed buyout for %s"
+                    "%s (%s) paid buyout for %s"
                     % (user.handle, user.team.name, level.name)
                 )
                 user.team.game_levels.append(level)
