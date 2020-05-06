@@ -20,6 +20,7 @@ Created on Nov 24, 2014
 """
 
 import os
+import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
@@ -69,3 +70,13 @@ class FlagAttachment(DatabaseObject):
         fpath = options.flag_attachment_dir + "/" + self.uuid
         if os.path.exists(fpath) and os.path.isfile(fpath):
             os.unlink(fpath)
+
+    def to_xml(self, parent):
+        attachment_elem = ET.SubElement(parent, "flag_attachment")
+        ET.SubElement(attachment_elem, "file_name").text = self.file_name
+        with open(options.flag_attachment_dir + "/" + self.uuid, mode="rb") as fp:
+            data = fp.read()
+            ET.SubElement(attachment_elem, "data").text = encode(data, "base64")
+
+    def to_dict(self):
+        return {"file_name": self.file_name, "data": self.data}

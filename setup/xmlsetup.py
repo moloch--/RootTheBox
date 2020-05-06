@@ -138,8 +138,12 @@ def create_flags(parent, box):
                 flag.case_sensitive = get_child_text(flag_elem, "case_sensitive", 0)
                 flag.description = get_child_text(flag_elem, "description")
                 flag.capture_message = get_child_text(flag_elem, "capture_message")
-                flag.type = get_child_text(flag_elem, "type", "static")
+                flag.type = flag_elem.get("type", "static")
                 flag.order = get_child_text(flag_elem, "order", None)
+                if flag.type == "file":
+                    add_attachments(
+                        get_child_by_tag(flag_elem, "flag_attachments"), flag
+                    )
                 dbsession.add(flag)
                 dbsession.flush()
                 depend = get_child_text(flag_elem, "depends_on", None)
@@ -156,6 +160,23 @@ def create_flags(parent, box):
                     if item["name"] == flag.name:
                         item["flag"].lock_id = flag.id
                         continue
+
+
+def add_attachments(parent, flag):
+    """ Add uploaded files as attachments to flags """
+    logging.info("Found %s attachment(s)" % parent.get("count"))
+    for index, attachement_elem in enumerate(parent.getchildren()):
+        try:
+            flag_attachment = FlagAttachment(
+                file_name=get_child_text(attachement_elem, "flag_name")
+            )
+            flag_attachment.data = bytearray(
+                b64decode(get_child_text(attachement_elem, "data"))
+            )
+            flag.flag_attachments.append(flag_attachment)
+            dbsession.add(flag_attachment)
+        except:
+            logging.exception("Failed to import attachement #%d in flag" % (index + 1))
 
 
 def create_choices(parent, flag):
