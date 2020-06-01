@@ -1,6 +1,11 @@
 function readURL(input) {
     if (input.files && input.files[0]) {
-        if (input.files[0]["type"] !== "image/svg+xml") {            
+        if (
+            input.files[0]["type"] === "image/bmp" || 
+            input.files[0]["type"] === "image/png" || 
+            input.files[0]["type"] === "image/gif" || 
+            input.files[0]["type"] === "image/jpeg"
+        ) {
             var reader = new FileReader();
             reader.onload = function (e) {
                 $('#avatarimage').attr('src', e.target.result);
