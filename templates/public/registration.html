@@ -97,7 +97,7 @@
                             <input id="user_avatar_select" name="user_avatar_select" type="hidden" value="{{avatarimg}}" />
                             {% if len(avatars) > 0 %}<a data-toggle="modal" class="btn btn-primary" href="#change-user-avatar-modal"> {{ _("Select New Avatar") }} </a>&nbsp;&nbsp;{% end %}
                             <a id="uploadbutton" class="btn btn-primary" href="#">{{ _("Upload Avatar") }}</a>&nbsp;&nbsp;(w500 x h250)
-                            <input id="user-avatar" name="avatar" type="file" accept="image/jpeg,image/gif,image/png" style="display: none;"/>
+                            <input id="user-avatar" name="avatar" type="file" accept="image/bmp,image/jpeg,image/gif,image/png" style="display: none;"/>
                         </div>
                     </div>
                 {% end %}
