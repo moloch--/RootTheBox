@@ -289,7 +289,7 @@ def decode(s, name="utf-8", *args, **kwargs):
 
 class _SSLSocketWrapper(object):
     def __init__(self, sock):
-        self.ssl = ssl.wrap_socket(sock)
+        self.ssl = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1_2)
 
     def recv(self, bufsize):
         return self.ssl.read(bufsize)
