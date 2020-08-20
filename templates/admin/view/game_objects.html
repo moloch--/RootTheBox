@@ -722,302 +722,306 @@
                     </div>
                 {% end %}
             {% end %}
-            {% for corp_index, corporation in enumerate(Corporation.all()) %}
-                <div id="{{ corporation.uuid }}" class="well">
-                    <h2 style="display:inline;">
-                        <i class="fa fa-fw fa-building-o"></i>
-                        {{ corporation.name }}&nbsp;&nbsp;
-                    </h2>
-                    <a id="edit-corporation-button{{ corp_index }}" class="btn btn-small" data-toggle="modal" href="#edit-corporation-modal" data-uuid="{{ corporation.uuid }}">
-                        <i class="fa fa-fw fa-pencil"></i>
-                        {{_("Edit Corporation")}}
-                    </a>
-                    <a id="delete-corporation-button{{ corp_index }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-corporation-modal" data-uuid="{{ corporation.uuid }}">
-                        <i class="fa fa-fw fa-times-circle-o"></i>
-                        {{_("Delete Corporation")}}
-                    </a>
-                    <br />{% if corporation.description %}<br>&nbsp;&nbsp;{{ corporation.description }}<br />{% end %}
-                    <br />
-                    {% if len(corporation.boxes) != 0 %}
-                        {% for box in corporation.boxes %}
-                            <div id="{{ box.uuid }}" class="well{% if box.locked %} locked{% end %}">
-                                <h3 style="display:inline;">
-                                    {% if box.operating_system.lower() == 'windows' %}
-                                        <i class="fa fa-windows"></i>
-                                    {% elif box.operating_system.lower() == 'linux' %}
-                                        <i class="fa fa-linux"></i>
-                                    {% elif box.operating_system.lower() == 'apple' %}
-                                        <i class="fa fa-apple"></i>
-                                    {% elif box.operating_system.lower() == '?' %}
-                                        <i class="fa fa-desktop"></i>
-                                    {% else %}
-                                        <i class="fa fa-th"></i>
-                                    {% end %}
-                                    {{ box.name }}&nbsp;&nbsp;
-                                </h3>
-                                    {% if box.locked %}
-                                        <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-success" data-uuid="{{ box.uuid }}">
-                                            <i class="fa fa-fw fa-unlock"></i>
-                                            {{_("Unlock")}}
+            {% if len(Corporation.all()) > 0 %}
+                {% for corp_index, corporation in enumerate(Corporation.all()) %}
+                    <div id="{{ corporation.uuid }}" class="well">
+                        <h2 style="display:inline;">
+                            <i class="fa fa-fw fa-building-o"></i>
+                            {{ corporation.name }}&nbsp;&nbsp;
+                        </h2>
+                        <a id="edit-corporation-button{{ corp_index }}" class="btn btn-small" data-toggle="modal" href="#edit-corporation-modal" data-uuid="{{ corporation.uuid }}">
+                            <i class="fa fa-fw fa-pencil"></i>
+                            {{_("Edit Corporation")}}
+                        </a>
+                        <a id="delete-corporation-button{{ corp_index }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-corporation-modal" data-uuid="{{ corporation.uuid }}">
+                            <i class="fa fa-fw fa-times-circle-o"></i>
+                            {{_("Delete Corporation")}}
+                        </a>
+                        <br />{% if corporation.description %}<br>&nbsp;&nbsp;{{ corporation.description }}<br />{% end %}
+                        <br />
+                        {% if len(corporation.boxes) != 0 %}
+                            {% for box in corporation.boxes %}
+                                <div id="{{ box.uuid }}" class="well{% if box.locked %} locked{% end %}">
+                                    <h3 style="display:inline;">
+                                        {% if box.operating_system.lower() == 'windows' %}
+                                            <i class="fa fa-windows"></i>
+                                        {% elif box.operating_system.lower() == 'linux' %}
+                                            <i class="fa fa-linux"></i>
+                                        {% elif box.operating_system.lower() == 'apple' %}
+                                            <i class="fa fa-apple"></i>
+                                        {% elif box.operating_system.lower() == '?' %}
+                                            <i class="fa fa-desktop"></i>
+                                        {% else %}
+                                            <i class="fa fa-th"></i>
+                                        {% end %}
+                                        {{ box.name }}&nbsp;&nbsp;
+                                    </h3>
+                                        {% if box.locked %}
+                                            <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-success" data-uuid="{{ box.uuid }}">
+                                                <i class="fa fa-fw fa-unlock"></i>
+                                                {{_("Unlock")}}
+                                            </a>
+                                        {% else %}
+                                            <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-warning" data-uuid="{{ box.uuid }}">
+                                                <i class="fa fa-fw fa-lock"></i>
+                                                {{_("Lock")}}
+                                            </a>
+                                        {% end %}
+                                        <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
+                                            <i class="fa fa-pencil"></i>
+                                            {{_("Edit Box")}}
                                         </a>
-                                    {% else %}
-                                        <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-warning" data-uuid="{{ box.uuid }}">
-                                            <i class="fa fa-fw fa-lock"></i>
-                                            {{_("Lock")}}
+                                        <a class="btn btn-small"  data-toggle="modal" href="/user/missions/boxes?uuid={{ box.uuid }}">
+                                            <i class="fa fa-fw fa-eye"></i>
+                                            {{_("View Box")}}
                                         </a>
-                                    {% end %}
-                                    <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
-                                        <i class="fa fa-pencil"></i>
-                                        {{_("Edit Box")}}
-                                    </a>
-                                    <a class="btn btn-small"  data-toggle="modal" href="/user/missions/boxes?uuid={{ box.uuid }}">
-                                        <i class="fa fa-fw fa-eye"></i>
-                                        {{_("View Box")}}
-                                    </a>
-                                    <a id="delete-box-button-{{ box.uuid }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-box-modal" data-uuid="{{ box.uuid }}">
-                                        <i class="fa fa-times-circle-o"></i>
-                                        {{_("Delete Box")}}
-                                    </a>
-                                    {% if options.use_bots %}
-                                    <a style="float:right;" class="btn" data-toggle="modal" href="/admin/garbage?uuid={{ box.uuid }}" target="_blank">
-                                        <i class="fa fa-fw fa-trash-o"></i>
-                                        {{ box.name }} Bot {{_("Garbage File") }}
-                                    </a>
-                                    {% end %}
-                                <br />{% if box.category %}{{ box.category }}<br />{% end %}
-                                <br />
-                                <div>                   
-                                    {% if box.avatar != "none" %}
-                                    <div class="span4" style="margin: 0 30px 5px 5px;">
-                                        <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
-                                        <br /><br />
+                                        <a id="delete-box-button-{{ box.uuid }}" class="btn btn-small btn-danger" data-toggle="modal" href="#delete-box-modal" data-uuid="{{ box.uuid }}">
+                                            <i class="fa fa-times-circle-o"></i>
+                                            {{_("Delete Box")}}
+                                        </a>
+                                        {% if options.use_bots %}
+                                        <a style="float:right;" class="btn" data-toggle="modal" href="/admin/garbage?uuid={{ box.uuid }}" target="_blank">
+                                            <i class="fa fa-fw fa-trash-o"></i>
+                                            {{ box.name }} Bot {{_("Garbage File") }}
+                                        </a>
+                                        {% end %}
+                                    <br />{% if box.category %}{{ box.category }}<br />{% end %}
+                                    <br />
+                                    <div>                   
+                                        {% if box.avatar != "none" %}
+                                        <div class="span4" style="margin: 0 30px 5px 5px;">
+                                            <img src="/avatars/{{ box.avatar }}" class="img-polaroid" />
+                                            <br /><br />
+                                        </div>
+                                        {% end %}
+                                        <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}{{_("BEGIN SECURE COMMUNIQUE")}}{% else %}{{_("DESCRIPTION")}}{% end %} *****************************************************************************************************************************************</div>
+                                        <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box._description }}</div>
+                                        <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} {{_("END SECURE COMMUNIQUE")}} {% end %}**********************************************************************************************************************************************************************</div>
                                     </div>
-                                    {% end %}
-                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin-top: 5px;">***** {% if options.story_mode %}{{_("BEGIN SECURE COMMUNIQUE")}}{% else %}{{_("DESCRIPTION")}}{% end %} *****************************************************************************************************************************************</div>
-                                    <div class="preformatted markdown" style="text-align: justify; padding: 0 20px; margin-left: 10px;">{{ box._description }}</div>
-                                    <div class="preformatted" style="overflow: hidden; white-space: nowrap; text-align: center; margin: 0;">*****{% if options.story_mode %} {{_("END SECURE COMMUNIQUE")}} {% end %}**********************************************************************************************************************************************************************</div>
-                                </div>
-                                <br clear="all" />
-                                <!-- Start Flags -->
-                                <div class="startflags">
-                                    <h4 style="display:inline;">
-                                        <i class="fa fa-flag-o"></i>
-                                        {{_("Flags on") }} {{ box.name }}&nbsp;&nbsp;&nbsp;
-                                    </h4>
-                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/flag?box={{box.uuid}}">
-                                        <i class="fa fa-plus"></i>
-                                        {{_("Add Flags") }}
-                                    </a>
-                                    <hr>
-                                    {% if len(box.flags) != 0 %}
-                                        <table class="table table-striped sort grid">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th><!-- Flag Lock --></th>
-                                                    <th>{{_("Name")}}</th>
-                                                    <th>{{_("Description")}}</th>
-                                                    <th>{{_("Token")}}</th>
-                                                    <th>{{_("Value")}}</th>
-                                                    <th>{{_("Type")}}</th>
-                                                    <th style="text-align: center;"><i class="fa fa-paperclip" title="Attachments"></i></th>
-                                                    <th>{{_("Statistics")}}
-                                                    <th><!-- Edit Button --></th>
-                                                    <th><!-- Delete Button --></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for index, flag in enumerate(box.flags) %}
+                                    <br clear="all" />
+                                    <!-- Start Flags -->
+                                    <div class="startflags">
+                                        <h4 style="display:inline;">
+                                            <i class="fa fa-flag-o"></i>
+                                            {{_("Flags on") }} {{ box.name }}&nbsp;&nbsp;&nbsp;
+                                        </h4>
+                                        <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/flag?box={{box.uuid}}">
+                                            <i class="fa fa-plus"></i>
+                                            {{_("Add Flags") }}
+                                        </a>
+                                        <hr>
+                                        {% if len(box.flags) != 0 %}
+                                            <table class="table table-striped sort grid">
+                                                <thead>
                                                     <tr>
-                                                        <td class="index shortcolumn" data-uuid="{{ flag.uuid }}">{{ index + 1 }}</td>
-                                                        <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
-                                                        <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
-                                                        <td class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
-                                                            {% set choices = FlagChoice.by_flag_id(flag.id) %}
-                                                            {% if choices and len(choices) > 0 %}{% for item in choices %}- {{item.choice}}
-                                                            {% end %}{% end %}{% end %}</td>
-                                                        <td><div class="wordbreak">{{ flag.token }}</div></td>
-                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
-                                                        <td class="shortcolumn">{{ str(flag.type) }}</td>
-                                                        <td class="shortcolumn" style="text-align: center;">
-                                                            <a id="flag-attachment-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#flag-attachment-button" data-uuid="{{ flag.uuid }}">
-                                                                {{ len(flag.flag_attachments) }}
-                                                            </a>
-                                                        </td>
-                                                        <td class="shortcolumn">
-                                                            <a id="details-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#details-flag-modal" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}" title="{{flag.token}}">
-                                                                <i class="fa fa-fw fa-eye"></i>
-                                                                {{ _("Details") }}
-                                                            </a>
-                                                        </td>
-                                                        <td class="shortcolumn">
-                                                            <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-flagtype="{{ str(flag._type) }}" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
-                                                                <i class="fa fa-fw fa-pencil"></i>
-                                                                {{_("Edit Flag") }}
-                                                            </a>
-                                                        </td>
-                                                        <td class="shortcolumn">
-                                                            <a id="delete-flag-button-{{ flag.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-flag-modal" data-uuid="{{ flag.uuid }}">
-                                                                <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                {{_("Delete")}}
-                                                            </a>
-                                                        </td>
+                                                        <th>#</th>
+                                                        <th><!-- Flag Lock --></th>
+                                                        <th>{{_("Name")}}</th>
+                                                        <th>{{_("Description")}}</th>
+                                                        <th>{{_("Token")}}</th>
+                                                        <th>{{_("Value")}}</th>
+                                                        <th>{{_("Type")}}</th>
+                                                        <th style="text-align: center;"><i class="fa fa-paperclip" title="Attachments"></i></th>
+                                                        <th>{{_("Statistics")}}
+                                                        <th><!-- Edit Button --></th>
+                                                        <th><!-- Delete Button --></th>
                                                     </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for index, flag in enumerate(box.flags) %}
+                                                        <tr>
+                                                            <td class="index shortcolumn" data-uuid="{{ flag.uuid }}">{{ index + 1 }}</td>
+                                                            <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
+                                                            <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
+                                                            <td class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
+                                                                {% set choices = FlagChoice.by_flag_id(flag.id) %}
+                                                                {% if choices and len(choices) > 0 %}{% for item in choices %}- {{item.choice}}
+                                                                {% end %}{% end %}{% end %}</td>
+                                                            <td><div class="wordbreak">{{ flag.token }}</div></td>
+                                                            <td class="shortcolumn" style="text-align: center;">{% if options.banking %}${% end %}{{ flag.value }}</td>
+                                                            <td class="shortcolumn">{{ str(flag.type) }}</td>
+                                                            <td class="shortcolumn" style="text-align: center;">
+                                                                <a id="flag-attachment-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#flag-attachment-button" data-uuid="{{ flag.uuid }}">
+                                                                    {{ len(flag.flag_attachments) }}
+                                                                </a>
+                                                            </td>
+                                                            <td class="shortcolumn">
+                                                                <a id="details-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#details-flag-modal" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}" title="{{flag.token}}">
+                                                                    <i class="fa fa-fw fa-eye"></i>
+                                                                    {{ _("Details") }}
+                                                                </a>
+                                                            </td>
+                                                            <td class="shortcolumn">
+                                                                <a id="edit-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-flag-modal" data-flagtype="{{ str(flag._type) }}" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}">
+                                                                    <i class="fa fa-fw fa-pencil"></i>
+                                                                    {{_("Edit Flag") }}
+                                                                </a>
+                                                            </td>
+                                                            <td class="shortcolumn">
+                                                                <a id="delete-flag-button-{{ flag.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-flag-modal" data-uuid="{{ flag.uuid }}">
+                                                                    <i class="fa fa-fw fa-times-circle-o"></i>
+                                                                    {{_("Delete")}}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% end %}
+                                                </tbody>
+                                            </table>
+                                        {% end %}
+                                    </div>
+                                    <!-- End Flags -->
+                                    <br />
+                                    <!-- Start Hints -->
+                                    <div class="starthints">
+                                        <h4 style="display:inline;">
+                                            <i class="fa fa-medkit"></i>
+                                            {{_("Hints on")}} {{ box.name }}&nbsp;&nbsp;&nbsp;
+                                        </h4>
+                                        <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/hint?box={{box.uuid}}">
+                                            <i class="fa fa-plus"></i>
+                                            {{_("Add Hint")}}
+                                        </a>
+                                        <hr>
+                                        {% if len(box.hints) != 0 %}
+                                            {% set boxhints = [] %}
+                                            {% set flaghints = [] %}
+                                            {% for index, hint in enumerate(box.hints) %}
+                                                {% if hint.flag_id %}
+                                                    {% set flaghints.append(hint) %}
+                                                {% else %}
+                                                    {% set boxhints.append(hint) %}
                                                 {% end %}
-                                            </tbody>
-                                        </table>
-                                    {% end %}
-                                </div>
-                                <!-- End Flags -->
-                                <br />
-                                <!-- Start Hints -->
-                                <div class="starthints">
-                                    <h4 style="display:inline;">
-                                        <i class="fa fa-medkit"></i>
-                                        {{_("Hints on")}} {{ box.name }}&nbsp;&nbsp;&nbsp;
-                                    </h4>
-                                    <a class="btn btn-primary btn-mini" data-toggle="modal" href="/admin/create/hint?box={{box.uuid}}">
-                                        <i class="fa fa-plus"></i>
-                                        {{_("Add Hint")}}
-                                    </a>
-                                    <hr>
-                                    {% if len(box.hints) != 0 %}
-                                        {% set boxhints = [] %}
-                                        {% set flaghints = [] %}
-                                        {% for index, hint in enumerate(box.hints) %}
-                                            {% if hint.flag_id %}
-                                                {% set flaghints.append(hint) %}
-                                            {% else %}
-                                                {% set boxhints.append(hint) %}
+                                            {% end %}
+                                        
+                                            {% if len(flaghints) > 0 %}
+                                            <h5>{{_("Flag Hints")}}</h5>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>{% if options.banking %}{{_("Price")}}{% else %}{{_("Cost")}}{% end %}</th>
+                                                        <th>{{_("Flag")}}</th>
+                                                        <th>{{_("Description")}}</th>
+                                                        <th><!-- Edit Button --></th>
+                                                        <th><!-- Delete Button --></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for index, hint in enumerate(flaghints) %}
+                                                        <tr>
+                                                            <td class="shortcolumn">{{ index + 1 }}</td>
+                                                            <td class="shortcolumn" style="text-align: center;">{% if options.banking %}{{_("$")}}{% end %}{{ hint.price }}</td>
+                                                            <td class="shortcolumn flagname" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
+                                                            <td class="descriptioncol markdown">{{ hint.description }}</td>
+                                                            <td class="shortcolumn">
+                                                                <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
+                                                                    <i class="fa fa-fw fa-pencil"></i>
+                                                                    {{_("Edit Hint")}}
+                                                                </a>
+                                                            </td>
+                                                            <td class="shortcolumn">
+                                                                <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                                    <i class="fa fa-fw fa-times-circle-o"></i>
+                                                                    {{_("Delete")}}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% end %}
+                                                </tbody>
+                                            </table>
+                                            {% end %}
+                                            {% if len(boxhints) > 0 %}
+                                            <h5>{{_("Box Hints")}}</h5>
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>{% if options.banking %}{{_("Price")}}{% else %}{{_("Cost")}}{% end %}</th>
+                                                        <th>{{_("Description")}}</th>
+                                                        <th><!-- Edit Button --></th>
+                                                        <th><!-- Delete Button --></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for index, hint in enumerate(boxhints) %}
+                                                        <tr>
+                                                            <td class="shortcolumn">{{ index + 1 }}</td>
+                                                            <td class="shortcolumn" style="text-align: center;">{% if options.banking %}{{_("$")}}{% end %}{{ hint.price }}</td>
+                                                            <td class="descriptioncol markdown">{{ hint.description }}</td>
+                                                            <td class="shortcolumn">
+                                                                <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
+                                                                    <i class="fa fa-fw fa-pencil"></i>
+                                                                    {{_("Edit Hint")}}
+                                                                </a>
+                                                            </td>
+                                                            <td class="shortcolumn">
+                                                                <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
+                                                                    <i class="fa fa-fw fa-times-circle-o"></i>
+                                                                    {{_("Delete")}}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% end %}
+                                                </tbody>
+                                            </table>
                                             {% end %}
                                         {% end %}
-                                       
-                                        {% if len(flaghints) > 0 %}
-                                        <h5>{{_("Flag Hints")}}</h5>
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>{% if options.banking %}{{_("Price")}}{% else %}{{_("Cost")}}{% end %}</th>
-                                                    <th>{{_("Flag")}}</th>
-                                                    <th>{{_("Description")}}</th>
-                                                    <th><!-- Edit Button --></th>
-                                                    <th><!-- Delete Button --></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for index, hint in enumerate(flaghints) %}
+                                    </div>
+                                    <!-- End Hints -->
+                                    <br/>
+                                    <!-- Start IPs -->
+                                    <div class="startips">
+                                        <h4 style="display:inline;">
+                                            <i class="fa fa-fw fa-globe"></i>
+                                            {{_("IP Address")}}&nbsp;&nbsp;
+                                        </h4>
+                                        <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-primary btn-mini" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
+                                            <i class="fa fa-fw fa-plus"></i>
+                                            {{_("Add IP Address")}}
+                                        </a>
+                                        <br />
+                                        <hr>
+                                        {% if len(box.ip_addresses) != 0 %}
+                                            <table class="table table-striped">
+                                                <thead>
                                                     <tr>
-                                                        <td class="shortcolumn">{{ index + 1 }}</td>
-                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}{{_("$")}}{% end %}{{ hint.price }}</td>
-                                                        <td class="shortcolumn flagname" style="padding-right: 25px;">{{ Flag.by_id(hint.flag_id).name }}</td>
-                                                        <td class="descriptioncol markdown">{{ hint.description }}</td>
-                                                        <td class="shortcolumn">
-                                                            <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
-                                                                <i class="fa fa-fw fa-pencil"></i>
-                                                                {{_("Edit Hint")}}
-                                                            </a>
-                                                        </td>
-                                                        <td class="shortcolumn">
-                                                            <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
-                                                                <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                {{_("Delete")}}
-                                                            </a>
-                                                        </td>
+                                                        <th>#</th>
+                                                        <th>{{_("Address")}}</th>
+                                                        <th>{{_("IP Version")}}</th>
+                                                        <th>{{_("Visible")}}</th>
+                                                        <th><!-- Delete --></th>
                                                     </tr>
-                                                {% end %}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {% for index, ip in enumerate(box.ip_addresses) %}
+                                                        <tr>
+                                                            <td>{{ index + 1 }}</td>
+                                                            <td>{{ ip.address }}</td>
+                                                            <td>{{ ip.version }}</td>
+                                                            <td>{% if ip.visable %} {{_("Yes")}} {% else %} {{_("No")}} {% end %}</td>
+                                                            <td class="shortcolumn">
+                                                                <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
+                                                                    <i class="fa fa-fw fa-times-circle-o"></i>
+                                                                    {{_("Delete")}}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% end %}
+                                                </tbody>
+                                            </table>
                                         {% end %}
-                                        {% if len(boxhints) > 0 %}
-                                        <h5>{{_("Box Hints")}}</h5>
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>{% if options.banking %}{{_("Price")}}{% else %}{{_("Cost")}}{% end %}</th>
-                                                    <th>{{_("Description")}}</th>
-                                                    <th><!-- Edit Button --></th>
-                                                    <th><!-- Delete Button --></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for index, hint in enumerate(boxhints) %}
-                                                    <tr>
-                                                        <td class="shortcolumn">{{ index + 1 }}</td>
-                                                        <td class="shortcolumn" style="text-align: center;">{% if options.banking %}{{_("$")}}{% end %}{{ hint.price }}</td>
-                                                        <td class="descriptioncol markdown">{{ hint.description }}</td>
-                                                        <td class="shortcolumn">
-                                                            <a id="edit-hint-button-{{ hint.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-hint-modal" data-uuid="{{ hint.uuid }}" data-box-uuid="{{ hint.box.uuid }}">
-                                                                <i class="fa fa-fw fa-pencil"></i>
-                                                                {{_("Edit Hint")}}
-                                                            </a>
-                                                        </td>
-                                                        <td class="shortcolumn">
-                                                            <a id="delete-hint-button-{{ hint.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-hint-modal" data-uuid="{{ hint.uuid }}">
-                                                                <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                {{_("Delete")}}
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                {% end %}
-                                            </tbody>
-                                        </table>
-                                        {% end %}
-                                    {% end %}
+                                    </div>
+                                    <!-- End IPs -->
                                 </div>
-                                <!-- End Hints -->
-                                <br/>
-                                <!-- Start IPs -->
-                                <div class="startips">
-                                    <h4 style="display:inline;">
-                                        <i class="fa fa-fw fa-globe"></i>
-                                        {{_("IP Address")}}&nbsp;&nbsp;
-                                    </h4>
-                                    <a id="add-ip-address-button-{{ box.uuid }}" class="btn btn-primary btn-mini" data-toggle="modal" href="#add-ip-address-modal" data-uuid="{{ box.uuid }}">
-                                        <i class="fa fa-fw fa-plus"></i>
-                                        {{_("Add IP Address")}}
-                                    </a>
-                                    <br />
-                                    <hr>
-                                    {% if len(box.ip_addresses) != 0 %}
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>{{_("Address")}}</th>
-                                                    <th>{{_("IP Version")}}</th>
-                                                    <th>{{_("Visible")}}</th>
-                                                    <th><!-- Delete --></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for index, ip in enumerate(box.ip_addresses) %}
-                                                    <tr>
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>{{ ip.address }}</td>
-                                                        <td>{{ ip.version }}</td>
-                                                        <td>{% if ip.visable %} {{_("Yes")}} {% else %} {{_("No")}} {% end %}</td>
-                                                        <td class="shortcolumn">
-                                                            <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
-                                                                <i class="fa fa-fw fa-times-circle-o"></i>
-                                                                {{_("Delete")}}
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                {% end %}
-                                            </tbody>
-                                        </table>
-                                    {% end %}
-                                </div>
-                                <!-- End IPs -->
-                            </div>
-                            <br />
+                                <br />
+                            {% end %}
+                        {% else %}
+                            <strong>{{_("No boxes in this corporation yet")}}, <a href="/admin/create/box">{{_("add some")}}</a></strong>
                         {% end %}
-                    {% else %}
-                        <strong>{{_("No boxes in this corporation yet")}}, <a href="/admin/create/box">{{_("add some")}}</a></strong>
-                    {% end %}
-                </div>
+                    </div>
+                {% end %}
+            {% else %}
+                <strong>{{_("No boxes in this corporation yet")}}, <a href="/admin/create/box">{{_("add some")}}</a></strong>
             {% end %}
         </div>
     </div>

@@ -85,7 +85,7 @@ class FlagChoice(DatabaseObject):
 
     @property
     def choice(self):
-        return self._choice
+        return str(self._choice)
 
     @choice.setter
     def choice(self, value):
