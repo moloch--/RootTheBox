@@ -108,7 +108,7 @@ class BoxHandler(BaseHandler):
         uuid = self.get_argument("uuid", "")
         box = Box.by_uuid(uuid)
         if box is not None:
-            user = self.get_current_user()         
+            user = self.get_current_user()
             if box.locked:
                 self.render(
                     "missions/status.html",
@@ -462,8 +462,7 @@ class PurchaseHintHandler(BaseHandler):
                 flag
                 and flag.box.flag_submission_type
                 != FlagsSubmissionType.SINGLE_SUBMISSION_BOX
-                and Penalty.by_count(flag, user.team)
-                >= self.config.max_flag_attempts
+                and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts
             ):
                 self.render_page(
                     hint.box, info=["You can no longer purchase this hint."]

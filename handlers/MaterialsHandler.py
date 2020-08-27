@@ -50,7 +50,8 @@ class MaterialsHandler(BaseHandler):
                 tmp = os.path.join(os.path.abspath(d), args[0])
                 if is_directory_traversal(tmp):
                     logging.warn(
-                        "%s attempted to use a directory traversal" % self.request.remote_ip
+                        "%s attempted to use a directory traversal"
+                        % self.request.remote_ip
                     )
                     self.redirect(self.application.settings["forbidden_url"])
                     return
@@ -88,7 +89,9 @@ class MaterialsHandler(BaseHandler):
         return d
 
     def show_materials(self):
-        return self.application.settings["game_started"] or options.game_materials_on_stop
+        return (
+            self.application.settings["game_started"] or options.game_materials_on_stop
+        )
 
 
 def is_directory_traversal(file_name):
@@ -96,6 +99,7 @@ def is_directory_traversal(file_name):
     requested_path = os.path.abspath(file_name)
     common_prefix = os.path.commonprefix([requested_path, materials_root_directory])
     return common_prefix != materials_root_directory
+
 
 def has_materials():
     d = options.game_materials_dir
@@ -106,6 +110,7 @@ def has_materials():
         else:
             i += 1
         return i > 0
+
 
 def has_box_materials(box):
     if not options.use_box_materials_dir:

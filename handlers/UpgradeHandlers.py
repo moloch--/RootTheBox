@@ -34,7 +34,12 @@ from models.Box import Box
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.User import User
-from libs.SecurityDecorators import authenticated, has_item, use_black_market, game_started
+from libs.SecurityDecorators import (
+    authenticated,
+    has_item,
+    use_black_market,
+    game_started,
+)
 from builtins import str
 from mimetypes import guess_type
 from base64 import b64decode

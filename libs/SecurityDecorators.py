@@ -75,7 +75,7 @@ def game_started(method):
             if user is None or not user.is_admin():
                 self.redirect("/gamestatus")
         return method(self, *args, **kwargs)
-        
+
     return wrapper
 
 

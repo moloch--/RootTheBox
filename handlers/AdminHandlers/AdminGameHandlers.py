@@ -74,22 +74,36 @@ class AdminGameHandler(BaseHandler):
         freeze_score = self.get_argument("freeze_scoreboard", None)
         stop_timer = self.get_argument("stop_timer", None)
 
-        if start_game and start_game != str(self.application.settings["game_started"]).lower():
+        if (
+            start_game
+            and start_game != str(self.application.settings["game_started"]).lower()
+        ):
             if self.get_argument("start_game", "") == "true":
                 self.start_game()
             else:
                 self.stop_game()
-        if stop_timer and self.isOn(stop_timer) != self.application.settings["stop_timer"]:
+        if (
+            stop_timer
+            and self.isOn(stop_timer) != self.application.settings["stop_timer"]
+        ):
             if self.isOn(stop_timer):
                 self.application.settings["stop_timer"] = True
             else:
                 self.application.settings["stop_timer"] = False
-        if suspend_reg and suspend_reg != str(self.application.settings["suspend_registration"]).lower():
+        if (
+            suspend_reg
+            and suspend_reg
+            != str(self.application.settings["suspend_registration"]).lower()
+        ):
             if suspend_reg == "true":
                 self.application.settings["suspend_registration"] = True
             elif suspend_reg == "false":
                 self.application.settings["suspend_registration"] = False
-        if freeze_score and freeze_score != str(self.application.settings["freeze_scoreboard"]).lower():
+        if (
+            freeze_score
+            and freeze_score
+            != str(self.application.settings["freeze_scoreboard"]).lower()
+        ):
             if freeze_score == "false":
                 self.application.settings["freeze_scoreboard"] = False
                 self.application.settings["stop_timer"] = False
@@ -112,7 +126,6 @@ class AdminGameHandler(BaseHandler):
 
     def isOn(self, value):
         return value == "on"
-
 
 
 class AdminMessageHandler(BaseHandler):
