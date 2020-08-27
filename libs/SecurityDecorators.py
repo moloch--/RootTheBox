@@ -65,6 +65,20 @@ def authenticated(method):
     return wrapper
 
 
+def game_started(method):
+    """ Checks to see if the game is running """
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if not self.application.settings["game_started"]:
+            user = self.get_current_user()
+            if user is None or not user.is_admin():
+                self.redirect("/gamestatus")
+        return method(self, *args, **kwargs)
+        
+    return wrapper
+
+
 def restrict_ip_address(method):
     """ Only allows access to ip addresses in a provided list """
 

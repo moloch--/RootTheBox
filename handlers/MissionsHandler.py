@@ -31,7 +31,7 @@ from tornado.options import options
 from builtins import next
 from builtins import str
 from past.utils import old_div
-from libs.SecurityDecorators import authenticated
+from libs.SecurityDecorators import authenticated, game_started
 from libs.StringCoding import decode, encode
 from handlers.BaseHandlers import BaseHandler
 from models.GameLevel import GameLevel
@@ -100,6 +100,7 @@ class StoryAjaxHandler(BaseHandler):
 
 class BoxHandler(BaseHandler):
     @authenticated
+    @game_started
     def get(self, *args, **kwargs):
         """
         Renders the box details page.
@@ -107,48 +108,35 @@ class BoxHandler(BaseHandler):
         uuid = self.get_argument("uuid", "")
         box = Box.by_uuid(uuid)
         if box is not None:
-            user = self.get_current_user()
-            if self.application.settings["game_started"] or user.is_admin():
-                if box.locked:
-                    self.render(
-                        "missions/status.html",
-                        errors=None,
-                        info=["This box is currently locked by the Admin."],
-                    )
-                else:
-                    self.render(
-                        "missions/box.html",
-                        box=box,
-                        user=user,
-                        team=user.team,
-                        errors=[],
-                        success=[],
-                        info=[],
-                    )
-            else:
+            user = self.get_current_user()         
+            if box.locked:
                 self.render(
                     "missions/status.html",
                     errors=None,
-                    info=["The game has not started yet"],
+                    info=["This box is currently locked by the Admin."],
+                )
+            else:
+                self.render(
+                    "missions/box.html",
+                    box=box,
+                    user=user,
+                    team=user.team,
+                    errors=[],
+                    success=[],
+                    info=[],
                 )
         else:
             self.render("public/404.html")
 
     @authenticated
+    @game_started
     def post(self, *args, **kwargs):
         """ Check validity of flag submissions """
         box_id = self.get_argument("box_id", None)
         uuid = self.get_argument("uuid", "")
         token = self.get_argument("token", "")
         user = self.get_current_user()
-        if not self.application.settings["game_started"] and not user.is_admin():
-            self.render(
-                "missions/status.html",
-                errors=None,
-                info=["The game has not started yet"],
-            )
-            return
-        elif (box_id and Box.by_id(box_id).locked) or (
+        if (box_id and Box.by_id(box_id).locked) or (
             uuid and Flag.by_uuid(uuid).box.locked
         ):
             self.render(
@@ -437,6 +425,7 @@ class BoxHandler(BaseHandler):
 
 class FlagCaptureMessageHandler(BaseHandler):
     @authenticated
+    @game_started
     def get(self, *args, **kwargs):
         fuuid = self.get_argument("flag", None)
         buuid = self.get_argument("box", None)
@@ -461,40 +450,34 @@ class FlagCaptureMessageHandler(BaseHandler):
 
 class PurchaseHintHandler(BaseHandler):
     @authenticated
+    @game_started
     def post(self, *args, **kwargs):
         """ Purchase a hint """
         uuid = self.get_argument("uuid", "")
         hint = Hint.by_uuid(uuid)
         if hint is not None:
             user = self.get_current_user()
-            if self.application.settings["game_started"] or user.is_admin():
-                flag = hint.flag
-                if (
-                    flag
-                    and flag.box.flag_submission_type
-                    != FlagsSubmissionType.SINGLE_SUBMISSION_BOX
-                    and Penalty.by_count(flag, user.team)
-                    >= self.config.max_flag_attempts
-                ):
-                    self.render_page(
-                        hint.box, info=["You can no longer purchase this hint."]
-                    )
-                elif hint.price <= user.team.money:
-                    logging.info(
-                        "%s (%s) purchased a hint for $%d on %s"
-                        % (user.handle, user.team.name, hint.price, hint.box.name)
-                    )
-                    self._purchase_hint(hint, user.team)
-                    self.render_page(hint.box)
-                else:
-                    self.render_page(
-                        hint.box, info=["You cannot afford to purchase this hint."]
-                    )
+            flag = hint.flag
+            if (
+                flag
+                and flag.box.flag_submission_type
+                != FlagsSubmissionType.SINGLE_SUBMISSION_BOX
+                and Penalty.by_count(flag, user.team)
+                >= self.config.max_flag_attempts
+            ):
+                self.render_page(
+                    hint.box, info=["You can no longer purchase this hint."]
+                )
+            elif hint.price <= user.team.money:
+                logging.info(
+                    "%s (%s) purchased a hint for $%d on %s"
+                    % (user.handle, user.team.name, hint.price, hint.box.name)
+                )
+                self._purchase_hint(hint, user.team)
+                self.render_page(hint.box)
             else:
-                self.render(
-                    "missions/status.html",
-                    errors=None,
-                    info=["The game has not started yet"],
+                self.render_page(
+                    hint.box, info=["You cannot afford to purchase this hint."]
                 )
         else:
             self.render("public/404.html")
@@ -528,34 +511,22 @@ class MissionsHandler(BaseHandler):
     """ Renders pages related to Missions/Flag submissions """
 
     @authenticated
+    @game_started
     def get(self, *args, **kwargs):
         """ Render missions view """
         user = self.get_current_user()
-        if self.application.settings["game_started"] or user.is_admin():
-            self.render("missions/view.html", team=user.team, errors=None, success=None)
-        else:
-            self.render(
-                "missions/status.html",
-                errors=None,
-                info=["The game has not started yet"],
-            )
+        self.render("missions/view.html", team=user.team, errors=None, success=None)
 
     @authenticated
+    @game_started
     def post(self, *args, **kwargs):
         """ Submit flags/buyout to levels """
         user = self.get_current_user()
-        if self.application.settings["game_started"] or user.is_admin():
-            uri = {"buyout": self.buyout}
-            if len(args) and args[0] in uri:
-                uri[str(args[0])]()
-            else:
-                self.render("public/404.html")
+        uri = {"buyout": self.buyout}
+        if len(args) and args[0] in uri:
+            uri[str(args[0])]()
         else:
-            self.render(
-                "missions/status.html",
-                errors=None,
-                info=["The game has not started yet"],
-            )
+            self.render("public/404.html")
 
     def buyout(self):
         """ Buyout and unlock a level """

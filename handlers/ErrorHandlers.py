@@ -64,6 +64,14 @@ class UnauthorizedHandler(BaseHandler):
         self.render("public/403.html", locked=locked, xsrf=False)
 
 
+class StopHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        """ Renders the Game Stopped page """
+        self.render(
+            "public/stopped.html", errors=None, info=["The game is currently stopped."]
+        )
+
+
 class NoobHandler(BaseHandler):
     def get(self, *args, **kwargs):
         """ Renders the noob page """

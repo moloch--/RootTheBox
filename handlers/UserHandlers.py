@@ -56,6 +56,7 @@ class HomeHandler(BaseHandler):
         """ Display the default user page """
         user = self.get_current_user()
         if user.is_admin():
+            self.timer()
             self.render("admin/home.html", user=user)
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()

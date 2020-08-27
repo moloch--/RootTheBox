@@ -325,7 +325,7 @@ class User(DatabaseObject):
         item = MarketItem.by_name(item_name)
         if item is None:
             raise ValueError("Item '%s' not in database." % str(item_name))
-        return True if item in self.team.items else False
+        return True if self.team and item in self.team.items else False
 
     def has_permission(self, permission):
         """ Return True if 'permission' is in permissions_names """

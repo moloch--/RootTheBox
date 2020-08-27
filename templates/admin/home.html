@@ -98,9 +98,9 @@
                 {% end %}
                 <form id="start-game-form" action="/admin/game" method="post">
                     {% raw xsrf_form_html() %}
-                    <input id="start-game" name="start_game" type="hidden" />
-                    <input id="suspend-registration" name="suspend_registration" type="hidden" />
-                    <input id="freeze-scoreboard" name="freeze_scoreboard" type="hidden" />
+                    <input id="start-game" name="start_game" type="hidden" value="{{ str(handler.application.settings['game_started']).lower() }}" />
+                    <input id="suspend-registration" name="suspend_registration" type="hidden"  value="{{ str(handler.application.settings['suspend_registration']).lower() }}" />
+                    <input id="freeze-scoreboard" name="freeze_scoreboard" type="hidden"  value="{{ str(handler.application.settings['freeze_scoreboard']).lower() }}" />
                 </form>
                 <form id="ban-ip-form" action="/admin/ban/add" method="post">
                     {% raw xsrf_form_html() %}
@@ -125,12 +125,12 @@
                 </div>
                 <div class="game_button_area">
                     {% if not handler.application.settings['suspend_registration'] %}
-                        <button id="suspend-registration-button" class="btn btn-warning game_button" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
+                        <button id="suspend-registration-button" class="btn btn-warning game_button" type="button">
                             <i class="fa fa-fw fa-pause"></i>  
                         </button>
                         <h4 class="game_button_text">{{ _("Pause Registration") }}</h4>
                     {% else %}
-                        <button id="resume-registration-button" class="btn btn-success game_button" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
+                        <button id="resume-registration-button" class="btn btn-success game_button" type="button">
                             <i class="fa fa-fw fa-play"></i>  
                         </button>
                         <h4 class="game_button_text">{{ _("Resume Registration") }}</h4>
@@ -138,12 +138,12 @@
                 </div>
                 <div class="game_button_area">
                     {% if not handler.application.settings['freeze_scoreboard'] %}
-                        <button id="freeze-scoreboard-button" class="btn btn-warning game_button" data-toggle="modal" href="#timer-modal" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
+                        <button id="freeze-scoreboard-button" class="btn btn-warning game_button" data-toggle="modal" href="#timer-modal" type="button">
                             <i class="fa fa-fw fa-pause"></i>
                         </button>
                         <h4 class="game_button_text">{{ _("Pause Scoreboard") }}</h4>
                     {% else %}
-                        <button id="resume-scoreboard-button" class="btn btn-success game_button" type="button"{% if not handler.application.settings['game_started'] %} disabled{% end %}>
+                        <button id="resume-scoreboard-button" class="btn btn-success game_button" type="button">
                             <i class="fa fa-fw fa-play"></i>
                         </button>
                         <h4 class="game_button_text">{{ _("Resume Scoreboard") }}</h4>

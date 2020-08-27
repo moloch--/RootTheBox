@@ -194,6 +194,7 @@ urls = [
     (r"/admin/reset", AdminResetHandler),
     # Error handlers - ErrorHandlers.py
     (r"/403", UnauthorizedHandler),
+    (r"/gamestatus", StopHandler),
     (r"/(.*).php", NoobHandler),
     (r"/admin", NoobHandler),
     (r"/(.*)phpmyadmin(.*)", NoobHandler),

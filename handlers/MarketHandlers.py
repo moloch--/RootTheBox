@@ -30,7 +30,7 @@ from tornado.options import options
 from .BaseHandlers import BaseHandler
 from models.MarketItem import MarketItem
 from models.Team import Team
-from libs.SecurityDecorators import authenticated, use_black_market
+from libs.SecurityDecorators import authenticated, use_black_market, game_started
 
 
 class MarketViewHandler(BaseHandler):
@@ -38,6 +38,7 @@ class MarketViewHandler(BaseHandler):
     """ Renders views of items in the market """
 
     @authenticated
+    @game_started
     @use_black_market
     def get(self, *args, **kwargs):
         """ Renders the main table """
@@ -45,6 +46,7 @@ class MarketViewHandler(BaseHandler):
         self.render("market/view.html", user=user, errors=None)
 
     @authenticated
+    @game_started
     @use_black_market
     def post(self, *args, **kwargs):
         """ Called to purchase an item """

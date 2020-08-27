@@ -354,6 +354,14 @@ define(
 )
 
 define(
+    "game_materials_on_stop",
+    default=True,
+    group="application",
+    help="show game materials when game stopped",
+    type=bool,
+)
+
+define(
     "use_box_materials_dir",
     default=True,
     group="application",

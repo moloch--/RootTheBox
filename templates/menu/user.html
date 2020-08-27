@@ -93,7 +93,7 @@
                                 </li>
                                 {% end %}
                             {% end %}
-                            {% if has_materials() %}
+                            {% if (handler.application.settings['game_started'] or options.game_materials_on_stop) and has_materials() %}
                             <li>
                                 <a href="/materials">
                                     <i class="fa fa-fw fa-folder-open-o"></i>
