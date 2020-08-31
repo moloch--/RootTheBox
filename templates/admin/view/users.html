@@ -195,21 +195,23 @@
                     </div>
                 </div>
                 {% if options.banking %}
-                <div class="control-group">
-                    <label class="control-label" for="user-hash-algorithm">{{_("Bank Hash Algorithm")}}</label>
-                    <div class="controls">
-                        <select id="user-hash-algorithm" name="hash_algorithm">
-                            <option value="md5">MD5</option>
-                            <option value="sha1">SHA1</option>
-                            <option value="sha256">SHA-256</option>
-                            <option value="sha512">SHA-512</option>
-                        </select>
+                <div id="banking-group">
+                    <div class="control-group">
+                        <label class="control-label" for="user-hash-algorithm">{{_("Bank Hash Algorithm")}}</label>
+                        <div class="controls">
+                            <select id="user-hash-algorithm" name="hash_algorithm">
+                                <option value="md5">MD5</option>
+                                <option value="sha1">SHA1</option>
+                                <option value="sha256">SHA-256</option>
+                                <option value="sha512">SHA-512</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="bank-password">{{_("Bank Password")}}</label>
-                    <div class="controls">
-                        <input id="bank-password" name="bank_password" type="password" placeholder="{{_('New Bank Password')}}" maxlength="{{ options.max_password_length }}">
+                    <div class="control-group">
+                        <label class="control-label" for="bank-password">{{_("Bank Password")}}</label>
+                        <div class="controls">
+                            <input id="bank-password" name="bank_password" type="password" placeholder="{{_('New Bank Password')}}" maxlength="{{ options.max_password_length }}">
+                        </div>
                     </div>
                 </div>
                 {% end %}
@@ -364,6 +366,7 @@
 {% end %}
 
 {% block content %}
+{% from models.User import User %}
 {% from models.Team import Team %}
     <!-- Lock Form -->
     <form id="lock-user-form" action="/admin/lock/user" method="post">
@@ -392,6 +395,63 @@
             {% end %}
             {% if len(Team.all()) == 0 %}
                 <p class="well"><strong>{{_("No Users")}}</strong></p>
+            {% end %}
+            {% set admins = [] %}
+            {% for user in User.all() %}
+                {% if user.is_admin() %}
+                    {% set admins.append(user) %}
+                {% end %}
+            {% end %}
+            {% if len(admins) > 0 %}
+                <div class="well">
+                    <h2 style="display:inline;"> {{_("Admins")}}&nbsp;&nbsp;</h2>
+                    <hr style="border: 2px solid green;" />
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{{_("Handle")}}</th>
+                                <th>{{_("Name")}}</th>
+                                <th>{{_("Last Login")}}</th>
+                                <th>{{_("Admin Notes")}}</th>
+                                <th><!-- Edit Button --></th>
+                                <th><!-- Delete Button --></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for index, user in enumerate(admins) %}
+                            {% if user.locked %}
+                                <tr class="error">
+                            {% else %}
+                                <tr>
+                            {% end %}
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ user.handle }}</td>
+                                <td>{%if user.name %}{{user.name}}{% else %}{{_("Unknown")}}{% end %}</td>
+                                {% if 0 < user.logins %}
+                                    <td>{{ user.last_login }}</td>
+                                {% else %}
+                                    <td>{{_("Never")}}</td>
+                                {% end %}
+                                <td>{% if user.notes %}{{ user.notes }}{% end %}</td>
+                                <td class="shortcolumn">
+                                    <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}">
+                                        <i class="fa fa-fw fa-pencil"></i>
+                                        {{_("Edit Account")}}
+                                    </a>
+                                </td>
+                                <td class="shortcolumn">
+                                    <a id="delete-user-button-{{ user.uuid }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-user-modal" data-uuid="{{ user.uuid }}">
+                                        <i class="fa fa-fw fa-times-circle-o"></i>
+                                        {{_("Delete")}}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% end %}
+                        </tbody>
+                    </table>
+                    <hr style="border: 2px solid green;" />
+                </div>
             {% end %}
             {% for team_index, team in enumerate(Team.all()) %}
                 {% if options.teams or len(team.members) > 0 %}

@@ -392,7 +392,7 @@ class User(DatabaseObject):
             "email": self.email,
             "admin": str(self.is_admin()).lower(),
             "hash_algorithm": self.algorithm,
-            "team_uuid": self.team.uuid,
+            "team_uuid": self.team.uuid if self.team else "",
             "avatar": self.avatar,
             "notes": self.notes,
         }

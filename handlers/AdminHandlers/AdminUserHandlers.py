@@ -31,10 +31,12 @@ from models.Team import Team
 from models.Box import Box
 from models.User import User, ADMIN_PERMISSION
 from models.Permission import Permission
+from models.GameLevel import GameLevel
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
 from libs.EventManager import EventManager
+from libs.Identicon import identicon
 from builtins import str
 from tornado.options import options
 from netaddr import IPAddress
@@ -180,25 +182,51 @@ class AdminEditUsersHandler(BaseHandler):
                     user.team_id = team.id
             elif options.teams:
                 raise ValidationError("Team does not exist in database")
-            self.dbsession.add(user)
 
             admin = self.get_argument("admin", "false")
             if admin == "true" and not user.is_admin():
                 permission = Permission()
                 permission.name = ADMIN_PERMISSION
                 permission.user_id = user.id
+                user.team = None
                 self.dbsession.add(permission)
             elif admin == "false" and user.is_admin():
+                if user == self.get_current_user():
+                    self.render(
+                        "admin/view/users.html", errors=["You cannont demote yourself."]
+                    )
+                    return
+                team = Team.by_name(user.handle)
+                if team is None:
+                    team = self.create_team(user)
+                user.team = team
                 permissions = Permission.by_user_id(user.id)
                 for permission in permissions:
                     if permission.name == ADMIN_PERMISSION:
                         self.dbsession.delete(permission)
 
+            self.dbsession.add(user)
             self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
         except ValidationError as error:
             self.render("admin/view/users.html", errors=[str(error)])
+
+    def create_team(self, user):
+        team = Team()
+        team.name = user.handle
+        team.motto = ""
+        team._avatar = identicon(team.name, 6)
+        if self.config.banking:
+            team.money = self.config.starting_team_money
+        else:
+            team.money = 0
+        level_0 = GameLevel.by_number(0)
+        if not level_0:
+            level_0 = GameLevel.all()[0]
+        team.game_levels.append(level_0)
+        self.dbsession.add(team)
+        return team
 
 
 class AdminDeleteUsersHandler(BaseHandler):
@@ -217,15 +245,17 @@ class AdminDeleteUsersHandler(BaseHandler):
         Delete user objects in the database, you cannot delete yourself.
         """
         user = User.by_uuid(self.get_argument("uuid", ""))
-        if user is not None and user != self.get_current_user():
+        if user is None:
+            self.render("admin/view/users.html", errors=["User does not exist"])
+        elif user == self.get_current_user():
+            self.render("admin/view/users.html", errors=["You cannot delete yourself."])
+        else:
             logging.info("Deleted User: '%s'" % str(user.handle))
             EventManager.instance().deauth(user)
             self.dbsession.delete(user)
             self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
-        else:
-            self.render("admin/view/users.html", errors=["User does not exist"])
 
     def del_team(self):
         """
