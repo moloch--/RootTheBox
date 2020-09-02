@@ -327,7 +327,7 @@ def _xml_file_import(filename):
 
 def import_xml(target):
     """ Import XML file or directory of files """
-    target = path.abspath(target)
+    target = path.abspath(path.expanduser(target))
     if not path.exists(target):
         logging.error("Error: Target does not exist (%s) " % target)
     elif path.isdir(target):

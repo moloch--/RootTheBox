@@ -959,6 +959,8 @@ if __name__ == "__main__":
         recovery()
     elif options.update:
         update()
+    elif options.xml:
+        setup_xml(options.xml)
     elif options.tests:
         tests()
     else:
