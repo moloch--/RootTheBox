@@ -180,6 +180,12 @@ class User(DatabaseObject):
         else:
             return options.default_theme
 
+    @theme.setter
+    def theme(self, value):
+        theme = Theme.by_name(value)
+        if theme:
+            self.theme_id = theme.id
+
     @property
     def bank_password(self):
         return self._bank_password

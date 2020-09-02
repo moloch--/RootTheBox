@@ -59,6 +59,8 @@ def get_child_text(elem, tag_name, default=""):
 
 def create_categories(categories):
     """ Create Category objects based on XML data """
+    if categories is None:
+        return
     logging.info("Found %s categories" % categories.get("count"))
     for index, cat_elem in enumerate(categories.getchildren()):
         cat = get_child_text(cat_elem, "category")
@@ -74,6 +76,8 @@ def create_categories(categories):
 
 def create_levels(levels):
     """ Create GameLevel objects based on XML data """
+    if levels is None:
+        return
     logging.info("Found %s game level(s)" % levels.get("count"))
     for index, level_elem in enumerate(levels.getchildren()):
         # GameLevel 0 is created automatically by the bootstrap
@@ -109,7 +113,7 @@ def create_levels(levels):
 
 def create_hints(parent, box, flag=None):
     """ Create flag objects for a box """
-    if parent:
+    if parent and box:
         logging.info("Found %s hint(s)" % parent.get("count"))
         for index, hint_elem in enumerate(parent.getchildren()):
             try:
@@ -126,7 +130,7 @@ def create_hints(parent, box, flag=None):
 
 def create_flags(parent, box):
     """ Create flag objects for a box """
-    if parent:
+    if parent and box:
         logging.info("Found %s flag(s)" % parent.get("count"))
         flag_dependency = []
         for index, flag_elem in enumerate(parent.getchildren()):
@@ -164,6 +168,8 @@ def create_flags(parent, box):
 
 def add_attachments(parent, flag):
     """ Add uploaded files as attachments to flags """
+    if flag is None:
+        return
     logging.info("Found %s attachment(s)" % parent.get("count"))
     for index, attachement_elem in enumerate(parent.getchildren()):
         try:
@@ -181,6 +187,8 @@ def add_attachments(parent, flag):
 
 def create_choices(parent, flag):
     """ Create multiple choice flag objects """
+    if flag is None:
+        return
     logging.info("Found %s choice(s)" % parent.get("count"))
     for index, choice_elem in enumerate(parent.getchildren()):
         try:
@@ -193,6 +201,8 @@ def create_choices(parent, flag):
 
 def create_boxes(parent, corporation):
     """ Create boxes for a corporation """
+    if corporation is None:
+        return
     logging.info("Found %s boxes" % parent.get("count"))
     for index, box_elem in enumerate(parent.getchildren()):
         try:
@@ -235,6 +245,8 @@ def create_boxes(parent, corporation):
 
 def create_corps(corps):
     """ Create Corporation objects based on XML data """
+    if corps is None:
+        return
     logging.info("Found %s corporation(s)" % corps.get("count"))
     for index, corp_elem in enumerate(corps):
         try:
@@ -254,9 +266,8 @@ def update_configuration(config):
     """ Update Configuration options based on XML data """
     if config is None:
         return
-    else:
-        """ Backup configuration """
-        copyfile(options.config, options.config + ".bak")
+    """ Backup configuration """
+    copyfile(options.config, options.config + ".bak")
     images = ["ctf_logo", "story_character", "scoreboard_right_image"]
     for config_elem in config:
         try:

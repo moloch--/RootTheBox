@@ -215,6 +215,7 @@ class RegistrationHandler(BaseHandler):
         user.bank_password = self.get_argument("bpass", "")
         user.name = self.get_argument("playername", "")
         user.email = self.get_argument("email", "")
+        user.theme = options.default_theme
         team = self.get_team()
         self.dbsession.add(user)
         self.dbsession.add(team)

@@ -38,6 +38,7 @@ from models.Swat import Swat
 from models.GameLevel import GameLevel
 from models.User import ADMIN_PERMISSION
 from models.Team import Team
+from models.Theme import Theme
 from models.Penalty import Penalty
 from models.Snapshot import Snapshot
 from models.SnapshotTeam import SnapshotTeam
@@ -53,10 +54,12 @@ from libs.ValidationError import ValidationError
 from libs.ConfigHelpers import save_config
 from libs.GameHistory import GameHistory
 from libs.ConsoleColors import *
+from libs.Scoreboard import score_bots
 from handlers.BaseHandlers import BaseHandler
 from string import printable
 from setup.xmlsetup import import_xml
 from tornado.options import options
+from tornado.ioloop import PeriodicCallback
 from past.builtins import basestring
 from datetime import datetime
 
@@ -596,6 +599,7 @@ class AdminImportXmlHandler(BaseHandler):
             else:
                 errors.append("Failed to parse file correctly.")
             os.unlink(fxml)
+            self.refresh_app_config()
             self.render("admin/import.html", success=success, errors=errors)
         else:
             self.render("admin/import.html", success=None, errors=["No file data."])
@@ -607,6 +611,28 @@ class AdminImportXmlHandler(BaseHandler):
         tmp_file.write(data)
         tmp_file.close()
         return tmp_file.name
+
+    def refresh_app_config(self):
+        # Update default theme
+        self.application.ui_modules["Theme"].theme = Theme.by_name(options.default_theme)
+        
+        # Callback functions  - updates and starts/stops the botnet callback
+        self.application.settings["score_bots_callback"].stop()
+        self.application.score_bots_callback=PeriodicCallback(score_bots, options.bot_reward_interval)
+        if (
+            options.use_bots
+        ):
+            logging.info("Starting botnet callback function")
+            self.application.settings["score_bots_callback"].start()
+        
+        logging.info("Restarting history callback function")
+        game_history = GameHistory.instance()
+        self.application.settings["history_callback"].stop()
+        self.application.history_callback=PeriodicCallback(
+            game_history.take_snapshot, options.history_snapshot_interval
+        )
+        self.application.settings["history_callback"].start()
+        
 
 
 class AdminResetHandler(BaseHandler):
