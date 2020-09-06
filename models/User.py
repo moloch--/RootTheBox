@@ -34,7 +34,7 @@ import xml.etree.cElementTree as ET
 from uuid import uuid4
 from hashlib import md5, sha1, sha256, sha512
 from pbkdf2 import PBKDF2
-from sqlalchemy import Column, ForeignKey, desc
+from sqlalchemy import Column, ForeignKey, desc, func
 from sqlalchemy.orm import synonym, relationship, backref
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
 from models import dbsession
@@ -128,10 +128,17 @@ class User(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
-    def by_handle(cls, handle):
+    def by_handle(cls, handle, case_sensitive=True):
         """ Return the user object whose user is "_handle" """
         handle = str(handle).strip()
-        return dbsession.query(cls).filter_by(_handle=handle).first()
+        if case_sensitive:
+            return dbsession.query(cls).filter_by(_handle=handle).first()
+        else:
+            return (
+                dbsession.query(cls)
+                .filter(func.lower(User._handle) == func.lower(handle))
+                .first()
+            )
 
     @classmethod
     def _hash_bank_password(cls, algorithm_name, password):

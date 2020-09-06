@@ -26,6 +26,7 @@ any authentication) with the exception of error handlers and the scoreboard
 
 
 import logging
+import re
 
 from netaddr import IPAddress
 from libs.Identicon import identicon
@@ -205,7 +206,15 @@ class RegistrationHandler(BaseHandler):
 
     def create_user(self):
         """ Add user to the database """
-        if User.by_handle(self.get_argument("handle", "")) is not None:
+        if (
+            bool(re.match(r"^[a-zA-Z0-9_\-\.]{3,16}$", self.get_argument("handle", "")))
+            is False
+        ):
+            raise ValidationError("Invalid handle format")
+        if (
+            User.by_handle(self.get_argument("handle", ""), case_sensitive=False)
+            is not None
+        ):
             raise ValidationError("This handle is already registered")
         if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
             raise ValidationError("Passwords do not match")

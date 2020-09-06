@@ -614,25 +614,26 @@ class AdminImportXmlHandler(BaseHandler):
 
     def refresh_app_config(self):
         # Update default theme
-        self.application.ui_modules["Theme"].theme = Theme.by_name(options.default_theme)
-        
+        self.application.ui_modules["Theme"].theme = Theme.by_name(
+            options.default_theme
+        )
+
         # Callback functions  - updates and starts/stops the botnet callback
         self.application.settings["score_bots_callback"].stop()
-        self.application.score_bots_callback=PeriodicCallback(score_bots, options.bot_reward_interval)
-        if (
-            options.use_bots
-        ):
+        self.application.score_bots_callback = PeriodicCallback(
+            score_bots, options.bot_reward_interval
+        )
+        if options.use_bots:
             logging.info("Starting botnet callback function")
             self.application.settings["score_bots_callback"].start()
-        
+
         logging.info("Restarting history callback function")
         game_history = GameHistory.instance()
         self.application.settings["history_callback"].stop()
-        self.application.history_callback=PeriodicCallback(
+        self.application.history_callback = PeriodicCallback(
             game_history.take_snapshot, options.history_snapshot_interval
         )
         self.application.settings["history_callback"].start()
-        
 
 
 class AdminResetHandler(BaseHandler):
