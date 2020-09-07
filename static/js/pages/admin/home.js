@@ -41,12 +41,12 @@ $(document).ready(function() {
         $("#threshold-size").prop('disabled', true);
     }
 
-    $("#ban-ip-button").click(function() {
+    $(".ban-ip-button").click(function() {
         $("#ban-ip").val($(this).data("ip"));
         $("#ban-ip-form").submit();
     });
 
-    $("#clear-ip-button").click(function() {
+    $(".clear-ip-button").click(function() {
         $("#clear-ip").val($(this).data("ip"));
         $("#clear-ip-form").submit();
     });
