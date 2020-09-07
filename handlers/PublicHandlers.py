@@ -439,6 +439,7 @@ class ForgotPasswordHandler(BaseHandler):
             .replace("{{name}}", user.name)
             .replace("{{action_url}}", reset_url)
             .replace("{{remote_ip}}", remote_ip)
+            .replace("https://example.com", origin)
         )
         f.close()
         try:
