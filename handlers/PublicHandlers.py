@@ -27,19 +27,25 @@ any authentication) with the exception of error handlers and the scoreboard
 
 import logging
 import re
+import smtplib
 
+from os import urandom
 from netaddr import IPAddress
 from libs.Identicon import identicon
 from libs.SecurityDecorators import blacklist_ips
 from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import filter_avatars
+from libs.StringCoding import encode, decode
+from base64 import urlsafe_b64encode, urlsafe_b64decode, b64encode
 from builtins import str
 from models.Team import Team
 from models.Theme import Theme
+from models.PasswordToken import PasswordToken
 from models.RegistrationToken import RegistrationToken
 from models.GameLevel import GameLevel
 from models.User import User
 from handlers.BaseHandlers import BaseHandler
+from hashlib import sha256
 from datetime import datetime
 from pbkdf2 import PBKDF2
 from tornado.options import options
@@ -204,13 +210,31 @@ class RegistrationHandler(BaseHandler):
         else:
             raise ValidationError("Invalid registration token")
 
-    def create_user(self):
-        """ Add user to the database """
+    def form_validation(self):
         if (
             bool(re.match(r"^[a-zA-Z0-9_\-\.]{3,16}$", self.get_argument("handle", "")))
             is False
         ):
             raise ValidationError("Invalid handle format")
+        if (
+            self.get_argument("email", None)
+            and bool(
+                re.match(
+                    r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$",
+                    self.get_argument("email", ""),
+                )
+            )
+            is False
+        ):
+            raise ValidationError("Invalid email format")
+        if (
+            self.get_argument("playername", None)
+            and bool(
+                re.match(r"^[a-zA-Z0-9 ]{3,64}$", self.get_argument("playername", ""))
+            )
+            is False
+        ):
+            raise ValidationError("Invalid email format")
         if (
             User.by_handle(self.get_argument("handle", ""), case_sensitive=False)
             is not None
@@ -218,6 +242,10 @@ class RegistrationHandler(BaseHandler):
             raise ValidationError("This handle is already registered")
         if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
             raise ValidationError("Passwords do not match")
+
+    def create_user(self):
+        """ Add user to the database """
+        self.form_validation()
         user = User()
         user.handle = self.get_argument("handle", "")
         user.password = self.get_argument("pass1", "")
@@ -338,3 +366,145 @@ class AboutHandler(BaseHandler):
     def get(self, *args, **kwargs):
         """ Renders the about page """
         self.render("public/about.html")
+
+
+class ForgotPasswordHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        """ Renders the Forgot Password Reset page """
+        if options.require_email:
+            self.render("public/forgot.html", errors=None, info=None)
+        else:
+            self.redirect("public/404")
+
+    def post(self, *args, **kwargs):
+        """ Sends the password reset to email """
+        user = User.by_email(self.get_argument("email", ""))
+        if user is not None and len(options.mail_host) > 0 and len(user.email) > 0:
+            reset_token = encode(urandom(16), "hex")
+            passtoken = PasswordToken()
+            passtoken.user_id = user.id
+            passtoken.value = sha256(reset_token).hexdigest()
+            self.dbsession.add(passtoken)
+            self.dbsession.commit()
+            receivers = [user.email]
+            message = self.create_message(user, reset_token)
+            smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port)
+            smtpObj.set_debuglevel(False)
+            try:
+                smtpObj.starttls()
+                smtpObj.login(options.mail_username, options.mail_password)
+                smtpObj.sendmail(options.mail_sender, receivers, message)
+            finally:
+                smtpObj.quit()
+
+        self.render(
+            "public/forgot.html",
+            errors=None,
+            info=["If the email exists, a password reset has been sent."],
+        )
+
+    def create_message(self, user, token):
+        account = encode(user.uuid)
+        try:
+            account = decode(urlsafe_b64encode(account))
+            token = decode(urlsafe_b64encode(token))
+        except:
+            account = urlsafe_b64encode(account)
+            token = urlsafe_b64encode(token)
+        if options.ssl:
+            origin = options.origin.replace("ws://", "https://").replace(
+                "wss://", "https://"
+            )
+        else:
+            origin = options.origin.replace("ws://", "http://")
+        reset_url = "%s/reset/token?u=%s&p=%s" % (origin, account, token)
+        remote_ip = (
+            self.request.headers.get("X-Real-IP")
+            or self.request.headers.get("X-Forwarded-For")
+            or self.request.remote_ip
+        )
+        header = []
+        header.append("Subject: %s Password Reset" % options.game_name)
+        header.append("From: %s <%s>" % (options.game_name, options.mail_sender))
+        header.append("To: %s <%s>" % (user.name, user.email))
+        header.append("MIME-Version: 1.0")
+        header.append('Content-Type: text/html; charset="UTF-8"')
+        header.append("Content-Transfer-Encoding: BASE64")
+        header.append("")
+        f = open("templates/public/email.html", "r")
+        template = (
+            f.read()
+            .replace("\n", "")
+            .replace("[Product Name]", options.game_name)
+            .replace("{{name}}", user.name)
+            .replace("{{action_url}}", reset_url)
+            .replace("{{remote_ip}}", remote_ip)
+        )
+        f.close()
+        try:
+            email_msg = "\n".join(header) + b64encode(template)
+        except:
+            email_msg = "\n".join(header) + decode(b64encode(encode(template)))
+        return email_msg
+
+
+class ResetPasswordHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        """ Renders the Token Reset page """
+        if len(options.mail_host) > 0:
+            try:
+                user_uuid = decode(urlsafe_b64decode(self.get_argument("u", "")))
+                token = sha256(
+                    urlsafe_b64decode(self.get_argument("p", ""))
+                ).hexdigest()
+            except:
+                user_uuid = urlsafe_b64decode(encode(self.get_argument("u", "")))
+                token = sha256(
+                    urlsafe_b64decode(encode(self.get_argument("p", "")))
+                ).hexdigest()
+            self.render(
+                "public/reset.html", errors=None, info=None, token=token, uuid=user_uuid
+            )
+        else:
+            self.redirect("public/404")
+
+    def post(self, *args, **kwargs):
+        token = self.get_argument("token", "")
+        uuid = self.get_argument("uuid", "")
+        if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
+            self.render(
+                "public/reset.html",
+                errors=None,
+                info=["Passwords do not match."],
+                token=token,
+                uuid=uuid,
+            )
+            return
+        pass_token = PasswordToken.by_value(token)
+        if pass_token:
+            user = User.by_id(pass_token.user_id)
+            if (
+                user
+                and user.uuid == uuid
+                and not pass_token.is_expired()
+                and not pass_token.used
+            ):
+                user.password = self.get_argument("pass1", "")
+                pass_token.used = True
+                self.dbsession.add(pass_token)
+                self.dbsession.commit()
+                self.render(
+                    "public/reset.html",
+                    errors=None,
+                    info=["Successfully updated password."],
+                    uuid=uuid,
+                    token=token,
+                )
+                return
+        self.render(
+            "public/reset.html",
+            errors=["The user or token does not exist, is invalid or expired."],
+            info=None,
+            token=token,
+            uuid=uuid,
+        )

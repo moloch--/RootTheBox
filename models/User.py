@@ -128,6 +128,11 @@ class User(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
+    def by_email(cls, _email):
+        """ Return an object based on a email """
+        return dbsession.query(cls).filter_by(_email=str(_email)).first()
+
+    @classmethod
     def by_handle(cls, handle, case_sensitive=True):
         """ Return the user object whose user is "_handle" """
         handle = str(handle).strip()

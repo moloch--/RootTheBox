@@ -1,24 +1,23 @@
 {% extends "../main.html" %}
 
-{% block title %}{{ _("Authenticate") }}{% end %}
+{% block title %}{{ _("Password Reset") }}{% end %}
 
 {% block header %}
 <link href="/static/css/pages/public/login.css" rel="stylesheet">
-{% from tornado.options import options %}
 {% end %}
 
 {% block content %}
 <div class="container">
-    <form class="form-signin" action="/login" method="post">
+    <form class="form-signin" action="/reset" method="post">
         <h3 class="form-signin-heading">
             <i class="fa fa-lock"></i>
-            {{ _("Authentication Required") }}
+            {{ _("Password Reset") }}
         </h3>
         {% if errors is not None and len(errors) != 0 %}
             {% for error in errors %}
                 <div class="alert alert-error" >
                     <a class="close" data-dismiss="alert" href="#">&times;</a>
-                    <h4 class="alert-heading">{{ _("Authentication Failure") }}</h4>
+                    <h4 class="alert-heading">{{ _("Error") }}</h4>
                     {{ error }}
                 </div>
             {% end %}
@@ -33,15 +32,11 @@
             {% end %}
         {% end %}
         {% raw xsrf_form_html() %}
-        <input name="account" type="text" class="input-block-level" placeholder="{{ _('Handle') }}" autofocus>
-        <input name="password" type="password" class="input-block-level" placeholder="{{ _('Password') }}" autocomplete="off">
+        <input name="email" type="text" class="input-block-level" placeholder="{{ _('email') }}" autofocus>
         <button class="btn btn-primary" type="submit">
-            <i class="fa fa-sign-in"></i>
-            {{ _("Login") }}
+            <i class="fa fa-key"></i>
+            {{ _("Request Password Reset") }}
         </button>
-        {% if len(options.mail_host) > 0 %}
-        <a href="/reset" style="float: right;">{{ _('Forgot Password') }}</a>
-        {% end %}
     </form>
 </div> <!-- /container -->
 <br />

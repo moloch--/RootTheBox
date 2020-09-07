@@ -33,8 +33,8 @@ class TestPublicHandlers(ApplicationTest):
         options.story_mode = True
         form = {"account": "HacKer", "password": "TestPassword"}
         rsp, body = self.post("/login", data=form)
-        # Should redirect to firstlogin
-        # logging.info(body)
+        # TODO Should redirect to firstlogin
+        # This fails in the @authenticated security descriptor due to no session. Memcached?
         self.assertIn(b"Incoming Transmission", body)
 
     def _login_failure(self):

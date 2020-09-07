@@ -81,6 +81,7 @@ class SettingsHandler(BaseHandler):
             "bank_password": self.post_bankpassword,
             "theme": self.post_theme,
             "motto": self.post_motto,
+            "email": self.post_email,
         }
         if len(args) == 1 and args[0] in post_functions:
             post_functions[args[0]]()
@@ -186,7 +187,15 @@ class SettingsHandler(BaseHandler):
             user.team.motto = self.get_argument("motto", "")
         self.dbsession.add(user)
         self.dbsession.commit()
-        self.render_page()
+        self.render_page(success=["Successfully updated Motto."])
+
+    def post_email(self, *args, **kwargs):
+        """ Change user email """
+        user = self.get_current_user()
+        user.email = self.get_argument("email", "")
+        self.dbsession.add(user)
+        self.dbsession.commit()
+        self.render_page(success=["Successfully updated email address."])
 
     def post_password(self, *args, **kwargs):
         """ Called on POST request for password change """

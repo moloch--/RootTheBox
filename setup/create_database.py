@@ -45,6 +45,7 @@ from models.WallOfSheep import WallOfSheep
 from models.Flag import Flag
 from models.FlagChoice import FlagChoice
 from models.FlagAttachment import FlagAttachment
+from models.PasswordToken import PasswordToken
 from models.Penalty import Penalty
 from models.Notification import Notification
 from models.Category import Category

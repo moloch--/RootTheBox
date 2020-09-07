@@ -520,18 +520,18 @@ class MissionsHandler(BaseHandler):
     @game_started
     def post(self, *args, **kwargs):
         """ Submit flags/buyout to levels """
-        user = self.get_current_user()
-        uri = {"buyout": self.buyout}
-        if len(args) and args[0] in uri:
-            uri[str(args[0])]()
-        else:
-            self.render("public/404.html")
+        if self.get_current_user():
+            uri = {"buyout": self.buyout}
+            if len(args) and args[0] in uri:
+                uri[str(args[0])]()
+                return
+        self.render("public/404.html")
 
     def buyout(self):
         """ Buyout and unlock a level """
         user = self.get_current_user()
         level = GameLevel.by_uuid(self.get_argument("uuid", ""))
-        if level is not None and user is not None:
+        if level is not None:
             if level.buyout <= user.team.money:
                 logging.info(
                     "%s (%s) paid buyout for %s"

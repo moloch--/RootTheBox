@@ -246,7 +246,28 @@
             </div>
             {% end %}
         </div>
-        
+        <div class="row" style="margin-left: 0px; margin-right: 20px;">
+            <div class="well">
+                <form class="form-horizontal" action="/user/settings/email" method="post" autocomplete="off">
+                    {% raw xsrf_form_html() %}
+                    <legend>
+                        <i class="fa fa-mail"></i>
+                        {{ _("Email") }}
+                    </legend>
+                    <label class="control-label" for="email">{{ _("Email") }}</label>
+                    <div class="control-group">
+                        <div class="controls">
+                            <input required type="text" name="email" id="email" placeholder="{{ _('Email') }}" value="{{ user.email }}" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" type="submit"> {{ _("Update Email") }} </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="row" style="margin-left: 0px; margin-right: 20px;">
             <div class="well">
                 <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">

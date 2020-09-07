@@ -678,3 +678,7 @@ You have not submitted any bribes yet.,Вы еще не предоставили
 "Your email, visible to game administrators.","Ваш электронный адрес, видимый для администраторов игр.",
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Ваш дескриптор должен состоять из 3-16 буквенно-цифровых символов. Подчеркивание, тире и точки разрешены.",
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Ваше имя, видимое для администраторов игр. Ваше имя может состоять из 3-64 буквенно-цифровых символов",
+"Password Reset",Восстановление пароля
+"Forgot Password",Забыли пароль
+"Request Password Reset",Запросить сброс пароля
+"Update Email",Обновить электронную почту

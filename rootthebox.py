@@ -69,6 +69,11 @@ def start():
         print(INFO + bold + R + "Starting RTB on %s" % listenport, flush=True)
     except TypeError:
         print(INFO + bold + R + "Starting RTB on %s" % listenport)
+    if len(options.mail_host) > 0 and "localhost" in options.origin:
+        logging.warning(
+            "%sWARNING:%s Invalid 'origin' configuration (localhost) for Email support %s"
+            % (WARN + bold + R, W, WARN)
+        )
 
     result = start_server()
     if result == "restart":
@@ -299,6 +304,24 @@ define(
     default=["127.0.0.1", "::1"],
     group="server",
     help="whitelist of ip addresses that can access the admin ui (use empty list to allow all ip addresses)",
+)
+
+# Mail Server
+define("mail_host", default="", group="mail", help="SMTP server")
+
+define("mail_port", default=587, group="mail", help="SMTP server port", type=int)
+
+define(
+    "mail_username", default="", group="mail", help="User account for the smtp server"
+)
+
+define("mail_password", default="", group="mail", help="Password for the smtp server")
+
+define(
+    "mail_sender",
+    default="noreply@rootthebox.com",
+    group="mail",
+    help="Email for the sender (FROM)",
 )
 
 # Application Settings
@@ -914,7 +937,10 @@ define("tests", default=False, help="runs the unit tests", type=bool)
 if __name__ == "__main__":
 
     # We need this to pull the --config option
-    options.parse_command_line()
+    try:
+        options.parse_command_line()
+    except:
+        os._exit(1)
 
     check_cwd()
 

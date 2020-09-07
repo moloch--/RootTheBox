@@ -678,3 +678,7 @@ You have not submitted any bribes yet.,你还没有提交任何赞助。
 "Your email, visible to game administrators.",您的电子邮件，对游戏管理员可见。
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",您的密码必须是3-16个字母数字字符。允许下划线，短划线和点。
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",您的名字，游戏管理员可以看到。您的姓名可以是3-64个字母数字字符
+"Password Reset",重设密码
+"Forgot Password",忘记密码
+"Request Password Reset",要求重设密码
+"Update Email",更新电邮

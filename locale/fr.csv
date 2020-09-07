@@ -678,3 +678,7 @@ You have not submitted any bribes yet.,Vous n'avez pas encore soumis de pots-de-
 "Your email, visible to game administrators.","Votre email, visible par les administrateurs du jeu."
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Votre pseudo doit être composé de 3 à 16 caractères alphanumériques. Soulignement, tiret et points autorisés."
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Votre nom, visible par les administrateurs du jeu. Votre nom doit être composé de 3 à 64 caractères alphanumériques"
+"Password Reset",Réinitialisation du mot de passe
+"Forgot Password",Mot de passe oublié
+"Request Password Reset",Demander la réinitialisation du mot de passe
+"Update Email",Mettre à jour l'e-mail

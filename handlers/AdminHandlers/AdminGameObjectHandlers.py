@@ -462,7 +462,7 @@ class AdminViewHandler(BaseHandler):
                         self.dbsession.add(flag)
                         self.dbsession.commit()
                         success.append(
-                            "Token succesfully added for Flag %s" % flag.name
+                            "Token successfully added for Flag %s" % flag.name
                         )
                     else:
                         errors.append("Flag token too long. Can not expand token.")

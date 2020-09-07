@@ -157,9 +157,9 @@
                                 <label class="control-label" for="motto">{{ _("Motto") }}</label>
                                 <div class="controls">
                                     <input id="motto" name="motto" maxlength="32" type="text" placeholder="{{ _('Team Motto') }}"
-                                        rel="popover"
+                                        rel="popover" pattern="^[a-zA-Z0-9_\-\.]{,32}$"
                                         data-original-title="{{_('Team Motto')}}"
-                                        data-content="{{_('Optional')}}: {{_('What is your teams motto?')}} [Max: 32 {{_('Characters')}}]">
+                                        data-content="{{_('Optional')}}: {{_('What is your teams motto?')}} [{{ _('Max') }}: 32 {{_('Characters')}}]">
                                 </div>
                             </div>
                         </div>
@@ -180,9 +180,9 @@
                         <label class="control-label" for="motto">{{ _("Motto") }}</label>
                         <div class="controls">
                             <input id="motto" name="motto" maxlength="32" type="text" placeholder="{{ _('Motto') }}"
-                                rel="popover"
+                                rel="popover" pattern="^[a-zA-Z0-9_\-\.]{,32}$"
                                 data-original-title="{{_('Motto')}}"
-                                data-content="{{_('Optional')}}: {{_('What is your motto?')}} [Max: 32 {{_('Characters')}}]">
+                                data-content="{{_('Optional')}}: {{_('What is your motto?')}} [{{ _('Max') }}: 32 {{_('Characters')}}]">
                         </div>
                     </div>
                 {% end %}
@@ -215,7 +215,7 @@
                             autocomplete="off"
                             rel="popover"
                             data-original-title="{{_('Password')}}"
-                            data-content="{{_('Used to secure your (in-game) bank account.')}} [Max: {{ options.max_password_length }} {{_('Characters')}}].  {{_('Please do NOT enter your real bank account password.')}}" />
+                            data-content="{{_('Used to secure your (in-game) bank account.')}} [{{ _('Max') }}: {{ options.max_password_length }} {{_('Characters')}}].  {{_('Please do NOT enter your real bank account password.')}}" />
                     </div>
                 </div>
                 {% end %}
