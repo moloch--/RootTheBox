@@ -371,7 +371,7 @@ class AboutHandler(BaseHandler):
 class ForgotPasswordHandler(BaseHandler):
     def get(self, *args, **kwargs):
         """ Renders the Forgot Password Reset page """
-        if options.require_email:
+        if len(options.mail_host) > 0:
             self.render("public/forgot.html", errors=None, info=None)
         else:
             self.redirect("public/404")
