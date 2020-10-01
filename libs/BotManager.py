@@ -80,12 +80,12 @@ class Bot(BotDatabaseObject):
 
     @property
     def box(self):
-        """ Pull box object from persistant db """
+        """ Pull box object from persistent db """
         return dbsession.query(Box).by_uuid(self.box_uuid)
 
     @property
     def team(self):
-        """ Pull box object from persistant db """
+        """ Pull box object from persistent db """
         return dbsession.query(Box).by_uuid(self.box_uuid)
 
     def to_dict(self):

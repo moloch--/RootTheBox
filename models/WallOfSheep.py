@@ -30,7 +30,7 @@ from models.BaseModels import DatabaseObject
 class WallOfSheep(DatabaseObject):
 
     """
-    Stores a record of cracked passwords, and publically displays
+    Stores a record of cracked passwords, and publicly displays
     them for all to see.
     """
 

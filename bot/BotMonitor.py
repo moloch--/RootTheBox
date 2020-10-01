@@ -1273,7 +1273,7 @@ class BotMonitor(object):
                 return
 
     def progress(self):
-        """ Progress animation, executed as seperate thread """
+        """ Progress animation, executed as separate thread """
         index = 0
         progress_bar = ["=--", "-=-", "--=", "-=-"]
         pong_string = "PNG"

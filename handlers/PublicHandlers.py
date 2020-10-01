@@ -19,7 +19,7 @@ Created on Mar 13, 2012
     limitations under the License.
 ----------------------------------------------------------------------------
 
-This file holds publically exposed handlers (handlers that to not require
+This file holds publicly exposed handlers (handlers that to not require
 any authentication) with the exception of error handlers and the scoreboard
 
 """

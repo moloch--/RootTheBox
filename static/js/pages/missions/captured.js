@@ -10,7 +10,7 @@ function text_animation(term) {
         intro_frames.push("  ");
         if (reward.length > 0) {
             if (banking === "$") {
-                intro_frames.push("This is acceptable and I have transfered $" + reward + " to your\naccount.", " ");
+                intro_frames.push("This is acceptable and I have transferred $" + reward + " to your\naccount.", " ");
             } else {
                 intro_frames.push("This is acceptable and I have added " + reward + " points to your\nscore.", " ");
             }
