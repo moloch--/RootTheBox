@@ -362,7 +362,7 @@
 			duration: options.duration[2]
 		});
 		
-		//In the intial stage of the animation the updating values should be hidden, the rows coloured
+		//In the initial stage of the animation the updating values should be hidden, the rows coloured
 		//and pulled to the left/right as expected and the table extended to accommodate new rows.
 		//When complete the values which were hidden are altered to their new ones.
 		var updateValue = [];  	//the divs with the values we'll change to the new values.
@@ -392,7 +392,7 @@
 
 		jOrigTable.find('div.moveable').each(function(i, wrapper){
 	
-			var newCell; //this will be set to the cell in the new table which is equivilent to the one being
+			var newCell; //this will be set to the cell in the new table which is equivalent to the one being
 						//wrapped, this will be remain null for wrappers in fresh and dropped rows.
 			var oldCell = wrapper.parentNode;
 			var row = $(wrapper).data("row");
@@ -464,7 +464,7 @@
 				secondAnimator.addSubject(new NumericalStyleSubject(wrapper, "opacity", 1, 0, ""));
 
 			} else if(row in fresh){
-				//turn row into a number and lose the preceeding 'x'..
+				//turn row into a number and lose the preceding 'x'..
 				row = row.substring(1)*1;
 
 				var animationSetting = options.animationSettings.fresh;

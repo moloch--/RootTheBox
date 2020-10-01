@@ -19,7 +19,7 @@ Created on Nov 24, 2014
     limitations under the License.
 
 
-This file contains all of the adminstrative functions.
+This file contains all of the administrative functions.
 There's a lot of code in here ... and it's mostly ugly validation code...
 
 Guidelines for writing code in this file:

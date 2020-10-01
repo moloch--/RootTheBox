@@ -126,7 +126,7 @@ urls = [
     (r"/user/bots/download/(windows|linux|monitor)", BotDownloadHandler),
     (r"/user/bots/webmonitor", BotWebMonitorHandler),
     ### BLACK MARKET URLS ###
-    # This is only relevent if the black market is enabled
+    # This is only relevant if the black market is enabled
     (r"/scoreboard/wall_of_sheep", ScoreboardWallOfSheepHandler),
     # Market handlers - MarketHandlers.py
     (r"/user/market", MarketViewHandler),
