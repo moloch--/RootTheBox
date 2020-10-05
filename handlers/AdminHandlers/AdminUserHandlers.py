@@ -185,12 +185,14 @@ class AdminEditUsersHandler(BaseHandler):
 
             admin = self.get_argument("admin", "false")
             if admin == "true" and not user.is_admin():
+                logging.info("Promoted user %s to Admin" % user.handle)
                 permission = Permission()
                 permission.name = ADMIN_PERMISSION
                 permission.user_id = user.id
-                user.team = None
+                user.team_id = None
                 self.dbsession.add(permission)
             elif admin == "false" and user.is_admin():
+                logging.info("Demoted user %s to Player" % user.handle)
                 if user == self.get_current_user():
                     self.render(
                         "admin/view/users.html", errors=["You cannont demote yourself."]
