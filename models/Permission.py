@@ -28,7 +28,7 @@ from models.BaseModels import DatabaseObject
 class Permission(DatabaseObject):
     """ Permission definition """
 
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     name = Column(Unicode(64), nullable=False)
 
     @classmethod

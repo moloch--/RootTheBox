@@ -653,7 +653,7 @@ class WebSocket(object):
 
     def recv_data(self):
         """
-        Recieve data with operation code.
+        Receive data with operation code.
 
         return  value: tuple of operation code and string(byte array) value.
         """
@@ -673,7 +673,7 @@ class WebSocket(object):
 
     def recv_frame(self):
         """
-        recieve data as frame from server.
+        Receive data as frame from server.
 
         return value: ABNF frame object.
         """
@@ -710,8 +710,8 @@ class WebSocket(object):
         data = self._recv_strict(length)
 
         if traceEnabled:
-            recieved = header_bytes + encode(length_data) + encode(mask_key) + data
-            logger.debug("recv: " + repr(recieved))
+            received = header_bytes + encode(length_data) + encode(mask_key) + data
+            logger.debug("recv: " + repr(received))
 
         if mask:
             data = ABNF.mask_data(mask_key, data)
@@ -813,7 +813,7 @@ class WebSocketApp(object):
         header: custom header for websocket handshake.
         on_open: callable object which is called at opening websocket.
           this function has one argument. The arugment is this class object.
-        on_message: callbale object which is called when recieved data.
+        on_message: callbale object which is called when received data.
          on_message has 2 arguments.
          The 1st arugment is this class object.
          The passing 2nd arugment is utf-8 string which we get from the server.
