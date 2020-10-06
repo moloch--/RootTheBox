@@ -138,6 +138,7 @@ class BoxHandler(BaseHandler):
         user = self.get_current_user()
         if (box_id and Box.by_id(box_id).locked) or (
             uuid and Flag.by_uuid(uuid).box.locked
+            box_id is None and uuid and Flag.by_uuid(uuid).box.locked
         ):
             self.render(
                 "missions/status.html",
