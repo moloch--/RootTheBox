@@ -145,7 +145,12 @@ class BoxHandler(BaseHandler):
                 info=["This box is currently locked by the Admin."],
             )
             return
-        if box_id is not None and token is not None:
+        if (
+            token is not None
+            and box_id is not None
+            and Box.by_id(box_id).flag_submission_type
+            == FlagsSubmissionType.SINGLE_SUBMISSION_BOX
+        ):
             flag = Flag.by_token_and_box_id(token, box_id)
         else:
             flag = Flag.by_uuid(uuid)
