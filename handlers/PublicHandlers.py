@@ -392,11 +392,18 @@ class ForgotPasswordHandler(BaseHandler):
             smtpObj.set_debuglevel(False)
             try:
                 smtpObj.starttls()
-                smtpObj.login(options.mail_username, options.mail_password)
+                try:
+                    smtpObj.login(options.mail_username, options.mail_password)
+                except smtplib.SMTPNotSupportedError as e:
+                    logging.warn("SMTP Auth issue (%s). Attempting to send anyway." % e)
                 smtpObj.sendmail(options.mail_sender, receivers, message)
             finally:
                 smtpObj.quit()
-
+            logging.info("Password Reset sent for %s" % user.email)
+        elif not len(options.mail_host) > 0:
+            logging.info("Password Reset request failed: No Mail Host in Settings.")
+        elif user is None or not len(user.email) > 0:
+            logging.info("Password Reset request failed: Email does not exist.")
         self.render(
             "public/forgot.html",
             errors=None,
