@@ -59,7 +59,7 @@ class Scoreboard(object):
         }
         teams = Team.ranks()
         for team in teams:
-            if len(team.members) > 0:
+            if not team.locked:
                 millis = int(round(time.time() * 1000))
                 game_state["teams"][team.name] = {
                     "uuid": team.uuid,

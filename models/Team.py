@@ -195,6 +195,14 @@ class Team(DatabaseObject):
         return self._code
 
     @property
+    def locked(self):
+        # Hides team from scoreboard if all users are locked or no users
+        for user in self.members:
+            if not user.locked:
+                return False
+        return True
+
+    @property
     def avatar(self):
         if self._avatar is not None:
             return self._avatar
