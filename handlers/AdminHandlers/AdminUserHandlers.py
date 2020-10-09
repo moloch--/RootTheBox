@@ -172,6 +172,7 @@ class AdminEditUsersHandler(BaseHandler):
                 avatar = self.get_argument("avatar", user.avatar)
                 # allow for default without setting
                 user._avatar = avatar
+            admin = self.get_argument("admin", "false")
             team = Team.by_uuid(self.get_argument("team_uuid", ""))
             if team is not None:
                 if user not in team.members:
@@ -180,10 +181,9 @@ class AdminEditUsersHandler(BaseHandler):
                         % (user.handle, user.team_id, team.name)
                     )
                     user.team_id = team.id
-            elif options.teams:
-                raise ValidationError("Team does not exist in database")
-
-            admin = self.get_argument("admin", "false")
+            elif options.teams and admin != "true":
+                raise ValidationError("Please select a valid Team.")
+            
             if admin == "true" and not user.is_admin():
                 logging.info("Promoted user %s to Admin" % user.handle)
                 permission = Permission()
@@ -198,10 +198,11 @@ class AdminEditUsersHandler(BaseHandler):
                         "admin/view/users.html", errors=["You cannont demote yourself."]
                     )
                     return
-                team = Team.by_name(user.handle)
+                if team is None:
+                    team = Team.by_name(user.handle)
                 if team is None:
                     team = self.create_team(user)
-                user.team = team
+                user.team_id = team.id
                 permissions = Permission.by_user_id(user.id)
                 for permission in permissions:
                     if permission.name == ADMIN_PERMISSION:
