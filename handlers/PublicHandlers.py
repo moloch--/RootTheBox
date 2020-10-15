@@ -220,7 +220,7 @@ class RegistrationHandler(BaseHandler):
             self.get_argument("email", None)
             and bool(
                 re.match(
-                    r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$",
+                    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
                     self.get_argument("email", ""),
                 )
             )
@@ -234,7 +234,7 @@ class RegistrationHandler(BaseHandler):
             )
             is False
         ):
-            raise ValidationError("Invalid email format")
+            raise ValidationError("Invalid playername format")
         if (
             User.by_handle(self.get_argument("handle", ""), case_sensitive=False)
             is not None
