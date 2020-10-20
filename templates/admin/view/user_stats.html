@@ -4,7 +4,6 @@
 
 {% block header %}
 {% from models.Category import Category %}
-{% autoescape None %}
 <script>
     var categories = '{{ Category.list() }}';
 </script>

@@ -183,7 +183,7 @@ class AdminEditUsersHandler(BaseHandler):
                     user.team_id = team.id
             elif options.teams and admin != "true":
                 raise ValidationError("Please select a valid Team.")
-            
+
             if admin == "true" and not user.is_admin():
                 logging.info("Promoted user %s to Admin" % user.handle)
                 permission = Permission()
