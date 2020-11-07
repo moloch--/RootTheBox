@@ -42,9 +42,8 @@ See the [Root the Box Wiki](https://github.com/moloch--/RootTheBox/wiki)
 
 ## Platform Requirements
 
--   [Python 2.7.x or < 3.8.x](https://www.python.org/), [PyPy](http://pypy.org/) or [Docker](https://github.com/moloch--/RootTheBox/wiki/Docker-Deployment)
--   Install scripts are for [Ubuntu](http://www.ubuntu.com/) (or [Debian](https://www.debian.org/)) but the application should work on any Linux, BSD, or OSX system.
--   Internet Explorer is _NOT_ supported, any compatibility with IE is purely coincidental. Please use the latest release of [Firefox](https://www.mozilla.org/en-US/), [Chrome](https://www.google.com/chrome/), [Opera](http://www.opera.com/), or any other browser that supports open standards.
+-   [Python 2.7.x or <= 3.8.x](https://www.python.org/), [PyPy](http://pypy.org/) or [Docker](https://github.com/moloch--/RootTheBox/wiki/Docker-Deployment).  Note: Python 3.9 breaks thigns as it removes Py2/3 compatibility.
+-   Install scripts are for [Ubuntu](http://www.ubuntu.com/) >= 18.04 (or [Debian](https://www.debian.org/)) but the application should work on any recent Linux, BSD, or OSX system.
 
 ## Questions? Problems? Feature Requests?
 
