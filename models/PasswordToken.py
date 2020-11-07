@@ -34,7 +34,7 @@ class PasswordToken(DatabaseObject):
     """ Password token definition """
 
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-    value = Column(String(32), unique=True, nullable=False)
+    value = Column(String(64), unique=True, nullable=False)
     used = Column(Boolean, nullable=False, default=False)
 
     @classmethod
