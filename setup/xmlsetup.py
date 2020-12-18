@@ -41,7 +41,7 @@ from base64 import b64decode
 
 def get_child_by_tag(elem, tag_name):
     """ Return child elements with a given tag """
-    tags = [child for child in elem.getchildren() if child.tag == tag_name]
+    tags = [child for child in elem if child.tag == tag_name]
     return tags[0] if 0 < len(tags) else None
 
 
@@ -62,7 +62,7 @@ def create_categories(categories):
     if categories is None:
         return
     logging.info("Found %s categories" % categories.get("count"))
-    for index, cat_elem in enumerate(categories.getchildren()):
+    for index, cat_elem in enumerate(categories):
         cat = get_child_text(cat_elem, "category")
         if Category.by_category(cat) is None:
             try:
@@ -79,7 +79,7 @@ def create_levels(levels):
     if levels is None:
         return
     logging.info("Found %s game level(s)" % levels.get("count"))
-    for index, level_elem in enumerate(levels.getchildren()):
+    for index, level_elem in enumerate(levels):
         # GameLevel 0 is created automatically by the bootstrap
         try:
             number = get_child_text(level_elem, "number")
@@ -115,7 +115,7 @@ def create_hints(parent, box, flag=None):
     """ Create flag objects for a box """
     if parent and box:
         logging.info("Found %s hint(s)" % parent.get("count"))
-        for index, hint_elem in enumerate(parent.getchildren()):
+        for index, hint_elem in enumerate(parent):
             try:
                 flag_id = None
                 if flag:
@@ -133,7 +133,7 @@ def create_flags(parent, box):
     if parent and box:
         logging.info("Found %s flag(s)" % parent.get("count"))
         flag_dependency = []
-        for index, flag_elem in enumerate(parent.getchildren()):
+        for index, flag_elem in enumerate(parent):
             try:
                 flag = Flag(box_id=box.id)
                 flag.name = get_child_text(flag_elem, "name")
@@ -171,7 +171,7 @@ def add_attachments(parent, flag):
     if flag is None:
         return
     logging.info("Found %s attachment(s)" % parent.get("count"))
-    for index, attachement_elem in enumerate(parent.getchildren()):
+    for index, attachement_elem in enumerate(parent):
         try:
             flag_attachment = FlagAttachment(
                 file_name=get_child_text(attachement_elem, "flag_name")
@@ -190,7 +190,7 @@ def create_choices(parent, flag):
     if flag is None:
         return
     logging.info("Found %s choice(s)" % parent.get("count"))
-    for index, choice_elem in enumerate(parent.getchildren()):
+    for index, choice_elem in enumerate(parent):
         try:
             choice = FlagChoice(flag_id=flag.id)
             choice.choice = choice_elem.text
@@ -204,7 +204,7 @@ def create_boxes(parent, corporation):
     if corporation is None:
         return
     logging.info("Found %s boxes" % parent.get("count"))
-    for index, box_elem in enumerate(parent.getchildren()):
+    for index, box_elem in enumerate(parent):
         try:
             name = get_child_text(box_elem, "name")
             game_level = GameLevel.by_number(get_child_text(box_elem, "gamelevel", "0"))
