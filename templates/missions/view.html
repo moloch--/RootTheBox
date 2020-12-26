@@ -88,10 +88,10 @@
                     <hr>
                 {% end %}
                 {% if not team or level.type == 'none' or level in team.game_levels %}
-                    <div class="container">
+                    <div id="myCarousel" class="container carousel slide" data-interval="false" data-ride="false" style="padding-left:15px;">
                         {% set boxes = [] %}
+                        <!-- Only show boxes that have flags -->
                         {% for box in level.boxes %}
-                            <!-- Only show boxes that have flags -->
                             {% if len(box.flags) > 0 and not box.locked %}
                                 {% if options.group_by_corp %}
                                     {% set boxcorp = Corporation.by_id(box.corporation_id) %}
@@ -103,7 +103,31 @@
                                 {% end %}
                             {% end %}
                         {% end %}
-                        {% for box in boxes[::3] %}
+                        {% set carousel = len(GameLevel.all()) > 1 and len(boxes) > 6 %}
+                        {% if carousel %}
+                        <div class="carousel-inner">
+                        {% else %}
+                        <div>
+                        {% end %}
+                            <!--
+                            {% set bcount = 0 %}
+                            {% set scount = 0 %}
+                            <ol class="carousel-indicators">
+                            {% for box in boxes[::3] %}
+                                {% if bcount % 2 == 0 %}
+                                <li data-target="#myCarousel" data-slide-to="{{scount + 1}}"{% if bcount == 0 %}class="active"{% end %}></li>
+                                {% set scount += 1 %}
+                                {% end %}
+                                {% set bcount += 1 %}
+                            {% end %}
+                            </ol>
+                            -->
+                            {% set bcount = 0 %}
+                            {% for box in boxes[::3] %}
+                            {% if bcount % 2 == 0 %}
+                            
+                            <div class="item{% if bcount == 0 %} active{% end %}">
+                            {% end %}
                             <div class="row">
                                 <div class="span3">
                                     <center>
@@ -227,6 +251,16 @@
                                 {% end %}
                             </div>
                             <br />
+                            {% set bcount += 1 %}
+                            {% if bcount % 2 == 0 %}
+                            </div>
+                            {% end %}
+                        {% end %}
+                        
+                        </div></div>
+                        {% if carousel %}
+                          <a class="carousel-control left" style="left: -80px;" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+                          <a class="carousel-control right" style="left: 935px" href="#myCarousel" data-slide="next">&rsaquo;</a>
                         {% end %}
                     </div>
                 {% else %}
