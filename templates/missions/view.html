@@ -88,7 +88,7 @@
                     <hr>
                 {% end %}
                 {% if not team or level.type == 'none' or level in team.game_levels %}
-                    <div id="myCarousel" class="container carousel slide" data-interval="false" data-ride="false" style="padding-left:15px;">
+                    <div id="boxCarousel{{ level.id }}" class="container carousel slide" data-interval="false" data-ride="false" style="padding-left:15px;">
                         {% set boxes = [] %}
                         <!-- Only show boxes that have flags -->
                         {% for box in level.boxes %}
@@ -115,7 +115,7 @@
                             <ol class="carousel-indicators">
                             {% for box in boxes[::3] %}
                                 {% if bcount % 2 == 0 %}
-                                <li data-target="#myCarousel" data-slide-to="{{scount + 1}}"{% if bcount == 0 %}class="active"{% end %}></li>
+                                <li data-target="#boxCarousel{{ level.id }}" data-slide-to="{{scount + 1}}"{% if bcount == 0 %}class="active"{% end %}></li>
                                 {% set scount += 1 %}
                                 {% end %}
                                 {% set bcount += 1 %}
@@ -259,8 +259,8 @@
                         
                         </div></div>
                         {% if carousel %}
-                          <a class="carousel-control left" style="left: -80px;" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-                          <a class="carousel-control right" style="left: 935px" href="#myCarousel" data-slide="next">&rsaquo;</a>
+                          <a class="carousel-control left" style="left: -80px;" href="#boxCarousel{{ level.id }}" data-slide="prev">&lsaquo;</a>
+                          <a class="carousel-control right" style="left: 935px" href="#boxCarousel{{ level.id }}" data-slide="next">&rsaquo;</a>
                         {% end %}
                     </div>
                 {% else %}
