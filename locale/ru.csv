@@ -682,3 +682,8 @@ You have not submitted any bribes yet.,Вы еще не предоставили
 "Forgot Password",Забыли пароль
 "Request Password Reset",Запросить сброс пароля
 "Update Email",Обновить электронную почту
+"Please check your email for account validation","Пожалуйста, проверьте свою электронную почту для подтверждения учетной записи"
+Validate Email,Подтвердить адрес электронной почты
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.","Для включения этой функции потребуется проверка электронной почты, прежде чем пользователь сможет получить доступ к игре. Если эта опция отключена, электронная почта не будет проверяться."
+Note: Mail settings must be defined.,Примечание. Необходимо указать настройки почты.
+Validation,Проверка

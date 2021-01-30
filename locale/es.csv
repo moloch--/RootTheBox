@@ -682,3 +682,8 @@ You have not submitted any bribes yet.,Aún no ha enviado ningún soborno.
 "Forgot Password",Se te olvidó tu contraseña
 "Request Password Reset",Petición para la recuperación de contraseña
 "Update Email",Actualizar correo electrónico
+"Please check your email for account validation",Compruebe su correo electrónico para la validación de la cuenta
+Validate Email,Validar correo electrónico
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.","Habilitar esta función requerirá la validación del correo electrónico antes de que el usuario pueda acceder al juego. Si esta opción está deshabilitada, no se verificará el correo electrónico."
+Note: Mail settings must be defined.,Nota: Se debe definir la configuración de correo.
+Validation,Validación

@@ -25,7 +25,7 @@
             </center>
             <br />
             {% for team in Team.all() %}
-                {% if len(team.members) > 0 %}
+                {% if len(team.members) > 0 and not team.locked %}
                 <li>
                     <a href="#{{ team.uuid }}">
                         <i class="icon-chevron-right"></i>
@@ -44,7 +44,7 @@
         </h1>
         <br />
         {% for index, team in enumerate(Team.ranks()) %}
-            {% if len(team.members) > 0 %}
+            {% if len(team.members) > 0 and not team.locked %}
             <div id="{{ team.uuid }}" class="container" align="middle">
                 <h2 style="display:inline;">
                     {% if index == 0 %}
@@ -61,11 +61,13 @@
                     <div class="row">
                         <div class="container">
                             {% for user in team.members %}
-                                <div class="span2" align="middle">
-                                        <h5>{{ user.handle }}</h5>
-                                        <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
+                                {% if not user.locked %}
+                                    <div class="span2" align="middle">
+                                            <h5>{{ user.handle }}</h5>
+                                            <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
 
-                                </div>
+                                    </div>
+                                {% end %}
                             {% end %}
                         </div>
                 </div>

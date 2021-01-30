@@ -609,6 +609,14 @@ define(
 )
 
 define(
+    "validate_email",
+    default=False,
+    group="game",
+    help="validate email for registration",
+    type=bool,
+)
+
+define(
     "public_teams",
     default=True,
     group="game",

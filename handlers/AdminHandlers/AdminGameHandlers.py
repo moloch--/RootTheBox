@@ -353,11 +353,18 @@ class AdminConfigurationHandler(BaseHandler):
         Update configuration
         Disabled fields will not be send in the POST, so check for blank values
         """
+        errors = None
         self.config.game_name = self.get_argument("game_name", "Root the Box")
         self.config.restrict_registration = self.get_bool(
             "restrict_registration", False
         )
         self.config.require_email = self.get_bool("require_email", True)
+        self.config.validate_email = self.get_bool("validate_email", False)
+        if self.config.validate_email and not len(options.mail_host) > 0:
+            errors = [
+                "Mail settings must be defined in the rootthebox.cfg to Validate Email."
+            ]
+            self.config.validate_email = False
         self.config.global_notification = self.get_bool("global_notification", True)
         self.config.hints_taken = self.get_bool("hints_taken", False)
         self.config.story_mode = self.get_bool("story_mode", False)
@@ -397,7 +404,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.password_upgrade_cost = self.get_int("password_upgrade_cost", 1000)
         self.config.bribe_cost = self.get_int("bribe_cost", 2500)
         self.config.max_pastebin_size = self.get_int("max_pastebin_size", 4096)
-        self.render("admin/configuration.html", errors=None, config=self.config)
+        self.render("admin/configuration.html", errors=errors, config=self.config)
 
     def config_bots(self):
         """ Updates bot config, and starts/stops the botnet callback """

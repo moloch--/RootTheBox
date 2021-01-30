@@ -682,3 +682,8 @@ You have not submitted any bribes yet.,아직 뇌물을 제출하지 않았습�
 "Forgot Password",비밀번호를 잊으 셨나요
 "Request Password Reset",비밀번호 재설정 요청
 "Update Email",이메일 업데이트
+"Please check your email for account validation",계정 확인을 위해 이메일을 확인하십시오.
+Validate Email,유효한 이메일
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.",이 기능을 활성화하려면 사용자가 게임에 액세스하기 전에 이메일 확인이 필요합니다. 이 옵션을 사용하지 않으면 이메일이 확인되지 않습니다.
+Note: Mail settings must be defined.,참고 : 메일 설정을 정의해야합니다.
+Validation,확인

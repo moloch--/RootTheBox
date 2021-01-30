@@ -41,6 +41,7 @@ from models import dbsession
 from models.Permission import Permission
 from models.MarketItem import MarketItem
 from models.BaseModels import DatabaseObject
+from models.EmailToken import EmailToken
 from models.Theme import Theme
 from libs.XSSImageCheck import MAX_AVATAR_SIZE, MIN_AVATAR_SIZE, IMG_FORMATS
 from libs.XSSImageCheck import is_xss_image, get_new_avatar, default_avatar
@@ -351,6 +352,20 @@ class User(DatabaseObject):
 
     def is_admin(self):
         return self.has_permission(ADMIN_PERMISSION)
+
+    def is_email_valid(self):
+        emailtoken = EmailToken.by_user_id(self.id)
+        if emailtoken is None:
+            return True
+        return emailtoken.valid
+
+    def validate_email(self, token):
+        emailtoken = EmailToken.by_user_id(self.id)
+        if emailtoken and emailtoken.value == token:
+            emailtoken.valid = True
+            dbsession.add(emailtoken)
+            dbsession.commit()
+        return self.is_email_valid()
 
     def validate_password(self, attempt):
         """ Check the password against existing credentials """

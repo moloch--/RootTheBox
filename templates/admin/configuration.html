@@ -74,6 +74,31 @@
                     </div>
                 </div>
             </div>
+            <div id="email-grouping" class="control-section">
+                <div class="control-group">
+                    <label class="control-label" for="validate-email">
+                        <i class="fa fa-check-circle"></i>
+                        {{ _("Validate Email") }}
+                    </label>
+                    <div class="controls">
+                        <input id="validate-email" name="validate_email" type="hidden" value="{{ str(config.validate_email).lower() }}" />
+                        <div id="validate-email-button" class="btn-group" data-toggle="buttons-radio"
+                            rel="popover"
+                            data-original-title="{{ _('Validate Email') }}"
+                            data-html="true"
+                            data-content="{{ _('Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.') }}<br><br><strong>{{ _('Note: Mail settings must be defined.') }}</strong>">
+                            <button id="validate-email-enable" type="button" class="btn btn-success">
+                                <i id="validate-email-enable-icon" class="fa fa-fw fa-square-o"></i>
+                                {{ _("Enable") }}
+                            </button>
+                            <button id="validate-email-disable" type="button" class="btn btn-danger">
+                                <i id="validate-email-disable-icon" class="fa fa-fw fa-square-o"></i>
+                                {{ _("Disable") }}
+                            </button>
+                        </div>
+                    </div>
+                </div>             
+            </div>
             <div class="control-group">
                 <label class="control-label" for="restrict-registration">
                     <i class="fa fa-key"></i>

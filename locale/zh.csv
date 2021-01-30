@@ -682,3 +682,8 @@ You have not submitted any bribes yet.,你还没有提交任何赞助。
 "Forgot Password",忘记密码
 "Request Password Reset",要求重设密码
 "Update Email",更新电邮
+"Please check your email for account validation",请检查您的电子邮件以进行帐户验证
+Validate Email,验证电子邮件
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.",启用此功能将需要验证电子邮件，然后用户才能访问游戏。 如果禁用此选项，则不会验证电子邮件。
+Note: Mail settings must be defined.,注意：必须定义邮件设置。
+Validation,验证方式

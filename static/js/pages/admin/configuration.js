@@ -25,6 +25,9 @@ $(document).ready(function() {
     if ($("#use-black-market").val() === "false") {
         $('#blackmarket-grouping').hide();
     }
+    if ($("#require-email").val() === "false") {
+        $("#email-grouping").hide();
+    }
     if ($("#teams").val() === "false") {
         $("#team-grouping").hide();
     }
@@ -51,6 +54,14 @@ $(document).ready(function() {
     } else {
         $("#require-email-disable-icon").removeClass("fa-square-o");
         $("#require-email-disable-icon").addClass("fa-check-square-o");
+    }
+    
+    if ($("#validate-email").val() === "true") {
+        $("#validate-email-enable-icon").removeClass("fa-square-o");
+        $("#validate-email-enable-icon").addClass("fa-check-square-o");
+    } else {
+        $("#validate-email-disable-icon").removeClass("fa-square-o");
+        $("#validate-email-disable-icon").addClass("fa-check-square-o");
     }
 
     if ($("#restrict-registration").val() === "true") {
@@ -164,6 +175,7 @@ $(document).ready(function() {
         $("#require-email-enable-icon").addClass("fa-check-square-o");
         $("#require-email-disable-icon").removeClass("fa-check-square-o");
         $("#require-email-disable-icon").addClass("fa-square-o");
+        $("#email-grouping").slideDown();
     });
     $("#require-email-disable").click(function() {
         $("#require-email").val("false");
@@ -171,8 +183,22 @@ $(document).ready(function() {
         $("#require-email-disable-icon").addClass("fa-check-square-o");
         $("#require-email-enable-icon").removeClass("fa-check-square-o");
         $("#require-email-enable-icon").addClass("fa-square-o");
+        $("#email-grouping").slideUp();
     });
-
+    $("#validate-email-enable").click(function() {
+        $("#validate-email").val("true");
+        $("#validate-email-enable-icon").removeClass("fa-square-o");
+        $("#validate-email-enable-icon").addClass("fa-check-square-o");
+        $("#validate-email-disable-icon").removeClass("fa-check-square-o");
+        $("#validate-email-disable-icon").addClass("fa-square-o");
+    });
+    $("#validate-email-disable").click(function() {
+        $("#validate-email").val("false");
+        $("#validate-email-disable-icon").removeClass("fa-square-o");
+        $("#validate-email-disable-icon").addClass("fa-check-square-o");
+        $("#validate-email-enable-icon").removeClass("fa-check-square-o");
+        $("#validate-email-enable-icon").addClass("fa-square-o");
+    });
     $("#restrict-registration-enable").click(function() {
         $("#restrict-registration").val("true");
         $("#restrict-registration-enable-icon").removeClass("fa-square-o");
@@ -398,6 +424,7 @@ $(document).ready(function() {
     /* Enable popovers */
     $("#game-name").popover({placement:'right', trigger:'hover'});
     $("#require-email-button").popover({placement:'right', trigger:'hover'});
+    $("#validate-email-button").popover({placement:'right', trigger:'hover'});
     $("#restrict-registration-button").popover({placement:'right', trigger:'hover'});
     $("#global-notifications-button").popover({placement:'right', trigger:'hover'});
     $("#public-teams-button").popover({placement:'right', trigger:'hover'});

@@ -682,3 +682,8 @@ You have not submitted any bribes yet.,Sie haben noch keine Bestechungsgelder ei
 "Forgot Password",Wachtwoord vergeten
 "Request Password Reset",Wachtwoord reset aanvragen
 "Update Email",E-mail bijwerken
+"Please check your email for account validation",Controleer uw e-mail voor accountvalidatie
+Validate Email,Email valideren
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.","Het inschakelen van deze functie vereist validatie van e-mail voordat de gebruiker toegang heeft tot de game. Als deze optie is uitgeschakeld, wordt e-mail niet geverifieerd."
+Note: Mail settings must be defined.,Opmerking: e-mailinstellingen moeten zijn gedefinieerd.
+Validation,Validatie

@@ -682,3 +682,8 @@ You have not submitted any bribes yet.,Vous n'avez pas encore soumis de pots-de-
 "Forgot Password",Mot de passe oublié
 "Request Password Reset",Demander la réinitialisation du mot de passe
 "Update Email",Mettre à jour l'e-mail
+"Please check your email for account validation",Veuillez vérifier votre email pour la validation du compte
+Validate Email,Email validé
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.","L'activation de cette fonctionnalité nécessitera la validation de l'e-mail avant que l'utilisateur puisse accéder au jeu. Si cette option est désactivée, l'e-mail ne sera pas vérifié."
+Note: Mail settings must be defined.,Remarque: les paramètres de messagerie doivent être définis.
+Validation,Validation
