@@ -478,6 +478,9 @@
                                 <th>{{_("Handle")}}</th>
                                 <th>{{_("Name")}}</th>
                                 <th>{{_("Last Login")}}</th>
+                                {% if options.require_email and options.validate_email %}
+                                <th>{{_("Validation")}}</th>
+                                {% end %}
                                 {% if options.banking %}
                                     <th>{{_("Bank Password Hash")}}</th>
                                 {% end %}
@@ -502,6 +505,9 @@
                                         <td>{{ user.last_login }}</td>
                                     {% else %}
                                         <td>{{_("Never")}}</td>
+                                    {% end %}
+                                    {% if options.require_email and options.validate_email %}
+                                        <td>{{ user.is_email_valid() }}</td>
                                     {% end %}
                                     {% if options.banking %}
                                         {% if 40 < len(user.bank_password) %}

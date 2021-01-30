@@ -42,6 +42,7 @@ from models.Team import Team
 from models.Theme import Theme
 from models.PasswordToken import PasswordToken
 from models.RegistrationToken import RegistrationToken
+from models.EmailToken import EmailToken
 from models.GameLevel import GameLevel
 from models.User import User
 from handlers.BaseHandlers import BaseHandler
@@ -92,11 +93,7 @@ class LoginHandler(BaseHandler):
         )
 
     def valid_login(self, user):
-        if user.locked:
-            self.render(
-                "public/login.html", info=None, errors=["Your account has been locked"]
-            )
-        elif user.is_admin() and not self.allowed_ip():
+        if user.is_admin() and not self.allowed_ip():
             self.render(
                 "public/login.html",
                 info=[
@@ -107,6 +104,21 @@ class LoginHandler(BaseHandler):
             logging.warning(
                 "Admin login - invalid IP %s.  Valid: %s"
                 % (self.request.remote_ip, ",".join(options.admin_ips))
+            )
+        elif (
+            options.require_email
+            and options.validate_email
+            and not user.is_admin()
+            and not user.is_email_valid()
+        ):
+            self.render(
+                "public/login.html",
+                info=None,
+                errors=["Your email account must be validated before login"],
+            )
+        elif user.locked:
+            self.render(
+                "public/login.html", info=None, errors=["Your account has been locked"]
             )
         else:
             self.successful_login(user)
@@ -192,7 +204,10 @@ class RegistrationHandler(BaseHandler):
                 if self.config.restrict_registration:
                     self.check_regtoken()
                 user = self.create_user()
-                self.render("public/successful_reg.html", account=user.handle)
+                validate = options.require_email and options.validate_email
+                self.render(
+                    "public/successful_reg.html", account=user.handle, validate=validate
+                )
         except ValidationError as error:
             self.render(
                 "public/registration.html",
@@ -216,8 +231,11 @@ class RegistrationHandler(BaseHandler):
             is False
         ):
             raise ValidationError("Invalid handle format")
+        email = self.get_argument("email", None)
+        if options.require_email and (not email or not len(email) > 0):
+            raise ValidationError("Email address is required")
         if (
-            self.get_argument("email", None)
+            email
             and bool(
                 re.match(
                     r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
@@ -277,7 +295,17 @@ class RegistrationHandler(BaseHandler):
         self.dbsession.add(user)
         self.dbsession.add(team)
         self.dbsession.commit()
-        self.event_manager.user_joined_team(user)
+        if (
+            options.require_email
+            and options.validate_email
+            and len(options.mail_host) > 0
+        ):
+            self.send_validate_message(user)
+            user.locked = True
+            self.dbsession.add(user)
+            self.dbsession.commit()
+        else:
+            self.event_manager.user_joined_team(user)
 
         # Chat
         if self.chatsession:
@@ -345,6 +373,92 @@ class RegistrationHandler(BaseHandler):
         else:
             raise ValidationError("Public teams are not enabled")
 
+    def send_validate_message(self, user):
+        if user is not None and len(user.email) > 0:
+            email_token = encode(urandom(16), "hex")
+            emailtoken = EmailToken()
+            emailtoken.user_id = user.id
+            emailtoken.value = sha256(email_token).hexdigest()
+            receivers = [user.email]
+            message = self.create_validate_message(user, email_token)
+            smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port)
+            smtpObj.set_debuglevel(False)
+            try:
+                smtpObj.starttls()
+                try:
+                    smtpObj.login(options.mail_username, options.mail_password)
+                except smtplib.SMTPNotSupportedError as e:
+                    logging.warn("SMTP Auth issue (%s). Attempting to send anyway." % e)
+                smtpObj.sendmail(options.mail_sender, receivers, message)
+            finally:
+                smtpObj.quit()
+            if not len(options.mail_host) > 0:
+                logging.info(
+                    "Email validation failed: No Mail Host in Configuration. Skipping Validation."
+                )
+                emailtoken.valid = True
+            else:
+                logging.info("Email Validation sent for %s" % user.email)
+            self.dbsession.add(emailtoken)
+            self.dbsession.commit()
+        elif (
+            user is not None
+            and options.require_email
+            and options.validate_email
+            and not len(user.email) > 0
+        ):
+            logging.info(
+                "Email validation failed: No Email Address for user %s.  Deleteing User"
+                % user.handle
+            )
+            self.dbsession.delete(user)
+            self.dbsession.commit()
+
+    def create_validate_message(self, user, token):
+        account = encode(user.uuid)
+        try:
+            account = decode(urlsafe_b64encode(account))
+            token = decode(urlsafe_b64encode(token))
+        except:
+            account = urlsafe_b64encode(account)
+            token = urlsafe_b64encode(token)
+        if options.ssl:
+            origin = options.origin.replace("ws://", "https://").replace(
+                "wss://", "https://"
+            )
+        else:
+            origin = options.origin.replace("ws://", "http://")
+        validate_url = "%s/registration/token?u=%s&t=%s" % (origin, account, token)
+        remote_ip = (
+            self.request.headers.get("X-Real-IP")
+            or self.request.headers.get("X-Forwarded-For")
+            or self.request.remote_ip
+        )
+        header = []
+        header.append("Subject: %s Email Validation" % options.game_name)
+        header.append("From: %s <%s>" % (options.game_name, options.mail_sender))
+        header.append("To: %s <%s>" % (user.name, user.email))
+        header.append("MIME-Version: 1.0")
+        header.append('Content-Type: text/html; charset="UTF-8"')
+        header.append("Content-Transfer-Encoding: BASE64")
+        header.append("")
+        f = open("templates/public/valid_email.html", "r")
+        template = (
+            f.read()
+            .replace("\n", "")
+            .replace("[Product Name]", options.game_name)
+            .replace("{{name}}", user.name)
+            .replace("{{action_url}}", validate_url)
+            .replace("{{remote_ip}}", remote_ip)
+            .replace("https://example.com", origin)
+        )
+        f.close()
+        try:
+            email_msg = "\n".join(header) + b64encode(template)
+        except:
+            email_msg = "\n".join(header) + decode(b64encode(encode(template)))
+        return email_msg
+
 
 class FakeRobotsHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -387,7 +501,7 @@ class ForgotPasswordHandler(BaseHandler):
             self.dbsession.add(passtoken)
             self.dbsession.commit()
             receivers = [user.email]
-            message = self.create_message(user, reset_token)
+            message = self.create_reset_message(user, reset_token)
             smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port)
             smtpObj.set_debuglevel(False)
             try:
@@ -410,7 +524,7 @@ class ForgotPasswordHandler(BaseHandler):
             info=["If the email exists, a password reset has been sent."],
         )
 
-    def create_message(self, user, token):
+    def create_reset_message(self, user, token):
         account = encode(user.uuid)
         try:
             account = decode(urlsafe_b64encode(account))
@@ -438,7 +552,7 @@ class ForgotPasswordHandler(BaseHandler):
         header.append('Content-Type: text/html; charset="UTF-8"')
         header.append("Content-Transfer-Encoding: BASE64")
         header.append("")
-        f = open("templates/public/email.html", "r")
+        f = open("templates/public/reset_email.html", "r")
         template = (
             f.read()
             .replace("\n", "")
@@ -516,3 +630,38 @@ class ResetPasswordHandler(BaseHandler):
             token=token,
             uuid=uuid,
         )
+
+
+class ValidEmailHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        """ Validates Email and renders login page """
+        if len(options.mail_host) > 0:
+            error = None
+            info = None
+            try:
+                user_uuid = decode(urlsafe_b64decode(self.get_argument("u", "")))
+                token = sha256(
+                    urlsafe_b64decode(self.get_argument("t", ""))
+                ).hexdigest()
+            except:
+                user_uuid = urlsafe_b64decode(encode(self.get_argument("u", "")))
+                token = sha256(
+                    urlsafe_b64decode(encode(self.get_argument("t", "")))
+                ).hexdigest()
+            user = User.by_uuid(user_uuid)
+            if user:
+                if user.is_email_valid() is True:
+                    pass
+                elif user.validate_email(token) is True:
+                    info = ["Successfully validated email for %s" % user.handle]
+                    user.locked = False
+                    self.dbsession.add(user)
+                    self.dbsession.commit()
+                    self.event_manager.user_joined_team(user)
+                else:
+                    error = ["Faield to validate email for %s" % user.handle]
+            elif len(user_uuid) > 0 and not user:
+                error = ["Invalid user for email validation"]
+            self.render("public/login.html", info=info, errors=error)
+        else:
+            self.redirect("public/404")

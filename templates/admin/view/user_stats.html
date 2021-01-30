@@ -5,7 +5,7 @@
 {% block header %}
 {% from models.Category import Category %}
 <script>
-    var categories = '{{ Category.list() }}';
+    var categories = '{{ Category.list() }}'.replaceAll('&quot;','"');;
 </script>
 <script src="/static/js/libs/highcharts-all.js"></script>
 <script src="/static/js/libs/highcharts-more.js"></script>

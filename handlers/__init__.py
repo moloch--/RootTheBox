@@ -87,6 +87,7 @@ urls = [
     # Public handlers - PublicHandlers.py
     (r"/login", LoginHandler),
     (r"/registration", RegistrationHandler),
+    (r"/registration/token", ValidEmailHandler),
     (r"/reset", ForgotPasswordHandler),
     (r"/reset/token", ResetPasswordHandler),
     (r"/about", AboutHandler),

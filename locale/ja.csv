@@ -682,3 +682,8 @@ You have not submitted any bribes yet.,まだ賄briを提出していません�
 "Forgot Password",パスワードをお忘れですか
 "Request Password Reset",パスワードのリセットをリクエストする
 "Update Email",メールを更新
+"Please check your email for account validation",アカウントの検証についてはメールを確認してください
+Validate Email,Ngesahake Email
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.",この機能を有効にするには、ユーザーがゲームにアクセスする前にメールの検証が必要になります。 このオプションが無効になっている場合、電子メールは検証されません。
+Note: Mail settings must be defined.,注：メール設定を定義する必要があります。
+Validation,検証

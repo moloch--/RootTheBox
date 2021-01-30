@@ -4,9 +4,15 @@
 
 {% block content %}
     <div class="container">
+        <br />
         <h1>{{ _("Successfully created a new account for") }} {{ account }}!</h1>
         <br />
-        <a href="/login">{{ _("Click here to login") }} &raquo;</a>
+        {% if validate %}
+            <h3>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-envelope"></i>&nbsp;
+            {{ _("Please check your email for account validation") }}</h3>
+        {% else %}
+            <a href="/login">{{ _("Click here to login") }} &raquo;</a>
+        {% end %}
         <br />
     </div>
 {% end %}

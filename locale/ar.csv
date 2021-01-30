@@ -682,3 +682,8 @@ You have not submitted any bribes yet.,لم ترسل أي رشاوى بعد.
 "Forgot Password",هل نسيت كلمة المرور
 "Request Password Reset",اعادة تعيين كلمة المرور طلب
 "Update Email",تحديث البريد الإلكتروني
+"Please check your email for account validation",يرجى التحقق من بريدك الإلكتروني للتحقق من صحة الحساب
+Validate Email,التحقق من صحة البريد الإلكتروني
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.",سيتطلب تمكين هذه الميزة التحقق من صحة البريد الإلكتروني قبل أن يتمكن المستخدم من الوصول إلى اللعبة. إذا تم تعطيل هذا الخيار ، فلن يتم التحقق من البريد الإلكتروني.
+Note: Mail settings must be defined.,ملاحظة: يجب تحديد إعدادات البريد.
+Validation,التحقق من الصحة
