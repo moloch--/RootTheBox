@@ -24,7 +24,9 @@
     <div class="span6">
         <div class="row">
             <div class="span11 offset1 well">
-                <h2>{{ _("Welcome") }} {{ user.handle }}</h2>
+                <h2 style="padding-bottom: 8px;">{{ _("Welcome") }} {{ user.handle }}
+                {% if options.teams %}<span style="float: right; font-size: 60%; margin-top: 8px;">{% if options.banking %}${% end %}{{ user.money }}</span></h2>{% end %}
+                {% if options.teams %}<span style="float: right; margin-top: -63px;">Player Score</span>{% end %}
                 <center>
                     {% if options.teams or not team %}
                         <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
