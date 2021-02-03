@@ -72,6 +72,7 @@ dbsession = StartSession()
 chatsession = None
 if options.rocketchat_admin:
     try:
+        logging.info("Attempting RocketChat connection...")
         from libs.ChatManager import ChatManager
 
         chatsession = ChatManager(
