@@ -77,6 +77,8 @@ class LoginHandler(BaseHandler):
         """ Checks submitted username and password """
         user = User.by_handle(self.get_argument("account", ""))
         password_attempt = self.get_argument("password", "")
+        if user is None:
+            user = User.by_email(self.get_argument("account", ""))
         if user is not None:
             if user.validate_password(password_attempt):
                 self.valid_login(user)
@@ -258,6 +260,8 @@ class RegistrationHandler(BaseHandler):
             is not None
         ):
             raise ValidationError("This handle is already registered")
+        if User.by_email(self.get_argument("email", "")) is not None:
+            raise ValidationError("This email address is already registered")
         if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
             raise ValidationError("Passwords do not match")
 

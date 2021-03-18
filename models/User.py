@@ -129,9 +129,13 @@ class User(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
-    def by_email(cls, _email):
+    def by_email(cls, email):
         """ Return an object based on a email """
-        return dbsession.query(cls).filter_by(_email=str(_email)).first()
+        return (
+            dbsession.query(cls)
+            .filter(func.lower(User._email) == func.lower(email))
+            .first()
+        )
 
     @classmethod
     def by_handle(cls, handle, case_sensitive=True):
