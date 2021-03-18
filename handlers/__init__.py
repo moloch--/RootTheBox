@@ -279,14 +279,9 @@ def load_history():
 # Main entry point
 def start_server():
     """ Main entry point for the application """
-    if options.debug:
-        logging.warn(
-            "%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (bold + R, W)
-        )
     locale.set_default_locale("en_US")
     locale.load_translations("locale")
     if options.autostart_game:
-        logging.info("The game is about to begin, good hunting!")
         app.settings["game_started"] = True
         app.settings["history_callback"].start()
         if options.use_bots:
@@ -319,6 +314,12 @@ def start_server():
             logging.error(err)
         sys.exit()
     server.add_sockets(sockets)
+    if options.debug:
+        logging.warn(
+            "%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (bold + R, W)
+        )
+    if options.autostart_game:
+        logging.info("The game is about to begin, good hunting!")
     try:
         Scoreboard.update_gamestate(app)
     except OperationalError as err:
