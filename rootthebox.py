@@ -459,6 +459,8 @@ define("sql_port", default=3306, group="database", help="database tcp port", typ
 
 define("sql_user", default="rtb", group="database", help="database username")
 
+define("sql_sslca", default="", group="database", help="SSL CA Cert for database server.")
+
 define(
     "sql_password",
     default="rtb",

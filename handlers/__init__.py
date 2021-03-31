@@ -262,6 +262,7 @@ def update_db(update=True):
         username=options.sql_user,
         password=options.sql_password,
         dialect=options.sql_dialect,
+        ssl_ca=options.sql_sslca,
     )
     alembic_cfg = Config("alembic/alembic.ini")
     alembic_cfg.attributes["configure_logger"] = False

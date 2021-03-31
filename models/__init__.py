@@ -58,6 +58,7 @@ db_connection = DatabaseConnection(
     username=options.sql_user,
     password=options.sql_password,
     dialect=options.sql_dialect,
+    ssl_ca=options.sql_sslca,
 )
 
 
