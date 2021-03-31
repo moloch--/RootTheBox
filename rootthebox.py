@@ -960,6 +960,7 @@ if __name__ == "__main__":
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
             options.memcached = "memcached"
             options.x_headers = True
+            options_parse_environment()  # Pick up env vars before saving config file.
             save_config()
             setup()
         else:
