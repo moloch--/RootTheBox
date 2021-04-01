@@ -472,6 +472,8 @@ define("sql_port", default=3306, group="database", help="database tcp port", typ
 
 define("sql_user", default="rtb", group="database", help="database username")
 
+define("sql_sslca", default="", group="database", help="SSL CA Cert for database server.")
+
 define(
     "sql_password",
     default="rtb",
@@ -973,6 +975,7 @@ if __name__ == "__main__":
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
             options.memcached = "memcached"
             options.x_headers = True
+            options_parse_environment()  # Pick up env vars before saving config file.
             save_config()
             setup()
         else:
