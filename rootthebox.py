@@ -1053,6 +1053,9 @@ if __name__ == "__main__":
     if options.add_admin:
         generate_admins(options.add_admin)
 
+    if options.admin_ips == ['[]']:
+        options.admin_ips = [] # Tornado issue?
+
     if options.setup.lower()[:3] in ["pro", "dev"]:
         setup()
     elif options.start:
