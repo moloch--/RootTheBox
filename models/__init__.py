@@ -30,6 +30,7 @@ from contextlib import contextmanager
 from libs.DatabaseConnection import DatabaseConnection
 from libs.ConsoleColors import *
 from builtins import str
+from msal import ConfidentialClientApplication
 
 
 if options.log_sql:
@@ -60,6 +61,14 @@ db_connection = DatabaseConnection(
     dialect=options.sql_dialect,
 )
 
+if options.auth == "azuread":
+    azuread_app = ConfidentialClientApplication (
+        options.client_id,
+        authority = "https://login.microsoftonline.com/" + options.tenant_id,
+        client_credential = options.client_secret
+    )
+else:
+    azuread_app = None
 
 ### Setup the database session
 engine = create_engine(str(db_connection), pool_pre_ping=True)

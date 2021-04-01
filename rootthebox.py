@@ -342,6 +342,13 @@ define(
 )
 
 define(
+    "auth",
+    default="db",
+    group="application",
+    help="The authentication mechanism, db (default) or Azure AD",
+)
+
+define(
     "avatar_dir",
     default="./files/avatars",
     group="application",
@@ -415,6 +422,12 @@ define(
     group="application",
     help="links to add to the tool menu",
 )
+
+# Azure AD
+define("client_id", default="", group="azuread" )
+define("tenant_id", default="common", group="azuread" )
+define("client_secret", default="", group="azuread" )
+define("redirect_url", default="http://localhost:8888/oidc", group="azuread" )
 
 # ReCAPTCHA
 define(
@@ -982,6 +995,13 @@ if __name__ == "__main__":
 
     # Make sure that cli args always have president over the file and env
     options.parse_command_line()
+
+    # If authenticating with Azure AD (i.e. enterprise scenario) There's a few settings which 
+    # don't make sense, so force them to disabled.
+    if options.auth.lower() == 'azuread':
+        options.auth = 'azuread' # in-case it wasn't lower-case.
+        options.require_email = False
+        options.public_teams = False
 
     if options.setup.lower()[:3] in ["pro", "dev"]:
         setup()

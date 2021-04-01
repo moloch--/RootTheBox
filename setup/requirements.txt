@@ -14,3 +14,4 @@ alembic
 enum34
 mysqlclient
 rocketchat_API
+msal

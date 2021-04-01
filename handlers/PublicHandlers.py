@@ -28,6 +28,8 @@ any authentication) with the exception of error handlers and the scoreboard
 import logging
 import re
 import smtplib
+import random
+import string
 
 from os import urandom
 from netaddr import IPAddress
@@ -38,19 +40,21 @@ from libs.XSSImageCheck import filter_avatars
 from libs.StringCoding import encode, decode
 from base64 import urlsafe_b64encode, urlsafe_b64decode, b64encode
 from builtins import str
+from models import azuread_app
 from models.Team import Team
 from models.Theme import Theme
 from models.PasswordToken import PasswordToken
 from models.RegistrationToken import RegistrationToken
 from models.EmailToken import EmailToken
 from models.GameLevel import GameLevel
-from models.User import User
+from models.User import User, ADMIN_PERMISSION
+from models.Permission import Permission
 from handlers.BaseHandlers import BaseHandler
 from hashlib import sha256
 from datetime import datetime
 from pbkdf2 import PBKDF2
 from tornado.options import options
-
+from msal import ConfidentialClientApplication
 
 class HomePageHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -61,16 +65,149 @@ class HomePageHandler(BaseHandler):
             self.render("public/home.html")
 
 
+class CodeFlowHandler(BaseHandler):
+
+    """ Handles the OIDC code flow response, when using Azure AD authentication """
+
+    azuread_app = azuread_app
+
+    def get(self, *args, **kwargs):
+        state = args = self.get_argument("state")
+        code = self.get_argument("code")
+        code_flow = self.memcached.get(state)
+        self.memcached.delete(state)
+        args = {
+            "code": code,
+            "state": state
+        }
+        result = azuread_app.acquire_token_by_auth_code_flow(code_flow, args)
+        if "error" in result:
+            self.redirect("/403")
+            return
+
+        claims = result.get("id_token_claims")
+
+        # Admin is defined by the Azure AD AppRole "Admin"
+        hasAdminRole = self.is_admin(claims)
+
+        # Get the team code (if set) would have come from the Join Team page.
+        team_code = None;
+        if "teamcode" in code_flow:
+            team_code = code_flow["teamcode"]
+
+        # Look up user the Azure AD object id (Guid)
+        user = User.by_uuid(claims["oid"])
+
+        # If user is not admin and not part of a team or new, they need to join a team.
+        # Redirect to the join team page here, if needed, before the user is created in the db.
+        if self.needs_team(hasAdminRole, user, team_code):
+            self.redirect("/jointeam?upn=" + claims["upn"])
+            return
+
+        # New user
+        if user is None:
+            user = self.add_user(claims, team_code)
+
+        self.update_permissions(user, hasAdminRole)
+
+        self.dbsession.commit()
+
+        self.create_login_session(user)
+
+        self.redirect("/user")
+
+    def create_login_session(self, user):
+        self.start_session()
+        theme = Theme.by_id(user.theme_id)
+        if user.team is not None:
+            self.session["team_id"] = int(user.team.id)
+        self.session["user_id"] = int(user.id)
+        self.session["user_uuid"] = user.uuid
+        self.session["handle"] = user.handle
+        self.session["theme"] = [str(f) for f in theme.files]
+        self.session["theme_id"] = int(theme.id)
+        if user.is_admin():
+            self.session["menu"] = "admin"
+        else:
+            self.session["menu"] = "user"
+        self.session.save()
+
+    # Admin is defined by the Azure AD AppRole "Admin"
+    def is_admin(self, claims):
+        if "roles" in claims:
+            roles = claims["roles"]
+            if "Admin" in roles:
+                return True
+        return False
+
+    # Figure out whether the user should be presented with the join team page.
+    def needs_team(self, hasAdminRole, user, team_code):
+        needsateam = False
+        # Is the a member of a team, if not admin?
+        if not hasAdminRole:
+            if user is not None:
+                if user.team is None:
+                    # Have they entered a joining code from the join team page?
+                    if team_code is not None and len(team_code) > 0:
+                        team = Team.by_code(team_code)
+                        user.team = team
+                    else:
+                        needsateam = True
+            # New user must have teamcode for joining a team.
+            elif team_code is None or len(team_code) == 0:
+                needsateam = True
+        return needsateam
+
+    def add_user(self, claims, team_code):
+        user = User()
+        user.uuid = claims["oid"]
+        user.handle = claims["preferred_username"].split("@")[0]
+        # Generate a long random password that the user will never know or use.
+        user.password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=30))
+        user.bank_password = False
+        user.name = claims["name"]
+        user.email = claims["email"]
+        user.theme = options.default_theme
+        user.last_login = datetime.now()
+        user.logins = 1
+        if not self.is_admin(claims):
+            user.team = Team.by_code(team_code)
+        self.dbsession.add(user)
+        return user
+
+    def update_permissions(self, user, isAdmin):
+        # Update permissions, in-case the user has been added to or removed from the 
+        # admin role in Azure AD.
+        if isAdmin and not user.is_admin():
+            permission = Permission()
+            permission.name = ADMIN_PERMISSION
+            permission.user_id = user.id
+            self.dbsession.add(permission)
+            user.team_id = None # Admins aren't part of a team.
+        elif not isAdmin and user.is_admin():
+            permissions = Permission.by_user_id(user.id)
+            for permission in permissions:
+                if permission.name == ADMIN_PERMISSION:
+                    self.dbsession.delete(permission)
+
+
 class LoginHandler(BaseHandler):
 
     """ Takes care of the login process """
+
+    azuread_app = azuread_app
 
     def get(self, *args, **kwargs):
         """ Display the login page """
         if self.session is not None:
             self.redirect("/user")
         else:
-            self.render("public/login.html", info=None, errors=None)
+            if options.auth == "azuread":
+                code_flow = self.build_auth_code_flow()
+                self.memcached.add(code_flow["state"], code_flow)
+                self.redirect(code_flow["auth_uri"])
+            else:
+                self.render("public/login.html", info=None, errors=None)
 
     @blacklist_ips
     def post(self, *args, **kwargs):
@@ -88,6 +225,10 @@ class LoginHandler(BaseHandler):
             if password_attempt is not None:
                 PBKDF2.crypt(password_attempt, "BurnTheHashTime")
             self.failed_login()
+
+    def build_auth_code_flow(self):
+        codeflow = azuread_app.initiate_auth_code_flow(["email"], redirect_uri=options.redirect_url)
+        return codeflow
 
     def allowed_ip(self):
         return (
@@ -463,6 +604,58 @@ class RegistrationHandler(BaseHandler):
             email_msg = "\n".join(header) + decode(b64encode(encode(template)))
         return email_msg
 
+
+class JoinTeamHandler(BaseHandler):
+
+    azuread_app = azuread_app
+
+    def get(self, *args, **kwargs):
+        if self.session is not None:
+            self.redirect("/user")
+        else:
+            login_hint = self.get_argument("upn", "")
+            self.render(
+                "public/jointeam.html",
+                errors=None,
+                suspend=self.application.settings["suspend_registration"],
+                login_hint=login_hint,
+            )
+
+    def post(self, *args, **kwargs):
+        login_hint = None
+        try:
+            if self.application.settings["suspend_registration"]:
+                self.render("public/jointeam.html", errors=None, suspend=True)
+            else:
+                code = self.get_argument("team-code", "")
+                code = self.validate_teamcode(code)
+                login_hint = self.get_argument("login-hint", None)
+                if len(login_hint) == 0:
+                    login_hint = None
+                code_flow = azuread_app.initiate_auth_code_flow(["email"],
+                    redirect_uri=options.redirect_url, 
+                    login_hint=login_hint)
+                code_flow["teamcode"] = code
+                self.memcached.add(code_flow["state"], code_flow)
+                self.redirect(code_flow["auth_uri"])
+
+        except ValidationError as error:
+            self.render(
+                "public/jointeam.html",
+                errors=[str(error)],
+                suspend=self.application.settings["suspend_registration"],
+                login_hint=login_hint,
+            )
+
+    def validate_teamcode(self, teamcode):
+        if len(teamcode) == 0:
+            raise ValidationError("Invalid team code")
+        team = Team.by_code(teamcode)
+        if not team:
+            raise ValidationError("Invalid team code")
+        elif self.config.max_team_size <= len(team.members):
+            raise ValidationError("Team %s is already full" % team.name)
+        return teamcode
 
 class FakeRobotsHandler(BaseHandler):
     def get(self, *args, **kwargs):
