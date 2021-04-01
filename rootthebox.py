@@ -101,6 +101,14 @@ def setup():
 
     create_tables(engine, metadata, options.log_sql)
     sys.stdout.flush()
+
+    from models.Theme import Theme
+
+    themes = Theme.all()
+    if len(themes) > 0:
+        print(INFO + "It looks like database has already been set up.")
+        return
+
     print(INFO + "%s : Bootstrapping the database ..." % current_time())
     import setup.bootstrap
 
