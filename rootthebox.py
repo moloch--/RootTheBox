@@ -306,6 +306,13 @@ define(
     help="whitelist of ip addresses that can access the admin ui (use empty list to allow all ip addresses)",
 )
 
+define(
+    "webhook_url",
+    default=None,
+    group="server",
+    help="url to receive webhook callbacks when certain game actions occur, such as flag capture"
+)
+
 # Mail Server
 define("mail_host", default="", group="mail", help="SMTP server")
 
