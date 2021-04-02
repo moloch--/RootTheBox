@@ -60,7 +60,12 @@ def send_capture_failed_webhook(user, flag):
 def send_level_complete_webhook(user, level):
     send_webhook({
         'action': 'level_complete',
-        'level': {},
+        'level': {
+            'name': level.name,
+            'number': level.number,
+            'type': level.type,
+            'reward': level.reward
+        },
         'user': get_user_info(user),
         'team': get_team_info(user.team)
     })
@@ -68,7 +73,12 @@ def send_level_complete_webhook(user, level):
 def send_box_complete_webhook(user, box):
     send_webhook({
         'action': 'box_complete',
-        'box': {},
+        'box': {
+            'name': box.name,
+            'value': box.value,
+            'operating_system': box.operating_system,
+            'difficulty': box.difficulty
+        },
         'user': get_user_info(user),
         'team': get_team_info(user.team)
     })
