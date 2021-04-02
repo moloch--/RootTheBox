@@ -21,6 +21,7 @@ Created on Apr 2, 2021
 # pylint: disable=unused-variable
 
 import logging
+import requests
 from tornado.options import options
 
 def send_game_start_webhook():
@@ -81,7 +82,10 @@ def get_user_info(user):
 def get_team_info(team):
     return {
         'name': team.name,
-        'score': team.get_score(),
+        'money': team.get_score("money"),
+        'flags': team.get_score("flag"),
+        'hints': team.get_score("hint"),
+        'bots': team.get_score("bot"),
         'members': get_team_members(team)
     }
 
@@ -93,8 +97,8 @@ def get_team_members(team):
 
 def send_webhook(data):
     if options.webhook_url:
-        logging.info("Sending webhook for '" + data.action + "' to " + options.webhook_url)
+        logging.info("Sending webhook for '" + data['action'] + "' to " + options.webhook_url)
         try:
-            requests.post("url", data)
+            requests.post(options.webhook_url, json=data)
         except requests.exceptions.RequestException:
             logging.exception("error sending webhook")
