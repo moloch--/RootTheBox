@@ -101,6 +101,14 @@ def setup():
 
     create_tables(engine, metadata, options.log_sql)
     sys.stdout.flush()
+
+    from models.Theme import Theme
+
+    themes = Theme.all()
+    if len(themes) > 0:
+        print(INFO + "It looks like database has already been set up.")
+        return
+
     print(INFO + "%s : Bootstrapping the database ..." % current_time())
     import setup.bootstrap
 
@@ -144,6 +152,44 @@ def setup_xml(xml_params):
         import_xml(xml_param)
     print(INFO + "%s : Completed processing of all .xml file(s)" % (current_time()))
 
+def generate_teams(num_teams):
+    """ Generates teams by number """
+    from models import Team, dbsession
+    for i in range(0, num_teams):
+        team = Team()
+        team.name = 'Team ' + str(i+1)
+        dbsession.add(team)
+        dbsession.flush()
+    dbsession.commit()
+
+def generate_teams_by_name(team_names):
+    """ Generates teams by their names """
+    from models import Team, dbsession
+    for i in range(0, len(team_names)):
+        team = Team()
+        team.name = team_names[i]
+        dbsession.add(team)
+        dbsession.flush()
+    dbsession.commit()
+
+def generate_admins(admin_names):
+    """ Creates admin users with the syntax '<handle> <email> <password>' """
+    from models import User, Permission, dbsession
+    from models.User import ADMIN_PERMISSION
+    for i in range(0, len(admin_names)):
+        admin_detail = admin_names[i].split()
+        user = User(
+            handle=admin_detail[0],
+            name=admin_detail[0],
+            email=admin_detail[1],
+            password=admin_detail[2])
+        dbsession.add(user)
+        dbsession.flush()
+
+        admin_permission = Permission(name=ADMIN_PERMISSION, user_id=user.id)
+        dbsession.add(admin_permission)
+        dbsession.flush()
+    dbsession.commit()
 
 def tests():
     """ Creates a temporary sqlite database and runs the unit tests """
@@ -304,6 +350,13 @@ define(
     default=["127.0.0.1", "::1"],
     group="server",
     help="whitelist of ip addresses that can access the admin ui (use empty list to allow all ip addresses)",
+)
+
+define(
+    "webhook_url",
+    default=None,
+    group="server",
+    help="url to receive webhook callbacks when certain game actions occur, such as flag capture"
 )
 
 # Mail Server
@@ -935,6 +988,31 @@ define(
     type=game_type,
 )
 
+# Auto-setup modes
+define(
+    "generate_teams",
+    default=0,
+    group="autosetup",
+    help="number of teams to generate (team 1, team 2, etc)",
+    type=int
+)
+
+define(
+    "generate_team",
+    default=[],
+    group="autosetup",
+    help="generate teams by name ('My team','Another team')",
+    multiple=True
+)
+
+define(
+    "add_admin",
+    default=[],
+    group="autosetup",
+    help="add administrator users, multiples supported ('<handle> <email> <password>')",
+    multiple=True
+)
+
 # Process modes/flags
 define("setup", default="", help="setup a database (prod|devel|docker)")
 
@@ -1005,6 +1083,16 @@ if __name__ == "__main__":
         options.auth = 'azuread' # in-case it wasn't lower-case.
         options.require_email = False
         options.public_teams = False
+
+    if options.generate_teams:
+        generate_teams(options.generate_teams)
+    if options.generate_team:
+        generate_teams_by_name(options.generate_team)
+    if options.add_admin:
+        generate_admins(options.add_admin)
+
+    if options.admin_ips == ['[]']:
+        options.admin_ips = [] # Tornado issue?
 
     if options.setup.lower()[:3] in ["pro", "dev"]:
         setup()

@@ -15,3 +15,4 @@ enum34
 mysqlclient
 rocketchat_API
 msal
+requests

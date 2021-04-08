@@ -33,6 +33,7 @@ from builtins import str
 from past.utils import old_div
 from libs.SecurityDecorators import authenticated, game_started
 from libs.StringCoding import decode, encode
+from libs.WebhookHelpers import *
 from handlers.BaseHandlers import BaseHandler
 from models.GameLevel import GameLevel
 from models.Flag import Flag
@@ -279,6 +280,9 @@ class BoxHandler(BaseHandler):
             )
         success = [reward_dialog]
 
+        # Fire capture webhook
+        send_capture_webhook(user, flag, old_reward)
+
         # Check for Box Completion
         box = flag.box
         if box.is_complete(user):
@@ -292,6 +296,9 @@ class BoxHandler(BaseHandler):
                 success.append(
                     "Congratulations! You have completed " + box.name + ". " + dialog
                 )
+
+                # Fire box complete webhook
+                send_box_complete_webhook(user, box)
             else:
                 success.append("Congratulations! You have completed " + box.name + ".")
 
@@ -328,6 +335,9 @@ class BoxHandler(BaseHandler):
                 + ". "
                 + reward_dialog
             )
+
+            # Fire level complete webhook
+            send_level_complete_webhook(user, box)
 
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
@@ -374,6 +384,10 @@ class BoxHandler(BaseHandler):
             self.dbsession.flush()
             self.event_manager.flag_penalty(user, flag)
             self.dbsession.commit()
+
+            # Fire capture failed webhook
+            send_capture_failed_webhook(user, flag)
+
             return penalty
         return False
 
