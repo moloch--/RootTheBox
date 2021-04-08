@@ -36,6 +36,7 @@ from models.User import User
 from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedSession, MemcachedConnect
 from libs.EventManager import EventManager
+from libs.WebhookHelpers import *
 from builtins import str
 
 try:
@@ -256,6 +257,8 @@ class BaseHandler(RequestHandler):
             self.application.settings["history_callback"].start()
             if self.config.use_bots:
                 self.application.settings["score_bots_callback"].start()
+            # Fire game start webhook
+            send_game_start_webhook()
 
     def stop_game(self):
         """ Stop the game and all callbacks """
@@ -266,6 +269,8 @@ class BaseHandler(RequestHandler):
                 self.application.settings["history_callback"].stop()
             if self.application.settings["score_bots_callback"]._running:
                 self.application.settings["score_bots_callback"].stop()
+            # Fire game stop webhook
+            send_game_stop_webhook()
 
     def get_user_locale(self):
         """
