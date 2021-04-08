@@ -28,7 +28,7 @@ any authentication) with the exception of error handlers and the scoreboard
 import logging
 import re
 import smtplib
-import random
+import secrets
 import string
 
 from os import urandom
@@ -163,7 +163,7 @@ class CodeFlowHandler(BaseHandler):
         user.uuid = claims["oid"]
         user.handle = claims["preferred_username"].split("@")[0]
         # Generate a long random password that the user will never know or use.
-        user.password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=30))
+        user.password = ''.join(secrets.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(30))
         user.bank_password = False
         user.name = claims["name"]
         user.email = claims["email"]
