@@ -306,6 +306,13 @@ define(
     help="whitelist of ip addresses that can access the admin ui (use empty list to allow all ip addresses)",
 )
 
+define(
+    "autoreload_source",
+    default=True,
+    group="server",
+    help="automatically restart the server if a change is detected in source (debuggers will not follow)"
+)
+
 # Mail Server
 define("mail_host", default="", group="mail", help="SMTP server")
 
@@ -975,7 +982,8 @@ if __name__ == "__main__":
             + bold
             + "If necessary, update the db username and password in the cfg and set any advanced configuration options."
         )
-        os._exit(1)
+        if not options.setup:
+            os._exit(1)
     else:
         logging.debug("Parsing config file `%s`" % (os.path.abspath(options.config),))
         options.parse_config_file(options.config)

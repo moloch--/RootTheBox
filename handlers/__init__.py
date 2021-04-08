@@ -249,6 +249,7 @@ app = Application(
     scoreboard_state={},
     # Application version
     version=__version__,
+    autoreload=options.autoreload_source
 )
 
 

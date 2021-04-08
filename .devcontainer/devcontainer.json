@@ -21,7 +21,12 @@
 					"type": "python",
 					"request": "launch",
 					"program": "rootthebox.py",
-					"args": [ "--start", "--debug" ],
+					"args": [ 
+						"--start", 
+						"--debug",
+						"--autostart_game=True",
+						"--autoreload_source=False" 
+					],
 					"console": "integratedTerminal",
 					"serverReadyAction": {
 						"action": "openExternally",
