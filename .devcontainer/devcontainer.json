@@ -1,0 +1,53 @@
+{
+	"name": "rootthebox",
+	"dockerComposeFile": ["../docker-compose.yml", "docker-compose.dev.yml"],
+	"service": "webapp",
+	"workspaceFolder": "/home/rtbdev/code/",
+	"extensions": [
+		"ms-python.python",
+		"redhat.vscode-xml"
+	],
+	"forwardPorts": [ 8888 ],
+	"settings": {
+		"terminal.integrated.cwd": "/home/rtbdev/code/",
+		"files.exclude": {
+			"**/.devcontainer": true,
+			"**/.vscode": true
+		},
+		"launch": {
+			"configurations": [
+				{
+					"name": "RootTheBox",
+					"type": "python",
+					"request": "launch",
+					"program": "rootthebox.py",
+					"args": [ 
+						"--start", 
+						"--debug",
+						"--autostart_game=True",
+						"--autoreload_source=False" 
+					],
+					"console": "integratedTerminal",
+					"serverReadyAction": {
+						"action": "openExternally",
+						"pattern": "Starting RTB on http://localhost:([0-9]+)",
+						"uriFormat": "http://localhost:%s"
+					}
+				}
+			]
+		}
+	},
+	"postCreateCommand": [
+		"/usr/local/bin/python3",
+		"/home/rtbdev/code/rootthebox.py",
+		"--setup=prod",
+		"--tests",
+		"--sql_dialect=mysql",
+		"--sql_host=mysql",
+		"--sql_user=rtb",
+		"--sql_password=rootthebox",
+		"--memcached=memcached",
+		"--admin_ips=[]",
+		"--debug"
+	]
+}
