@@ -348,7 +348,9 @@ class AdminLockHandler(BaseHandler):
             user.locked = False if user.locked else True
             self.dbsession.add(user)
             self.dbsession.commit()
-        self.redirect("/admin/users")
+            self.redirect("/admin/users")
+        else:
+            self.render("public/404.html")
 
     def lock_box(self):
         uuid = self.get_argument("uuid", "")
@@ -357,7 +359,9 @@ class AdminLockHandler(BaseHandler):
             box.locked = False if box.locked else True
             self.dbsession.add(box)
             self.dbsession.commit()
-        self.redirect("/admin/view/game_objects#%s" % str(uuid))
+            self.redirect("/admin/view/game_objects#%s" % box.uuid)
+        else:
+            self.render("public/404.html")
 
 
 class AdminAjaxUserHandler(BaseHandler):
