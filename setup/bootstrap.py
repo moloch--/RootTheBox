@@ -44,6 +44,7 @@ if (
     options.setup.lower().startswith("dev")
     or options.setup.lower().startswith("docker")
     or options.tests
+    or options.auth.lower() == "azuread"
 ):
     admin_handle = "admin"
     password = "rootthebox"
@@ -133,12 +134,14 @@ game_level = GameLevel(number=0, buyout=0)
 dbsession.add(game_level)
 dbsession.flush()
 
-# Admin User Account
-admin_user = User(handle=admin_handle)
-admin_user.password = password
-dbsession.add(admin_user)
-dbsession.flush()
+if options.auth.lower() == "db":
+    # Admin User Account
+    admin_user = User(handle=admin_handle)
+    admin_user.password = password
+    dbsession.add(admin_user)
+    dbsession.flush()
 
-admin_permission = Permission(name=ADMIN_PERMISSION, user_id=admin_user.id)
-dbsession.add(admin_permission)
+    admin_permission = Permission(name=ADMIN_PERMISSION, user_id=admin_user.id)
+    dbsession.add(admin_permission)
+
 dbsession.commit()

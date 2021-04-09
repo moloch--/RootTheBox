@@ -37,6 +37,7 @@ class Menu(UIModule):
         else:
             user = None
         scoreboard_visible = self.scoreboard_visible(user)
+        registration_allowed = self.registration_allowed()
         if self.handler.session is not None:
             if self.handler.session["menu"] == "user":
                 return self.render_string(
@@ -47,7 +48,7 @@ class Menu(UIModule):
                     "menu/admin.html", user=user, scoreboard_visible=scoreboard_visible
                 )
         return self.render_string(
-            "menu/public.html", scoreboard_visible=scoreboard_visible
+            "menu/public.html", scoreboard_visible=scoreboard_visible, registration_visible=registration_allowed
         )
 
     def scoreboard_visible(self, user):
@@ -56,3 +57,8 @@ class Menu(UIModule):
         if user:
             return options.scoreboard_visibility == "players" or user.is_admin()
         return False
+
+    def registration_allowed(self):
+        if options.auth == "azuread":
+            return False
+        return True

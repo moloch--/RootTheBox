@@ -268,6 +268,7 @@
                 </form>
             </div>
         </div>
+        {% if options.auth == "db" %}
         <div class="row" style="margin-left: 0px; margin-right: 20px;">
             <div class="well">
                 <form class="form-horizontal" action="/user/settings/password" method="post" autocomplete="off">
@@ -302,6 +303,7 @@
                 </form>
             </div>
         </div>
+        {% end %}
         {% if options.banking %}
         <div class="row-fluid" style="margin-left: 0px;">
             <div class="well" style="margin-right: 20px;">
