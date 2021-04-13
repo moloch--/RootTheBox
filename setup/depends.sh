@@ -69,7 +69,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   fi
 
   echo "[*] Installing common packages..."
-  apt-get install build-essential zlib1g-dev memcached $SKIP
+  apt-get install build-essential zlib1g-dev memcached rustc $SKIP
 
   echo "[*] Installing db packages..."
   if [[ "$SKIP" == "-y" ]]; then

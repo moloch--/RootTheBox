@@ -14,5 +14,6 @@ alembic
 enum34
 mysqlclient
 rocketchat_API
+setuptools-rust
 msal
 requests
