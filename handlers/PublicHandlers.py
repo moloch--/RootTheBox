@@ -401,7 +401,7 @@ class RegistrationHandler(BaseHandler):
             is not None
         ):
             raise ValidationError("This handle is already registered")
-        if User.by_email(self.get_argument("email", "")) is not None:
+        if options.require_email and User.by_email(self.get_argument("email", None)) is not None:
             raise ValidationError("This email address is already registered")
         if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
             raise ValidationError("Passwords do not match")
