@@ -346,11 +346,11 @@ $(document).ready(function() {
     $(".boxavatarimg").click(function() {
         var filename = $(this).attr('value');
         $("#box_avatar_select").val(filename);
-        $("#avatarfilename").text("File: " + filename.replace("box/",""));
+        $("#avatarfilename").text("File: " + filename.replace("box/","").replace(/^C:\\fakepath\\/, ""));
         $("#avatarclose").click();
     });
     $("#box-avatar").change(function(){
-        $("#avatarfilename").text("File: " + $(this).val());
+        $("#avatarfilename").text("File: " + $(this).val().replace(/^C:\\fakepath\\/, ""));
         $("#box_avatar_select").val("");
     });
     $("#removeavatar").click(function(){
