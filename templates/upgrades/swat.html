@@ -63,29 +63,31 @@
                 </thead>
                 <tbody>
                     {% for index, target in enumerate(targets) %}
-                        {% if Swat.user_is_pending(target) %}
-                            <tr class="warning">
-                        {% elif Swat.user_is_in_progress(target) %}
-                            <tr class="error">
-                        {% else %}
-                            <tr>
-                        {% end %}
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ target.team.name }}</td>
-                            <td>{{ target.handle }}</td>
-                            <td>${{ Swat.get_price(target) }}</td>
+                        {% if target.team and not target.team.locked %}
                             {% if Swat.user_is_pending(target) %}
-                                <td>{{ _("Bribe Pending") }}</td>
+                                <tr class="warning">
                             {% elif Swat.user_is_in_progress(target) %}
-                                <td>{{ _("Accepted / In Jail") }}</td>
+                                <tr class="error">
                             {% else %}
-                                <td>
-                                    <a id="swat-player-button{{ index }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#swat-player-modal" data-uuid="{{ target.uuid}}" data-price="{{ Swat.get_price(target) }}">
-                                        {{ _("Arrest Player") }}
-                                    </a>
-                                </td>
+                                <tr>
                             {% end %}
-                        </tr>
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ target.team.name }}</td>
+                                <td>{{ target.handle }}</td>
+                                <td>${{ Swat.get_price(target) }}</td>
+                                {% if Swat.user_is_pending(target) %}
+                                    <td>{{ _("Bribe Pending") }}</td>
+                                {% elif Swat.user_is_in_progress(target) %}
+                                    <td>{{ _("Accepted / In Jail") }}</td>
+                                {% else %}
+                                    <td>
+                                        <a id="swat-player-button{{ index }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#swat-player-modal" data-uuid="{{ target.uuid}}" data-price="{{ Swat.get_price(target) }}">
+                                            {{ _("Arrest Player") }}
+                                        </a>
+                                    </td>
+                                {% end %}
+                            </tr>
+                        {% end %}
                     {% end %}
                 </tbody>
             </table>
