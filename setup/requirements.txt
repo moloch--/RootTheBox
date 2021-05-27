@@ -1,8 +1,10 @@
 tornado==5.*; python_version < '3.0'
 tornado; python_version >= '3.0'
 pbkdf2
-PyMySQL
-python-binary-memcached
+PyMySQL==0.10.1; python_version < '3.0'
+PyMySQL; python_version >= '3.0'
+python-binary-memcached==0.27.0; python_version < '3.0'
+python-binary-memcached; python_version >= '3.0'
 python-dateutil
 defusedxml
 netaddr
@@ -14,6 +16,7 @@ alembic
 enum34
 mysqlclient
 rocketchat_API
-setuptools-rust
+setuptools-rust==0.10.3; python_version < '3.0'
+setuptools-rust; python_version >= '3.0'
 msal
 requests
