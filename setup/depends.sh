@@ -102,7 +102,7 @@ echo "[*] Installing python libs..."
 
 #sh "$current_path/python-depends.sh"
 if [[ "$python_version" == "2" ]]; then
-    pip2 install -r "$current_path/requirements.txt" --upgrade
+    pip install -r "$current_path/requirements.txt" --upgrade
 fi
 if [[ "$python3_version" == "3" ]]; then
     pip3 install -r "$current_path/requirements.txt" --upgrade
