@@ -40,7 +40,14 @@ from tornado.options import options
 
 class DatabaseConnection(object):
     def __init__(
-        self, database, hostname="", port="", username="", password="", dialect="", ssl_ca=""
+        self,
+        database,
+        hostname="",
+        port="",
+        username="",
+        password="",
+        dialect="",
+        ssl_ca="",
     ):
         self.database = database
         self.hostname = hostname

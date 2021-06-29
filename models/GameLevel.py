@@ -30,6 +30,7 @@ from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from builtins import str
+from models.Relationships import team_to_game_level
 
 
 class GameLevel(DatabaseObject):
@@ -50,6 +51,12 @@ class GameLevel(DatabaseObject):
         "Box",
         backref=backref("game_level", lazy="select"),
         cascade="all,delete,delete-orphan",
+    )
+
+    teams = relationship(
+        "Team",
+        secondary=team_to_game_level,
+        backref=backref("GameLevel", lazy="select"),
     )
 
     @classmethod

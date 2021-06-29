@@ -131,7 +131,7 @@ class User(DatabaseObject):
     @classmethod
     def by_email(cls, email):
         """ Return an object based on a email """
-        if  email and len(email) > 0:
+        if email and len(email) > 0:
             return (
                 dbsession.query(cls)
                 .filter(func.lower(User._email) == func.lower(email))

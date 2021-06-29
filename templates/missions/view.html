@@ -62,20 +62,23 @@
             {% if len(level.boxes) > 0 %}
                 {% if options.group_by_corp %}
                     <h2>{{ corp.name }}&nbsp;</h2>
-                    {% if corp.description %}<h4 class="levelheader">{{ corp.description }}<h4>{% end %}
+                    {% if corp.description %}<h4 class="levelheader">{{ corp.description }}</h4>{% end %}
                 {% end %}
+
+            {% set has_level = not team or level.type == 'none' or level in team.game_levels %}
+            {% if not (level.type == 'hidden' and not has_level) %}
             <div class="well">
                 {% if len(GameLevel.all()) > 1 %}
                     <h3 class="levelheader">
-                        {% if not team or level.type == 'none' or level in team.game_levels %}
+                        {% if has_level %}
                             <i class="fa fa-unlock-alt"></i>
                         {% else %}
                             <i class="fa fa-lock"></i>
                         {% end %}
                         {{ level.name }}&nbsp;
                     </h3>
-                    {% if level.description %}<h4 class="levelheader">({{ level.description }})<h4>{% end %}
-                    {% if team and (level.type == 'none' or level in team.game_levels) %}
+                    {% if level.description %}<h4 class="levelheader">({{ level.description }})</h4>{% end %}
+                    {% if team and has_level %}
                         <div class="progress" style="height: 10px; background-color: #424242;">
                         {% if len(level.flags) == 0 %}
                             <div class="bar minibar" style="width: {{0}}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}"></div>
@@ -87,7 +90,7 @@
                     {% end %}
                     <hr>
                 {% end %}
-                {% if not team or level.type == 'none' or level in team.game_levels %}
+                {% if has_level %}
                     <div class="container">
                         {% set boxes = [] %}
                         {% for box in level.boxes %}
@@ -235,9 +238,12 @@
                         <i class="fa fa-unlock"></i>
                         {{ _("Unlock") }}
                     </a>
+                    {% elif level._type == "points" %}
+                        {{ _("This level will unlock at") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
+                    {% elif level._type == "progress" %}
+                        {{ _("This level will unlock at") }} {{ level.buyout }}% {{ _("completion of prior level") }}
                     {% end %}
                     <hr>
-
                     <strong>
                         {{ _("You do not have access to this level yet.") }}
                     </strong>
@@ -245,6 +251,7 @@
                     <br />
                 {% end %}
             </div>
+            {% end %}
             {% end %}
         {% end %}
         {% end %}

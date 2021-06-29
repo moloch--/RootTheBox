@@ -339,6 +339,22 @@ class BoxHandler(BaseHandler):
             # Fire level complete webhook
             send_level_complete_webhook(user, box)
 
+        # Unlock level if based on Game Score
+        for lv in GameLevel.all():
+            if (
+                lv.type == "points"
+                and lv.buyout <= user.team.money
+                and lv not in user.team.game_levels
+            ):
+                logging.info(
+                    "%s (%s) unlocked %s" % (user.handle, user.team.name, lv.name)
+                )
+                user.team.game_levels.append(lv)
+                self.dbsession.add(user.team)
+                self.dbsession.commit()
+                self.event_manager.level_unlocked(user, lv)
+                success.append("Congratulations! You have unlocked " + lv.name)
+
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
         if next_level and next_level not in user.team.game_levels:

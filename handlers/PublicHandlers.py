@@ -56,6 +56,7 @@ from pbkdf2 import PBKDF2
 from tornado.options import options
 from msal import ConfidentialClientApplication
 
+
 class HomePageHandler(BaseHandler):
     def get(self, *args, **kwargs):
         """ Renders the main page """
@@ -76,10 +77,7 @@ class CodeFlowHandler(BaseHandler):
         code = self.get_argument("code")
         code_flow = self.memcached.get(state)
         self.memcached.delete(state)
-        args = {
-            "code": code,
-            "state": state
-        }
+        args = {"code": code, "state": state}
         result = azuread_app.acquire_token_by_auth_code_flow(code_flow, args)
         if "error" in result:
             self.redirect("/403")
@@ -91,7 +89,7 @@ class CodeFlowHandler(BaseHandler):
         hasAdminRole = self.is_admin(claims)
 
         # Get the team code (if set) would have come from the Join Team page.
-        team_code = None;
+        team_code = None
         if "teamcode" in code_flow:
             team_code = code_flow["teamcode"]
 
@@ -163,7 +161,10 @@ class CodeFlowHandler(BaseHandler):
         user.uuid = claims["oid"]
         user.handle = claims["preferred_username"].split("@")[0]
         # Generate a long random password that the user will never know or use.
-        user.password = ''.join(secrets.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(30))
+        user.password = "".join(
+            secrets.choice(string.ascii_letters + string.digits + string.punctuation)
+            for i in range(30)
+        )
         user.bank_password = False
         user.name = claims["name"]
         user.email = claims["email"]
@@ -176,14 +177,14 @@ class CodeFlowHandler(BaseHandler):
         return user
 
     def update_permissions(self, user, isAdmin):
-        # Update permissions, in-case the user has been added to or removed from the 
+        # Update permissions, in-case the user has been added to or removed from the
         # admin role in Azure AD.
         if isAdmin and not user.is_admin():
             permission = Permission()
             permission.name = ADMIN_PERMISSION
             permission.user_id = user.id
             self.dbsession.add(permission)
-            user.team_id = None # Admins aren't part of a team.
+            user.team_id = None  # Admins aren't part of a team.
         elif not isAdmin and user.is_admin():
             permissions = Permission.by_user_id(user.id)
             for permission in permissions:
@@ -227,7 +228,9 @@ class LoginHandler(BaseHandler):
             self.failed_login()
 
     def build_auth_code_flow(self):
-        codeflow = azuread_app.initiate_auth_code_flow(["email"], redirect_uri=options.redirect_url)
+        codeflow = azuread_app.initiate_auth_code_flow(
+            ["email"], redirect_uri=options.redirect_url
+        )
         return codeflow
 
     def allowed_ip(self):
@@ -401,7 +404,10 @@ class RegistrationHandler(BaseHandler):
             is not None
         ):
             raise ValidationError("This handle is already registered")
-        if options.require_email and User.by_email(self.get_argument("email", None)) is not None:
+        if (
+            options.require_email
+            and User.by_email(self.get_argument("email", None)) is not None
+        ):
             raise ValidationError("This email address is already registered")
         if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
             raise ValidationError("Passwords do not match")
@@ -632,9 +638,9 @@ class JoinTeamHandler(BaseHandler):
                 login_hint = self.get_argument("login-hint", None)
                 if len(login_hint) == 0:
                     login_hint = None
-                code_flow = azuread_app.initiate_auth_code_flow(["email"],
-                    redirect_uri=options.redirect_url, 
-                    login_hint=login_hint)
+                code_flow = azuread_app.initiate_auth_code_flow(
+                    ["email"], redirect_uri=options.redirect_url, login_hint=login_hint
+                )
                 code_flow["teamcode"] = code
                 self.memcached.add(code_flow["state"], code_flow)
                 self.redirect(code_flow["auth_uri"])
@@ -656,6 +662,7 @@ class JoinTeamHandler(BaseHandler):
         elif self.config.max_team_size <= len(team.members):
             raise ValidationError("Team %s is already full" % team.name)
         return teamcode
+
 
 class FakeRobotsHandler(BaseHandler):
     def get(self, *args, **kwargs):
