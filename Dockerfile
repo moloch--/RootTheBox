@@ -9,7 +9,7 @@ RUN mkdir /opt/rtb
 ADD . /opt/rtb
 
 RUN apt-get update
-RUN apt-get install build-essential zlib1g-dev -y
+RUN apt-get install build-essential zlib1g-dev rustc -y
 RUN apt-get install python3-pycurl sqlite3 libsqlite3-dev -y
 
 ADD ./setup/requirements.txt ./

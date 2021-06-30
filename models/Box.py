@@ -85,7 +85,7 @@ class Box(DatabaseObject):
     )
 
     teams = relationship(
-        "Team", secondary=team_to_box, backref=backref("box", lazy="select")
+        "Team", secondary=team_to_box, back_populates="boxes", lazy="select"
     )
 
     hints = relationship(

@@ -56,7 +56,8 @@ class GameLevel(DatabaseObject):
     teams = relationship(
         "Team",
         secondary=team_to_game_level,
-        backref=backref("GameLevel", lazy="select"),
+        back_populates="game_levels",
+        lazy="select",
     )
 
     @classmethod
