@@ -214,6 +214,7 @@ Dynamic Scoring,다이나믹 스코어링
 Each flag has a submit.  The player will choose the flag they intend to capture.,각 플래그에는 제출이 있습니다. 플레이어는 캡처하려는 깃발을 선택합니다.
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",각 플레이어는 다양한 난이도와 정교함을 목표로 깃발을 모으고 영광을 얻습니다. 행운을 빕니다!
 Edit,편집하다
+Edit Access,액세스 편집
 Edit Account,계정 편집
 Edit Box,편집 상자
 Edit Category,카테고리 편집
@@ -362,6 +363,7 @@ MacOS,맥 OS
 Mainframe Console,메인 프레임 콘솔
 Manage Black Market,암시장 관리
 Manage Categories,카테고리 관리
+Managed,관리
 Market Objects,시장 객체
 Max,맥스
 Max Flag Attempts,최대 깃발 시도
@@ -490,6 +492,7 @@ Registration,기재
 Registration Email,등록 이메일
 Registration Tokens,등록 토큰
 Regular Expression,정규식
+Remove,없애다
 Require Email,이메일 필요
 Reset Actions,조치 재설정
 Reset Game,게임 재설정

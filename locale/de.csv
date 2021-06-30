@@ -214,6 +214,7 @@ Dynamic Scoring,Dynamisches Punkten
 Each flag has a submit.  The player will choose the flag they intend to capture.,"Jede Flagge hat ein Submit. Der Spieler wählt die Flagge, die er erobern möchte."
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Jeder Spieler visiert Herausforderungen unterschiedlicher Schwierigkeit und Rafinesse an und versucht, Flaggen zu sammeln und Ruhm zu erlangen. Viel Glück!"
 Edit,Bearbeiten
+Edit Access,Toegang bewerken
 Edit Account,Konto bearbeiten
 Edit Box,Box bearbeiten
 Edit Category,Kategorie bearbeiten
@@ -362,6 +363,7 @@ MacOS,Mac OS
 Mainframe Console,Mainframe-Konsole
 Manage Black Market,Schwarzmarkt verwalten
 Manage Categories,Kategorien verwalten
+Managed,Beheerd
 Market Objects,Marktobjekte
 Max,Max
 Max Flag Attempts,Max. Flaggen-Versuche
@@ -490,6 +492,7 @@ Registration,Registrierung
 Registration Email,Registrierungs-E-Mail
 Registration Tokens,Registrierungs-Tokens
 Regular Expression,Regulären Ausdruck
+Remove,Verwijderen
 Require Email,E-Mail anfordern
 Reset Actions,Aktionen zurücksetzen
 Reset Game,Spiel zurücksetzen

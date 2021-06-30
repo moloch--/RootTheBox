@@ -214,6 +214,7 @@ Dynamic Scoring,التسجيل الديناميكي
 Each flag has a submit.  The player will choose the flag they intend to capture.,كل العلم لديه تقديم. سيختار اللاعب العلم الذي يعتزم التقاطه.
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",سيستهدف كل لاعب تحديات متفاوتة الصعوبة والتطور ، في محاولة لجمع الأعلام والفوز بالمجد. حظا طيبا وفقك الله!
 Edit,تصحيح
+Edit Access,تحرير الوصول
 Edit Account,تحرير الحساب
 Edit Box,تحرير مربع
 Edit Category,تحرير الفئة
@@ -362,6 +363,7 @@ MacOS,ماك
 Mainframe Console,المركزية وحدة التحكم
 Manage Black Market,إدارة السوق السوداء
 Manage Categories,إدارة الفئات
+Managed,مُدار
 Market Objects,كائنات السوق
 Max,ماكس
 Max Flag Attempts,محاولات العلم ماكس
@@ -490,6 +492,7 @@ Registration,التسجيل
 Registration Email,تسجيل البريد الإلكتروني
 Registration Tokens,رموز التسجيل
 Regular Expression,تعبير عادي
+Remove,إزالة
 Require Email,تتطلب البريد الإلكتروني
 Reset Actions,إعادة ضبط الإجراءات
 Reset Game,أعد اعداد اللعبة

@@ -57,6 +57,7 @@ from models.Flag import (
 )
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import *
+from libs.StringCoding import decode
 from builtins import str
 
 
@@ -815,17 +816,26 @@ class AdminEditHandler(BaseHandler):
                 lv_teams = level.teams
                 for team in lv_teams:
                     teams.append(team.uuid)
-                for team_uuid in self.get_argument("access"):
-                    if team_uuid not in teams:
+                access = self.request.arguments.get("accessList", [])
+                available = self.request.arguments.get("availableList", [])
+                if not isinstance(access, list):
+                    access = [access]
+                if not isinstance(available, list):
+                    available = [available]
+                for team_uuid in access:
+                    if decode(team_uuid) not in teams:
                         team = Team.by_uuid(team_uuid)
-                        team.game_levels.append(level)
-                        self.dbsession.add(team)
-                        self.dbsession.commit()
-                for team_uuid in self.get_argument("available"):
-                    if team_uuid in teams:
-                        teams.game_levels.remove(level)
-                        self.dbsession.add(team)
-                        self.dbsession.commit()
+                        if team:
+                            team.game_levels.append(level)
+                            self.dbsession.add(team)
+                            self.dbsession.commit()
+                for team_uuid in available:
+                    if decode(team_uuid) in teams:
+                        team = Team.by_uuid(team_uuid)
+                        if team:
+                            team.game_levels.remove(level)
+                            self.dbsession.add(team)
+                            self.dbsession.commit()
                 self.redirect("/admin/view/game_levels")
         except ValueError:
             raise ValidationError("That was not a number ...")

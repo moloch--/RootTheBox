@@ -214,6 +214,7 @@ Dynamic Scoring,गतिशील स्कोरिंग
 Each flag has a submit.  The player will choose the flag they intend to capture.,प्रत्येक ध्वज में एक जमा है। खिलाड़ी उस झंडे का चयन करेगा जिसे वे पकड़ने का इरादा रखते हैं।
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","प्रत्येक खिलाड़ी अलग-अलग कठिनाई और परिष्कार की चुनौतियों को लक्षित करेगा, झंडे इकट्ठा करने और महिमा जीतने का प्रयास करेगा। सौभाग्य!"
 Edit,संपादित करें
+Edit Access,पहुंच संपादित करें
 Edit Account,खाता संपादित करें
 Edit Box,बॉक्स को संपादित करें
 Edit Category,श्रेणी संपादित करें
@@ -362,6 +363,7 @@ MacOS,मैक ओ एस
 Mainframe Console,मेनफ्रेम कंसोल
 Manage Black Market,ब्लैक मार्केट का प्रबंधन करें
 Manage Categories,श्रेणी व्यवस्थित करें
+Managed,प्रबंधित
 Market Objects,बाज़ार की वस्तुएँ
 Max,मैक्स
 Max Flag Attempts,अधिकतम ध्वज प्रयास
@@ -490,6 +492,7 @@ Registration,पंजीकरण
 Registration Email,पंजीकरण ईमेल
 Registration Tokens,पंजीकरण टोकन
 Regular Expression,नियमित अभिव्यक्ति
+Remove,हटाना
 Require Email,ईमेल की आवश्यकता है
 Reset Actions,कार्य रीसेट करें
 Reset Game,खेल रीसेट करें

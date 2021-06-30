@@ -499,10 +499,12 @@ class RegistrationHandler(BaseHandler):
                 team.money = self.config.starting_team_money
             else:
                 team.money = 0
-            level_0 = GameLevel.by_number(0)
-            if not level_0:
-                level_0 = GameLevel.all()[0]
-            team.game_levels.append(level_0)
+            levels = GameLevel.all()
+            for level in levels:
+                if level.type == "none":
+                    team.game_levels.append(level)
+                elif level.type != "hidden" and level.buyout == 0:
+                    team.game_levels.append(level)
             return team
         elif self.config.public_teams:
             if Team.by_name(self.get_argument("team_name", "")) is not None:
