@@ -78,7 +78,8 @@
                 <hr style="margin-bottom: 8px;">
                 {% if game_started %}
                     {% for index, level in enumerate(GameLevel.all()) %}
-                        {% if len(level.boxes) > 0 and team %}
+                        {% set show_level = level.type != "hidden" or (level.type == "hidden" and level in team.game_levels) %}
+                        {% if len(level.boxes) > 0 and team and show_level %}
                             {% if len(GameLevel.all()) > 1 %}
                             <h3 class="levelheader">
                                 {% if level.type == 'none' or level in team.game_levels %}

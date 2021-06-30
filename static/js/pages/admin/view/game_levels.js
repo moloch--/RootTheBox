@@ -124,7 +124,7 @@ $(document).ready(function() {
         $("#edit-game-level-form").submit();
     });
 
-    $("a[id^=edit-access-button]").click(function() {
+    $("button[id^=edit-access-button]").click(function() {
         getAccess("access", $(this).data("uuid"));
     });
 

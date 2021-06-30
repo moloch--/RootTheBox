@@ -110,7 +110,14 @@ class BoxHandler(BaseHandler):
         box = Box.by_uuid(uuid)
         if box is not None:
             user = self.get_current_user()
-            if box.locked:
+            level = GameLevel.by_id(box.game_level_id)
+            if (
+                user.team
+                and level.type != "none"
+                and level not in user.team.game_levels
+            ):
+                self.redirect("/403")
+            elif box.locked:
                 self.render(
                     "missions/status.html",
                     errors=None,

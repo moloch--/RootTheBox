@@ -220,10 +220,10 @@
                     <i class="fa fa-pencil"></i>
                     {{ _("Edit Game Level") }}
                 </a>
-                <a id="edit-access-button{{ index }}" style="float: right; margin-top: 5px; margin-right: 10px;" class="btn btn-small" data-toggle="modal" href="#edit-access-modal" data-uuid="{{ level.uuid }}">
+                <button type="button" id="edit-access-button{{ index }}" style="float: right; margin-top: 5px; margin-right: 10px;" class="btn btn-small" data-toggle="modal" href="#edit-access-modal" data-uuid="{{ level.uuid }}"{% if level.type == "none" %} disabled{%end%}>
                     <i class="fa fa-pencil"></i>
                     {{ _("Edit Access") }}
-                </a>
+                </button>
                 <div style="padding-left: 3px; margin-bottom: -10px;">
                 {% if level._name  and level._name != level.name %}<strong>{{ _("Level") }} #{{ level.number }}</strong>&nbsp;&nbsp;&ndash;&nbsp;{% end %}
                     {% if level._type == "none" or level.buyout == 0 %}
