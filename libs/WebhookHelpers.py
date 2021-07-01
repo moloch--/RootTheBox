@@ -24,80 +24,83 @@ import logging
 import requests
 from tornado.options import options
 
+
 def send_game_start_webhook():
-    send_webhook({
-        'action': 'game_start'
-    })
+    send_webhook({"action": "game_start"})
+
 
 def send_game_stop_webhook():
-    send_webhook({
-        'action': 'game_stop'
-    })
+    send_webhook({"action": "game_stop"})
+
 
 def send_capture_webhook(user, flag, reward):
-    send_webhook({
-        'action': 'capture_flag',
-        'flag': {
-            'name': flag.name,
-            'original_value': flag.value,
-            'value': reward
-        },
-        'user': get_user_info(user),
-        'team': get_team_info(user.team)
-    })
+    send_webhook(
+        {
+            "action": "capture_flag",
+            "flag": {"name": flag.name, "original_value": flag.value, "value": reward},
+            "user": get_user_info(user),
+            "team": get_team_info(user.team),
+        }
+    )
+
 
 def send_capture_failed_webhook(user, flag):
-    send_webhook({
-        'action': 'capture_failed',
-        'flag': {
-            'name': flag.name,
-            'original_value': flag.value
-        },
-        'user': get_user_info(user),
-        'team': get_team_info(user.team)
-    })
+    send_webhook(
+        {
+            "action": "capture_failed",
+            "flag": {"name": flag.name, "original_value": flag.value},
+            "user": get_user_info(user),
+            "team": get_team_info(user.team),
+        }
+    )
+
 
 def send_level_complete_webhook(user, level):
-    send_webhook({
-        'action': 'level_complete',
-        'level': {
-            'name': level.name,
-            'number': level.number,
-            'type': level.type,
-            'reward': level.reward
-        },
-        'user': get_user_info(user),
-        'team': get_team_info(user.team)
-    })
+    send_webhook(
+        {
+            "action": "level_complete",
+            "level": {
+                "name": level.name,
+                "number": level.number,
+                "type": level.type,
+                "reward": level.reward,
+            },
+            "user": get_user_info(user),
+            "team": get_team_info(user.team),
+        }
+    )
+
 
 def send_box_complete_webhook(user, box):
-    send_webhook({
-        'action': 'box_complete',
-        'box': {
-            'name': box.name,
-            'value': box.value,
-            'operating_system': box.operating_system,
-            'difficulty': box.difficulty
-        },
-        'user': get_user_info(user),
-        'team': get_team_info(user.team)
-    })
+    send_webhook(
+        {
+            "action": "box_complete",
+            "box": {
+                "name": box.name,
+                "value": box.value,
+                "operating_system": box.operating_system,
+                "difficulty": box.difficulty,
+            },
+            "user": get_user_info(user),
+            "team": get_team_info(user.team),
+        }
+    )
+
 
 def get_user_info(user):
-    return {
-        'handle': user.handle,
-        'email': user.email
-    }
+    return {"handle": user.handle, "email": user.email}
+
 
 def get_team_info(team):
     return {
-        'name': team.name,
-        'money': team.get_score("money"),
-        'flags': team.get_score("flag"),
-        'hints': team.get_score("hint"),
-        'bots': team.get_score("bot"),
-        'members': get_team_members(team)
+        "name": team.name,
+        "money": team.get_score("money"),
+        "flags": team.get_score("flag"),
+        "hints": team.get_score("hint"),
+        "bots": team.get_score("bot"),
+        "members": get_team_members(team),
     }
+
 
 def get_team_members(team):
     team_members = []
@@ -105,9 +108,12 @@ def get_team_members(team):
         team_members.append(get_user_info(team_member))
     return team_members
 
+
 def send_webhook(data):
     if options.webhook_url:
-        logging.info("Sending webhook for '" + data['action'] + "' to " + options.webhook_url)
+        logging.info(
+            "Sending webhook for '" + data["action"] + "' to " + options.webhook_url
+        )
         try:
             requests.post(options.webhook_url, json=data)
         except requests.exceptions.RequestException:

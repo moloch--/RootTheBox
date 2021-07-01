@@ -48,7 +48,9 @@ class Menu(UIModule):
                     "menu/admin.html", user=user, scoreboard_visible=scoreboard_visible
                 )
         return self.render_string(
-            "menu/public.html", scoreboard_visible=scoreboard_visible, registration_visible=registration_allowed
+            "menu/public.html",
+            scoreboard_visible=scoreboard_visible,
+            registration_visible=registration_allowed,
         )
 
     def scoreboard_visible(self, user):

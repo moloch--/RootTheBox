@@ -88,7 +88,7 @@ class Team(DatabaseObject):
     )
 
     boxes = relationship(
-        "Box", secondary=team_to_box, backref=backref("team", lazy="select")
+        "Box", secondary=team_to_box, back_populates="teams", lazy="select"
     )
 
     items = relationship(
@@ -106,9 +106,7 @@ class Team(DatabaseObject):
     )
 
     game_levels = relationship(
-        "GameLevel",
-        secondary=team_to_game_level,
-        backref=backref("team", lazy="select"),
+        "GameLevel", secondary=team_to_game_level, back_populates="teams", lazy="select"
     )
 
     @classmethod

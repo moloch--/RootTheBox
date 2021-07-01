@@ -57,6 +57,7 @@ from models.Flag import (
 )
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import *
+from libs.StringCoding import decode
 from builtins import str
 
 
@@ -489,7 +490,7 @@ class AdminEditHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Just redirect to the corisponding /view page """
+        """ Just redirect to the corresponding /view page """
         uri = {
             "corporation": "game_objects",
             "box": "game_objects",
@@ -523,6 +524,7 @@ class AdminEditHandler(BaseHandler):
             "market_item": self.edit_market_item,
             "category": self.edit_category,
             "flag_order": self.edit_flag_order,
+            "level_access": self.edit_level_access,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -803,6 +805,43 @@ class AdminEditHandler(BaseHandler):
                 "admin/view/game_objects.html", success=None, errors=[str(error)]
             )
 
+    def edit_level_access(self):
+        """ Update game level access """
+        try:
+            level = GameLevel.by_uuid(self.get_argument("uuid", ""))
+            if level is None:
+                raise ValidationError("Game level does not exist")
+            else:
+                teams = []
+                lv_teams = level.teams
+                for team in lv_teams:
+                    teams.append(team.uuid)
+                access = self.request.arguments.get("accessList", [])
+                available = self.request.arguments.get("availableList", [])
+                if not isinstance(access, list):
+                    access = [access]
+                if not isinstance(available, list):
+                    available = [available]
+                for team_uuid in access:
+                    if decode(team_uuid) not in teams:
+                        team = Team.by_uuid(team_uuid)
+                        if team:
+                            team.game_levels.append(level)
+                            self.dbsession.add(team)
+                            self.dbsession.commit()
+                for team_uuid in available:
+                    if decode(team_uuid) in teams:
+                        team = Team.by_uuid(team_uuid)
+                        if team:
+                            team.game_levels.remove(level)
+                            self.dbsession.add(team)
+                            self.dbsession.commit()
+                self.redirect("/admin/view/game_levels")
+        except ValueError:
+            raise ValidationError("That was not a number ...")
+        except ValidationError as error:
+            self.render("admin/view/game_levels.html", errors=[str(error)])
+
     def edit_game_level(self):
         """ Update game level objects """
         try:
@@ -820,7 +859,7 @@ class AdminEditHandler(BaseHandler):
                 level.buyout = min(level.buyout, 100)
             elif level._type == "none":
                 level.buyout = 0
-            if level._type != "none" and level.buyout == 0:
+            if level._type != "none" and level._type != "hidden" and level.buyout == 0:
                 level._type = "none"
             self.dbsession.add(level)
             self.dbsession.flush()
@@ -1105,6 +1144,20 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                     "hints": hints,
                 }
                 self.write(obj)
+            else:
+                self.write({"Error": "Invalid uuid."})
+        elif obj_name == "access":
+            obj = game_objects["game_level"].by_uuid(uuid)
+            if obj is not None:
+                all_teams = Team.all()
+                access = []
+                available = []
+                for team in obj.teams:
+                    all_teams.remove(team)
+                    access.append(team.to_dict())
+                for team in all_teams:
+                    available.append(team.to_dict())
+                self.write({"available": available, "access": access})
             else:
                 self.write({"Error": "Invalid uuid."})
         else:

@@ -214,6 +214,7 @@ Dynamic Scoring,Pontuação Dinâmica
 Each flag has a submit.  The player will choose the flag they intend to capture.,Cada bandeira tem um envio. O jogador escolherá a bandeira que pretendem capturar.
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Cada jogador terá como alvo desafios de dificuldade e sofisticação variadas, tentando coletar bandeiras e conquistar a glória. Boa sorte!"
 Edit,Editar
+Edit Access,Editar acesso
 Edit Account,Editar conta
 Edit Box,Caixa de edição
 Edit Category,Editar categoria
@@ -362,6 +363,7 @@ MacOS,Mac OS
 Mainframe Console,Console de mainframe
 Manage Black Market,Gerenciar mercado negro
 Manage Categories,Gerenciar categorias
+Managed,Gerenciou
 Market Objects,Objetos de mercado
 Max,Max
 Max Flag Attempts,Tentativas de sinalização máxima
@@ -490,6 +492,7 @@ Registration,Cadastro
 Registration Email,E-mail de registro
 Registration Tokens,Tokens de Registro
 Regular Expression,Expressão regular
+Remove,Remover
 Require Email,Solicitar e-mail
 Reset Actions,Redefinir ações
 Reset Game,Redefinir Jogo
@@ -630,6 +633,7 @@ Unlock Level,Desbloquear Nível
 Unlocks,Desbloqueia
 Unlocks after,Desbloqueia após
 Unlocks for,Desbloqueia para
+Unlocks at,Desbloqueia em
 Update Bank Password,Atualizar senha do banco
 Update Configuration,Atualizar configuração
 Update Password,Atualizar senha

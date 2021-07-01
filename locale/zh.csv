@@ -214,6 +214,7 @@ Dynamic Scoring,动态评分
 Each flag has a submit.  The player will choose the flag they intend to capture.,每次提交都有不同Flag。玩家将选择他们应该获得的Flag。
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",每个玩家都将面对不同难度和复杂程度的挑战，尝试收集Flag并赢得荣耀。祝好运！
 Edit,编辑
+Edit Access,编辑权限
 Edit Account,编辑账户
 Edit Box,编辑题目
 Edit Category,编辑类别
@@ -362,6 +363,7 @@ MacOS,苹果系统
 Mainframe Console,主控制台
 Manage Black Market,管理黑市
 Manage Categories,管理类别
+Managed,管理
 Market Objects,市场对象
 Max,最大
 Max Flag Attempts,最大Flag尝试数
@@ -490,6 +492,7 @@ Registration,注册
 Registration Email,注册邮箱
 Registration Tokens,邀请码
 Regular Expression,正则表达式
+Remove,去掉
 Require Email,要求电子邮件
 Reset Actions,重置操作
 Reset Game,重置游戏
@@ -630,6 +633,7 @@ Unlock Level,解锁等级
 Unlocks,解锁
 Unlocks after,解锁后
 Unlocks for,解锁
+Unlocks at,解锁于
 Update Bank Password,更新银行密码
 Update Configuration,更新配置
 Update Password,更新密码

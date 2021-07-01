@@ -48,6 +48,8 @@
                             <option value="none">{{ _("No Lock") }}</option>
                             <option value="buyout">{{ _("Purchase Unlock") }}</option>
                             <option value="progress">{{ _("Game Progress") }}</option>
+                            <option value="points">{{ _("Game Points") }}</option>
+                            <option value="hidden">{{ _("Managed") }}</option>
                         </select>
                     </div>
                 </div>
@@ -73,6 +75,61 @@
             </button>
         </div>
     </div>
+    <!-- Level Access -->
+    <div id="edit-access-modal" class="modal hide fade" style="display: none; ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>
+                <i class="fa fa-pencil"></i>
+                {{ _("Edit Access") }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" id="edit-access-form" method="post" action="/admin/edit/level_access">
+                {% raw xsrf_form_html() %}
+                <input id="edit-access-uuid" name="uuid" type="hidden" />
+                <div>
+                    <table width="100%">
+                        <tbody>
+                            <tr><td>Available</td><td>Access</td></tr>
+                            <tr>
+                                <td style="padding: 5px 0;">
+                                    <select id="availableList" name="availableList" multiple="multiple"
+                                        style="width: 200px; height: 170px; margin: 0px 2px 0px 3px;">
+                                    </select>
+                                </td>
+                                <td style="padding: 5px 0;">
+                                    <select id="accessList" name="accessList" multiple="multiple"
+                                        style="width: 200px; height: 170px; margin: 0px 2px 0px 3px;">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button id="addToLevel" class="btn btn-mini" type="button">
+                                        &nbsp;&nbsp;&nbsp;{{ _("Add") }}&nbsp;&nbsp;&nbsp;
+                                    </button>
+                                </td>
+                                <td>
+                                    <button id="removeFromLevel" class="btn btn-mini" type="button">
+                                        &nbsp;{{ _("Remove") }}&nbsp;
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
+            <button id="edit-access-submit" class="btn btn-primary" type="button">
+                <i class="fa fa-save"></i>
+                {{ _("Save") }}
+            </button>
+        </div>
+    </div>
+    <!-- Delete Level -->
     <div id="delete-game-level-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -163,12 +220,20 @@
                     <i class="fa fa-pencil"></i>
                     {{ _("Edit Game Level") }}
                 </a>
+                <button type="button" id="edit-access-button{{ index }}" style="float: right; margin-top: 5px; margin-right: 10px;" class="btn btn-small" data-toggle="modal" href="#edit-access-modal" data-uuid="{{ level.uuid }}"{% if level.type == "none" %} disabled{%end%}>
+                    <i class="fa fa-pencil"></i>
+                    {{ _("Edit Access") }}
+                </button>
                 <div style="padding-left: 3px; margin-bottom: -10px;">
                 {% if level._name  and level._name != level.name %}<strong>{{ _("Level") }} #{{ level.number }}</strong>&nbsp;&nbsp;&ndash;&nbsp;{% end %}
                     {% if level._type == "none" or level.buyout == 0 %}
                         <i class="fa fa-unlock-alt"></i> {{ _("No Lock") }}
+                    {% elif level._type == "hidden" %}
+                        <i class="fa fa-lock"></i>
                     {% elif level._type == "buyout" %}
                         <i class="fa fa-lock"></i> {{ _("Unlocks for") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
+                    {% elif level._type == "points" %}
+                        <i class="fa fa-lock"></i> {{ _("Unlocks at") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
                     {% else %}
                         {% set last = GameLevel.last_level(level.id) %}
                         <i class="fa fa-lock"></i> {{ _("Unlocks after") }} {{ level.buyout }}% {{ _("completion of Level") }} {% if last %}{{ last.number }}{% end %}

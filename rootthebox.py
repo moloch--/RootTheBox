@@ -152,19 +152,23 @@ def setup_xml(xml_params):
         import_xml(xml_param)
     print(INFO + "%s : Completed processing of all .xml file(s)" % (current_time()))
 
+
 def generate_teams(num_teams):
     """ Generates teams by number """
     from models import Team, dbsession
+
     for i in range(0, num_teams):
         team = Team()
-        team.name = 'Team ' + str(i+1)
+        team.name = "Team " + str(i + 1)
         dbsession.add(team)
         dbsession.flush()
     dbsession.commit()
 
+
 def generate_teams_by_name(team_names):
     """ Generates teams by their names """
     from models import Team, dbsession
+
     for i in range(0, len(team_names)):
         team = Team()
         team.name = team_names[i]
@@ -172,17 +176,20 @@ def generate_teams_by_name(team_names):
         dbsession.flush()
     dbsession.commit()
 
+
 def generate_admins(admin_names):
     """ Creates admin users with the syntax '<handle> <email> <password>' """
     from models import User, Permission, dbsession
     from models.User import ADMIN_PERMISSION
+
     for i in range(0, len(admin_names)):
         admin_detail = admin_names[i].split()
         user = User(
             handle=admin_detail[0],
             name=admin_detail[0],
             email=admin_detail[1],
-            password=admin_detail[2])
+            password=admin_detail[2],
+        )
         dbsession.add(user)
         dbsession.flush()
 
@@ -190,6 +197,7 @@ def generate_admins(admin_names):
         dbsession.add(admin_permission)
         dbsession.flush()
     dbsession.commit()
+
 
 def tests():
     """ Creates a temporary sqlite database and runs the unit tests """
@@ -356,14 +364,14 @@ define(
     "autoreload_source",
     default=True,
     group="server",
-    help="automatically restart the server if a change is detected in source (debuggers will not follow)"
+    help="automatically restart the server if a change is detected in source (debuggers will not follow)",
 )
 
 define(
     "webhook_url",
     default=None,
     group="server",
-    help="url to receive webhook callbacks when certain game actions occur, such as flag capture"
+    help="url to receive webhook callbacks when certain game actions occur, such as flag capture",
 )
 
 # Mail Server
@@ -484,10 +492,10 @@ define(
 )
 
 # Azure AD
-define("client_id", default="", group="azuread" )
-define("tenant_id", default="common", group="azuread" )
-define("client_secret", default="", group="azuread" )
-define("redirect_url", default="http://localhost:8888/oidc", group="azuread" )
+define("client_id", default="", group="azuread")
+define("tenant_id", default="common", group="azuread")
+define("client_secret", default="", group="azuread")
+define("redirect_url", default="http://localhost:8888/oidc", group="azuread")
 
 # ReCAPTCHA
 define(
@@ -532,7 +540,9 @@ define("sql_port", default=3306, group="database", help="database tcp port", typ
 
 define("sql_user", default="rtb", group="database", help="database username")
 
-define("sql_sslca", default="", group="database", help="SSL CA Cert for database server.")
+define(
+    "sql_sslca", default="", group="database", help="SSL CA Cert for database server."
+)
 
 define(
     "sql_password",
@@ -1001,7 +1011,7 @@ define(
     default=0,
     group="autosetup",
     help="number of teams to generate (team 1, team 2, etc)",
-    type=int
+    type=int,
 )
 
 define(
@@ -1009,7 +1019,7 @@ define(
     default=[],
     group="autosetup",
     help="generate teams by name ('My team','Another team')",
-    multiple=True
+    multiple=True,
 )
 
 define(
@@ -1017,7 +1027,7 @@ define(
     default=[],
     group="autosetup",
     help="add administrator users, multiples supported ('<handle> <email> <password>')",
-    multiple=True
+    multiple=True,
 )
 
 # Process modes/flags
@@ -1085,10 +1095,10 @@ if __name__ == "__main__":
     # Make sure that cli args always have president over the file and env
     options.parse_command_line()
 
-    # If authenticating with Azure AD (i.e. enterprise scenario) There's a few settings which 
+    # If authenticating with Azure AD (i.e. enterprise scenario) There's a few settings which
     # don't make sense, so force them to disabled.
-    if options.auth.lower() == 'azuread':
-        options.auth = 'azuread' # in-case it wasn't lower-case.
+    if options.auth.lower() == "azuread":
+        options.auth = "azuread"  # in-case it wasn't lower-case.
         options.require_email = False
         options.public_teams = False
 
@@ -1099,8 +1109,8 @@ if __name__ == "__main__":
     if options.add_admin:
         generate_admins(options.add_admin)
 
-    if options.admin_ips == ['[]']:
-        options.admin_ips = [] # Tornado issue?
+    if options.admin_ips == ["[]"]:
+        options.admin_ips = []  # Tornado issue?
 
     if options.setup.lower()[:3] in ["pro", "dev"]:
         setup()

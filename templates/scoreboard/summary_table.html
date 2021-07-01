@@ -35,6 +35,9 @@
                             {% set box_count_lvl = level.get("box_count") %}
                             {% set team_level = level.get("teams").get(team_name) %}
                             {% set team_count_lvl = team_level.get("lvl_count") %}
+                            {% if team and level.get("type") == 'hidden' and not team_level.get("lvl_unlock") %}
+                                {% continue %}
+                            {% end %}
                             {% if level_count_all > 1 and box_count_lvl > 0 and box_count_lvl < box_count_all %}
                                 {% if index > 0 %}
                                     <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>

@@ -214,6 +214,7 @@ Dynamic Scoring,গতিশীল স্কোরিং
 Each flag has a submit.  The player will choose the flag they intend to capture.,প্রতিটি পতাকা একটি জমা আছে। প্লেয়ারটি ক্যাপচারের উদ্দেশ্যে তাদের পতাকাটি বেছে নেবে।
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",প্রতিটি প্লেয়ার বিভিন্ন অসুবিধা এবং পরিশীলনের চ্যালেঞ্জগুলি লক্ষ্য করে পতাকা সংগ্রহের চেষ্টা করে এবং গৌরব অর্জন করতে পারে। শুভকামনা!
 Edit,সম্পাদন করা
+Edit Access,অ্যাক্সেস সম্পাদনা করুন
 Edit Account,অ্যাকাউন্ট সম্পাদনা করুন
 Edit Box,সম্পাদনা বাক্স
 Edit Category,বিভাগ সম্পাদনা করুন
@@ -362,6 +363,7 @@ MacOS,ম্যাক অপারেটিং সিস্টেম
 Mainframe Console,মেনফ্রেম কনসোল
 Manage Black Market,ব্ল্যাক মার্কেট পরিচালনা করুন
 Manage Categories,বিভাগগুলি পরিচালনা করুন
+Managed,পরিচালিত
 Market Objects,মার্কেট অবজেক্টস
 Max,ম্যাক্স
 Max Flag Attempts,সর্বোচ্চ পতাকা চেষ্টা
@@ -490,6 +492,7 @@ Registration,নিবন্ধন
 Registration Email,নিবন্ধন ইমেল
 Registration Tokens,নিবন্ধন টোকেন
 Regular Expression,নিয়মিত এক্সপ্রেশন
+Remove,অপসারণ
 Require Email,ইমেল প্রয়োজন
 Reset Actions,ক্রিয়াগুলি পুনরায় সেট করুন
 Reset Game,রিসেট গেম
@@ -630,6 +633,7 @@ Unlock Level,আনলক স্তর
 Unlocks,খুলে
 Unlocks after,পরে আনলক হয়
 Unlocks for,জন্য আনলক
+Unlocks at,আনলক করে
 Update Bank Password,ব্যাংক পাসওয়ার্ড আপডেট করুন
 Update Configuration,আপডেট কনফিগারেশন
 Update Password,পাসওয়ার্ড আপডেট করুন

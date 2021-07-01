@@ -214,6 +214,7 @@ Dynamic Scoring,動的スコアリング
 Each flag has a submit.  The player will choose the flag they intend to capture.,各フラグには送信があります。プレイヤーは、キャプチャする予定のフラグを選択します。
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",各プレイヤーは、さまざまな難易度と洗練度の課題をターゲットにし、旗を集めて栄光を獲得しようとします。がんばろう！
 Edit,編集
+Edit Access,アクセスの編集
 Edit Account,アカウントの編集
 Edit Box,編集ボックス
 Edit Category,カテゴリを編集
@@ -362,6 +363,7 @@ MacOS,マックOS
 Mainframe Console,メインフレームコンソール
 Manage Black Market,ブラックマーケットの管理
 Manage Categories,カテゴリーを管理する
+Managed,管理
 Market Objects,マーケットオブジェクト
 Max,マックス
 Max Flag Attempts,最大フラグ試行
@@ -490,6 +492,7 @@ Registration,登録
 Registration Email,登録メール
 Registration Tokens,登録トークン
 Regular Expression,正規表現
+Remove,削除する
 Require Email,メールが必要
 Reset Actions,リセットアクション
 Reset Game,ゲームをリセット
@@ -630,6 +633,7 @@ Unlock Level,ロック解除レベル
 Unlocks,ロック解除
 Unlocks after,後にロック解除
 Unlocks for,のロックを解除
+Unlocks at,でロックを解除します
 Update Bank Password,銀行のパスワードを更新
 Update Configuration,構成の更新
 Update Password,パスワードを更新

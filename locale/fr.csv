@@ -214,6 +214,7 @@ Dynamic Scoring,Notation dynamique
 Each flag has a submit.  The player will choose the flag they intend to capture.,Chaque drapeau a une soumission. Le joueur choisira le drapeau qu'il a l'intention de capturer.
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Chaque joueur ciblera des défis de difficulté et de sophistication variables, en essayant de collecter des drapeaux et de remporter la gloire. Bonne chance!"
 Edit,modifier
+Edit Access,Modifier l'accès
 Edit Account,Modifier le compte
 Edit Box,Zone d'édition
 Edit Category,Modifier la catégorie
@@ -362,6 +363,7 @@ MacOS,MacOS
 Mainframe Console,Console Mainframe
 Manage Black Market,Gérer le marché noir
 Manage Categories,Gérer les catégories
+Managed,Géré
 Market Objects,Objets du marché
 Max,Max
 Max Flag Attempts,Nombre maximal de tentatives de drapeau
@@ -490,6 +492,7 @@ Registration,enregistrement
 Registration Email,Email d'inscription
 Registration Tokens,Jetons d'inscription
 Regular Expression,Expression régulière
+Remove,Supprimer
 Require Email,Demander un email
 Reset Actions,Actions de réinitialisation
 Reset Game,Réinitialiser le jeu
@@ -630,6 +633,7 @@ Unlock Level,Niveau de déblocage
 Unlocks,Déverrouille
 Unlocks after,Déverrouille après
 Unlocks for,Déverrouille pour
+Unlocks at,Se débloque à
 Update Bank Password,Mettre à jour le mot de passe de la banque
 Update Configuration,Mise à jour de la configuration
 Update Password,Mettre à jour le mot de passe
