@@ -859,7 +859,7 @@ class AdminEditHandler(BaseHandler):
                 level.buyout = min(level.buyout, 100)
             elif level._type == "none":
                 level.buyout = 0
-            if level._type != "none" and level._type != "hidden"and level.buyout == 0:
+            if level._type != "none" and level._type != "hidden" and level.buyout == 0:
                 level._type = "none"
             self.dbsession.add(level)
             self.dbsession.flush()
