@@ -67,9 +67,6 @@ function getStatDetails(obj, uuid) {
                         $("#acceptanswer").prop("disabled", true);
                         $("#flagtypenote").show();
                     }
-                    
-                    console.log($(e.target));
-                    
                     return false; 
                 }
             );

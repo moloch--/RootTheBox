@@ -5,7 +5,6 @@ function getCookie(name) {
 }
 
 function getAccess(obj, uuid) {
-    console.log(obj)
     $("#edit-" + obj + "-uuid").val(uuid);
     data = {'uuid': uuid, 'obj': obj, '_xsrf': getCookie("_xsrf")}
     $.post('/admin/ajax/objects', data, function(response) {

@@ -5,7 +5,7 @@ $(document).ready(function() {
         $("#buy-market-item-uuid").val(uuid);
         $.getJSON('/user/market/details?uuid=' + uuid, function(data) {
             $.each(data, function(key, val) {
-                console.log("#" + key.toString() + " -> " + val.toString());
+                //console.log("#" + key.toString() + " -> " + val.toString());
                 if (key !== "image") {
                     $("#" + key).text(val);
                 } else {
