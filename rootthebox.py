@@ -777,7 +777,7 @@ define(
 
 define(
     "min_user_password_length",
-    default=10,
+    default=7,
     group="game",
     help="min user password length",
     type=int,

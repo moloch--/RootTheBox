@@ -458,6 +458,7 @@ Pause Scoreboard,Anzeigetafel anhalten
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Bestrafen Sie die Punktzahl für jeden falschen Versuch um diesen Prozentsatz des Flag-Werts (angewendet nach dynamischem Scoring, falls aktiviert)."
 Pending,steht aus
 Pending Bribes,Ausstehende Bestechungsgelder
+per page,per pagina
 Plain Text,Einfacher Text
 Play Story,Story spielen
 player,Spieler

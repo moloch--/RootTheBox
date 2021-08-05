@@ -781,42 +781,37 @@ class ResetPasswordHandler(BaseHandler):
         """ Renders the Token Reset page """
         if len(options.mail_host) > 0:
             try:
-                user_uuid = decode(urlsafe_b64decode(self.get_argument("u", "")))
+                uuid = decode(urlsafe_b64decode(self.get_argument("u", "")))
                 token = sha256(
                     urlsafe_b64decode(self.get_argument("p", ""))
                 ).hexdigest()
             except:
-                user_uuid = urlsafe_b64decode(encode(self.get_argument("u", "")))
+                uuid = urlsafe_b64decode(encode(self.get_argument("u", "")))
                 token = sha256(
                     urlsafe_b64decode(encode(self.get_argument("p", "")))
                 ).hexdigest()
-            self.render(
-                "public/reset.html", errors=None, info=None, token=token, uuid=user_uuid
-            )
+            if self.valid_pass_token(token, uuid):
+                self.render(
+                    "public/reset.html", errors=None, info=None, token=token, uuid=uuid
+                )
         else:
             self.redirect("public/404")
 
     def post(self, *args, **kwargs):
         token = self.get_argument("token", "")
         uuid = self.get_argument("uuid", "")
-        if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
-            self.render(
-                "public/reset.html",
-                errors=None,
-                info=["Passwords do not match."],
-                token=token,
-                uuid=uuid,
-            )
-            return
-        pass_token = PasswordToken.by_value(token)
-        if pass_token:
-            user = User.by_id(pass_token.user_id)
-            if (
-                user
-                and user.uuid == uuid
-                and not pass_token.is_expired()
-                and not pass_token.used
-            ):
+        if self.valid_pass_token(token, uuid):
+            if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
+                self.render(
+                    "public/reset.html",
+                    errors=None,
+                    info=["Passwords do not match."],
+                    token=token,
+                    uuid=uuid,
+                )
+            else:
+                pass_token = PasswordToken.by_value(token)
+                user = User.by_id(pass_token.user_id)
                 user.password = self.get_argument("pass1", "")
                 pass_token.used = True
                 self.dbsession.add(pass_token)
@@ -828,14 +823,26 @@ class ResetPasswordHandler(BaseHandler):
                     uuid=uuid,
                     token=token,
                 )
-                return
+
+    def valid_pass_token(self, token, uuid):
+        pass_token = PasswordToken.by_value(token)
+        if pass_token:
+            user = User.by_id(pass_token.user_id)
+            if (
+                user
+                and user.uuid == uuid
+                and not pass_token.is_expired()
+                and not pass_token.used
+            ):
+                return True
         self.render(
             "public/reset.html",
-            errors=["The user or token does not exist, is invalid or expired."],
+            errors=["The password reset token does not exist, is invalid or expired."],
             info=None,
-            token=token,
-            uuid=uuid,
+            token="",
+            uuid="",
         )
+        return False
 
 
 class ValidEmailHandler(BaseHandler):

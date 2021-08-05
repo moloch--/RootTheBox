@@ -458,6 +458,7 @@ Pause Scoreboard,스코어 보드 일시 중지
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,각 잘못된 시도에 대해 플래그 값의이 백분율만큼 점수를 부과합니다 (활성화 된 경우 동적 스코어링 후 적용).
 Pending,대기 중
 Pending Bribes,보류중인 뇌물
+per page,페이지 당
 Plain Text,일반 텍스트
 Play Story,스토리 플레이
 player,플레이어

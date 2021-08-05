@@ -458,6 +458,7 @@ Pause Scoreboard,スコアボードを一時停止
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,不正な試行ごとにフラグ値のこの割合でスコアにペナルティを課します（有効な場合、動的スコアリング後に適用されます）。
 Pending,保留中
 Pending Bribes,保留中の賄Bri
+per page,1ページあたり
 Plain Text,プレーンテキスト
 Play Story,プレイストーリー
 player,プレーヤー

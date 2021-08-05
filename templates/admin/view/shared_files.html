@@ -37,6 +37,7 @@
 
 {% block content %}
 {% from models.Team import Team %}
+{% set teams = Team.all() %}
     <div class="container">
         <h1>
             <i class="fa fa-files-o"></i>
@@ -67,7 +68,7 @@
                                 <div class="controls">
                                     <select id="team-uuid" name="team_uuid">
                                         <option value="all">All</option>
-                                        {% for team in Team.all() %}
+                                        {% for team in teams %}
                                             <option value="{{ team.uuid }}">{{ team.name }}</option>
                                         {% end %}
                                     </select>
@@ -94,7 +95,6 @@
                 </div>
             </div>
             <div class="well">
-                {% set teams = Team.all() %}
                 {% set index = 0 %}
                 {% for team in teams %}
                     {% set shares = team.files %}

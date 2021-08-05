@@ -458,6 +458,7 @@ Pause Scoreboard,स्कोरबोर्ड को रोकें
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,प्रत्येक गलत प्रयास के लिए ध्वज मान के इस प्रतिशत द्वारा स्कोर को दंडित करें (यदि सक्षम होने पर गतिशील स्कोरिंग के बाद लागू किया जाता है)।
 Pending,अपूर्ण
 Pending Bribes,लंबित रिश्वत
+per page,प्रति पृष्ठ
 Plain Text,सादे पाठ
 Play Story,प्ले कहानी
 player,खिलाड़ी

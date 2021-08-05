@@ -48,6 +48,7 @@ class Scoreboard(object):
 
     @classmethod
     def update_gamestate(self, app):
+        game_levels = GameLevel.all()
         game_state = {
             "teams": {},
             "levels": {},
@@ -55,41 +56,38 @@ class Scoreboard(object):
             "hint_count": len(Hint.all()),
             "flag_count": len(Flag.all()),
             "box_count": len(Box.all()),
-            "level_count": len(GameLevel.all()),
+            "level_count": len(game_levels),
         }
         teams = Team.ranks()
         for team in teams:
-            if not team.locked:
-                millis = int(round(time.time() * 1000))
-                game_state["teams"][team.name] = {
-                    "uuid": team.uuid,
-                    "flags": [flag.uuid for flag in team.flags],
-                    "game_levels": [str(lvl) for lvl in team.game_levels],
-                    "members_count": len(team.members),
-                    "hints_count": len(team.hints),
-                    "bot_count": BotManager.instance().count_by_team(team.name),
-                    "money": team.money,
-                }
+            millis = int(round(time.time() * 1000))
+            game_state["teams"][team.name] = {
+                "uuid": team.uuid,
+                "flags": [flag.uuid for flag in team.flags],
+                "game_levels": [str(lvl) for lvl in team.game_levels],
+                "members_count": len(team.members),
+                "hints_count": len(team.hints),
+                "bot_count": BotManager.instance().count_by_team(team.name),
+                "money": team.money,
+            }
 
-                highlights = {"money": 0, "flag": 0, "bot": 0, "hint": 0}
-                for item in highlights:
-                    value = team.get_score(item)
-                    game_state["teams"][team.name][item] = value
-                    game_history = app.settings["scoreboard_history"]
-                    if team.name in game_history:
-                        prev = game_history[team.name][item]
-                        if prev < value:
-                            highlights[item] = millis
-                        else:
-                            highlights[item] = game_history[team.name]["highlights"][
-                                item
-                            ]
-                highlights["now"] = millis
-                game_state["teams"][team.name]["highlights"] = highlights
-                app.settings["scoreboard_history"][team.name] = game_state["teams"].get(
-                    team.name
-                )
-        for level in GameLevel.all():
+            highlights = {"money": 0, "flag": 0, "bot": 0, "hint": 0}
+            for item in highlights:
+                value = team.get_score(item)
+                game_state["teams"][team.name][item] = value
+                game_history = app.settings["scoreboard_history"]
+                if team.name in game_history:
+                    prev = game_history[team.name][item]
+                    if prev < value:
+                        highlights[item] = millis
+                    else:
+                        highlights[item] = game_history[team.name]["highlights"][item]
+            highlights["now"] = millis
+            game_state["teams"][team.name]["highlights"] = highlights
+            app.settings["scoreboard_history"][team.name] = game_state["teams"].get(
+                team.name
+            )
+        for level in game_levels:
             game_state["levels"][level.name] = {
                 "type": level.type,
                 "number": level.number,
@@ -119,6 +117,7 @@ class Scoreboard(object):
                         flag.uuid
                     ] = {"name": flag.name}
         app.settings["scoreboard_state"] = game_state
+        return len(teams)
 
 
 def score_bots():
@@ -127,7 +126,7 @@ def score_bots():
     bot_manager = BotManager.instance()
     event_manager = EventManager.instance()
     for team in Team.all():
-        if len(team.members) > 0:
+        if not team.locked:
             bots = bot_manager.by_team(team.name)
             if 0 < len(bots):
                 reward = 0

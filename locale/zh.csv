@@ -458,6 +458,7 @@ Pause Scoreboard,暂停记分牌
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,对每次不正确的尝试按Flag分值的百分比惩罚分数（如果启用动态评分后应用）。
 Pending,待定
 Pending Bribes,待定赞助
+per page,每页
 Plain Text,纯文本
 Play Story,开始剧情模式
 player,玩家

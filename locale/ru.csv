@@ -458,6 +458,7 @@ Pause Scoreboard,Пауза Табло,
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Штрафуйте счет этим процентом от значения флага за каждую неверную попытку (применяется после динамического подсчета, если он включен)",
 Pending,в ожидании,
 Pending Bribes,В ожидании взятки,
+per page,на страницу
 Plain Text,Простой текст,
 Play Story,Play Story,
 player,игрок,

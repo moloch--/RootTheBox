@@ -60,7 +60,11 @@ class UnauthorizedHandler(BaseHandler):
         """ Renders the 403 page """
         self.clear_content_policy("object")
         self.add_content_policy("object", "'self'")
-        locked = bool(self.get_argument("locked", "").lower() == "true")
+        try:
+            locked = bool(self.get_argument("locked", "").lower() == "true")
+        except ValueError:
+            self.render("public/404.html")
+            return
         self.render("public/403.html", locked=locked, xsrf=False)
 
 

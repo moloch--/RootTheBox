@@ -35,16 +35,16 @@
                 &nbsp;&nbsp;<a href="/login">{{ _("Click here to login") }} &raquo;</a>
                 <br />
             {% end %}
-        {% else %}  
+        {% elif errors is None %}  
             <div>
                 <input type="hidden" name="uuid" value="{{uuid}}" />
                 <input type="hidden" name="token" value="{{token}}" />
-                <input required id="pass1" name="pass1" minlength="{{ options.min_user_password_length }}"  placeholder="{{ _('Password') }}" type="password"
+                <input class="input-block-level" required id="pass1" name="pass1" minlength="{{ options.min_user_password_length }}"  placeholder="{{ _('Password') }}" type="password"
                     autocomplete="off"
                     rel="popover"
                     data-original-title="{{_('Password')}}"
                     data-content="{{_('Enter a complex password of')}} {{ options.min_user_password_length }}+ {{_('Characters')}}" />
-                <input required id="pass2" name="pass2" minlength="{{ options.min_user_password_length }}"  placeholder="{{ _('Confirm Password') }}" type="password"
+                <input class="input-block-level" required id="pass2" name="pass2" minlength="{{ options.min_user_password_length }}"  placeholder="{{ _('Confirm Password') }}" type="password"
                     autocomplete="off"
                     rel="popover"
                     data-original-title="{{_('Confirm Password')}}"

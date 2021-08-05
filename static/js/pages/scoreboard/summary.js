@@ -29,7 +29,6 @@ var tableOptions = {
 
 /* Update code */
 $(document).ready(function() {
-    
     if ($("#timercount").length > 0) {
         $.get("/scoreboard/ajax/timer", function(distance) {
             distance = distance * 1000;
@@ -50,7 +49,9 @@ $(document).ready(function() {
                 game_data = jQuery.parseJSON(event.data);
                 
                 /* Update Summary Table */
-                $.get("/scoreboard/ajax/summary", function(table_data) {
+                let count = $("#paramaters").data("count");
+                let page = $("#paramaters").data("page");
+                $.get("/scoreboard/ajax/summary?count=" + count + "&page=" + page, function(table_data) {
                     highlight_table = highlights(table_data);
                     if ($("#summary_tbody").find('tr').length == 0) {
                         $("#summary_tbody").html(highlight_table);
@@ -82,6 +83,9 @@ $(document).ready(function() {
         setTimeout(changeDisplay, fadetext);
         setTimeout(updateLastFlag, 1000);
     }
+    $("#page_count").on('change', function() {
+        document.location.href = "/scoreboard?count=" + this.value + "&page=1";
+    });
 });
 
 function changeDisplay() {

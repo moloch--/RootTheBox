@@ -458,6 +458,7 @@ Pause Scoreboard,وقفة لوحة النتائج
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,قم باختبار النتيجة بنسبة هذا النسبة المئوية من قيمة العلامة لكل محاولة غير صحيحة (يتم تطبيقها بعد التسجيل الديناميكي في حالة التمكين).
 Pending,قيد الانتظار
 Pending Bribes,في انتظار الرشاوى
+per page,لكل صفحة
 Plain Text,نص عادي
 Play Story,تلعب قصة
 player,لاعب

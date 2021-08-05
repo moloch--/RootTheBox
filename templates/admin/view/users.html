@@ -11,6 +11,7 @@
 {% from libs.XSSImageCheck import filter_avatars %}
 {% from libs.XSSImageCheck import existing_avatars %}
 {% from tornado.options import options %}
+{% set teams = Team.all() %}
     <!-- Change Avatar -->
     {% if options.teams %}
         {% set dir = "team" %}
@@ -236,7 +237,7 @@
                     <div class="controls">
                         <select id="user-team-uuid" name="team_uuid">
                             <option value=""></option>
-                            {% for team in Team.all() %}
+                            {% for team in teams %}
                                 <option value="{{ team.uuid }}">{{ team.name }}</option>
                             {% end %}
                         </select>
@@ -335,7 +336,7 @@
                     <div class="controls">
                         <select id="team-money-uuid" name="team_uuid">
                             <option value="all">All</option>
-                            {% for team in Team.all() %}
+                            {% for team in teams %}
                                 <option value="{{ team.uuid }}">{{ team.name }}</option>
                             {% end %}
                         </select>
@@ -393,7 +394,7 @@
                     </div>
                 {% end %}
             {% end %}
-            {% if len(Team.all()) == 0 %}
+            {% if len(teams) == 0 %}
                 <p class="well"><strong>{{_("No Users")}}</strong></p>
             {% end %}
             {% set admins = [] %}
@@ -453,7 +454,7 @@
                     <hr style="border: 2px solid green;" />
                 </div>
             {% end %}
-            {% for team_index, team in enumerate(Team.all()) %}
+            {% for team_index, team in enumerate(teams) %}
                 {% if options.teams or len(team.members) > 0 %}
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>

@@ -471,7 +471,10 @@ class FlagCaptureMessageHandler(BaseHandler):
     def get(self, *args, **kwargs):
         fuuid = self.get_argument("flag", None)
         buuid = self.get_argument("box", None)
-        reward = self.get_argument("reward", None)
+        try:
+            reward = int(self.get_argument("reward", 0))
+        except ValueError:
+            reward = 0
         user = self.get_current_user()
         box = Box.by_uuid(buuid)
         flag = Flag.by_uuid(fuuid)

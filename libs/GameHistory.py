@@ -117,7 +117,7 @@ class GameHistory(object):
         bot_manager = BotManager.instance()
         # self.dbsession = DBSession()
         for team in Team.all():
-            if len(team.members) > 0:
+            if not team.locked:
                 snapshot_team = SnapshotTeam(
                     team_id=team.id,
                     money=team.money,

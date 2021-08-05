@@ -458,6 +458,7 @@ Pause Scoreboard,স্কোরবোর্ড বিরতি দিন
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,প্রতিটি ভুল প্রয়াসের জন্য পতাকা মানটির এই শতাংশের দ্বারা স্কোরকে পেনালাইজ করুন (সক্ষম করা থাকলে গতিশীল স্কোরিংয়ের পরে প্রয়োগ করা হবে)।
 Pending,মুলতুবী
 Pending Bribes,মুলতুবি থাকা
+per page,প্রতি পৃষ্ঠা
 Plain Text,সাধারণ পাঠ্য
 Play Story,গল্প খেলুন
 player,খেলোয়াড়

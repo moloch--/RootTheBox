@@ -18,6 +18,9 @@ $(document).ready(function() {
           }
       }
   }
+  $("#page_count").on('change', function() {
+    document.location.href = "/teams?count=" + this.value + "&page=1";
+  });
 });
 
 function padDigits(number, digits) {
