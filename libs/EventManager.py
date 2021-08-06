@@ -173,26 +173,32 @@ class EventManager(object):
     def flag_decayed(self, team, flag):
         """ Callback for when a bot is added """
         message = (
-            "The value of Flag %s has decreased due to other team captures - score adjusted."
+            "The value of challenge %s has decreased due to other team captures - score adjusted."
             % (flag.name,)
         )
         Notification.create_team(team, "Flag Value Decreased", message, INFO)
         self.io_loop.add_callback(self.push_team, team.id)
 
-    def flag_captured(self, team, flag):
+    def flag_captured(self, player, flag):
         """ Callback for when a flag is captured """
-        if len(GameLevel.all()) > 1:
-            message = "%s has captured the '%s' flag in %s (Lvl %s)" % (
+        if isinstance(player, User) and options.teams:
+            team = player.team
+            message = '%s (%s) has completed "%s" in %s' % (
+                player.handle,
                 team.name,
                 flag.name,
                 flag.box.name,
-                GameLevel.by_id(flag.box.game_level_id).number,
             )
         else:
-            message = "%s has captured the '%s' flag in %s" % (
+            team = player
+            message = '%s has completed "%s" in %s' % (
                 team.name,
                 flag.name,
                 flag.box.name,
+            )
+        if len(GameLevel.all()) > 1:
+            message = message + " (%s)" % (
+                GameLevel.by_id(flag.box.game_level_id).name,
             )
         Notification.create_broadcast(team, "Flag Capture", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
@@ -200,10 +206,17 @@ class EventManager(object):
 
     def bot_added(self, user, count):
         """ Callback for when a bot is added """
-        message = "%s added a new bot; total number of bots is now %d" % (
-            user.team.name,
-            count,
-        )
+        if options.teams:
+            message = "%s (%s) added a new bot; total number of bots is now %d" % (
+                user.handle,
+                user.team.name,
+                count,
+            )
+        else:
+            message = "%s added a new bot; total number of bots is now %d" % (
+                user.team.name,
+                count,
+            )
         Notification.create_broadcast(user.team, "Bot added", message, INFO)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
@@ -218,32 +231,35 @@ class EventManager(object):
 
     def hint_taken(self, user, hint):
         """ Callback for when a hint is taken """
-        if len(GameLevel.all()) > 1:
-            message = "%s has taken a hint for %s (Lvl %s)" % (
-                user.team.name,
-                hint.box.name,
-                GameLevel.by_id(hint.box.game_level_id).number,
-            )
+        if options.teams:
+            message = "%s has taken a hint for %s" % (user.handle, hint.box.name)
         else:
             message = "%s has taken a hint for %s" % (user.team.name, hint.box.name)
+        if len(GameLevel.all()) > 1:
+            message = message + " (%s)" % (
+                GameLevel.by_id(hint.box.game_level_id).name,
+            )
         Notification.create_team(user.team, "Hint Taken", message, INFO)
         self.io_loop.add_callback(self.push_team, user.team.id)
         self.io_loop.add_callback(self.push_scoreboard)
 
     def flag_penalty(self, user, flag):
         """ Callback for when a flag is captured """
-        if len(GameLevel.all()) > 1:
-            message = "%s was penalized on the '%s' flag in %s (Lvl %s)" % (
-                user.team.name,
+        if options.teams:
+            message = "%s was penalized on '%s' in %s" % (
+                user.handle,
                 flag.name,
                 flag.box.name,
-                GameLevel.by_id(flag.box.game_level_id).number,
             )
         else:
-            message = "%s was penalized on the '%s' flag in %s" % (
+            message = "%s was penalized on '%s' in %s" % (
                 user.team.name,
                 flag.name,
                 flag.box.name,
+            )
+        if len(GameLevel.all()) > 1:
+            message = message + " (%s)" % (
+                GameLevel.by_id(flag.box.game_level_id).name,
             )
         Notification.create_team(user.team, "Flag Penalty", message, WARNING)
         self.io_loop.add_callback(self.push_team, user.team.id)
@@ -251,7 +267,7 @@ class EventManager(object):
 
     def level_unlocked(self, user, level):
         """ Callback for when a team unlocks a new level """
-        message = "%s unlocked level #%d." % (user.team.name, level.number)
+        message = "%s unlocked %s." % (user.team.name, level.name)
         Notification.create_broadcast(user.team, "Level Unlocked", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
@@ -264,7 +280,15 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     def player_swated(self, user, target):
-        message = "%s called the SWAT team on %s." % (user.handle, target.handle)
+        if options.teams:
+            message = "%s (%s) called the SWAT team on %s (%s)." % (
+                user.handle,
+                user.team.name,
+                target.handle,
+                target.team.name,
+            )
+        else:
+            message = "%s called the SWAT team on %s." % (user.handle, target.handle)
         Notification.create_broadcast(user.team, "Player Arrested!", message, INFO)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)

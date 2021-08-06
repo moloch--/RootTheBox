@@ -74,7 +74,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         try:
             self.connections.remove(self)
         except KeyError:
-            logging.warn("[Web Socket] Connection has already been closed.")
+            logging.warning("[Web Socket] Connection has already been closed.")
 
 
 class ScoreboardHandler(BaseHandler):
@@ -151,9 +151,11 @@ class ScoreboardAjaxHandler(BaseHandler):
         )
 
     def summary_page(self, page, display):
+        """ Prepare the pagination for the leaderboard """
         teams = self.settings["scoreboard_state"].get("teams")
         teamcount = len(teams)
         if teamcount > display:
+            """ Minimize the content sent to the browser """
             scoreboard = self.settings["scoreboard_state"].copy()
             end_count = display * page
             start_count = end_count - display
@@ -331,7 +333,7 @@ class ScoreboardPauseHandler(WebSocketHandler):
         try:
             self.connections.remove(self)
         except KeyError:
-            logging.warn("[Web Socket] Connection has already been closed.")
+            logging.warning("[Web Socket] Connection has already been closed.")
 
 
 class TeamsHandler(BaseHandler):

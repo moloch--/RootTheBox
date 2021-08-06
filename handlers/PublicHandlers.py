@@ -541,7 +541,9 @@ class RegistrationHandler(BaseHandler):
                 try:
                     smtpObj.login(options.mail_username, options.mail_password)
                 except smtplib.SMTPNotSupportedError as e:
-                    logging.warn("SMTP Auth issue (%s). Attempting to send anyway." % e)
+                    logging.warning(
+                        "SMTP Auth issue (%s). Attempting to send anyway." % e
+                    )
                 smtpObj.sendmail(options.mail_sender, receivers, message)
             finally:
                 smtpObj.quit()
@@ -715,7 +717,9 @@ class ForgotPasswordHandler(BaseHandler):
                 try:
                     smtpObj.login(options.mail_username, options.mail_password)
                 except smtplib.SMTPNotSupportedError as e:
-                    logging.warn("SMTP Auth issue (%s). Attempting to send anyway." % e)
+                    logging.warning(
+                        "SMTP Auth issue (%s). Attempting to send anyway." % e
+                    )
                 smtpObj.sendmail(options.mail_sender, receivers, message)
             finally:
                 smtpObj.quit()

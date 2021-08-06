@@ -49,7 +49,7 @@ class MaterialsHandler(BaseHandler):
             if len(args) == 1:
                 tmp = os.path.join(os.path.abspath(d), args[0])
                 if is_directory_traversal(tmp):
-                    logging.warn(
+                    logging.warning(
                         "%s attempted to use a directory traversal"
                         % self.request.remote_ip
                     )

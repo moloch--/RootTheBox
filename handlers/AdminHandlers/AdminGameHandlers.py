@@ -299,7 +299,7 @@ class AdminSwatHandler(BaseHandler):
             self.dbsession.commit()
             self.render_page()
         else:
-            logging.warn(
+            logging.warning(
                 "Invalid request to accept bribe with uuid: %r"
                 % (self.get_argument("uuid", ""),)
             )
@@ -317,7 +317,7 @@ class AdminSwatHandler(BaseHandler):
             self.dbsession.commit()
             self.render_page()
         else:
-            logging.warn(
+            logging.warning(
                 "Invalid request to complete bribe with uuid: %r"
                 % (self.get_argument("uuid", ""),)
             )

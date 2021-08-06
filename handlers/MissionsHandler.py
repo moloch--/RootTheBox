@@ -440,7 +440,7 @@ class BoxHandler(BaseHandler):
                 self.dbsession.add(user)
                 self.dbsession.add(team)
                 self.dbsession.commit()
-                self.event_manager.flag_captured(team, flag)
+                self.event_manager.flag_captured(user, flag)
                 return True
         return False
 

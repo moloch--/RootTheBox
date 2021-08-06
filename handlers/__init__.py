@@ -325,7 +325,7 @@ def start_server():
         sys.exit()
     server.add_sockets(sockets)
     if options.debug:
-        logging.warn(
+        logging.warning(
             "%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (bold + R, W)
         )
     if options.autostart_game:
