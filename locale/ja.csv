@@ -587,12 +587,13 @@ Text Share,テキスト共有
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,闇市場は開かれていて、あなたは男を知っています。ターゲットのソースコードまたはS.W.A.Tをダウンロードします。 （ゲーム内の）警察に賄briを贈ることによる他のプレーヤー。
 The cost to take the hint.  Can be >= 0.,ヒントを取るためのコスト。 0以上にすることができます。
 The deduction is,控除は
-"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.",他の唯一の可能性は、コードの一部を台無しにしてしまったことです。
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.","他の唯一の可能性は、コードの一部を台無しにしてしまったことです。"
 The starting money for a new,新しいための開始お金
 Theme,テーマ
 There are currently no shared files.,現在、共有ファイルはありません。
-"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",これらのフラグはファイルです。ユーザーはフラグをキャプチャするためにまったく同じファイルを送信する必要があります。ファイルのハッシュ（SHA1）のみがサーバーに保存されます。
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!",このゲームは動的スコアリングを使用するように設定されています。つまり、他のプレイヤーがフラグをキャプチャすると、それらのフラグの値が減少します。それで、それらを速くつかむか、負けてください！
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","これらのフラグはファイルです。ユーザーはフラグをキャプチャするためにまったく同じファイルを送信する必要があります。ファイルのハッシュ（SHA1）のみがサーバーに保存されます。"
+"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","このゲームは、速度に基づく動的スコアリングを使用するように設定されています。つまり、他のプレーヤーがフラグをキャプチャすると、それらのフラグの将来の値が減少します。 だから、それらを速くつかむか、負けてください！"
+"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","このゲームは、難易度に基づいた動的スコアリングを使用するように設定されています。つまり、他のプレーヤーがフラグをキャプチャすると、それらのフラグの全体的な値が減少し、スコアが低下する可能性があります。"
 This is a test flag/string the user could input for credit.,これは、ユーザーがクレジットのために入力できるテストフラグ/文字列です。
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,これは、プレイヤーがS.W.A.Tに支払う必要がある金額です。別のプレイヤーアカウント。同じプレイヤーの後続のSWATも、この量だけ毎回増加します。
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,これは、プレイヤーが銀行のパスワードハッシュアルゴリズムをアップグレードするために支払う必要がある金額です

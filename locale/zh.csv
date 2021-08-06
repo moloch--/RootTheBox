@@ -592,7 +592,8 @@ The starting money for a new,一个新的初始钱数
 Theme,主题
 There are currently no shared files.,目前没有共享文件。
 "These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",这些Flag是文件，用户必须提交完全相同的文件才能捕获Flag。只有文件的哈希（SHA1）存储在服务器上。
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!",此游戏设置为使用动态评分，这意味着当其他玩家捕获Flag时，这些Flag的值将减少。所以尽快获得要么什么也得不到！
+"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","该游戏设置为使用基于速度的动态计分，这意味着随着其他玩家夺取旗帜，这些旗帜的未来价值将减少。 所以快点抓住它们，否则就输了！"
+"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","该游戏设置为使用基于难度的动态计分，这意味着当其他玩家夺取旗帜时，这些旗帜的整体价值将降低并可能降低您的分数。"
 This is a test flag/string the user could input for credit.,这是用户可以使用的测试Flag/字符串。
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,这是玩家必须向S.W.A.T支付的金额以干掉另一个玩家账号。同一玩家的后续SWAT每次也增加这个数量。
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,这是玩家必须支付的用于升级其银行密码哈希算法的金额

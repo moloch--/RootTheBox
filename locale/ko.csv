@@ -592,7 +592,8 @@ The starting money for a new,새로운 시작 돈
 Theme,테마
 There are currently no shared files.,현재 공유 파일이 없습니다.
 "These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",이 플래그는 파일이므로 사용자는 플래그를 캡처하기 위해 정확히 동일한 파일을 제출해야합니다. 파일의 해시 (SHA1) 만 서버에 저장됩니다.
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","이 게임은 다이나믹 스코어링을 사용하도록 설정되었습니다. 즉, 다른 플레이어가 깃발을 캡처 할 때 해당 깃발의 값이 감소합니다. 그래서 빨리 잡아 또는 잃어 버려!"
+"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","이 게임은 속도에 기반한 동적 득점을 사용하도록 설정되어 있습니다. 즉, 다른 플레이어가 깃발을 캡처하면 해당 깃발의 미래 가치가 감소합니다. 그러니 빨리 잡거나 잃어버리세요!"
+"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","이 게임은 난이도에 따라 동적 득점을 사용하도록 설정되어 있습니다. 즉, 다른 플레이어가 깃발을 캡처하면 해당 깃발의 전체 가치가 줄어들고 잠재적으로 점수가 낮아집니다."
 This is a test flag/string the user could input for credit.,이것은 사용자가 신용을 위해 입력 할 수있는 테스트 플래그 / 문자열입니다.
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,플레이어가 S.W.A.T.에 지불해야하는 금액입니다. 다른 플레이어 계정. 동일한 플레이어의 후속 SWAT도 매번이 양만큼 증가합니다.
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,은행 비밀번호 해시 알고리즘을 업그레이드하기 위해 플레이어가 지불해야하는 금액입니다.

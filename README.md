@@ -9,8 +9,6 @@ Root the Box is a real-time capture the flag (CTF) scoring engine for computer w
 
 ![example](static/images/example.png?raw=true)
 
-Like traditional CTF games, each team or player can target challenges of varying difficulty and sophistication, attempting to collect flags. But Root the Box brings additional options to the game.  It has built-in support for "botnets", allowing players to upload a small bot program to target machines that grant periodic rewards for each bot in the botnet.  You have the option to use a banking system, where (in-game) money can be used instead of points to unlock new levels, buy hints to flags, download a target's source code, or even "SWAT" other players.  Password hashes for player bank accounts can also be publicly displayed, allowing competitors to crack them and steal each other's money.
-
 ## Screenshots & Demo
 Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Screenshots) and game examples.
 
@@ -25,15 +23,17 @@ Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Sc
 -   Flag Types: Static, Regex, Datetime, Multiple Choice, File - w/options for case sensitivity
 -   Options for Penalties, Hints, Attempts, Level Bonuses, Dynamic Scoring, Categories and more
 -   Built-in team based file/text sharing and Admin game material distirbution
--   Chat support with [Rocket Chat](https://rocket.chat/) integration
+-   Integrated [CyberChef](https://gchq.github.io/CyberChef/) in tools menu
+-   Chat support, with optional [Rocket Chat](https://rocket.chat/) integration
 -   [CTF Time](https://ctftime.org/) compatible JSON scoreboard feed
 -   Supports [OWASP Juice Shop CTF](https://github.com/bkimminich/juice-shop-ctf) export
 -   Freeze scoreboard at a specific time allowing for end game countdown
 -   Optional Story Mode - Supports intro dialog, capture Flag or Section dialog w/graphics
--   Optional [in-game Botnets](https://github.com/moloch--/RootTheBox/wiki/Features) or wall of sheep displaying cracked passwords
--   Unlocks and upgrades as users capture flags
+-   Optional [Advanced Features](https://github.com/moloch--/RootTheBox/wiki/Features), such as in-game botnets, "SWAT" players, banking (in-game) money, and wall of sheep displaying cracked passwords
+-   Allows for unlocks and upgrades as users capture flags
 -   Export and share Boxes/Flags
 -   Multiple Language Support
+-   Deploy in the [Cloud](https://github.com/moloch--/RootTheBox/wiki/Cloud-Deployment), with [Docker](https://github.com/moloch--/RootTheBox/wiki/Docker-Deployment), or [Direct](https://github.com/moloch--/RootTheBox/wiki/Installation).
 -   Site Themes and other cool stuff
 
 ## Setup

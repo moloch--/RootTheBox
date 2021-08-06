@@ -265,7 +265,11 @@
                 <i class="fa fa-bar-chart-o" style="font-size: 180%"></i>
             </div>
             <div class="span7 msgdescription">
-                {{ _("This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!") }}
+                {% if options.dynamic_flag_type == "decay_future" %}
+                    {{ _("This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!") }}
+                {% else %}
+                    {{ _("This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.") }}
+                {% end %}
             </div>
         </div>
         <br/>
