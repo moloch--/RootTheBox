@@ -38,6 +38,7 @@ import tornado
 import json
 
 from models.Theme import Theme
+from models.User import User
 from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
@@ -55,12 +56,19 @@ class HomeHandler(BaseHandler):
     def get(self, *args, **kwargs):
         """ Display the default user page """
         user = self.get_current_user()
-        if user.is_admin():
+        uuid = self.get_argument("id", None)
+        display_user = User.by_uuid(uuid)
+        visitor = False
+        
+        if display_user and display_user != user:
+            user = display_user
+            visitor = True
+        if uuid is None and user.is_admin():
             self.timer()
             self.render("admin/home.html", user=user)
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()
-            self.render("user/home.html", user=user, game_started=game_started)
+            self.render("user/home.html", user=user, game_started=game_started, visitor=visitor)
 
 
 class SettingsHandler(BaseHandler):

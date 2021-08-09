@@ -240,6 +240,40 @@
                     </li>
                 </ul>
             </div>
+            <div class="nav-collapse pull-right">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell" title="{{ _('Notifications') }}"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-alert-menu">
+                            <li>
+                                <a href="/notifications/all">
+                                    {{ _("See All") }} &raquo;
+                                </a>
+                                <hr style="margin-bottom: 2px; margin-top: 3px;">
+                            </li>
+                            {% for index, notify in enumerate(reversed(list(user.notifications[-5:]))) %}
+                            <li style="padding: 10px 10px 10px 15px;">
+                                <span >
+                                        {% if notify.icon_url is not None %}
+                                            <img src="{{ notify.icon_url }}" style="width: 16px;" />
+                                        {% end %}
+                                    
+                                        <strong>{{ _(notify.title) }}</strong>
+                                        {{ notify.created.strftime("%I:%M%p %x") }}
+                                        <br />{{ notify.message }}
+                                    
+                                        {% if index < len(user.notifications[-5:]) - 1 %}
+                                            <hr style="margin-top: 8px; margin-bottom: -12px;">
+                                        {% end %}
+                                </span>
+                            </li>
+                            {% end %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
