@@ -39,11 +39,7 @@
     </div>
 
     <div class="span10">
-        <h1>
-            <i class="fa fa-group"></i>
-            {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
-        </h1>
-        <div style="float:right; margin-top: -75px;">
+        <div style="float:right; margin-top: -15px;">
             {% if teamcount > 0 %}
                 {% set pcount = ceil(teamcount / display) %}
                 
@@ -78,6 +74,10 @@
                 </div>
             {% end %}
         </div>
+        <h1 class="offset1">
+            <i class="fa fa-group"></i>
+            {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
+        </h1>
         <br />
         {% for t_index, team in enumerate(teams) %}
             {% set rank = page * display - display + t_index + 1 %}
@@ -99,9 +99,10 @@
                             {% for user in team.members %}
                                 {% if not user.locked %}
                                     <div class="span2" align="middle">
+                                        <a href="/user?id={{user.uuid}}">
                                             <h5>{{ user.handle }}</h5>
-                                            <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
 
+                                        </a>
                                     </div>
                                 {% end %}
                             {% end %}
