@@ -84,20 +84,14 @@
             <div id="{{ team.uuid }}" class="container" align="middle">
                 <h2 style="display:inline;">
                     {% if rank == 1 %}
-                        <i class="fa fa-trophy"></i> - {% if options.teams %}{{ team.name }}{% else %}<a href="/user?id={{user.uuid}}">{{ team.name }}</a>{%end%}
+                        <i class="fa fa-trophy"></i> - {{ team.name }}
                     {% else %}
-                        #{{ rank }} - {% if options.teams %}{{ team.name }}{% else %}<a href="/user?id={{user.uuid}}">{{ team.name }}</a>{%end%}
+                        #{{ rank }} - {{ team.name }}
                     {% end %}
                 </h2>
                 {% if team.motto != "" %}<h4 style="display:inline;">&nbsp;&nbsp;&nbsp;&nbsp;"{{ team.motto }}"</h4>{% end %}
                 <br>
-                {% if options.teams %}
-                    <img src="/avatars/{{ team.avatar }}" class="img-polaroid" align="middle" />
-                {% else %}
-                    <a href="/user?id={{user.uuid}}">
-                        <img src="/avatars/{{ team.avatar }}" class="img-polaroid" align="middle" />
-                    </a>
-                {% end %}
+                <img src="/avatars/{{ team.avatar }}" class="img-polaroid" align="middle" />
                 <!--<hr /> -->
                 {% if options.teams %}
                     <div class="row">
