@@ -253,6 +253,7 @@ Enter a Matching Flag,一致するフラグを入力してください
 Enter Choice,選択肢を入力
 Enter the same password as before,以前と同じパスワードを入力してください
 ERROR,エラー
+Expire,期限切れ
 Export Game Objects,ゲームオブジェクトのエクスポート
 Export of gameplay settings does not include the entire server and database configuration.,ゲームプレイ設定のエクスポートには、サーバーとデータベースの構成全体は含まれません。
 Export XML,XMLをエクスポート

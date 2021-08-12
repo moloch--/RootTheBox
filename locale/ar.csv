@@ -253,6 +253,7 @@ Enter a Matching Flag,أدخل علم المطابقة
 Enter Choice,أدخل الاختيار
 Enter the same password as before,أدخل نفس كلمة المرور كما كان من قبل
 ERROR,خطأ
+Expire,تنقضي
 Export Game Objects,كائنات لعبة التصدير
 Export of gameplay settings does not include the entire server and database configuration., لا يتضمن تصدير إعدادات اللعب تكوين الخادم وقاعدة البيانات بالكامل.
 Export XML,تصدير XML

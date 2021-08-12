@@ -84,6 +84,17 @@ team_to_flag = Table(
     ),
 )
 
+user_to_flag = Table(
+    "user_to_flag",
+    DatabaseObject.metadata,
+    Column(
+        "user_id", Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False
+    ),
+    Column(
+        "flag_id", Integer, ForeignKey("flag.id", ondelete="CASCADE"), nullable=False
+    ),
+)
+
 team_to_game_level = Table(
     "team_to_game_level",
     DatabaseObject.metadata,

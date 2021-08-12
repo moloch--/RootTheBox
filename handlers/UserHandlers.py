@@ -52,23 +52,31 @@ RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
 
 
 class HomeHandler(BaseHandler):
-    @authenticated
+    """Allow for public view of user page if scoreboard set to public"""
+
     def get(self, *args, **kwargs):
         """ Display the default user page """
         user = self.get_current_user()
         uuid = self.get_argument("id", None)
         display_user = User.by_uuid(uuid)
         visitor = False
-        
-        if display_user and display_user != user:
+        if not user and (options.scoreboard_visibility != "public" or not display_user):
+            self.redirect("/login")
+            return
+        elif display_user and (not user or display_user != user):
             user = display_user
             visitor = True
+        if not user:
+            self.redirect("/login")
+            return
         if uuid is None and user.is_admin():
             self.timer()
             self.render("admin/home.html", user=user)
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()
-            self.render("user/home.html", user=user, game_started=game_started, visitor=visitor)
+            self.render(
+                "user/home.html", user=user, game_started=game_started, visitor=visitor
+            )
 
 
 class SettingsHandler(BaseHandler):

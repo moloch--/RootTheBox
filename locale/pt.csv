@@ -253,6 +253,7 @@ Enter a Matching Flag,Insira uma bandeira de correspondência
 Enter Choice,Digite a escolha
 Enter the same password as before,Digite a mesma senha de antes
 ERROR,ERRO
+Expire,Expirar
 Export Game Objects,Exportar Objetos do Jogo
 Export of gameplay settings does not include the entire server and database configuration.,A exportação de configurações de jogabilidade não inclui toda a configuração do servidor e do banco de dados.
 Export XML,Exportar XML

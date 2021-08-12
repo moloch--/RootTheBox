@@ -233,7 +233,7 @@
                                                 {% set teamcount = len(Team.all()) %}
                                                 {% for index, flag in enumerate(box.flags) %}
                                                     <tr>
-                                                        {% set captures = len(Flag.captures(flag.id)) %}
+                                                        {% set captures = len(Flag.team_captures(flag.id)) %}
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn">{{ flag.box.name }}</td>
                                                         <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>

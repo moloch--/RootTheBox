@@ -28,7 +28,7 @@ import xml.etree.cElementTree as ET
 from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
-from models.Relationships import team_to_flag
+from models.Relationships import team_to_flag, user_to_flag
 from sqlalchemy.types import Unicode, Integer, String
 from models import dbsession
 from models.Box import Box
@@ -142,8 +142,12 @@ class Flag(DatabaseObject):
         return dbsession.query(cls).filter_by(_type=str(_type)).all()
 
     @classmethod
-    def captures(cls, _id):
+    def team_captures(cls, _id):
         return dbsession.query(team_to_flag).filter_by(flag_id=_id).all()
+
+    @classmethod
+    def user_captures(cls, _id):
+        return dbsession.query(user_to_flag).filter_by(flag_id=_id).all()
 
     @classmethod
     def create_flag(cls, _type, box, name, raw_token, description, value):
@@ -232,16 +236,16 @@ class Flag(DatabaseObject):
     def dynamic_value(self, team=None):
         if options.dynamic_flag_value is False:
             return self.value
-        elif len(self.captures(self.id)) == 0:
+        elif len(self.team_captures(self.id)) == 0:
             return self.value
         elif team and self in team.flags:
             depreciation = float(old_div(options.flag_value_decrease, 100.0))
             deduction = self.value * depreciation
             if options.dynamic_flag_type == "decay_all":
-                reduction = (len(self.captures(self.id)) - 1) * deduction
+                reduction = (len(self.team_captures(self.id)) - 1) * deduction
                 return max(options.flag_value_minimum, int(self.value - reduction))
             else:
-                for index, item in enumerate(self.captures(self.id)):
+                for index, item in enumerate(self.team_captures(self.id)):
                     if team == Team.by_id(item[0]):
                         reduction = index * deduction
                         return max(
@@ -250,7 +254,7 @@ class Flag(DatabaseObject):
         else:
             depreciation = float(old_div(options.flag_value_decrease, 100.0))
             deduction = self.value * depreciation
-            reduction = len(self.captures(self.id)) * deduction
+            reduction = len(self.team_captures(self.id)) * deduction
             return max(options.flag_value_minimum, int(self.value - reduction))
 
     @property

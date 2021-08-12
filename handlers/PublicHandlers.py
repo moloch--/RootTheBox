@@ -266,6 +266,10 @@ class LoginHandler(BaseHandler):
             self.render(
                 "public/login.html", info=None, errors=["Your account has been locked"]
             )
+        elif user.is_expired():
+            self.render(
+                "public/login.html", info=None, errors=["Your account is expired"]
+            )
         else:
             self.successful_login(user)
             if self.config.story_mode and user.logins == 1 and not user.is_admin():

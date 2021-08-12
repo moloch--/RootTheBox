@@ -253,6 +253,7 @@ Enter a Matching Flag,일치하는 플래그를 입력하십시오
 Enter Choice,초이스 입력
 Enter the same password as before,이전과 동일한 비밀번호를 입력하십시오
 ERROR,오류
+Expire,내쉬다
 Export Game Objects,게임 오브젝트 내보내기
 Export of gameplay settings does not include the entire server and database configuration.,게임 플레이 설정 내보내기에는 전체 서버 및 데이터베이스 구성이 포함되지 않습니다.
 Export XML,XML 내보내기

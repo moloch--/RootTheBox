@@ -58,6 +58,8 @@ $(document).ready(function() {
         }
     });
 
+    $( "#user-expire" ).datepicker();
+
     $("#edit-user-submit").click(function() {
         $("#edit-user-form").submit();
     });

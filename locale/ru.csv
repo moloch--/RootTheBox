@@ -253,6 +253,7 @@ Enter a Matching Flag,Введите соответствующий флаг,
 Enter Choice,Введите выбор,
 Enter the same password as before,"Введите тот же пароль, что и раньше",
 ERROR,ОШИБКА,
+Expire,Срок действия
 Export Game Objects,Экспорт игровых объектов,
 Export of gameplay settings does not include the entire server and database configuration.,Экспорт настроек игрового процесса не включает в себя всю конфигурацию сервера и базы данных.,
 Export XML,Экспорт XML,

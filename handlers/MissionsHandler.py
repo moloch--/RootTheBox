@@ -428,7 +428,7 @@ class BoxHandler(BaseHandler):
                     self.config.dynamic_flag_value
                     and self.config.dynamic_flag_type == "decay_all"
                 ):
-                    for item in Flag.captures(flag.id):
+                    for item in Flag.team_captures(flag.id):
                         tm = Team.by_id(item[0])
                         deduction = flag.dynamic_value(tm) - flag_value
                         tm.money = int(tm.money - deduction)
@@ -437,6 +437,7 @@ class BoxHandler(BaseHandler):
                 team.money += flag_value
                 user.money += flag_value
                 team.flags.append(flag)
+                user.flags.append(flag)
                 self.dbsession.add(user)
                 self.dbsession.add(team)
                 self.dbsession.commit()

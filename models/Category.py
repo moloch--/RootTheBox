@@ -39,6 +39,7 @@ class Category(DatabaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
     _category = Column(Unicode(64), unique=True, nullable=False)
+    _description = Column(Unicode(1024), nullable=True)
 
     boxes = relationship("Box", backref=backref("category", lazy="select"))
 
@@ -76,6 +77,18 @@ class Category(DatabaseObject):
         return dbsession.query(cls).filter_by(uuid=uuid).first()
 
     @property
+    def description(self):
+        if self._description is None:
+            return ""
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        if 1024 < len(value):
+            raise ValidationError("Description cannot be greater than 1024 characters")
+        self._description = str(value)
+
+    @property
     def category(self):
         return self._category
 
@@ -87,12 +100,17 @@ class Category(DatabaseObject):
 
     def to_dict(self):
         """ Returns editable data as a dictionary """
-        return {"uuid": self.uuid, "category": self.category}
+        return {
+            "uuid": self.uuid,
+            "category": self.category,
+            "description": self.description,
+        }
 
     def to_xml(self, parent):
         """ Add to XML dom """
-        corp_elem = ET.SubElement(parent, "category")
-        ET.SubElement(corp_elem, "category").text = self.category
+        cat_elem = ET.SubElement(parent, "category")
+        ET.SubElement(cat_elem, "category").text = self.category
+        ET.SubElement(cat_elem, "description").text = self.description
 
     def __len__(self):
         return len(self.boxes)

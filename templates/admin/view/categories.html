@@ -28,6 +28,13 @@
                     <input autofocus id="edit-category-item-name" name="category" maxlength="24" minlength="3" type="text" placeholder="Category" />
                 </div>
             </div>
+            <div class="control-group">
+                <div class="controls">
+                    <textarea autofocus id="edit-category-description" name="category_description" maxlength="1024" type="text" placeholder="{{_('Optional')}} {{_('Description')}}"
+                           data-original-title="{{_('Description')}}">
+                    </textarea>
+                </div>
+            </div>
         </form>
     </div>
     <div class="modal-footer">
@@ -83,18 +90,20 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>{{ _("Category Name") }}</th>
-                    <th><!-- Button --></th>
+                    <th class="shortcolumn"> # </th>
+                    <th class="shortcolumn"> {{ _("Category Name") }} </th>
+                    <th> {{ _("Description") }}</th>
+                    <th class="shortcolumn"><!-- Button --></th>
                 </tr>
             </thead>
             <tbody>
                 {% for index, item in enumerate(Category.all()) %}
                     <tr>
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ item.category }}</td>
+                        <td class="shortcolumn"> {{ index + 1 }} </td>
+                        <td class="shortcolumn"> {{ item.category }} </td>
+                        <td> {{ item.description }}</td>
                         <td class="shortcolumn">
-                            <a id="edit-category-item-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#edit-category-item-modal" data-uuid="{{ item.uuid }}" data-name="{{ item.category }}">
+                            <a id="edit-category-item-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#edit-category-item-modal" data-uuid="{{ item.uuid }}" data-name="{{ item.category }}" data-description="{{ item.description }}">
                                 &nbsp;&nbsp;<i class="fa fa-pencil"></i>&nbsp;
                                 {{ _("Edit") }}&nbsp;&nbsp;&nbsp;
                             </a>

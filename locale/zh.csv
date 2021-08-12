@@ -253,6 +253,7 @@ Enter a Matching Flag,输入匹配Flag
 Enter Choice,输入选择
 Enter the same password as before,输入与以前相同的密码
 ERROR,错误
+Expire,到期
 Export Game Objects,导出游戏对象
 Export of gameplay settings does not include the entire server and database configuration.,导出游戏设置不包括整个服务器和数据库配置。
 Export XML,导出XML
