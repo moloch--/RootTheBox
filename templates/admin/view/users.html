@@ -508,7 +508,7 @@
                                     <tr>
                                 {% end %}
                                     <td class="shortcolumn">{{ index + 1 }}</td>
-                                    <td class="shortcolumn"> <a href="/user?id={{user.uuid}}">{{ user.handle }}</a> </td>
+                                    <td class="shortcolumn"> {{ user.handle }} </td>
                                     <td class="shortcolumn"> {%if user.name %}{{user.name}}{% else %}{{_("Unknown")}}{% end %} </td>
                                     {% if 0 < user.logins %}
                                         <td class="shortcolumn"> {{ user.last_login }} </td>
@@ -545,7 +545,7 @@
                                         {% end %}
                                     </td>
                                     <td class="shortcolumn">
-                                        <a class="btn btn-mini" href="/admin/user_stats?uuid={{ user.uuid }}">
+                                        <a class="btn btn-mini" href="/user?id={{ user.uuid }}">
                                             <i class="fa fa-fw fa-bar-chart-o"></i>
                                             {{_("Statistics")}}
                                         </a>

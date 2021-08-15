@@ -57,6 +57,10 @@ class HomeHandler(BaseHandler):
     def get(self, *args, **kwargs):
         """ Display the default user page """
         user = self.get_current_user()
+        if user:
+            admin = user.is_admin()
+        else:
+            admin = False
         uuid = self.get_argument("id", None)
         display_user = User.by_uuid(uuid)
         visitor = False
@@ -75,7 +79,11 @@ class HomeHandler(BaseHandler):
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()
             self.render(
-                "user/home.html", user=user, game_started=game_started, visitor=visitor
+                "user/home.html",
+                user=user,
+                game_started=game_started,
+                visitor=visitor,
+                admin=admin,
             )
 
 

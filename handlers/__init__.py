@@ -181,7 +181,6 @@ urls = [
     (r"/admin/upgrades/source_code_market(.*)", AdminSourceCodeMarketHandler),
     (r"/admin/upgrades/swat(.*)", AdminSwatHandler),
     (r"/admin/users", AdminManageUsersHandler),
-    (r"/admin/user_stats", AdminUserStatsHandler),
     (r"/admin/users/edit/(user|team)", AdminEditUsersHandler),
     (r"/admin/users/edit/teams/scores", AdminEditTeamsHandler),
     (r"/admin/users/delete/(.*)", AdminDeleteUsersHandler),
