@@ -37,7 +37,6 @@ from hashlib import md5, sha1, sha256, sha512
 from pbkdf2 import PBKDF2
 from sqlalchemy import Column, ForeignKey, desc, func
 from sqlalchemy.orm import synonym, relationship, backref
-from sqlalchemy.sql.elements import Null
 from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
 from models import dbsession
 from models.Permission import Permission
@@ -81,7 +80,7 @@ class User(DatabaseObject):
     _password = Column("password", String(64))
     _bank_password = Column("bank_password", String(128))
     _notes = Column(Unicode(512))
-    _expire = Column(DateTime, default=Null, nullable=True)
+    _expire = Column(DateTime, default=None, nullable=True)
     money = Column(Integer, default=0, nullable=False)
 
     theme_id = Column(Integer, ForeignKey("theme.id"), default=3, nullable=False)
