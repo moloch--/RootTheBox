@@ -53,6 +53,7 @@ $(document).ready(function() {
                 let page = $("#paramaters").data("page");
                 $.get("/scoreboard/ajax/summary?count=" + count + "&page=" + page, function(table_data) {
                     highlight_table = highlights(table_data);
+                    $("#summary_loading").hide();
                     if ($("#summary_tbody").find('tr').length == 0) {
                         $("#summary_tbody").html(highlight_table);
                         ranking = getRanking(table_data);

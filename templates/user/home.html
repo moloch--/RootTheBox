@@ -264,7 +264,7 @@
         {% end %}
     </div>
 
-    {% if options.teams and (admin or (team and not visitor)) %}
+    {% if options.teams and team and not visitor %}
     <div class="span5 well" style="width: 46%;">
         <h2>
             <i class="fa fa-group"></i>

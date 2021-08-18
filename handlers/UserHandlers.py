@@ -83,7 +83,6 @@ class HomeHandler(BaseHandler):
                 user=user,
                 game_started=game_started,
                 visitor=visitor,
-                admin=admin,
             )
 
 
