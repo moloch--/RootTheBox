@@ -79,10 +79,7 @@ class HomeHandler(BaseHandler):
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()
             self.render(
-                "user/home.html",
-                user=user,
-                game_started=game_started,
-                visitor=visitor,
+                "user/home.html", user=user, game_started=game_started, visitor=visitor
             )
 
 

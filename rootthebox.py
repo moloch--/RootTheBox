@@ -325,9 +325,9 @@ define(
 
 define(
     "session_age",
-    default=int(60 * 60),
+    default=int(48 * 60),
     group="server",
-    help="max session age (seconds)",
+    help="max session age (minutes) of inactivity",
     type=int,
 )
 
