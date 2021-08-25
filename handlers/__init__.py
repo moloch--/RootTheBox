@@ -243,7 +243,8 @@ app = Application(
     # Flags used to run the game
     game_started=options.autostart_game,
     suspend_registration=False,
-    freeze_scoreboard=False,
+    countdown_timer=False,
+    hide_scoreboard=False,
     stop_timer=False,
     temp_global_notifications=None,
     # Callback functions

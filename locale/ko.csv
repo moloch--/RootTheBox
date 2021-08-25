@@ -307,6 +307,7 @@ Get your registration token from reception,리셉션에서 등록 토큰 받기
 Glitch in the Matrix,매트릭스의 글리치
 Global Notifications,글로벌 알림
 Handle,핸들
+Hide scoreboard during countdown,카운트다운 중 스코어보드 숨기기
 Hint,힌트
 Hint not yet taken,아직 가져 오지 않은 힌트
 Hint Taken,찍은 힌트
@@ -455,7 +456,7 @@ Paste Text Here,여기에 텍스트 붙여 넣기
 PasteBin,PasteBin
 Pastebin Character Limit,Pastebin 문자 제한
 Pause Registration,일시 정지 등록
-Pause Scoreboard,스코어 보드 일시 중지
+Set Countdown,카운트다운 설정
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,각 잘못된 시도에 대해 플래그 값의이 백분율만큼 점수를 부과합니다 (활성화 된 경우 동적 스코어링 후 적용).
 Pending,대기 중
 Pending Bribes,보류중인 뇌물

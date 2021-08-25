@@ -4,6 +4,7 @@
 <script src="/static/js/pages/missions/view.js"></script>
 <script src="/static/js/pages/scoreboard/teams.js"></script>
 <script src="/static/js/pages/anchor.js"></script>
+<link href="/static/css/pages/public/summary.css" rel="stylesheet" />
 {% end %}
 {% block title %}
 {% from tornado.options import options %}
@@ -16,7 +17,7 @@
 {% from models.GameLevel import GameLevel %}
 
 <div class="row-fluid">
-    {% if not timer %}
+    {% if not hide_scoreboard %}
     <div class="span2" />
         <ul class="nav nav-tabs nav-stacked affix well">
             <center>
@@ -74,6 +75,9 @@
                 </div>
             {% end %}
         </div>
+        {% if timer %}
+        <h3 id="timercount" title="Scoreboard Countdown" style="float: right; color: red; margin-right: 100px;"></h3>
+        {% end %}
         <h1 class="offset1">
             <i class="fa fa-group"></i>
             {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}
@@ -176,7 +180,7 @@
         <br>
     </div>
     {% else %}
-        <h1 id="timercount" class="timercount"></h1>
+        <h1 id="timercount_hidescoreboard" class="timercount"></h1>
     {% end %}
 </div>
 {% end %}

@@ -11,9 +11,9 @@
 {% block title %}{{ _("Scoreboard") }}{% end %}
 
 {% block content %}
-{% from tornado.options import options %}
-{% from math import ceil %}
-{% if not timer %}
+    {% from tornado.options import options %}
+    {% from math import ceil %}
+    {% if not hide_scoreboard %}
     <div class="row-fluid">
         <div style="float:right; margin-top: -15px; margin-right: 4.75%;">
             {% set pcount = ceil(teamcount / display) %}
@@ -48,6 +48,9 @@
                 </ul>
             </div>
         </div>
+        {% if timer %}
+        <h3 id="timercount" title="Scoreboard Countdown" style="float: right; color: red; margin-right: 100px;"></h3>
+        {% end %}
         <h1 class="offset1">
             <i class="fa fa-bar-chart-o"></i>
             {{ _("Scoreboard") }}
@@ -125,6 +128,6 @@
         {% end %}
     </div>
     {% else %}
-    <h1 id="timercount" class="timercount"></h1>
+    <h1 id="timercount_hidescoreboard" class="timercount"></h1>
     {% end %}
 {% end %}

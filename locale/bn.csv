@@ -307,6 +307,7 @@ Get your registration token from reception,অভ্যর্থনা থেক
 Glitch in the Matrix,ম্যাট্রিক্সে ভুল
 Global Notifications,গ্লোবাল বিজ্ঞপ্তি
 Handle,হাতল
+Hide scoreboard during countdown,কাউন্টডাউনের সময় স্কোরবোর্ড লুকান
 Hint,ইঙ্গিত
 Hint not yet taken,ইঙ্গিত এখনও নেওয়া হয়নি
 Hint Taken,ইঙ্গিত নেওয়া
@@ -455,7 +456,7 @@ Paste Text Here,এখানে পাঠ্য আটকান
 PasteBin,PasteBin
 Pastebin Character Limit,পেস্টবিন চরিত্রের সীমা
 Pause Registration,নিবন্ধকরণ বিরতি দিন
-Pause Scoreboard,স্কোরবোর্ড বিরতি দিন
+Set Countdown,কাউন্টডাউন সেট করুন
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,প্রতিটি ভুল প্রয়াসের জন্য পতাকা মানটির এই শতাংশের দ্বারা স্কোরকে পেনালাইজ করুন (সক্ষম করা থাকলে গতিশীল স্কোরিংয়ের পরে প্রয়োগ করা হবে)।
 Pending,মুলতুবী
 Pending Bribes,মুলতুবি থাকা

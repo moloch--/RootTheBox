@@ -307,6 +307,7 @@ Get your registration token from reception,الحصول على رمز التسج
 Glitch in the Matrix,خلل في المصفوفة
 Global Notifications,الإخطارات العالمية
 Handle,مقبض
+Hide scoreboard during countdown,إخفاء لوحة النتائج أثناء العد التنازلي
 Hint,ملحوظة
 Hint not yet taken,تلميح لم تتخذ بعد
 Hint Taken,تلميح اتخذت
@@ -455,7 +456,7 @@ Paste Text Here,لصق النص هنا
 PasteBin,باستبين
 Pastebin Character Limit,Pastebin حرف الحد
 Pause Registration,وقفة التسجيل
-Pause Scoreboard,وقفة لوحة النتائج
+Set Countdown,ضبط العد التنازلي
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,قم باختبار النتيجة بنسبة هذا النسبة المئوية من قيمة العلامة لكل محاولة غير صحيحة (يتم تطبيقها بعد التسجيل الديناميكي في حالة التمكين).
 Pending,قيد الانتظار
 Pending Bribes,في انتظار الرشاوى

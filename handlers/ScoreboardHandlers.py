@@ -55,14 +55,14 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
     def open(self):
         """ When we receive a new websocket connect """
         self.connections.add(self)
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message(Scoreboard.now(self))
 
     def on_message(self, message):
         """ We ignore messages if there are more than 1 every 3 seconds """
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             Scoreboard.update_gamestate(self)
@@ -93,6 +93,7 @@ class ScoreboardHandler(BaseHandler):
             self.render(
                 "scoreboard/summary.html",
                 timer=self.timer(),
+                hide_scoreboard=self.application.settings["hide_scoreboard"],
                 page=page,
                 display=display,
                 teamcount=teamcount,
@@ -240,7 +241,11 @@ class ScoreboardHistoryHandler(BaseHandler):
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         if scoreboard_visible(user):
-            self.render("scoreboard/history.html", timer=self.timer())
+            self.render(
+                "scoreboard/history.html",
+                hide_scoreboard=self.application.settings["hide_scoreboard"],
+                timer=self.timer(),
+            )
         elif not user:
             self.redirect("/login")
         else:
@@ -271,7 +276,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 
     def on_message(self, message):
         """ We ignore messages if there are more than 1 every 3 seconds """
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
@@ -317,13 +322,13 @@ class ScoreboardPauseHandler(WebSocketHandler):
     def open(self):
         """ When we receive a new websocket connect """
         self.connections.add(self)
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message("play")
 
     def on_message(self, message):
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message("play")
@@ -360,6 +365,7 @@ class TeamsHandler(BaseHandler):
             self.render(
                 "scoreboard/teams.html",
                 timer=self.timer(),
+                hide_scoreboard=self.application.settings["hide_scoreboard"],
                 teams=teams,
                 page=page,
                 display=display,

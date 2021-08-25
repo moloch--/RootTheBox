@@ -307,6 +307,7 @@ Get your registration token from reception,Получите регистраци
 Glitch in the Matrix,Глюк в матрице,
 Global Notifications,Глобальные уведомления,
 Handle,Справиться,
+Hide scoreboard during countdown,Скрыть табло во время обратного отсчета
 Hint,намек,
 Hint not yet taken,Подсказка еще не принята,
 Hint Taken,Подсказка,
@@ -455,7 +456,7 @@ Paste Text Here,Вставить текст сюда,
 PasteBin,Pastebin,
 Pastebin Character Limit,Pastebin Character Limit,
 Pause Registration,Пауза Регистрация,
-Pause Scoreboard,Пауза Табло,
+Set Countdown,Установить обратный отсчет
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Штрафуйте счет этим процентом от значения флага за каждую неверную попытку (применяется после динамического подсчета, если он включен)",
 Pending,в ожидании,
 Pending Bribes,В ожидании взятки,

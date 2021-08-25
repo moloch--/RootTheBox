@@ -10,13 +10,16 @@
 
 {% block content %}
 {% from tornado.options import options %}
-    {% if not timer %}
+    {% if not hide_scoreboard %}
         <script type="application/javascript">
             setGraphTitle("{% if options.banking %}{{ _('Bank Account Balance') }}{% else %}{{ _('Score') }}{% end %}");
             setGraphScale("{% if options.banking %}{{ _('Money') }}{% else %}{{ _('Points') }}{% end %}");
             setGraphSymbol("{% if options.banking %}{{ _('$') }}{% end %}");
         </script>
         <div class="row-fluid">
+            {% if timer %}
+            <h3 id="timercount" title="Scoreboard Countdown" style="float: right; color: red; margin-top: 3px; margin-bottom: 0px; margin-right: 150px;"></h3>
+            {% end %}
             <h1 class="offset1" style="margin-bottom: 0px;">
                 <i class="fa fa-bar-chart-o"></i>
                 {{ _("Charts") }}
@@ -27,13 +30,13 @@
             <br />
             <div id="pie_graphs" class="row-fluid">
                 <div class="well span5 offset1">
-                    <div id="pie_flags" style="height:300px;" data-name="{{ _('Flags Captured') }}">
+                    <div id="pie_flags" style="height:300px;" data-name="{{ _('Flags Captured') }} ({{ _('Top 10') }})">
                         <!-- Pie Chart Here -->
                     </div>
                 </div>
                 <div class="well span5">
                     <div id="pie_money" style="height:300px;" 
-                        data-name="{% if options.banking %}{{ _('Bank Account') }}{% else %}{{ _('Score') }}{% end %}" 
+                        data-name="{% if options.banking %}{{ _('Bank Account') }}{% else %}{{ _('Score') }}{% end %}  ({{ _('Top 10') }})" 
                         data-symbol="{% if options.banking %}{{ _('$') }}{% end %}">
                         <!-- Pie Chart Here -->
                     </div>
@@ -106,6 +109,6 @@
             </div>
         </div>
     {% else %}
-        <h1 id="timercount" class="timercount"></h1>
+        <h1 id="timercount_hidescoreboard" class="timercount"></h1>
     {% end %}
 {% end %}

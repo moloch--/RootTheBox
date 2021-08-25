@@ -239,10 +239,11 @@ class BaseHandler(RequestHandler):
 
     def timer(self):
         timer = None
-        if self.application.settings["freeze_scoreboard"]:
-            timerdiff = self.application.settings["freeze_scoreboard"] - time.time()
+        if self.application.settings["countdown_timer"]:
+            timerdiff = self.application.settings["countdown_timer"] - time.time()
             if timerdiff <= 0:
                 timerdiff = 0
+                self.application.settings["hide_scoreboard"] = False
                 if self.application.settings["stop_timer"]:
                     self.application.settings["stop_timer"] = False
                     self.stop_game()

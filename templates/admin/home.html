@@ -23,7 +23,10 @@
     <div style="margin-left: 50px; vertical-align: middle;">
         <p>
             {{ _("Set the game countdown timer") }}:
-        </p><p><input id="timer-minutes" name="freeze_scoreboard" style="width: 50px;" type="number" value="30" /> Minutes</p>
+        </p><p><input id="timer-minutes" name="countdown_timer" style="width: 50px;" type="number" value="30" /> Minutes</p>
+        <p>
+            <input name="hide_scoreboard" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> {{ _("Hide scoreboard during countdown") }}.
+        </p>
         <p>
             <input name="stop_timer" type="checkbox" style="margin-top: -5px; margin-right: 5px;"> {{ _("Stop the game after timer ends") }}.
         </p>
@@ -100,7 +103,7 @@
                     {% raw xsrf_form_html() %}
                     <input id="start-game" name="start_game" type="hidden" value="{{ str(handler.application.settings['game_started']).lower() }}" />
                     <input id="suspend-registration" name="suspend_registration" type="hidden"  value="{{ str(handler.application.settings['suspend_registration']).lower() }}" />
-                    <input id="freeze-scoreboard" name="freeze_scoreboard" type="hidden"  value="{{ str(handler.application.settings['freeze_scoreboard']).lower() }}" />
+                    <input id="countdown-timer" name="countdown_timer" type="hidden"  value="{{ str(handler.application.settings['countdown_timer']).lower() }}" />
                 </form>
                 <form id="ban-ip-form" action="/admin/ban/add" method="post">
                     {% raw xsrf_form_html() %}
@@ -137,16 +140,16 @@
                     {% end %}
                 </div>
                 <div class="game_button_area">
-                    {% if not handler.application.settings['freeze_scoreboard'] %}
-                        <button id="freeze-scoreboard-button" class="btn btn-warning game_button" data-toggle="modal" href="#timer-modal" type="button">
-                            <i class="fa fa-fw fa-pause"></i>
+                    {% if not handler.application.settings['countdown_timer'] %}
+                        <button id="countdown-timer-button" class="btn btn-success game_button" data-toggle="modal" href="#timer-modal" type="button">
+                            <i class="fa fa-fw fa-clock-o"></i>
                         </button>
-                        <h4 class="game_button_text">{{ _("Pause Scoreboard") }}</h4>
+                        <h4 class="game_button_text">{{ _("Set Countdown") }}</h4>
                     {% else %}
-                        <button id="resume-scoreboard-button" class="btn btn-success game_button" type="button">
-                            <i class="fa fa-fw fa-play"></i>
+                        <button id="resume-scoreboard-button" class="btn btn-warning game_button" type="button">
+                            &nbsp;<i class="fa fa-ban"></i>&nbsp;
                         </button>
-                        <h4 class="game_button_text">{{ _("Resume Scoreboard") }}</h4>
+                        <h4 class="game_button_text">{{ _("Clear Countdown") }}</h4>
                     {% end %}
                 </div>
 

@@ -307,6 +307,7 @@ Get your registration token from reception,レセプションから登録トー�
 Glitch in the Matrix,マトリックスのグリッチ
 Global Notifications,グローバル通知
 Handle,ハンドル
+Hide scoreboard during countdown,カウントダウン中にスコアボードを非表示にする
 Hint,ヒント
 Hint not yet taken,ヒントはまだ取られていません
 Hint Taken,ヒントを取る
@@ -455,7 +456,7 @@ Paste Text Here,ここにテキストを貼り付け
 PasteBin,ペーストビン
 Pastebin Character Limit,ペーストビンの文字数制限
 Pause Registration,登録を一時停止
-Pause Scoreboard,スコアボードを一時停止
+Set Countdown,カウントダウンを設定する
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,不正な試行ごとにフラグ値のこの割合でスコアにペナルティを課します（有効な場合、動的スコアリング後に適用されます）。
 Pending,保留中
 Pending Bribes,保留中の賄Bri

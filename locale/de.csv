@@ -307,6 +307,7 @@ Get your registration token from reception,Holen Sie sich Ihren Registrierungs-T
 Glitch in the Matrix,Glitch in der Matrix
 Global Notifications,Globale Benachrichtigungen
 Handle,Identifikator
+Hide scoreboard during countdown,Scorebord verbergen tijdens aftellen
 Hint,Hinweis
 Hint not yet taken,Hinweis noch nicht genutzt
 Hint Taken,Hinweis genutzt
@@ -455,7 +456,7 @@ Paste Text Here,Hier Text einfügen
 PasteBin,PasteBin
 Pastebin Character Limit,Zeichenlimit für Pastebin
 Pause Registration,Registrierung pausieren
-Pause Scoreboard,Anzeigetafel anhalten
+Set Countdown,Aftellen instellen
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Bestrafen Sie die Punktzahl für jeden falschen Versuch um diesen Prozentsatz des Flag-Werts (angewendet nach dynamischem Scoring, falls aktiviert)."
 Pending,steht aus
 Pending Bribes,Ausstehende Bestechungsgelder

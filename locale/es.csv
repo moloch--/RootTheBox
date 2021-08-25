@@ -307,6 +307,7 @@ Get your registration token from reception,Obtenga su token de registro en la re
 Glitch in the Matrix,Glitch en la matriz
 Global Notifications,Notificaciones globales
 Handle,Encargarse de
+Hide scoreboard during countdown,Ocultar el marcador durante la cuenta atrás
 Hint,Insinuación
 Hint not yet taken,Sugerencia aún no tomada
 Hint Taken,Sugerencia tomada
@@ -455,7 +456,7 @@ Paste Text Here,Pega el texto aquí
 PasteBin,PasteBin
 Pastebin Character Limit,Límite de caracteres de Pastebin
 Pause Registration,Pausar registro
-Pause Scoreboard,Pausar marcador
+Set Countdown,Establecer cuenta regresiva
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,Penalice la puntuación en este porcentaje del valor de la bandera por cada intento incorrecto (aplicado después de la puntuación dinámica si está habilitado).
 Pending,Pendiente
 Pending Bribes,Sobornos pendientes

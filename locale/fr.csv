@@ -307,6 +307,7 @@ Get your registration token from reception,Recevez votre jeton d'inscription à 
 Glitch in the Matrix,Glitch dans la matrice
 Global Notifications,Notifications globales
 Handle,Identifiant
+Hide scoreboard during countdown,Masquer le tableau de bord pendant le compte à rebours
 Hint,Indice
 Hint not yet taken,Indice non encore pris
 Hint Taken,Indice pris
@@ -455,7 +456,7 @@ Paste Text Here,Coller le texte ici
 PasteBin,PasteBin
 Pastebin Character Limit,Pastebin Caractère Limite
 Pause Registration,Inscription en pause
-Pause Scoreboard,Tableau de bord en pause
+Set Countdown,Définir le compte à rebours
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,Pénalisez le score de ce pourcentage de la valeur de l'indicateur pour chaque tentative incorrecte (appliqué après le scoring dynamique s'il est activé).
 Pending,en attendant
 Pending Bribes,Pots de vin en attente

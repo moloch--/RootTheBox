@@ -4,7 +4,7 @@ var game_data;
 
 /* Highcharts code */
 $(document).ready(function() {
-    if ($("#timercount").length === 0) {
+    if ($("#timercount_hidescoreboard").length === 0) {
         /* Options for both graphs*/
         Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
             return {
@@ -499,10 +499,10 @@ function initializeSocket(length) {
 }
 
 $(document).ready(function() {
-    if ($("#timercount").length > 0) {
+    if ($("#timercount_hidescoreboard").length > 0) {
         $.get("/scoreboard/ajax/timer", function(distance) {
             distance = distance * 1000;
-            setTimer(distance);
+            setTimer(distance, "_hidescoreboard");
         });
         window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/pause_score");
         scoreboard_ws.onmessage = function(event) {
@@ -515,6 +515,12 @@ $(document).ready(function() {
         $("#datapoints").change(function(){
             initializeSocket(this.value);
         });
+        if ($("#timercount").length > 0) {
+            $.get("/scoreboard/ajax/timer", function(distance) {
+                distance = distance * 1000;
+                setTimer(distance, "");
+            });
+        }
         window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
         scoreboard_ws.onmessage = function(event) {
             if (event.data === "pause") {
@@ -523,16 +529,26 @@ $(document).ready(function() {
                 game_data = jQuery.parseJSON(event.data);
 
                 /* Update Money */
+                let i = 0;
                 var money_ls = [];
                 $.each(game_data, function(index, item) {
                     money_ls.push([index.toString(), item.money]);
+                    i = i+1;
+                    if (i > 9) {
+                        return false;
+                    }
                 });
                 money_chart.series[0].setData(money_ls, true);
     
                 /* Update Flags */
+                i = 0;
                 var flag_ls = [];
                 $.each(game_data, function(index, item) {
                     flag_ls.push([index.toString(), item.flags.length]);
+                    i = i+1;
+                    if (i > 9) {
+                        return false;
+                    }
                 });
                 flag_chart.series[0].setData(flag_ls, true);
                 
@@ -554,7 +570,7 @@ function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }
   
-function setTimer(distance) {
+function setTimer(distance, id) {
     // Update the count down every 1 second
     var x = setInterval(function() {
         // Time calculations for days, hours, minutes and seconds
@@ -567,12 +583,12 @@ function setTimer(distance) {
         if (hours > 0) {
             hourval = hours + "h ";
         }
-        $("#timercount").text(hourval + padDigits(minutes,2) + "m " + padDigits(seconds,2) + "s ");
+        $("#timercount" + id).text(hourval + padDigits(minutes,2) + "m " + padDigits(seconds,2) + "s ");
 
         // If the count down is finished, write some text
         if (distance <= 0) {
             clearInterval(x);
-            $("#timercount").text("EXPIRED");
+            $("#timercount" + id).text("EXPIRED");
         }
         distance = distance - 1000;
     }, 1000);

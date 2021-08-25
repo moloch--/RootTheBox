@@ -307,6 +307,7 @@ Get your registration token from reception,从邀请函获得邀请码
 Glitch in the Matrix,发生小故障
 Global Notifications,全局通知
 Handle,用户名
+Hide scoreboard during countdown,在倒计时期间隐藏记分牌
 Hint,提示
 Hint not yet taken,提示尚未获取
 Hint Taken,提示已获取
@@ -455,7 +456,7 @@ Paste Text Here,粘贴文本
 PasteBin,剪贴板
 Pastebin Character Limit,剪贴板字符限制
 Pause Registration,暂停注册
-Pause Scoreboard,暂停记分牌
+Set Countdown,设置倒计时
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,对每次不正确的尝试按Flag分值的百分比惩罚分数（如果启用动态评分后应用）。
 Pending,待定
 Pending Bribes,待定赞助
