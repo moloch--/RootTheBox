@@ -344,7 +344,7 @@ class BoxHandler(BaseHandler):
             )
 
             # Fire level complete webhook
-            send_level_complete_webhook(user, box)
+            send_level_complete_webhook(user, level)
 
         # Unlock level if based on Game Score
         for lv in GameLevel.all():
