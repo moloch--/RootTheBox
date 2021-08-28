@@ -105,7 +105,8 @@ class AdminGameHandler(BaseHandler):
                 self.application.settings["suspend_registration"] = False
         if (
             hide_scoreboard
-            and self.isOn(hide_scoreboard) != self.application.settings["hide_scoreboard"]
+            and self.isOn(hide_scoreboard)
+            != self.application.settings["hide_scoreboard"]
         ):
             if self.isOn(hide_scoreboard):
                 self.application.settings["hide_scoreboard"] = True
