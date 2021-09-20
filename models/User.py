@@ -212,7 +212,7 @@ class User(DatabaseObject):
 
     @bank_password.setter
     def bank_password(self, value):
-        if not options.banking:
+        if not options.banking or not value:
             # random password
             _password = "".join(
                 random.SystemRandom().choice(string.ascii_uppercase + string.digits)

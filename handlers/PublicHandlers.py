@@ -165,7 +165,7 @@ class CodeFlowHandler(BaseHandler):
             secrets.choice(string.ascii_letters + string.digits + string.punctuation)
             for i in range(30)
         )
-        user.bank_password = False
+        user.bank_password = ""
         user.name = claims["name"]
         user.email = claims["email"]
         user.theme = options.default_theme
