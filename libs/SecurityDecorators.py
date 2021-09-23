@@ -53,7 +53,7 @@ def authenticated(method):
                     self.clear_all_cookies()
                     self.redirect(self.application.settings["login_url"])
             else:
-                logging.warn(
+                logging.warning(
                     "Session hijack attempt from %s?" % (self.request.remote_ip,)
                 )
                 self.session.delete()
@@ -90,7 +90,7 @@ def restrict_ip_address(method):
         ):
             return method(self, *args, **kwargs)
         else:
-            logging.warn(
+            logging.warning(
                 "Attempted unauthorized access from %s to %s"
                 % (self.request.remote_ip, self.request.uri)
             )
@@ -120,7 +120,7 @@ def authorized(permission):
                 user = User.by_handle(self.session["handle"])
                 if user is not None and user.has_permission(permission):
                     return method(self, *args, **kwargs)
-            logging.warn(
+            logging.warning(
                 "Attempted unauthorized access from %s to %s"
                 % (self.request.remote_ip, self.request.uri)
             )
@@ -155,7 +155,7 @@ def has_item(name):
             if user is not None and user.has_item(name):
                 return method(self, *args, **kwargs)
             else:
-                logging.warn(
+                logging.warning(
                     "Attempted unauthorized access from %s to %s"
                     % (self.request.remote_ip, self.request.uri)
                 )

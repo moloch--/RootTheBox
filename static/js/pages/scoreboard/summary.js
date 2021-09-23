@@ -29,11 +29,10 @@ var tableOptions = {
 
 /* Update code */
 $(document).ready(function() {
-    
-    if ($("#timercount").length > 0) {
+    if ($("#timercount_hidescoreboard").length > 0) {
         $.get("/scoreboard/ajax/timer", function(distance) {
             distance = distance * 1000;
-            setTimer(distance);
+            setTimer(distance, "_hidescoreboard");
         });
         window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/pause_score");
         scoreboard_ws.onmessage = function(event) {
@@ -42,6 +41,12 @@ $(document).ready(function() {
             }
         }
     } else {
+        if ($("#timercount").length > 0) {
+            $.get("/scoreboard/ajax/timer", function(distance) {
+                distance = distance * 1000;
+                setTimer(distance, "");
+            });
+        }
         window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
         scoreboard_ws.onmessage = function(event) {
             if (event.data === "pause") {
@@ -50,8 +55,11 @@ $(document).ready(function() {
                 game_data = jQuery.parseJSON(event.data);
                 
                 /* Update Summary Table */
-                $.get("/scoreboard/ajax/summary", function(table_data) {
+                let count = $("#paramaters").data("count");
+                let page = $("#paramaters").data("page");
+                $.get("/scoreboard/ajax/summary?count=" + count + "&page=" + page, function(table_data) {
                     highlight_table = highlights(table_data);
+                    $("#summary_loading").hide();
                     if ($("#summary_tbody").find('tr').length == 0) {
                         $("#summary_tbody").html(highlight_table);
                         ranking = getRanking(table_data);
@@ -82,6 +90,9 @@ $(document).ready(function() {
         setTimeout(changeDisplay, fadetext);
         setTimeout(updateLastFlag, 1000);
     }
+    $("#page_count").on('change', function() {
+        document.location.href = "/scoreboard?count=" + this.value + "&page=1";
+    });
 });
 
 function changeDisplay() {
@@ -197,7 +208,7 @@ function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }
   
-function setTimer(distance) {
+function setTimer(distance, id) {
     
     // Update the count down every 1 second
     var x = setInterval(function() {
@@ -211,12 +222,12 @@ function setTimer(distance) {
         if (hours > 0) {
             hourval = hours + "h ";
         }
-        $("#timercount").text(hourval + padDigits(minutes,2) + "m " + padDigits(seconds,2) + "s ");
+        $("#timercount" + id).text(hourval + padDigits(minutes,2) + "m " + padDigits(seconds,2) + "s ");
 
         // If the count down is finished, write some text
         if (distance <= 0) {
             clearInterval(x);
-            $("#timercount").text("EXPIRED");
+            $("#timercount" + id).text("EXPIRED");
         }
         distance = distance - 1000;
     }, 1000);

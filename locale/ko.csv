@@ -253,6 +253,7 @@ Enter a Matching Flag,일치하는 플래그를 입력하십시오
 Enter Choice,초이스 입력
 Enter the same password as before,이전과 동일한 비밀번호를 입력하십시오
 ERROR,오류
+Expire,내쉬다
 Export Game Objects,게임 오브젝트 내보내기
 Export of gameplay settings does not include the entire server and database configuration.,게임 플레이 설정 내보내기에는 전체 서버 및 데이터베이스 구성이 포함되지 않습니다.
 Export XML,XML 내보내기
@@ -306,6 +307,7 @@ Get your registration token from reception,리셉션에서 등록 토큰 받기
 Glitch in the Matrix,매트릭스의 글리치
 Global Notifications,글로벌 알림
 Handle,핸들
+Hide scoreboard during countdown,카운트다운 중 스코어보드 숨기기
 Hint,힌트
 Hint not yet taken,아직 가져 오지 않은 힌트
 Hint Taken,찍은 힌트
@@ -454,10 +456,11 @@ Paste Text Here,여기에 텍스트 붙여 넣기
 PasteBin,PasteBin
 Pastebin Character Limit,Pastebin 문자 제한
 Pause Registration,일시 정지 등록
-Pause Scoreboard,스코어 보드 일시 중지
+Set Countdown,카운트다운 설정
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,각 잘못된 시도에 대해 플래그 값의이 백분율만큼 점수를 부과합니다 (활성화 된 경우 동적 스코어링 후 적용).
 Pending,대기 중
 Pending Bribes,보류중인 뇌물
+per page,페이지 당
 Plain Text,일반 텍스트
 Play Story,스토리 플레이
 player,플레이어
@@ -591,7 +594,8 @@ The starting money for a new,새로운 시작 돈
 Theme,테마
 There are currently no shared files.,현재 공유 파일이 없습니다.
 "These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",이 플래그는 파일이므로 사용자는 플래그를 캡처하기 위해 정확히 동일한 파일을 제출해야합니다. 파일의 해시 (SHA1) 만 서버에 저장됩니다.
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","이 게임은 다이나믹 스코어링을 사용하도록 설정되었습니다. 즉, 다른 플레이어가 깃발을 캡처 할 때 해당 깃발의 값이 감소합니다. 그래서 빨리 잡아 또는 잃어 버려!"
+"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","이 게임은 속도에 기반한 동적 득점을 사용하도록 설정되어 있습니다. 즉, 다른 플레이어가 깃발을 캡처하면 해당 깃발의 미래 가치가 감소합니다. 그러니 빨리 잡거나 잃어버리세요!"
+"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","이 게임은 난이도에 따라 동적 득점을 사용하도록 설정되어 있습니다. 즉, 다른 플레이어가 깃발을 캡처하면 해당 깃발의 전체 가치가 줄어들고 잠재적으로 점수가 낮아집니다."
 This is a test flag/string the user could input for credit.,이것은 사용자가 신용을 위해 입력 할 수있는 테스트 플래그 / 문자열입니다.
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,플레이어가 S.W.A.T.에 지불해야하는 금액입니다. 다른 플레이어 계정. 동일한 플레이어의 후속 SWAT도 매번이 양만큼 증가합니다.
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,은행 비밀번호 해시 알고리즘을 업그레이드하기 위해 플레이어가 지불해야하는 금액입니다.

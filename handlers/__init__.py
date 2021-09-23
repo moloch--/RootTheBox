@@ -181,7 +181,6 @@ urls = [
     (r"/admin/upgrades/source_code_market(.*)", AdminSourceCodeMarketHandler),
     (r"/admin/upgrades/swat(.*)", AdminSwatHandler),
     (r"/admin/users", AdminManageUsersHandler),
-    (r"/admin/user_stats", AdminUserStatsHandler),
     (r"/admin/users/edit/(user|team)", AdminEditUsersHandler),
     (r"/admin/users/edit/teams/scores", AdminEditTeamsHandler),
     (r"/admin/users/delete/(.*)", AdminDeleteUsersHandler),
@@ -244,7 +243,8 @@ app = Application(
     # Flags used to run the game
     game_started=options.autostart_game,
     suspend_registration=False,
-    freeze_scoreboard=False,
+    countdown_timer=False,
+    hide_scoreboard=False,
     stop_timer=False,
     temp_global_notifications=None,
     # Callback functions
@@ -325,7 +325,7 @@ def start_server():
         sys.exit()
     server.add_sockets(sockets)
     if options.debug:
-        logging.warn(
+        logging.warning(
             "%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (bold + R, W)
         )
     if options.autostart_game:

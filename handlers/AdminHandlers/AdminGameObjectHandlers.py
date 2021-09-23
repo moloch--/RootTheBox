@@ -165,11 +165,13 @@ class AdminCreateHandler(BaseHandler):
         """ Add a new category to the database """
         try:
             category = self.get_argument("category", "")
+            cat_desc = self.get_argument("category_description", "")
             if Category.by_category(category) is not None:
                 raise ValidationError("Category already exists")
             else:
                 new_category = Category()
                 new_category.category = category
+                new_category.description = cat_desc
                 self.dbsession.add(new_category)
                 self.dbsession.commit()
                 self.redirect("/admin/view/categories")
@@ -435,7 +437,7 @@ class AdminViewHandler(BaseHandler):
                             self.config.dynamic_flag_value
                             and self.config.dynamic_flag_type == "decay_all"
                         ):
-                            for item in Flag.captures(flag.id):
+                            for item in Flag.team_captures(flag.id):
                                 tm = Team.by_id(item[0])
                                 deduction = flag.dynamic_value(tm) - flag_value
                                 tm.money = int(tm.money - deduction)
@@ -562,13 +564,20 @@ class AdminEditHandler(BaseHandler):
             if cat is None:
                 raise ValidationError("Category does not exist")
             category = self.get_argument("category", "")
+            cat_desc = self.get_argument("category_description", "")
             if category != cat.category:
                 logging.info(
                     "Updated category name %s -> %s" % (cat.category, category)
                 )
-                cat.category = category
-                self.dbsession.add(cat)
-                self.dbsession.commit()
+            if cat_desc != cat.description:
+                logging.info(
+                    "Updated category description %s -> %s"
+                    % (cat.description, cat_desc)
+                )
+            cat.category = category
+            cat.description = cat_desc
+            self.dbsession.add(cat)
+            self.dbsession.commit()
             self.redirect("/admin/view/categories")
         except ValidationError as error:
             self.render("admin/view/categories.html", errors=[str(error)])
@@ -1122,7 +1131,7 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
                     }
                 ]
                 captures = []
-                for item in Flag.captures(flag.id):
+                for item in Flag.team_captures(flag.id):
                     team = Team.by_id(item[0])
                     if team:
                         captures.append({"name": team.name})

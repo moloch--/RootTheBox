@@ -34,6 +34,7 @@ from libs.SecurityDecorators import use_black_market
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
 from builtins import str
+from math import ceil
 from models.Team import Team
 from models.User import User
 from models.Box import Box
@@ -54,14 +55,14 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
     def open(self):
         """ When we receive a new websocket connect """
         self.connections.add(self)
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message(Scoreboard.now(self))
 
     def on_message(self, message):
         """ We ignore messages if there are more than 1 every 3 seconds """
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             Scoreboard.update_gamestate(self)
@@ -73,7 +74,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         try:
             self.connections.remove(self)
         except KeyError:
-            logging.warn("[Web Socket] Connection has already been closed.")
+            logging.warning("[Web Socket] Connection has already been closed.")
 
 
 class ScoreboardHandler(BaseHandler):
@@ -81,9 +82,22 @@ class ScoreboardHandler(BaseHandler):
 
     def get(self, *args, **kargs):
         user = self.get_current_user()
+        try:
+            page = int(self.get_argument("page", 1))
+            display = int(self.get_argument("count", 50))
+        except ValueError:
+            page = 1
+            display = 50
         if scoreboard_visible(user):
-            Scoreboard.update_gamestate(self)
-            self.render("scoreboard/summary.html", timer=self.timer())
+            teamcount = Scoreboard.update_gamestate(self)
+            self.render(
+                "scoreboard/summary.html",
+                timer=self.timer(),
+                hide_scoreboard=self.application.settings["hide_scoreboard"],
+                page=page,
+                display=display,
+                teamcount=teamcount,
+            )
         elif not user:
             self.redirect("/login")
         else:
@@ -124,10 +138,46 @@ class ScoreboardAjaxHandler(BaseHandler):
 
     def summary_table(self):
         """ Render the "leaderboard" team snippit """
+        try:
+            page = int(self.get_argument("page", 1))
+            display = int(self.get_argument("count", 50))
+        except ValueError:
+            page = 1
+            display = 50
         self.render(
             "scoreboard/summary_table.html",
-            game_state=self.settings["scoreboard_state"],
+            game_state=self.summary_page(page, display),
+            page=page,
+            display=display,
         )
+
+    def summary_page(self, page, display):
+        """ Prepare the pagination for the leaderboard """
+        teams = self.settings["scoreboard_state"].get("teams")
+        teamcount = len(teams)
+        if teamcount > display:
+            """ Minimize the content sent to the browser """
+            scoreboard = self.settings["scoreboard_state"].copy()
+            end_count = display * page
+            start_count = end_count - display
+            teamlist = []
+            for i, team in enumerate(teams):
+                if i < start_count or i >= end_count:
+                    teamlist.append(team)
+            for team in teamlist:
+                if team in scoreboard["teams"]:
+                    del scoreboard["teams"][team]
+            for level in scoreboard.get("levels"):
+                for team in teamlist:
+                    if team in scoreboard["levels"][level]["teams"]:
+                        del scoreboard["levels"][level]["teams"][team]
+                for box in scoreboard["levels"][level].get("boxes"):
+                    for team in teamlist:
+                        if team in scoreboard["levels"][level]["boxes"][box]["teams"]:
+                            del scoreboard["levels"][level]["boxes"][box]["teams"][team]
+            return scoreboard
+        else:
+            return self.settings["scoreboard_state"]
 
     def mvp_table(self):
         """ Render the "leaderboard" mvp snippit """
@@ -191,7 +241,11 @@ class ScoreboardHistoryHandler(BaseHandler):
     def get(self, *args, **kwargs):
         user = self.get_current_user()
         if scoreboard_visible(user):
-            self.render("scoreboard/history.html", timer=self.timer())
+            self.render(
+                "scoreboard/history.html",
+                hide_scoreboard=self.application.settings["hide_scoreboard"],
+                timer=self.timer(),
+            )
         elif not user:
             self.redirect("/login")
         else:
@@ -222,7 +276,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 
     def on_message(self, message):
         """ We ignore messages if there are more than 1 every 3 seconds """
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
             self.last_message = datetime.now()
@@ -268,13 +322,13 @@ class ScoreboardPauseHandler(WebSocketHandler):
     def open(self):
         """ When we receive a new websocket connect """
         self.connections.add(self)
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message("play")
 
     def on_message(self, message):
-        if self.application.settings["freeze_scoreboard"]:
+        if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         else:
             self.write_message("play")
@@ -284,14 +338,39 @@ class ScoreboardPauseHandler(WebSocketHandler):
         try:
             self.connections.remove(self)
         except KeyError:
-            logging.warn("[Web Socket] Connection has already been closed.")
+            logging.warning("[Web Socket] Connection has already been closed.")
 
 
 class TeamsHandler(BaseHandler):
     def get(self, *args, **kwargs):
         user = self.get_current_user()
+        try:
+            page = int(self.get_argument("page", 1))
+            display = int(self.get_argument("count", 25))
+        except ValueError:
+            page = 1
+            display = 25
+        ranks = Team.ranks()
+        teamcount = len(ranks)
+        pcount = ceil(teamcount / display)
+        if pcount < page:
+            page = pcount
+        end_count = display * page
+        start_count = end_count - display
+        teams = []
+        for i, team in enumerate(ranks):
+            if i >= start_count and i < end_count:
+                teams.append(team)
         if scoreboard_visible(user):
-            self.render("scoreboard/teams.html", timer=self.timer())
+            self.render(
+                "scoreboard/teams.html",
+                timer=self.timer(),
+                hide_scoreboard=self.application.settings["hide_scoreboard"],
+                teams=teams,
+                page=page,
+                display=display,
+                teamcount=teamcount,
+            )
         elif not user:
             self.redirect("/login")
         else:

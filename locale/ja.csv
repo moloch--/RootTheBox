@@ -253,6 +253,7 @@ Enter a Matching Flag,一致するフラグを入力してください
 Enter Choice,選択肢を入力
 Enter the same password as before,以前と同じパスワードを入力してください
 ERROR,エラー
+Expire,期限切れ
 Export Game Objects,ゲームオブジェクトのエクスポート
 Export of gameplay settings does not include the entire server and database configuration.,ゲームプレイ設定のエクスポートには、サーバーとデータベースの構成全体は含まれません。
 Export XML,XMLをエクスポート
@@ -306,6 +307,7 @@ Get your registration token from reception,レセプションから登録トー�
 Glitch in the Matrix,マトリックスのグリッチ
 Global Notifications,グローバル通知
 Handle,ハンドル
+Hide scoreboard during countdown,カウントダウン中にスコアボードを非表示にする
 Hint,ヒント
 Hint not yet taken,ヒントはまだ取られていません
 Hint Taken,ヒントを取る
@@ -454,10 +456,11 @@ Paste Text Here,ここにテキストを貼り付け
 PasteBin,ペーストビン
 Pastebin Character Limit,ペーストビンの文字数制限
 Pause Registration,登録を一時停止
-Pause Scoreboard,スコアボードを一時停止
+Set Countdown,カウントダウンを設定する
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,不正な試行ごとにフラグ値のこの割合でスコアにペナルティを課します（有効な場合、動的スコアリング後に適用されます）。
 Pending,保留中
 Pending Bribes,保留中の賄Bri
+per page,1ページあたり
 Plain Text,プレーンテキスト
 Play Story,プレイストーリー
 player,プレーヤー
@@ -586,12 +589,13 @@ Text Share,テキスト共有
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,闇市場は開かれていて、あなたは男を知っています。ターゲットのソースコードまたはS.W.A.Tをダウンロードします。 （ゲーム内の）警察に賄briを贈ることによる他のプレーヤー。
 The cost to take the hint.  Can be >= 0.,ヒントを取るためのコスト。 0以上にすることができます。
 The deduction is,控除は
-"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.",他の唯一の可能性は、コードの一部を台無しにしてしまったことです。
+"The only other possibility is that I messed up some of the code, and that doesn't seem very likely.","他の唯一の可能性は、コードの一部を台無しにしてしまったことです。"
 The starting money for a new,新しいための開始お金
 Theme,テーマ
 There are currently no shared files.,現在、共有ファイルはありません。
-"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",これらのフラグはファイルです。ユーザーはフラグをキャプチャするためにまったく同じファイルを送信する必要があります。ファイルのハッシュ（SHA1）のみがサーバーに保存されます。
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!",このゲームは動的スコアリングを使用するように設定されています。つまり、他のプレイヤーがフラグをキャプチャすると、それらのフラグの値が減少します。それで、それらを速くつかむか、負けてください！
+"These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","これらのフラグはファイルです。ユーザーはフラグをキャプチャするためにまったく同じファイルを送信する必要があります。ファイルのハッシュ（SHA1）のみがサーバーに保存されます。"
+"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","このゲームは、速度に基づく動的スコアリングを使用するように設定されています。つまり、他のプレーヤーがフラグをキャプチャすると、それらのフラグの将来の値が減少します。 だから、それらを速くつかむか、負けてください！"
+"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","このゲームは、難易度に基づいた動的スコアリングを使用するように設定されています。つまり、他のプレーヤーがフラグをキャプチャすると、それらのフラグの全体的な値が減少し、スコアが低下する可能性があります。"
 This is a test flag/string the user could input for credit.,これは、ユーザーがクレジットのために入力できるテストフラグ/文字列です。
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,これは、プレイヤーがS.W.A.Tに支払う必要がある金額です。別のプレイヤーアカウント。同じプレイヤーの後続のSWATも、この量だけ毎回増加します。
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,これは、プレイヤーが銀行のパスワードハッシュアルゴリズムをアップグレードするために支払う必要がある金額です

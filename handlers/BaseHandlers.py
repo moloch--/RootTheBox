@@ -219,19 +219,19 @@ class BaseHandler(RequestHandler):
 
     def put(self, *args, **kwargs):
         """ Log odd behavior, this should never get legitimately called """
-        logging.warn("%s attempted to use PUT method" % self.request.remote_ip)
+        logging.warning("%s attempted to use PUT method" % self.request.remote_ip)
 
     def delete(self, *args, **kwargs):
         """ Log odd behavior, this should never get legitimately called """
-        logging.warn("%s attempted to use DELETE method" % self.request.remote_ip)
+        logging.warning("%s attempted to use DELETE method" % self.request.remote_ip)
 
     def head(self, *args, **kwargs):
         """ Ignore it """
-        logging.warn("%s attempted to use HEAD method" % self.request.remote_ip)
+        logging.warning("%s attempted to use HEAD method" % self.request.remote_ip)
 
     def options(self, *args, **kwargs):
         """ Log odd behavior, this should never get legitimately called """
-        logging.warn("%s attempted to use OPTIONS method" % self.request.remote_ip)
+        logging.warning("%s attempted to use OPTIONS method" % self.request.remote_ip)
 
     def on_finish(self, *args, **kwargs):
         """ Called after a response is sent to the client """
@@ -239,10 +239,11 @@ class BaseHandler(RequestHandler):
 
     def timer(self):
         timer = None
-        if self.application.settings["freeze_scoreboard"]:
-            timerdiff = self.application.settings["freeze_scoreboard"] - time.time()
+        if self.application.settings["countdown_timer"]:
+            timerdiff = self.application.settings["countdown_timer"] - time.time()
             if timerdiff <= 0:
                 timerdiff = 0
+                self.application.settings["hide_scoreboard"] = False
                 if self.application.settings["stop_timer"]:
                     self.application.settings["stop_timer"] = False
                     self.stop_game()

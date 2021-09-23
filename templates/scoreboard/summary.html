@@ -11,16 +11,52 @@
 {% block title %}{{ _("Scoreboard") }}{% end %}
 
 {% block content %}
-{% from tornado.options import options %}
-{% if not timer %}
+    {% from tornado.options import options %}
+    {% from math import ceil %}
+    {% if not hide_scoreboard %}
     <div class="row-fluid">
+        <div style="float:right; margin-top: -15px; margin-right: 4.75%;">
+            {% set pcount = ceil(teamcount / display) %}
+            <div id="paramaters" data-count="{{display}}" data-page="{{page}}" style="visibility: hidden;"></div>
+            <div class="pagination" style="padding: 5px; margin-right: 110px">
+                <ul>
+                    {% if pcount > 1 %}
+                    <li {%if page==1 %}class="disabled" {%end%}><a {%if page !=1 %}href="?count={{display}}&page={{page-1}}"
+                            {%end%}>Prev</a></li>
+                    {% for x in range(max(1,page-4), min(pcount+1, max(page+5, 10))) %}
+                    <li {%if page==x %}class="active" {%end%}><a {%if page !=x %}href="?count={{display}}&page={{x}}"
+                            {%end%}>{{x}}</a></li>
+                    {% end %}
+                    <li {%if page==pcount %}class="disabled" {%end%}><a {%if page !=pcount
+                            %}href="?count={{display}}&page={{page+1}}" {%end%}>Next</a></li>
+                    {% end %}
+                    <li class="disabled">
+                        <a>&nbsp;{% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %} {{ _("per page") }}</a>
+                    </li>
+                    <li>
+                        <select id="page_count" style="width: 80px;">
+                            {% if display!= 10 and display!=25 and display!=50 and display!=100 and display!=250 %}
+                                <option value={{display}} selected>{{display}}</option>
+                            {%end%}
+                            <option value=10{% if display==10 %} selected{%end%}>10</option>
+                            <option value=25{% if display==25 %} selected{%end%}>25</option>
+                            <option value=50{% if display==50 %} selected{%end%}>50</option>
+                            <option value=100{% if display==100 %} selected{%end%}>100</option>
+                            <option value=250{% if display==250 %} selected{%end%}>250</option>
+                        </select>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {% if timer %}
+        <h3 id="timercount" title="Scoreboard Countdown" style="float: right; color: red; margin-right: 100px;"></h3>
+        {% end %}
         <h1 class="offset1">
             <i class="fa fa-bar-chart-o"></i>
             {{ _("Scoreboard") }}
         </h1>
-        <br />
     </div>
-   
+    <br />
     <div class="row-fluid">
         {% if len(options.scoreboard_right_image) > 0 %}
             {% set wellspan="span7" %}
@@ -30,6 +66,7 @@
             {% set wellspan="span10" %}
         {% end %}
         <div class="well {{wellspan}} offset1" style="padding-left: 30px; padding-right: 30px;">
+            <div id="summary_loading"><h3>Loading...</h3></div>
             <table id="summary_table" class="table table-striped" data-since-score="{{ _('Since Score') }}">
                 <thead>
                     <tr style="font-size: 120%;">
@@ -91,6 +128,6 @@
         {% end %}
     </div>
     {% else %}
-    <h1 id="timercount" class="timercount"></h1>
+    <h1 id="timercount_hidescoreboard" class="timercount"></h1>
     {% end %}
 {% end %}

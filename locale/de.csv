@@ -253,6 +253,7 @@ Enter a Matching Flag,Geben Sie eine passende Flagge ein
 Enter Choice,Auswahl eingeben
 Enter the same password as before,Geben Sie dasselbe Passwort wie zuvor ein
 ERROR,ERROR
+Expire,Verlopen
 Export Game Objects,Spielobjekte exportieren
 Export of gameplay settings does not include the entire server and database configuration.,Der Export der Gameplay-Einstellungen umfasst nicht die gesamte Server- und Datenbankkonfiguration.
 Export XML,XML exportieren
@@ -306,6 +307,7 @@ Get your registration token from reception,Holen Sie sich Ihren Registrierungs-T
 Glitch in the Matrix,Glitch in der Matrix
 Global Notifications,Globale Benachrichtigungen
 Handle,Identifikator
+Hide scoreboard during countdown,Scorebord verbergen tijdens aftellen
 Hint,Hinweis
 Hint not yet taken,Hinweis noch nicht genutzt
 Hint Taken,Hinweis genutzt
@@ -454,10 +456,11 @@ Paste Text Here,Hier Text einfügen
 PasteBin,PasteBin
 Pastebin Character Limit,Zeichenlimit für Pastebin
 Pause Registration,Registrierung pausieren
-Pause Scoreboard,Anzeigetafel anhalten
+Set Countdown,Aftellen instellen
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Bestrafen Sie die Punktzahl für jeden falschen Versuch um diesen Prozentsatz des Flag-Werts (angewendet nach dynamischem Scoring, falls aktiviert)."
 Pending,steht aus
 Pending Bribes,Ausstehende Bestechungsgelder
+per page,per pagina
 Plain Text,Einfacher Text
 Play Story,Story spielen
 player,Spieler
@@ -591,7 +594,8 @@ The starting money for a new,Das Startgeld für ein neues
 Theme,Thema
 There are currently no shared files.,Derzeit sind keine freigegebenen Dateien vorhanden.
 "These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","Diese Flags sind Dateien. Benutzer müssen genau dieselbe Datei senden, um das Flag zu erfassen. Nur ein Hash (SHA1) der Datei wird auf dem Server gespeichert."
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","In diesem Spiel wird dynamisches Scoring verwendet, dh wenn andere Spieler die Flaggen erobern, sinkt der Wert dieser Flaggen. Schnapp sie dir also schnell oder verliere!"
+"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","Deze game is opgezet om dynamische scores te gebruiken op basis van snelheid, wat betekent dat als andere spelers de vlaggen veroveren, de toekomstige waarde van die vlaggen zal afnemen. Dus grijp ze snel of verlies ze!"
+"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","Deze game is ingesteld om dynamische scores te gebruiken op basis van moeilijkheidsgraad, wat betekent dat als andere spelers de vlaggen veroveren, de totale waarde van die vlaggen zal afnemen en mogelijk uw score zal verlagen."
 This is a test flag/string the user could input for credit.,"Dies ist ein Testflag / eine Zeichenfolge, die der Benutzer zur Gutschrift eingeben kann."
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,"Dies ist der Betrag, den ein Spieler an S.W.A.T. zahlen muss. Konto eines anderen Spielers. Nachfolgende SWATs desselben Spielers werden jedes Mal um diesen Betrag erhöht."
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,"Dies ist der Betrag, den ein Spieler zahlen muss, um den Hashing-Algorithmus für seine Bankkennwörter zu aktualisieren"

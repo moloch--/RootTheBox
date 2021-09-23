@@ -64,10 +64,12 @@ def create_categories(categories):
     logging.info("Found %s categories" % categories.get("count"))
     for index, cat_elem in enumerate(categories):
         cat = get_child_text(cat_elem, "category")
+        desc = get_child_text(cat_elem, "description")
         if Category.by_category(cat) is None:
             try:
                 category = Category()
                 category.category = cat
+                category.description = desc
                 dbsession.add(category)
             except:
                 logging.exception("Failed to import category #%d" % (index + 1))

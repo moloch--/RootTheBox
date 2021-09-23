@@ -1,30 +1,39 @@
 $(document).ready(function() {
   window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/pause_score");
         
-  if ($("#timercount").length > 0) {
+  if ($("#timercount_hidescoreboard").length > 0) {
       $.get("/scoreboard/ajax/timer", function(distance) {
-          distance = distance * 1000;
-          setTimer(distance);
-      });
+            distance = distance * 1000;
+            setTimer(distance, "_hidescoreboard");
+        });
       scoreboard_ws.onmessage = function(event) {
           if (event.data !== "pause") {
               location.reload();
           }
       }
   } else {
+      if ($("#timercount").length > 0) {
+        $.get("/scoreboard/ajax/timer", function(distance) {
+              distance = distance * 1000;
+              setTimer(distance, "");
+          });
+      }
       scoreboard_ws.onmessage = function(event) {
           if (event.data === "pause") {
               location.reload();
           }
       }
   }
+  $("#page_count").on('change', function() {
+    document.location.href = "/teams?count=" + this.value + "&page=1";
+  });
 });
 
 function padDigits(number, digits) {
   return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }
 
-function setTimer(distance) {
+function setTimer(distance, id) {
   // Update the count down every 1 second
   var x = setInterval(function () {
     // Time calculations for days, hours, minutes and seconds
@@ -37,12 +46,12 @@ function setTimer(distance) {
     if (hours > 0) {
       hourval = hours + "h ";
     }
-    $("#timercount").text(hourval + padDigits(minutes, 2) + "m " + padDigits(seconds, 2) + "s ");
+    $("#timercount" + id).text(hourval + padDigits(minutes, 2) + "m " + padDigits(seconds, 2) + "s ");
 
     // If the count down is finished, write some text
     if (distance <= 0) {
       clearInterval(x);
-      $("#timercount").text("EXPIRED");
+      $("#timercount" + id).text("EXPIRED");
     }
     distance = distance - 1000;
   }, 1000);

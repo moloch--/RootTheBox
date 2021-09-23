@@ -174,7 +174,7 @@ class BotManager(object):
             self.botdb.flush()
             self.notify_monitors(team)
         else:
-            logging.warn(
+            logging.warning(
                 "Failed to remove bot '%s' does not exist in manager" % bot_wsocket.uuid
             )
 

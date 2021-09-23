@@ -253,6 +253,7 @@ Enter a Matching Flag,Введите соответствующий флаг,
 Enter Choice,Введите выбор,
 Enter the same password as before,"Введите тот же пароль, что и раньше",
 ERROR,ОШИБКА,
+Expire,Срок действия
 Export Game Objects,Экспорт игровых объектов,
 Export of gameplay settings does not include the entire server and database configuration.,Экспорт настроек игрового процесса не включает в себя всю конфигурацию сервера и базы данных.,
 Export XML,Экспорт XML,
@@ -306,6 +307,7 @@ Get your registration token from reception,Получите регистраци
 Glitch in the Matrix,Глюк в матрице,
 Global Notifications,Глобальные уведомления,
 Handle,Справиться,
+Hide scoreboard during countdown,Скрыть табло во время обратного отсчета
 Hint,намек,
 Hint not yet taken,Подсказка еще не принята,
 Hint Taken,Подсказка,
@@ -454,10 +456,11 @@ Paste Text Here,Вставить текст сюда,
 PasteBin,Pastebin,
 Pastebin Character Limit,Pastebin Character Limit,
 Pause Registration,Пауза Регистрация,
-Pause Scoreboard,Пауза Табло,
+Set Countdown,Установить обратный отсчет
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,"Штрафуйте счет этим процентом от значения флага за каждую неверную попытку (применяется после динамического подсчета, если он включен)",
 Pending,в ожидании,
 Pending Bribes,В ожидании взятки,
+per page,на страницу
 Plain Text,Простой текст,
 Play Story,Play Story,
 player,игрок,
@@ -591,7 +594,8 @@ The starting money for a new,Стартовые деньги для нового
 Theme,тема,
 There are currently no shared files.,В настоящее время нет общих файлов.,
 "These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.","Эти флаги являются файлами, пользователи должны предоставить один и тот же файл для захвата флага. Только хэш (SHA1) файла хранится на сервере.",
-"This game is set up to use dynamic scoring, meaning as other players capture the flags, the value of those flags will decrease.  So grab them fast or lose out!","Эта игра настроена на использование динамического подсчета очков, то есть, когда другие игроки захватывают флаги, значение этих флагов будет уменьшаться. Так что хватай их быстро или проиграй!",
+"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","Эта игра настроена на использование динамического подсчета очков на основе скорости, что означает, что по мере того, как другие игроки захватывают флаги, будущее значение этих флагов будет уменьшаться. Так что хватайте их быстро или проиграйте!"
+"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","Эта игра настроена на использование динамического подсчета очков в зависимости от сложности, что означает, что по мере того, как другие игроки захватывают флаги, общее значение этих флагов будет уменьшаться и потенциально уменьшит ваш счет."
 This is a test flag/string the user could input for credit.,"Это тестовый флаг / строка, которую пользователь может ввести для кредита.",
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,"Это сумма, которую игрок должен заплатить S.W.A.T. аккаунт другого игрока. Последующие спецназы того же игрока также увеличиваются на эту сумму каждый раз.",
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,"Это сумма, которую игрок должен заплатить, чтобы обновить алгоритм хэширования своих банковских паролей.",

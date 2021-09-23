@@ -28,7 +28,7 @@ $(document).ready(function() {
     });
 
     $("#resume-scoreboard-button").click(function() {
-        $("#freeze-scoreboard").val("false");
+        $("#countdown-timer").val("false");
         $("#start-game-form").submit();
     });
 

@@ -3,6 +3,7 @@
 {% block title %}{{_("User Management")}}{% end %}
 
 {% block header %}
+<link rel="stylesheet" href="/static/css/jquery-ui.css">
 <script src="/static/js/pages/admin/users.js"></script>
 {% end %}
 
@@ -11,6 +12,7 @@
 {% from libs.XSSImageCheck import filter_avatars %}
 {% from libs.XSSImageCheck import existing_avatars %}
 {% from tornado.options import options %}
+{% set teams = Team.all() %}
     <!-- Change Avatar -->
     {% if options.teams %}
         {% set dir = "team" %}
@@ -236,13 +238,19 @@
                     <div class="controls">
                         <select id="user-team-uuid" name="team_uuid">
                             <option value=""></option>
-                            {% for team in Team.all() %}
+                            {% for team in teams %}
                                 <option value="{{ team.uuid }}">{{ team.name }}</option>
                             {% end %}
                         </select>
                     </div>
                 </div>
                 {% end %}
+                <div class="control-group">
+                    <label class="control-label" for="user-expire">{{_("Expire Account")}}</label>
+                    <div class="controls">
+                        <input type="text" id="user-expire" name="expire" placeholder="{{_('Optional')}}">
+                    </div>
+                </div>
                 <div class="control-group">
                     <label class="control-label" for="user-notes">{{_("Admin Notes")}}</label>
                     <div class="controls">
@@ -335,7 +343,7 @@
                     <div class="controls">
                         <select id="team-money-uuid" name="team_uuid">
                             <option value="all">All</option>
-                            {% for team in Team.all() %}
+                            {% for team in teams %}
                                 <option value="{{ team.uuid }}">{{ team.name }}</option>
                             {% end %}
                         </select>
@@ -393,7 +401,7 @@
                     </div>
                 {% end %}
             {% end %}
-            {% if len(Team.all()) == 0 %}
+            {% if len(teams) == 0 %}
                 <p class="well"><strong>{{_("No Users")}}</strong></p>
             {% end %}
             {% set admins = [] %}
@@ -410,10 +418,10 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>{{_("Handle")}}</th>
-                                <th>{{_("Name")}}</th>
-                                <th>{{_("Last Login")}}</th>
-                                <th>{{_("Admin Notes")}}</th>
+                                <th> {{_("Handle")}} </th>
+                                <th> {{_("Name")}} </th>
+                                <th> {{_("Last Login")}} </th>
+                                <th> {{_("Admin Notes")}} </th>
                                 <th><!-- Edit Button --></th>
                                 <th><!-- Delete Button --></th>
                             </tr>
@@ -425,15 +433,15 @@
                             {% else %}
                                 <tr>
                             {% end %}
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ user.handle }}</td>
-                                <td>{%if user.name %}{{user.name}}{% else %}{{_("Unknown")}}{% end %}</td>
+                                <td class="shortcolumn">{{ index + 1 }}</td>
+                                <td class="shortcolumn"> {{ user.handle }} </td>
+                                <td class="shortcolumn"> {%if user.name %}{{user.name}}{% else %}{{_("Unknown")}}{% end %} </td>
                                 {% if 0 < user.logins %}
-                                    <td>{{ user.last_login }}</td>
+                                    <td class="shortcolumn"> {{ user.last_login }} </td>
                                 {% else %}
-                                    <td>{{_("Never")}}</td>
+                                    <td class="shortcolumn"> {{_("Never")}} </td>
                                 {% end %}
-                                <td>{% if user.notes %}{{ user.notes }}{% end %}</td>
+                                <td> {% if user.notes %}{{ user.notes }}{% end %} </td>
                                 <td class="shortcolumn">
                                     <a id="edit-user-button-{{ user.uuid }}" class="btn btn-mini" data-toggle="modal" href="#edit-user-modal" data-uuid="{{ user.uuid }}">
                                         <i class="fa fa-fw fa-pencil"></i>
@@ -453,7 +461,7 @@
                     <hr style="border: 2px solid green;" />
                 </div>
             {% end %}
-            {% for team_index, team in enumerate(Team.all()) %}
+            {% for team_index, team in enumerate(teams) %}
                 {% if options.teams or len(team.members) > 0 %}
                 <div class="well">
                     <h2 style="display:inline;"> {{ team.name }}&nbsp;&nbsp;</h2>
@@ -476,15 +484,16 @@
                             <tr>
                                 <th>#</th>
                                 <th>{{_("Handle")}}</th>
-                                <th>{{_("Name")}}</th>
-                                <th>{{_("Last Login")}}</th>
+                                <th> {{_("Name")}} </th>
+                                <th> {{_("Last Login")}} </th>
+                                <th> {{_("Expire")}} </th>
                                 {% if options.require_email and options.validate_email %}
-                                <th>{{_("Validation")}}</th>
+                                <th> {{_("Validation")}} </th>
                                 {% end %}
                                 {% if options.banking %}
-                                    <th>{{_("Bank Password Hash")}}</th>
+                                    <th> {{_("Bank Password Hash")}} </th>
                                 {% end %}
-                                <th>{{_("Admin Notes")}}</th>
+                                <th> {{_("Admin Notes")}} </th>
                                 <th><!-- Lock Button --></th>
                                 <th><!-- Stats Button --></th>
                                 <th><!-- Edit Button --></th>
@@ -498,16 +507,17 @@
                                 {% else %}
                                     <tr>
                                 {% end %}
-                                    <td>{{ index + 1 }}</td>
-                                    <td>{{ user.handle }}</td>
-                                    <td>{%if user.name %}{{user.name}}{% else %}{{_("Unknown")}}{% end %}</td>
+                                    <td class="shortcolumn">{{ index + 1 }}</td>
+                                    <td class="shortcolumn"> {{ user.handle }} </td>
+                                    <td class="shortcolumn"> {%if user.name %}{{user.name}}{% else %}{{_("Unknown")}}{% end %} </td>
                                     {% if 0 < user.logins %}
-                                        <td>{{ user.last_login }}</td>
+                                        <td class="shortcolumn"> {{ user.last_login }} </td>
                                     {% else %}
-                                        <td>{{_("Never")}}</td>
+                                        <td class="shortcolumn"> {{_("Never")}} </td>
                                     {% end %}
+                                    <td class="shortcolumn"> {%if user.expire %}{{user.expire}}{% else %}Never{% end %} </td>
                                     {% if options.require_email and options.validate_email %}
-                                        <td>{{ user.is_email_valid() }}</td>
+                                        <td class="shortcolumn"> {{ user.is_email_valid() }} </td>
                                     {% end %}
                                     {% if options.banking %}
                                         {% if 40 < len(user.bank_password) %}
@@ -517,10 +527,10 @@
                                                 </a>
                                             </td>
                                         {% else %}
-                                            <td>{{ user.algorithm }}: {{ user.bank_password }}</td>
+                                            <td> {{ user.algorithm }}: {{ user.bank_password }} </td>
                                         {% end %}
                                     {% end %}
-                                    <td>{% if user.notes %}{{ user.notes }}{% end %}</td>
+                                    <td> {% if user.notes %}{{ user.notes }}{% end %} </td>
                                     <td class="shortcolumn">
                                         {% if user.locked %}
                                             <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
@@ -535,7 +545,7 @@
                                         {% end %}
                                     </td>
                                     <td class="shortcolumn">
-                                        <a class="btn btn-mini" href="/admin/user_stats?uuid={{ user.uuid }}">
+                                        <a class="btn btn-mini" href="/user?id={{ user.uuid }}">
                                             <i class="fa fa-fw fa-bar-chart-o"></i>
                                             {{_("Statistics")}}
                                         </a>

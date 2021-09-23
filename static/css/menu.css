@@ -4,3 +4,13 @@
 @media screen and (min-width: 980px) {
     .btncollapse {display: none;}
 }
+.dropdown-alert-menu {
+    min-width: 375px !important;
+    margin-left: -214px !important;
+}
+.navbar .nav>li>.dropdown-alert-menu:before{
+    left:220px !important;
+}
+.navbar .nav>li>.dropdown-alert-menu:after{
+    left:221px !important;
+}

@@ -110,7 +110,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             else:
                 self.opcodes[req["opcode"]](req)
         except ValueError as error:
-            logging.warn("Invalid json request from bot: %s" % str(error))
+            logging.warning("Invalid json request from bot: %s" % str(error))
             self.close()
 
     def on_close(self):
@@ -205,7 +205,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             else:
                 self.opcodes[req["opcode"]](req)
         except ValueError as error:
-            logging.warn("Invalid json request from bot: %s" % str(error))
+            logging.warning("Invalid json request from bot: %s" % str(error))
 
     def on_close(self):
         """ Close connection to remote host """

@@ -428,7 +428,7 @@ class BoxHandler(BaseHandler):
                     self.config.dynamic_flag_value
                     and self.config.dynamic_flag_type == "decay_all"
                 ):
-                    for item in Flag.captures(flag.id):
+                    for item in Flag.team_captures(flag.id):
                         tm = Team.by_id(item[0])
                         deduction = flag.dynamic_value(tm) - flag_value
                         tm.money = int(tm.money - deduction)
@@ -437,10 +437,11 @@ class BoxHandler(BaseHandler):
                 team.money += flag_value
                 user.money += flag_value
                 team.flags.append(flag)
+                user.flags.append(flag)
                 self.dbsession.add(user)
                 self.dbsession.add(team)
                 self.dbsession.commit()
-                self.event_manager.flag_captured(team, flag)
+                self.event_manager.flag_captured(user, flag)
                 return True
         return False
 
@@ -471,7 +472,10 @@ class FlagCaptureMessageHandler(BaseHandler):
     def get(self, *args, **kwargs):
         fuuid = self.get_argument("flag", None)
         buuid = self.get_argument("box", None)
-        reward = self.get_argument("reward", None)
+        try:
+            reward = int(self.get_argument("reward", 0))
+        except ValueError:
+            reward = 0
         user = self.get_current_user()
         box = Box.by_uuid(buuid)
         flag = Flag.by_uuid(fuuid)

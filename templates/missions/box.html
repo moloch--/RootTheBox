@@ -296,7 +296,7 @@
                             <td class="shortcolumn" style="vertical-align: middle; padding-right: 20px; font-weight: bold;">{{ flag.name }}</td>
                             {% if team and flag.lock_id and not Flag.by_id(flag.lock_id) in team.flags %}
                                 <td class="descriptioncol"><i class="fa fa-lock"></i> {{ _("Locked by") }} {{ Flag.by_id(flag.lock_id).name }}</td>
-                                <td class="shortcolumn centercolumn">{{ len(Flag.captures(flag.id)) }}</td>
+                                <td class="shortcolumn centercolumn">{{ len(Flag.team_captures(flag.id)) }}</td>
                                 {% if options.penalize_flag_value %}
                                 <td class="shortcolumn centercolumn">0</td>
                                 {% end %}
@@ -305,7 +305,7 @@
                                 <td></td>
                             {% else %}
                                 <td style="width: 100%;"></td>
-                                <td class="shortcolumn centercolumn">{{ len(Flag.captures(flag.id)) }}</td>
+                                <td class="shortcolumn centercolumn">{{ len(Flag.team_captures(flag.id)) }}</td>
                                 {% if team and options.penalize_flag_value and not user.is_admin() %}
                                     <td class="shortcolumn centercolumn">{% if flag in team.flags %}{{ penalty + 1 }}{% else %}{{ penalty }}{% end %}</td>
                                 {% end %}

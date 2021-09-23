@@ -5,12 +5,12 @@
 {% set level_count_all = game_state.get("level_count") %}
 {% set teaminfo = game_state.get("teams") %}
 {% set levelinfo = game_state.get("levels") %}
-{% for index, team_name in enumerate(teaminfo) %}
+{% for t_index, team_name in enumerate(teaminfo) %}
     {% set team = teaminfo.get(team_name) %}
     {% if team.get('members_count') > 0 %}
     <tr id="{{ team.get('uuid') }}" style="padding-top: 5px;">
         <td class="summarycolumn shortcolumn centercolumn" style="font-size: x-large; padding: 0px 20px 0px 10px;">
-            {{ index + 1 }}
+            {{ page * display - display + t_index + 1 }}
         </td>
         <td style="display:none;">{{ team.get('uuid') }}</td>
         <td class="summarycolumn anim:hold">

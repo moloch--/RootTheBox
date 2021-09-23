@@ -74,7 +74,8 @@ class AdminGameHandler(BaseHandler):
     def post(self, *args, **kwargs):
         start_game = self.get_argument("start_game", None)
         suspend_reg = self.get_argument("suspend_registration", None)
-        freeze_score = self.get_argument("freeze_scoreboard", None)
+        set_timer = self.get_argument("countdown_timer", None)
+        hide_scoreboard = self.get_argument("hide_scoreboard", None)
         stop_timer = self.get_argument("stop_timer", None)
 
         if (
@@ -103,22 +104,31 @@ class AdminGameHandler(BaseHandler):
             elif suspend_reg == "false":
                 self.application.settings["suspend_registration"] = False
         if (
-            freeze_score
-            and freeze_score
-            != str(self.application.settings["freeze_scoreboard"]).lower()
+            hide_scoreboard
+            and self.isOn(hide_scoreboard)
+            != self.application.settings["hide_scoreboard"]
         ):
-            if freeze_score == "false":
-                self.application.settings["freeze_scoreboard"] = False
+            if self.isOn(hide_scoreboard):
+                self.application.settings["hide_scoreboard"] = True
+            else:
+                self.application.settings["hide_scoreboard"] = False
+        if (
+            set_timer
+            and set_timer != str(self.application.settings["countdown_timer"]).lower()
+        ):
+            if set_timer == "false":
+                self.application.settings["countdown_timer"] = False
                 self.application.settings["stop_timer"] = False
+                self.application.settings["hide_scoreboard"] = False
                 if self.application.settings["temp_global_notifications"] is not None:
                     options.global_notification = self.application.settings[
                         "temp_global_notifications"
                     ]
                     self.application.settings["temp_global_notifications"] = None
                 self.event_manager.push_scoreboard()
-            elif freeze_score:
-                diff = 60 * int(float(freeze_score))
-                self.application.settings["freeze_scoreboard"] = time.time() + diff
+            elif set_timer:
+                diff = 60 * int(float(set_timer))
+                self.application.settings["countdown_timer"] = time.time() + diff
                 self.application.settings[
                     "temp_global_notifications"
                 ] = options.global_notification
@@ -299,7 +309,7 @@ class AdminSwatHandler(BaseHandler):
             self.dbsession.commit()
             self.render_page()
         else:
-            logging.warn(
+            logging.warning(
                 "Invalid request to accept bribe with uuid: %r"
                 % (self.get_argument("uuid", ""),)
             )
@@ -317,7 +327,7 @@ class AdminSwatHandler(BaseHandler):
             self.dbsession.commit()
             self.render_page()
         else:
-            logging.warn(
+            logging.warning(
                 "Invalid request to complete bribe with uuid: %r"
                 % (self.get_argument("uuid", ""),)
             )
