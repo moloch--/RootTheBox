@@ -168,4 +168,9 @@ class DatabaseConnection(object):
         db_name = quote(self.database)
         db_user = quote(self.username)
         db_password = quote_plus(self.password)
+        if "@" in db_password:
+            logging.warning(
+                "%sWARNING:%s Using the '@' symbol in your database password can cause login issues with SQL Alchemy.%s"
+                % (WARN + bold + R, W, WARN)
+            )
         return db_host, db_name, db_user, db_password
