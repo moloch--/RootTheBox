@@ -1,18 +1,18 @@
 (stop - start) * cost.,(중지-시작) * 비용.
 $,$
 A brief description of the box,상자에 대한 간단한 설명
-About,약
+About,정보
 Accept,수락
-Accept Bribe?,뇌물을 받습니까?
-Accept this bribe?,이 뇌물을 받아?
-Accepted,받아 들여
-Accepted / In Jail,허용 / 감옥에서
-Account Locked!,잠긴 계정!
+Accept Bribe?,뇌물을 받으시겠습니까?
+Accept this bribe?,이 뇌물을 받으시겠습니까?
+Accepted,수락
+Accepted / In Jail,수락 / 감옥에서
+Account Locked!,계정 잠김!
 Account Password,계정 비밀번호
-Active Bots,활성 봇
-Add,더하다
-Add,더하다
-add,더하다
+Active Bots,봇 활성화
+Add,추가
+Add,추가
+add,추가
 Add a Category for Boxes.,박스 카테고리를 추가합니다.
 Add Flags,플래그 추가
 Add Hint,힌트 추가
@@ -24,13 +24,13 @@ Add Source Code to Market,시장에 소스 코드 추가
 Add to Market,시장에 추가
 Address,주소
 Admin,관리자
-Admin Home,관리 홈
+Admin Home,관리자 페이지
 Admin Message,관리자 메시지
 Admin Notes,관리자 노트
 Administrator Panel,관리자 패널
 Admins,관리자
 All Notifications,모든 알림
-and logos in export.,수출 로고.
+and logos in export.,로고 추출.
 and so on,등등
 Apply penalty on attempt,시도시 페널티 적용
 Are you a Cylon?,Cylon입니까?
@@ -47,17 +47,17 @@ Are you sure you want to delete this IP address?,이 IP 주소를 삭제 하시�
 Are you sure you want to delete this source code?,이 소스 코드를 삭제 하시겠습니까?
 Are you sure you want to delete this user?,이 사용자를 삭제 하시겠습니까?
 Are you sure you want to delete?,삭제 하시겠습니까?
-Arrest Player,체포 선수
+Arrest Player,선수 체포
 attempt,시도
-attempt and continue until the,시도하고 계속할 때까지
+attempt and continue until the,때까지 계속 시도
 Attempts,시도
 Authenticate,인증
 Authentication Failure,인증 실패
 Authentication Required,인증 필요
-Automatic Ban,자동 금지
-Avatar,화신
+Automatic Ban,자동 추방
+Avatar,아바타
 Backup/Restore,백업 / 복원
-Ban IP Address,금지 IP 주소
+Ban IP Address,IP 주소 금지
 Bank Account,은행 계좌
 Bank Account Balance,은행 계좌 잔고
 Bank Hash Algorithm,은행 해시 알고리즘
@@ -81,7 +81,7 @@ Bots,봇
 Box,상자
 Box Difficulty,상자 난이도
 Box Hints,박스 힌트
-Box Hints Taken,박스 힌트
+Box Hints Taken,박스 힌트 가져감
 Box Name,박스 이름
 Boxes,박스
 Bribe,뇌물
@@ -92,41 +92,41 @@ Bribe Price,뇌물 가격
 Bribes in Progress,진행중인 뇌물
 Buy,사다
 Buy Source Code,소스 코드 구매
-Buy Upgrade,구매 업그레이드
+Buy Upgrade,업그레이드 구매
 bytes,바이트
 Capture Message,메시지 캡처
-Capture Rate,캡처 속도
+Capture Rate,속도 캡처
 Captures,캡처
 Case-Sensitive,대소 문자 구분
 Cash Stolen,현금 도난
 Categories,카테고리
-Category,범주
-Category box belongs too?,카테고리 상자도 속해 있습니까?
+Category,카테고리
+Category box belongs too?,카테고리 상자는 어디에 속해 있습니까?
 Category Name,카테고리 이름
 Change,변화
 Change Avatar,아바타 변경
 Characters,캐릭터
 Charts,차트
-Chat,잡담
+Chat,챗
 Checksum,체크섬
 Choose,고르다
 Choose a name for your new team!,새 팀의 이름을 선택하십시오!
 Choose Avatar,아바타를 선택하십시오
-Classic,권위 있는
+Classic,클래식
 Clear,명확한
 Clear all notifications and game history,모든 알림 및 게임 기록 지우기
-Clear all team / player flag captures,모든 팀 / 플레이어 깃발 캡처 지우기
-Clear all team pastebin and file shares,모든 팀 pastebin 및 파일 공유 지우기
-Clear market items or source code purchases,명확한 시장 품목 또는 소스 코드 구매
+Clear all team / player flag captures,모든 팀 / 플레이어 깃발 캡처 기록 지우기
+Clear all team pastebin and file shares,모든 팀 페이스트 빈 및 파일 공유 기록 지우기
+Clear market items or source code purchases,시장 품목 또는 소스 코드 구매 기록 지우기
 Click here to login,로그인하려면 여기를 클릭하십시오
 Close,닫기
 Command & Control,명령 및 제어
-Complete,완전한
-Complete Bribe,완전한 뇌물
+Complete,완료
+Complete Bribe,뇌물 완료
 Complete this bribe?,이 뇌물을 완료 하시겠습니까?
-Completed,완료
+Completed,완료됨
 Completed Bribes,완료된 뇌물
-Completion Message,완료 메시지
+Completion Message,완료된메시지
 completion of Level,레벨 완료
 Completion Reward,완료 보상
 Configuration,구성
@@ -134,32 +134,32 @@ Confirm,확인
 Confirm Account Password,계정 비밀번호 확인
 Confirm New Password,새 암호를 확인합니다
 Confirm Password,비밀번호 확인
-Content,함유량
+Content,컨텐츠
 Content Missing,내용 누락
 Corporation,법인
 Corporation box belongs too?,회사 상자도 속해 있습니까?
 Corporation Name,법인 명
 Corporations,법인
 Cost,비용
-Cost to open this level and see flags,이 레벨을 열고 깃발을 보는 비용
-Cracked by,금이 간
-Create,몹시 떠들어 대다
+Cost to open this level and see flags,레벨을 열고 플레그를 보기위해서는 비용이 듭니다
+Cracked by,으로 부터 금이갓다
+Create,생성
 Create Box,상자 만들기
-Create Category,카테고리 만들기
-Create Corporation,회사 만들기
+Create Category,카테고리 생성
+Create Corporation,회사 생성
 Create Datetime Flag,날짜 / 시간 플래그 생성
 Create File Flag,파일 플래그 생성
-Create Flag,깃발 만들기
-Create Game Level,게임 레벨 만들기
-Create Hint,힌트 만들기
-Create Message,메시지 작성
-Create Multiple Choice Flag,객관식 깃발 만들기
-Create New Paste,새 붙여 넣기 만들기
-Create Notification,알림 만들기
-Create Regex Flag,정규식 플래그 만들기
+Create Flag,깃발 생성
+Create Game Level,게임 레벨 생성
+Create Hint,힌트 생성
+Create Message,메시지 생성
+Create Multiple Choice Flag,여러 깃발 생성
+Create New Paste,새로운 페이스트 생성
+Create Notification,알림 생성
+Create Regex Flag,정규식 플래그 생성
 Create Static Flag,정적 플래그 생성
-Create Team,팀 만들기
-Created,만들어진
+Create Team,팀 생성
+Created,만들어짐
 Current algorithm,현재 알고리즘
 Current Bank Account Password,현재 은행 계좌 비밀번호
 Current Bank Password,현재 은행 비밀번호
@@ -171,19 +171,19 @@ Date,날짜
 Datetime Flag,날짜 / 시간 플래그
 Datetime Token,날짜 / 시간 토큰
 DEBUG,디버그
-Decline,쇠퇴
+Decline,거절
 Decline Bribe?,뇌물을 거절 하시겠습니까?
 Decline this bribe?,이 뇌물을 거절 하시겠습니까?
-Declined,거부
+Declined,거절됨
 Decrease All Captures,모든 캡처 감소
-Decrease flag reward by this percent per capture.,깃발 보상을 캡처 당이 퍼센트만큼 줄입니다.
+Decrease flag reward by this percent per capture.,깃발 보상을 캡처 퍼센트만큼 줄이십시오.
 Decrease flag until it reaches this minimum value.,이 최소값에 도달 할 때까지 플래그를 줄이십시오.
-Decrease Future Captures,향후 캡처 감소
-Decreases the flag value for future captures - this method rewards speed of capture.,향후 캡처의 플래그 값을 줄입니다.이 방법은 캡처 속도를 보상합니다.
+Decrease Future Captures,향후 캡쳐를 줄이십시오
+Decreases the flag value for future captures - this method rewards speed of capture.,향후 플래그 값을 줄입니다.이 방법은 캡처 속도를 보상합니다.
 Decreases the flag value for past and future team captures - this method rewards difficulty.,과거와 미래의 팀 캡처에 대한 플래그 값을 줄입니다.이 방법은 어려움을 보상합니다.
 deduct on & after,공제 후
-defaults to,기본값은
-Delete,지우다
+defaults to,기본값으로
+Delete,삭제
 Delete Box,상자 삭제
 Delete Category,카테고리 삭제
 Delete Corporation,회사 삭제
@@ -197,26 +197,26 @@ Delete Source Code,소스 코드 삭제
 Delete Team,팀 삭제
 Delete User,사용자 삭제
 Dependent Flag,종속 플래그
-Description,기술
-DESCRIPTION,기술
-Details,세부
-Difficulty,어려움
+Description,설명
+DESCRIPTION,설명
+Details,세부 사항
+Difficulty,난이도
 Difficulty Rating,난이도
 Disable,비활성화
 Disabling this option will skip the story line and give the player an instant capture message.,이 옵션을 비활성화하면 스토리 라인을 건너 뛰고 플레이어에게 즉석 캡처 메시지가 표시됩니다.
-Display Hints Taken,찍은 디스플레이 힌트
+Display Hints Taken,디스플레이 힌트 사용됨
 Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,지시가없는 한 커뮤니티 플래그를 삭제하거나 수정하지 마십시오. 게임 목표에 설명되어 있지 않은 한 다른 플레이어를 공격하지 마십시오.
 Download,다운로드
 Download File,파일 다운로드
-Download the command line botnet monitor,명령 행 봇넷 모니터 다운로드
+Download the command line botnet monitor,커멘드 라인 봇넷 모니터 다운로드
 Dynamic Decay Type,동적 부패 유형
 Dynamic Scoring,다이나믹 스코어링
 Each flag has a submit.  The player will choose the flag they intend to capture.,각 플래그에는 제출이 있습니다. 플레이어는 캡처하려는 깃발을 선택합니다.
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!",각 플레이어는 다양한 난이도와 정교함을 목표로 깃발을 모으고 영광을 얻습니다. 행운을 빕니다!
-Edit,편집하다
+Edit,편집
 Edit Access,액세스 편집
 Edit Account,계정 편집
-Edit Box,편집 상자
+Edit Box,상자 편집
 Edit Category,카테고리 편집
 Edit Corporation,회사 편집
 Edit Flag,플래그 편집
@@ -229,7 +229,7 @@ Edit Player,플레이어 편집
 Edit Team,팀 편집
 Edit User,사용자 편집
 Email,이메일
-EMPTY,빈
+EMPTY,비어있다
 Enable,사용
 "Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",이 기능을 사용하면 플레이어가 등록 중에 자신의 팀을 만들 수 있습니다. 이 옵션을 비활성화하면 관리자가 플레이어가 참가할 팀을 만들어야합니다.
 Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,이 기능을 활성화하면 플레이어가 게임 내에서 코드 (파스트 빈)와 파일을 공유 할 수 있습니다. 이 기능을 비활성화하면 도구 메뉴에서이 옵션이 제거됩니다.
@@ -654,10 +654,10 @@ User Handle,사용자 핸들
 User Management,사용자 관리
 Users / Teams,사용자 / 팀
 Value,값
-View,전망
-View Box,박스보기
-View Details,세부 정보보기
-Visible,명백한
+View,뷰
+View Box,박스 뷰
+View Details,세부 정보 뷰
+Visible,공개
 Visible to Players,플레이어에게 공개
 Waiting for the game to start‚Ä¶,게임이 시작되기를 기다리는 중
 Wall of Sheep,양의 벽
@@ -666,11 +666,11 @@ Welcome,환영
 Welcome to the computer war game where security professionals can practice and learn.,보안 전문가가 연습하고 배울 수있는 컴퓨터 전쟁 게임에 오신 것을 환영합니다.
 Welcome to the Scene,현장에 오신 것을 환영합니다
 What is the name of this box?,이 상자의 이름은 무엇입니까?
-"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",회사 이름은 무엇입니까? 회사를 사용하지 않으려면 이름이없는 회사를 만드십시오.
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",회사 이름은 무엇입니까? 만약 회사를 사용하지 않으려면 이름없는 회사로 생성하십시오.
 What is your motto?,당신의 좌우명은 무엇입니까?
 What is your teams motto?,당신의 팀 좌우명은 무엇입니까?
 What type of system is this?,이것은 어떤 유형의 시스템입니까?
-Whats the difficulty of the box?,상자의 어려움은 무엇입니까?
+Whats the difficulty of the box?,상자의 난이도가 어떻게됩니까?
 When banking is disabled,은행 업무가 비활성화 된 경우
 "When to start applying the penalty.  For example, you may want the first incorrect attempt to be free, but penalize subsequent attempts.","페널티 적용 시작시기 예를 들어, 첫 번째 잘못된 시도는 자유로울 수 있지만 후속 시도에는 불이익을 줄 수 있습니다."
 "When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","페널티 적용 중단시기 예를 들어, 특정 총 플래그 값만 불이익을 받고 추가 시도가 자유 로워 지도록 허용하여 모든 플래그가 일부 값을 갖도록 할 수 있습니다."
@@ -681,17 +681,17 @@ XML File,XML 파일
 Yes,예
 You are not on a team,당신은 팀에 없습니다
 You do not have access to this level yet.,아직이 레벨에 액세스 할 수 없습니다.
-You do not own this upgrade.,이 업그레이드를 소유하지 않았습니다.
+You do not own this upgrade.,이 업그레이드를 소유하고 있지않습니다.
 You have not submitted any bribes yet.,아직 뇌물을 제출하지 않았습니다.
-"Your email, visible to game administrators.",게임 관리자가 볼 수있는 이메일.
+"Your email, visible to game administrators.",이메일은 관리자에게 보여집니다.
 "Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","핸들은 3-16 자의 영숫자 문자 여야합니다. 밑줄, 대시 및 점이 허용됩니다."
 "Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",게임 관리자에게 공개되는 귀하의 이름. 이름은 3 ~ 64 자의 영숫자 문자 일 수 있습니다
 "Password Reset",비밀번호 초기화
-"Forgot Password",비밀번호를 잊으 셨나요
+"Forgot Password",비밀번호 찾기
 "Request Password Reset",비밀번호 재설정 요청
 "Update Email",이메일 업데이트
 "Please check your email for account validation",계정 확인을 위해 이메일을 확인하십시오.
-Validate Email,유효한 이메일
-"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.",이 기능을 활성화하려면 사용자가 게임에 액세스하기 전에 이메일 확인이 필요합니다. 이 옵션을 사용하지 않으면 이메일이 확인되지 않습니다.
-Note: Mail settings must be defined.,참고 : 메일 설정을 정의해야합니다.
+Validate Email,이메일 인증
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.",이 기능을 활성화하면 사용자는 이메일 이메일 인증을 하여야지만 게임에 참가할 수 있습니다. 이 기능을 비활성화 하시면 이메일은 인증하지 않습니다.
+Note: Mail settings must be defined.,참고 : 메일 설정이 정의되어 있어야 합니다.
 Validation,확인
