@@ -455,7 +455,7 @@ Paste Name,붙여 넣기 이름
 Paste Text Here,여기에 텍스트 붙여 넣기
 PasteBin,PasteBin
 Pastebin Character Limit,Pastebin 문자 제한
-Pause Registration,일시 정지 등록
+Pause Registration,일시 정지
 Set Countdown,카운트다운 설정
 Penalize the score by this percent of the flag value for each incorrect attempt (applied after dynamic scoring if enabled).,각 잘못된 시도에 대해 플래그 값의이 백분율만큼 점수를 부과합니다 (활성화 된 경우 동적 스코어링 후 적용).
 Pending,대기 중
@@ -538,7 +538,7 @@ Source Code Archive,소스 코드 아카이브
 Source Code Market,소스 코드 시장
 Special Thanks,특별 감사
 Start a New Team,새로운 팀을 시작하십시오
-Start the Game,게임을 시작하다
+Start the Game,게임 시작
 start with 0 points,0 점으로 시작
 Starting Money,돈을 시작
 Static Flag,정적 플래그
