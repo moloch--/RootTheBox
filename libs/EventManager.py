@@ -181,8 +181,11 @@ class EventManager(object):
 
     def flag_captured(self, player, flag):
         """ Callback for when a flag is captured """
-        if isinstance(player, User) and options.teams:
+        if isinstance(player, User):
             team = player.team
+        else:
+            team = player
+        if isinstance(player, User) and options.teams:
             message = '%s (%s) has completed "%s" in %s' % (
                 player.handle,
                 team.name,
@@ -190,7 +193,6 @@ class EventManager(object):
                 flag.box.name,
             )
         else:
-            team = player
             message = '%s has completed "%s" in %s' % (
                 team.name,
                 flag.name,
