@@ -449,7 +449,7 @@ class AdminViewHandler(BaseHandler):
                         self.dbsession.commit()
                         self.event_manager.flag_captured(team, flag)
                         self._check_level(flag, team)
-                    success.append("%s awarded %d" % (team.name, flag_value))
+                        success.append("%s awarded %d" % (team.name, flag_value))
                 if (
                     accept_answer == "on"
                     and (flag.type == "static" or flag.type == "regex")
