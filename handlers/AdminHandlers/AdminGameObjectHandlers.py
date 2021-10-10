@@ -787,7 +787,7 @@ class AdminEditHandler(BaseHandler):
             flagchoice = FlagChoice.by_uuid(choice)
             if choiceitems[choice] != flagchoice.choice:
                 # update choice
-                flagchoice.choice = choiceitems[choice]
+                flagchoice.choice = decode(choiceitems[choice])
                 self.dbsession.add(flagchoice)
         self.dbsession.commit()
 
