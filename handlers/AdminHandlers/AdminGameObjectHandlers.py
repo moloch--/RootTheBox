@@ -777,7 +777,7 @@ class AdminEditHandler(BaseHandler):
                         for flagoption in arguments[item]:
                             if len(flagoption) > 0:
                                 # add choice
-                                FlagChoice.create_choice(flag, flagoption)
+                                FlagChoice.create_choice(flag, decode(flagoption))
         for choice in currentchoices:
             if not choice["uuid"] in choiceitems:
                 # delete choice
