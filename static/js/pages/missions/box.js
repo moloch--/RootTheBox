@@ -40,7 +40,10 @@ $(document).ready(function() {
     });
 
     $(".flag-expand").click(function() {
-        if ($('.playstory').length === 0 || !$('.playstory').is(':hover')) {
+        var isHovered = $('.playstory').filter(function() {
+            return $(this).is(":hover");
+        });
+        if ($('.playstory').length === 0 || isHovered.length === 0) {
             $(this).next(".flag-collapse").toggle();
             $(this).next().next(".flag-collapse").toggle();
         }
