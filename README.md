@@ -16,6 +16,8 @@ Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Sc
 -   Admin Username `admin` Password `rootthebox`
 -   Player Username `player` Password `rootthebox`
 
+If you’re using RootTheBox, please ★Star this repository to show your interest!
+
 ## Features
 
 -   Team Play or Individual Play
