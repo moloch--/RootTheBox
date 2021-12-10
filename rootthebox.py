@@ -1065,8 +1065,11 @@ if __name__ == "__main__":
     if options.version:
         version()
     elif options.setup.startswith("docker"):
-        if not os.path.isfile(options.sql_database + ".db"):
+        if not os.path.isfile(options.sql_database) and not os.path.isfile(
+            "%s.db" % options.sql_database
+        ):
             logging.info("Running Docker Setup")
+            options.sql_database = "files/rootthebox.db"
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
             options.memcached = "memcached"
             options.x_headers = True
