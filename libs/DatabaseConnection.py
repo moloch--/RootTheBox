@@ -103,7 +103,9 @@ class DatabaseConnection(object):
         db_name = self.database
         if not len(db_name):
             db_name = "rtb"
-        return "sqlite:///%s.db" % db_name
+        if not db_name.endswith(".db"):
+            db_name =  "%s.db" % db_name
+        return "sqlite:///%s" % db_name
 
     def _mysql(self):
         """ Configure db_connection for MySQL """
