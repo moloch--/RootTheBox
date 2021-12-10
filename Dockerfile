@@ -8,9 +8,9 @@ FROM python:3.8
 RUN mkdir /opt/rtb
 ADD . /opt/rtb
 
-RUN apt-get update
-RUN apt-get install build-essential zlib1g-dev rustc -y
-RUN apt-get install python3-pycurl sqlite3 libsqlite3-dev -y
+RUN apt-get update && apt-get install -y \
+build-essential zlib1g-dev rustc \
+python3-pycurl sqlite3 libsqlite3-dev 
 
 ADD ./setup/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt --upgrade
