@@ -287,7 +287,7 @@ class SourceCodeMarketHandler(BaseHandler):
         self.event_manager.push_score_update()
 
     def render_page(self, errors=None):
-        """ Addes extra params to render() """
+        """ Adds extra params to render() """
         user = self.get_current_user()
         boxes = [box for box in Box.all() if box.source_code is not None]
         self.render(

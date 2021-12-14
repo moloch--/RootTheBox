@@ -40,7 +40,7 @@ class IpAddress(DatabaseObject):
     box_id = Column(Integer, ForeignKey("box.id"), nullable=False)
     _address = Column(String(80))
     _ip_address = None
-    visable = Column(Boolean, default=True)
+    visible = Column(Boolean, default=True)
 
     @classmethod
     def all(cls):

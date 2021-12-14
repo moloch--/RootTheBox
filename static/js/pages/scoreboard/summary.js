@@ -55,8 +55,8 @@ $(document).ready(function() {
                 game_data = jQuery.parseJSON(event.data);
                 
                 /* Update Summary Table */
-                let count = $("#paramaters").data("count");
-                let page = $("#paramaters").data("page");
+                let count = $("#parameters").data("count");
+                let page = $("#parameters").data("page");
                 $.get("/scoreboard/ajax/summary?count=" + count + "&page=" + page, function(table_data) {
                     highlight_table = highlights(table_data);
                     $("#summary_loading").hide();

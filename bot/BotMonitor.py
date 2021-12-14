@@ -1150,7 +1150,7 @@ class BotMonitor(object):
         self.screen.refresh()
 
     def __summary__(self, bot_count, update_time):
-        """ Addes total bots and update time """
+        """ Adds total bots and update time """
         start_pos = 3
         pos_y = 1
         self.screen.addstr(
