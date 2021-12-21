@@ -1065,9 +1065,9 @@ if __name__ == "__main__":
     if options.version:
         version()
     elif options.setup.startswith("docker"):
-        if not os.path.isfile(options.sql_database) and not os.path.isfile(
-            "%s.db" % options.sql_database
-        ):
+        if os.path.isfile(options.config):
+            options.parse_config_file(options.config)
+        else:
             logging.info("Running Docker Setup")
             options.sql_database = "files/rootthebox.db"
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
@@ -1076,8 +1076,6 @@ if __name__ == "__main__":
             options_parse_environment()  # Pick up env vars before saving config file.
             save_config()
             setup()
-        else:
-            options.parse_config_file(options.config)
         options.start = True
     elif options.save or not os.path.isfile(options.config):
         save_config()
