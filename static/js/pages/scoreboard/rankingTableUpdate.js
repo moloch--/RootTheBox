@@ -48,7 +48,7 @@
 		return colorStr;
 	}
 
-	//Convert the rgb value to the hex equivilent..
+	//Convert the rgb value to the hex equivalent..
 	var cssColorToHex = function(colorStr){
 		var hex = '#';
 		$.each(colorStr.substring(4).split(','), function(i, str){
@@ -66,7 +66,7 @@
 		return minLeft;
 	}
 
-	//The defalt options to use in the case that none as specified..
+	//The default options to use in the case that none as specified..
 	var defaultOptions = {
 		onComplete: function(){ /*do nothing*/ },
 		duration: [1000, 0, 700, 0, 500], //The milliseconds to do each phase and the delay between them

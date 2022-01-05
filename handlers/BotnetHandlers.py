@@ -45,7 +45,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
     =================================
     1) Bot connects to server
         a) If IP config.whitelist_box_ips is enabled, check
-           the datbase for boxes with matching IPs
+           the database for boxes with matching IPs
 
     2) Server responds with "Interrogation" request
         a) This request includes a random string 'xid'
@@ -120,7 +120,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
 
     def interrogation_response(self, msg):
-        """ Steps 3 and 4; validate repsonses """
+        """ Steps 3 and 4; validate responses """
         logging.debug("Received interrogate response, validating ...")
         response_xid = msg["response_xid"]
         user = User.by_handle(msg["handle"])
