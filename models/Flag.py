@@ -159,7 +159,7 @@ class Flag(DatabaseObject):
             FLAG_DATETIME: cls._create_flag_datetime,
             FLAG_CHOICE: cls._create_flag_choice,
         }
-        # TODO Don't understand why this is here - name is not unqiue value
+        # TODO Don't understand why this is here - name is not unique value
         # and you could simply name questions per box, like "Question 1" - ElJefe 6/1/2018
         # if cls.by_name(name) is not None:
         # raise ValidationError('Flag name already exists in database')
@@ -439,10 +439,10 @@ class Flag(DatabaseObject):
         if self.lock_id:
             ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
         ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
-        attachements_elem = ET.SubElement(flag_elem, "flag_attachments")
-        attachements_elem.set("count", "%s" % str(len(self.flag_attachments)))
-        for attachement in self.flag_attachments:
-            attachement.to_xml(attachements_elem)
+        attachments_elem = ET.SubElement(flag_elem, "flag_attachments")
+        attachments_elem.set("count", "%s" % str(len(self.flag_attachments)))
+        for attachment in self.flag_attachments:
+            attachment.to_xml(attachments_elem)
         choice_elem = ET.SubElement(flag_elem, "flag_choices")
         choice_elem.set("count", "%s" % str(len(self.flag_choice)))
         for choice in self.flag_choice:

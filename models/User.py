@@ -19,7 +19,7 @@ Created on Mar 12, 2012
     limitations under the License.
 ----------------------------------------------------------------------------
 
-This file contiains the user object, used to store data related to an
+This file contains the user object, used to store data related to an
 indiviudal user, such as handle/account/password/etc
 
 """

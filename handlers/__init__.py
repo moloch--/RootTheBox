@@ -141,7 +141,7 @@ urls = [
     (r"/user/settings", SettingsHandler),
     (r"/user/settings/(.*)", SettingsHandler),
     (r"/logout", LogoutHandler),
-    # Notificaiton handlers - NotificationHandlers.py
+    # Notification handlers - NotificationHandlers.py
     (r"/notifications/all", AllNotificationsHandler),
     (r"/connect/notifications/updates", NotifySocketHandler),
     # Static Handlers - StaticFileHandler.py
@@ -252,7 +252,7 @@ app = Application(
     history_callback=PeriodicCallback(
         game_history.take_snapshot, options.history_snapshot_interval
     ),
-    # Scoreboard Hightlights
+    # Scoreboard Highlights
     scoreboard_history={},
     scoreboard_state={},
     # Application version

@@ -299,8 +299,8 @@ class Box(DatabaseObject):
         return [ip for ip in self.ip_addresses if ip.version == 6]
 
     @property
-    def visable_ips(self):
-        return [ip for ip in self.ip_addresses if ip.visable is True]
+    def visible_ips(self):
+        return [ip for ip in self.ip_addresses if ip.visible is True]
 
     @property
     def source_code(self):

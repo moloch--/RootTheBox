@@ -508,7 +508,7 @@
             <div class="control-group">
                 <div class="controls">
                     <label class="checkbox">
-                        <input name="visable" value="true" type="checkbox" checked> {{_("Visible to Players")}}
+                        <input name="visible" value="true" type="checkbox" checked> {{_("Visible to Players")}}
                     </label>
                 </div>
             </div>
@@ -659,7 +659,7 @@
 {% end %}
 
 {% block content %}
-    <!-- Start Visable -->
+    <!-- Start Visible -->
     <div class="row-fluid">
         <div class="span2">
             <ul id="navWrapper" class="nav nav-tabs nav-stacked affix well">
@@ -998,7 +998,7 @@
                                                             <td>{{ index + 1 }}</td>
                                                             <td>{{ ip.address }}</td>
                                                             <td>{{ ip.version }}</td>
-                                                            <td>{% if ip.visable %} {{_("Yes")}} {% else %} {{_("No")}} {% end %}</td>
+                                                            <td>{% if ip.visible %} {{_("Yes")}} {% else %} {{_("No")}} {% end %}</td>
                                                             <td class="shortcolumn">
                                                                 <a id="delete-ip-address-button-{{ ip.uuid }}" class="btn btn-danger btn-mini" data-toggle="modal" href="#delete-ip-address-modal" data-uuid="{{ ip.uuid }}">
                                                                     <i class="fa fa-fw fa-times-circle-o"></i>

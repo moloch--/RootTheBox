@@ -43,7 +43,7 @@ class StaticFileHandler(DefaultStaticHandler):
     def set_default_headers(self):
         """
         We need to add the security headers here too, especially the
-        X-Content-Type-Options header, since we whitelist file extenstions.
+        X-Content-Type-Options header, since we whitelist file extensions.
         this should prevent anyone from serving html/etc from the static
         handler
         """
@@ -65,5 +65,5 @@ class StaticFileHandler(DefaultStaticHandler):
             "Static file request from %s resulted in %d status"
             % (self.request.remote_ip, status_code)
         )
-        # Reguardless of error, send a 404
+        # Regardless of error, send a 404
         self.render("public/404.html")
