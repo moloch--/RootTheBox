@@ -17,8 +17,8 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column('ip_address', 'visable', new_column_name='visible')
+    op.alter_column('ip_address', 'visable', new_column_name='visible', existing_type=sa.BOOLEAN)
 
 
 def downgrade():
-    op.alter_column('ip_address', 'visible', new_column_name='visable')
+    op.alter_column('ip_address', 'visible', new_column_name='visable', existing_type=sa.BOOLEAN)
