@@ -133,7 +133,7 @@
 {% end %}
 
 {% block content %}
-    <!-- Visible -->
+    <!-- Visable -->
     <div class="container">
         <h1>
             {% if box.operating_system.lower() == 'windows' %}
@@ -415,7 +415,7 @@
                 {% end %}
             </table>
         </div>
-        {% if len(box.visible_ips) != 0 %}
+        {% if len(box.visable_ips) != 0 %}
             <div class="well">
                 <table class="table table-hover">
                     <caption><h4> - {{ _("Known IP Addresses") }} - </h4></caption>
@@ -428,7 +428,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for index, ip in enumerate(box.visible_ips) %}
+                        {% for index, ip in enumerate(box.visable_ips) %}
                             <tr>
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ str(ip) }}</td>

@@ -19,7 +19,7 @@ Created on Mar 13, 2012
     limitations under the License.
 ----------------------------------------------------------------------------
 
-This file contains handlers related to the file sharing functionality
+This file conatains handlers related to the file sharing functionality
 
 """
 

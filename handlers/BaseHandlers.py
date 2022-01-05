@@ -72,7 +72,7 @@ class BaseHandler(RequestHandler):
     new_events = []
     io_loop = IOLoop.instance()
     event_manager = EventManager.instance()
-    config = options  # backward compatibility
+    config = options  # backward compatability
 
     def initialize(self):
         """ Setup sessions, etc """
@@ -210,11 +210,11 @@ class BaseHandler(RequestHandler):
                 super(BaseHandler, self).write_error(status_code, **kwargs)
 
     def get(self, *args, **kwargs):
-        """ Placeholder, in case child class does not impl this method """
+        """ Placeholder, incase child class does not impl this method """
         self.render("public/404.html")
 
     def post(self, *args, **kwargs):
-        """ Placeholder, in case child class does not impl this method """
+        """ Placeholder, incase child class does not impl this method """
         self.render("public/404.html")
 
     def put(self, *args, **kwargs):
@@ -304,7 +304,7 @@ class BaseWebSocketHandler(WebSocketHandler):
     _memcached = None
     io_loop = IOLoop.instance()
     manager = EventManager.instance()
-    config = options  # backward compatibility
+    config = options  # backward compatability
 
     def check_origin(self, origin):
         """ Parses the request's origin header """

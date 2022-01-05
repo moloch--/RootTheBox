@@ -173,18 +173,18 @@ def add_attachments(parent, flag):
     if flag is None:
         return
     logging.info("Found %s attachment(s)" % parent.get("count"))
-    for index, attachment_elem in enumerate(parent):
+    for index, attachement_elem in enumerate(parent):
         try:
             flag_attachment = FlagAttachment(
-                file_name=get_child_text(attachment_elem, "flag_name")
+                file_name=get_child_text(attachement_elem, "flag_name")
             )
             flag_attachment.data = bytearray(
-                b64decode(get_child_text(attachment_elem, "data"))
+                b64decode(get_child_text(attachement_elem, "data"))
             )
             flag.flag_attachments.append(flag_attachment)
             dbsession.add(flag_attachment)
         except:
-            logging.exception("Failed to import attachment #%d in flag" % (index + 1))
+            logging.exception("Failed to import attachement #%d in flag" % (index + 1))
 
 
 def create_choices(parent, flag):
@@ -261,7 +261,7 @@ def create_corps(corps):
                 corporation = Corporation.by_name(corporation.name)
             create_boxes(get_child_by_tag(corp_elem, "boxes"), corporation)
         except BaseException as e:
-            logging.exception("Failed to create corporation #%d (%s)" % (index + 1, e))
+            logging.exception("Faild to create corporation #%d (%s)" % (index + 1, e))
 
 
 def update_configuration(config):
@@ -298,7 +298,7 @@ def update_configuration(config):
                         )
                     )
         except BaseException as e:
-            logging.exception("Failed to update configuration (%s)" % e)
+            logging.exception("Faild to update configuration (%s)" % e)
     save_config()
 
 

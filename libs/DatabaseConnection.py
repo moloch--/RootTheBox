@@ -140,7 +140,7 @@ class DatabaseConnection(object):
             return __mysqlconnector
         else:
             logging.fatal(
-                "Cannot connect to database with any available driver. Verify correct username & password in rootthebox.cfg and db dependencies."
+                "Cannot connect to database with any available driver. Verify correct username & password in rootthebox.cfg and db dependecies."
             )
             os._exit(1)
 

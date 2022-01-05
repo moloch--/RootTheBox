@@ -19,7 +19,7 @@ Created on Mar 12, 2012
     limitations under the License.
 ------------------------------------------------------------------------------
 
-Wrapper for AsyncHTTPTestCase that removed some of the boilerplate code
+Wrapper for AsyncHTTPTestCase that removed somes of the boilerplate code
 
 """
 

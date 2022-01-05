@@ -243,7 +243,7 @@ class LoginHandler(BaseHandler):
             self.render(
                 "public/login.html",
                 info=[
-                    "Successful credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
+                    "Succesfull credentials, but administration is restriceted via IP.  See 'admin_ips' in configuration."
                 ],
                 errors=None,
             )
@@ -567,7 +567,7 @@ class RegistrationHandler(BaseHandler):
             and not len(user.email) > 0
         ):
             logging.info(
-                "Email validation failed: No Email Address for user %s.  Deleting User"
+                "Email validation failed: No Email Address for user %s.  Deleteing User"
                 % user.handle
             )
             self.dbsession.delete(user)
@@ -880,7 +880,7 @@ class ValidEmailHandler(BaseHandler):
                     self.dbsession.commit()
                     self.event_manager.user_joined_team(user)
                 else:
-                    error = ["Failed to validate email for %s" % user.handle]
+                    error = ["Faield to validate email for %s" % user.handle]
             elif len(user_uuid) > 0 and not user:
                 error = ["Invalid user for email validation"]
             self.render("public/login.html", info=info, errors=error)

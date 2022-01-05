@@ -38,7 +38,7 @@ if options.log_sql:
     sql_logger = logging.getLogger("sqlalchemy.engine")
     sql_logger.setLevel(logging.INFO)
 
-    # This benchmarks the amount of time spent querying the database
+    # This benchmarks the amount of time spent quering the database
     @event.listens_for(Engine, "before_cursor_execute")
     def before_cursor_execute(
         conn, cursor, statement, parameters, context, executemany

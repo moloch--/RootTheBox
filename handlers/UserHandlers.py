@@ -109,7 +109,7 @@ class SettingsHandler(BaseHandler):
             self.render_page()
 
     def render_page(self, errors=[], success=[]):
-        """ Small wrap for self.render to cut down on lengthy params """
+        """ Small wrap for self.render to cut down on lenghty params """
         user = self.get_current_user()
         self.add_content_policy("script", "'unsafe-eval'")
         current_theme = Theme.by_id(self.session["theme_id"])

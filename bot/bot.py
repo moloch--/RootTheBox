@@ -134,7 +134,7 @@ logger = logging.getLogger()
 
 class WebSocketException(Exception):
     """
-    websocket exception class.
+    websocket exeception class.
     """
 
     pass
@@ -335,7 +335,7 @@ class ABNF(object):
         OPCODE_PONG: "pong",
     }
 
-    # data length threshold.
+    # data length threashold.
     LENGTH_7 = 0x7D
     LENGTH_16 = 1 << 16
     LENGTH_63 = 1 << 63
@@ -363,7 +363,7 @@ class ABNF(object):
 
         data: data to send. This is string value(byte array).
             if opcode is OPCODE_TEXT and this value is uniocde,
-            data value is converted into unicode string, automatically.
+            data value is conveted into unicode string, automatically.
 
         opcode: operation code. please see OPCODE_XXX.
         """
@@ -432,7 +432,7 @@ class WebSocket(object):
       The WebSocket protocol draft-hixie-thewebsocketprotocol-76
       http://tools.ietf.org/html/draft-hixie-thewebsocketprotocol-76
 
-    We can connect to the websocket server and send/receive data.
+    We can connect to the websocket server and send/recieve data.
     The following example is a echo client.
 
     >>> import websocket
@@ -451,7 +451,7 @@ class WebSocket(object):
 
     def __init__(self, get_mask_key=None, sockopt=()):
         """
-        Initialize WebSocket object.
+        Initalize WebSocket object.
         """
         self.connected = False
         self.io_sock = self.sock = socket.socket()
@@ -812,17 +812,17 @@ class WebSocketApp(object):
         url: websocket url.
         header: custom header for websocket handshake.
         on_open: callable object which is called at opening websocket.
-          this function has one argument. The argument is this class object.
+          this function has one argument. The arugment is this class object.
         on_message: callbale object which is called when received data.
          on_message has 2 arguments.
-         The 1st argument is this class object.
-         The passing 2nd argument is utf-8 string which we get from the server.
+         The 1st arugment is this class object.
+         The passing 2nd arugment is utf-8 string which we get from the server.
        on_error: callable object which is called when we get error.
          on_error has 2 arguments.
-         The 1st argument is this class object.
-         The passing 2nd argument is exception object.
+         The 1st arugment is this class object.
+         The passing 2nd arugment is exception object.
        on_close: callable object which is called when closed the connection.
-         this function has one argument. The argument is this class object.
+         this function has one argument. The arugment is this class object.
        keep_running: a boolean flag indicating whether the app's main loop should
          keep running, defaults to True
        get_mask_key: a callable to produce new mask keys, see the WebSocket.set_mask_key's
@@ -1041,7 +1041,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--garbage",
         "-g",
-        help="path to garbage file (default: /root/garbage or C:\\garbage)",
+        help="path to garbage file (defult: /root/garbage or C:\\garbage)",
         dest="garbage",
     )
     parser.add_argument(

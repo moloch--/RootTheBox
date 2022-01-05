@@ -336,7 +336,7 @@ class AdminSwatHandler(BaseHandler):
 
 class AdminConfigurationHandler(BaseHandler):
 
-    """ Allows the admin to change some of the configuration options """
+    """ Allows the admin to change some of the configuraiton options """
 
     def get_int(self, name, default=0):
         try:

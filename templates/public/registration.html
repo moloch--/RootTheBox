@@ -110,7 +110,7 @@
                         <input required id="handle" name="handle" maxlength="16" minlength="3" placeholder="{{ _('Player Alias') }}" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9_\-\.]{3,16}$"
                             data-original-title="{{ _('Player Alias') }}"
-                            data-content="{{_('Your handle must be 3-16 alphanumeric characters.  Underscore, dash, and dots allowed.')}}" />
+                            data-content="{{_('Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.')}}" />
                     </div>
                 </div>
                 <div class="control-group">
@@ -121,7 +121,7 @@
                         <input required id="playername" name="playername" maxlength="64" minlength="3" placeholder="{{_('Name')}}" type="text"
                             rel="popover" pattern="^[a-zA-Z0-9 ]{3,64}$"
                             data-original-title="{{ _('Player Name') }}"
-                            data-content="{{_('Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters')}}" />
+                            data-content="{{_('Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters')}}" />
                     </div>
                 </div>
                 {% if options.require_email %}

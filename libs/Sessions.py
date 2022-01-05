@@ -39,11 +39,11 @@ class BaseSession(collections.MutableMapping):
     regenerated periodically.
 
     The session_id attribute stores a unique, random, 64 characters long
-    string serving as an identifier.
+    string serving as an indentifier.
 
     To create a new storage system for the sessions, subclass BaseSession
     and define save(), load() and delete(). For inspiration, check out any
-    of the already available classes and documentation to aforementioned
+    of the already available classes and documentation to aformentioned
     functions.
     """
 

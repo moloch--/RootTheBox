@@ -144,7 +144,7 @@ class GameHistory(object):
         return self.dbsession.query(Snapshot).order_by(desc(Snapshot.id)).first().id
 
     def __getitem__(self, key):
-        """ Implements slices and indices """
+        """ Implements slices and indexs """
         if isinstance(key, slice):
             ls = [self[index] for index in range(*key.indices(len(self)))]
             return [item for item in ls if item is not None]

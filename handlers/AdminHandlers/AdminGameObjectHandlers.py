@@ -800,8 +800,8 @@ class AdminEditHandler(BaseHandler):
             ip_addr = self.get_argument("ip_address", "")
             if IpAddress.by_address(ip_addr) is None:
                 ip = IpAddress(box_id=box.id, address=ip_addr)
-                if self.get_argument("visible", "").lower() != "true":
-                    ip.visible = False
+                if self.get_argument("visable", "").lower() != "true":
+                    ip.visable = False
                 box.ip_addresses.append(ip)
                 self.dbsession.add(ip)
                 self.dbsession.add(box)
@@ -891,7 +891,7 @@ class AdminEditHandler(BaseHandler):
             self.render("admin/view/game_levels.html", errors=[str(error)])
 
     def box_level(self):
-        """ Changes a box level """
+        """ Changes a boxs level """
         errors = []
         box = Box.by_uuid(self.get_argument("box_uuid", ""))
         level = GameLevel.by_uuid(self.get_argument("level_uuid", ""))
