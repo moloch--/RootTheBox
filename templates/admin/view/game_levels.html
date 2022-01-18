@@ -226,13 +226,13 @@
                 </button>
                 <div style="padding-left: 3px; margin-bottom: -10px;">
                 {% if level._name  and level._name != level.name %}<strong>{{ _("Level") }} #{{ level.number }}</strong>&nbsp;&nbsp;&ndash;&nbsp;{% end %}
-                    {% if level._type == "none" or level.buyout == 0 %}
+                    {% if level.type == "hidden" %}
+                        <i class="fa fa-lock"></i> {{ _("Managed") }}
+                    {% elif level.type == "none" or level.buyout == 0 %}
                         <i class="fa fa-unlock-alt"></i> {{ _("No Lock") }}
-                    {% elif level._type == "hidden" %}
-                        <i class="fa fa-lock"></i>
-                    {% elif level._type == "buyout" %}
+                    {% elif level.type == "buyout" %}
                         <i class="fa fa-lock"></i> {{ _("Unlocks for") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
-                    {% elif level._type == "points" %}
+                    {% elif level.type == "points" %}
                         <i class="fa fa-lock"></i> {{ _("Unlocks at") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
                     {% else %}
                         {% set last = GameLevel.last_level(level.id) %}
