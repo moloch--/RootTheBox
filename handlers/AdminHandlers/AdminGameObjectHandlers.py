@@ -971,53 +971,57 @@ class AdminDeleteHandler(BaseHandler):
         else:
             self.render("public/404.html")
 
-    def del_ip(self):
+    def del_ip(self, ip=None):
         """ Delete an ip address object """
-        ip = IpAddress.by_uuid(self.get_argument("ip_uuid", ""))
+        ip_init = ip
+        if ip is None:
+            ip = IpAddress.by_uuid(self.get_argument("ip_uuid", ""))
         if ip is not None:
             logging.info("Deleted IP address: '%s'" % str(ip))
             self.dbsession.delete(ip)
             self.dbsession.commit()
-            self.redirect("/admin/view/game_objects")
-        else:
-            logging.info(
-                "IP address (%r) does not exist in database"
-                % (self.get_argument("ip_uuid", ""),)
-            )
+            if ip_init is None:
+                self.redirect("/admin/view/game_objects")
+        elif ip_init is None:
             self.render(
                 "admin/view/game_objects.html",
                 success=None,
                 errors=["IP does not exist in database"],
             )
 
-    def del_flag(self):
+    def del_flag(self, flag=None):
         """ Delete a flag object from the database """
-        flag = Flag.by_uuid(self.get_argument("uuid", ""))
+        flag_init = flag
+        if flag is None:
+            flag = Flag.by_uuid(self.get_argument("uuid", ""))
         if flag is not None:
+            hints = flag.hints
+            for hint in hints:
+                self.del_hint(hint)
             logging.info("Deleted flag: %s " % flag.name)
             self.dbsession.delete(flag)
             self.dbsession.commit()
-            self.redirect("/admin/view/game_objects")
-        else:
-            logging.info(
-                "Flag (%r) does not exist in the database"
-                % (self.get_argument("uuid", ""))
-            )
+            if flag_init is None:
+                self.redirect("/admin/view/game_objects")
+        elif flag_init is None:
             self.render(
                 "admin/view/game_objects.html",
                 success=None,
                 errors=["Flag does not exist in database."],
             )
 
-    def del_hint(self):
+    def del_hint(self, hint=None):
         """ Delete a hint from the database """
-        hint = Hint.by_uuid(self.get_argument("uuid", ""))
+        hint_init = hint
+        if hint is None:
+            hint = Hint.by_uuid(self.get_argument("uuid", ""))
         if hint is not None:
             logging.info("Delete hint: %s" % hint.uuid)
             self.dbsession.delete(hint)
             self.dbsession.commit()
-            self.redirect("/admin/view/game_objects")
-        else:
+            if hint_init is None:
+                self.redirect("/admin/view/game_objects")
+        elif hint_init is None:
             self.render(
                 "admin/view/game_objects.html",
                 success=None,
@@ -1053,15 +1057,27 @@ class AdminDeleteHandler(BaseHandler):
                 errors=["Category does not exist in database."],
             )
 
-    def del_box(self):
+    def del_box(self, box=None):
         """ Delete a box """
-        box = Box.by_uuid(self.get_argument("uuid", ""))
+        box_init = box
+        if box is None:
+            box = Box.by_uuid(self.get_argument("uuid", ""))
         if box is not None:
+            hints = box.hints
+            flags = box.flags
+            ips = box.ip_addresses
+            for ip in ips:
+                self.del_ip(ip)
+            for hint in hints:
+                self.del_hint(hint)
+            for flag in flags:
+                self.del_flag(flag)
             logging.info("Delete box: %s" % box.name)
             self.dbsession.delete(box)
             self.dbsession.commit()
-            self.redirect("/admin/view/game_objects")
-        else:
+            if box_init is None:
+                self.redirect("/admin/view/game_objects")
+        elif box_init is None:
             self.render(
                 "admin/view/game_objects.html",
                 success=None,
@@ -1072,6 +1088,9 @@ class AdminDeleteHandler(BaseHandler):
         """ Deletes a game level, and fixes the linked list """
         game_level = GameLevel.by_uuid(self.get_argument("uuid", ""))
         if game_level is not None:
+            boxes = game_level.boxes
+            for box in boxes:
+                self.del_box(box)
             game_levels = sorted(GameLevel.all())
             game_levels.remove(game_level)
             for index, level in enumerate(game_levels[:-1]):
