@@ -43,10 +43,7 @@ def get_new_avatar(dir, forceteam=False):
         from models.Box import Box
 
         cmplist = Box.all()
-    dblist = []
-    for item in cmplist:
-        if item._avatar:
-            dblist.append(item._avatar)
+    dblist = [item._avatar for item in cmplist if item._avatar]
     for image in avatars:
         if image not in dblist:
             return image
