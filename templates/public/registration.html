@@ -148,7 +148,7 @@
                                 <label class="control-label" for="team_name">{{ _("Team Name") }}</label>
                                 <div class="controls">
                                     <input id="team-name" name="team_name" maxlength="24" minlength="3" type="text" placeholder="{{ _('Team Name') }}"
-                                        rel="popover"
+                                        rel="popover" pattern="^[a-zA-Z0-9 _\-\.]{3,24}$"
                                         data-original-title="{{_('New Team Name')}}"
                                         data-content="{{_('Choose a name for your new team!')}} [3-24 {{_('Characters')}}]" >
                                 </div>
@@ -157,7 +157,7 @@
                                 <label class="control-label" for="motto">{{ _("Motto") }}</label>
                                 <div class="controls">
                                     <input id="motto" name="motto" maxlength="32" type="text" placeholder="{{ _('Team Motto') }}"
-                                        rel="popover" pattern="^[a-zA-Z0-9_\-\.]{,32}$"
+                                        rel="popover" pattern="^[a-zA-Z0-9 _\-\.]{,32}$"
                                         data-original-title="{{_('Team Motto')}}"
                                         data-content="{{_('Optional')}}: {{_('What is your teams motto?')}} [{{ _('Max') }}: 32 {{_('Characters')}}]">
                                 </div>
