@@ -18,9 +18,11 @@ function getStatDetails(obj, uuid) {
                     var table = "";
                     if (value.length > 0) {
                         for (i=0; i < value.length; i++) {
-                            table += "<tr><td class='shortcolumn statcolumn'>" + value[i].name + "</td>";
+                            let tkn = $('<div>').html(value[i].token);
+                            let nm = $('<div>').html(value[i].name);
+                            table += "<tr><td class='shortcolumn statcolumn'>" + nm.text() + "</td>";
                             if (value[i].token !== undefined) {
-                                table += "<td class='descriptioncol' style='text-align: center;'>" + value[i].token + "</td>";
+                                table += "<td class='descriptioncol' style='text-align: center;'>" + tkn.text() + "</td>";
                             }
                             if (value[i].price !== undefined) {
                                 table += "<td class='shortcolumn statcolumn'>" + value[i].price + "</td>";
@@ -31,7 +33,7 @@ function getStatDetails(obj, uuid) {
                             if (key == "attempts") {
                                 table += "<td class='shortcolum statcolumn'><a class='acceptbtn btn btn-mini' href='#' ";
                                 table += "data-flag-uuid='" + value[i].flag + "' data-team-uuid='" + value[i].team + "' ";
-                                table += "data-team-name='" + value[i].name + "' data-flag-token='" + value[i].token + "' ";
+                                table += "data-team-name='" + nm.text() + "' data-flag-token='" + tkn.text() + "' ";
                                 table += "data-flag-penalty='" + value[i].penalty + "' data-flag-type='" + value[i].type + "'>";
                                 table += "Accept Answer</a></td>";
                             }
