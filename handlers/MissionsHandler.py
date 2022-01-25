@@ -123,6 +123,12 @@ class BoxHandler(BaseHandler):
                     errors=None,
                     info=["This box is currently locked by the Admin."],
                 )
+            elif level.type == "locked":
+                self.render(
+                    "missions/status.html",
+                    errors=None,
+                    info=["This level is currently locked by the Admin."],
+                )
             else:
                 self.render(
                     "missions/box.html",

@@ -46,6 +46,7 @@
                     <div class="controls">
                         <select id="game_level-type" name="type">
                             <option value="none">{{ _("No Lock") }}</option>
+                            <option value="locked">{{ _("Locked") }}</option>
                             <option value="buyout">{{ _("Purchase Unlock") }}</option>
                             <option value="progress">{{ _("Game Progress") }}</option>
                             <option value="points">{{ _("Game Points") }}</option>
@@ -228,6 +229,8 @@
                 {% if level._name  and level._name != level.name %}<strong>{{ _("Level") }} #{{ level.number }}</strong>&nbsp;&nbsp;&ndash;&nbsp;{% end %}
                     {% if level.type == "hidden" %}
                         <i class="fa fa-lock"></i> {{ _("Managed") }}
+                    {% elif level.type == "locked" %}
+                        <i class="fa fa-lock"></i> {{ _("Locked") }}
                     {% elif level.type == "none" or level.buyout == 0 %}
                         <i class="fa fa-unlock-alt"></i> {{ _("No Lock") }}
                     {% elif level.type == "buyout" %}

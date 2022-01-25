@@ -65,7 +65,7 @@
                     {% if corp.description %}<h4 class="levelheader">{{ corp.description }}</h4>{% end %}
                 {% end %}
 
-            {% set has_level = not team or level.type == 'none' or level in team.game_levels %}
+            {% set has_level = (not team or level.type == 'none' or level in team.game_levels) and level.type != 'locked'  %}
             {% if not (level.type == 'hidden' and not has_level) %}
             <div class="well">
                 {% if len(GameLevel.all()) > 1 %}
@@ -243,10 +243,16 @@
                     {% elif level._type == "progress" %}
                         {{ _("This level will unlock at") }} {{ level.buyout }}% {{ _("completion of prior level") }}
                     {% end %}
+                    {% if level.type != "locked" %}
                     <hr>
                     <strong>
                         {{ _("You do not have access to this level yet.") }}
                     </strong>
+                    {% else %}
+                    <strong>
+                        {{ _("This level is currently locked by the administrator.") }}
+                    </strong>
+                    {% end %}
                     <br />
                     <br />
                 {% end %}
