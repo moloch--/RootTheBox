@@ -203,7 +203,7 @@ Details,詳細
 Difficulty,困難
 Difficulty Rating,難易度評価
 Disable,無効にする
-Disabling this option will skip the story line and give the player an instant capture message.,このオプションを無効にすると、ストーリーラインがスキップされ、プレーヤーにインスタントキャプチャメッセージが表示されます。
+Disabling this option will skip the storyline and give the player an instant capture message.,このオプションを無効にすると、ストーリーラインがスキップされ、プレーヤーにインスタントキャプチャメッセージが表示されます。
 Display Hints Taken,撮影したヒントを表示
 Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,指示がない限り、コミュニティフラグを削除または変更しないでください。ゲームの目標に記載されていない限り、他のプレイヤーを攻撃しないでください。
 Download,ダウンロード
@@ -234,7 +234,7 @@ Enable,有効にする
 "Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",この機能を有効にすると、プレイヤーは登録時に独自のチームを作成できます。このオプションが無効になっている場合、管理者はプレイヤーが参加するチームを作成する必要があります。
 Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,この機能を有効にすると、プレイヤーはゲーム内でコード（ペーストビン）とファイルを共有できます。この機能を無効にすると、これらのオプションが[ツール]メニューから削除されます。
 "Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.",この機能を有効にすると、チームは連邦準備制度、ソースコードマーケット、SWATなどのアップグレードを購入できます。
-"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.",この機能を有効にすると、追加される可能性のあるフラグまたはボックスキャプチャメッセージをゲームで表示できます。デフォルトでは、ゲームはミッションを割り当てる雇用主であるモリスのストーリーに沿っています。
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the story line of Morris, an employer that assigns missions.",この機能を有効にすると、追加される可能性のあるフラグまたはボックスキャプチャメッセージをゲームで表示できます。デフォルトでは、ゲームはミッションを割り当てる雇用主であるモリスのストーリーに沿っています。
 "Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",この機能を有効にすると、不正なキャプチャの試行に対してペナルティが適用されます。ペナルティは、スコアからの即時の控除であり、フラグ値の減少ではありません。
 "Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.",この機能を有効にすると、キャプチャの数に基づいてフラグの報酬が減少します。このオプションが無効になっている場合、フラグ値は他のプレイヤーがキャプチャしても一貫したままです。
 Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,この機能を有効にすると、チームまたはプレーヤーがスコアボードで取得したヒントの数が表示されます。ヒントが無料の場合に役立ちます。スコアまたはフラグが等しい場合、ソートにはより低いヒントカウントが使用されます。このオプションを無効にすると、スコアボードからヒントカウントが削除されます。
@@ -684,8 +684,8 @@ You do not have access to this level yet.,このレベルにはまだアクセ�
 You do not own this upgrade.,このアップグレードの所有者ではありません。
 You have not submitted any bribes yet.,まだ賄briを提出していません。
 "Your email, visible to game administrators.",ゲーム管理者に表示されるメール。
-"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",ハンドルは3〜16文字の英数字でなければなりません。アンダースコア、ダッシュ、およびドットを使用できます。
-"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",ゲーム管理者に表示されるあなたの名前。名前には3〜64文字の英数字を使用できます
+"Your handle must be 3-16 alphanumeric characters.  Underscore, dash, and dots allowed.",ハンドルは3〜16文字の英数字でなければなりません。アンダースコア、ダッシュ、およびドットを使用できます。
+"Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters",ゲーム管理者に表示されるあなたの名前。名前には3〜64文字の英数字を使用できます
 "Password Reset",パスワードのリセット
 "Forgot Password",パスワードをお忘れですか
 "Request Password Reset",パスワードのリセットをリクエストする
