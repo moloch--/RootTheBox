@@ -203,7 +203,7 @@ Details,细节
 Difficulty,难度
 Difficulty Rating,难度等级
 Disable,禁用
-Disabling this option will skip the story line and give the player an instant capture message.,禁用此选项将跳过故事情节并为玩家提供即时消息。
+Disabling this option will skip the storyline and give the player an instant capture message.,禁用此选项将跳过故事情节并为玩家提供即时消息。
 Display Hints Taken,显示提示
 Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,除非另有说明，否则请勿删除或修改社区标志。除非在游戏目标中有所描述，否则不要攻击其他玩家。
 Download,下载
@@ -234,7 +234,7 @@ Enable,启用
 "Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",启用此功能将允许玩家在注册期间创建自己的团队。如果禁用此选项，则管理员必须创建团队以供玩家加入。
 Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,启用此功能将允许玩家在游戏中共享代码（pastebin）和文件。禁用此功能将从“工具”菜单中删除这些选项。
 "Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.",启用此功能将允许团队购买升级，例如银行系统，源代码市场或SWAT。
-"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.",启用此功能将允许游戏显示可能添加的Flag或题目提交消息。默认情况下，游戏遵循莫里斯的剧情发展，莫里斯是指派任务的雇主。
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the story line of Morris, an employer that assigns missions.",启用此功能将允许游戏显示可能添加的Flag或题目提交消息。默认情况下，游戏遵循莫里斯的剧情发展，莫里斯是指派任务的雇主。
 "Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",启用此功能将对不正确的解答尝试应用惩罚。罚款是从分数中即时扣除，而不是减少flag分值。
 "Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.",启用此功能将根据解出次数减少Flag的奖励。如果禁用此选项，则Flag分值将保持一致，不会因为其他玩家解出而减少。
 Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,启用此功能将在记分板上显示团队或玩家使用的提示数量。提示是免费时很有用。当分数或Flag相同时，较低的提示计数可用于排序。禁用此选项将从记分板中删除提示计数。
@@ -684,8 +684,8 @@ You do not have access to this level yet.,您还没有访问此级别的权限�
 You do not own this upgrade.,您没有此升级。
 You have not submitted any bribes yet.,你还没有提交任何赞助。
 "Your email, visible to game administrators.",您的电子邮件，对游戏管理员可见。
-"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",您的密码必须是3-16个字母数字字符。允许下划线，短划线和点。
-"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",您的名字，游戏管理员可以看到。您的姓名可以是3-64个字母数字字符
+"Your handle must be 3-16 alphanumeric characters.  Underscore, dash, and dots allowed.",您的密码必须是3-16个字母数字字符。允许下划线，短划线和点。
+"Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters",您的名字，游戏管理员可以看到。您的姓名可以是3-64个字母数字字符
 "Password Reset",重设密码
 "Forgot Password",忘记密码
 "Request Password Reset",要求重设密码

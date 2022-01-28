@@ -203,7 +203,7 @@ Details,Detalles
 Difficulty,Dificultad
 Difficulty Rating,Grado de dificultad
 Disable,Inhabilitar
-Disabling this option will skip the story line and give the player an instant capture message.,Deshabilitar esta opción saltará la línea de la historia y le dará al jugador un mensaje instantáneo de captura.
+Disabling this option will skip the storyline and give the player an instant capture message.,Deshabilitar esta opción saltará la línea de la historia y le dará al jugador un mensaje instantáneo de captura.
 Display Hints Taken,Mostrar sugerencias tomadas
 Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,No elimine ni modifique las banderas de la comunidad a menos que se le indique. No ataque a otros jugadores a menos que se indique en los objetivos del juego.
 Download,Descargar
@@ -234,7 +234,7 @@ Enable,Habilitar
 "Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.","Al habilitar esta función, los jugadores podrán crear sus propios equipos durante el registro. Si esta opción está desactivada, el administrador debe crear equipos para que los jugadores se unan."
 Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,"Al habilitar esta función, los jugadores podrán compartir código (pastebin) y archivos en el juego. Deshabilitar esta función eliminará estas opciones del menú Herramientas."
 "Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","Al habilitar esta función, los equipos podrán comprar actualizaciones, como la Reserva Federal, el Mercado de Código Fuente o SWAT."
-"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.","Habilitar esta función permitirá que el juego muestre mensajes de captura de bandera o cuadro que se pueden agregar. Por defecto, el juego sigue la historia de Morris, un empleador que asigna misiones."
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the story line of Morris, an employer that assigns missions.","Habilitar esta función permitirá que el juego muestre mensajes de captura de bandera o cuadro que se pueden agregar. Por defecto, el juego sigue la historia de Morris, un empleador que asigna misiones."
 "Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.","Habilitar esta función aplicará una penalización por intentos de captura incorrectos. La penalización es una deducción instantánea del puntaje, no una disminución en el valor de la bandera."
 "Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.","Habilitar esta función disminuirá la recompensa por una bandera en función del número de capturas. Si esta opción está desactivada, el valor de la bandera permanece constante mientras otros jugadores lo capturan."
 Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,Habilitar esta función mostrará el número de pistas tomadas en el marcador por un equipo o jugador. Útil cuando las pistas son gratis. Se utiliza un recuento de pistas más bajo para ordenar cuando los puntajes o las banderas son iguales. Deshabilitar esta opción eliminará el recuento de pistas del marcador.
@@ -684,8 +684,8 @@ You do not have access to this level yet.,Aún no tienes acceso a este nivel.
 You do not own this upgrade.,No eres el propietario de esta actualización.
 You have not submitted any bribes yet.,Aún no ha enviado ningún soborno.
 "Your email, visible to game administrators.","Su correo electrónico, visible para los administradores del juego."
-"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Su identificador debe tener 3-16 caracteres alfanuméricos. Subrayado, guión y puntos permitidos."
-"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Tu nombre, visible para los administradores del juego. Tu nombre puede tener 3-64 caracteres alfanuméricos"
+"Your handle must be 3-16 alphanumeric characters.  Underscore, dash, and dots allowed.","Su identificador debe tener 3-16 caracteres alfanuméricos. Subrayado, guión y puntos permitidos."
+"Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters","Tu nombre, visible para los administradores del juego. Tu nombre puede tener 3-64 caracteres alfanuméricos"
 "Password Reset",Restablecimiento de contraseña
 "Forgot Password",Se te olvidó tu contraseña
 "Request Password Reset",Petición para la recuperación de contraseña

@@ -203,7 +203,7 @@ Details,تفاصيل
 Difficulty,صعوبة
 Difficulty Rating,تقييم الصعوبة
 Disable,تعطيل
-Disabling this option will skip the story line and give the player an instant capture message.,سيؤدي تعطيل هذا الخيار إلى تخطي سطر القصة وإعطاء اللاعب رسالة التقاط فورية.
+Disabling this option will skip the storyline and give the player an instant capture message.,سيؤدي تعطيل هذا الخيار إلى تخطي سطر القصة وإعطاء اللاعب رسالة التقاط فورية.
 Display Hints Taken,عرض تلميحات اتخذت
 Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,لا تحذف أو تعدل أعلام المجتمع ما لم يتم توجيهك. لا تهاجم اللاعبين الآخرين إلا في الأهداف المحددة في اللعبة.
 Download,تحميل
@@ -234,7 +234,7 @@ Enable,مكن
 "Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",يتيح تمكين هذه الميزة للاعبين إنشاء فرقهم الخاصة أثناء التسجيل. إذا تم تعطيل هذا الخيار ، يجب على المشرف إنشاء فرق للاعبين للانضمام إليها.
 Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,سيسمح تمكين هذه الميزة للاعبين بمشاركة الكود (pastebin) والملفات الموجودة في اللعبة. سيؤدي تعطيل هذه الميزة إلى إزالة هذه الخيارات من قائمة الأدوات.
 "Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.",يتيح تمكين هذه الميزة للفرق شراء ترقيات ، مثل Federal Reserve أو Source Code Market أو SWAT.
-"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.",سيتيح تمكين هذه الميزة للعبة عرض رسائل التقاط علامة أو مربعة يمكن إضافتها. تبعًا للإعدادات الافتراضية ، تتبع اللعبة قصة Morris ، صاحب العمل الذي يقوم بتعيين المهام.
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the story line of Morris, an employer that assigns missions.",سيتيح تمكين هذه الميزة للعبة عرض رسائل التقاط علامة أو مربعة يمكن إضافتها. تبعًا للإعدادات الافتراضية ، تتبع اللعبة قصة Morris ، صاحب العمل الذي يقوم بتعيين المهام.
 "Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",سيؤدي تمكين هذه الميزة إلى فرض عقوبة على محاولات الالتقاط غير الصحيحة. العقوبة هي خصم فوري من النتيجة ، وليس انخفاضًا في قيمة العلم.
 "Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.",سيؤدي تمكين هذه الميزة إلى تقليل مكافأة العلامة بناءً على عدد مرات الالتقاط. إذا تم تعطيل هذا الخيار ، فستبقى قيمة العلامة متسقة مع قيام اللاعبين الآخرين بالتقاطها.
 Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,سيؤدي تمكين هذه الميزة إلى عرض عدد التلميحات التي تم التقاطها على لوحة النتائج بواسطة فريق أو لاعب. مفيدة عندما تلميحات مجانية. يتم استخدام عدد تلميحات أقل للفرز عندما تكون النقاط أو العلامات متساوية. سيؤدي تعطيل هذا الخيار إلى إزالة عدد التلميحات من لوحة النتائج.
@@ -684,8 +684,8 @@ You do not have access to this level yet.,ليس لديك حق الوصول إل
 You do not own this upgrade.,أنت لا تملك هذه الترقية.
 You have not submitted any bribes yet.,لم ترسل أي رشاوى بعد.
 "Your email, visible to game administrators.",بريدك الإلكتروني ، مرئي لمسؤولي اللعبة.
-"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.",يجب أن يكون مؤشرك من 3 إلى 16 حرفًا أبجديًا رقميًا. الشرطة السفلية ، الشرطة ، والنقاط المسموح بها.
-"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters",اسمك مرئي لمسؤولي اللعبة. يمكن أن يكون اسمك 3-64 حرفًا رقميًا
+"Your handle must be 3-16 alphanumeric characters.  Underscore, dash, and dots allowed.",يجب أن يكون مؤشرك من 3 إلى 16 حرفًا أبجديًا رقميًا. الشرطة السفلية ، الشرطة ، والنقاط المسموح بها.
+"Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters",اسمك مرئي لمسؤولي اللعبة. يمكن أن يكون اسمك 3-64 حرفًا رقميًا
 "Password Reset",إعادة تعيين كلمة المرور
 "Forgot Password",هل نسيت كلمة المرور
 "Request Password Reset",اعادة تعيين كلمة المرور طلب

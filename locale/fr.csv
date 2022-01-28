@@ -203,7 +203,7 @@ Details,Détails
 Difficulty,Difficulté
 Difficulty Rating,Niveau de difficulté
 Disable,Désactiver
-Disabling this option will skip the story line and give the player an instant capture message.,"Si vous désactivez cette option, l'historique sera ignoré et le joueur recevra un message de capture instantanée."
+Disabling this option will skip the storyline and give the player an instant capture message.,"Si vous désactivez cette option, l'historique sera ignoré et le joueur recevra un message de capture instantanée."
 Display Hints Taken,Afficher les astuces prises
 Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,"Ne supprimez ni ne modifiez les drapeaux de communauté, à moins d'y être invité. Ne pas attaquer les autres joueurs à moins d’être indiqué dans les objectifs du jeu."
 Download,Télécharger
@@ -234,7 +234,7 @@ Enable,Activer
 "Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.","L'activation de cette fonctionnalité permettra aux joueurs de créer leurs propres équipes lors de l'inscription. Si cette option est désactivée, l’administrateur devra créer des équipes que les joueurs pourront rejoindre."
 Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,Activer cette fonctionnalité permettra aux joueurs de partager du code (pastebin) et des fichiers dans le jeu. La désactivation de cette fonctionnalité supprimera ces options du menu Outils.
 "Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.","L'activation de cette fonctionnalité permettra aux équipes d'acheter des mises à niveau, telles que la Réserve fédérale, le marché du code source ou le SWAT."
-"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the storyline of Morris, an employer that assigns missions.","L'activation de cette fonctionnalité permettra au jeu d'afficher les messages de capture de drapeau ou de boîte pouvant être ajoutés. Par défaut, le jeu suit le scénario de Morris, un employeur qui attribue des missions."
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the story line of Morris, an employer that assigns missions.","L'activation de cette fonctionnalité permettra au jeu d'afficher les messages de capture de drapeau ou de boîte pouvant être ajoutés. Par défaut, le jeu suit le scénario de Morris, un employeur qui attribue des missions."
 "Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.","L'activation de cette fonctionnalité entraînera une pénalité pour les tentatives de capture incorrectes. La pénalité est une déduction instantanée du score, pas une diminution de la valeur du drapeau."
 "Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.","L'activation de cette fonctionnalité réduira la récompense d'un indicateur en fonction du nombre de captures. Si cette option est désactivée, la valeur du drapeau reste cohérente à mesure que les autres joueurs le capturent."
 Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,Activer cette fonctionnalité affichera le nombre de conseils pris sur le tableau de bord par une équipe ou un joueur. Utile quand les indices sont gratuits. Un nombre d'indices inférieur est utilisé pour le tri lorsque les scores ou les drapeaux sont égaux. La désactivation de cette option supprimera le nombre d'indices du tableau de bord.
@@ -684,8 +684,8 @@ You do not have access to this level yet.,Vous n'avez pas encore accès à ce ni
 You do not own this upgrade.,Vous ne possédez pas cette mise à jour.
 You have not submitted any bribes yet.,Vous n'avez pas encore soumis de pots-de-vin.
 "Your email, visible to game administrators.","Votre email, visible par les administrateurs du jeu."
-"Your handle must be 3-16 alpha-numeric characters.  Underscore, dash, and dots allowed.","Votre pseudo doit être composé de 3 à 16 caractères alphanumériques. Soulignement, tiret et points autorisés."
-"Your name, visible to game administrators.  Your name can be 3-64 alpha-numeric characters","Votre nom, visible par les administrateurs du jeu. Votre nom doit être composé de 3 à 64 caractères alphanumériques"
+"Your handle must be 3-16 alphanumeric characters.  Underscore, dash, and dots allowed.","Votre pseudo doit être composé de 3 à 16 caractères alphanumériques. Soulignement, tiret et points autorisés."
+"Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters","Votre nom, visible par les administrateurs du jeu. Votre nom doit être composé de 3 à 64 caractères alphanumériques"
 "Password Reset",Réinitialisation du mot de passe
 "Forgot Password",Mot de passe oublié
 "Request Password Reset",Demander la réinitialisation du mot de passe
