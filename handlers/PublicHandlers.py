@@ -351,6 +351,7 @@ class RegistrationHandler(BaseHandler):
             if self.application.settings["suspend_registration"]:
                 self.render("public/registration.html", errors=None, suspend=True)
             else:
+                self.form_validation()
                 if self.config.restrict_registration:
                     self.check_regtoken()
                 user = self.create_user()
@@ -445,7 +446,6 @@ class RegistrationHandler(BaseHandler):
 
     def create_user(self):
         """ Add user to the database """
-        self.form_validation()
         user = User()
         user.handle = self.get_argument("handle", "")
         user.password = self.get_argument("pass1", "")
