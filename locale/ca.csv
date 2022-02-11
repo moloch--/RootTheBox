@@ -13,7 +13,7 @@ Active Bots,Bots actius
 Add,Afegir
 Add,Afegir
 add,afegir
-Add a Category for Boxes.,Agregar una categoria per a quadres.
+Add a Category for Boxes.,Agregar una categoria per a les Caixes.
 Add Flags,Agregar banderes
 Add Hint,Afegir pista
 Add IP address,Agregar adreça IP
@@ -33,10 +33,10 @@ All Notifications,Totes les notificacions
 and logos in export.,i logotips en exportació.
 and so on,i així
 Apply penalty on attempt,Aplicar penalització en intentar
-Are you a Cylon?,Eres un cylon?
-Are You Elite,Eres elit?
+Are you a Cylon?,Eres un Cylon?
+Are You Elite,Eres Èlit?
 Are you sure you want to buy this code?,Estàs segur que vols comprar aquest codi?
-Are you sure you want to delete this box?,Estàs segur que desitges eliminar aquest quadre?
+Are you sure you want to delete this box?,Estàs segur que desitges eliminar aquesta Caixa?
 Are you sure you want to delete this category?,Estàs segur que desitges eliminar aquesta categoria?
 Are you sure you want to delete this corporation?,Estàs segur que desitges eliminar aquesta corporació?
 Are you sure you want to delete this file?,Estàs segur que desitges eliminar aquest arxiu?
@@ -46,17 +46,17 @@ Are you sure you want to delete this hint?,Estàs segur que desitges eliminar aq
 Are you sure you want to delete this IP address?,Està segur que desitja eliminar aquesta adreça IP?
 Are you sure you want to delete this source code?,Estàs segur que desitges eliminar aquest codi font?
 Are you sure you want to delete this user?,Estàs segur que desitges eliminar a aquest usuari?
-Are you sure you want to delete?,Aquestes segur que vols esborrar-ho?
+Are you sure you want to delete?,Estàs segur que vols esborrar-ho?
 Arrest Player,Jugador d'arrest
 attempt,intent
 attempt and continue until the,intente i continue fins que
 Attempts,Intents
 Authenticate,Autenticar
-Authentication Failure,Fallada d'autentificacion
-Authentication Required,Autenticacion requerida
+Authentication Failure,Fallada d'autentificació
+Authentication Required,Autenticació requerida
 Automatic Ban,Prohibició automàtica
 Avatar,Avatar
-Backup/Restore,Còpia de seguretat de restauracion
+Backup/Restore,Còpia de seguretat de restauració
 Ban IP Address,Prohibir adreça IP
 Bank Account,Compte bancari
 Bank Account Balance,Saldo de compte bancari
@@ -69,9 +69,9 @@ Banned IPs,IPs prohibides
 BEGIN SECURE COMMUNIQUE,COMENCE COMUNICAT SEGUR
 Black Market,Mercat negre
 Bonus reward for those that complete the level.,Recompensa addicional per a aquells que completen el nivell.
-Bot,Larva del borinot
-Bot added,Larva del moscardón afegit
-Bot Reward,Recompensa Larva del moscardón
+Bot,Larva del moscardó
+Bot added,Larva del moscardó afegit
+Bot Reward,Recompensa Larva del moscardó
 Botnet,Botnet
 Botnet Command & Control,Botnet Command & Control
 Botnet Monitor,Monitor de xarxa de zombis
@@ -98,10 +98,10 @@ Capture Message,Capturar missatge
 Capture Rate,Taxa de captura
 Captures,Captures
 Case-Sensitive,Distingeix majúscules i minúscules
-Cash Stolen,Diners en efectiu robat
+Cash Stolen,Diners en efectiu robats
 Categories,Categories
 Category,Categoria
-Category box belongs too?,El quadre de categoria també pertany?
+Category box belongs too?,La caixa de categoria també pertany?
 Category Name,nom de la categoria
 Change,Canvi
 Change Avatar,Canviar avatar
@@ -116,10 +116,10 @@ Classic,Clàssic
 Clear,Clar
 Clear all notifications and game history,Esborrar totes les notificacions i l'historial del joc
 Clear all team / player flag captures,Esborrar totes les captures de la bandera de l'equip / jugador
-Clear all team pastebin and file shares,Esborrar tots els recursos compartits d'arxivaments i pastissos de l'equip
+Clear all team pastebin and file shares,Esborrar tots els recursos compartits d'arxivaments i pastebin de l'equip
 Clear market items or source code purchases,Esborrar articles del mercat o compres de codi font
 Click here to login,Faça clic ací per a ingressar
-Close,A prop
+Close,Tancar
 Command & Control,Comando i control
 Complete,Completar
 Complete Bribe,Suborn complet
@@ -147,14 +147,14 @@ Create,
 Create Box,Crear caixa
 Create Category,Crear categoria
 Create Corporation,Crear corporació
-Create Datetime Flag,Crear indicador de data i hora
+Create Datetime Flag,Crear bandera de data i hora
 Create File Flag,Crear bandera d'arxiu
 Create Flag,Crear bandera
 Create Game Level,Crear nivell de joc
 Create Hint,Crear pista
 Create Message,Crear un missatge
 Create Multiple Choice Flag,Crear bandera d'opció múltiple
-Create New Paste,Crear nova pasta
+Create New Paste,Crear nou pegat
 Create Notification,Crear notificació
 Create Regex Flag,Crear bandera d'expressions regulars
 Create Static Flag,Crear bandera estàtica
@@ -169,7 +169,7 @@ CyberChef,CyberChef
 Data Points,Punts de dades
 Date,Data
 Datetime Flag,Indicador de data i hora
-Datetime Token,Simbólico de data i hora
+Datetime Token,Token de data i hora
 DEBUG,DEPURAR
 Decline,Disminució
 Decline Bribe?,Rebutjar el suborn?
@@ -179,9 +179,9 @@ Decrease All Captures,Disminuïsca totes les captures
 Decrease flag reward by this percent per capture.,Disminuïsca la recompensa de la bandera en aquest percentatge per captura.
 Decrease flag until it reaches this minimum value.,Disminuïsca la bandera fins que aconseguisca aquest valor mínim.
 Decrease Future Captures,Disminuir futures captures
-Decreases the flag value for future captures - this method rewards speed of capture.,Disminueix el valor de l'indicador per a futures captures: aquest mètode recompensa la velocitat de captura.
+Decreases the flag value for future captures - this method rewards speed of capture.,Disminueix el valor de la bandera per a futures captures: aquest mètode recompensa la velocitat de captura.
 Decreases the flag value for past and future team captures - this method rewards difficulty.,Disminueix el valor de la bandera per a les captures d'equip passades i futures: aquest mètode recompensa la dificultat.
-deduct on & after,deduir en i després
+deduct on & after,deduir abans i després
 defaults to,per defecte és
 Delete,Esborrar
 Delete Box,Eliminar quadre
@@ -204,8 +204,8 @@ Difficulty,Dificultat
 Difficulty Rating,Grau de dificultat
 Disable,Inhabilitar
 Disabling this option will skip the storyline and give the player an instant capture message.,Deshabilitar aquesta opció saltarà la línia de la història i li donarà al jugador un missatge instantani de captura.
-Display Hints Taken,Mostrar suggeriments presos
-Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,No elimine ni modifique les banderes de la comunitat llevat que se li indique. No atac a altres jugadors llevat que s'indique en els objectius del joc.
+Display Hints Taken,Mostrar suggeriments destapats
+Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,No elimine ni modifique les banderes de la comunitat llevat que se li indique. No ataque a altres jugadors llevat que s'indique en els objectius del joc.
 Download,Descarregar
 Download File,Descarregar arxiu
 Download the command line botnet monitor,Descarregue el monitor de xarxa de zombis de línia de comando
@@ -306,14 +306,14 @@ Get help with,Obtinga ajuda amb
 Get your registration token from reception,Obtinga la seua token de registre en la recepció
 Glitch in the Matrix,Glitch en la matriu
 Global Notifications,Notificacions globals
-Handle,Encarregar-se d'Ocultar
+Handle,El teu alias
 Hide scoreboard during countdown,Ocultar el marcador durant el compte arrere
-Hint,Insinuació
+Hint,Pista
 Hint not yet taken,Suggeriment encara no presa
 Hint Taken,Suggeriment pres
 Hints,Consells
 Hints on,Consells sobre
-Hints Taken,Consells presos
+Hints Taken,Consells destapats
 History,Història
 Home,Casa
 How should the next level unlock?,Com ha de desbloquejar-se el següent nivell?
@@ -329,14 +329,14 @@ In Progress,En progrés
 "In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","En aquest cas, la bandera és una expressió regular. L'usuari ha d'enviar una cadena que coincidisca amb el patró per a capturar la bandera. Els partits poden ser insensibles. Assegure's de provar la seua expressió regular i assegure's que no siga massa àmplia."
 "In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.","En aquest cas, la bandera és una cadena estàtica. L'usuari ha d'enviar el token exacte per a capturar la bandera. Els espais en blanc al principi i al final s'eliminen."
 Include gameplay settings (such as those under ,Inclou configuracions de joc (com les que es troben davall d'Ingresos
-Income,
+Income,Entrant
 Incoming Transmission,Transmissió entrant
 Incorrect,Incorrecte
 Incorrect Penalty,Penalització incorrecta
 indicates use by another player,indica ús per un altre jugador
 INFO,INFORMACIÓ
 Information,Informació
-Invalid CSRF Token,Simbólico CSRF invàlid
+Invalid CSRF Token,Simbòlic CSRF invàlid
 IP Address,Adreça IP
 IP Version,Versió IP
 It appears you're an unsophisticated script kiddie!,Sembla que eres un guionista poc sofisticat!
@@ -481,7 +481,7 @@ Privacy Policy,Política
 Private,Privat
 Programming,Programació
 Provide the code used to join an existing team.  Visible to other team members on their home page.,Proporcione el codi utilitzat per a unir-se a un equip existent. Visible per a altres membres de l'equip en la seua pàgina d'inici.
-Public,Público
+Public,Públic
 Public Team Creation,Creació d'equip públic
 Public Teams,Equips públics
 Purchase,Compra
@@ -514,7 +514,7 @@ S.W.A.T,ESCLAFAR
 Save,Salvar
 Score,Puntuació
 Scoreboard,Marcador
-Scoreboard Rank By,Classificació del marcador per Visibilidad
+Scoreboard Rank By,Classificació del marcador per Visibilitat
 Scoreboard Visibility,Visibilitat del marcador
 Security Breach,Violació de la seguretat
 See All,Veure tot
@@ -542,13 +542,13 @@ Start the Game,Començar el joc
 start with 0 points,començar amb 0 punts
 Starting Money,Diners inicials
 Static Flag,Bandera estàtica
-Static Token,Simbólico estàtic
+Static Token,Token estàtic
 Statistics,Estadística
 stop on & after,parar i després
 Stop the Game,Detenir el joc
 Stop the game after timer ends,Detingues el joc quan acabe el temporitzador
 Story,Història
-Story Mode,Manera historia
+Story Mode,Mode historia
 Submit,Enviar
 Submit a Bug,Enviar un error
 Submit a Flag,Enviar una bandera
@@ -560,7 +560,7 @@ Success!,Èxit!
 Successful,Reeixit
 Successful Captures,Captures reeixides
 Successful Registration,Registre reeixit
-Successfully created a new account for,Es va crear amb èxit un nou compte per a Resumen
+Successfully created a new account for,S'ha creat amb èxit un nou compte per a 
 Summary,
 Supports,Secunda
 Switch Level,Canviar nivell
@@ -676,7 +676,7 @@ When banking is disabled,Quan la banca està deshabilitada
 "When to stop applying the penalty.  For example, you may want to only penalize a certain total of the flags value and allow any further attempts to be free, thus allowing all flags to have some value.","Quan deixar d'aplicar la pena. Per exemple, és possible que desitge penalitzar només un cert total del valor de les banderes i permetre que qualsevol intent posterior siga lliure, permetent que totes les banderes tinguen algun valor."
 when using banking.,quan s'usa la banca.
 Windows,Finestres
-With contributions from,Amb contribucions d'Archivo
+With contributions from,Amb contribucions d'Arxiu
 XML File,Arxiu XML
 Yes,Sí
 You are not on a team,No aquestes en un equip
