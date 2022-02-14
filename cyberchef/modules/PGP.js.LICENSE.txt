@@ -139,3 +139,15 @@
  * @license Apache-2.0
  *
  */
+
+/**
+ * PGP functions.
+ *
+ * @author tlwr [toby@toby.codes]
+ * @author Matt C [matt@artemisbot.uk]
+ * @author n1474335 [n1474335@gmail.com]
+ *
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */

@@ -5,16 +5,16 @@
  * @license  MIT
  */
 
-/*!
- * UAParser.js v0.7.24
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*!@license
+ * UAParser.js v0.7.28
  * Lightweight JavaScript-based User-Agent string parser
  * https://github.com/faisalman/ua-parser-js
  *
  * Copyright © 2012-2021 Faisal Salman <f@faisalman.com>
  * Licensed under MIT License
  */
-
-/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 /**
  * @author d98762625 [d98762625@gmail.com]
@@ -103,6 +103,16 @@
  * File type functions
  *
  * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * Stream class for parsing binary protocols.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @author tlwr [toby@toby.codes]
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  *

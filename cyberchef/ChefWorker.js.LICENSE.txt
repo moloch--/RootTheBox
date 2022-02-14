@@ -514,6 +514,18 @@
  */
 
 /**
+ * Protobuf lib. Contains functions to decode protobuf serialised
+ * data without a schema or .proto file.
+ *
+ * Provides utility functions to encode and decode variable length
+ * integers (varint).
+ *
+ * @author GCHQ Contributor [3]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
  * Some parts taken from mimelib (http://github.com/andris9/mimelib)
  * @author Andris Reinman
  * @license MIT

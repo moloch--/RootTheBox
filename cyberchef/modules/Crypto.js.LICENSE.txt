@@ -59,6 +59,64 @@
  */
 
 /**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ *
+ * HASSH created by Salesforce
+ *   Ben Reardon (@benreardon)
+ *   Adel Karimi (@0x4d31)
+ *   and the JA3 crew:
+ *     John B. Althouse
+ *     Jeff Atkinson
+ *     Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ *
+ * HASSH created by Salesforce
+ *   Ben Reardon (@benreardon)
+ *   Adel Karimi (@0x4d31)
+ *   and the JA3 crew:
+ *     John B. Althouse
+ *     Jeff Atkinson
+ *     Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
+*/
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ *
+ * JA3 created by Salesforce
+ *   John B. Althouse
+ *   Jeff Atkinson
+ *   Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ *
+ * JA3S created by Salesforce
+ *   John B. Althouse
+ *   Jeff Atkinson
+ *   Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
+ */
+
+/**
  * Base64 functions.
  *
  * @author n1474335 [n1474335@gmail.com]
@@ -146,6 +204,16 @@
  * @author mt3571 [mt3571@protonmail.com]
  * @copyright Crown Copyright 2020
  * @license Apache-2.0
+ */
+
+/**
+ * Stream class for parsing binary protocols.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @author tlwr [toby@toby.codes]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
  */
 
 /**
