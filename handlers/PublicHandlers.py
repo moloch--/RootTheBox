@@ -38,6 +38,7 @@ from libs.SecurityDecorators import blacklist_ips
 from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import filter_avatars
 from libs.StringCoding import encode, decode
+from libs.EmailHelpers import email_rfc2822_compliance
 from base64 import urlsafe_b64encode, urlsafe_b64decode, b64encode
 from builtins import str
 from models import azuread_app
@@ -564,7 +565,8 @@ class RegistrationHandler(BaseHandler):
             emailtoken.user_id = user.id
             emailtoken.value = sha256(email_token).hexdigest()
             receivers = [user.email]
-            message = self.create_validate_message(user, email_token)
+            message = email_rfc2822_compliance(
+                self.create_validate_message(user, email_token))
             smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port)
             smtpObj.set_debuglevel(False)
             try:
@@ -740,7 +742,8 @@ class ForgotPasswordHandler(BaseHandler):
             self.dbsession.add(passtoken)
             self.dbsession.commit()
             receivers = [user.email]
-            message = self.create_reset_message(user, reset_token)
+            message = email_rfc2822_compliance(
+                self.create_reset_message(user, reset_token))
             smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port)
             smtpObj.set_debuglevel(False)
             try:
