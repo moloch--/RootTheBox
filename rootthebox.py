@@ -1057,6 +1057,7 @@ if __name__ == "__main__":
     # We need this to pull the --config option
     try:
         options.parse_command_line()
+        options_parse_environment()
     except:
         os._exit(1)
 
@@ -1065,17 +1066,22 @@ if __name__ == "__main__":
     if options.version:
         version()
     elif options.setup.startswith("docker"):
-        if os.path.isfile(options.config):
-            options.parse_config_file(options.config)
-        else:
+        if (not os.path.isfile(options.config) or (
+            options.sql_dialect == "sqlite"
+            and not os.path.isfile(options.sql_database)
+            and not os.path.isfile("%s.db" % options.sql_database))
+        ):
             logging.info("Running Docker Setup")
+            if os.path.isfile(options.config):
+                options.parse_config_file(options.config)
             options.sql_database = "files/rootthebox.db"
             options.admin_ips = []  # Remove admin ips due to docker 127.0.0.1 mapping
             options.memcached = "memcached"
             options.x_headers = True
-            options_parse_environment()  # Pick up env vars before saving config file.
             save_config()
             setup()
+        else:
+            options.parse_config_file(options.config)
         options.start = True
     elif options.save or not os.path.isfile(options.config):
         save_config()
