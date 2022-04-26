@@ -335,10 +335,10 @@ class Flag(DatabaseObject):
     @property
     def value(self):
         if self._original_value and self._original_value > self._value:
-            """ Since value itself is no longer decreased in dynamic scoring
+            """Since value itself is no longer decreased in dynamic scoring
             there is no need for original_value, but for backward compatibility
-            if _original_value is GT the value, update the value. 
-            At some point, we can remove original_value column. """
+            if _original_value is GT the value, update the value.
+            At some point, we can remove original_value column."""
             self.value = self._original_value
         return self._value
 

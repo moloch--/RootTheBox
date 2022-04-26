@@ -566,7 +566,8 @@ class RegistrationHandler(BaseHandler):
             emailtoken.value = sha256(email_token).hexdigest()
             receivers = [user.email]
             message = email_rfc2822_compliance(
-                self.create_validate_message(user, email_token))
+                self.create_validate_message(user, email_token)
+            )
             smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port)
             smtpObj.set_debuglevel(False)
             try:
@@ -743,7 +744,8 @@ class ForgotPasswordHandler(BaseHandler):
             self.dbsession.commit()
             receivers = [user.email]
             message = email_rfc2822_compliance(
-                self.create_reset_message(user, reset_token))
+                self.create_reset_message(user, reset_token)
+            )
             smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port)
             smtpObj.set_debuglevel(False)
             try:

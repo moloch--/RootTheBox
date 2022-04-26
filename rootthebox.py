@@ -1066,10 +1066,10 @@ if __name__ == "__main__":
     if options.version:
         version()
     elif options.setup.startswith("docker"):
-        if (not os.path.isfile(options.config) or (
+        if not os.path.isfile(options.config) or (
             options.sql_dialect == "sqlite"
             and not os.path.isfile(options.sql_database)
-            and not os.path.isfile("%s.db" % options.sql_database))
+            and not os.path.isfile("%s.db" % options.sql_database)
         ):
             logging.info("Running Docker Setup")
             if os.path.isfile(options.config):

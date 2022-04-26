@@ -809,24 +809,24 @@ class WebSocketApp(object):
         sockopt=(),
     ):
         """
-        url: websocket url.
-        header: custom header for websocket handshake.
-        on_open: callable object which is called at opening websocket.
+         url: websocket url.
+         header: custom header for websocket handshake.
+         on_open: callable object which is called at opening websocket.
+           this function has one argument. The argument is this class object.
+         on_message: callbale object which is called when received data.
+          on_message has 2 arguments.
+          The 1st argument is this class object.
+          The passing 2nd argument is utf-8 string which we get from the server.
+        on_error: callable object which is called when we get error.
+          on_error has 2 arguments.
+          The 1st argument is this class object.
+          The passing 2nd argument is exception object.
+        on_close: callable object which is called when closed the connection.
           this function has one argument. The argument is this class object.
-        on_message: callbale object which is called when received data.
-         on_message has 2 arguments.
-         The 1st argument is this class object.
-         The passing 2nd argument is utf-8 string which we get from the server.
-       on_error: callable object which is called when we get error.
-         on_error has 2 arguments.
-         The 1st argument is this class object.
-         The passing 2nd argument is exception object.
-       on_close: callable object which is called when closed the connection.
-         this function has one argument. The argument is this class object.
-       keep_running: a boolean flag indicating whether the app's main loop should
-         keep running, defaults to True
-       get_mask_key: a callable to produce new mask keys, see the WebSocket.set_mask_key's
-         docstring for more information
+        keep_running: a boolean flag indicating whether the app's main loop should
+          keep running, defaults to True
+        get_mask_key: a callable to produce new mask keys, see the WebSocket.set_mask_key's
+          docstring for more information
         """
         self.url = url
         self.header = header
