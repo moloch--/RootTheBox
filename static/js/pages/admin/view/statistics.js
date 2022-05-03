@@ -8,7 +8,7 @@ function getStatDetails(obj, uuid) {
                 $("#flag_value").text(value[0]["price"]);
                 $("#details_flag_name").text(value[0].name);
                 $("#details_flag_description").text(value[0].description);
-                $("#details_flag_token").text(value[0].token);
+                $("#details_flag_token").text(htmlEncode(value[0].token));
                 $("#count_attempts").text(response["attempts"].length);
                 $("#count_captures").text(response["captures"].length);
                 $("#count_hints").text(response["hints"].length);
@@ -18,10 +18,10 @@ function getStatDetails(obj, uuid) {
                     var table = "";
                     if (value.length > 0) {
                         for (i=0; i < value.length; i++) {
-                            let tkn = $('<div>').html(value[i].token);
-                            let nm = $('<div>').html(value[i].name);
+                            let tkn = $('<div>').text(htmlEncode(value[i].token));
+                            let nm = $('<div>').text(value[i].name);
                             table += "<tr><td class='shortcolumn statcolumn'>" + nm.text() + "</td>";
-                            if (value[i].token !== undefined) {
+                            if (htmlEncode(value[i].token) !== undefined) {
                                 table += "<td class='descriptioncol' style='text-align: center;'>" + tkn.text() + "</td>";
                             }
                             if (value[i].price !== undefined) {
