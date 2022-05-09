@@ -36,6 +36,8 @@ function getDetails(obj, uuid) {
                 }
             } else if (obj === "box" && key === "corporation") {
                 $('#edit-box-corporation option[value=' + value + ']').prop('selected',true);
+            } else if (obj === "box" && key === "game_level") {
+                $('#edit-box-game-level option[value=' + value + ']').prop('selected',true);
             } else if (obj === "box" && key === "flag_submission_type") {
                 if (value === "CLASSIC") {
                     $('#box-flag-submission-type-classic').click();

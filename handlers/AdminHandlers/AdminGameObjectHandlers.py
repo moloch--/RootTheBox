@@ -598,6 +598,14 @@ class AdminEditHandler(BaseHandler):
                     box.name = name
                 else:
                     raise ValidationError("Box name already exists")
+            # Game Level
+            level = GameLevel.by_uuid(self.get_argument("game_level", ""))
+            if level is not None and level.id != box.game_level_id:
+                logging.info(
+                    "Updated %s's level %s -> %s"
+                    % (box.name, box.game_level_id, level.id)
+                )
+                box.game_level_id = level.id
             # Corporation
             corp = Corporation.by_uuid(self.get_argument("corporation_uuid", ""))
             if corp is not None and corp.id != box.corporation_id:
@@ -665,8 +673,8 @@ class AdminEditHandler(BaseHandler):
                 )
                 box.capture_message = capture_message
             # Reward Value
-            reward = self.get_argument("value", 0)
-            if reward != box.value:
+            reward = self.get_argument("value", "0")
+            if reward != str(box.value):
                 logging.info(
                     "Updated %s's capture value %s -> %s"
                     % (box.name, box.value, reward)
@@ -833,14 +841,14 @@ class AdminEditHandler(BaseHandler):
                     available = [available]
                 for team_uuid in access:
                     if decode(team_uuid) not in teams:
-                        team = Team.by_uuid(team_uuid)
+                        team = Team.by_uuid(decode(team_uuid))
                         if team:
                             team.game_levels.append(level)
                             self.dbsession.add(team)
                             self.dbsession.commit()
                 for team_uuid in available:
                     if decode(team_uuid) in teams:
-                        team = Team.by_uuid(team_uuid)
+                        team = Team.by_uuid(decode(team_uuid))
                         if team:
                             team.game_levels.remove(level)
                             self.dbsession.add(team)
