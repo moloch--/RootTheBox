@@ -66,7 +66,7 @@ function greetings(term) {
 $(document).ready(function() {
     $("#closebutton").click(function(){
         if ($(this).val().length > 0) {
-            window.location = '/user/missions/boxes?uuid=' + $(this).val();
+            window.location = '/user/missions/boxes?uuid=' + htmlEncode($(this).val());
         } else {
             window.location = '/user/missions';
         }

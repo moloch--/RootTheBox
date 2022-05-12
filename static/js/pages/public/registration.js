@@ -41,7 +41,7 @@ $(document).ready(function() {
     $(".useravatarimg").click(function() {
         var filename = $(this).attr('value');
         $("#user_avatar_select").val(filename);
-        $("#avatarimage").attr("src", "/avatars/" + $(this).attr('value'));
+        $("#avatarimage").attr("src", "/avatars/" + htmlEncode($(this).attr('value')));
         $("#avatarclose").click();
     });
     $("#user-avatar").change(function(){

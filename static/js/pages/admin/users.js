@@ -96,7 +96,7 @@ $(document).ready(function() {
 
     $(".teamavatarimg").click(function() {
         var image = $(this).attr('value');
-        $("#team-avatarimg").attr('src', "/avatars/" + image);
+        $("#team-avatarimg").attr('src', "/avatars/" + htmlEncode(image));
         $("#team-file-avatar").val("");
         $("#team-avatar").val(image);
         $("#team-avatar-form").click();
@@ -104,7 +104,7 @@ $(document).ready(function() {
 
     $(".useravatarimg").click(function() {
         var image = $(this).attr('value');
-        $("#user-avatarimg").attr('src', "/avatars/" + image);
+        $("#user-avatarimg").attr('src', "/avatars/" + htmlEncode(image));
         $("#user-file-avatar").val("");
         $("#user-avatar").val(image);
         $("#user-avatar-form").click();
