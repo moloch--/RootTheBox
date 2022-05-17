@@ -101,7 +101,7 @@ function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }
 
-function updateGitStatus() {
+async function updateGitStatus() {
     if ($("#gitstatus").length == 1) {
         $.get("/admin/gitstatus", function(status) {
             status = status.replace("b'", "").replace(/\\n/g, "; ");
