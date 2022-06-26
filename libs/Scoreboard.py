@@ -55,7 +55,7 @@ class Scoreboard(object):
             "boxes": {},
             "hint_count": len(Hint.all()),
             "flag_count": len(Flag.all()),
-            "box_count": len(Box.all()),
+            "box_count": len(Box.unlocked()),
             "level_count": len(game_levels),
         }
         teams = Team.ranks()
@@ -104,6 +104,7 @@ class Scoreboard(object):
             for box in level.boxes:
                 game_state["levels"][level.name]["boxes"][box.uuid] = {
                     "name": box.name,
+                    "locked": box.locked,
                     "teams": {},
                     "flags": {},
                     "flag_count": len(box.flags),

@@ -90,7 +90,7 @@
         {% end %}
     {% end %}
     <div class="well">
-        {% if len(Box.all()) == 0 %}
+        {% if len(Box.unlocked()) == 0 %}
             <p><strong>{{_("No Boxes")}}</strong></p>
         {% else %}
             <table class="table table-striped">

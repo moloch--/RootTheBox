@@ -58,24 +58,28 @@
                                 </div>
                             {% elif box_count_lvl > 0 %}
                                 {% set box_level = level.get("boxes") %}
+                                {% set idx = 0 %}
                                 {% for index, box_uuid in enumerate(box_level) %}
                                     {% set box = box_level.get(box_uuid) %}
                                     {% set flag_count_box = box.get("flag_count") %}
                                     {% set team_box = box.get("teams").get(team_name) %}
                                     {% set team_count_box = team_box.get("box_count") %}
                                     {% if box_count_lvl > 1 and flag_count_box > 0 and (flag_count_box < flag_count_all or flag_count_all > 35) %}
-                                        {% if index > 0 %}
-                                            <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
+                                        {% if not box.get("locked") %}
+                                            {% if idx > 0 %}
+                                                <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
+                                            {% end %}
+                                            <div class="summarycolumn" style="display: table-cell;">
+                                                <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if box_count_all > 1 %}{{ box.get('name') }} &ndash; {% end %}{% if team_count_box != 0 %}{{ int(( team_count_box /  float(flag_count_box) ) * 100) }}%{% else %}0%{% end %}">
+                                                    {% if team_count_box != 0 %}
+                                                        <div class="bar minibar" style="width: {{ ( team_count_box /  float(flag_count_box) ) * 100.0 }}%;"></div>
+                                                    {% else %}
+                                                        <div class="bar minibar" style="width: 0%;"></div>
+                                                    {% end %}
+                                                </div>    
+                                            </div>
+                                            {% set idx = idx + 1 %}
                                         {% end %}
-                                        <div class="summarycolumn" style="display: table-cell;">
-                                            <div class="progress" style="height: 8px; margin-bottom: 8px; background-color: #424242;" title="{% if box_count_all > 1 %}{{ box.get('name') }} &ndash; {% end %}{% if team_count_box != 0 %}{{ int(( team_count_box /  float(flag_count_box) ) * 100) }}%{% else %}0%{% end %}">
-                                                {% if team_count_box != 0 %}
-                                                    <div class="bar minibar" style="width: {{ ( team_count_box /  float(flag_count_box) ) * 100.0 }}%;"></div>
-                                                {% else %}
-                                                    <div class="bar minibar" style="width: 0%;"></div>
-                                                {% end %}
-                                            </div>    
-                                        </div>
                                     {% elif flag_count_box > 0 %}
                                         {% set flags = box.get("flags") %}
                                         {% for index, flaguuid in enumerate(flags) %}

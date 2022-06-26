@@ -3,9 +3,15 @@
 {% block title %}{{ _("Successful Registration") }}{% end %}
 
 {% block content %}
+{% from tornado.options import options %}
     <div class="container">
         <br />
-        <h1>{{ _("Successfully created a new account for") }} {{ account }}!</h1>
+        <h1>{{ _("Successfully created a new account for") }} {{ user.handle }}!</h1>
+        {% if options.teams and user.team %}
+            <ul><h3><i class="fa fa-key"></i> {{ user.team.code }}<br>
+            {{ _("Share your team code to allow other players to join") }} {{ user.team.name }}.
+            </h3></ul>
+        {% end %}
         <br />
         {% if validate %}
             <h3>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-envelope"></i>&nbsp;

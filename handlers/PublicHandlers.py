@@ -358,7 +358,7 @@ class RegistrationHandler(BaseHandler):
                 user = self.create_user()
                 validate = options.require_email and options.validate_email
                 self.render(
-                    "public/successful_reg.html", account=user.handle, validate=validate
+                    "public/successful_reg.html", user=user, validate=validate
                 )
         except ValidationError as error:
             self.render(
