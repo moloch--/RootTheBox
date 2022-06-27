@@ -109,7 +109,7 @@
                             {% if level.type == 'none' or level in team.game_levels %}
                                 <hr style="margin: 5px 0;">
                                 {% for box in level.boxes %}
-                                    {% if len(box.flags) > 0 %}
+                                    {% if not box.locked and len(box.flags) > 0 %}
                                     <div class="row" style="margin-left: 16px;">
                                         <div class="span4">
                                             <a href="/user/missions/boxes?uuid={{ box.uuid }}">
@@ -311,7 +311,7 @@
                     {% if level.type == 'none' or level in team.game_levels %}
                         <hr style="margin: 5px 0;">
                         {% for box in level.boxes %}
-                            {% if len(box.flags) > 0 %}
+                            {% if not box.locked and len(box.flags) > 0 %}
                             <div class="row" style="margin-left: 16px;">
                                 <div class="span4">
                                     <a href="/user/missions/boxes?uuid={{ box.uuid }}">
