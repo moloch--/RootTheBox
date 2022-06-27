@@ -117,6 +117,11 @@ class Box(DatabaseObject):
         return dbsession.query(cls).all()
 
     @classmethod
+    def unlocked(cls):
+        """ Return a list of all unlocked objects in the database """
+        return dbsession.query(cls).filter_by(_locked=False).all()
+
+    @classmethod
     def by_id(cls, _id):
         """ Returns a the object with id of _id """
         return dbsession.query(cls).filter_by(id=_id).first()
@@ -335,6 +340,7 @@ class Box(DatabaseObject):
         ).name
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = str(self.garbage)
+        ET.SubElement(box_elem, "locked").text = self.locked
         if self.category_id:
             ET.SubElement(box_elem, "category").text = Category.by_id(
                 self.category_id
@@ -384,6 +390,7 @@ class Box(DatabaseObject):
             "flag_submission_type": self.flag_submission_type,
             "flaglist": self.flaglist(self.id),
             "value": self.value,
+            "locked": self.locked,
         }
 
     def __repr__(self):
