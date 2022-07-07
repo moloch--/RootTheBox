@@ -250,6 +250,8 @@ class Box(DatabaseObject):
     @locked.setter
     def locked(self, value):
         """ Setter method for _lock """
+        if isinstance(value, str):
+            value = value.lower() in ['true', '1']
         assert isinstance(value, bool)
         self._locked = value
 
@@ -340,7 +342,7 @@ class Box(DatabaseObject):
         ).name
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = str(self.garbage)
-        ET.SubElement(box_elem, "locked").text = self.locked
+        ET.SubElement(box_elem, "locked").text = str(self.locked)
         if self.category_id:
             ET.SubElement(box_elem, "category").text = Category.by_id(
                 self.category_id

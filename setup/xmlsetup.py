@@ -224,6 +224,7 @@ def create_boxes(parent, corporation):
                 box.description = get_child_text(box_elem, "description")
                 box.capture_message = get_child_text(box_elem, "capture_message")
                 box.operating_system = get_child_text(box_elem, "operatingsystem")
+                box.locked = get_child_text(box_elem, "locked", "0")
                 box.value = get_child_text(box_elem, "value", "0")
                 if get_child_text(box_elem, "avatar", "none") != "none":
                     box.avatar = bytearray(
