@@ -90,6 +90,7 @@ urls = [
     (r"/about", AboutHandler),
     (r"/", HomePageHandler),
     (r"/robots(|\.txt)", FakeRobotsHandler),
+    (r"/status", StatusHandler),
     # Scoreboard Handlers - ScoreboardHandlers.py
     (r"/scoreboard", ScoreboardHandler),
     (r"/scoreboard/history", ScoreboardHistoryHandler),

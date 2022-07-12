@@ -30,6 +30,7 @@ import re
 import smtplib
 import secrets
 import string
+import json
 
 from os import urandom
 from netaddr import IPAddress
@@ -329,6 +330,15 @@ class LoginHandler(BaseHandler):
             info=None,
             errors=["Bad username and/or password, try again"],
         )
+
+class StatusHandler(BaseHandler):
+    
+    """ Status """
+
+    def get(self, *args, **kwargs):
+        status = {"game_started": self.application.settings["game_started"], "suspend_registration": self.application.settings["suspend_registration"]}
+        return self.write(json.dumps(status))
+
 
 
 class RegistrationHandler(BaseHandler):
