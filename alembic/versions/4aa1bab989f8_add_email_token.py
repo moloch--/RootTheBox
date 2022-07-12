@@ -28,7 +28,7 @@ def upgrade():
             nullable=False,
         ),
         sa.Column("value", sa.VARCHAR(length=64), nullable=False, unique=True),
-        sa.Column("valid", sa.BOOLEAN, nullable=False),
+        sa.Column("valid", sa.BOOLEAN),
     )
 
 
