@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column("box", sa.Column("_locked", sa.BOOLEAN, nullable=False))
+    op.add_column("box", sa.Column("_locked", sa.BOOLEAN, nullable=False, default=False))
 
 
 def downgrade():
