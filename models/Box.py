@@ -94,7 +94,7 @@ class Box(DatabaseObject):
         cascade="all,delete,delete-orphan",
     )
 
-    flags = relationship(
+    _flags = relationship(
         "Flag",
         backref=backref("box", lazy="select"),
         cascade="all,delete,delete-orphan",
@@ -162,6 +162,22 @@ class Box(DatabaseObject):
         for flag in flags:
             flaglist[flag.uuid] = flag.name
         return flaglist
+
+    @property
+    def flags(self):
+        flags = []
+        for flag in self._flags:
+            if not flag.locked:
+                flags.append(flag)
+        return flags
+
+    @flags.setter
+    def flags(self, flags):
+        self._flags = flags
+
+    @property
+    def flags_all(self):
+        return self._flags
 
     @property
     def name(self):
@@ -349,7 +365,7 @@ class Box(DatabaseObject):
             ).category
         flags_elem = ET.SubElement(box_elem, "flags")
         flags_elem.set("count", "%s" % str(len(self.flags)))
-        for flag in self.flags:
+        for flag in self.flags_all:
             flag.to_xml(flags_elem)
         hints_elem = ET.SubElement(box_elem, "hints")
         count = 0

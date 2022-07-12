@@ -226,6 +226,11 @@ $(document).ready(function() {
         $("#lock-box-uuid").val($(this).data("uuid"));
         $("#lock-box-form").submit();
     });
+    
+    $("a[id^=lock-flag-button]").click(function() {
+        $("#lock-flag-uuid").val($(this).data("uuid"));
+        $("#lock-flag-form").submit();
+    });
 
     /* IP Address */
     $("#add-ip-address-submit").click(function() {

@@ -23,10 +23,15 @@
 {% from models.Flag import FLAG_CHOICE %}
 {% from models.FlagChoice import FlagChoice %}
     {% set avatars = filter_avatars("box") %}
-    <!-- Lock Form -->
+    <!-- Lock Box Form -->
     <form id="lock-box-form" action="/admin/lock/box" method="post">
         {% raw xsrf_form_html() %}
         <input id="lock-box-uuid" name="uuid" type="hidden" />
+    </form>
+    <!-- Lock Flag Form -->
+    <form id="lock-flag-form" action="/admin/lock/flag" method="post">
+        {% raw xsrf_form_html() %}
+        <input id="lock-flag-uuid" name="uuid" type="hidden" />
     </form>
     <!-- Select Avatars -->
     <div id="change-box-avatar-modal" class="modal hide fade" style="z-index: 100000; display: none; {% if len(avatars) > 0 %}width: 750px; margin-left: -375px;{% end %}">
@@ -821,7 +826,7 @@
                                             {{_("Add Flags") }}
                                         </a>
                                         <hr>
-                                        {% if len(box.flags) != 0 %}
+                                        {% if len(box.flags_all) != 0 %}
                                             <table class="table table-striped sort grid">
                                                 <thead>
                                                     <tr>
@@ -833,14 +838,15 @@
                                                         <th>{{_("Value")}}</th>
                                                         <th>{{_("Type")}}</th>
                                                         <th style="text-align: center;"><i class="fa fa-paperclip" title="Attachments"></i></th>
+                                                        <th>&nbsp;<i class="fa fa-lock" title="Lock"></i></th>
                                                         <th>{{_("Statistics")}}</th>
                                                         <th><!-- Edit Button --></th>
                                                         <th><!-- Delete Button --></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {% for index, flag in enumerate(box.flags) %}
-                                                        <tr>
+                                                    {% for index, flag in enumerate(box.flags_all) %}
+                                                        <tr id="{{ flag.uuid }}" class="{% if flag.locked %} locked{% end %}">
                                                             <td class="index shortcolumn" data-uuid="{{ flag.uuid }}">{{ index + 1 }}</td>
                                                             <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                             <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
@@ -855,6 +861,17 @@
                                                                 <a id="flag-attachment-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#flag-attachment-button" data-uuid="{{ flag.uuid }}">
                                                                     {{ len(flag.flag_attachments) }}
                                                                 </a>
+                                                            </td>
+                                                            <td class="shortcolumn">
+                                                                {% if flag.locked %}
+                                                                <a id="lock-flag-button-{{ flag.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ flag.uuid }}">
+                                                                    <i class="fa fa-unlock" title="Lock Flag"></i>
+                                                                </a>
+                                                                {% else %}
+                                                                <a id="lock-flag-button-{{ flag.uuid }}" class="btn btn-mini btn-warning" data-uuid="{{ flag.uuid }}">
+                                                                    <i class="fa fa-lock" title="Unlock Flag"></i>
+                                                                </a>
+                                                                {% end %}
                                                             </td>
                                                             <td class="shortcolumn">
                                                                 <a id="details-flag-button-{{ flag.uuid }}" class="btn btn-mini" data-toggle="modal" href="#details-flag-modal" data-uuid="{{ flag.uuid }}" data-box-uuid="{{ flag.box.uuid }}" title="{{flag.token}}">

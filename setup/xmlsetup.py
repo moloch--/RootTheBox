@@ -146,6 +146,7 @@ def create_flags(parent, box):
                 flag.capture_message = get_child_text(flag_elem, "capture_message")
                 flag.type = flag_elem.get("type", "static")
                 flag.order = get_child_text(flag_elem, "order", None)
+                flag.locked = get_child_text(flag_elem, "locked", 0)
                 if flag.type == "file":
                     add_attachments(
                         get_child_by_tag(flag_elem, "flag_attachments"), flag
@@ -224,7 +225,7 @@ def create_boxes(parent, corporation):
                 box.description = get_child_text(box_elem, "description")
                 box.capture_message = get_child_text(box_elem, "capture_message")
                 box.operating_system = get_child_text(box_elem, "operatingsystem")
-                box.locked = get_child_text(box_elem, "locked", "0")
+                box.locked = get_child_text(box_elem, "locked", 0)
                 box.value = get_child_text(box_elem, "value", "0")
                 if get_child_text(box_elem, "avatar", "none") != "none":
                     box.avatar = bytearray(

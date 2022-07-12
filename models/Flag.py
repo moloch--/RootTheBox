@@ -29,7 +29,7 @@ from uuid import uuid4
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from models.Relationships import team_to_flag, user_to_flag
-from sqlalchemy.types import Unicode, Integer, String
+from sqlalchemy.types import Unicode, Integer, String, Boolean
 from models import dbsession
 from models.Box import Box
 from models.Team import Team
@@ -79,6 +79,7 @@ class Flag(DatabaseObject):
     _original_value = Column(Integer, nullable=True)
     _order = Column(Integer, nullable=True, index=True)
     _type = Column(Unicode(16), default=False)
+    _locked = Column(Boolean, default=False, nullable=False)
 
     flag_attachments = relationship(
         "FlagAttachment",
@@ -379,6 +380,19 @@ class Flag(DatabaseObject):
     def box(self):
         return Box.by_id(self.box_id)
 
+    @property
+    def locked(self):
+        """ Determines if an admin has locked an flag. """
+        return self._locked
+
+    @locked.setter
+    def locked(self, value):
+        """ Setter method for _lock """
+        if isinstance(value, str):
+            value = value.lower() in ['true', '1']
+        assert isinstance(value, bool)
+        self._locked = value
+
     def choices(self):
         # inlucdes the choice uuid - needed for editing choice
         choices = []
@@ -436,6 +450,7 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
+        ET.SubElement(flag_elem, "locked").text = str(self.locked)
         if self.lock_id:
             ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
         ET.SubElement(flag_elem, "case_sensitive").text = str(self.case_sensitive)
@@ -479,6 +494,7 @@ class Flag(DatabaseObject):
             "flagtype": self.type,
             "choices": self.choices(),
             "order": self.order,
+            "locked": self.locked,
         }
 
     def __repr__(self):

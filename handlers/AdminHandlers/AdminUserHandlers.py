@@ -29,6 +29,7 @@ import logging
 
 from models.Team import Team
 from models.Box import Box
+from models.Flag import Flag
 from models.User import User, ADMIN_PERMISSION
 from models.Permission import Permission
 from models.GameLevel import GameLevel
@@ -329,7 +330,7 @@ class AdminLockHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         """ Calls an lock based on URL """
-        uri = {"user": self.lock_user, "box": self.lock_box}
+        uri = {"user": self.lock_user, "box": self.lock_box, "flag": self.lock_flag}
         if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
@@ -354,6 +355,18 @@ class AdminLockHandler(BaseHandler):
             self.dbsession.add(box)
             self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
+        else:
+            self.render("public/404.html")
+
+    def lock_flag(self):
+        uuid = self.get_argument("uuid", "")
+        print(uuid)
+        flag = Flag.by_uuid(uuid)
+        if flag is not None:
+            flag.locked = False if flag.locked else True
+            self.dbsession.add(flag)
+            self.dbsession.commit()
+            self.redirect("/admin/view/game_objects#%s" % flag.uuid)
         else:
             self.render("public/404.html")
 
