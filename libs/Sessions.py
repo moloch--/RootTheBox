@@ -9,9 +9,14 @@ This module implements sessions for Tornado using Memcached.
 
 import re
 import os
+import sys
 import json
 import logging
-import collections
+
+if sys.version_info.major >= 3 and sys.version_info.minor >= 10:
+    from collections.abc import MutableMapping
+else:
+    from collections import MutableMapping
 
 try:
     import bmemcached as memcache
@@ -24,7 +29,7 @@ from tornado.options import options
 from libs.StringCoding import encode, decode
 
 
-class BaseSession(collections.MutableMapping):
+class BaseSession(MutableMapping):
     """
     The base class for the session object. Work with the session object
     is really simple, just treat is as any other dictionary:

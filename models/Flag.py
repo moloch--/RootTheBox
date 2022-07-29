@@ -389,7 +389,7 @@ class Flag(DatabaseObject):
     def locked(self, value):
         """ Setter method for _lock """
         if isinstance(value, str):
-            value = value.lower() in ['true', '1']
+            value = value.lower() in ["true", "1"]
         assert isinstance(value, bool)
         self._locked = value
 

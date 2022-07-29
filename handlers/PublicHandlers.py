@@ -331,14 +331,17 @@ class LoginHandler(BaseHandler):
             errors=["Bad username and/or password, try again"],
         )
 
+
 class StatusHandler(BaseHandler):
-    
+
     """ Status """
 
     def get(self, *args, **kwargs):
-        status = {"game_started": self.application.settings["game_started"], "suspend_registration": self.application.settings["suspend_registration"]}
+        status = {
+            "game_started": self.application.settings["game_started"],
+            "suspend_registration": self.application.settings["suspend_registration"],
+        }
         return self.write(json.dumps(status))
-
 
 
 class RegistrationHandler(BaseHandler):
@@ -367,9 +370,7 @@ class RegistrationHandler(BaseHandler):
                     self.check_regtoken()
                 user = self.create_user()
                 validate = options.require_email and options.validate_email
-                self.render(
-                    "public/successful_reg.html", user=user, validate=validate
-                )
+                self.render("public/successful_reg.html", user=user, validate=validate)
         except ValidationError as error:
             self.render(
                 "public/registration.html",
