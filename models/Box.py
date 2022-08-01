@@ -261,6 +261,8 @@ class Box(DatabaseObject):
     @property
     def locked(self):
         """ Determines if an admin has locked an box. """
+        if self._locked == None:
+            return False
         return self._locked
 
     @locked.setter
@@ -407,8 +409,8 @@ class Box(DatabaseObject):
             "game_level": game_level.uuid,
             "flag_submission_type": self.flag_submission_type,
             "flaglist": self.flaglist(self.id),
-            "value": self.value,
-            "locked": self.locked,
+            "value": str(self.value),
+            "locked": str(self.locked),
         }
 
     def __repr__(self):
