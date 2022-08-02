@@ -1058,7 +1058,8 @@ if __name__ == "__main__":
     try:
         options.parse_command_line()
         options_parse_environment()
-    except:
+    except Exception as e:
+        print(e)
         os._exit(1)
 
     check_cwd()

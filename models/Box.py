@@ -268,7 +268,11 @@ class Box(DatabaseObject):
     @locked.setter
     def locked(self, value):
         """ Setter method for _lock """
-        if isinstance(value, str):
+        if value is None:
+            value = False
+        elif isinstance(value, int):
+            value = value == 1
+        elif isinstance(value, str):
             value = value.lower() in ["true", "1"]
         assert isinstance(value, bool)
         self._locked = value
