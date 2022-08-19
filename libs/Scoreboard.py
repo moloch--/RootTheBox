@@ -25,6 +25,7 @@ Created on Oct 04, 2012
 import json
 import logging
 import time
+import asyncio
 
 from models import dbsession
 from models.Team import Team
@@ -48,6 +49,12 @@ class Scoreboard(object):
 
     @classmethod
     def update_gamestate(self, app):
+        try:
+            asyncio.create_task(self._update_gamestate(self, app))
+        except:
+            asyncio.ensure_future(self._update_gamestate(self, app))
+
+    async def _update_gamestate(self, app):
         game_levels = GameLevel.all()
         game_state = {
             "teams": {},
@@ -118,7 +125,6 @@ class Scoreboard(object):
                         flag.uuid
                     ] = {"name": flag.name}
         app.settings["scoreboard_state"] = game_state
-        return len(teams)
 
 
 def score_bots():

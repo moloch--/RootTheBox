@@ -78,8 +78,19 @@ class HomeHandler(BaseHandler):
             self.render("admin/home.html", user=user)
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()
+            gamestate = self.application.settings["scoreboard_state"].get("teams")
+            rank = len(gamestate) + 1
+            for i, team in enumerate(gamestate):
+                if team == user.team.name:
+                    rank = i + 1
+                    break
             self.render(
-                "user/home.html", user=user, game_started=game_started, visitor=visitor
+                "user/home.html",
+                user=user,
+                game_started=game_started,
+                visitor=visitor,
+                rank=rank,
+                scoreboard_visible=options.scoreboard_visibility != "admins",
             )
 
 

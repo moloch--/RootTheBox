@@ -26,8 +26,17 @@
             <div class="span11 offset1 well">
                 <h2 style="padding-bottom: 8px;">
                     <i class="fa fa-user"></i> {{ user.handle }} 
-                {% if options.teams %}<span style="float: right; font-size: 60%; margin-top: 8px;">{% if options.banking %}${% end %}{{ user.money }} &bull; {{ len(user.flags) }} <i class="fa fa-flag-o"></i></span></h2>{% end %}
-                {% if options.teams %}<span style="float: right; margin-top: -63px;">{{ _("Player Score") }}</span>{% end %}
+                </h2>
+                <span style="float: right; margin-top: -63px; text-align: center;">
+                    <table>
+                        <tr>
+                            {% if options.teams %}<td>{{ _("Player Score") }}</td>{% end %}{% if scoreboard_visible %}<td style="padding-left: 20px;">Rank</td>{% end %}
+                        </tr>
+                        <tr>
+                            {% if options.teams %}<td><h4 style="margin-top: 0;">{% if options.banking %}${% end %}{{ user.money }} &bull; {{ len(user.flags) }} <i class="fa fa-flag-o"></i><h4></td>{% end %}{% if scoreboard_visible %}<td style="padding-left: 20px;"><h4 style="margin-top: 0;">{{ rank }}<h4></td>{% end %}
+                        </tr>
+                    </table>
+                </span>
                 <center>
                     {% if options.teams or not team %}
                         <img src="/avatars/{{ user.avatar }}" class="img-polaroid" />
