@@ -230,7 +230,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% set teamcount = len(Team.all()) %}
+                                                {% set teamcount = Team.count() %}
                                                 {% for index, flag in enumerate(box.flags) %}
                                                     <tr>
                                                         {% set captures = len(Flag.team_captures(flag.id)) %}

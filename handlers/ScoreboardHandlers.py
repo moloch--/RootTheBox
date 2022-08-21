@@ -89,11 +89,13 @@ class ScoreboardHandler(BaseHandler):
             page = 1
             display = 50
         if scoreboard_visible(user):
-            teamcount = Scoreboard.update_gamestate(self)
+            Scoreboard.update_gamestate(self)
+            settings = self.application.settings
+            teamcount = len(settings["scoreboard_state"].get("teams"))
             self.render(
                 "scoreboard/summary.html",
                 timer=self.timer(),
-                hide_scoreboard=self.application.settings["hide_scoreboard"],
+                hide_scoreboard=settings["hide_scoreboard"],
                 page=page,
                 display=display,
                 teamcount=teamcount,
