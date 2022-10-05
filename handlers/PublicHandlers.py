@@ -579,10 +579,19 @@ class RegistrationHandler(BaseHandler):
             message = email_rfc2822_compliance(
                 self.create_validate_message(user, email_token)
             )
-            smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port)
+            try:
+                if options.mail_port == 465:
+                    smtpObj = smtplib.SMTP_SSL(options.mail_host, port=options.mail_port, timeout=5)
+                else:
+                    smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port, timeout=5)
+                    smtpObj.starttls()
+            except Exception as e:
+                logging.warning(
+                        "SMTP Failed with Connection issue (%s)." % e
+                    )
+                return
             smtpObj.set_debuglevel(False)
             try:
-                smtpObj.starttls()
                 try:
                     smtpObj.login(options.mail_username, options.mail_password)
                 except smtplib.SMTPNotSupportedError as e:

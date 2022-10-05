@@ -52,7 +52,13 @@ class Scoreboard(object):
         try:
             asyncio.create_task(self._update_gamestate(self, app))
         except:
-            asyncio.ensure_future(self._update_gamestate(self, app))
+            try:
+                asyncio.ensure_future(self._update_gamestate(self, app))
+            except RuntimeError:
+                # possible not awaited but should still run - not sure what py version does this, but it shouldn't need to be awaited
+                pass
+            except Exception as e:
+                logging.error(e)
 
     async def _update_gamestate(self, app):
         game_levels = GameLevel.all()
