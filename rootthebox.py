@@ -872,6 +872,14 @@ define(
 )
 
 define(
+    "scoreboard_lazy_update",
+    default=False,
+    group="game",
+    help="Skips aggressive gamestate update on scoreboard refresh",
+    type=bool,
+)
+
+define(
     "dynamic_flag_value",
     default=False,
     group="game",

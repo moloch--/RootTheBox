@@ -37,6 +37,7 @@ from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from tornado.options import options
 from builtins import object, str
+from collections import OrderedDict
 
 
 class Scoreboard(object):
@@ -54,7 +55,7 @@ class Scoreboard(object):
         except:
             try:
                 asyncio.ensure_future(self._update_gamestate(self, app))
-            except RuntimeError:
+            except RuntimeWarning:
                 # possible not awaited but should still run - not sure what py version does this, but it shouldn't need to be awaited
                 pass
             except Exception as e:
@@ -63,7 +64,7 @@ class Scoreboard(object):
     async def _update_gamestate(self, app):
         game_levels = GameLevel.all()
         game_state = {
-            "teams": {},
+            "teams": OrderedDict(),
             "levels": {},
             "boxes": {},
             "hint_count": len(Hint.all()),

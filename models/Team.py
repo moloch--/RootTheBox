@@ -28,7 +28,7 @@ import imghdr
 import io
 
 from uuid import uuid4
-from sqlalchemy import Column
+from sqlalchemy import Column, desc
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession
@@ -138,7 +138,7 @@ class Team(DatabaseObject):
     def ranks(cls):
         """ Returns a list of unlocked objects in the database """
         ranked = []
-        for team in sorted(dbsession.query(cls).all()):
+        for team in sorted(dbsession.query(cls).order_by(desc(cls.money)).all()):
             if not team.locked:
                 ranked.append(team)
         return ranked

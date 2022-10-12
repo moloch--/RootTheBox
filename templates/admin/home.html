@@ -157,6 +157,11 @@
         </div>
         <div class="row">
             <div class="span11 offset1 well">
+                <h3><i class="fa fa-fw fa-group"></i> {{ _("Total Users") }}: {{usercount}}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span11 offset1 well">
                 <h3>{{_("Automatic Ban")}}</h3>
                 <hr />
                 <form action="/admin/ban/config" method="post">

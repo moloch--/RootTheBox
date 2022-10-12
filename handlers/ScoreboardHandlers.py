@@ -42,6 +42,7 @@ from models.Category import Category
 from models.WallOfSheep import WallOfSheep
 from datetime import datetime, timedelta
 from tornado.options import options
+from collections import OrderedDict
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):
@@ -89,7 +90,8 @@ class ScoreboardHandler(BaseHandler):
             page = 1
             display = 50
         if scoreboard_visible(user):
-            Scoreboard.update_gamestate(self)
+            if not options.scoreboard_lazy_update:
+                Scoreboard.update_gamestate(self)
             settings = self.application.settings
             teamcount = len(settings["scoreboard_state"].get("teams"))
             self.render(
@@ -158,25 +160,15 @@ class ScoreboardAjaxHandler(BaseHandler):
         teams = self.settings["scoreboard_state"].get("teams")
         teamcount = len(teams)
         if teamcount > display:
-            """ Minimize the content sent to the browser """
             scoreboard = self.settings["scoreboard_state"].copy()
-            end_count = display * page
+            scoreboard["teams"] = OrderedDict()
+            end_count = display * page - 1
             start_count = end_count - display
-            teamlist = []
             for i, team in enumerate(teams):
-                if i < start_count or i >= end_count:
-                    teamlist.append(team)
-            for team in teamlist:
-                if team in scoreboard["teams"]:
-                    del scoreboard["teams"][team]
-            for level in scoreboard.get("levels"):
-                for team in teamlist:
-                    if team in scoreboard["levels"][level]["teams"]:
-                        del scoreboard["levels"][level]["teams"][team]
-                for box in scoreboard["levels"][level].get("boxes"):
-                    for team in teamlist:
-                        if team in scoreboard["levels"][level]["boxes"][box]["teams"]:
-                            del scoreboard["levels"][level]["boxes"][box]["teams"][team]
+                if i > start_count and i <= end_count:
+                    scoreboard["teams"][team] = teams[team]
+                elif i > end_count:
+                    break
             return scoreboard
         else:
             return self.settings["scoreboard_state"]

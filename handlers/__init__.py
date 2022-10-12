@@ -329,9 +329,8 @@ def start_server():
         logging.warning(
             "%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (bold + R, W)
         )
-    if options.autostart_game:
-        logging.info("The game is about to begin, good hunting!")
     try:
+        logging.info("Building Scoreboard Gamestate...")
         Scoreboard.update_gamestate(app)
     except OperationalError as err:
         if "Table definition has changed" in str(err):
@@ -339,6 +338,8 @@ def start_server():
             return "restart"
         else:
             logging.error("There was a problem starting RootTheBox. Error: " + str(err))
+    if options.autostart_game:
+        logging.info("The game is about to begin, good hunting!")
     try:
         io_loop.start()
     except KeyboardInterrupt:

@@ -501,6 +501,7 @@ class RegistrationHandler(BaseHandler):
         else:
             self.event_manager.user_joined_team(user)
 
+        self.event_manager.push_score_update()
         # Chat
         if self.chatsession:
             self.chatsession.create_user(user, self.get_argument("pass1", ""))
@@ -581,14 +582,16 @@ class RegistrationHandler(BaseHandler):
             )
             try:
                 if options.mail_port == 465:
-                    smtpObj = smtplib.SMTP_SSL(options.mail_host, port=options.mail_port, timeout=5)
+                    smtpObj = smtplib.SMTP_SSL(
+                        options.mail_host, port=options.mail_port, timeout=5
+                    )
                 else:
-                    smtpObj = smtplib.SMTP(options.mail_host, port=options.mail_port, timeout=5)
+                    smtpObj = smtplib.SMTP(
+                        options.mail_host, port=options.mail_port, timeout=5
+                    )
                     smtpObj.starttls()
             except Exception as e:
-                logging.warning(
-                        "SMTP Failed with Connection issue (%s)." % e
-                    )
+                logging.warning("SMTP Failed with Connection issue (%s)." % e)
                 return
             smtpObj.set_debuglevel(False)
             try:

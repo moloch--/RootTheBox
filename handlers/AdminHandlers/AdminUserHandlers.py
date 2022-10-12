@@ -224,6 +224,8 @@ class AdminEditUsersHandler(BaseHandler):
             level_0 = GameLevel.all()[0]
         team.game_levels.append(level_0)
         self.dbsession.add(team)
+        self.dbsession.commit()
+        self.event_manager.push_score_update()
         return team
 
 
@@ -343,6 +345,7 @@ class AdminLockHandler(BaseHandler):
             user.locked = False if user.locked else True
             self.dbsession.add(user)
             self.dbsession.commit()
+            self.event_manager.push_score_update()
             self.redirect("/admin/users")
         else:
             self.render("public/404.html")

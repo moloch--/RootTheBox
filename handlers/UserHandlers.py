@@ -75,7 +75,7 @@ class HomeHandler(BaseHandler):
             return
         if uuid is None and user.is_admin():
             self.timer()
-            self.render("admin/home.html", user=user)
+            self.render("admin/home.html", user=user, usercount=len(User.all()))
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()
             gamestate = self.application.settings["scoreboard_state"].get("teams")
