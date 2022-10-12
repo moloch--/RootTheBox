@@ -84,7 +84,7 @@ class ScoreboardHandler(BaseHandler):
     def get(self, *args, **kargs):
         user = self.get_current_user()
         try:
-            page = int(self.get_argument("page", 1))
+            page = int(self.get_argument("page", 0))
             display = int(self.get_argument("count", 50))
         except ValueError:
             page = 1
@@ -94,6 +94,15 @@ class ScoreboardHandler(BaseHandler):
                 Scoreboard.update_gamestate(self)
             settings = self.application.settings
             teamcount = len(settings["scoreboard_state"].get("teams"))
+            if page == 0:
+                page = 1
+                if teamcount > display and user and user.team:
+                    # Jump to the user's place in the scoreboard
+                    for index, team in enumerate(settings["scoreboard_state"].get("teams")):
+                        if user.team.name == team:
+                            page = ceil(index / display)
+                            break
+            
             self.render(
                 "scoreboard/summary.html",
                 timer=self.timer(),
