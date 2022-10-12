@@ -31,11 +31,11 @@ from sqlalchemy.ext.declarative import declarative_base
 
 class _DatabaseObject(object):
 
-    """ All game objects inherit from this object """
+    """All game objects inherit from this object"""
 
     @declared_attr
     def __tablename__(self):
-        """ Converts name from camel case to snake case """
+        """Converts name from camel case to snake case"""
         name = self.__name__
         return name[0].lower() + re.sub(
             r"([A-Z])", lambda letter: "_" + letter.group(0).lower(), name[1:]

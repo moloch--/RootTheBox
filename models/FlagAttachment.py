@@ -66,7 +66,7 @@ class FlagAttachment(DatabaseObject):
             fp.write(str(encode(value, "base64")).encode())
 
     def delete_data(self):
-        """ Remove the file from the file system, if it exists """
+        """Remove the file from the file system, if it exists"""
         fpath = options.flag_attachment_dir + "/" + self.uuid
         if os.path.exists(fpath) and os.path.isfile(fpath):
             os.unlink(fpath)

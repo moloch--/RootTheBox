@@ -23,7 +23,7 @@ from models.BaseModels import DatabaseObject
 
 
 def create_tables(sqla_engine, sqla_metadata, echo=False):
-    """ Create all the tables """
+    """Create all the tables"""
     setattr(sqla_engine, "echo", echo)
     sqla_metadata.create_all(sqla_engine)
 

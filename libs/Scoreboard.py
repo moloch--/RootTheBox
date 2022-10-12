@@ -41,11 +41,11 @@ from collections import OrderedDict
 
 
 class Scoreboard(object):
-    """ Manages websocket connections (mostly thread safe) """
+    """Manages websocket connections (mostly thread safe)"""
 
     @classmethod
     def now(self, app):
-        """ Returns the current game state """
+        """Returns the current game state"""
         return json.dumps(app.settings["scoreboard_state"].get("teams"))
 
     @classmethod
@@ -84,7 +84,7 @@ class Scoreboard(object):
                 "hints_count": len(team.hints),
                 "bot_count": bots[team.uuid],
                 "money": team.money,
-                "users": [user.uuid for user in team.members]
+                "users": [user.uuid for user in team.members],
             }
 
             highlights = {"money": 0, "flag": 0, "bot": 0, "hint": 0}
@@ -137,7 +137,7 @@ class Scoreboard(object):
 
 
 def score_bots():
-    """ Award money for botnets """
+    """Award money for botnets"""
     logging.info("Scoring botnets, please wait ...")
     bot_manager = BotManager.instance()
     event_manager = EventManager.instance()

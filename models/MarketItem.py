@@ -31,7 +31,7 @@ from builtins import str
 
 
 class MarketItem(DatabaseObject):
-    """ Item definition """
+    """Item definition"""
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     name = Column(Unicode(64), nullable=False)
@@ -41,26 +41,26 @@ class MarketItem(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        """ Returns a the object with a given uuid """
+        """Returns a the object with a given uuid"""
         return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_name(cls, _name):
-        """ Returns an object with a given name """
+        """Returns an object with a given name"""
         return dbsession.query(cls).filter_by(name=str(_name)).first()
 
     def to_dict(self):
-        """ Returns object data as dictionary object """
+        """Returns object data as dictionary object"""
         return {
             "name": self.name,
             "price": self.price,
@@ -70,11 +70,11 @@ class MarketItem(DatabaseObject):
         }
 
     def __eq__(self, other):
-        """ Equivalency """
+        """Equivalency"""
         return self.uuid == other.uuid
 
     def __ne__(self, other):
-        """ Not Equivalent """
+        """Not Equivalent"""
         return not self == other
 
     def __hash__(self):

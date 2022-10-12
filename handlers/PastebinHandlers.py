@@ -33,12 +33,12 @@ from tornado.options import options
 
 class PasteHandler(BaseHandler):
 
-    """ Renders the main page """
+    """Renders the main page"""
 
     @authenticated
     def get(self, *args, **kwargs):
         if options.team_sharing:
-            """ Renders the main page for PasteBin """
+            """Renders the main page for PasteBin"""
             self.render("pastebin/view.html", user=self.get_current_user())
         else:
             self.redirect("/404")
@@ -46,12 +46,12 @@ class PasteHandler(BaseHandler):
 
 class CreatePasteHandler(BaseHandler):
 
-    """ Creates paste bin shares """
+    """Creates paste bin shares"""
 
     @authenticated
     def get(self, *args, **kwargs):
         if options.team_sharing:
-            """ AJAX // Display team text shares """
+            """AJAX // Display team text shares"""
             self.render(
                 "pastebin/create.html", errors=None, user=self.get_current_user()
             )
@@ -61,7 +61,7 @@ class CreatePasteHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         if options.team_sharing:
-            """ Creates a new text share """
+            """Creates a new text share"""
             name = self.get_argument("name", "")
             content = self.get_argument("content", "")
             user = self.get_current_user()
@@ -98,12 +98,12 @@ class CreatePasteHandler(BaseHandler):
 
 class DisplayPasteHandler(BaseHandler):
 
-    """ Displays shared texts """
+    """Displays shared texts"""
 
     @authenticated
     def get(self, *args, **kwargs):
         if options.team_sharing:
-            """ AJAX // Retrieves a paste from the database """
+            """AJAX // Retrieves a paste from the database"""
             paste_uuid = self.get_argument("paste_uuid", "")
             user = self.get_current_user()
             paste = PasteBin.by_uuid(paste_uuid)
@@ -123,12 +123,12 @@ class DisplayPasteHandler(BaseHandler):
 
 class DeletePasteHandler(BaseHandler):
 
-    """ Deletes shared texts """
+    """Deletes shared texts"""
 
     @authenticated
     def post(self, *args, **kwargs):
         if options.team_sharing:
-            """ AJAX // Delete a paste object from the database """
+            """AJAX // Delete a paste object from the database"""
             paste = PasteBin.by_uuid(self.get_argument("uuid", ""))
             user = self.get_current_user()
             if user.is_admin():

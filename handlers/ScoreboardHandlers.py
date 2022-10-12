@@ -46,7 +46,7 @@ from collections import OrderedDict
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):
-    """ Get Score data via websocket """
+    """Get Score data via websocket"""
 
     connections = set()
 
@@ -54,7 +54,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         self.last_message = datetime.now()
 
     def open(self):
-        """ When we receive a new websocket connect """
+        """When we receive a new websocket connect"""
         self.connections.add(self)
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
@@ -62,7 +62,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
             self.write_message(Scoreboard.now(self))
 
     def on_message(self, message):
-        """ We ignore messages if there are more than 1 every 3 seconds """
+        """We ignore messages if there are more than 1 every 3 seconds"""
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
@@ -71,7 +71,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
             self.write_message(Scoreboard.now(self))
 
     def on_close(self):
-        """ Lost connection to client """
+        """Lost connection to client"""
         try:
             self.connections.remove(self)
         except KeyError:
@@ -79,7 +79,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
 
 class ScoreboardHandler(BaseHandler):
-    """ Main summary page """
+    """Main summary page"""
 
     def get(self, *args, **kargs):
         user = self.get_current_user()
@@ -98,11 +98,13 @@ class ScoreboardHandler(BaseHandler):
                 page = 1
                 if teamcount > display and user and user.team:
                     # Jump to the user's place in the scoreboard
-                    for index, team in enumerate(settings["scoreboard_state"].get("teams")):
+                    for index, team in enumerate(
+                        settings["scoreboard_state"].get("teams")
+                    ):
                         if user.team.name == team:
                             page = ceil(index / display)
                             break
-            
+
             self.render(
                 "scoreboard/summary.html",
                 timer=self.timer(),
@@ -119,7 +121,7 @@ class ScoreboardHandler(BaseHandler):
 
 class ScoreboardAjaxHandler(BaseHandler):
     def get(self, *args, **kargs):
-        """ Renders AJAX snippit based on URI """
+        """Renders AJAX snippit based on URI"""
         uri = {
             "summary": self.summary_table,
             "team": self.team_details,
@@ -134,7 +136,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             self.render("public/404.html")
 
     def json_feed(self):
-        """ Render the "leaderboard" json feed - CTFtime: https://ctftime.org/json-scoreboard-feed """
+        """Render the "leaderboard" json feed - CTFtime: https://ctftime.org/json-scoreboard-feed"""
         self.set_header("Content-Type", "application/json")
         feed = {}
         user = self.get_current_user()
@@ -150,7 +152,7 @@ class ScoreboardAjaxHandler(BaseHandler):
         self.write(json.dumps(feed, sort_keys=True, indent=4))
 
     def summary_table(self):
-        """ Render the "leaderboard" team snippit """
+        """Render the "leaderboard" team snippit"""
         try:
             page = int(self.get_argument("page", 1))
             display = int(self.get_argument("count", 50))
@@ -165,7 +167,7 @@ class ScoreboardAjaxHandler(BaseHandler):
         )
 
     def summary_page(self, page, display):
-        """ Prepare the pagination for the leaderboard """
+        """Prepare the pagination for the leaderboard"""
         teams = self.settings["scoreboard_state"].get("teams")
         teamcount = len(teams)
         if teamcount > display:
@@ -183,7 +185,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             return self.settings["scoreboard_state"]
 
     def mvp_table(self):
-        """ Render the "leaderboard" mvp snippit """
+        """Render the "leaderboard" mvp snippit"""
         self.render("scoreboard/mvp_table.html", users=User.ranks())
 
     def timediff(self):
@@ -194,7 +196,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             self.finish()
 
     def team_details(self):
-        """ Returns team details in JSON form """
+        """Returns team details in JSON form"""
         uuid = self.get_argument("uuid", "")
         team = Team.by_uuid(uuid)
         if team is not None:
@@ -212,7 +214,7 @@ class ScoreboardAjaxHandler(BaseHandler):
         self.finish()
 
     def team_skills(self):
-        """ Returns team details in JSON form """
+        """Returns team details in JSON form"""
         uuid = self.get_argument("uuid", "")
         if uuid == "":
             user = self.get_current_user()
@@ -257,7 +259,7 @@ class ScoreboardHistoryHandler(BaseHandler):
 
 class ScoreboardFeedHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the scoreboard feed page """
+        """Renders the scoreboard feed page"""
         hostname = "%s://%s" % (self.request.protocol, self.request.host)
         self.render("scoreboard/feed.html", hostname=hostname)
 
@@ -272,13 +274,13 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
         self.last_message = datetime.now()
 
     def open(self):
-        """ When we receive a new websocket connect """
+        """When we receive a new websocket connect"""
         self.connections.add(self)
         history_length = int(self.get_argument("length", 29))
         self.write_message(self.get_history(history_length))
 
     def on_message(self, message):
-        """ We ignore messages if there are more than 1 every 3 seconds """
+        """We ignore messages if there are more than 1 every 3 seconds"""
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
@@ -286,11 +288,11 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
             self.write_message(self.get_history(1))
 
     def on_close(self):
-        """ Lost connection to client """
+        """Lost connection to client"""
         self.connections.remove(self)
 
     def get_history(self, length=29):
-        """ Send history in JSON """
+        """Send history in JSON"""
         length = abs(length) + 1
         return json.dumps({"history": self.game_history[(-1 * length) :]})
 
@@ -298,7 +300,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 class ScoreboardWallOfSheepHandler(BaseHandler):
     @use_black_market
     def get(self, *args, **kwargs):
-        """ Optionally order by argument; defaults to date/time """
+        """Optionally order by argument; defaults to date/time"""
         user = self.get_current_user()
         if scoreboard_visible(user):
             order = self.get_argument("order_by", "").lower()
@@ -323,7 +325,7 @@ class ScoreboardPauseHandler(WebSocketHandler):
     connections = set()
 
     def open(self):
-        """ When we receive a new websocket connect """
+        """When we receive a new websocket connect"""
         self.connections.add(self)
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
@@ -337,7 +339,7 @@ class ScoreboardPauseHandler(WebSocketHandler):
             self.write_message("play")
 
     def on_close(self):
-        """ Lost connection to client """
+        """Lost connection to client"""
         try:
             self.connections.remove(self)
         except KeyError:
@@ -363,7 +365,7 @@ class TeamsHandler(BaseHandler):
         teams = []
         for i, team in enumerate(ranks):
             if i >= start_count and i < end_count:
-                teams.append(Team.by_uuid(ranks[team].get('uuid')))
+                teams.append(Team.by_uuid(ranks[team].get("uuid")))
             elif i >= end_count:
                 break
 

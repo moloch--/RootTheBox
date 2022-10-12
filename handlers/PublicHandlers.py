@@ -61,7 +61,7 @@ from msal import ConfidentialClientApplication
 
 class HomePageHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the main page """
+        """Renders the main page"""
         if self.session is not None:
             self.redirect("/user")
         else:
@@ -70,7 +70,7 @@ class HomePageHandler(BaseHandler):
 
 class CodeFlowHandler(BaseHandler):
 
-    """ Handles the OIDC code flow response, when using Azure AD authentication """
+    """Handles the OIDC code flow response, when using Azure AD authentication"""
 
     azuread_app = azuread_app
 
@@ -196,12 +196,12 @@ class CodeFlowHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
 
-    """ Takes care of the login process """
+    """Takes care of the login process"""
 
     azuread_app = azuread_app
 
     def get(self, *args, **kwargs):
-        """ Display the login page """
+        """Display the login page"""
         if self.session is not None:
             self.redirect("/user")
         else:
@@ -214,7 +214,7 @@ class LoginHandler(BaseHandler):
 
     @blacklist_ips
     def post(self, *args, **kwargs):
-        """ Checks submitted username and password """
+        """Checks submitted username and password"""
         user = User.by_handle(self.get_argument("account", ""))
         password_attempt = self.get_argument("password", "")
         if user is None:
@@ -280,7 +280,7 @@ class LoginHandler(BaseHandler):
                 self.redirect("/user")
 
     def successful_login(self, user):
-        """ Called when a user successfully logs in """
+        """Called when a user successfully logs in"""
         logging.info(
             "Successful login: %s from %s" % (user.handle, self.request.remote_ip)
         )
@@ -304,7 +304,7 @@ class LoginHandler(BaseHandler):
         self.session.save()
 
     def failed_login(self):
-        """ Called if username/password is invalid """
+        """Called if username/password is invalid"""
         ip = self.request.remote_ip
         logging.info("*** Failed login attempt from: %s" % ip)
         failed_logins = self.application.settings["failed_logins"]
@@ -334,7 +334,7 @@ class LoginHandler(BaseHandler):
 
 class StatusHandler(BaseHandler):
 
-    """ Status """
+    """Status"""
 
     def get(self, *args, **kwargs):
         status = {
@@ -346,10 +346,10 @@ class StatusHandler(BaseHandler):
 
 class RegistrationHandler(BaseHandler):
 
-    """ Registration Code """
+    """Registration Code"""
 
     def get(self, *args, **kwargs):
-        """ Renders the registration page """
+        """Renders the registration page"""
         if self.session is not None:
             self.redirect("/user")
         else:
@@ -360,7 +360,7 @@ class RegistrationHandler(BaseHandler):
             )
 
     def post(self, *args, **kwargs):
-        """ Attempts to create an account, with shitty form validation """
+        """Attempts to create an account, with shitty form validation"""
         try:
             if self.application.settings["suspend_registration"]:
                 self.render("public/registration.html", errors=None, suspend=True)
@@ -457,7 +457,7 @@ class RegistrationHandler(BaseHandler):
             raise ValidationError("Passwords do not match")
 
     def create_user(self):
-        """ Add user to the database """
+        """Add user to the database"""
         user = User()
         user.handle = self.get_argument("handle", "")
         user.password = self.get_argument("pass1", "")
@@ -509,7 +509,7 @@ class RegistrationHandler(BaseHandler):
         return user
 
     def get_team(self):
-        """ Create a team object, or pull the existing one """
+        """Create a team object, or pull the existing one"""
         code = self.get_argument("team-code", "")
         if len(code) > 0:
             team = Team.by_code(code)
@@ -521,7 +521,7 @@ class RegistrationHandler(BaseHandler):
         return self.create_team()
 
     def create_team(self):
-        """ Create a new team """
+        """Create a new team"""
         if not self.config.teams:
             team = Team.by_name(self.get_argument("handle", ""))
             if team is None:
@@ -743,20 +743,20 @@ class FakeRobotsHandler(BaseHandler):
 
 class AboutHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the about page """
+        """Renders the about page"""
         self.render("public/about.html")
 
 
 class ForgotPasswordHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the Forgot Password Reset page """
+        """Renders the Forgot Password Reset page"""
         if len(options.mail_host) > 0:
             self.render("public/forgot.html", errors=None, info=None)
         else:
             self.redirect("public/404")
 
     def post(self, *args, **kwargs):
-        """ Sends the password reset to email """
+        """Sends the password reset to email"""
         user = User.by_email(self.get_argument("email", ""))
         if user is not None and len(options.mail_host) > 0 and len(user.email) > 0:
             reset_token = encode(urandom(16), "hex")
@@ -841,7 +841,7 @@ class ForgotPasswordHandler(BaseHandler):
 
 class ResetPasswordHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the Token Reset page """
+        """Renders the Token Reset page"""
         if len(options.mail_host) > 0:
             try:
                 uuid = decode(urlsafe_b64decode(self.get_argument("u", "")))
@@ -910,7 +910,7 @@ class ResetPasswordHandler(BaseHandler):
 
 class ValidEmailHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Validates Email and renders login page """
+        """Validates Email and renders login page"""
         if len(options.mail_host) > 0:
             error = None
             info = None

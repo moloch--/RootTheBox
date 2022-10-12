@@ -40,12 +40,12 @@ MAX_UPLOADS = 5
 
 class FileUploadHandler(BaseHandler):
 
-    """ Handles file shares for teams """
+    """Handles file shares for teams"""
 
     @authenticated
     def get(self, *args, **kwargs):
         if options.team_sharing:
-            """ Renders upload file page """
+            """Renders upload file page"""
             user = self.get_current_user()
             self.render(
                 "file_upload/shared_files.html", errors=None, shares=user.team.files
@@ -56,7 +56,7 @@ class FileUploadHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         if options.team_sharing:
-            """ Shit form validation """
+            """Shit form validation"""
             user = self.get_current_user()
             self.errors = []
             shares = []
@@ -100,7 +100,7 @@ class FileUploadHandler(BaseHandler):
 
     def create_file(self, team, shared_file):
         if options.team_sharing:
-            """ Saves uploaded file """
+            """Saves uploaded file"""
             try:
                 file_upload = FileUpload(team_id=team.id)
                 file_upload.file_name = shared_file["filename"]
@@ -117,12 +117,12 @@ class FileUploadHandler(BaseHandler):
 
 class FileDownloadHandler(BaseHandler):
 
-    """ Download shared files from here """
+    """Download shared files from here"""
 
     @authenticated
     def get(self, *args, **kwargs):
         if options.team_sharing:
-            """ Get a file and send it to the user """
+            """Get a file and send it to the user"""
             user = self.get_current_user()
             shared_file = FileUpload.by_uuid(self.get_argument("uuid", ""))
             if user.is_admin() or (
@@ -143,7 +143,7 @@ class FileDownloadHandler(BaseHandler):
 
 class FileDeleteHandler(BaseHandler):
 
-    """ Delete shared files """
+    """Delete shared files"""
 
     @authenticated
     def post(self, *args, **kwargs):

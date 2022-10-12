@@ -50,7 +50,7 @@ class EventManager(object):
 
     # [ Connection Methods ] -----------------------------------------------
     def add_connection(self, connection):
-        """ Add a connection """
+        """Add a connection"""
         if connection.team_id is None:
             self.public_connections.add(connection)
         else:
@@ -64,7 +64,7 @@ class EventManager(object):
             team_connections[connection.user_id].add(connection)
 
     def remove_connection(self, connection):
-        """ Remove connection """
+        """Remove connection"""
         if connection.team_id is None or connection.user_id is None:
             self.public_connections.remove(connection)
         else:
@@ -72,7 +72,7 @@ class EventManager(object):
             team_connections[connection.user_id].remove(connection)
 
     def deauth(self, user):
-        """ Send a deauth message to a user's client(s) """
+        """Send a deauth message to a user's client(s)"""
         if user.team is None:
             return
         connections = self.get_user_connections(user.team.id, user.id)
@@ -80,7 +80,7 @@ class EventManager(object):
             connection.close()
 
     def get_user_connections(self, team_id, user_id):
-        """ For an user object this method returns a set() of connections """
+        """For an user object this method returns a set() of connections"""
         if team_id in self.auth_connections:
             if user_id in self.auth_connections[team_id]:
                 return self.auth_connections[team_id][user_id]
@@ -95,7 +95,7 @@ class EventManager(object):
 
     @property
     def all_connections(self):
-        """ Iterate ALL THE THINGS! """
+        """Iterate ALL THE THINGS!"""
         for team_id in self.auth_connections:
             for user_id in self.auth_connections[team_id]:
                 for connection in self.auth_connections[team_id][user_id]:
@@ -105,7 +105,7 @@ class EventManager(object):
 
     # [ Push Updates ] -----------------------------------------------------
     def push_broadcast(self):
-        """ Push to everyone """
+        """Push to everyone"""
         for team_id in self.auth_connections:
             self.push_team(team_id)
 
@@ -115,7 +115,7 @@ class EventManager(object):
                 self.push_user(team_id, user_id)
 
     def push_user(self, team_id, user_id):
-        """ Push all unread notifications to open user websockets """
+        """Push all unread notifications to open user websockets"""
         connections = self.get_user_connections(team_id, user_id)
         notifications = Notification.unread_by_user_id(user_id)
         logging.debug(
@@ -150,7 +150,7 @@ class EventManager(object):
 
     # [ Broadcast Events ] -------------------------------------------------
     def admin_score_update(self, team, message, value):
-        """ Callback for when admin point change is made """
+        """Callback for when admin point change is made"""
         if value < 0:
             icon = WARNING
         else:
@@ -165,13 +165,13 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     def admin_message(self, message):
-        """ Callback for when admin point change is made """
+        """Callback for when admin point change is made"""
         Notification.create_broadcast(None, "Admin Message", message, INFO)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
     def flag_decayed(self, team, flag):
-        """ Callback for when a bot is added """
+        """Callback for when a bot is added"""
         message = (
             "The value of challenge %s has decreased due to other team captures - score adjusted."
             % (flag.name,)
@@ -180,7 +180,7 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_team, team.id)
 
     def flag_captured(self, player, flag):
-        """ Callback for when a flag is captured """
+        """Callback for when a flag is captured"""
         if isinstance(player, User):
             team = player.team
         else:
@@ -207,7 +207,7 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     def bot_added(self, user, count):
-        """ Callback for when a bot is added """
+        """Callback for when a bot is added"""
         if options.teams:
             message = "%s (%s) added a new bot; total number of bots is now %d" % (
                 user.handle,
@@ -224,7 +224,7 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     def bot_scored(self, team, message=None):
-        """ Callback for when a bot scores """
+        """Callback for when a bot scores"""
         if message is None:
             message = "%s botnet has scored" % team.name
         Notification.create_team(team, "Botnet Scored", message, SUCCESS)
@@ -232,7 +232,7 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     def hint_taken(self, user, hint):
-        """ Callback for when a hint is taken """
+        """Callback for when a hint is taken"""
         if options.teams:
             message = "%s has taken a hint for %s" % (user.handle, hint.box.name)
         else:
@@ -246,7 +246,7 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     def flag_penalty(self, user, flag):
-        """ Callback for when a flag is captured """
+        """Callback for when a flag is captured"""
         if options.teams:
             message = "%s was penalized on '%s' in %s" % (
                 user.handle,
@@ -268,14 +268,14 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     def level_unlocked(self, user, level):
-        """ Callback for when a team unlocks a new level """
+        """Callback for when a team unlocks a new level"""
         message = "%s unlocked %s." % (user.team.name, level.name)
         Notification.create_broadcast(user.team, "Level Unlocked", message, SUCCESS)
         self.io_loop.add_callback(self.push_broadcast)
         self.io_loop.add_callback(self.push_scoreboard)
 
     def item_purchased(self, user, item):
-        """ Callback when a team purchases an item """
+        """Callback when a team purchases an item"""
         message = "%s purchased %s from the black market" % (user.handle, item.name)
         Notification.create_team(user.team, "Upgrade Purchased", message, SUCCESS)
         self.io_loop.add_callback(self.push_team, user.team.id)
@@ -297,7 +297,7 @@ class EventManager(object):
 
     # [ Team Events ] ------------------------------------------------------
     def user_joined_team(self, user):
-        """ Callback when a user joins a team"""
+        """Callback when a user joins a team"""
         if options.teams:
             message = "%s has joined the %s team" % (user.handle, user.team.name)
             Notification.create_team(user.team, "New Team Member", message, INFO)
@@ -308,13 +308,13 @@ class EventManager(object):
         self.io_loop.add_callback(self.push_scoreboard)
 
     def team_file_shared(self, user, team, file_upload):
-        """ Callback when a team file share is created """
+        """Callback when a team file share is created"""
         message = "%s has shared the file '%s'" % (user.handle, file_upload.file_name)
         Notification.create_team(team, "File Share", message, INFO)
         self.io_loop.add_callback(self.push_team, team.id)
 
     def team_paste_shared(self, user, team, paste_bin):
-        """ Callback when a pastebin is created """
+        """Callback when a pastebin is created"""
         message = "%s posted '%s' to the team paste bin" % (user.handle, paste_bin.name)
         Notification.create_team(team, "Text Share", message, INFO)
         self.io_loop.add_callback(self.push_team, team.id)

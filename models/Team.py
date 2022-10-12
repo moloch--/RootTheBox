@@ -56,7 +56,7 @@ from builtins import str
 
 class Team(DatabaseObject):
 
-    """ Team definition """
+    """Team definition"""
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
     _name = Column(Unicode(24), unique=True, nullable=False)
@@ -112,46 +112,35 @@ class Team(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        """ Return and object based on a uuid """
+        """Return and object based on a uuid"""
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
     def by_name(cls, name):
-        """ Return the team object based on "team_name" """
+        """Return the team object based on "team_name" """
         return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_code(cls, code):
-        """ Return the team object based on the _code """
+        """Return the team object based on the _code"""
         return dbsession.query(cls).filter_by(_code=code).first()
 
     @classmethod
-    def locked_teams(cls):
-        """ Returns a list of locked objects in the database """
-        locked_users = User.locked_users()
-        teams = []
-        for user in locked_users:
-            if user.team.locked:
-                teams.append(user.team)
-        return teams
-
-    @classmethod
     def ranks(cls):
-        """ Returns a list of unlocked objects in the database """
+        """Returns a list of unlocked objects in the database"""
         ranked = []
-        locked_teams = cls.locked_teams()
         for team in sorted(dbsession.query(cls).order_by(desc(cls.money)).all()):
-            if team not in locked_teams:
+            if not team.locked:
                 ranked.append(team)
         return ranked
 
@@ -265,15 +254,15 @@ class Team(DatabaseObject):
 
     @property
     def levels(self):
-        """ Sorted game_levels """
+        """Sorted game_levels"""
         return sorted(self.game_levels)
 
     def level_flags(self, lvl):
-        """ Given a level number return all flags captured for that level """
+        """Given a level number return all flags captured for that level"""
         return [flag for flag in self.flags if flag.game_level.number == lvl]
 
     def box_flags(self, box):
-        """ Given a box return all flags captured for that box """
+        """Given a box return all flags captured for that box"""
         return [flag for flag in self.flags if flag.box == box]
 
     @property
@@ -282,12 +271,12 @@ class Team(DatabaseObject):
         return bot_manager.count_by_team_uuid(self.uuid)
 
     def file_by_file_name(self, file_name):
-        """ Return file object based on file_name """
+        """Return file object based on file_name"""
         ls = self.files.filter_by(file_name=file_name)
         return ls[0] if 0 < len(ls) else None
 
     def to_dict(self):
-        """ Use for JSON related tasks; return public data only """
+        """Use for JSON related tasks; return public data only"""
         return {
             "uuid": self.uuid,
             "name": self.name,
@@ -320,16 +309,16 @@ class Team(DatabaseObject):
         return not self.__eq__(other)
 
     def __cmp__(self, other):
-        """ Compare based on the config option rank_by """
+        """Compare based on the config option rank_by"""
         if options.rank_by.lower() != "money":
-            """ flags ▲, money ▲, hints ▼ """
+            """flags ▲, money ▲, hints ▼"""
             this, that = len(self.flags), len(other.flags)
             if this == that:
                 this, that = self.money, other.money
             if this == that:
                 this, that = len(other.hints), len(self.hints)
         else:
-            """ money ▲, hints ▼, flags ▲ """
+            """money ▲, hints ▼, flags ▲"""
             this, that = self.money, other.money
             if this == that:
                 this, that = len(other.hints), len(self.hints)

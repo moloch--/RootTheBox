@@ -31,7 +31,7 @@ from models.BaseModels import DatabaseObject
 
 class Penalty(DatabaseObject):
 
-    """ Penalty definition """
+    """Penalty definition"""
 
     team_id = Column(Integer, ForeignKey("team.id", ondelete="CASCADE"))
     flag_id = Column(Integer, ForeignKey("flag.id", ondelete="CASCADE"))
@@ -39,22 +39,22 @@ class Penalty(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).filter_by(team_id=None).all()
 
     @classmethod
     def clear(cls):
-        """ Deletes all objects in the database """
+        """Deletes all objects in the database"""
         return dbsession.query(cls).delete()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_team_id(cls, _id):
-        """ Return penalties for a team """
+        """Return penalties for a team"""
         return (
             dbsession.query(cls)
             .filter_by(team_id=_id)
@@ -64,7 +64,7 @@ class Penalty(DatabaseObject):
 
     @classmethod
     def by_flag_id(cls, _id):
-        """ Return penalties for a flag """
+        """Return penalties for a flag"""
         return (
             dbsession.query(cls)
             .filter_by(flag_id=_id)
@@ -74,7 +74,7 @@ class Penalty(DatabaseObject):
 
     @classmethod
     def by_count(cls, flag, team):
-        """ Return penalty count for a team and flag """
+        """Return penalty count for a team and flag"""
         if not team:
             return 0
         return (
@@ -85,7 +85,7 @@ class Penalty(DatabaseObject):
 
     @classmethod
     def by_team_token(cls, flag, team, submission):
-        """ Return result for existing team token """
+        """Return result for existing team token"""
         return (
             dbsession.query(cls)
             .filter(
@@ -100,7 +100,7 @@ class Penalty(DatabaseObject):
 
     @classmethod
     def by_token_count(cls, flag, team, submission):
-        """ Return count for existing team token """
+        """Return count for existing team token"""
         return (
             dbsession.query(cls)
             .filter(
@@ -125,7 +125,7 @@ class Penalty(DatabaseObject):
 
     @classmethod
     def _create(cls, team, flag, submission):
-        """ Create a attempt and save it to the database """
+        """Create a attempt and save it to the database"""
         if not team:
             team = cls.team
         if not flag:
@@ -137,5 +137,5 @@ class Penalty(DatabaseObject):
         return attempt
 
     def to_dict(self):
-        """ Return public data as dict """
+        """Return public data as dict"""
         return {"token": self.token}

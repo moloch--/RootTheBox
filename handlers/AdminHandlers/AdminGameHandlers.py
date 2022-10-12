@@ -66,7 +66,7 @@ from datetime import datetime
 
 class AdminGameHandler(BaseHandler):
 
-    """ Start or stop the game """
+    """Start or stop the game"""
 
     @restrict_ip_address
     @authenticated
@@ -161,13 +161,13 @@ class AdminMessageHandler(BaseHandler):
 
 class AdminRegTokenHandler(BaseHandler):
 
-    """ Manages registration tokens """
+    """Manages registration tokens"""
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Call method based on URI """
+        """Call method based on URI"""
         uri = {"create": self.create, "view": self.view}
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -178,7 +178,7 @@ class AdminRegTokenHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        """ Used to delete regtokens """
+        """Used to delete regtokens"""
         token_value = self.get_argument("token_value", "")
         reg_token = RegistrationToken.by_value(token_value)
         if reg_token is not None:
@@ -189,20 +189,20 @@ class AdminRegTokenHandler(BaseHandler):
             self.render("admin/view/token.html", errors=["Token does not exist"])
 
     def create(self):
-        """ Adds a registration token to the db and displays the value """
+        """Adds a registration token to the db and displays the value"""
         token = RegistrationToken()
         self.dbsession.add(token)
         self.dbsession.commit()
         self.render("admin/create/token.html", token=token)
 
     def view(self):
-        """ View all reg tokens """
+        """View all reg tokens"""
         self.render("admin/view/token.html", errors=None)
 
 
 class AdminSourceCodeMarketHandler(BaseHandler):
 
-    """ Add source code files to the source code market """
+    """Add source code files to the source code market"""
 
     @restrict_ip_address
     @authenticated
@@ -239,7 +239,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
             raise ValidationError("The selected box does not exist")
 
     def create_source_code(self, box, price):
-        """ Save file data and create object in database """
+        """Save file data and create object in database"""
         description = self.get_argument("description", "")
         file_name = self.request.files["source_archive"][0]["filename"]
         source_code = SourceCode(
@@ -252,7 +252,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         self.dbsession.commit()
 
     def delete_source_code(self):
-        """ Delete source code file """
+        """Delete source code file"""
         uuid = self.get_argument("box_uuid", "")
         box = Box.by_uuid(uuid)
         if box is not None and box.source_code is not None:
@@ -266,7 +266,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
 
 class AdminSwatHandler(BaseHandler):
 
-    """ Manage SWAT requests """
+    """Manage SWAT requests"""
 
     @restrict_ip_address
     @authenticated
@@ -275,7 +275,7 @@ class AdminSwatHandler(BaseHandler):
         self.render_page()
 
     def render_page(self, errors=None):
-        """ Render page with extra arguments """
+        """Render page with extra arguments"""
         if errors is not None and not isinstance(errors, list):
             errors = [str(errors)]
         self.render(
@@ -290,7 +290,7 @@ class AdminSwatHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        """ Accept/Complete bribes """
+        """Accept/Complete bribes"""
         uri = {"/accept": self.accept_bribe, "/complete": self.complete_bribe}
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -298,7 +298,7 @@ class AdminSwatHandler(BaseHandler):
             self.render("public/404.html")
 
     def accept_bribe(self):
-        """ Accept bribe, and lock user's account """
+        """Accept bribe, and lock user's account"""
         swat = Swat.by_uuid(self.get_argument("uuid", ""))
         if swat is not None and not swat.completed:
             logging.info("Accepted SWAT with uuid: %s", swat.uuid)
@@ -316,7 +316,7 @@ class AdminSwatHandler(BaseHandler):
             self.render_page("Requested SWAT object does not exist")
 
     def complete_bribe(self):
-        """ Complete bribe and unlock user's account """
+        """Complete bribe and unlock user's account"""
         swat = Swat.by_uuid(self.get_argument("uuid", ""))
         if swat is not None and not swat.completed:
             logging.info("Completed SWAT with uuid: %s", swat.uuid)
@@ -336,7 +336,7 @@ class AdminSwatHandler(BaseHandler):
 
 class AdminConfigurationHandler(BaseHandler):
 
-    """ Allows the admin to change some of the configuration options """
+    """Allows the admin to change some of the configuration options"""
 
     def get_int(self, name, default=0):
         try:
@@ -417,7 +417,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.render("admin/configuration.html", errors=errors, config=self.config)
 
     def config_bots(self):
-        """ Updates bot config, and starts/stops the botnet callback """
+        """Updates bot config, and starts/stops the botnet callback"""
         self.config.use_bots = self.get_bool("use_bots", True)
         if (
             self.config.use_bots
@@ -438,7 +438,7 @@ class AdminGarbageCfgHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Download a Box's garbage file """
+        """Download a Box's garbage file"""
         box = Box.by_uuid(self.get_argument("uuid", ""))
         if box is not None:
             data = box.get_garbage_cfg()
@@ -457,7 +457,7 @@ class AdminGitStatusHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Get the status of Git """
+        """Get the status of Git"""
         sp = subprocess.Popen(
             ["git", "fetch"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
@@ -492,7 +492,7 @@ class AdminGitStatusHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        """ Update RTB to the latest repository code. """
+        """Update RTB to the latest repository code."""
         os.system("git pull")
         """
         Shutdown the actual process and restart the service.
@@ -503,7 +503,7 @@ class AdminGitStatusHandler(BaseHandler):
         os.execl("./setup/restart.sh", "./setup/restart.sh")
 
     def current_time(self):
-        """ Nicely formatted current time as a string """
+        """Nicely formatted current time as a string"""
         return str(datetime.now()).split(" ")[1].split(".")[0]
 
 
@@ -515,14 +515,14 @@ class AdminExportHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Export to document formats """
+        """Export to document formats"""
         self.render("admin/export.html", errors=None)
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        """ Include the requests exports in the xml dom """
+        """Include the requests exports in the xml dom"""
         root = ET.Element("rootthebox")
         root.set("api", self.API_VERSION)
         if self.get_argument("game_config", "") == "true":
@@ -533,7 +533,7 @@ class AdminExportHandler(BaseHandler):
         self.write_xml(xml_dom.toprettyxml())
 
     def write_xml(self, xml_doc):
-        """ Write XML document to page """
+        """Write XML document to page"""
         self.set_header("Content-Type", "text/xml")
         self.set_header(
             "Content-disposition",
@@ -597,7 +597,7 @@ class AdminImportXmlHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Import setup files """
+        """Import setup files"""
         self.render("admin/import.html", success=None, errors=None)
 
     @restrict_ip_address
@@ -622,7 +622,7 @@ class AdminImportXmlHandler(BaseHandler):
             self.render("admin/import.html", success=None, errors=["No file data."])
 
     def _get_tmp_file(self):
-        """ Creates a tmp file with the file data """
+        """Creates a tmp file with the file data"""
         data = self.request.files["xml_file"][0]["body"]
         tmp_file = NamedTemporaryFile(delete=False)
         tmp_file.write(data)
@@ -658,7 +658,7 @@ class AdminResetHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Reset Game Information """
+        """Reset Game Information"""
         self.render("admin/reset.html", success=None, errors=None)
 
     @restrict_ip_address

@@ -88,7 +88,7 @@ class AdminEditUsersHandler(BaseHandler):
             self.redirect("/admin/users")
 
     def edit_team(self):
-        """ Edits the team object """
+        """Edits the team object"""
         try:
             team = Team.by_uuid(self.get_argument("uuid", ""))
             if team is None:
@@ -112,7 +112,7 @@ class AdminEditUsersHandler(BaseHandler):
             self.render("admin/view/users.html", errors=[str(error)])
 
     def edit_user(self):
-        """ Update user objects in the database """
+        """Update user objects in the database"""
         try:
             user = User.by_uuid(self.get_argument("uuid", ""))
             if user is None:
@@ -291,7 +291,7 @@ class AdminBanHammerHandler(BaseHandler):
         self.redirect("/user")
 
     def ban_config(self):
-        """ Configure the automatic ban settings """
+        """Configure the automatic ban settings"""
         if self.get_argument("automatic_ban", "") == "true":
             self.application.settings["automatic_ban"] = True
             try:
@@ -305,7 +305,7 @@ class AdminBanHammerHandler(BaseHandler):
             self.application.settings["automatic_ban"] = False
 
     def ban_add(self):
-        """ Add an ip address to the banned list """
+        """Add an ip address to the banned list"""
         try:
             ip = self.get_argument("ip", "")
             if not IPAddress(ip).is_loopback():
@@ -315,7 +315,7 @@ class AdminBanHammerHandler(BaseHandler):
             pass  # Don't care about exceptions here
 
     def ban_clear(self):
-        """ Remove an ip from the banned list """
+        """Remove an ip from the banned list"""
         ip = self.get_argument("ip", "")
         if ip in self.application.settings["blacklisted_ips"]:
             logging.info("Removed ban on ip: %s" % ip)
@@ -325,13 +325,13 @@ class AdminBanHammerHandler(BaseHandler):
 
 class AdminLockHandler(BaseHandler):
 
-    """ Used to manually lock/unlocked accounts """
+    """Used to manually lock/unlocked accounts"""
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        """ Calls an lock based on URL """
+        """Calls an lock based on URL"""
         uri = {"user": self.lock_user, "box": self.lock_box, "flag": self.lock_flag}
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -339,7 +339,7 @@ class AdminLockHandler(BaseHandler):
             self.render("public/404.html")
 
     def lock_user(self):
-        """ Toggle account lock """
+        """Toggle account lock"""
         user = User.by_uuid(self.get_argument("uuid", ""))
         if user is not None:
             user.locked = False if user.locked else True

@@ -33,7 +33,7 @@ from models.BaseModels import DatabaseObject
 
 
 class Corporation(DatabaseObject):
-    """ Corporation definition """
+    """Corporation definition"""
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
@@ -48,7 +48,7 @@ class Corporation(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
@@ -57,17 +57,17 @@ class Corporation(DatabaseObject):
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_name(cls, name):
-        """ Returns a the object with name of name """
+        """Returns a the object with name of name"""
         return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_uuid(cls, uuid):
-        """ Return an object based on uuid """
+        """Return an object based on uuid"""
         return dbsession.query(cls).filter_by(uuid=uuid).first()
 
     @property
@@ -93,7 +93,7 @@ class Corporation(DatabaseObject):
         self._description = str(value)
 
     def to_dict(self):
-        """ Returns editable data as a dictionary """
+        """Returns editable data as a dictionary"""
         return {
             "uuid": self.uuid,
             "name": self.name,
@@ -102,7 +102,7 @@ class Corporation(DatabaseObject):
         }
 
     def to_xml(self, parent):
-        """ Add to XML dom """
+        """Add to XML dom"""
         corp_elem = ET.SubElement(parent, "corporation")
         ET.SubElement(corp_elem, "name").text = self.name
         ET.SubElement(corp_elem, "description").text = self.description

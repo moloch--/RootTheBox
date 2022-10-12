@@ -289,7 +289,7 @@ def load_history():
 
 # Main entry point
 def start_server():
-    """ Main entry point for the application """
+    """Main entry point for the application"""
     locale.set_default_locale("en_US")
     locale.load_translations("locale")
     if options.autostart_game:

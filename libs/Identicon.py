@@ -31,7 +31,7 @@ def identicon(str_, size, background="#f0f0f0", square=False):
     digest, body = digest >> 24, ""
     x = y = 0
     if square:
-        for t in range(size ** 2 // 2):
+        for t in range(size**2 // 2):
             if digest & 1:
                 body += _rect(x, y, 1, 1, color, background, stroke_weight)
                 body += _rect(size - x - 1, y, 1, 1, color, background, stroke_weight)
@@ -39,7 +39,7 @@ def identicon(str_, size, background="#f0f0f0", square=False):
             x, y = (x + 1, 0) if y == size else (x, y)
         image_data = _svg(size, size, body, background)
     else:
-        for t in range(size ** 2):
+        for t in range(size**2):
             if digest & 1:
                 body += _rect(x, y, 1, 1, color, background, stroke_weight)
                 body += _rect(

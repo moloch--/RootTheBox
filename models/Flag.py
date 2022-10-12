@@ -44,11 +44,11 @@ from dateutil.parser import parse
 from past.utils import old_div
 
 ### Constants
-FLAG_STATIC = u"static"
-FLAG_REGEX = u"regex"
-FLAG_FILE = u"file"
-FLAG_DATETIME = u"datetime"
-FLAG_CHOICE = u"choice"
+FLAG_STATIC = "static"
+FLAG_REGEX = "regex"
+FLAG_FILE = "file"
+FLAG_DATETIME = "datetime"
+FLAG_CHOICE = "choice"
 FLAG_TYPES = [FLAG_STATIC, FLAG_REGEX, FLAG_FILE, FLAG_DATETIME, FLAG_CHOICE]
 
 
@@ -109,37 +109,37 @@ class Flag(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_name(cls, name):
-        """ Returns a the object with name of _name """
+        """Returns a the object with name of _name"""
         return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        """ Return and object based on a uuid """
+        """Return and object based on a uuid"""
         return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_token(cls, token):
-        """ Return and object based on a token """
+        """Return and object based on a token"""
         return dbsession.query(cls).filter_by(_token=str(token)).first()
 
     @classmethod
     def by_token_and_box_id(cls, token, box_id):
-        """ Return and object based on a token """
+        """Return and object based on a token"""
         return dbsession.query(cls).filter_by(_token=str(token), box_id=box_id).first()
 
     @classmethod
     def by_type(cls, _type):
-        """ Return and object based on a token """
+        """Return and object based on a token"""
         return dbsession.query(cls).filter_by(_type=str(_type)).all()
 
     @classmethod
@@ -152,7 +152,7 @@ class Flag(DatabaseObject):
 
     @classmethod
     def create_flag(cls, _type, box, name, raw_token, description, value):
-        """ Check parameters applicable to all flag types """
+        """Check parameters applicable to all flag types"""
         creators = {
             FLAG_STATIC: cls._create_flag_static,
             FLAG_REGEX: cls._create_flag_regex,
@@ -171,7 +171,7 @@ class Flag(DatabaseObject):
 
     @classmethod
     def _create_flag_file(cls, box, name, raw_token, description, value):
-        """ Check flag file specific parameters """
+        """Check flag file specific parameters"""
         token = cls.digest(raw_token)
         return cls(
             box_id=box.id, name=name, token=token, description=description, value=value
@@ -179,7 +179,7 @@ class Flag(DatabaseObject):
 
     @classmethod
     def _create_flag_regex(cls, box, name, raw_token, description, value):
-        """ Check flag regex specific parameters """
+        """Check flag regex specific parameters"""
         try:
             re.compile(raw_token)
         except:
@@ -194,7 +194,7 @@ class Flag(DatabaseObject):
 
     @classmethod
     def _create_flag_static(cls, box, name, raw_token, description, value):
-        """ Check flag static specific parameters """
+        """Check flag static specific parameters"""
         return cls(
             box_id=box.id,
             name=name,
@@ -205,7 +205,7 @@ class Flag(DatabaseObject):
 
     @classmethod
     def _create_flag_datetime(cls, box, name, raw_token, description, value):
-        """ Check flag datetime specific parameters """
+        """Check flag datetime specific parameters"""
         try:
             parse(raw_token)
         except:
@@ -220,7 +220,7 @@ class Flag(DatabaseObject):
 
     @classmethod
     def _create_flag_choice(cls, box, name, raw_token, description, value):
-        """ Check flag choice specific parameters """
+        """Check flag choice specific parameters"""
         return cls(
             box_id=box.id,
             name=name,
@@ -231,7 +231,7 @@ class Flag(DatabaseObject):
 
     @classmethod
     def digest(self, data):
-        """ Token is SHA1 of data """
+        """Token is SHA1 of data"""
         return hashlib.sha1(data).hexdigest()
 
     def dynamic_value(self, team=None):
@@ -382,14 +382,14 @@ class Flag(DatabaseObject):
 
     @property
     def locked(self):
-        """ Determines if an admin has locked an flag. """
+        """Determines if an admin has locked an flag."""
         if self._locked == None:
             return False
         return self._locked
 
     @locked.setter
     def locked(self, value):
-        """ Setter method for _lock """
+        """Setter method for _lock"""
         if value is None:
             value = False
         elif isinstance(value, int):
@@ -448,7 +448,7 @@ class Flag(DatabaseObject):
             raise ValueError("Invalid flag type, cannot capture")
 
     def to_xml(self, parent):
-        """ Write attributes to XML doc """
+        """Write attributes to XML doc"""
         flag_elem = ET.SubElement(parent, "flag")
         flag_elem.set("type", self._type)
         ET.SubElement(flag_elem, "name").text = self._name
@@ -478,7 +478,7 @@ class Flag(DatabaseObject):
                 hint.to_xml(hints_elem)
 
     def to_dict(self):
-        """ Returns public data as a dict """
+        """Returns public data as a dict"""
         box = Box.by_id(self.box_id)
         if self.lock_id:
             lock_uuid = Flag.by_id(self.lock_id).uuid

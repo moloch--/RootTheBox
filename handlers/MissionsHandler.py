@@ -63,7 +63,7 @@ class FirstLoginHandler(BaseHandler):
 class StoryAjaxHandler(BaseHandler):
     @authenticated
     def get(self, *args, **kargs):
-        """ Renders AJAX snippit based on URI """
+        """Renders AJAX snippit based on URI"""
         uri = {"firstlogin": self.firstlogin}
         user = self.get_current_user()
         if user and len(args) and args[0] in uri:
@@ -88,7 +88,7 @@ class StoryAjaxHandler(BaseHandler):
             self.render("public/404.html")
 
     def firstlogin(self):
-        """ Render the first login dialog """
+        """Render the first login dialog"""
         dialog = []
         if isinstance(options.story_firstlogin, list):
             dialog.extend(options.story_firstlogin)
@@ -145,7 +145,7 @@ class BoxHandler(BaseHandler):
     @authenticated
     @game_started
     def post(self, *args, **kwargs):
-        """ Check validity of flag submissions """
+        """Check validity of flag submissions"""
         box_id = self.get_argument("box_id", None)
         uuid = self.get_argument("uuid", "")
         token = self.get_argument("token", "")
@@ -421,7 +421,7 @@ class BoxHandler(BaseHandler):
         return False
 
     def attempt_capture(self, flag, submission):
-        """ Compares a user provided token to the token in the db """
+        """Compares a user provided token to the token in the db"""
         user = self.get_current_user()
         team = user.team
         logging.info(
@@ -459,7 +459,7 @@ class BoxHandler(BaseHandler):
         self.render_page_by_box(box, errors, success, info)
 
     def render_page_by_box(self, box, errors=[], success=[], info=[]):
-        """ Wrapper to .render() to avoid duplicate code """
+        """Wrapper to .render() to avoid duplicate code"""
         user = self.get_current_user()
         self.render(
             "missions/box.html",
@@ -504,7 +504,7 @@ class PurchaseHintHandler(BaseHandler):
     @authenticated
     @game_started
     def post(self, *args, **kwargs):
-        """ Purchase a hint """
+        """Purchase a hint"""
         uuid = self.get_argument("uuid", "")
         hint = Hint.by_uuid(uuid)
         if hint is not None:
@@ -534,7 +534,7 @@ class PurchaseHintHandler(BaseHandler):
             self.render("public/404.html")
 
     def _purchase_hint(self, hint, team):
-        """ Add hint to team object """
+        """Add hint to team object"""
         if hint not in team.hints:
             user = self.get_current_user()
             team.money -= abs(hint.price)
@@ -544,7 +544,7 @@ class PurchaseHintHandler(BaseHandler):
             self.event_manager.hint_taken(user, hint)
 
     def render_page(self, box, errors=[], success=[], info=[]):
-        """ Wrapper to .render() to avoid duplicate code """
+        """Wrapper to .render() to avoid duplicate code"""
         user = self.get_current_user()
         self.render(
             "missions/box.html",
@@ -559,19 +559,19 @@ class PurchaseHintHandler(BaseHandler):
 
 class MissionsHandler(BaseHandler):
 
-    """ Renders pages related to Missions/Flag submissions """
+    """Renders pages related to Missions/Flag submissions"""
 
     @authenticated
     @game_started
     def get(self, *args, **kwargs):
-        """ Render missions view """
+        """Render missions view"""
         user = self.get_current_user()
         self.render("missions/view.html", team=user.team, errors=None, success=None)
 
     @authenticated
     @game_started
     def post(self, *args, **kwargs):
-        """ Submit flags/buyout to levels """
+        """Submit flags/buyout to levels"""
         if self.get_current_user():
             uri = {"buyout": self.buyout}
             if len(args) and args[0] in uri:
@@ -580,7 +580,7 @@ class MissionsHandler(BaseHandler):
         self.render("public/404.html")
 
     def buyout(self):
-        """ Buyout and unlock a level """
+        """Buyout and unlock a level"""
         user = self.get_current_user()
         level = GameLevel.by_uuid(self.get_argument("uuid", ""))
         if level is not None:

@@ -37,7 +37,7 @@ from models import dbsession
 
 
 class RecoveryConsole(cmd.Cmd):
-    """ Recovery console for user/passwords """
+    """Recovery console for user/passwords"""
 
     intro = (
         "\n ====================\n"
@@ -230,5 +230,5 @@ class RecoveryConsole(cmd.Cmd):
         os._exit(0)
 
     def default(self, command):
-        """ Called when input is not a command """
+        """Called when input is not a command"""
         print(WARN + "Unknown command " + bold + command + W + ", see help.")

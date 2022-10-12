@@ -876,7 +876,7 @@ class WebSocketApp(object):
 # > Time to Str
 ###################
 def current_time():
-    """ Return current time as HH:MM:SS """
+    """Return current time as HH:MM:SS"""
     return time.strftime("%H:%M:%S")
 
 
@@ -884,7 +884,7 @@ def current_time():
 # > Opcodes
 ###################
 def stop_animate_thread(ws):
-    """ Block until animation thread exits """
+    """Block until animation thread exits"""
     logging.info("Waiting for animation thread to exit ...")
     ws.monitor.stop_thread = True
     if ws.monitor.animate_thread is not None:
@@ -895,7 +895,7 @@ def stop_animate_thread(ws):
 
 
 def update(ws, message):
-    """ Recv and draw latest update """
+    """Recv and draw latest update"""
     logging.debug("Got update: %s" % message)
     bots = []
     for bot in message["bots"]:
@@ -904,14 +904,14 @@ def update(ws, message):
 
 
 def auth_failure(ws, message):
-    """ Failed to properly authenticate with scoring engine """
+    """Failed to properly authenticate with scoring engine"""
     stop_animate_thread(ws)
     logging.info("Authentication failure")
     ws.monitor.auth_failure("ACCESS DENIED")
 
 
 def auth_success(ws, message):
-    """ Successfully authenticated with scoring engine"""
+    """Successfully authenticated with scoring engine"""
     stop_animate_thread(ws)
     logging.info("Successfully authenticated")
     thread = threading.Thread(target=ws.monitor.progress)
@@ -935,7 +935,7 @@ OPCODES["ping"] = ping
 # > WS Callbacks
 ###################
 def on_open(ws):
-    """ Send auth when socket is open """
+    """Send auth when socket is open"""
     logging.info("Sending credentials to engine")
     auth_msg = json.dumps(
         {"opcode": "auth", "handle": ws.agent_name, "password": ws.password}
@@ -945,7 +945,7 @@ def on_open(ws):
 
 
 def on_message(ws, message):
-    """ Parse message and call a function """
+    """Parse message and call a function"""
     logging.debug("Recv'd message: %s" % str(message))
     try:
         response = json.loads(message)
@@ -960,7 +960,7 @@ def on_message(ws, message):
 
 
 def on_error(ws, error):
-    """ Error recv'd on WebSocket """
+    """Error recv'd on WebSocket"""
     logging.exception("[WebSocket] on_error - %s" % type(error))
     stop_animate_thread(ws)
     if isinstance(error, socket.error):
@@ -971,7 +971,7 @@ def on_error(ws, error):
 
 
 def on_close(ws):
-    """ Websocket closed """
+    """Websocket closed"""
     logging.debug("[WebSocket] Closing connection.")
     stop_animate_thread(ws)
     ws.monitor.stop("Connection lost")
@@ -981,7 +981,7 @@ def on_close(ws):
 # > Bot Monitor
 ###################
 class BotMonitor(object):
-    """ Manages all flags and state changes """
+    """Manages all flags and state changes"""
 
     def __init__(self, connection_url):
         self.url = connection_url
@@ -992,7 +992,7 @@ class BotMonitor(object):
         self.pong = False
 
     def start(self):
-        """ Initializes the screen """
+        """Initializes the screen"""
         self.screen = curses.initscr()
         self.__clear__()
         curses.start_color()
@@ -1008,19 +1008,19 @@ class BotMonitor(object):
         self.__connect__()
 
     def stop(self, message=None):
-        """ Gracefully exits the program """
+        """Gracefully exits the program"""
         logging.debug("Stopping curses ui: %s" % message)
         self.__clear__()
         curses.endwin()
         os._exit(0)
 
     def connection_problems(self):
-        """ Display connection issue, and exit """
+        """Display connection issue, and exit"""
         logging.fatal("Connection failure!")
         self.auth_failure("CONNECTION FAILURE")
 
     def __connect__(self):
-        """ Connect and authenticate with scoring engine """
+        """Connect and authenticate with scoring engine"""
         ws = WebSocketApp(
             self.url, on_message=on_message, on_error=on_error, on_close=on_close
         )
@@ -1034,7 +1034,7 @@ class BotMonitor(object):
         ws.run_forever()
 
     def __connecting__(self):
-        """ Display connecting animation """
+        """Display connecting animation"""
         self.__clear__()
         self.screen.refresh()
         prompt = " Connecting, please wait ..."
@@ -1060,7 +1060,7 @@ class BotMonitor(object):
         connecting.endwin()
 
     def __load__(self):
-        """ Loads all required data """
+        """Loads all required data"""
         self.load_message = " Loading, please wait ... "
         self.loading_bar = curses.newwin(
             3,
@@ -1076,7 +1076,7 @@ class BotMonitor(object):
         self.loading_bar.clear()
 
     def __interface__(self):
-        """ Main interface loop """
+        """Main interface loop"""
         self.__redraw__()
         self.screen.nodelay(1)
         self.__title__()
@@ -1085,7 +1085,7 @@ class BotMonitor(object):
         self.screen.refresh()
 
     def __title__(self):
-        """ Create title and footer """
+        """Create title and footer"""
         title = " Root the Box: Botnet Monitor "
         start_x = old_div((self.max_x - len(title)), 2)
         self.screen.addstr(
@@ -1101,7 +1101,7 @@ class BotMonitor(object):
         self.screen.addstr(self.max_y - 1, 3, "[---]")
 
     def __grid__(self):
-        """ Draws the grid layout """
+        """Draws the grid layout"""
         pos_x, pos_y = 3, 3
         self.screen.hline(2, 1, curses.ACS_HLINE, self.max_x - 2)
         self.screen.hline(4, 1, curses.ACS_HLINE, self.max_x - 2)
@@ -1124,13 +1124,13 @@ class BotMonitor(object):
         self.screen.addstr(pos_y, pos_x + 2, self.income_title)
 
     def __positions__(self):
-        """ Calculates starting x position for each column """
+        """Calculates starting x position for each column"""
         self.start_ip_pos = 2
         self.start_name_pos = self.start_ip_pos + len(self.ip_title) + 3
         self.start_income_pos = self.start_name_pos + len(self.name_title) + 1
 
     def update_grid(self, boxes):
-        """ Redraw the grid with updated box information """
+        """Redraw the grid with updated box information"""
         self.__interface__()
         update_income = sum([box[2] for box in boxes])
         self.total_income += update_income
@@ -1150,7 +1150,7 @@ class BotMonitor(object):
         self.screen.refresh()
 
     def __summary__(self, bot_count, update_time):
-        """ Adds total bots and update time """
+        """Adds total bots and update time"""
         start_pos = 3
         pos_y = 1
         self.screen.addstr(
@@ -1161,7 +1161,7 @@ class BotMonitor(object):
         self.screen.addstr(pos_y, bot_pos, bot_string, curses.A_BOLD)
 
     def __colors__(self):
-        """ Init colors pairs """
+        """Init colors pairs"""
         self.NO_COLOR = -1
         self.RED = 1
         curses.init_pair(self.RED, curses.COLOR_RED, self.NO_COLOR)
@@ -1173,18 +1173,18 @@ class BotMonitor(object):
         curses.init_pair(self.BLUE, curses.COLOR_BLUE, self.NO_COLOR)
 
     def __redraw__(self):
-        """ Redraw the entire window """
+        """Redraw the entire window"""
         self.screen.clear()
         self.screen.border(0)
         self.screen.refresh()
 
     def __clear__(self):
-        """ Clears the screen """
+        """Clears the screen"""
         self.screen.clear()
         self.screen.refresh()
 
     def __credentials__(self):
-        """ Get display name from user """
+        """Get display name from user"""
         self.stop_thread = False
         thread = threading.Thread(target=self.__matrix__)
         self.loading_bar.clear()
@@ -1220,7 +1220,7 @@ class BotMonitor(object):
         thread.join()  # Wait for "Matrix" threads to stop
 
     def __matrix__(self):
-        """ Displays really cool, pointless matrix like animation in the background """
+        """Displays really cool, pointless matrix like animation in the background"""
         # (2) Sat com animation
         sat_com = " > Initializing sat com unit, please wait ... "
         progress = ["|", "/", "-", "\\"]
@@ -1255,7 +1255,7 @@ class BotMonitor(object):
         self.screen.refresh()
         # (5) Initializing memory address
         memory = " > Initializing memory: "
-        for index in range(0, 2 ** 32, 2 ** 20):
+        for index in range(0, 2**32, 2**20):
             time.sleep(0.02)
             self.screen.addstr(5, 2, memory + str("0x%08X" % index))
             self.screen.refresh()
@@ -1273,7 +1273,7 @@ class BotMonitor(object):
                 return
 
     def progress(self):
-        """ Progress animation, executed as separate thread """
+        """Progress animation, executed as separate thread"""
         index = 0
         progress_bar = ["=--", "-=-", "--=", "-=-"]
         pong_string = "PNG"
@@ -1297,7 +1297,7 @@ class BotMonitor(object):
             time.sleep(0.2)
 
     def auth_failure(self, msg):
-        """ Display authentication failure message """
+        """Display authentication failure message"""
         logging.info("Displaying auth failure message")
         self.__clear__()
         self.screen.refresh()
@@ -1327,7 +1327,7 @@ class BotMonitor(object):
 # > Main Entry
 ###################
 def main(domain, port, secure, log_file, log_level):
-    """ Creates and starts the monitor """
+    """Creates and starts the monitor"""
     hdlr = logging.FileHandler(log_file)
     formatter = logging.Formatter("\r[%(levelname)s] %(asctime)s - %(message)s")
     hdlr.setFormatter(formatter)

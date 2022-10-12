@@ -63,13 +63,13 @@ from builtins import str
 
 class AdminCreateHandler(BaseHandler):
 
-    """ Handler used to create game objects """
+    """Handler used to create game objects"""
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Renders Corp/Box/Flag create pages """
+        """Renders Corp/Box/Flag create pages"""
         box = Box.by_uuid(self.get_argument("box", ""))
         game_objects = {
             "corporation": "admin/create/corporation.html",
@@ -94,7 +94,7 @@ class AdminCreateHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        """ Calls a function based on URL """
+        """Calls a function based on URL"""
         game_objects = {
             "corporation": self.create_corporation,
             "box": self.create_box,
@@ -114,7 +114,7 @@ class AdminCreateHandler(BaseHandler):
             self.render("public/404.html")
 
     def create_team(self):
-        """ Admins can create teams manually """
+        """Admins can create teams manually"""
         try:
             name = self.get_argument("team_name", "")
             if Team.by_name(name) is not None:
@@ -145,7 +145,7 @@ class AdminCreateHandler(BaseHandler):
             self.render("admin/create/team.html", errors=[str(error)])
 
     def create_corporation(self):
-        """ Add a new corporation to the database """
+        """Add a new corporation to the database"""
         try:
             corp_name = self.get_argument("corporation_name", "")
             corp_desc = self.get_argument("corporation_description", "")
@@ -162,7 +162,7 @@ class AdminCreateHandler(BaseHandler):
             self.render("admin/create/corporation.html", errors=[str(error)])
 
     def create_category(self):
-        """ Add a new category to the database """
+        """Add a new category to the database"""
         try:
             category = self.get_argument("category", "")
             cat_desc = self.get_argument("category_description", "")
@@ -179,7 +179,7 @@ class AdminCreateHandler(BaseHandler):
             self.render("admin/create/category.html", errors=[str(error)])
 
     def create_box(self):
-        """ Create a box object """
+        """Create a box object"""
         try:
             game_level = self.get_argument("game_level", "")
             corp_uuid = self.get_argument("corporation_uuid", "")
@@ -228,35 +228,35 @@ class AdminCreateHandler(BaseHandler):
             self.render("admin/create/box.html", errors=[str(error)])
 
     def create_flag_static(self):
-        """ Create a static flag """
+        """Create a static flag"""
         try:
             self._mkflag(FLAG_STATIC)
         except ValidationError as error:
             self.render("admin/create/flag-static.html", errors=[str(error)], box=None)
 
     def create_flag_regex(self):
-        """ Create a regex flag """
+        """Create a regex flag"""
         try:
             self._mkflag(FLAG_REGEX)
         except ValidationError as error:
             self.render("admin/create/flag-regex.html", errors=[str(error)], box=None)
 
     def create_flag_file(self):
-        """ Create a flag flag """
+        """Create a flag flag"""
         try:
             self._mkflag(FLAG_FILE, is_file=True)
         except ValidationError as error:
             self.render("admin/create/flag-file.html", errors=[str(error)], box=None)
 
     def create_flag_choice(self):
-        """ Create a multiple choice flag """
+        """Create a multiple choice flag"""
         try:
             self._mkflag(FLAG_CHOICE)
         except ValidationError as error:
             self.render("admin/create/flag-choice.html", errors=[str(error)], box=None)
 
     def create_flag_datetime(self):
-        """ Create a datetime flag """
+        """Create a datetime flag"""
         try:
             self._mkflag(FLAG_DATETIME)
         except ValidationError as error:
@@ -302,7 +302,7 @@ class AdminCreateHandler(BaseHandler):
             self.render("admin/create/game_level.html", errors=[str(error)])
 
     def create_hint(self):
-        """ Add hint to database """
+        """Add hint to database"""
         try:
             box = Box.by_uuid(self.get_argument("box_uuid", ""))
             if box is None:
@@ -322,7 +322,7 @@ class AdminCreateHandler(BaseHandler):
             self.render("admin/create/hint.html", errors=[str(error)])
 
     def _mkflag(self, flag_type, is_file=False):
-        """ Creates the flag in the database """
+        """Creates the flag in the database"""
         box = Box.by_uuid(self.get_argument("box_uuid", ""))
         if box is None:
             raise ValidationError("Box does not exist")
@@ -359,7 +359,7 @@ class AdminCreateHandler(BaseHandler):
         self.redirect("/admin/view/game_objects#%s" % box.uuid)
 
     def add_attachments(self, flag):
-        """ Add uploaded files as attachments to flags """
+        """Add uploaded files as attachments to flags"""
         if hasattr(self.request, "files"):
             if "flag" not in self.request.files:
                 return
@@ -373,13 +373,13 @@ class AdminCreateHandler(BaseHandler):
 
 class AdminViewHandler(BaseHandler):
 
-    """ View game objects """
+    """View game objects"""
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Calls a view function based on URI """
+        """Calls a view function based on URI"""
         uri = {
             "game_objects": "admin/view/game_objects.html",
             "game_levels": "admin/view/game_levels.html",
@@ -486,13 +486,13 @@ class AdminViewHandler(BaseHandler):
 
 class AdminEditHandler(BaseHandler):
 
-    """ Edit game objects """
+    """Edit game objects"""
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def get(self, *args, **kwargs):
-        """ Just redirect to the corresponding /view page """
+        """Just redirect to the corresponding /view page"""
         uri = {
             "corporation": "game_objects",
             "box": "game_objects",
@@ -514,7 +514,7 @@ class AdminEditHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        """ Calls an edit function based on URL """
+        """Calls an edit function based on URL"""
         uri = {
             "corporation": self.edit_corporations,
             "box": self.edit_boxes,
@@ -534,7 +534,7 @@ class AdminEditHandler(BaseHandler):
             self.render("public/404.html")
 
     def edit_corporations(self):
-        """ Updates corporation object in the database """
+        """Updates corporation object in the database"""
         try:
             corp = Corporation.by_uuid(self.get_argument("uuid", ""))
             if corp is None:
@@ -558,7 +558,7 @@ class AdminEditHandler(BaseHandler):
             )
 
     def edit_category(self):
-        """ Updates category object in the database """
+        """Updates category object in the database"""
         try:
             cat = Category.by_uuid(self.get_argument("uuid", ""))
             if cat is None:
@@ -696,7 +696,7 @@ class AdminEditHandler(BaseHandler):
             )
 
     def edit_flag_order(self):
-        """ Edit flag order in the database """
+        """Edit flag order in the database"""
         try:
             flag = Flag.by_uuid(self.get_argument("uuid", ""))
             if flag is None:
@@ -708,7 +708,7 @@ class AdminEditHandler(BaseHandler):
             logging.error("Failed to reorder flag: %s" % error)
 
     def edit_flags(self):
-        """ Edit existing flags in the database """
+        """Edit existing flags in the database"""
         try:
             flag = Flag.by_uuid(self.get_argument("uuid", ""))
             if flag is None:
@@ -772,7 +772,7 @@ class AdminEditHandler(BaseHandler):
             )
 
     def edit_choices(self, flag, arguments):
-        """ Edit flag multiple choice items """
+        """Edit flag multiple choice items"""
         choiceitems = {}
         currentchoices = json.loads(flag.choices())
         for item in arguments:
@@ -800,7 +800,7 @@ class AdminEditHandler(BaseHandler):
         self.dbsession.commit()
 
     def edit_ip(self):
-        """ Add ip addresses to a box (sorta edits the box object) """
+        """Add ip addresses to a box (sorta edits the box object)"""
         try:
             box = Box.by_uuid(self.get_argument("box_uuid", ""))
             if box is None:
@@ -823,7 +823,7 @@ class AdminEditHandler(BaseHandler):
             )
 
     def edit_level_access(self):
-        """ Update game level access """
+        """Update game level access"""
         try:
             level = GameLevel.by_uuid(self.get_argument("uuid", ""))
             if level is None:
@@ -860,7 +860,7 @@ class AdminEditHandler(BaseHandler):
             self.render("admin/view/game_levels.html", errors=[str(error)])
 
     def edit_game_level(self):
-        """ Update game level objects """
+        """Update game level objects"""
         try:
             level = GameLevel.by_uuid(self.get_argument("uuid", ""))
             if level is None:
@@ -899,7 +899,7 @@ class AdminEditHandler(BaseHandler):
             self.render("admin/view/game_levels.html", errors=[str(error)])
 
     def box_level(self):
-        """ Changes a box level """
+        """Changes a box level"""
         errors = []
         box = Box.by_uuid(self.get_argument("box_uuid", ""))
         level = GameLevel.by_uuid(self.get_argument("level_uuid", ""))
@@ -914,7 +914,7 @@ class AdminEditHandler(BaseHandler):
         self.render("admin/view/game_levels.html", errors=errors)
 
     def edit_hint(self):
-        """ Edit a hint object """
+        """Edit a hint object"""
         try:
             hint = Hint.by_uuid(self.get_argument("uuid", ""))
             if hint is None:
@@ -941,7 +941,7 @@ class AdminEditHandler(BaseHandler):
             )
 
     def edit_market_item(self):
-        """ Change a market item's price """
+        """Change a market item's price"""
         try:
             item = MarketItem.by_uuid(self.get_argument("item_uuid", ""))
             if item is None:
@@ -958,13 +958,13 @@ class AdminEditHandler(BaseHandler):
 
 class AdminDeleteHandler(BaseHandler):
 
-    """ Delete flags/ips from the database """
+    """Delete flags/ips from the database"""
 
     @restrict_ip_address
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
-        """ Used to delete database objects """
+        """Used to delete database objects"""
         uri = {
             "ip": self.del_ip,
             "flag": self.del_flag,
@@ -980,7 +980,7 @@ class AdminDeleteHandler(BaseHandler):
             self.render("public/404.html")
 
     def del_ip(self, ip=None):
-        """ Delete an ip address object """
+        """Delete an ip address object"""
         ip_init = ip
         if ip is None:
             ip = IpAddress.by_uuid(self.get_argument("ip_uuid", ""))
@@ -998,7 +998,7 @@ class AdminDeleteHandler(BaseHandler):
             )
 
     def del_flag(self, flag=None):
-        """ Delete a flag object from the database """
+        """Delete a flag object from the database"""
         flag_init = flag
         if flag is None:
             flag = Flag.by_uuid(self.get_argument("uuid", ""))
@@ -1019,7 +1019,7 @@ class AdminDeleteHandler(BaseHandler):
             )
 
     def del_hint(self, hint=None):
-        """ Delete a hint from the database """
+        """Delete a hint from the database"""
         hint_init = hint
         if hint is None:
             hint = Hint.by_uuid(self.get_argument("uuid", ""))
@@ -1037,7 +1037,7 @@ class AdminDeleteHandler(BaseHandler):
             )
 
     def del_corp(self):
-        """ Delete a corporation """
+        """Delete a corporation"""
         corp = Corporation.by_uuid(self.get_argument("uuid", ""))
         if corp is not None:
             logging.info("Delete corporation: %s" % corp.name)
@@ -1052,7 +1052,7 @@ class AdminDeleteHandler(BaseHandler):
             )
 
     def del_category(self):
-        """ Delete a category """
+        """Delete a category"""
         cat = Category.by_uuid(self.get_argument("uuid", ""))
         if cat is not None:
             logging.info("Delete category: %s" % cat.category)
@@ -1066,7 +1066,7 @@ class AdminDeleteHandler(BaseHandler):
             )
 
     def del_box(self, box=None):
-        """ Delete a box """
+        """Delete a box"""
         box_init = box
         if box is None:
             box = Box.by_uuid(self.get_argument("uuid", ""))
@@ -1093,7 +1093,7 @@ class AdminDeleteHandler(BaseHandler):
             )
 
     def del_game_level(self):
-        """ Deletes a game level, and fixes the linked list """
+        """Deletes a game level, and fixes the linked list"""
         game_level = GameLevel.by_uuid(self.get_argument("uuid", ""))
         if game_level is not None:
             boxes = game_level.boxes
@@ -1121,7 +1121,7 @@ class AdminDeleteHandler(BaseHandler):
 
 class AdminAjaxGameObjectDataHandler(BaseHandler):
 
-    """ Handles AJAX data for admin handlers """
+    """Handles AJAX data for admin handlers"""
 
     @restrict_ip_address
     @authenticated
@@ -1244,7 +1244,7 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
 
 class AdminTestTokenHandler(BaseHandler):
 
-    """ Handles token test """
+    """Handles token test"""
 
     @restrict_ip_address
     @authenticated
