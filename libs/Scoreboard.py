@@ -25,9 +25,10 @@ Created on Oct 04, 2012
 import json
 import logging
 import time
-import asyncio
 
-from models import dbsession
+from threading import Thread
+from sqlalchemy.orm import scoped_session
+from models import dbsession, session_maker
 from models.Team import Team
 from models.Box import Box
 from models.Flag import Flag
@@ -49,21 +50,20 @@ class Scoreboard(object):
         return json.dumps(app.settings["scoreboard_state"].get("teams"))
 
     @classmethod
-    def update_gamestate(self, app):
-        try:
-            asyncio.create_task(self._update_gamestate(self, app))
-        except:
-            try:
-                asyncio.ensure_future(self._update_gamestate(self, app))
-            except RuntimeWarning:
-                # possible not awaited but should still run - not sure what py version does this, but it shouldn't need to be awaited
-                pass
-            except Exception as e:
-                logging.error(e)
+    def update_gamestate(self, app, background=False):
+        if background:
+            t = Thread(target=self._update_gamestate, args = (self, app), daemon=True)
+            t.start()
+        else:
+            self._update_gamestate(self, app)
 
-    async def _update_gamestate(self, app):
-        game_levels = GameLevel.all()
-        teams = Team.ranks()
+    def _update_gamestate(self, app):
+        threadSession = scoped_session(session_maker)
+        threadDBSession = lambda: threadSession(autoflush=True)
+        threadsession = threadDBSession()
+
+        game_levels = GameLevel.all(threadsession)
+        teams = Team.ranks(threadsession)
         bots = BotManager.instance().count_all_teams()
         game_state = {
             "teams": OrderedDict(),
@@ -134,6 +134,7 @@ class Scoreboard(object):
                         flag.uuid
                     ] = {"name": flag.name}
         app.settings["scoreboard_state"] = game_state
+        threadSession.remove()
 
 
 def score_bots():
