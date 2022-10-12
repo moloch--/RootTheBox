@@ -162,12 +162,12 @@ class ScoreboardAjaxHandler(BaseHandler):
         if teamcount > display:
             scoreboard = self.settings["scoreboard_state"].copy()
             scoreboard["teams"] = OrderedDict()
-            end_count = display * page - 1
+            end_count = display * page
             start_count = end_count - display
             for i, team in enumerate(teams):
-                if i > start_count and i <= end_count:
+                if i >= start_count and i < end_count:
                     scoreboard["teams"][team] = teams[team]
-                elif i > end_count:
+                elif i >= end_count:
                     break
             return scoreboard
         else:
@@ -355,6 +355,9 @@ class TeamsHandler(BaseHandler):
         for i, team in enumerate(ranks):
             if i >= start_count and i < end_count:
                 teams.append(team)
+            elif i >= end_count:
+                break
+
         if scoreboard_visible(user):
             self.render(
                 "scoreboard/teams.html",

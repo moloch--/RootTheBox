@@ -63,6 +63,8 @@ class Scoreboard(object):
 
     async def _update_gamestate(self, app):
         game_levels = GameLevel.all()
+        teams = Team.ranks()
+        bots = BotManager.instance().count_all_teams()
         game_state = {
             "teams": OrderedDict(),
             "levels": {},
@@ -72,7 +74,6 @@ class Scoreboard(object):
             "box_count": len(Box.unlocked()),
             "level_count": len(game_levels),
         }
-        teams = Team.ranks()
         for team in teams:
             millis = int(round(time.time() * 1000))
             game_state["teams"][team.name] = {
@@ -81,7 +82,7 @@ class Scoreboard(object):
                 "game_levels": [str(lvl) for lvl in team.game_levels],
                 "members_count": len(team.members),
                 "hints_count": len(team.hints),
-                "bot_count": BotManager.instance().count_by_team(team.name),
+                "bot_count": bots[team.uuid],
                 "money": team.money,
             }
 

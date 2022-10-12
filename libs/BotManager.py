@@ -134,6 +134,17 @@ class BotManager(object):
         bots = self.botdb.query(Bot).filter_by(team_name=str(team)).all()
         return [self.botnet[bot.wsock_uuid] for bot in bots]
 
+    def count_all_teams(self):
+        from models.Team import Team
+
+        teams = Team.all()
+        botcount = {}
+        for team in teams:
+            botcount[team.uuid] = 0
+        for bot in self.botdb.query(Bot).all():
+            botcount[bot.team_uuid] += 1
+        return botcount
+
     def count_by_team(self, team):
         return len(self.by_team(team))
 

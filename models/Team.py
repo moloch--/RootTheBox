@@ -33,6 +33,7 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
+from models.User import User
 from models.Relationships import (
     team_to_box,
     team_to_item,
@@ -135,11 +136,22 @@ class Team(DatabaseObject):
         return dbsession.query(cls).filter_by(_code=code).first()
 
     @classmethod
+    def locked_teams(cls):
+        """ Returns a list of locked objects in the database """
+        locked_users = User.locked_users()
+        teams = []
+        for user in locked_users:
+            if user.team.locked:
+                teams.append(user.team)
+        return teams
+
+    @classmethod
     def ranks(cls):
         """ Returns a list of unlocked objects in the database """
         ranked = []
+        locked_teams = cls.locked_teams()
         for team in sorted(dbsession.query(cls).order_by(desc(cls.money)).all()):
-            if not team.locked:
+            if team not in locked_teams:
                 ranked.append(team)
         return ranked
 

@@ -131,6 +131,11 @@ class User(DatabaseObject):
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
+    def locked_users(cls):
+        """ Returns a list of locked objects in the database """
+        return dbsession.query(cls).filter_by(_locked=1).all()
+
+    @classmethod
     def by_uuid(cls, _uuid):
         """ Return and object based on a uuid """
         return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
