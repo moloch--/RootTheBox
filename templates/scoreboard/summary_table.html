@@ -108,7 +108,7 @@
         <td class="summarycolumn botcol" style="font-size: large; white-space: nowrap; vertical-align: middle; width: 40px; text-align: center;{% if options.use_bots %} display: table-cell;{% else %} display: none;{% end %}">{{ team.get("bot_count") }}</td>
         <td class="summarycolumn flagcol" style="{% if not options.rank_by == 'money' %}font-size: x-large; font-weight: bold;{% else %}font-size: large;{% end %} white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{{ len(team.get("flags")) }}</div></td>
         <td class="summarycolumn moneycol" style="{% if options.rank_by == 'money' %}font-size: x-large; font-weight: bold;{% else %}font-size: large;{% end %} white-space: nowrap; vertical-align: middle; width: 50px; text-align: center;">{% if options.banking %}{{ _("$") }}{% end %}{{ team.get("money") }}</td>
-        <td class="summarycolumn shortcolumn" style="vertical-align: middle; padding-left: 20px;"><a id="team-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{{ team.get('uuid') }}">{{ _("Details") }} &raquo;</a></td>
+        <td class="summarycolumn shortcolumn" style="vertical-align: middle; padding-left: 20px;"><a id="{% if options.teams %}team{% else %}user{% end %}-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" data-uuid="{% if options.teams %}{{ team.get('uuid') }}{% else %}{{ team.get('users')[0] }}{% end %}">{{ _("Details") }} &raquo;</a></td>
     </tr>
     {% end %}
     

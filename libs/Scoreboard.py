@@ -84,6 +84,7 @@ class Scoreboard(object):
                 "hints_count": len(team.hints),
                 "bot_count": bots[team.uuid],
                 "money": team.money,
+                "users": [user.uuid for user in team.members]
             }
 
             highlights = {"money": 0, "flag": 0, "bot": 0, "hint": 0}
