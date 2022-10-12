@@ -344,7 +344,7 @@ class TeamsHandler(BaseHandler):
         except ValueError:
             page = 1
             display = 25
-        ranks = Team.ranks()
+        ranks = self.application.settings["scoreboard_state"]["teams"]
         teamcount = len(ranks)
         pcount = ceil(teamcount / display)
         if pcount < page:
@@ -354,7 +354,7 @@ class TeamsHandler(BaseHandler):
         teams = []
         for i, team in enumerate(ranks):
             if i >= start_count and i < end_count:
-                teams.append(team)
+                teams.append(Team.by_uuid(ranks[team].get('uuid')))
             elif i >= end_count:
                 break
 
