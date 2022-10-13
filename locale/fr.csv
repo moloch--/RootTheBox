@@ -299,6 +299,7 @@ Game Level,Niveau de jeu
 Game Levels,Niveaux de jeu
 Game Management,Gestion du jeu
 Game Materials,Matériel de jeu
+Game Metrics,Métriques de jeu
 Game Name,Nom du jeu
 Game Progress,Progression du jeu
 Garbage File,Fichier de déchets
@@ -629,6 +630,9 @@ Token Value,Valeur du jeton
 Tools,Outils
 Tools & Upgrades,Outils et mises à niveau
 Total Cash Stolen,Total des espèces volées
+Total Users,Nombre total d'utilisateurs
+Total Teams,Total des équipes
+Total Boxes,Nombre total de boîtes
 Type,Type
 Unknown,Inconnu
 Unlock,Ouvrir

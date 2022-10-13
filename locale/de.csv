@@ -299,6 +299,7 @@ Game Level,Spiellevel
 Game Levels,Spiellevels
 Game Management,Spielverwaltung
 Game Materials,Spielmaterialien
+Game Metrics,Spielmetriken
 Game Name,Spielname
 Game Progress,Spielfortschritt
 Garbage File,Mülleimer
@@ -629,6 +630,9 @@ Token Value,Token-Wert
 Tools,Werkzeuge
 Tools & Upgrades,Tools & Upgrades
 Total Cash Stolen,Bargeld gestohlen
+Total Users,Benutzer insgesamt
+Total Teams,Gesamtteams
+Total Boxes,Gesamtboxen
 Type,Art
 Unknown,unbekannte
 Unlock,Freischalten

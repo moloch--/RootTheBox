@@ -39,6 +39,7 @@ import json
 
 from models.Theme import Theme
 from models.User import User
+from models.Box import Box
 from libs.EventManager import EventManager
 from libs.ValidationError import ValidationError
 from libs.SecurityDecorators import authenticated
@@ -73,12 +74,18 @@ class HomeHandler(BaseHandler):
         if not user:
             self.redirect("/login")
             return
+        gamestate = self.application.settings["scoreboard_state"].get("teams")
         if uuid is None and user.is_admin():
             self.timer()
-            self.render("admin/home.html", user=user, usercount=len(User.all()))
+            self.render(
+                "admin/home.html", 
+                user=user,
+                boxcount=len(Box.all()),
+                teamcount=len(gamestate), 
+                usercount=len(User.all_users())
+            )
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()
-            gamestate = self.application.settings["scoreboard_state"].get("teams")
             rank = len(gamestate) + 1
             for i, team in enumerate(gamestate):
                 if team == user.team.name:

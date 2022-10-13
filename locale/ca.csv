@@ -299,6 +299,7 @@ Game Level,Nivell de joc
 Game Levels,Nivells de joc
 Game Management,Administració de jocs
 Game Materials,Materials de joc
+Game Metrics,Mètriques del joc
 Game Name,Nom del joc
 Game Progress,Progrés del joc
 Garbage File,Arxiu de fem
@@ -629,6 +630,9 @@ Token Value,Valor de token
 Tools,Eines
 Tools & Upgrades,Eines i actualitzacions
 Total Cash Stolen,Total d'efectiu robat
+Total Users,Total d'usuaris
+Total Teams,Total d'equips
+Total Boxes,Total de caixes
 Type,Tipus
 Unknown,Desconegut
 Unlock,desbloquejar

@@ -157,7 +157,13 @@
         </div>
         <div class="row">
             <div class="span11 offset1 well">
-                <h3><i class="fa fa-fw fa-group"></i> {{ _("Total Users") }}: {{usercount}}</h3>
+                <h3>{{ _("Game Metrics") }}</h3>
+                <hr />
+                <ul>
+                <div style="margin-bottom: 5px;"><i class="fa fa-fw fa-user"></i> {{ _("Total Users") }}: {{usercount}}</div>
+                {% if options.teams %}<div style="margin-bottom: 5px;"><i class="fa fa-fw fa-group"></i> {{ _("Total Teams") }}: {{teamcount}}</div>{% end %}
+                <div style="margin-bottom: 5px;"><i class="fa fa-fw fa-th"></i> {{ _("Total Boxes") }}: {{boxcount}}</div>
+                </ul>
             </div>
         </div>
         <div class="row">
