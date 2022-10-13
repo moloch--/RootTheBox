@@ -99,10 +99,10 @@ class ScoreboardHandler(BaseHandler):
                 if teamcount > display and user and user.team:
                     # Jump to the user's place in the scoreboard
                     for index, team in enumerate(
-                        settings["scoreboard_state"].get("teams")
+                        settings["scoreboard_state"].get("teams"), start=1
                     ):
                         if user.team.name == team:
-                            page = ceil(index / display)
+                            page = max(1, ceil(index / display))
                             break
 
             self.render(
