@@ -41,7 +41,7 @@ Are you sure you want to delete this category?,您确定要删除此类别吗？
 Are you sure you want to delete this corporation?,您确定要删除该赛事吗？
 Are you sure you want to delete this file?,您确定要删除此文件吗？
 Are you sure you want to delete this flag?,您确定要删除此flag吗？
-Are you sure you want to delete this game level?,您确定要删除此游戏关卡吗？
+Are you sure you want to delete this game level?,您确定要删除此难度等级吗？
 Are you sure you want to delete this hint?,您确定要删除此提示吗？
 Are you sure you want to delete this IP address?,您确定要删除此IP地址吗？
 Are you sure you want to delete this source code?,您确定要删除此源代码吗？
@@ -60,7 +60,7 @@ Backup/Restore,备份/恢复
 Ban IP Address,禁止IP地址
 Bank Account,银行账户
 Bank Account Balance,银行账户余额
-Bank Hash Algorithm,银行哈希算法
+Bank Hash Algorithm,银行密码哈希算法
 Bank Password,银行密码
 Bank Password Hash,银行密码哈希
 Bank Password Length,银行密码长度
@@ -68,7 +68,7 @@ Banking System,银行系统
 Banned IPs,禁止的IP
 BEGIN SECURE COMMUNIQUE,开始加密通信
 Black Market,黑市
-Bonus reward for those that complete the level.,那些完成关卡的奖励奖励。
+Bonus reward for those that complete the level.,那些完成难度级别的奖励。
 Bot,机器人
 Bot added,机器人已添加
 Bot Reward,机器人奖励
@@ -94,7 +94,7 @@ Buy,购买
 Buy Source Code,购买源代码
 Buy Upgrade,购买升级
 bytes,字节
-Capture Message,解题消息
+Capture Message,解题信息
 Capture Rate,解出率
 Captures,解出
 Case-Sensitive,区分大小写
@@ -105,7 +105,7 @@ Category box belongs too?,题目的分类是？
 Category Name,分类名称
 Change,更改
 Change Avatar,改变头像
-Characters,人物
+Characters,字符
 Charts,图表
 Chat,聊天
 Checksum,校验和
@@ -113,21 +113,21 @@ Choose,选择
 Choose a name for your new team!,为新团队选择一个名称！
 Choose Avatar,选择头像
 Classic,经典
-Clear,清除
-Clear all notifications and game history,清除所有通知和游戏历史记录
-Clear all team / player flag captures,清除所有团队/玩家获得的Flag
-Clear all team pastebin and file shares,清除所有团队剪贴板和文件共享
-Clear market items or source code purchases,清除市场物品或源代码购买
+Clear,移除
+Clear all notifications and game history,移除所有通知和竞赛历史记录
+Clear all team / player flag captures,移除所有团队/玩家获得的Flag
+Clear all team pastebin and file shares,移除所有团队剪贴板和文件共享
+Clear market items or source code purchases,移除市场物品或源代码购买
 Click here to login,点击此处登录
 Close,关闭
 Command & Control,命令与控制
-Complete,完成
-Complete Bribe,完成赞助
-Complete this bribe?,完成这个赞助？
-Completed,已完成
-Completed Bribes,完成赞助
+Complete,结束
+Complete Bribe,结束赞助
+Complete this bribe?,结束这个赞助？
+Completed,已结束
+Completed Bribes,结束的赞助
 Completion Message,完成消息
-completion of Level,完成等级
+completion of Level,完成级别
 Completion Reward,完成奖励
 Configuration,配置
 Confirm,确认
@@ -137,11 +137,11 @@ Confirm Password,确认密码
 Content,内容
 Content Missing,内容缺失
 Corporation,赛事
-Corporation box belongs too?,赛事关卡也一样？
+Corporation box belongs too?,赛事题目属于？
 Corporation Name,赛事名称
 Corporations,赛事
 Cost,花费
-Cost to open this level and see flags,打开此关卡并查看Flag的成本
+Cost to open this level and see flags,解锁此难度级别并查看Flag的成本
 Cracked by,破解人
 Create,创建
 Create Box,创建题目
@@ -150,7 +150,7 @@ Create Corporation,创建赛事
 Create Datetime Flag,创建日期时间型flag
 Create File Flag,创建文件flag
 Create Flag,创建flag
-Create Game Level,创建游戏关卡
+Create Game Level,创建难度级别
 Create Hint,创建提示
 Create Message,创建消息
 Create Multiple Choice Flag,创建多选flag
@@ -163,8 +163,8 @@ Created,创建
 Current algorithm,当前的算法
 Current Bank Account Password,当前银行帐户密码
 Current Bank Password,当前银行密码
-Current Level,当前关卡
-Current Level,当前关卡
+Current Level,当前难度等级
+Current Level,当前难度等级
 CyberChef,工具箱
 Data Points,数据点
 Date,日期
@@ -179,8 +179,8 @@ Decrease All Captures,减少所有解出
 Decrease flag reward by this percent per capture.,每次解出将flag奖励降低此百分比。
 Decrease flag until it reaches this minimum value.,减少分值，直到达到该最小值。
 Decrease Future Captures,减少未来解出
-Decreases the flag value for future captures - this method rewards speed of capture.,减少未来解出flag得分-此方法奖励解出速度。
-Decreases the flag value for past and future team captures - this method rewards difficulty.,降低过去和将来团队解出的flag得分-这种方法奖励解出难度。
+Decreases the flag value for future captures - this method rewards speed of capture.,减少未来解出flag的得分-此方法奖励解出速度。
+Decreases the flag value for past and future team captures - this method rewards difficulty.,降低过去和将来团队解出flag的得分-这种方法奖励解出难度。
 deduct on & after,扣除之后
 defaults to,默认为
 Delete,删除
@@ -189,7 +189,7 @@ Delete Category,删除类别
 Delete Corporation,删除赛事
 Delete File Upload,删除上传文件
 Delete Flag,删除Flag
-Delete Game Level,删除游戏关卡
+Delete Game Level,删除难度级别
 Delete Hint,删除提示
 Delete IP Address,删除IP地址
 Delete Player,删除玩家
@@ -199,13 +199,13 @@ Delete User,删除用户
 Dependent Flag,有依赖的Flag
 Description,描述
 DESCRIPTION,描述
-Details,细节
+Details,详情
 Difficulty,难度
 Difficulty Rating,难度等级
 Disable,禁用
 Disabling this option will skip the storyline and give the player an instant capture message.,禁用此选项将跳过故事情节并为玩家提供即时解出消息。
 Display Hints Taken,显示提示
-Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,除非另有说明，否则请勿删除或修改公共flag。除非在游戏目标中有所描述，否则不要攻击其他玩家。
+Do not delete or modify community flags unless instructed. Do not attack other players unless outlined in the game goals.,除非另有说明，否则请勿删除或修改公共flag。除非在竞赛目标中有所描述，否则不要攻击其他玩家。
 Download,下载
 Download File,下载文件
 Download the command line botnet monitor,下载命令行僵尸网络监视器
@@ -221,9 +221,9 @@ Edit Category,编辑类别
 Edit Corporation,编辑赛事
 Edit Flag,编辑Flag
 Edit Flag,编辑Flag
-Edit Game Level,编辑游戏关卡
+Edit Game Level,编辑难度级别
 Edit Hint,编辑提示
-Edit Level,编辑关卡
+Edit Level,编辑级别
 Edit Market Item,编辑市场项目
 Edit Player,编辑玩家
 Edit Team,编辑团队
@@ -232,18 +232,18 @@ Email,电子邮件
 EMPTY,空
 Enable,启用
 "Enabling this feature will allow players to create their own teams during registration.  If this option is disabled, the admin must create teams for players to join.",启用此功能将允许玩家在注册期间创建自己的团队。如果禁用此选项，则管理员必须创建团队以供玩家加入。
-Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,启用此功能将允许玩家在游戏中共享代码（pastebin）和文件。禁用此功能将从“工具”菜单中删除这些选项。
+Enabling this feature will allow players to share code (pastebin) and files in-game.  Disabling this feature will remove these options from the Tools Menu.,启用此功能将允许玩家在竞赛中共享代码（pastebin）和文件。禁用此功能将从“工具”菜单中删除这些选项。
 "Enabling this feature will allow teams to purchase upgrades, such as the Federal Reserve, Source Code Market, or SWAT.",启用此功能将允许团队购买升级，例如银行系统，源代码市场或SWAT。
-"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the story line of Morris, an employer that assigns missions.",启用此功能将允许游戏显示可能添加的Flag或题目提交消息。默认情况下，游戏遵循莫里斯的剧情发展，莫里斯是指派任务的雇主。
-"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",启用此功能将对不正确的解答尝试应用惩罚。罚款是从得分中即时扣除，而不是减少flag分值。
+"Enabling this feature will allow the game to display flag or box capture messages that may be added. By default, the game follows the story line of Morris, an employer that assigns missions.",启用此功能将允许竞赛显示可能添加的Flag或题目提交消息。默认情况下，竞赛遵循莫里斯的剧情发展，莫里斯是指派任务的雇主。
+"Enabling this feature will apply a penalty for incorrect capture attempts.  The penalty is an instant deduction from the score, not a decrease in the flag value.",启用此功能将对不正确的解答尝试应用惩罚。惩罚是从得分中即时扣除，而不是减少flag分值。
 "Enabling this feature will decrease the reward for a flag based on the number of captures.  If this option is disabled, the flag value remains consistent as other players capture it.",启用此功能将根据解出次数减少Flag的奖励。如果禁用此选项，则Flag分值将保持一致，不会因为其他玩家解出而减少。
 Enabling this feature will display the number of hints taken on the scoreboard by a team or player.  Useful when hints are free.  A lower hint count is used for sorting when scores or flags are equal.  Disabling this option will remove the hint count from the scoreboard.,启用此功能将在记分板上显示团队或玩家使用的提示数量。提示是免费时很有用。当分数或Flag相同时，较低的提示计数可用于排序。禁用此选项将从记分板中删除提示计数。
 "Enabling this feature will display the player MVP scoreboard.  Any player that has contributed points to the team will be displayed.  If this option is disabled, the MVP Scoreboard will be hidden.",启用此功能将显示玩家MVP记分板。任何为团队贡献积分的玩家都将被显示出来。如果禁用此选项，则将隐藏MVP记分板。
 Enabling this feature will require players to provide a valid registration token in order to create a new account.  Registration tokens are created in the admin interface.,启用此功能将要求玩家提供有效的邀请码以创建新帐户。邀请码在管理界面中生成。
 Enabling this feature will require players to provide an email address in order to create a new account.,启用此功能将要求玩家提供电子邮件地址以创建新帐户。
-Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,启用此功能会向游戏中的所有玩家发送Flag和关卡解锁通知。禁用此选项会将这些通知限制为团队成员。
-"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.",启用此功能会将游戏和记分板设置为团队竞争性游戏。如果禁用此选项，则为个人竞争性游戏。
-"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.",启用此功能会将游戏设置为使用基于金钱的评分系统。如果禁用此选项，游戏将使用基于分值的评分系统。
+Enabling this feature will send flag and level unlock notifications to all players in the game.  Disabling this option will limit those notifications to team members.,启用此功能会向竞赛中的所有玩家发送Flag和难度解锁通知。禁用此选项会将这些通知限制为团队成员。
+"Enabling this feature will set the game and scoreboard up for team competitive play.  If this option is disabled, the game is set up for individual competitive play.",启用此功能会将竞赛和记分板设置为团队竞争性。如果禁用此选项，则为个人竞争性。
+"Enabling this feature will set the game to use a money based scoring system.  If this option is disabled, the game uses a points based scoring system.",启用此功能会将竞赛设置为使用基于金钱的评分系统。如果禁用此选项，竞赛将使用基于分值的评分系统。
 "Enabling this option will set the token to be case sensitive.  If this option is disabled, the answer token is case-insensitive.",启用此选项会将Flag设置为区分大小写。如果禁用此选项，则答案Flag不区分大小写。
 "Enabling this option will set the token to be case senstive.  If this option is disabled, the answer token is case-insenstive.",启用此选项会将Flag设置为区分大小写。如果禁用此选项，则答案Flag不区分大小写。
 Enabling this setting activates the botnet features.  Teams can run their bot executables on boxes they pwn and are paid for each bot over time.,启用此设置可激活僵尸网络功能。团队可以在他们解出的题目上运行他们的机器人可执行文件，并随着时间的推移为每个机器人付费。
@@ -254,13 +254,13 @@ Enter Choice,输入选择
 Enter the same password as before,输入与以前相同的密码
 ERROR,错误
 Expire,到期
-Export Game Objects,导出游戏对象
-Export of gameplay settings does not include the entire server and database configuration.,导出游戏设置不包括整个服务器和数据库配置。
+Export Game Objects,导出竞赛设置
+Export of gameplay settings does not include the entire server and database configuration.,导出竞赛设置不包括整个服务器和数据库配置。
 Export XML,导出XML
 Export XML,导出XML
 Failed Attempts,失败尝试
 Failed Logins,失败登录
-Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,失败需要付出代价。提交错误答案时应小心处罚。
+Failure has a cost. Be careful as penalties are applied when incorrect answers are submitted.,失败需要付出代价。提交错误答案时应小心惩罚。
 Federal Reserve,银行系统
 Federal Reserve Bank,银行
 File,文件
@@ -274,7 +274,7 @@ First Login,首次登录
 Flag,Flag
 Flag Capture,Flag获取
 Flag Decrease Value,Flag分值减少
-Flag Details,Flag细节
+Flag Details,Flag详情
 Flag File,Flag文件
 Flag Hints,Flag提示
 Flag Minimum Value,Flag最小分值
@@ -287,26 +287,26 @@ Flag Penalty Stop,结束Flag惩罚
 Flag Submission Type,Flag提交类型
 Flag Type,Flag类型
 Flags,Flag
-Flags / Boxes / Corp.,Flag / 关卡 / 赛事.
+Flags / Boxes / Corp.,Flag / 题目 / 赛事.
 Flags Captured,Flag已获取
 Flags on,Flag启用
 for,对于
 Forbidden,禁止
-Game,游戏
-Game Control,游戏控制
-Game Information,游戏信息
-Game Level,游戏等级
-Game Levels,游戏关卡
-Game Management,游戏管理
-Game Materials,游戏资料
-Game Name,游戏名称
-Game Progress,游戏进展
+Game,竞赛
+Game Control,竞赛控制
+Game Information,竞赛信息
+Game Level,难度等级
+Game Levels,难度等级
+Game Management,竞赛管理
+Game Materials,竞赛资料
+Game Name,竞赛名称
+Game Progress,竞赛进展
 Garbage File,垃圾文件
 Get help with,获得帮助
 Get your registration token from reception,从邀请函获得邀请码
 Glitch in the Matrix,发生小故障
 Global Notifications,全局通知
-Handle,处理
+Handle,用户名
 Hide scoreboard during countdown,在倒计时期间隐藏记分牌
 Hint,提示
 Hint not yet taken,提示尚未获取
@@ -319,7 +319,7 @@ Home,首页
 How should the next level unlock?,下一级如何解锁？
 I accept the,我接受
 "If the flag selection is left empty, the hint will be considered a Box Hint.",如果Flag归属为空，则提示将被视为题目提示。
-"If this option is disabled, there is no cost for submitting incorrect flags.",如果禁用此选项，则提交错误Flag无花费。
+"If this option is disabled, there is no cost for submitting incorrect flags.",如果禁用此选项，则提交错误Flag无惩罚。
 Import File,导入文件
 Import XML,导入XML
 Import XML,导入XML
@@ -328,7 +328,7 @@ In Progress,进行中
 "In this case, the flag is a multiple choice question where the selected option is the token.",在这种情况下，Flag是一个多项选择问题，其中所选选项是Flag。
 "In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.",在这种情况下，Flag是正则表达式。用户必须提交与模式匹配的字符串以捕获标志。匹配可能不敏感。请务必测试你的正则表达式，并确保它不太宽泛。
 "In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.",在这种情况下，Flag是静态字符串。用户必须提交确切的Flag才能捕获该Flag。开头和结尾的空格会自动去掉。
-Include gameplay settings (such as those under ,包括游戏设置（例如
+Include gameplay settings (such as those under ,包括竞赛设置（例如
 Income,收入
 Incoming Transmission,接入通信
 Incorrect,不正确
@@ -342,7 +342,7 @@ IP Version,IP版本
 It appears you're an unsophisticated script kiddie!,看来你是一个简单的脚本小子！
 "It can be visible to all visitors (public), to authenticated users (players), or only to administrators (admins).",它可以对所有访问者可见（公共），经过身份验证的用户可见（玩家）或仅对管理员（管理员）可见。
 "It looks like you typed a URL incorrectly, or were attempting to find something you ought not have access to.",看起来您输入的URL不正确，或者试图找到您无法访问的内容。
-"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.",这是钱，是时候兑现这些技能了！这个游戏设置为使用银行系统，所以花费时间来建立你的财富并购买任何获得胜利所需东西。
+"It's about the money and it's time to cash in on those skills!  This game is set up to use a banking system, so waste no time to build your fortune and buy what you need to win.",这是钱，是时候兑现这些技能了！这个竞赛设置为使用银行系统，所以花费时间来建立你的财富并购买任何获得胜利所需东西。
 Item Cost,物品成本
 Join Existing Team,加入现有团队
 Known IP Addresses,已知的IP地址
@@ -372,8 +372,8 @@ Max Flag Attempts,最大Flag尝试数
 Max PasteBin Size,最大剪贴板大小
 Max Team Size,最大团队规模
 Maximum Flag Attempts,最大Flag尝试
-Maximum Penalty,最高罚款
-Maximum Penalty is determined as,最高罚款被确定为
+Maximum Penalty,最高惩罚
+Maximum Penalty is determined as,最高惩罚被确定为
 Min user password length,最小用户密码长度
 Minimum User Password Length,最小用户密码长度
 Mission Progress,任务进展
@@ -384,7 +384,7 @@ money,钱
 Motto,座右铭
 Multiple Choice,多项选择
 Multiple Choice Flag,多选Flag
-Must be unique,必须是独特的
+Must be unique,必须是唯一的
 MVP,MVP
 MVP - List Top N Payers,MVP-列出前N名玩家
 MVP List Top,MVP榜单
@@ -398,7 +398,7 @@ New Box,新题目
 New Category,新类别
 New Corporation,新赛事
 New Flag,新Flag
-New Game Level,新的游戏关卡
+New Game Level,新难度级别
 New IP Address,新的IP地址
 New Password,新密码
 New Team,新团队
@@ -408,7 +408,7 @@ No,没有
 No Avatar,没有头像
 No Boxes,没有题目
 No boxes in this corporation yet,这个赛事还没有题目
-No boxes on this level yet,这个关卡还没有题目
+No boxes on this level yet,这个难度还没有题目
 No Bribes in Progress,没有赞助正在进行中
 No Completed Bribes,没有已完成赞助
 No flags captured yet.,尚未获得任何Flag。
@@ -426,8 +426,8 @@ None,没有
 Noob Alert,新手警告
 "Not all options are accessible in the web configuration.  For more, see",并非所有选项都可在Web配置中访问。有关更多信息，请参阅
 Note,注意
-Note: Files or documents for the challenge can be placed in the Game Materials.,注意：挑战的文件或文档可以放在游戏材料中。
-Note: Files or documents for the challenge can be placed in the Game Materials.,注意：挑战的文件或文档可以放在游戏材料中。
+Note: Files or documents for the challenge can be placed in the Game Materials.,注意：挑战的文件或文档可以放在竞赛资料中。
+Note: Files or documents for the challenge can be placed in the Game Materials.,注意：挑战的文件或文档可以放在竞赛资料中。
 NOTE: Max attempts and penalties will not be applied in Single Box mode.,注意：单一题目模式下不会应用最大尝试次数和惩罚次数。
 NOTE: This setting is ignored if the box flag submission type is set to Single Box.,注意：如果题目Flag提交类型设置为单个题目，则忽略此设置。
 Notification Message,通知消息
@@ -498,8 +498,8 @@ Regular Expression,正则表达式
 Remove,移除
 Require Email,需要电子邮件
 Reset Actions,重置操作
-Reset Game,重置游戏
-Reset Game,重置游戏
+Reset Game,重置竞赛
+Reset Game,重置竞赛
 Reset player / team starting points / money,重置玩家/团队的初始分值/金钱
 Restrict players bank password to this length,将玩家银行密码限制为此长度
 Restrict players user password to this length,将玩家用户密码限制为此长度
@@ -509,7 +509,7 @@ Return to Edit,返回编辑
 Return to Missions,回到任务
 Reward,奖励
 Role,角色
-Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,参与规则：不要攻击游戏记分牌平台。除非游戏目标指定，否则请勿更改网络中现有帐户的密码。
+Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,参与规则：不要攻击竞赛记分牌平台。除非竞赛目标指定，否则请勿更改网络中现有帐户的密码。
 S.W.A.T,S.W.A.T
 Save,保存
 Score,得分
@@ -524,7 +524,7 @@ Select New Avatar,选择新头像
 Send,发送
 Send a global notification to all players,向所有玩家发送全局通知
 Set Countdown Timer,设置倒数计时器
-Set the game countdown timer,设置游戏倒数计时器
+Set the game countdown timer,设置竞赛倒数计时器
 Settings,设置
 Share your team code to allow other players to join,分享您的团队代码以允许其他玩家加入
 Shared Files,共享文件
@@ -538,22 +538,22 @@ Source Code Archive,源代码存档
 Source Code Market,源代码市场
 Special Thanks,特别感谢
 Start a New Team,创建一个新团队
-Start the Game,开始游戏
+Start the Game,开始竞赛
 start with 0 points,从0分开始
-Starting Money,开始赚钱
+Starting Money,起始金额
 Static Flag,静态Flag
 Static Token,静态令牌
 Statistics,统计
 stop on & after,停下来之后
-Stop the Game,停止游戏
-Stop the game after timer ends,计时器结束后停止游戏
+Stop the Game,停止竞赛
+Stop the game after timer ends,计时器结束后停止竞赛
 Story,故事
 Story Mode,故事模式
 Submit,提交
 Submit a Bug,提交一个Bug
 Submit a Flag,提交Flag
 Submit Bribe,提交赞助
-Submit Bribes,提交多个赞助
+Submit Bribes,提交赞助
 Submit Flag,提交Flag
 SUCCESS,成功
 Success!,成功！
@@ -569,7 +569,7 @@ Take,接受
 Take Hint,接受提示
 Taken,已接受
 Target,目标
-Target Handle,目标处理
+Target Handle,目标名
 Target Management,目标管理
 team,团队
 Team,团队
@@ -580,13 +580,13 @@ Team Information,团队信息
 Team Motto,团队座右铭
 Team Name,队名
 Team PasteBin,团队剪贴板
-Team Play,团队游戏
+Team Play,团队协作
 Team Shares,团队分享
 Team Sharing,团队分享中
 Teams,团队
 Test Flag,测试Flag
 Text Share,文字分享
-The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,黑市是开放的，你知道从哪找。下载目标的源代码或通过贿赂（游戏中）警察干掉其他玩家。
+The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,黑市是开放的，你知道从哪找。下载目标的源代码或通过赞助（虚拟的）警察干掉其他玩家。
 The cost to take the hint.  Can be >= 0.,使用提示的成本。可以> = 0。
 The deduction is,扣除值
 "The only other possibility is that I messed up some of the code, and that doesn't seem very likely.",唯一的另一种可能性是我搞砸了一些代码，这似乎不太可能。
@@ -594,8 +594,8 @@ The starting money for a new,一个新的初始钱数
 Theme,主题
 There are currently no shared files.,目前没有共享文件。
 "These flags are files, users must submit the exact same file to capture the flag. Only a hash (SHA1) of the file is stored on the server.",这些Flag是文件，用户必须提交完全相同的文件才能捕获Flag。只有文件的哈希（SHA1）存储在服务器上。
-"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","该游戏设置为使用基于速度的动态计分，这意味着随着其他玩家解出flag时，这些flag的未来分值将减少。 所以快点解出它们，否则就输了！"
-"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","该游戏设置为使用基于难度的动态计分，这意味着当其他玩家解出flag时，这些flag的整体分值将降低并可能降低您的分数。"
+"This game is set up to use dynamic scoring based on speed, meaning as other players capture the flags, the future value of those flags will decrease.  So grab them fast or lose out!","该竞赛设置为使用基于速度的动态计分，这意味着随着其他玩家解出flag时，这些flag的未来分值将减少。 所以快点解出它们，否则就输了！"
+"This game is set up to use dynamic scoring based on difficulty, meaning as other players capture the flags, the overall value of those flags will decrease and potentially reduce your score.","该竞赛设置为使用基于难度的动态计分，这意味着当其他玩家解出flag时，这些flag的整体分值将降低并可能降低您的分数。"
 This is a test flag/string the user could input for credit.,这是用户可以使用的测试Flag/字符串。
 This is the amount a player must pay to S.W.A.T. another players account.  Subsequent SWATs of the same player are also increased by this amount each time.,这是玩家必须向S.W.A.T支付的金额以干掉另一个玩家账号。同一玩家的后续每次使用SWAT也将增加这个金额。
 This is the amount a player must pay to upgrade their bank passwords hashing algorithm,这是玩家必须支付的用于升级其银行密码哈希算法的金额
@@ -649,8 +649,8 @@ Upload Avatar,上传头像
 Upload Avatar File,上传头像文件
 Upload Files,上传文件
 Used,用过的
-Used to secure your (in-game) bank account.,用于保护您的（游戏中）银行帐户。
-User Handle,用户处理
+Used to secure your (in-game) bank account.,用于保护您的（竞赛中）银行帐户。
+User Handle,用户名
 User Management,用户管理
 Users / Teams,用户/团队
 Value,值
@@ -658,15 +658,15 @@ View,查看
 View Box,查看题目
 View Details,查看详情
 Visible,可见
-Visible to Players,玩家可见度
-Waiting for the game to start,等待游戏开始
+Visible to Players,玩家可见
+Waiting for the game to start,等待竞赛开始
 Wall of Sheep,绵羊墙
 WARNING,警告
 Welcome,欢迎
-Welcome to the computer war game where security professionals can practice and learn.,欢迎来到安全专业人士可以练习和学习的地方。
-Welcome to the Scene,欢迎来到现场
+Welcome to the computer war game where security professionals can practice and learn.,欢迎来到安全专业人士的乐园。
+Welcome to the Scene,欢迎来到竞赛
 What is the name of this box?,这个题目的名字是什么？
-"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",你的公司名称是什么？如果您不打算使用公司，只需创建一个没有名称的公司。
+"What is your Corporation Name?  If you do not plan to use Corporations, just create one with no name.",你的竞赛名称是什么？如果您不打算使用竞赛，只需创建一个没有名称的竞赛。
 What is your motto?,你的座右铭是？
 What is your teams motto?,你的团队座右铭是什么？
 What type of system is this?,这是什么类型的系统？
@@ -683,15 +683,15 @@ You are not on a team,你不在一个团队
 You do not have access to this level yet.,您还没有访问此级别的权限。
 You do not own this upgrade.,您没有此升级。
 You have not submitted any bribes yet.,你还没有提交任何赞助。
-"Your email, visible to game administrators.",您的电子邮件，对游戏管理员可见。
+"Your email, visible to game administrators.",您的电子邮件，对竞赛管理员可见。
 "Your handle must be 3-16 alphanumeric characters.  Underscore, dash, and dots allowed.",您的密码必须是3-16个字母数字字符。允许下划线，短划线和点。
-"Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters",您的名字，游戏管理员可以看到。您的姓名可以是3-64个字母数字字符
+"Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters",您的名字，竞赛管理员可以看到。您的姓名可以是3-64个字母数字字符
 "Password Reset",重设密码
 "Forgot Password",忘记密码
 "Request Password Reset",要求重设密码
 "Update Email",更新电邮
 "Please check your email for account validation",请检查您的电子邮件以进行帐户验证
 Validate Email,验证电子邮件
-"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.",启用此功能将需要验证电子邮件，然后用户才能访问游戏。 如果禁用此选项，则不会验证电子邮件。
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.",启用此功能将需要验证电子邮件，然后用户才能访问竞赛。 如果禁用此选项，则不会验证电子邮件。
 Note: Mail settings must be defined.,注意：必须定义邮件设置。
 Validation,验证方式
