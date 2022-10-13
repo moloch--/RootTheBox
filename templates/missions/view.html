@@ -93,7 +93,7 @@
                 {% if has_level %}
                     <div class="container">
                         {% set boxes = [] %}
-                        {% for box in level.boxes %}
+                        {% for box in sorted(level.boxes) %}
                             <!-- Only show boxes that have flags -->
                             {% if len(box.flags) > 0 and not box.locked %}
                                 {% if options.group_by_corp %}

@@ -227,6 +227,7 @@ def create_boxes(parent, corporation):
                 box.operating_system = get_child_text(box_elem, "operatingsystem")
                 box.locked = get_child_text(box_elem, "locked", 0)
                 box.value = get_child_text(box_elem, "value", "0")
+                box.order = get_child_text(box_elem, "order", None)
                 if get_child_text(box_elem, "avatar", "none") != "none":
                     box.avatar = bytearray(
                         b64decode(get_child_text(box_elem, "avatar"))

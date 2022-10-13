@@ -680,6 +680,14 @@ class AdminEditHandler(BaseHandler):
                     % (box.name, box.value, reward)
                 )
                 box.value = reward
+            # Box Order
+            order = self.get_argument("order", None)
+            if order and int(order) != box.order:
+                logging.info(
+                    "Updated %s's box order %s -> %s"
+                    % (box.name, box.order, order)
+                )
+                box.order = order
             # Avatar
             avatar_select = self.get_argument("box_avatar_select", "")
             if avatar_select and len(avatar_select) > 0:

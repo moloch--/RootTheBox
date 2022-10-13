@@ -143,6 +143,12 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label" for="box-order">{{ _("Box Order") }}</label>
+                    <div class="controls">
+                        <input id="box-order" name="order" type="number" pattern="[1-9]+" min=1 placeholder="{{_('Box Order')}}" />
+                    </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="game_level">{{_("Game Level")}}</label>
                     <div class="controls">
                         <select id="edit-box-game-level" name="game_level">
@@ -756,7 +762,7 @@
                         <br />{% if corporation.description %}<br>&nbsp;&nbsp;{{ corporation.description }}<br />{% end %}
                         <br />
                         {% if len(corporation.boxes) != 0 %}
-                            {% for box in corporation.boxes %}
+                            {% for box in sorted(corporation.boxes) %}
                                 <div id="{{ box.uuid }}" class="well{% if box.locked %} locked{% end %}">
                                     <h3 style="display:inline;">
                                         {% if box.operating_system.lower() == 'windows' %}

@@ -76,6 +76,7 @@ class Box(DatabaseObject):
     _avatar = Column(String(64))
     _value = Column(Integer, nullable=True)
     _locked = Column(Boolean, default=False, nullable=False)
+    _order = Column(Integer, nullable=True, index=True)
 
     garbage = Column(
         String(32),
@@ -114,7 +115,7 @@ class Box(DatabaseObject):
     @classmethod
     def all(cls):
         """Returns a list of all objects in the database"""
-        return dbsession.query(cls).all()
+        return sorted(dbsession.query(cls).all())
 
     @classmethod
     def unlocked(cls):
@@ -188,6 +189,32 @@ class Box(DatabaseObject):
         if not 3 <= len(str(value)) <= 32:
             raise ValidationError("Name must be 3 - 32 characters")
         self._name = str(value)
+
+    @property
+    def order(self):
+        if not self._order:
+            self._order = self.id
+        return self._order
+
+    @order.setter
+    def order(self, value):
+        if not value:
+            return
+        value = int(value)
+        if value == self.order:
+            return
+        print("Box %s setting to %d" % (self.name, value))
+        i = 1
+        boxes = self.all()
+        for box in boxes:
+            if i == value:
+                i += 1
+            if self == box:
+                self._order = value
+            else:
+                box._order = i
+                i += 1
+            print("Box %s set to %d" % (box.name, box.order))
 
     @property
     def operating_system(self):
@@ -414,6 +441,7 @@ class Box(DatabaseObject):
             "flag_submission_type": self.flag_submission_type,
             "flaglist": self.flaglist(self.id),
             "value": str(self.value),
+            "order": str(self.order),
             "locked": str(self.locked),
         }
 
@@ -422,3 +450,31 @@ class Box(DatabaseObject):
 
     def __str__(self):
         return self.name
+
+    def __cmp__(self, other):
+        """Compare based on the order"""
+        this, that = self.order, other.order
+        if this > that:
+            return 1
+        elif this == that:
+            return 0
+        else:
+            return -1
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __gt__(self, other):
+        return self.__cmp__(other) > 0
+
+    def __lt__(self, other):
+        return self.__cmp__(other) < 0
+
+    def __ge__(self, other):
+        return self.__cmp__(other) >= 0
+
+    def __le__(self, other):
+        return self.__cmp__(other) <= 0
