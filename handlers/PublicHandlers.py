@@ -817,6 +817,7 @@ class ForgotPasswordHandler(BaseHandler):
         header.append("MIME-Version: 1.0")
         header.append('Content-Type: text/html; charset="UTF-8"')
         header.append("Content-Transfer-Encoding: BASE64")
+        header.append("\r\n")
         header.append("")
         f = open("templates/public/reset_email.html", "r")
         template = (
