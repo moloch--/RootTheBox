@@ -416,21 +416,22 @@ class AdminViewHandler(BaseHandler):
                 point_restore = self.get_argument("point_restore", "")
                 accept_answer = self.get_argument("accept_answer", "")
                 answer_token = self.get_argument("answer_token", "")
-                if point_restore == "on" and options.penalize_flag_value and team:
-                    value = int(
-                        flag.dynamic_value(team) * (options.flag_penalty_cost * 0.01)
-                    )
-                    team.money += value
-                    penalty = Penalty.by_team_token(flag, team, answer_token)
-                    if penalty:
-                        self.dbsession.delete(penalty)
-                    self.dbsession.add(team)
-                    self.dbsession.commit()
-                    self.event_manager.admin_score_update(
-                        team,
-                        "%s penalty reversed - score has been updated." % team.name,
-                        value,
-                    )
+                if point_restore == "on" and team:
+                    if options.penalize_flag_value:
+                        value = int(
+                            flag.dynamic_value(team) * (options.flag_penalty_cost * 0.01)
+                        )
+                        team.money += value
+                        penalty = Penalty.by_team_token(flag, team, answer_token)
+                        if penalty:
+                            self.dbsession.delete(penalty)
+                        self.dbsession.add(team)
+                        self.dbsession.commit()
+                        self.event_manager.admin_score_update(
+                            team,
+                            "%s penalty reversed - score has been updated." % team.name,
+                            value,
+                        )
                     if flag not in team.flags:
                         flag_value = flag.dynamic_value(team)
                         if (
@@ -449,7 +450,11 @@ class AdminViewHandler(BaseHandler):
                         self.dbsession.commit()
                         self.event_manager.flag_captured(team, flag)
                         self._check_level(flag, team)
-                        success.append("%s awarded %d" % (team.name, flag_value))
+                        if options.banking:
+                            price = "$" + str(flag_value)
+                        else:
+                            price = str(flag_value) + " points"
+                        success.append("%s awarded flag and %s" % (team.name, price))
                 if (
                     accept_answer == "on"
                     and (flag.type == "static" or flag.type == "regex")

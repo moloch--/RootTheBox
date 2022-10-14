@@ -59,11 +59,6 @@ function getStatDetails(obj, uuid) {
                     $("#answer-team-uuid").val($(e.target).data("team-uuid"));
                     $("#answer-token").val(token);
                     $("#answer-flag").text(token);
-                    if (penalty === "0") {
-                        $("#pointrestore").hide();
-                    } else {
-                        $("#answer-penalty").text(penalty);
-                    }
                     if (flagtype !== "static" && flagtype !== "regex") {
                         $("#acceptanswer").prop("checked", false);
                         $("#acceptanswer").prop("disabled", true);
