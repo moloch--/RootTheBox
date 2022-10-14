@@ -75,6 +75,11 @@ class HomeHandler(BaseHandler):
             self.redirect("/login")
             return
         gamestate = self.application.settings["scoreboard_state"].get("teams")
+        try:
+            stats = self.memcached.stats().get("127.0.0.1")
+            activeconnections = int(stats.get("curr_connections"))
+        except:
+            activeconnections = None
         if uuid is None and user.is_admin():
             self.timer()
             self.render(
@@ -82,7 +87,8 @@ class HomeHandler(BaseHandler):
                 user=user,
                 boxcount=len(Box.all()),
                 teamcount=len(gamestate), 
-                usercount=len(User.all_users())
+                usercount=len(User.all_users()),
+                activeconnections=activeconnections
             )
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()
