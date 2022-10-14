@@ -632,9 +632,9 @@ class RegistrationHandler(BaseHandler):
             account = urlsafe_b64encode(account)
             token = urlsafe_b64encode(token)
         if options.ssl:
-            origin = options.origin.replace("ws://", "https://").replace(
+            origin = options.origin.replace(
                 "wss://", "https://"
-            )
+            ).replace("ws://", "https://")
         else:
             origin = options.origin.replace("ws://", "http://")
         validate_url = "%s/registration/token?u=%s&t=%s" % (origin, account, token)
