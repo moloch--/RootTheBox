@@ -107,7 +107,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for index, box in enumerate(Box.all()) %}
+                    {% for index, box in enumerate(sorted(Box.all())) %}
                     <tr>
                         <td>{{ index + 1 }}</td>
                         <td>{{ box.name }}</td>

@@ -52,7 +52,7 @@ class Scoreboard(object):
     @classmethod
     def update_gamestate(self, app, background=False):
         if background:
-            t = Thread(target=self._update_gamestate, args = (self, app), daemon=True)
+            t = Thread(target=self._update_gamestate, args=(self, app), daemon=True)
             t.start()
         else:
             self._update_gamestate(self, app)
@@ -117,7 +117,7 @@ class Scoreboard(object):
                     "lvl_count": len(team.level_flags(level.number)),
                     "lvl_unlock": level in team.game_levels,
                 }
-            for box in level.boxes:
+            for box in sorted(level.boxes):
                 game_state["levels"][level.name]["boxes"][box.uuid] = {
                     "name": box.name,
                     "locked": box.locked,
@@ -129,7 +129,7 @@ class Scoreboard(object):
                     game_state["levels"][level.name]["boxes"][box.uuid]["teams"][
                         team.name
                     ] = {"box_count": len(team.box_flags(box))}
-                for flag in box.flags:
+                for flag in sorted(box.flags):
                     game_state["levels"][level.name]["boxes"][box.uuid]["flags"][
                         flag.uuid
                     ] = {"name": flag.name}

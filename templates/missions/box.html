@@ -221,7 +221,7 @@
         {% set flaghints = [] %}
 
         {% set flagcount=0 %}
-        {% for index, flag in enumerate(box.flags) %}
+        {% for index, flag in enumerate(sorted(box.flags)) %}
             {% if team and flag in team.flags %}
                 {% set flagcount += 1 %}
             {% end %}
@@ -281,7 +281,7 @@
                         {% end %}
                     </tr>
                 </thead>
-                {% for index, flag in enumerate(box.flags) %}
+                {% for index, flag in enumerate(sorted(box.flags)) %}
                     {% set penalty = Penalty.by_count(flag, team) %}
                     <tbody class="flagbody">
                         <tr {% if team and flag in team.flags %}class="flag-expand" style="cursor: pointer;"{% end %}>

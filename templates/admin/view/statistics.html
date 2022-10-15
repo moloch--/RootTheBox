@@ -97,6 +97,7 @@
             <div style="margin-left: 50px; vertical-align: middle;">
                 <input type="hidden" id="answer-flag-uuid" name="flag_uuid" value="" />
                 <input type="hidden" id="answer-team-uuid" name="team_uuid" value="" />
+                <input type="hidden" id="answer-user-uuid" name="user_uuid" value="" />
                 <input type="hidden" id="answer-token" name="answer_token" value="" />
                 <p>
                     <input id="acceptanswer" name="accept_answer" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> {{ _("Add the answer as an acceptable flag token") }}.
@@ -154,7 +155,7 @@
                     </strong>
                 </center>
                 <br />
-                {% for box in Box.all() %}
+                {% for box in sorted(Box.all()) %}
                     <li>
                         <a href="#{{ box.uuid }}">
                             <i class="icon-chevron-right"></i>
@@ -201,7 +202,7 @@
                     <br />
             {% end %}
                     {% if len(corporation.boxes) != 0 %}
-                        {% for box in corporation.boxes %}
+                        {% for box in sorted(corporation.boxes) %}
                             <div id="{{ box.uuid }}" class="well">
 
                                
@@ -230,7 +231,7 @@
                                             </thead>
                                             <tbody>
                                                 {% set teamcount = Team.count() %}
-                                                {% for index, flag in enumerate(box.flags) %}
+                                                {% for index, flag in enumerate(sorted(box.flags)) %}
                                                     <tr>
                                                         {% set captures = len(Flag.team_captures(flag.id)) %}
                                                         <td class="shortcolumn">{{ index + 1 }}</td>

@@ -127,7 +127,7 @@
                                             </h5>
                                             {% if team %}
                                                 {% set flagcount=0 %}
-                                                {% for index, flag in enumerate(box.flags) %}
+                                                {% for index, flag in enumerate(sorted(box.flags)) %}
                                                     {% if flag in team.flags %}
                                                         {% set flagcount += 1 %}
                                                     {% end %}

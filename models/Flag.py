@@ -505,3 +505,34 @@ class Flag(DatabaseObject):
 
     def __repr__(self):
         return "<Flag - name:%s, type:%s >" % (self.name, str(self._type))
+
+    def __str__(self):
+        return self.name
+
+    def __cmp__(self, other):
+        """Compare based on the order"""
+        this, that = self.order, other.order
+        if this > that:
+            return 1
+        elif this == that:
+            return 0
+        else:
+            return -1
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __gt__(self, other):
+        return self.__cmp__(other) > 0
+
+    def __lt__(self, other):
+        return self.__cmp__(other) < 0
+
+    def __ge__(self, other):
+        return self.__cmp__(other) >= 0
+
+    def __le__(self, other):
+        return self.__cmp__(other) <= 0

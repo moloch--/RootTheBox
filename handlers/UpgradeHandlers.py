@@ -289,7 +289,7 @@ class SourceCodeMarketHandler(BaseHandler):
     def render_page(self, errors=None):
         """Adds extra params to render()"""
         user = self.get_current_user()
-        boxes = [box for box in Box.all() if box.source_code is not None]
+        boxes = [box for box in sorted(Box.all()) if box.source_code is not None]
         self.render(
             "upgrades/source_code_market.html", user=user, boxes=boxes, errors=errors
         )

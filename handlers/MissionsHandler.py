@@ -392,7 +392,7 @@ class BoxHandler(BaseHandler):
         if submission is not None and flag not in user.team.flags:
             if flag.is_file:
                 submission = Flag.digest(submission)
-            Penalty.create_attempt(team=user.team, flag=flag, submission=submission)
+            Penalty.create_attempt(user=user, flag=flag, submission=submission)
             if not self.config.penalize_flag_value:
                 return False
             attempts = Penalty.by_count(flag, user.team)

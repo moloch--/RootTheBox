@@ -163,7 +163,7 @@ def create_flags(parent, box):
                 logging.exception("Failed to import flag #%d" % (index + 1))
         if len(flag_dependency) > 0:
             for item in flag_dependency:
-                for flag in box.flags:
+                for flag in sorted(box.flags):
                     if item["name"] == flag.name:
                         item["flag"].lock_id = flag.id
                         continue

@@ -83,12 +83,12 @@ class HomeHandler(BaseHandler):
         if uuid is None and user.is_admin():
             self.timer()
             self.render(
-                "admin/home.html", 
+                "admin/home.html",
                 user=user,
                 boxcount=len(Box.all()),
-                teamcount=len(gamestate), 
+                teamcount=len(gamestate),
                 usercount=len(User.all_users()),
-                activeconnections=activeconnections
+                activeconnections=activeconnections,
             )
         else:
             game_started = self.application.settings["game_started"] or user.is_admin()

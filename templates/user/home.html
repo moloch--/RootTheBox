@@ -117,7 +117,7 @@
                             {% end %}
                             {% if level.type == 'none' or level in team.game_levels %}
                                 <hr style="margin: 5px 0;">
-                                {% for box in level.boxes %}
+                                {% for box in sorted(level.boxes) %}
                                     {% if not box.locked and len(box.flags) > 0 %}
                                     <div class="row" style="margin-left: 16px;">
                                         <div class="span4">
@@ -138,14 +138,14 @@
                                             </a>
                                         </div>
                                         {% set flagcount=0 %} 
-                                        {% for index, flag in enumerate(box.flags) %} 
+                                        {% for index, flag in enumerate(sorted(box.flags)) %} 
                                             {% if flag in user.flags %} 
                                                 {% set flagcount += 1 %}
                                             {% end %} 
                                         {% end %}
                                         <div class="span8" style="padding-top: 6px;">
                                             <table style="width: 100%; margin: 0 3px;"><tr>
-                                            {% for index, flag in enumerate(box.flags) %} 
+                                            {% for index, flag in enumerate(sorted(box.flags)) %} 
                                                 <td style="padding: 0 3px;">
                                                     <div class="progress" style="height: 8px; background-color: #424242;" title="{{ flag.name }}">
                                                         <div class="bar minibar" style="width: {% if flag in user.flags %}100{% else %}0{% end %}%;"></div>
@@ -319,7 +319,7 @@
                     {% end %}
                     {% if level.type == 'none' or level in team.game_levels %}
                         <hr style="margin: 5px 0;">
-                        {% for box in level.boxes %}
+                        {% for box in sorted(level.boxes) %}
                             {% if not box.locked and len(box.flags) > 0 %}
                             <div class="row" style="margin-left: 16px;">
                                 <div class="span4">
@@ -340,14 +340,14 @@
                                     </a>
                                 </div>
                                 {% set flagcount=0 %} 
-                                {% for index, flag in enumerate(box.flags) %} 
+                                {% for index, flag in enumerate(sorted(box.flags)) %} 
                                     {% if flag in team.flags %} 
                                         {% set flagcount += 1 %}
                                     {% end %} 
                                 {% end %}
                                 <div class="span8" style="padding-top: 6px;">
                                     <table style="width: 100%; margin: 0 3px;"><tr>
-                                    {% for index, flag in enumerate(box.flags) %} 
+                                    {% for index, flag in enumerate(sorted(box.flags)) %} 
                                         <td style="padding: 0 3px;">
                                             <div class="progress" style="height: 8px; background-color: #424242;" title="{{ flag.name }}">
                                                 <div class="bar minibar" style="width: {% if flag in team.flags %}100{% else %}0{% end %}%;"></div>

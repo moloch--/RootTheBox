@@ -165,6 +165,18 @@ class Box(DatabaseObject):
         return flaglist
 
     @property
+    def corporation(self):
+        return Corporation.by_id(self.corporation_id)
+
+    @property
+    def game_level(self):
+        return GameLevel.by_id(self.game_level_id)
+
+    @property
+    def category(self):
+        return Category.by_id(self.category_id)
+
+    @property
     def flags(self):
         flags = []
         for flag in self._flags:
@@ -203,7 +215,6 @@ class Box(DatabaseObject):
         value = int(value)
         if value == self.order:
             return
-        print("Box %s setting to %d" % (self.name, value))
         i = 1
         boxes = self.all()
         for box in boxes:
@@ -214,7 +225,6 @@ class Box(DatabaseObject):
             else:
                 box._order = i
                 i += 1
-            print("Box %s set to %d" % (box.name, box.order))
 
     @property
     def operating_system(self):
@@ -421,9 +431,7 @@ class Box(DatabaseObject):
 
     def to_dict(self):
         """Returns editable data as a dictionary"""
-        corp = Corporation.by_id(self.corporation_id)
-        game_level = GameLevel.by_id(self.game_level_id)
-        cat = Category.by_id(self.category_id)
+        cat = self.category
         if cat:
             category = cat.uuid
         else:
@@ -431,13 +439,13 @@ class Box(DatabaseObject):
         return {
             "name": self.name,
             "uuid": self.uuid,
-            "corporation": corp.uuid,
+            "corporation": self.corporation.uuid,
             "category": category,
             "operating_system": self.operating_system,
             "description": self._description,
             "capture_message": self.capture_message,
             "difficulty": self.difficulty,
-            "game_level": game_level.uuid,
+            "game_level": self.game_level.uuid,
             "flag_submission_type": self.flag_submission_type,
             "flaglist": self.flaglist(self.id),
             "value": str(self.value),

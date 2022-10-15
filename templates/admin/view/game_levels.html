@@ -255,7 +255,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for index, box in enumerate(level.boxes) %}
+                            {% for index, box in enumerate(sorted(level.boxes)) %}
                                 <tr>
                                     <td class="shortcolumn">{{ index + 1 }}</td>
                                     <td>{{ box.name }}</td>

@@ -33,7 +33,6 @@ import logging
 import re
 import json
 
-from past.utils import old_div
 from handlers.BaseHandlers import BaseHandler
 from models.Box import Box, FlagsSubmissionType
 from models.Corporation import Corporation
@@ -408,8 +407,10 @@ class AdminViewHandler(BaseHandler):
             }
             flag_uuid = self.get_argument("flag_uuid", "")
             team_uuid = self.get_argument("team_uuid", "")
+            user_uuid = self.get_argument("user_uuid", "")
             flag = Flag.by_uuid(flag_uuid)
             team = Team.by_uuid(team_uuid)
+            user = User.by_uuid(user_uuid)
             errors = []
             success = []
             if flag:
@@ -418,20 +419,23 @@ class AdminViewHandler(BaseHandler):
                 answer_token = self.get_argument("answer_token", "")
                 if point_restore == "on" and team:
                     if options.penalize_flag_value:
-                        value = int(
-                            flag.dynamic_value(team) * (options.flag_penalty_cost * 0.01)
-                        )
-                        team.money += value
                         penalty = Penalty.by_team_token(flag, team, answer_token)
                         if penalty:
+                            value = penalty.cost()
+                            if value > 0:
+                                team.money += value
+                                if user:
+                                    user.money += value
+                                    self.dbsession.add(user)
+                                self.dbsession.add(team)
+                                self.event_manager.admin_score_update(
+                                    team,
+                                    "%s penalty reversed - score has been updated."
+                                    % team.name,
+                                    value,
+                                )
                             self.dbsession.delete(penalty)
-                        self.dbsession.add(team)
-                        self.dbsession.commit()
-                        self.event_manager.admin_score_update(
-                            team,
-                            "%s penalty reversed - score has been updated." % team.name,
-                            value,
-                        )
+                            self.dbsession.commit()
                     if flag not in team.flags:
                         flag_value = flag.dynamic_value(team)
                         if (
@@ -445,6 +449,10 @@ class AdminViewHandler(BaseHandler):
                                 self.dbsession.add(tm)
                                 self.event_manager.flag_decayed(tm, flag)
                         team.money += flag_value
+                        if user:
+                            user.money += flag_value
+                            user.flags.append(flag)
+                            self.dbsession.add(user)
                         team.flags.append(flag)
                         self.dbsession.add(team)
                         self.dbsession.commit()
@@ -689,8 +697,7 @@ class AdminEditHandler(BaseHandler):
             order = self.get_argument("order", None)
             if order and int(order) != box.order:
                 logging.info(
-                    "Updated %s's box order %s -> %s"
-                    % (box.name, box.order, order)
+                    "Updated %s's box order %s -> %s" % (box.name, box.order, order)
                 )
                 box.order = order
             # Avatar
@@ -1215,42 +1222,28 @@ class AdminAjaxGameObjectDataHandler(BaseHandler):
 
     def attempts(self, flag):
         attempts = []
-        teamcount = {}
         for item in Penalty.by_flag_id(flag.id):
             team = Team.by_id(item.team_id)
-            if team.id in teamcount:
-                teamcount.update({team.id: teamcount[team.id] + 1})
-            else:
-                teamcount.update({team.id: 1})
+            user_uuid = ""
+            if item.user_id:
+                user = User.by_id(item.user_id)
+                if user:
+                    user_uuid = user.uuid
             if team:
-                if team.id in teamcount:
-                    teamcount.update({team.id: teamcount[team.id] + 1})
-                else:
-                    teamcount.update({team.id: 1})
                 entries = {
                     "name": team.name,
                     "token": item.token,
                     "flag": flag.uuid,
                     "team": team.uuid,
+                    "user": user_uuid,
                     "type": flag.type,
                 }
                 if options.penalize_flag_value:
-                    penalty = "-"
+                    penalty = item.cost()
+                    prefix = "-" if penalty > 0 else ""
                     if options.banking:
-                        penalty += "$"
-                    if (
-                        teamcount[team.id] < options.flag_start_penalty
-                        or teamcount[team.id] > options.flag_stop_penalty
-                    ):
-                        penalty += "0"
-                    else:
-                        penalty += str(
-                            int(
-                                flag.dynamic_value(team)
-                                * (options.flag_penalty_cost * 0.01)
-                            )
-                        )
-                    entries.update({"penalty": penalty})
+                        prefix = prefix + "$"
+                    entries.update({"penalty": prefix + str(penalty)})
                 attempts.append(entries)
         return attempts
 

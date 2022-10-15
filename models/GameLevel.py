@@ -171,7 +171,7 @@ class GameLevel(DatabaseObject):
         """Return all flags for the level"""
         _flags = []
         for box in self.boxes:
-            _flags += box.flags
+            _flags += sorted(box.flags)
         return _flags
 
     def to_xml(self, parent):

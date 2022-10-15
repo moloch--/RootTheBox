@@ -23,10 +23,10 @@ import logging
 
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
-from sqlalchemy.types import Unicode, String, Integer, Boolean
+from sqlalchemy.types import Unicode, Integer
 from models import dbsession
-from models.User import User
 from models.BaseModels import DatabaseObject
+from tornado.options import options
 
 
 class Penalty(DatabaseObject):
@@ -35,6 +35,7 @@ class Penalty(DatabaseObject):
 
     team_id = Column(Integer, ForeignKey("team.id", ondelete="CASCADE"))
     flag_id = Column(Integer, ForeignKey("flag.id", ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey("user.id"))
     _token = Column(Unicode(256), nullable=True)
 
     @classmethod
@@ -58,6 +59,16 @@ class Penalty(DatabaseObject):
         return (
             dbsession.query(cls)
             .filter_by(team_id=_id)
+            .order_by(desc(cls.created))
+            .all()
+        )
+
+    @classmethod
+    def by_team_flag_id(cls, _team, _flag):
+        """Return penalties for a team"""
+        return (
+            dbsession.query(cls)
+            .filter(and_(cls.team_id == _team, cls.flag_id == _flag))
             .order_by(desc(cls.created))
             .all()
         )
@@ -114,8 +125,8 @@ class Penalty(DatabaseObject):
         )
 
     @classmethod
-    def create_attempt(cls, team=None, flag=None, submission=None):
-        attempt = cls._create(team, flag, submission)
+    def create_attempt(cls, user=None, flag=None, submission=None):
+        attempt = cls._create(user, flag, submission)
         dbsession.add(attempt)
         dbsession.commit()
 
@@ -124,8 +135,9 @@ class Penalty(DatabaseObject):
         return self._token
 
     @classmethod
-    def _create(cls, team, flag, submission):
+    def _create(cls, user, flag, submission):
         """Create a attempt and save it to the database"""
+        team = user.team
         if not team:
             team = cls.team
         if not flag:
@@ -133,8 +145,29 @@ class Penalty(DatabaseObject):
         if not submission:
             submission = ""
         logging.debug("Creating flag '%s' attempt for %r" % (flag.id, team.name))
-        attempt = Penalty(team_id=team.id, flag_id=flag.id, _token=submission)
+        attempt = Penalty(
+            team_id=team.id, user_id=user.id, flag_id=flag.id, _token=submission
+        )
         return attempt
+
+    def cost(self):
+        if not options.penalize_flag_value:
+            return 0
+        attempts = Penalty.by_team_flag_id(self.team_id, self.flag_id)
+        for idx, item in enumerate(attempts, start=1):
+            if item == self:
+                if idx < options.flag_start_penalty or idx > options.flag_stop_penalty:
+                    penalty = 0
+                else:
+                    from models.Team import Team
+                    from models.Flag import Flag
+
+                    flag = Flag.by_id(self.flag_id)
+                    team = Team.by_id(self.team_id)
+                    penalty = int(
+                        flag.dynamic_value(team) * (options.flag_penalty_cost * 0.01)
+                    )
+        return penalty
 
     def to_dict(self):
         """Return public data as dict"""

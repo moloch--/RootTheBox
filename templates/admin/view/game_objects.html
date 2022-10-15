@@ -313,7 +313,7 @@
                     <label class="control-label" for="edit-flag-box">{{_("Box")}}</label>
                     <div class="controls">
                         <select id="edit-flag-box" name="box_uuid">
-                            {% for box in Box.all() %}
+                            {% for box in sorted(Box.all()) %}
                                 <option value="{{ box.uuid }}">{{ box.name }}</option>
                             {% end %}
                         </select>
@@ -657,6 +657,7 @@
             <div style="margin-left: 50px; vertical-align: middle;">
                 <input type="hidden" id="answer-flag-uuid" name="flag_uuid" value="" />
                 <input type="hidden" id="answer-team-uuid" name="team_uuid" value="" />
+                <input type="hidden" id="answer-user-uuid" name="user_uuid" value="" />
                 <input type="hidden" id="answer-token" name="answer_token" value="" />
                 <p>
                     <input id="acceptanswer" name="accept_answer" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> {{ _("Add the answer as an acceptable flag token") }}.
@@ -709,7 +710,7 @@
                     </strong>
                 </center>
                 <br />
-                {% for box in Box.all() %}
+                {% for box in sorted(Box.all()) %}
                     <li>
                         <a href="#{{ box.uuid }}">
                             <i class="icon-chevron-right"></i>
@@ -850,7 +851,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {% for index, flag in enumerate(box.flags_all) %}
+                                                    {% for index, flag in enumerate(sorted(box.flags_all)) %}
                                                         <tr id="{{ flag.uuid }}" class="{% if flag.locked %} locked{% end %}">
                                                             <td class="index shortcolumn" data-uuid="{{ flag.uuid }}">{{ index + 1 }}</td>
                                                             <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
