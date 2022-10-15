@@ -639,7 +639,9 @@ class RegistrationHandler(BaseHandler):
                 "ws://", "https://"
             )
         else:
-            origin = options.origin.replace("ws://", "http://")
+            origin = options.origin.replace("wss://", "https://").replace(
+                "ws://", "http://"
+            )
         validate_url = "%s/registration/token?u=%s&t=%s" % (origin, account, token)
         remote_ip = (
             self.request.headers.get("X-Real-IP")
@@ -802,11 +804,13 @@ class ForgotPasswordHandler(BaseHandler):
             account = urlsafe_b64encode(account)
             token = urlsafe_b64encode(token)
         if options.ssl:
-            origin = options.origin.replace("ws://", "https://").replace(
-                "wss://", "https://"
+            origin = options.origin.replace("wss://", "https://").replace(
+                "ws://", "https://"
             )
         else:
-            origin = options.origin.replace("ws://", "http://")
+            origin = options.origin.replace("wss://", "https://").replace(
+                "ws://", "http://"
+            )
         reset_url = "%s/reset/token?u=%s&p=%s" % (origin, account, token)
         remote_ip = (
             self.request.headers.get("X-Real-IP")
