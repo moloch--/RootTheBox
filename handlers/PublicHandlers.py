@@ -337,12 +337,19 @@ class StatusHandler(BaseHandler):
     """Status"""
 
     def get(self, *args, **kwargs):
+        teamcount = len(self.application.settings["scoreboard_state"].get("teams"))
         status = {
             "version": self.application.settings["version"],
             "name": options.game_name,
             "game_started": self.application.settings["game_started"],
             "suspend_registration": self.application.settings["suspend_registration"],
         }
+        if options.teams:
+            usercount=len(User.all_users())
+            status["team_count"] = teamcount
+            status["player_count"] = usercount
+        else:
+            status["player_count"] = teamcount
         return self.write(json.dumps(status))
 
 
