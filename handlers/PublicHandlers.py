@@ -338,6 +338,8 @@ class StatusHandler(BaseHandler):
 
     def get(self, *args, **kwargs):
         status = {
+            "version": self.application.settings["version"],
+            "name": options.game_name,
             "game_started": self.application.settings["game_started"],
             "suspend_registration": self.application.settings["suspend_registration"],
         }
