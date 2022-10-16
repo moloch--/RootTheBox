@@ -36,15 +36,15 @@ def _has_table(table_name):
 
 def upgrade():
     if not _table_has_column("penalty", "user_id"):
-        op.add_column("penalty", sa.Column("user_id", sa.INTEGER))
-        op.create_foreign_key(
-            "penalty_ibfk_3",
-            "penalty",
-            "user",
-            ["user_id"],
-            ["id"],
-            ondelete="SET NULL",
-        )
+        with op.batch_alter_table("penalty") as batch_op:
+            batch_op.add_column(sa.Column("user_id", sa.INTEGER))
+            batch_op.create_foreign_key(
+                "penalty_ibfk_3",
+                "user",
+                ["user_id"],
+                ["id"],
+                ondelete="SET NULL",
+            )
 
 
 def downgrade():
