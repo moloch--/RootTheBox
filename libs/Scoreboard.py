@@ -45,19 +45,21 @@ class Scoreboard(object):
     """Manages websocket connections (mostly thread safe)"""
 
     @classmethod
-    def now(self, app):
+    def now(cls, app):
         """Returns the current game state"""
         return json.dumps(app.settings["scoreboard_state"].get("teams"))
 
     @classmethod
-    def update_gamestate(self, app, background=False):
+    def update_gamestate(cls, app, background=True):
         if background:
-            t = Thread(target=self._update_gamestate, args=(self, app), daemon=True)
+            t = Thread(target=cls._update_gamestate, args=(app,))
+            t.daemon = True
             t.start()
         else:
-            self._update_gamestate(self, app)
+            cls._update_gamestate(app)
 
-    def _update_gamestate(self, app):
+    @classmethod
+    def _update_gamestate(cls, app):
         threadSession = scoped_session(session_maker)
         threadDBSession = lambda: threadSession(autoflush=True)
         threadsession = threadDBSession()

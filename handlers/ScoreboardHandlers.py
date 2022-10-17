@@ -63,10 +63,10 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
     def on_message(self, message):
         """We ignore messages if there are more than 1 every 3 seconds"""
+        Scoreboard.update_gamestate(self)
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         elif datetime.now() - self.last_message > timedelta(seconds=3):
-            Scoreboard.update_gamestate(self)
             self.last_message = datetime.now()
             self.write_message(Scoreboard.now(self))
 
@@ -357,7 +357,7 @@ class TeamsHandler(BaseHandler):
             display = 25
         ranks = self.application.settings["scoreboard_state"]["teams"]
         teamcount = len(ranks)
-        pcount = ceil(teamcount / display)
+        pcount = int(ceil(teamcount / float(display)))
         if pcount < page:
             page = pcount
         end_count = display * page

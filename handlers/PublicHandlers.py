@@ -28,7 +28,7 @@ any authentication) with the exception of error handlers and the scoreboard
 import logging
 import re
 import smtplib
-import secrets
+import random
 import string
 import json
 
@@ -164,7 +164,7 @@ class CodeFlowHandler(BaseHandler):
         user.handle = claims["preferred_username"].split("@")[0]
         # Generate a long random password that the user will never know or use.
         user.password = "".join(
-            secrets.choice(string.ascii_letters + string.digits + string.punctuation)
+            random.choice(string.ascii_letters + string.digits + string.punctuation)
             for i in range(30)
         )
         user.bank_password = ""

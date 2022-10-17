@@ -42,7 +42,7 @@ class GameLevel(DatabaseObject):
     next_level_id = Column(Integer, ForeignKey("game_level.id"))
     _number = Column(Integer, unique=True, nullable=False)
     _buyout = Column(Integer, nullable=False)
-    _type = Column(Unicode(16), nullable=False, default="none")
+    _type = Column(Unicode(16), nullable=False, default=str("none"))
     _reward = Column(Integer, nullable=False, default=0)
     _name = Column(Unicode(32), nullable=True)
     _description = Column(Unicode(512))
