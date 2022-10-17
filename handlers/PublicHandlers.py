@@ -345,7 +345,7 @@ class StatusHandler(BaseHandler):
             "suspend_registration": self.application.settings["suspend_registration"],
         }
         if options.teams:
-            usercount=len(User.all_users())
+            usercount = len(User.all_users())
             status["team_count"] = teamcount
             status["player_count"] = usercount
         else:

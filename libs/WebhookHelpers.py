@@ -26,16 +26,30 @@ from tornado.options import options
 
 
 def send_game_start_webhook():
-    send_webhook({"action": "game_start"})
+    send_webhook(
+        {
+            "game": options.game_name,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
+            "action": "game_start",
+        }
+    )
 
 
 def send_game_stop_webhook():
-    send_webhook({"action": "game_stop"})
+    send_webhook(
+        {
+            "game": options.game_name,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
+            "action": "game_stop",
+        }
+    )
 
 
 def send_capture_webhook(user, flag, reward):
     send_webhook(
         {
+            "game": options.game_name,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "capture_flag",
             "flag": {"name": flag.name, "original_value": flag.value, "value": reward},
             "user": get_user_info(user),
@@ -47,6 +61,8 @@ def send_capture_webhook(user, flag, reward):
 def send_capture_failed_webhook(user, flag):
     send_webhook(
         {
+            "game": options.game_name,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "capture_failed",
             "flag": {"name": flag.name, "original_value": flag.value},
             "user": get_user_info(user),
@@ -58,6 +74,8 @@ def send_capture_failed_webhook(user, flag):
 def send_level_complete_webhook(user, level):
     send_webhook(
         {
+            "game": options.game_name,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "level_complete",
             "level": {
                 "name": level.name,
@@ -74,6 +92,8 @@ def send_level_complete_webhook(user, level):
 def send_box_complete_webhook(user, box):
     send_webhook(
         {
+            "game": options.game_name,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "box_complete",
             "box": {
                 "name": box.name,
@@ -87,12 +107,33 @@ def send_box_complete_webhook(user, box):
     )
 
 
+def send_hint_taken_webhook(user, hint):
+    send_webhook(
+        {
+            "game": options.game_name,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
+            "action": "hint_taken",
+            "flag": {"name": hint.flag.name},
+            "user": get_user_info(user),
+            "team": get_team_info(user.team),
+            "cost": hint.price,
+        }
+    )
+
+
 def get_user_info(user):
-    return {"handle": user.handle, "email": user.email}
+    return {
+        "game": options.game_name,
+        "origin": options.origin.replace("wss://", "").replace("ws://", ""),
+        "handle": user.handle,
+        "email": user.email,
+    }
 
 
 def get_team_info(team):
     return {
+        "game": options.game_name,
+        "origin": options.origin.replace("wss://", "").replace("ws://", ""),
         "name": team.name,
         "money": team.get_score("money"),
         "flags": team.get_score("flag"),

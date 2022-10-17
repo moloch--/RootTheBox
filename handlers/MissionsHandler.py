@@ -389,6 +389,9 @@ class BoxHandler(BaseHandler):
     def failed_capture(self, flag, submission):
         user = self.get_current_user()
         if submission is not None and flag not in user.team.flags:
+            # Fire capture failed webhook
+            send_capture_failed_webhook(user, flag)
+
             if flag.is_file:
                 submission = Flag.digest(submission)
             Penalty.create_attempt(user=user, flag=flag, submission=submission)
@@ -412,9 +415,6 @@ class BoxHandler(BaseHandler):
             self.dbsession.flush()
             self.event_manager.flag_penalty(user, flag)
             self.dbsession.commit()
-
-            # Fire capture failed webhook
-            send_capture_failed_webhook(user, flag)
 
             return penalty
         return False
@@ -541,6 +541,7 @@ class PurchaseHintHandler(BaseHandler):
             self.dbsession.add(team)
             self.dbsession.commit()
             self.event_manager.hint_taken(user, hint)
+            send_hint_taken_webhook(user, hint)
 
     def render_page(self, box, errors=[], success=[], info=[]):
         """Wrapper to .render() to avoid duplicate code"""
