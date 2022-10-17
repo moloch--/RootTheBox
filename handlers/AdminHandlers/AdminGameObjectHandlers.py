@@ -34,6 +34,7 @@ import re
 import json
 
 from handlers.BaseHandlers import BaseHandler
+from handlers.MissionsHandler import BoxHandler
 from models.Box import Box, FlagsSubmissionType
 from models.Corporation import Corporation
 from models.Category import Category
@@ -456,8 +457,9 @@ class AdminViewHandler(BaseHandler):
                         team.flags.append(flag)
                         self.dbsession.add(team)
                         self.dbsession.commit()
-                        self.event_manager.flag_captured(team, flag)
+                        BoxHandler.success_capture(self, user, flag, flag_value)
                         self._check_level(flag, team)
+                        self.event_manager.flag_captured(team, flag)
                         if options.banking:
                             price = "$" + str(flag_value)
                         else:

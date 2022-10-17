@@ -85,97 +85,33 @@
                     <strong>{{ _("You are not on a team") }}</strong>
                 {% end %}
             </div>
+            
         </div>
-
-        {% if options.teams %}
-        <div class="row">
-            <div class="span11 offset1 well">
-                <h2>
-                    <i class="fa fa-flag"></i> 
-                    {{ _("Player") }} {{ _("Mission Progress") }}
-                </h2>
-                <hr style="margin-bottom: 8px;">
-                {% if game_started %}
-                    {% for index, level in enumerate(GameLevel.all()) %}
-                        {% set show_level = level.type != "hidden" or (level.type == "hidden" and level in team.game_levels) %}
-                        {% if len(level.boxes) > 0 and team and show_level %}
-                            {% if len(GameLevel.all()) > 1 %}
-                            <h3 class="levelheader">
-                                {% if level.type == 'none' or level in team.game_levels %}
-                                    <i class="fa fa-unlock-alt"></i>
-                                {% else %}
-                                    <i class="fa fa-lock"></i>
-                                {% end %}
-                                {{ level.name }}&nbsp;
-                            </h3>{% end %}
-                            {% if level.description %}<h4 class="levelheader">({{ level.description }})<h4>{% end %}
-                            {% if len(team.level_flags(level.number)) != 0 %}
-                                <div class="progress" style="height: 8px; margin-bottom: 15px; background-color: #424242;">
-                                    <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
-                                    </div>
-                                </div>
-                            {% end %}
-                            {% if level.type == 'none' or level in team.game_levels %}
-                                <hr style="margin: 5px 0;">
-                                {% for box in sorted(level.boxes) %}
-                                    {% if not box.locked and len(box.flags) > 0 %}
-                                    <div class="row" style="margin-left: 16px;">
-                                        <div class="span4">
-                                            <a href="/user/missions/boxes?uuid={{ box.uuid }}">
-                                                <h5 style="display: inline;">
-                                                    {% if box.operating_system.lower() == "windows" %}
-                                                    <i class="fa fa-windows"></i>
-                                                    {% elif box.operating_system.lower() == "linux" %}
-                                                    <i class="fa fa-linux"></i>
-                                                    {% elif box.operating_system.lower() == "apple" %}
-                                                    <i class="fa fa-apple"></i>
-                                                    {% elif box.operating_system.lower() == "?" %}
-                                                    <i class="fa fa-desktop"></i>
-                                                    {% else %}
-                                                    <i class="fa fa-th"></i>
-                                                    {% end %} {{ box.corporation.name }} - {{ box.name }}
-                                                </h5>
-                                            </a>
-                                        </div>
-                                        {% set flagcount=0 %} 
-                                        {% for index, flag in enumerate(sorted(box.flags)) %} 
-                                            {% if flag in user.flags %} 
-                                                {% set flagcount += 1 %}
-                                            {% end %} 
-                                        {% end %}
-                                        <div class="span8" style="padding-top: 6px;">
-                                            <table style="width: 100%; margin: 0 3px;"><tr>
-                                            {% for index, flag in enumerate(sorted(box.flags)) %} 
-                                                <td style="padding: 0 3px;">
-                                                    <div class="progress" style="height: 8px; background-color: #424242;" title="{{ flag.name }}">
-                                                        <div class="bar minibar" style="width: {% if flag in user.flags %}100{% else %}0{% end %}%;"></div>
-                                                    </div>
-                                                </td>
-                                            {% end %}
-                                            </tr></table>
-                                        </div>
-                                    </div>
-                                    {% end %}
-                                {% end %}
-                                <br/>
-                            {% else %}
-                                <hr style="margin: 5px 0;">
-                            {% end %}
-                        {% end %}
+        {% if len(Category.all()) > 2 %}
+            <div class="row">
+                <!-- Only looks good if there are at least 3 categories -->
+                <div class="span11 offset1 well">
+                    <h2><i class="fa fa-star"></i> {% if options.teams %}{{ _("Team") }} {% end %}{{ _("Skill Progress") }}</h2>
+                    <hr style="margin-bottom: 8px;">
+                    <center>
+                    {% if game_started %}
+                        <div id="spider_skills" style="height:400px; max-width: 550px;" data-uuid="{{ team.uuid }}" data-name="{{ _('Categories') }}">
+                            <!-- Spider Chart Here -->
+                        </div>
+                    {% else %}
+                        <div class="row" style="padding-top: 15px;">
+                            <div class="span1" style="text-align: right;">
+                                <i class="fa fa-pause" style="font-size: 120%;"></i>
+                            </div>
+                            <div class="span7 msgdescription">
+                                    {{ _("Waiting for the game to start...") }}
+                            </div>
+                        </div>
                     {% end %}
-                {% else %}
-                    <div class="row" style="padding-top: 15px;">
-                        <div class="span1" style="text-align: right;">
-                            <i class="fa fa-pause" style="font-size: 120%;"></i>
-                        </div>
-                        <div class="span7 msgdescription">
-                                {{ _("Waiting for the game to start...") }}
-                        </div>
-                    </div>
-                {% end %}
+                    </center>
+                </div>
             </div>
-        </div>
-        {% end %} 
+            {% end %} 
 
         {% if not visitor %}
         <div class="row">
@@ -376,28 +312,97 @@
             </div>
         {% end %}
     </div>
+        {% if options.teams %}
+        
+        <div class="span5 well" style="width: 46%;">
+            <h2>
+                <i class="fa fa-flag"></i> 
+                {{ _("Player") }} {{ _("Mission Progress") }}
+            </h2>
+            <hr style="margin-bottom: 8px;">
+            {% if game_started %}
+                {% for index, level in enumerate(GameLevel.all()) %}
+                    {% set show_level = level.type != "hidden" or (level.type == "hidden" and level in team.game_levels) %}
+                    {% if len(level.boxes) > 0 and team and show_level %}
+                        {% if len(GameLevel.all()) > 1 %}
+                        <h3 class="levelheader">
+                            {% if level.type == 'none' or level in team.game_levels %}
+                                <i class="fa fa-unlock-alt"></i>
+                            {% else %}
+                                <i class="fa fa-lock"></i>
+                            {% end %}
+                            {{ level.name }}&nbsp;
+                        </h3>{% end %}
+                        {% if level.description %}<h4 class="levelheader">({{ level.description }})<h4>{% end %}
+                        {% if len(team.level_flags(level.number)) != 0 %}
+                            <div class="progress" style="height: 8px; margin-bottom: 15px; background-color: #424242;">
+                                <div class="bar minibar" style="width: {{ ( len(team.level_flags(level.number)) /  float(len(level.flags)) ) * 100.0 }}%;" title="{{ len(team.level_flags(level.number)) }} / {{ len(level.flags) }}">
+                                </div>
+                            </div>
+                        {% end %}
+                        {% if level.type == 'none' or level in team.game_levels %}
+                            <hr style="margin: 5px 0;">
+                            {% for box in sorted(level.boxes) %}
+                                {% if not box.locked and len(box.flags) > 0 %}
+                                <div class="row" style="margin-left: 16px;">
+                                    <div class="span4">
+                                        <a href="/user/missions/boxes?uuid={{ box.uuid }}">
+                                            <h5 style="display: inline;">
+                                                {% if box.operating_system.lower() == "windows" %}
+                                                <i class="fa fa-windows"></i>
+                                                {% elif box.operating_system.lower() == "linux" %}
+                                                <i class="fa fa-linux"></i>
+                                                {% elif box.operating_system.lower() == "apple" %}
+                                                <i class="fa fa-apple"></i>
+                                                {% elif box.operating_system.lower() == "?" %}
+                                                <i class="fa fa-desktop"></i>
+                                                {% else %}
+                                                <i class="fa fa-th"></i>
+                                                {% end %} {{ box.corporation.name }} - {{ box.name }}
+                                            </h5>
+                                        </a>
+                                    </div>
+                                    {% set flagcount=0 %} 
+                                    {% for index, flag in enumerate(sorted(box.flags)) %} 
+                                        {% if flag in user.flags %} 
+                                            {% set flagcount += 1 %}
+                                        {% end %} 
+                                    {% end %}
+                                    <div class="span8" style="padding-top: 6px;">
+                                        <table style="width: 100%; margin: 0 3px;"><tr>
+                                        {% for index, flag in enumerate(sorted(box.flags)) %} 
+                                            <td style="padding: 0 3px;">
+                                                <div class="progress" style="height: 8px; background-color: #424242;" title="{{ flag.name }}">
+                                                    <div class="bar minibar" style="width: {% if flag in user.flags %}100{% else %}0{% end %}%;"></div>
+                                                </div>
+                                            </td>
+                                        {% end %}
+                                        </tr></table>
+                                    </div>
+                                </div>
+                                {% end %}
+                            {% end %}
+                            <br/>
+                        {% else %}
+                            <hr style="margin: 5px 0;">
+                        {% end %}
+                    {% end %}
+                {% end %}
+            {% else %}
+                <div class="row" style="padding-top: 15px;">
+                    <div class="span1" style="text-align: right;">
+                        <i class="fa fa-pause" style="font-size: 120%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+                            {{ _("Waiting for the game to start...") }}
+                    </div>
+                </div>
+            {% end %}
+        </div>
+
+        {% end %} 
 
 
-    {% if len(Category.all()) > 2 %}
-    <!-- Only looks good if there are at least 3 categories -->
-    <div class="span5 well" style="width: 46%;">
-        <h2><i class="fa fa-star"></i> {% if options.teams %}{{ _("Team") }} {% end %}{{ _("Skill Progress") }}</h2>
-        <hr style="margin-bottom: 8px;">
-        {% if game_started %}
-            <div id="spider_skills" style="height:400px; max-width: 550px;" data-uuid="{{ team.uuid }}" data-name="{{ _('Categories') }}">
-                <!-- Spider Chart Here -->
-            </div>
-        {% else %}
-            <div class="row" style="padding-top: 15px;">
-                <div class="span1" style="text-align: right;">
-                    <i class="fa fa-pause" style="font-size: 120%;"></i>
-                </div>
-                <div class="span7 msgdescription">
-                        {{ _("Waiting for the game to start...") }}
-                </div>
-            </div>
-        {% end %}
-    </div>
-    {% end %} 
+    
 </div>
 {% end %}
