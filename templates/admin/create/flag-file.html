@@ -50,7 +50,7 @@
                                     data-original-title="{{_('Box')}}"
                                     data-content="{{_('This is the box the flag is located on.')}}">
                                 <option value=""></option>
-                                {% for thebox in Box.all() %}
+                                {% for thebox in sorted(Box.all()) %}
                                 <option value="{{ thebox.uuid }}"{% if box and box.uuid == thebox.uuid %} selected{% end %}>
                                     {{ thebox.name }}{% if thebox.corporation.name != "" %} ({{ thebox.corporation.name }}){% end %}
                                 </option>

@@ -47,9 +47,9 @@ class FirstLoginHandler(BaseHandler):
     @authenticated
     def get(self, *args, **kwargs):
         user = self.get_current_user()
-        reward = self.config.bot_reward
-        usebots = self.config.use_bots
-        banking = self.config.banking
+        reward = options.bot_reward
+        usebots = options.use_bots
+        banking = options.banking
         self.add_content_policy("script", "'unsafe-eval'")
         self.render(
             "missions/firstlogin.html",
@@ -63,7 +63,7 @@ class FirstLoginHandler(BaseHandler):
 class StoryAjaxHandler(BaseHandler):
     @authenticated
     def get(self, *args, **kargs):
-        """ Renders AJAX snippit based on URI """
+        """Renders AJAX snippit based on URI"""
         uri = {"firstlogin": self.firstlogin}
         user = self.get_current_user()
         if user and len(args) and args[0] in uri:
@@ -88,7 +88,7 @@ class StoryAjaxHandler(BaseHandler):
             self.render("public/404.html")
 
     def firstlogin(self):
-        """ Render the first login dialog """
+        """Render the first login dialog"""
         dialog = []
         if isinstance(options.story_firstlogin, list):
             dialog.extend(options.story_firstlogin)
@@ -145,7 +145,7 @@ class BoxHandler(BaseHandler):
     @authenticated
     @game_started
     def post(self, *args, **kwargs):
-        """ Check validity of flag submissions """
+        """Check validity of flag submissions"""
         box_id = self.get_argument("box_id", None)
         uuid = self.get_argument("uuid", "")
         token = self.get_argument("token", "")
@@ -170,7 +170,7 @@ class BoxHandler(BaseHandler):
             flag = Flag.by_uuid(uuid)
             if (
                 flag is not None
-                and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts
+                and Penalty.by_count(flag, user.team) >= options.max_flag_attempts
             ):
                 self.render_page_by_flag(
                     flag,
@@ -199,8 +199,8 @@ class BoxHandler(BaseHandler):
             old_reward = flag.dynamic_value(user.team) if flag is not None else 0
             if flag is not None and self.attempt_capture(flag, submission):
                 self.add_content_policy("script", "'unsafe-eval'")
-                success = self.success_capture(flag, old_reward)
-                if self.config.story_mode:
+                success = self.success_capture(user, flag, old_reward)
+                if options.story_mode:
                     box = flag.box
                     if not (len(box.capture_message) > 0 and box.is_complete(user)):
                         box = None
@@ -225,14 +225,14 @@ class BoxHandler(BaseHandler):
 
     def failed_attempt(self, flag, user, submission, box_id):
         if flag is None or Penalty.by_token_count(flag, user.team, submission) == 0:
-            if self.config.teams:
+            if options.teams:
                 teamval = "team's "
             else:
                 teamval = ""
             penalty = self.failed_capture(flag, submission) if flag is not None else 0
             penalty_dialog = "Sorry - Try Again"
             if penalty:
-                if self.config.banking:
+                if options.banking:
                     penalty_dialog = (
                         "$"
                         + str(penalty)
@@ -258,7 +258,7 @@ class BoxHandler(BaseHandler):
                 self.render_page_by_flag(flag, errors=[penalty_dialog])
             return
         else:
-            if self.config.teams:
+            if options.teams:
                 teamdup = " by your team.  Try Again"
             else:
                 teamdup = " by you.  Try Again"
@@ -271,15 +271,14 @@ class BoxHandler(BaseHandler):
             )
             return
 
-    def success_capture(self, flag, old_reward=None):
-        if self.config.teams:
+    def success_capture(self, user, flag, old_reward=None):
+        if options.teams:
             teamval = "team's "
         else:
             teamval = ""
-        user = self.get_current_user()
         old_reward = flag.dynamic_value(user.team) if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
-        if self.config.banking:
+        if options.banking:
             reward_dialog += (
                 "$"
                 + str(old_reward)
@@ -327,7 +326,7 @@ class BoxHandler(BaseHandler):
                 self.dbsession.add(user.team)
                 self.dbsession.flush()
                 self.dbsession.commit()
-                if self.config.banking:
+                if options.banking:
                     reward_dialog += (
                         "$"
                         + str(level._reward)
@@ -390,18 +389,21 @@ class BoxHandler(BaseHandler):
     def failed_capture(self, flag, submission):
         user = self.get_current_user()
         if submission is not None and flag not in user.team.flags:
+            # Fire capture failed webhook
+            send_capture_failed_webhook(user, flag)
+
             if flag.is_file:
                 submission = Flag.digest(submission)
-            Penalty.create_attempt(team=user.team, flag=flag, submission=submission)
-            if not self.config.penalize_flag_value:
+            Penalty.create_attempt(user=user, flag=flag, submission=submission)
+            if not options.penalize_flag_value:
                 return False
             attempts = Penalty.by_count(flag, user.team)
-            if attempts < self.config.flag_start_penalty:
+            if attempts < options.flag_start_penalty:
                 return False
-            if attempts >= self.config.flag_stop_penalty:
+            if attempts >= options.flag_stop_penalty:
                 return False
             penalty = int(
-                flag.dynamic_value(user.team) * self.config.flag_penalty_cost * 0.01
+                flag.dynamic_value(user.team) * options.flag_penalty_cost * 0.01
             )
             logging.info(
                 "%s (%s) capture failed '%s' - lost %s"
@@ -414,14 +416,11 @@ class BoxHandler(BaseHandler):
             self.event_manager.flag_penalty(user, flag)
             self.dbsession.commit()
 
-            # Fire capture failed webhook
-            send_capture_failed_webhook(user, flag)
-
             return penalty
         return False
 
     def attempt_capture(self, flag, submission):
-        """ Compares a user provided token to the token in the db """
+        """Compares a user provided token to the token in the db"""
         user = self.get_current_user()
         team = user.team
         logging.info(
@@ -431,8 +430,8 @@ class BoxHandler(BaseHandler):
             if flag.capture(submission):
                 flag_value = flag.dynamic_value(team)
                 if (
-                    self.config.dynamic_flag_value
-                    and self.config.dynamic_flag_type == "decay_all"
+                    options.dynamic_flag_value
+                    and options.dynamic_flag_type == "decay_all"
                 ):
                     for item in Flag.team_captures(flag.id):
                         tm = Team.by_id(item[0])
@@ -459,7 +458,7 @@ class BoxHandler(BaseHandler):
         self.render_page_by_box(box, errors, success, info)
 
     def render_page_by_box(self, box, errors=[], success=[], info=[]):
-        """ Wrapper to .render() to avoid duplicate code """
+        """Wrapper to .render() to avoid duplicate code"""
         user = self.get_current_user()
         self.render(
             "missions/box.html",
@@ -486,12 +485,12 @@ class FlagCaptureMessageHandler(BaseHandler):
         box = Box.by_uuid(buuid)
         flag = Flag.by_uuid(fuuid)
         if box is not None and box.is_complete(user):
-            if self.config.story_mode and len(box.capture_message) > 0:
+            if options.story_mode and len(box.capture_message) > 0:
                 self.add_content_policy("script", "'unsafe-eval'")
                 self.render("missions/captured.html", box=box, flag=None, reward=reward)
                 return
         elif flag is not None and flag in user.team.flags:
-            if self.config.story_mode and len(flag.capture_message) > 0:
+            if options.story_mode and len(flag.capture_message) > 0:
                 self.add_content_policy("script", "'unsafe-eval'")
                 self.render(
                     "missions/captured.html", box=None, flag=flag, reward=reward
@@ -504,7 +503,7 @@ class PurchaseHintHandler(BaseHandler):
     @authenticated
     @game_started
     def post(self, *args, **kwargs):
-        """ Purchase a hint """
+        """Purchase a hint"""
         uuid = self.get_argument("uuid", "")
         hint = Hint.by_uuid(uuid)
         if hint is not None:
@@ -514,7 +513,7 @@ class PurchaseHintHandler(BaseHandler):
                 flag
                 and flag.box.flag_submission_type
                 != FlagsSubmissionType.SINGLE_SUBMISSION_BOX
-                and Penalty.by_count(flag, user.team) >= self.config.max_flag_attempts
+                and Penalty.by_count(flag, user.team) >= options.max_flag_attempts
             ):
                 self.render_page(
                     hint.box, info=["You can no longer purchase this hint."]
@@ -534,7 +533,7 @@ class PurchaseHintHandler(BaseHandler):
             self.render("public/404.html")
 
     def _purchase_hint(self, hint, team):
-        """ Add hint to team object """
+        """Add hint to team object"""
         if hint not in team.hints:
             user = self.get_current_user()
             team.money -= abs(hint.price)
@@ -542,9 +541,10 @@ class PurchaseHintHandler(BaseHandler):
             self.dbsession.add(team)
             self.dbsession.commit()
             self.event_manager.hint_taken(user, hint)
+            send_hint_taken_webhook(user, hint)
 
     def render_page(self, box, errors=[], success=[], info=[]):
-        """ Wrapper to .render() to avoid duplicate code """
+        """Wrapper to .render() to avoid duplicate code"""
         user = self.get_current_user()
         self.render(
             "missions/box.html",
@@ -559,19 +559,19 @@ class PurchaseHintHandler(BaseHandler):
 
 class MissionsHandler(BaseHandler):
 
-    """ Renders pages related to Missions/Flag submissions """
+    """Renders pages related to Missions/Flag submissions"""
 
     @authenticated
     @game_started
     def get(self, *args, **kwargs):
-        """ Render missions view """
+        """Render missions view"""
         user = self.get_current_user()
         self.render("missions/view.html", team=user.team, errors=None, success=None)
 
     @authenticated
     @game_started
     def post(self, *args, **kwargs):
-        """ Submit flags/buyout to levels """
+        """Submit flags/buyout to levels"""
         if self.get_current_user():
             uri = {"buyout": self.buyout}
             if len(args) and args[0] in uri:
@@ -580,7 +580,7 @@ class MissionsHandler(BaseHandler):
         self.render("public/404.html")
 
     def buyout(self):
-        """ Buyout and unlock a level """
+        """Buyout and unlock a level"""
         user = self.get_current_user()
         level = GameLevel.by_uuid(self.get_argument("uuid", ""))
         if level is not None:

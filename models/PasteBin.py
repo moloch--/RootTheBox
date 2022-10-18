@@ -30,7 +30,7 @@ from builtins import str
 
 
 class PasteBin(DatabaseObject):
-    """ PasteBin definition """
+    """PasteBin definition"""
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
@@ -40,17 +40,17 @@ class PasteBin(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        """ Get a paste object by uuid """
+        """Get a paste object by uuid"""
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @property

@@ -132,7 +132,7 @@ class BaseSession(MutableMapping):
         pass
 
     def serialize(self):
-        """ We use JSON instead of Pickles """
+        """We use JSON instead of Pickles"""
         dump = {
             "session_id": str(self.session_id),
             "data": self.data,

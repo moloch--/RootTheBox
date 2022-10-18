@@ -28,12 +28,12 @@ from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 class NotifySocketHandler(BaseWebSocketHandler):
 
-    """ Handles websocket connections """
+    """Handles websocket connections"""
 
     event_manager = EventManager.instance()
 
     def open(self):
-        """ When we receive a new websocket connect """
+        """When we receive a new websocket connect"""
         self.event_manager.add_connection(self)
         if self.session is not None and "team_id" in self.session:
             logging.debug(
@@ -46,7 +46,7 @@ class NotifySocketHandler(BaseWebSocketHandler):
             logging.debug("[Web Socket] Opened public notification socket.")
 
     def on_close(self):
-        """ Lost connection to client """
+        """Lost connection to client"""
         self.event_manager.remove_connection(self)
 
     @property

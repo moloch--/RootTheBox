@@ -58,7 +58,7 @@ class DatabaseConnection(object):
         self.ssl_ca = ssl_ca
 
     def __str__(self):
-        """ Construct the database connection string """
+        """Construct the database connection string"""
         if self.dialect == "sqlite":
             db_conn = self._sqlite()
         elif self.dialect.startswith("postgres"):
@@ -108,7 +108,7 @@ class DatabaseConnection(object):
         return "sqlite:///%s" % db_name
 
     def _mysql(self):
-        """ Configure db_connection for MySQL """
+        """Configure db_connection for MySQL"""
         logging.debug("Configured to use MySQL for a database")
         db_server, db_name, db_user, db_password = self._db_credentials()
         db_charset = "utf8mb4"
@@ -159,7 +159,7 @@ class DatabaseConnection(object):
             return False
 
     def _db_credentials(self):
-        """ Pull db creds and return them url encoded """
+        """Pull db creds and return them url encoded"""
         if self.password == "" or self.password == "RUNTIME":
             sys.stdout.write(PROMPT + "Database password: ")
             sys.stdout.flush()

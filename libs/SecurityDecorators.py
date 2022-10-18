@@ -27,7 +27,7 @@ from tornado.options import options
 
 
 def authenticated(method):
-    """ Checks to see if a user has been authenticated """
+    """Checks to see if a user has been authenticated"""
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -66,7 +66,7 @@ def authenticated(method):
 
 
 def game_started(method):
-    """ Checks to see if the game is running """
+    """Checks to see if the game is running"""
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -80,7 +80,7 @@ def game_started(method):
 
 
 def restrict_ip_address(method):
-    """ Only allows access to ip addresses in a provided list """
+    """Only allows access to ip addresses in a provided list"""
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -111,7 +111,7 @@ def blacklist_ips(method):
 
 
 def authorized(permission):
-    """ Checks user's permissions """
+    """Checks user's permissions"""
 
     def func(method):
         @functools.wraps(method)
@@ -132,7 +132,7 @@ def authorized(permission):
 
 
 def debug(method):
-    """ Logs a method call/return """
+    """Logs a method call/return"""
 
     @functools.wraps(method)
     def wrapper(*args, **kwargs):
@@ -146,7 +146,7 @@ def debug(method):
 
 
 def has_item(name):
-    """ Checks user's team owns an unlock/item """
+    """Checks user's team owns an unlock/item"""
 
     def func(method):
         @functools.wraps(method)
@@ -167,7 +167,7 @@ def has_item(name):
 
 
 def use_bots(method):
-    """ Checks to see if a user has been authenticated """
+    """Checks to see if a user has been authenticated"""
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -180,7 +180,7 @@ def use_bots(method):
 
 
 def use_black_market(method):
-    """ Checks to see if a user has been authenticated """
+    """Checks to see if a user has been authenticated"""
 
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):

@@ -25,9 +25,10 @@ Created on Oct 04, 2012
 import json
 import logging
 import time
-import asyncio
 
-from models import dbsession
+from threading import Thread
+from sqlalchemy.orm import scoped_session
+from models import dbsession, session_maker
 from models.Team import Team
 from models.Box import Box
 from models.Flag import Flag
@@ -37,33 +38,37 @@ from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from tornado.options import options
 from builtins import object, str
+from collections import OrderedDict
 
 
 class Scoreboard(object):
-    """ Manages websocket connections (mostly thread safe) """
+    """Manages websocket connections (mostly thread safe)"""
 
     @classmethod
-    def now(self, app):
-        """ Returns the current game state """
+    def now(cls, app):
+        """Returns the current game state"""
         return json.dumps(app.settings["scoreboard_state"].get("teams"))
 
     @classmethod
-    def update_gamestate(self, app):
-        try:
-            asyncio.create_task(self._update_gamestate(self, app))
-        except:
-            try:
-                asyncio.ensure_future(self._update_gamestate(self, app))
-            except RuntimeError:
-                # possible not awaited but should still run - not sure what py version does this, but it shouldn't need to be awaited
-                pass
-            except Exception as e:
-                logging.error(e)
+    def update_gamestate(cls, app, background=True):
+        if background:
+            t = Thread(target=cls._update_gamestate, args=(app,))
+            t.daemon = True
+            t.start()
+        else:
+            cls._update_gamestate(app)
 
-    async def _update_gamestate(self, app):
-        game_levels = GameLevel.all()
+    @classmethod
+    def _update_gamestate(cls, app):
+        threadSession = scoped_session(session_maker)
+        threadDBSession = lambda: threadSession(autoflush=True)
+        threadsession = threadDBSession()
+
+        game_levels = GameLevel.all(threadsession)
+        teams = Team.ranks(threadsession)
+        bots = BotManager.instance().count_all_teams()
         game_state = {
-            "teams": {},
+            "teams": OrderedDict(),
             "levels": {},
             "boxes": {},
             "hint_count": len(Hint.all()),
@@ -71,7 +76,6 @@ class Scoreboard(object):
             "box_count": len(Box.unlocked()),
             "level_count": len(game_levels),
         }
-        teams = Team.ranks()
         for team in teams:
             millis = int(round(time.time() * 1000))
             game_state["teams"][team.name] = {
@@ -80,8 +84,9 @@ class Scoreboard(object):
                 "game_levels": [str(lvl) for lvl in team.game_levels],
                 "members_count": len(team.members),
                 "hints_count": len(team.hints),
-                "bot_count": BotManager.instance().count_by_team(team.name),
+                "bot_count": bots[team.uuid],
                 "money": team.money,
+                "users": [user.uuid for user in team.members],
             }
 
             highlights = {"money": 0, "flag": 0, "bot": 0, "hint": 0}
@@ -114,7 +119,7 @@ class Scoreboard(object):
                     "lvl_count": len(team.level_flags(level.number)),
                     "lvl_unlock": level in team.game_levels,
                 }
-            for box in level.boxes:
+            for box in sorted(level.boxes):
                 game_state["levels"][level.name]["boxes"][box.uuid] = {
                     "name": box.name,
                     "locked": box.locked,
@@ -126,15 +131,16 @@ class Scoreboard(object):
                     game_state["levels"][level.name]["boxes"][box.uuid]["teams"][
                         team.name
                     ] = {"box_count": len(team.box_flags(box))}
-                for flag in box.flags:
+                for flag in sorted(box.flags):
                     game_state["levels"][level.name]["boxes"][box.uuid]["flags"][
                         flag.uuid
                     ] = {"name": flag.name}
         app.settings["scoreboard_state"] = game_state
+        threadSession.remove()
 
 
 def score_bots():
-    """ Award money for botnets """
+    """Award money for botnets"""
     logging.info("Scoring botnets, please wait ...")
     bot_manager = BotManager.instance()
     event_manager = EventManager.instance()

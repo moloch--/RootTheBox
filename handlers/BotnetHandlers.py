@@ -88,7 +88,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.opcodes = {"interrogation_response": self.interrogation_response}
 
     def open(self, *args):
-        """ Steps 1 and 2; called when a new bot connects """
+        """Steps 1 and 2; called when a new bot connects"""
         box = Box.by_ip_address(self.request.remote_ip)
         self.remote_ip = self.request.remote_ip
         if box is None and self.config.whitelist_box_ips:
@@ -100,7 +100,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.write_message({"opcode": "interrogate", "xid": str(self.xid)})
 
     def on_message(self, message):
-        """ Routes the request to the correct function based on opcode """
+        """Routes the request to the correct function based on opcode"""
         try:
             req = json.loads(message)
             if "opcode" not in req:
@@ -114,13 +114,13 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.close()
 
     def on_close(self):
-        """ Close connection to remote host """
+        """Close connection to remote host"""
         if self.uuid in self.bot_manager.botnet:
             self.bot_manager.remove_bot(self)
         logging.debug("Closing connection to bot at %s" % self.request.remote_ip)
 
     def interrogation_response(self, msg):
-        """ Steps 3 and 4; validate responses """
+        """Steps 3 and 4; validate responses"""
         logging.debug("Received interrogate response, validating ...")
         response_xid = msg["response_xid"]
         user = User.by_handle(msg["handle"])
@@ -141,7 +141,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.add_to_botnet(user)
 
     def add_to_botnet(self, user):
-        """ Step 6 and 7; Add current web socket to botnet """
+        """Step 6 and 7; Add current web socket to botnet"""
         if self.bot_manager.add_bot(self):
             logging.debug("Auth okay, adding '%s' to botnet" % self.uuid)
             count = self.bot_manager.count_by_team(self.team_name)
@@ -161,7 +161,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         return response_xid == sha512(round1).hexdigest()
 
     def ping(self):
-        """ Just make sure we can write data to the socket """
+        """Just make sure we can write data to the socket"""
         try:
             self.write_message({"opcode": "ping"})
         except:
@@ -169,7 +169,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
             self.close()
 
     def send_error(self, msg):
-        """ Send the errors, and close socket """
+        """Send the errors, and close socket"""
         self.write_message({"opcode": "error", "message": msg})
         self.close()
 
@@ -195,7 +195,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
         logging.debug("Opened new monitor socket to %s" % self.request.remote_ip)
 
     def on_message(self, message):
-        """ Parse request """
+        """Parse request"""
         try:
             req = json.loads(message)
             if "opcode" not in req:
@@ -208,14 +208,14 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             logging.warning("Invalid json request from bot: %s" % str(error))
 
     def on_close(self):
-        """ Close connection to remote host """
+        """Close connection to remote host"""
         self.bot_manager.remove_monitor(self)
         logging.debug(
             "Closing connection to bot monitor at %s" % self.request.remote_ip
         )
 
     def auth(self, req):
-        """ Authenticate user """
+        """Authenticate user"""
         try:
             user = User.by_handle(req["handle"])
         except:
@@ -243,7 +243,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             self.close()
 
     def update(self, bots):
-        """ Called by the observable class """
+        """Called by the observable class"""
         self.write_message({"opcode": "update", "bots": bots})
 
     def ping(self):
@@ -251,7 +251,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
 
 
 class BotWebMonitorHandler(BaseHandler):
-    """ Just renders the html page for the web monitor """
+    """Just renders the html page for the web monitor"""
 
     @authenticated
     @use_bots
@@ -281,7 +281,7 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
             self.close()
 
     def open(self):
-        """ Only open sockets from authenticated clients """
+        """Only open sockets from authenticated clients"""
         user = self.get_current_user()
         if self.session is not None and ("team_id" in self.session or user.is_admin()):
             logging.debug(
@@ -311,22 +311,22 @@ class BotWebMonitorSocketHandler(BaseWebSocketHandler):
         logging.debug("%s is send us websocket messages." % user.handle)
 
     def update(self, boxes):
-        """ Called by observable class """
+        """Called by observable class"""
         self.write_message({"opcode": "update", "bots": boxes})
 
     def ping(self):
-        """ Send an update as a ping """
+        """Send an update as a ping"""
         bots = self.bot_manager.get_bots(self.team_name)
         self.update(bots)
 
     def on_close(self):
-        """ Close connection to remote host """
+        """Close connection to remote host"""
         if self.bot_manager is not None:
             self.bot_manager.remove_monitor(self)
 
 
 class BotDownloadHandler(BaseHandler):
-    """ Distributes bot binaries / scripts """
+    """Distributes bot binaries / scripts"""
 
     @authenticated
     @use_bots
@@ -341,7 +341,7 @@ class BotDownloadHandler(BaseHandler):
         self.finish()
 
     def windows(self):
-        """ Download Windows PE file """
+        """Download Windows PE file"""
         self.set_header("Content-Type", "application/exe")
         self.set_header("Content-disposition", "attachment; filename=rtb_bot.exe")
         if os.path.exists("bot/dist/bot.exe"):
@@ -356,7 +356,7 @@ class BotDownloadHandler(BaseHandler):
             self.generic()
 
     def generic(self):
-        """ Send them the generic python script """
+        """Send them the generic python script"""
         self.set_header("Content-Type", "text/x-python")
         self.set_header("Content-disposition", "attachment; filename=rtb_bot.py")
         if os.path.exists("bot/bot.py"):
@@ -366,7 +366,7 @@ class BotDownloadHandler(BaseHandler):
                 self.write(data)
 
     def monitor(self):
-        """ Send curses ui bot monitor """
+        """Send curses ui bot monitor"""
         self.set_header("Content-Type", "text/x-python")
         self.set_header("Content-disposition", "attachment; filename=botnet_monitor.py")
         if os.path.exists("bot/BotMonitor.py"):

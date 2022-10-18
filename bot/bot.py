@@ -930,7 +930,7 @@ def send_interrogation_response(ws, response):
 
 
 def recv_ping(ws, response, verbose=False):
-    """ Print that we just got a ping from c&c """
+    """Print that we just got a ping from c&c"""
     sys.stdout.write(chr(27) + "[2K" + "\r")
     sys.stdout.write(
         INFO + " %s  Ping  : Received a ping from command & control" % current_time()
@@ -953,7 +953,7 @@ def on_open(ws):
 
 
 def on_message(ws, message):
-    """ Parse message and call a function """
+    """Parse message and call a function"""
     try:
         response = json.loads(message)
         if "opcode" not in response:
@@ -983,7 +983,7 @@ def get_default_garbage():
 
 
 def main(domain, port, user, garbage_path, secure, verbose):
-    """ Main() """
+    """Main()"""
     garbage_cfg = ConfigParser.SafeConfigParser()
     if garbage_path is None:
         garbage_path = get_default_garbage()

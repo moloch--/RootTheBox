@@ -35,13 +35,13 @@ from libs.SecurityDecorators import authenticated, use_black_market, game_starte
 
 class MarketViewHandler(BaseHandler):
 
-    """ Renders views of items in the market """
+    """Renders views of items in the market"""
 
     @authenticated
     @game_started
     @use_black_market
     def get(self, *args, **kwargs):
-        """ Renders the main table """
+        """Renders the main table"""
         user = self.get_current_user()
         self.render("market/view.html", user=user, errors=None)
 
@@ -49,7 +49,7 @@ class MarketViewHandler(BaseHandler):
     @game_started
     @use_black_market
     def post(self, *args, **kwargs):
-        """ Called to purchase an item """
+        """Called to purchase an item"""
         uuid = self.get_argument("uuid", "")
         item = MarketItem.by_uuid(uuid)
         if item is not None:
@@ -84,7 +84,7 @@ class MarketViewHandler(BaseHandler):
             )
 
     def purchase_item(self, team, item):
-        """ Conducts the actual purchase of an item """
+        """Conducts the actual purchase of an item"""
         team.money -= abs(item.price)
         team.items.append(item)
         self.dbsession.add(team)
@@ -94,12 +94,12 @@ class MarketViewHandler(BaseHandler):
 
 class MarketDetailsHandler(BaseHandler):
 
-    """ Renders views of items in the market """
+    """Renders views of items in the market"""
 
     @authenticated
     @use_black_market
     def get(self, *args, **kwargs):
-        """ Get details on an item """
+        """Get details on an item"""
         uuid = self.get_argument("uuid", "")
         item = MarketItem.by_uuid(uuid)
         if item is None:

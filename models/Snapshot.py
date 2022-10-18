@@ -33,7 +33,7 @@ UNIX_EPOCH = datetime.datetime(year=1970, month=1, day=1)
 
 
 class Snapshot(DatabaseObject):
-    """ Snapshot of game data """
+    """Snapshot of game data"""
 
     # Has many 'SnapshotTeam' objects
     teams = relationship(
@@ -44,12 +44,12 @@ class Snapshot(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, identifier):
-        """ Returns a the object with id of identifier """
+        """Returns a the object with id of identifier"""
         return dbsession.query(cls).filter_by(id=identifier).first()
 
     @classmethod

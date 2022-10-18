@@ -12,7 +12,7 @@ from tornado.options import options
 
 
 class TestPublicHandlers(ApplicationTest):
-    """ Test functionality in handlers/PublicHandlers.py """
+    """Test functionality in handlers/PublicHandlers.py"""
 
     def test_home_page_get(self):
         rsp, body = self.get("/")

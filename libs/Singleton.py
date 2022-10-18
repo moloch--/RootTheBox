@@ -23,7 +23,7 @@ from builtins import object
 
 
 class Singleton(object):
-    """ Thread safe singleton """
+    """Thread safe singleton"""
 
     def __init__(self, decorated):
         self._decorated = decorated

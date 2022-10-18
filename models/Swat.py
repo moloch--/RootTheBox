@@ -47,7 +47,7 @@ class Swat(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
@@ -97,27 +97,27 @@ class Swat(DatabaseObject):
 
     @classmethod
     def by_id(cls, ident):
-        """ Returns a the object with id of ident """
+        """Returns a the object with id of ident"""
         return dbsession.query(cls).filter_by(id=ident).first()
 
     @classmethod
     def by_uuid(cls, uuid):
-        """ Returns a the object with given uuid"""
+        """Returns a the object with given uuid"""
         return dbsession.query(cls).filter_by(uuid=uuid).first()
 
     @classmethod
     def by_user_id(cls, uid):
-        """ Return all objects based on user id """
+        """Return all objects based on user id"""
         return dbsession.query(cls).filter_by(user_id=uid).all()
 
     @classmethod
     def by_target_id(cls, uid):
-        """ Return all objects based on target id """
+        """Return all objects based on target id"""
         return dbsession.query(cls).filter_by(target_id=uid).all()
 
     @classmethod
     def count_completed_by_target_id(cls, uid):
-        """ Return the number of completed bribes in database """
+        """Return the number of completed bribes in database"""
         return (
             dbsession.query(cls)
             .filter(and_(cls.completed == True, cls.target_id == uid))
@@ -126,12 +126,12 @@ class Swat(DatabaseObject):
 
     @classmethod
     def ordered(cls):
-        """ Return all bribes in chronological order """
+        """Return all bribes in chronological order"""
         return dbsession.query(cls).order_by(desc(cls.created)).all()
 
     @classmethod
     def ordered_by_user_id(cls, uid):
-        """ Return all bribes for user id in chronological order """
+        """Return all bribes for user id in chronological order"""
         return (
             dbsession.query(cls)
             .filter_by(user_id=uid)
@@ -141,7 +141,7 @@ class Swat(DatabaseObject):
 
     @classmethod
     def ordered_by_target_id(cls, uid):
-        """ Return all bribes for target id in chronological order """
+        """Return all bribes for target id in chronological order"""
         return (
             dbsession.query(cls)
             .filter_by(target_id=uid)
@@ -151,7 +151,7 @@ class Swat(DatabaseObject):
 
     @classmethod
     def get_price(cls, user):
-        """ Calculate price of next bribe based on history """
+        """Calculate price of next bribe based on history"""
         base_price = options.bribe_cost
         return base_price + (cls.count_completed_by_target_id(user.id) * base_price)
 
@@ -164,7 +164,7 @@ class Swat(DatabaseObject):
 
     @classmethod
     def user_is_in_progress(cls, user):
-        """ Returns bool based on if a user had a bribe in progress """
+        """Returns bool based on if a user had a bribe in progress"""
         return 0 < len(cls.in_progress_by_target_id(user.id))
 
     @property

@@ -36,15 +36,15 @@ from builtins import str
 
 
 ### Constants ###
-SUCCESS = u"/static/images/success.png"
-INFO = u"/static/images/info.png"
-WARNING = u"/static/images/warning.png"
-ERROR = u"/static/images/error.png"
+SUCCESS = "/static/images/success.png"
+INFO = "/static/images/info.png"
+WARNING = "/static/images/warning.png"
+ERROR = "/static/images/error.png"
 
 
 class Notification(DatabaseObject):
 
-    """ Notification definition """
+    """Notification definition"""
 
     user_id = Column(Integer, ForeignKey("user.id"))
     title = Column(Unicode(256), nullable=False)
@@ -54,29 +54,29 @@ class Notification(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).filter_by(user_id=None).all()
 
     @classmethod
     def admin(cls):
-        """ Returns a list of unique notifications in the database """
+        """Returns a list of unique notifications in the database"""
         return dbsession.query(
             cls.created, cls.icon_url, cls.message, cls.title
         ).distinct()
 
     @classmethod
     def clear(cls):
-        """ Deletes all objects in the database """
+        """Deletes all objects in the database"""
         return dbsession.query(cls).delete()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_user_id(cls, _id):
-        """ Return notifications for a single user """
+        """Return notifications for a single user"""
         return (
             dbsession.query(cls)
             .filter_by(user_id=_id)
@@ -86,7 +86,7 @@ class Notification(DatabaseObject):
 
     @classmethod
     def unread_by_user_id(cls, user_id):
-        """ Return all notification which have not been viewed """
+        """Return all notification which have not been viewed"""
         return (
             dbsession.query(cls)
             .filter(and_(cls.user_id == user_id, cls.viewed == False))
@@ -118,7 +118,7 @@ class Notification(DatabaseObject):
 
     @classmethod
     def _create(cls, user, title, message, icon=None):
-        """ Create a notification and save it to the database """
+        """Create a notification and save it to the database"""
         logging.debug("Creating notification '%s' for %r" % (title, user))
         icon = icon if icon is not None else INFO
         notification = Notification(
@@ -130,5 +130,5 @@ class Notification(DatabaseObject):
         return notification
 
     def to_dict(self):
-        """ Return public data as dict """
+        """Return public data as dict"""
         return {"title": self.title, "message": self.message, "icon_url": self.icon_url}

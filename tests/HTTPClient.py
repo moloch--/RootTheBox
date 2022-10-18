@@ -54,7 +54,7 @@ class ApplicationTest(AsyncHTTPTestCase):
         return self._fetch(path, method="GET", **kwargs)
 
     def post(self, path, authenticated=False, **kwargs):
-        """ Automatically adds the _xsrf tokens """
+        """Automatically adds the _xsrf tokens"""
         if authenticated:
             self._login(self.username, self.password)
         if "data" not in kwargs:
@@ -64,7 +64,7 @@ class ApplicationTest(AsyncHTTPTestCase):
         return self._fetch(path, method="POST", **kwargs)
 
     def _login(self, username, password):
-        """ Login to the web app and obtain a session_id cookie """
+        """Login to the web app and obtain a session_id cookie"""
         try:
             form = {"username": username, "password": password}
             self.post("/login", data=form, follow_redirects=False)
@@ -74,7 +74,7 @@ class ApplicationTest(AsyncHTTPTestCase):
             logging.exception("Login failed")
 
     def _fetch(self, path, **kwargs):
-        """ Little wrapper to make .fetch easier """
+        """Little wrapper to make .fetch easier"""
         data = kwargs.get("data", "")
         if data:
             kwargs.pop("data")
@@ -93,7 +93,7 @@ class ApplicationTest(AsyncHTTPTestCase):
         return _headers
 
     def _form_encode(self, data):
-        """ URLEncode parameters """
+        """URLEncode parameters"""
         _data = []
         for name, param in list(data.items()):
             _data.append("%s=%s" % (quote_plus(name), quote_plus(param)))

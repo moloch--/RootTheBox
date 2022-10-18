@@ -60,7 +60,7 @@ class StaticFileHandler(DefaultStaticHandler):
             self.add_header("Strict-Transport-Security", "max-age=31536000;")
 
     def write_error(self, status_code, **kwargs):
-        """ Render a generic error page """
+        """Render a generic error page"""
         logging.error(
             "Static file request from %s resulted in %d status"
             % (self.request.remote_ip, status_code)

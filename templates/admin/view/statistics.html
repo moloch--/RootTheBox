@@ -97,16 +97,16 @@
             <div style="margin-left: 50px; vertical-align: middle;">
                 <input type="hidden" id="answer-flag-uuid" name="flag_uuid" value="" />
                 <input type="hidden" id="answer-team-uuid" name="team_uuid" value="" />
+                <input type="hidden" id="answer-user-uuid" name="user_uuid" value="" />
                 <input type="hidden" id="answer-token" name="answer_token" value="" />
                 <p>
                     <input id="acceptanswer" name="accept_answer" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> {{ _("Add the answer as an acceptable flag token") }}.
                 </p>
-                {% if options.penalize_flag_value %}
                 <p id="pointrestore">
-                    <input name="point_restore" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> {{ _("Restore the penalty loss to the ") }}
-                    {% if options.teams %}team{% else %}player{% end %} ({% if options.banking %}${% end %}<span id="answer-penalty"></span>{% if not options.banking %} points{% end %}).
+                    <input name="point_restore" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> 
+                    {{ _("If not captured, award flag and") }} {% if options.banking %}{{ _("money") }}{% else %}{{ _("points") }}{% end %}.
+                    {% if options.penalize_flag_value %}{{ _("Restore the penalty cost") }}{% end %}
                 </p>
-                {% end %}
             </div>
             </form>
         </div>
@@ -129,7 +129,7 @@
     <!-- Start Visible -->
     <div class="row-fluid">
         <div class="span2">
-            <ul class="nav nav-tabs nav-stacked affix well">
+            <ul id="navWrapper" class="nav nav-tabs nav-stacked affix well">
                 {% if len(Corporation.all()) > 1 %}
                     <center>
                         <strong>
@@ -155,7 +155,7 @@
                     </strong>
                 </center>
                 <br />
-                {% for box in Box.all() %}
+                {% for box in sorted(Box.all()) %}
                     <li>
                         <a href="#{{ box.uuid }}">
                             <i class="icon-chevron-right"></i>
@@ -202,7 +202,7 @@
                     <br />
             {% end %}
                     {% if len(corporation.boxes) != 0 %}
-                        {% for box in corporation.boxes %}
+                        {% for box in sorted(corporation.boxes) %}
                             <div id="{{ box.uuid }}" class="well">
 
                                
@@ -231,7 +231,7 @@
                                             </thead>
                                             <tbody>
                                                 {% set teamcount = Team.count() %}
-                                                {% for index, flag in enumerate(box.flags) %}
+                                                {% for index, flag in enumerate(sorted(box.flags)) %}
                                                     <tr>
                                                         {% set captures = len(Flag.team_captures(flag.id)) %}
                                                         <td class="shortcolumn">{{ index + 1 }}</td>

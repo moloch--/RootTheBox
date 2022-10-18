@@ -59,7 +59,7 @@ from builtins import (  # noqa: E402
 
 
 class Box(DatabaseObject):
-    """ Box definition """
+    """Box definition"""
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
@@ -76,6 +76,7 @@ class Box(DatabaseObject):
     _avatar = Column(String(64))
     _value = Column(Integer, nullable=True)
     _locked = Column(Boolean, default=False, nullable=False)
+    _order = Column(Integer, nullable=True, index=True)
 
     garbage = Column(
         String(32),
@@ -113,32 +114,32 @@ class Box(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
-        return dbsession.query(cls).all()
+        """Returns a list of all objects in the database"""
+        return sorted(dbsession.query(cls).all())
 
     @classmethod
     def unlocked(cls):
-        """ Return a list of all unlocked objects in the database """
+        """Return a list of all unlocked objects in the database"""
         return dbsession.query(cls).filter_by(_locked=False).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        """ Return and object based on a uuid """
+        """Return and object based on a uuid"""
         return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_name(cls, name):
-        """ Return the box object whose name is "name" """
+        """Return the box object whose name is "name" """
         return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def by_category(cls, _cat_id):
-        """ Return the box object whose category is "_cat_id" """
+        """Return the box object whose category is "_cat_id" """
         return dbsession.query(cls).filter_by(category_id=int(_cat_id)).all()
 
     @classmethod
@@ -162,6 +163,18 @@ class Box(DatabaseObject):
         for flag in flags:
             flaglist[flag.uuid] = flag.name
         return flaglist
+
+    @property
+    def corporation(self):
+        return Corporation.by_id(self.corporation_id)
+
+    @property
+    def game_level(self):
+        return GameLevel.by_id(self.game_level_id)
+
+    @property
+    def category(self):
+        return Category.by_id(self.category_id)
 
     @property
     def flags(self):
@@ -188,6 +201,30 @@ class Box(DatabaseObject):
         if not 3 <= len(str(value)) <= 32:
             raise ValidationError("Name must be 3 - 32 characters")
         self._name = str(value)
+
+    @property
+    def order(self):
+        if not self._order:
+            self._order = self.id
+        return self._order
+
+    @order.setter
+    def order(self, value):
+        if not value:
+            return
+        value = int(value)
+        if value == self.order:
+            return
+        i = 1
+        boxes = self.all()
+        for box in boxes:
+            if i == value:
+                i += 1
+            if self == box:
+                self._order = value
+            else:
+                box._order = i
+                i += 1
 
     @property
     def operating_system(self):
@@ -260,14 +297,14 @@ class Box(DatabaseObject):
 
     @property
     def locked(self):
-        """ Determines if an admin has locked an box. """
+        """Determines if an admin has locked an box."""
         if self._locked == None:
             return False
         return self._locked
 
     @locked.setter
     def locked(self, value):
-        """ Setter method for _lock """
+        """Setter method for _lock"""
         if value is None:
             value = False
         elif isinstance(value, int):
@@ -319,12 +356,12 @@ class Box(DatabaseObject):
 
     @property
     def ipv4s(self):
-        """ Return a list of all ipv4 addresses """
+        """Return a list of all ipv4 addresses"""
         return [ip for ip in self.ip_addresses if ip.version == 4]
 
     @property
     def ipv6s(self):
-        """ Return a list of all ipv6 addresses """
+        """Return a list of all ipv6 addresses"""
         return [ip for ip in self.ip_addresses if ip.version == 6]
 
     @property
@@ -351,7 +388,7 @@ class Box(DatabaseObject):
         return boxcomplete
 
     def to_xml(self, parent):
-        """ Convert object to XML """
+        """Convert object to XML"""
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", "%s" % str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
@@ -393,10 +430,8 @@ class Box(DatabaseObject):
             ET.SubElement(box_elem, "avatar").text = "none"
 
     def to_dict(self):
-        """ Returns editable data as a dictionary """
-        corp = Corporation.by_id(self.corporation_id)
-        game_level = GameLevel.by_id(self.game_level_id)
-        cat = Category.by_id(self.category_id)
+        """Returns editable data as a dictionary"""
+        cat = self.category
         if cat:
             category = cat.uuid
         else:
@@ -404,16 +439,17 @@ class Box(DatabaseObject):
         return {
             "name": self.name,
             "uuid": self.uuid,
-            "corporation": corp.uuid,
+            "corporation": self.corporation.uuid,
             "category": category,
             "operating_system": self.operating_system,
             "description": self._description,
             "capture_message": self.capture_message,
             "difficulty": self.difficulty,
-            "game_level": game_level.uuid,
+            "game_level": self.game_level.uuid,
             "flag_submission_type": self.flag_submission_type,
             "flaglist": self.flaglist(self.id),
             "value": str(self.value),
+            "order": str(self.order),
             "locked": str(self.locked),
         }
 
@@ -422,3 +458,31 @@ class Box(DatabaseObject):
 
     def __str__(self):
         return self.name
+
+    def __cmp__(self, other):
+        """Compare based on the order"""
+        this, that = self.order, other.order
+        if this > that:
+            return 1
+        elif this == that:
+            return 0
+        else:
+            return -1
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __gt__(self, other):
+        return self.__cmp__(other) > 0
+
+    def __lt__(self, other):
+        return self.__cmp__(other) < 0
+
+    def __ge__(self, other):
+        return self.__cmp__(other) >= 0
+
+    def __le__(self, other):
+        return self.__cmp__(other) <= 0

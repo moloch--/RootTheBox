@@ -299,6 +299,7 @@ Game Level,مستوى اللعبة
 Game Levels,مستويات اللعبة
 Game Management,إدارة اللعبة
 Game Materials,مواد اللعبة
+Game Metrics,مقاييس اللعبة
 Game Name,اسم اللعبة
 Game Progress,تقدم اللعبة
 Garbage File,ملف القمامة
@@ -629,6 +630,9 @@ Token Value,قيمة الرمز
 Tools,أدوات
 Tools & Upgrades,أدوات وترقيات
 Total Cash Stolen,مجموع النقدية المسروقة
+Total Users,إجمالي المستخدمين
+Total Teams,مجموع الفرق
+Total Boxes,مجموع الصناديق
 Type,نوع
 Unknown,غير معروف
 Unlock,فتح

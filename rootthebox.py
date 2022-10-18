@@ -40,12 +40,12 @@ from setup import __version__
 
 
 def current_time():
-    """ Nicely formatted current time as a string """
+    """Nicely formatted current time as a string"""
     return str(datetime.now()).split(" ")[1].split(".")[0]
 
 
 def start():
-    """ Update the database schema """
+    """Update the database schema"""
     try:
         from handlers import update_db
 
@@ -130,7 +130,7 @@ def setup():
 
 
 def recovery():
-    """ Starts the recovery console """
+    """Starts the recovery console"""
     from setup.recovery import RecoveryConsole
 
     print(INFO + "%s : Starting recovery console ..." % current_time())
@@ -142,7 +142,7 @@ def recovery():
 
 
 def setup_xml(xml_params):
-    """ Imports XML file(s) """
+    """Imports XML file(s)"""
     from setup.xmlsetup import import_xml
 
     for index, xml_param in enumerate(xml_params):
@@ -154,7 +154,7 @@ def setup_xml(xml_params):
 
 
 def generate_teams(num_teams):
-    """ Generates teams by number """
+    """Generates teams by number"""
     from models import Team, dbsession
 
     for i in range(0, num_teams):
@@ -166,7 +166,7 @@ def generate_teams(num_teams):
 
 
 def generate_teams_by_name(team_names):
-    """ Generates teams by their names """
+    """Generates teams by their names"""
     from models import Team, dbsession
 
     for i in range(0, len(team_names)):
@@ -178,7 +178,7 @@ def generate_teams_by_name(team_names):
 
 
 def generate_admins(admin_names):
-    """ Creates admin users with the syntax '<handle> <email> <password>' """
+    """Creates admin users with the syntax '<handle> <email> <password>'"""
     from models import User, Permission, dbsession
     from models.User import ADMIN_PERMISSION
 
@@ -200,7 +200,7 @@ def generate_admins(admin_names):
 
 
 def tests():
-    """ Creates a temporary sqlite database and runs the unit tests """
+    """Creates a temporary sqlite database and runs the unit tests"""
     print(INFO + "%s : Running unit tests ..." % current_time())
     from tests import setup_database, teardown_database
 
@@ -221,7 +221,7 @@ def restart():
 
 
 def update():
-    """ Update RTB to the latest repository code. """
+    """Update RTB to the latest repository code."""
     os.system("git pull")
 
 
@@ -235,7 +235,7 @@ def version():
 
 
 def check_cwd():
-    """ Checks to make sure the cwd is the application root directory """
+    """Checks to make sure the cwd is the application root directory"""
     app_root = os.path.dirname(os.path.abspath(__file__))
     if app_root != os.getcwd():
         print(INFO + "Switching CWD to '%s'" % app_root)
@@ -869,6 +869,14 @@ define(
     group="game",
     help="Visibility of the Scoreboard - public, players, admins",
     type=game_type,
+)
+
+define(
+    "scoreboard_lazy_update",
+    default=False,
+    group="game",
+    help="Skips aggressive gamestate update on scoreboard refresh",
+    type=bool,
 )
 
 define(

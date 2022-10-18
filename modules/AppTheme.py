@@ -30,7 +30,7 @@ class AppTheme(UIModule):
     theme = Theme.by_name(options.default_theme)
 
     def render(self, *args, **kwargs):
-        """ Includes different CSS themes based on user prefs """
+        """Includes different CSS themes based on user prefs"""
 
         if (
             options.allow_user_to_change_theme

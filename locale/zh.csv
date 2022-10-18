@@ -292,6 +292,16 @@ Flags Captured,Flag已获取
 Flags on,Flag启用
 for,对于
 Forbidden,禁止
+Game,游戏
+Game Control,游戏控制
+Game Information,游戏信息
+Game Level,游戏等级
+Game Levels,游戏关卡
+Game Management,游戏管理
+Game Materials,游戏资料
+Game Metrics,游戏指标
+Game Name,游戏名称
+Game Progress,游戏进展
 Game,竞赛
 Game Control,竞赛控制
 Game Information,竞赛信息
@@ -629,6 +639,9 @@ Token Value,令牌值
 Tools,工具
 Tools & Upgrades,工具和升级
 Total Cash Stolen,总被盗现金
+Total Users,总用户
+Total Teams,团队总数
+Total Boxes,总箱数
 Type,类型
 Unknown,未知
 Unlock,解锁

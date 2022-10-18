@@ -41,32 +41,32 @@ class WallOfSheep(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns all team objects """
+        """Returns all team objects"""
         return dbsession.query(cls).all()
 
     @classmethod
     def all_order_created(cls):
-        """ Returns all team objects """
+        """Returns all team objects"""
         return dbsession.query(cls).order_by(desc(cls.created)).all()
 
     @classmethod
     def all_order_value(cls):
-        """ Returns all team objects """
+        """Returns all team objects"""
         return dbsession.query(cls).order_by(desc(cls.value)).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_victim_id(cls, _id):
-        """ Returns all entries for a _id """
+        """Returns all entries for a _id"""
         return dbsession.query(cls).filter_by(victim_id=_id).all()
 
     @classmethod
     def by_cracker_id(cls, _id):
-        """ Returns all entries for cracker_id """
+        """Returns all entries for cracker_id"""
         return dbsession.query(cls).filter_by(cracker_id=_id).all()
 
     @classmethod
@@ -97,16 +97,16 @@ class WallOfSheep(DatabaseObject):
 
     @property
     def victim(self):
-        """ Returns display name of user """
+        """Returns display name of user"""
         return User.by_id(self.victim_id)
 
     @property
     def cracker(self):
-        """ Returns display name of cracker """
+        """Returns display name of cracker"""
         return User.by_id(self.cracker_id)
 
     def __cmp__(self, other):
-        """ Used for sorting """
+        """Used for sorting"""
         return len(self) - len(other)
 
     def __eq__(self, other):

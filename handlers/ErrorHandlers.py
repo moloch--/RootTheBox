@@ -27,37 +27,37 @@ from handlers.BaseHandlers import BaseHandler
 
 class NotFoundHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the 404 page """
+        """Renders the 404 page"""
         self.render("public/404.html")
 
     def post(self, *args, **kwargs):
-        """ Renders the 404 page """
+        """Renders the 404 page"""
         self.render("public/404.html")
 
     def put(self, *args, **kwargs):
-        """ Log odd behavior, this should never get legitimately called """
+        """Log odd behavior, this should never get legitimately called"""
         logging.warning("%s attempted to use PUT method" % self.request.remote_ip)
         self.render("public/404.html")
 
     def delete(self, *args, **kwargs):
-        """ Log odd behavior, this should never get legitimately called """
+        """Log odd behavior, this should never get legitimately called"""
         logging.warning("%s attempted to use DELETE method" % self.request.remote_ip)
         self.render("public/404.html")
 
     def head(self, *args, **kwargs):
-        """ Log odd behavior, this should never get legitimately called """
+        """Log odd behavior, this should never get legitimately called"""
         logging.warning("%s attempted to use HEAD method" % self.request.remote_ip)
         self.render("public/404.html")
 
     def options(self, *args, **kwargs):
-        """ Log odd behavior, this should never get legitimately called """
+        """Log odd behavior, this should never get legitimately called"""
         logging.warning("%s attempted to use OPTIONS method" % self.request.remote_ip)
         self.render("public/404.html")
 
 
 class UnauthorizedHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the 403 page """
+        """Renders the 403 page"""
         self.clear_content_policy("object")
         self.add_content_policy("object", "'self'")
         try:
@@ -70,7 +70,7 @@ class UnauthorizedHandler(BaseHandler):
 
 class StopHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the Game Stopped page """
+        """Renders the Game Stopped page"""
         self.render(
             "public/stopped.html", errors=None, info=["The game is currently stopped."]
         )
@@ -78,7 +78,7 @@ class StopHandler(BaseHandler):
 
 class NoobHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        """ Renders the noob page """
+        """Renders the noob page"""
         if self.session is not None:
             user = self.get_current_user()
             logging.info(

@@ -31,7 +31,7 @@ class Menu(UIModule):
     #       to avoid having to go to the database to render the menu.
 
     def render(self, *args, **kwargs):
-        """ Renders the top menu """
+        """Renders the top menu"""
         if self.handler.session is not None:
             user = User.by_id(self.handler.session["user_id"])
         else:

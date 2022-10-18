@@ -58,14 +58,14 @@ from past.builtins import basestring
 
 
 # Constants
-ADMIN_PERMISSION = u"admin"
-DEFAULT_HASH_ALGORITHM = u"md5"
+ADMIN_PERMISSION = "admin"
+DEFAULT_HASH_ALGORITHM = "md5"
 ITERATE = 0x2BAD  # 11181
 
 
 class User(DatabaseObject):
 
-    """ User definition """
+    """User definition"""
 
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
@@ -111,33 +111,33 @@ class User(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
     def all_users(cls):
-        """ Return all non-admin user objects """
+        """Return all non-admin user objects"""
         return [user for user in cls.all() if user.is_admin() is False]
 
     @classmethod
     def not_team(cls, tid):
-        """ Return all users not on a given team, exclude admins """
+        """Return all users not on a given team, exclude admins"""
         teams = dbsession.query(cls).filter(cls.team_id != tid).all()
         return [user for user in teams if user.is_admin() is False]
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        """ Return and object based on a uuid """
+        """Return and object based on a uuid"""
         return dbsession.query(cls).filter_by(uuid=str(_uuid)).first()
 
     @classmethod
     def by_email(cls, email):
-        """ Return an object based on a email """
+        """Return an object based on a email"""
         if email and len(email) > 0:
             return (
                 dbsession.query(cls)
@@ -149,7 +149,7 @@ class User(DatabaseObject):
 
     @classmethod
     def by_handle(cls, handle, case_sensitive=True):
-        """ Return the user object whose user is "_handle" """
+        """Return the user object whose user is "_handle" """
         handle = str(handle).strip()
         if case_sensitive:
             return dbsession.query(cls).filter_by(_handle=handle).first()
@@ -182,7 +182,7 @@ class User(DatabaseObject):
 
     @classmethod
     def ranks(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).order_by(desc(cls.money)).all()
 
     @property
@@ -293,12 +293,12 @@ class User(DatabaseObject):
 
     @property
     def permissions_all(self):
-        """ Return a set with all permissions granted to the user """
+        """Return a set with all permissions granted to the user"""
         return dbsession.query(Permission).filter_by(user_id=self.id)
 
     @property
     def permissions_names(self):
-        """ Return a list with all permissions accounts granted to the user """
+        """Return a list with all permissions accounts granted to the user"""
         return [permission.name for permission in self.permissions_all]
 
     @property
@@ -314,7 +314,7 @@ class User(DatabaseObject):
 
     @locked.setter
     def locked(self, value):
-        """ Setter method for _lock """
+        """Setter method for _lock"""
         assert isinstance(value, bool)
         if not self.is_admin():
             self._locked = value
@@ -367,14 +367,14 @@ class User(DatabaseObject):
             )
 
     def has_item(self, item_name):
-        """ Check to see if a team has purchased an item """
+        """Check to see if a team has purchased an item"""
         item = MarketItem.by_name(item_name)
         if item is None:
             raise ValueError("Item '%s' not in database." % str(item_name))
         return True if self.team and item in self.team.items else False
 
     def has_permission(self, permission):
-        """ Return True if 'permission' is in permissions_names """
+        """Return True if 'permission' is in permissions_names"""
         return True if permission in self.permissions_names else False
 
     def is_admin(self):
@@ -401,14 +401,14 @@ class User(DatabaseObject):
         return self.is_email_valid()
 
     def validate_password(self, attempt):
-        """ Check the password against existing credentials """
+        """Check the password against existing credentials"""
         if self._password is not None:
             return self.password == PBKDF2.crypt(attempt, self.password)
         else:
             return False
 
     def validate_bank_password(self, attempt):
-        """ Check the bank password against existing credentials """
+        """Check the bank password against existing credentials"""
         if self._bank_password is not None:
             result = self._hash_bank_password(self.algorithm, attempt)
             return self.bank_password == result
@@ -435,12 +435,12 @@ class User(DatabaseObject):
         return self.notifications.sort(key=lambda notify: notify.created)[:limit]
 
     def next_algorithm(self):
-        """ Returns next algo """
+        """Returns next algo"""
         current = self.get_algorithm(self.algorithm)
         return self.get_algorithm(current[1] + 1)
 
     def get_algorithm(self, index):
-        """ Return algorithm tuple based on string or int """
+        """Return algorithm tuple based on string or int"""
         if isinstance(index, basestring) and index in self.algorithms:
             return self.algorithms[index]
         elif isinstance(index, int):  # Find by numeric index
@@ -450,7 +450,7 @@ class User(DatabaseObject):
         return None
 
     def to_dict(self):
-        """ Return user data as dictionary """
+        """Return user data as dictionary"""
         return {
             "uuid": self.uuid,
             "handle": self.handle,

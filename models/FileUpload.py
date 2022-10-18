@@ -35,7 +35,7 @@ from libs.StringCoding import encode, decode
 from builtins import str
 
 
-MAX_FILE_SIZE = 50 * (1024 ** 2)  # Max file size 50Mb
+MAX_FILE_SIZE = 50 * (1024**2)  # Max file size 50Mb
 
 
 class FileUpload(DatabaseObject):
@@ -54,12 +54,12 @@ class FileUpload(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod

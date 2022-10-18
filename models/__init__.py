@@ -24,7 +24,7 @@ import logging
 
 from tornado.options import options
 from sqlalchemy import event, create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.engine import Engine
 from contextlib import contextmanager
 from libs.DatabaseConnection import DatabaseConnection
@@ -73,7 +73,8 @@ else:
 
 ### Setup the database session
 engine = create_engine(str(db_connection), pool_pre_ping=True)
-_Session = sessionmaker(bind=engine)
+session_maker = sessionmaker(bind=engine)
+_Session = scoped_session(session_maker)
 StartSession = lambda: _Session(autoflush=True)
 
 dbsession = StartSession()
@@ -99,7 +100,7 @@ if options.rocketchat_admin:
 
 @contextmanager
 def cxt_dbsession():
-    """ Provide a transactional scope around a series of operations. """
+    """Provide a transactional scope around a series of operations."""
     session = StartSession()
     try:
         yield session

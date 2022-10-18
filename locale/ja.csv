@@ -299,6 +299,7 @@ Game Level,ゲームレベル
 Game Levels,ゲームレベル
 Game Management,ゲーム管理
 Game Materials,ゲーム素材
+Game Metrics,ゲームの指標
 Game Name,ゲーム名
 Game Progress,ゲームの進行
 Garbage File,ごみファイル
@@ -629,6 +630,9 @@ Token Value,トークン値
 Tools,道具
 Tools & Upgrades,ツールとアップグレード
 Total Cash Stolen,盗まれた現金の合計
+Total Users,総ユーザー数
+Total Teams,合計チーム
+Total Boxes,合計ボックス
 Type,タイプ
 Unknown,道の
 Unlock,ロック解除

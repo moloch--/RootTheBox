@@ -31,7 +31,7 @@ from datetime import datetime, timedelta
 
 
 class EmailToken(DatabaseObject):
-    """ Email verification token definition """
+    """Email verification token definition"""
 
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     value = Column(String(64), unique=True, nullable=False)
@@ -39,25 +39,25 @@ class EmailToken(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Returns a the object with id of _id """
+        """Returns a the object with id of _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_user_id(cls, user_id):
-        """ Returns a the object with id of user_id """
+        """Returns a the object with id of user_id"""
         return dbsession.query(cls).filter_by(user_id=user_id).first()
 
     @classmethod
     def count(cls):
-        """ Returns a list of all objects in the database """
+        """Returns a list of all objects in the database"""
         return dbsession.query(cls).count()
 
     @classmethod
     def by_value(cls, value):
-        """ Returns a the object with value of value """
+        """Returns a the object with value of value"""
         return dbsession.query(cls).filter_by(value=value).first()

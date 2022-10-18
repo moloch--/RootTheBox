@@ -289,7 +289,7 @@ def load_history():
 
 # Main entry point
 def start_server():
-    """ Main entry point for the application """
+    """Main entry point for the application"""
     locale.set_default_locale("en_US")
     locale.load_translations("locale")
     if options.autostart_game:
@@ -329,16 +329,17 @@ def start_server():
         logging.warning(
             "%sDebug mode is enabled; DO NOT USE THIS IN PRODUCTION%s" % (bold + R, W)
         )
-    if options.autostart_game:
-        logging.info("The game is about to begin, good hunting!")
     try:
-        Scoreboard.update_gamestate(app)
+        logging.info("Building Scoreboard Gamestate...")
+        Scoreboard.update_gamestate(app, background=False)
     except OperationalError as err:
         if "Table definition has changed" in str(err):
             logging.info("Table definitions have changed -restarting RootTheBox.")
             return "restart"
         else:
             logging.error("There was a problem starting RootTheBox. Error: " + str(err))
+    if options.autostart_game:
+        logging.info("The game is about to begin, good hunting!")
     try:
         io_loop.start()
     except KeyboardInterrupt:

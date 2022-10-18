@@ -43,7 +43,7 @@ class ThemeFile(DatabaseObject):
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):
-        """ Remove any non-white listed chars from a string """
+        """Remove any non-white listed chars from a string"""
         char_white_list = ascii_letters + digits + extra_chars
         return "".join([char for char in string if char in char_white_list])
 
@@ -76,27 +76,27 @@ class Theme(DatabaseObject):
 
     @classmethod
     def all(cls):
-        """ Return all objects """
+        """Return all objects"""
         return dbsession.query(cls).all()
 
     @classmethod
     def by_id(cls, _id):
-        """ Return the object whose id is _id """
+        """Return the object whose id is _id"""
         return dbsession.query(cls).filter_by(id=_id).first()
 
     @classmethod
     def by_uuid(cls, _uuid):
-        """ Return the object whose uuid is _uuid """
+        """Return the object whose uuid is _uuid"""
         return dbsession.query(cls).filter_by(uuid=_uuid).first()
 
     @classmethod
     def by_name(cls, name):
-        """ Return the object whose name is _name """
+        """Return the object whose name is _name"""
         return dbsession.query(cls).filter_by(_name=str(name)).first()
 
     @classmethod
     def _filter_string(cls, string, extra_chars=""):
-        """ Remove any non-white listed chars from a string """
+        """Remove any non-white listed chars from a string"""
         char_white_list = ascii_letters + digits + extra_chars
         return "".join([char for char in string if char in char_white_list])
 

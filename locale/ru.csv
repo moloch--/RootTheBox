@@ -299,6 +299,7 @@ Game Level,Уровень игры,
 Game Levels,Уровни игры,
 Game Management,Управление игрой,
 Game Materials,Игровые материалы,
+Game Metrics,Метрики игры
 Game Name,Название игры,
 Game Progress,Прогресс игры,
 Garbage File,Файл мусора,
@@ -629,6 +630,9 @@ Token Value,Значение токена,
 Tools,инструменты,
 Tools & Upgrades,Инструменты и обновления,
 Total Cash Stolen,Всего украдено,
+Total Users,Всего пользователей
+Total Teams,Всего команд
+Total Boxes,Всего ящиков
 Type,Тип,
 Unknown,неизвестный,
 Unlock,отпереть,

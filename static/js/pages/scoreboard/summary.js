@@ -78,6 +78,9 @@ $(document).ready(function() {
                     $("a[id^=team-details-button]").click(function() {
                         window.location = "/teams#" + $(this).data("uuid");
                     });
+                    $("a[id^=user-details-button]").click(function() {
+                        window.location = "/user?id=" + $(this).data("uuid");
+                    }); 
                 });
                 if ($("#mvp_table").length > 0) {
                     /* Update MVP Table */

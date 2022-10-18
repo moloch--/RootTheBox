@@ -19,7 +19,7 @@
 <div class="row-fluid">
     {% if not hide_scoreboard %}
     <div class="span2" />
-        <ul class="nav nav-tabs nav-stacked affix well">
+        <ul id="navWrapper" class="nav nav-tabs nav-stacked affix well">
             <center>
                 <strong>
                     <i class="fa fa-group"></i>
@@ -42,7 +42,7 @@
     <div class="span10">
         <div style="float:right; margin-top: -15px;">
             {% if teamcount > 0 %}
-                {% set pcount = ceil(teamcount / display) %}
+                {% set pcount = int(ceil(teamcount / float(display))) %}
                 
                 <div class="pagination" style="padding: 5px; margin-right: 75px">
                     <ul>

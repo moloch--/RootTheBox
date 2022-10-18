@@ -50,7 +50,7 @@ class _BotDatabaseObject(object):
 
     @declared_attr
     def __tablename__(self):
-        """ Converts class name from camel case to snake case """
+        """Converts class name from camel case to snake case"""
         name = self.__name__
         return str(
             name[0].lower()
@@ -65,7 +65,7 @@ BotDatabaseObject = declarative_base(cls=_BotDatabaseObject)
 
 
 class Bot(BotDatabaseObject):
-    """ Bot Class """
+    """Bot Class"""
 
     last_ping = Column(DateTime, default=datetime.now)
     wsock_uuid = Column(Unicode(36), nullable=False)
@@ -80,12 +80,12 @@ class Bot(BotDatabaseObject):
 
     @property
     def box(self):
-        """ Pull box object from persistent db """
+        """Pull box object from persistent db"""
         return dbsession.query(Box).by_uuid(self.box_uuid)
 
     @property
     def team(self):
-        """ Pull box object from persistent db """
+        """Pull box object from persistent db"""
         return dbsession.query(Box).by_uuid(self.box_uuid)
 
     def to_dict(self):
@@ -134,6 +134,17 @@ class BotManager(object):
         bots = self.botdb.query(Bot).filter_by(team_name=str(team)).all()
         return [self.botnet[bot.wsock_uuid] for bot in bots]
 
+    def count_all_teams(self):
+        from models.Team import Team
+
+        teams = Team.all()
+        botcount = {}
+        for team in teams:
+            botcount[team.uuid] = 0
+        for bot in self.botdb.query(Bot).all():
+            botcount[bot.team_uuid] += 1
+        return botcount
+
     def count_by_team(self, team):
         return len(self.by_team(team))
 
@@ -160,7 +171,7 @@ class BotManager(object):
             return False
 
     def save_bot(self, bot):
-        """ Save changes to a bot and flush """
+        """Save changes to a bot and flush"""
         self.botdb.add(bot)
         self.botdb.flush()
 
@@ -179,7 +190,7 @@ class BotManager(object):
             )
 
     def is_duplicate(self, bot_wsocket):
-        """ Check for duplicate bots """
+        """Check for duplicate bots"""
         assert bot_wsocket.team_uuid is not None
         assert bot_wsocket.box_uuid is not None
         return (
@@ -195,13 +206,13 @@ class BotManager(object):
         )
 
     def add_monitor(self, monitor_wsocket):
-        """ Add new monitor socket """
+        """Add new monitor socket"""
         if monitor_wsocket.team_name not in self.monitors:
             self.monitors[monitor_wsocket.team_name] = []
         self.monitors[monitor_wsocket.team_name].append(monitor_wsocket)
 
     def remove_monitor(self, monitor_wsocket):
-        """ Remove a monitor socket """
+        """Remove a monitor socket"""
         if (
             monitor_wsocket.team_name in self.monitors
             and monitor_wsocket in self.monitors[monitor_wsocket.team_name]
@@ -209,7 +220,7 @@ class BotManager(object):
             self.monitors[monitor_wsocket.team_name].remove(monitor_wsocket)
 
     def notify_monitors(self, team_name):
-        """ Update team monitors """
+        """Update team monitors"""
         if team_name in self.monitors and 0 < len(self.monitors[team_name]):
             logging.debug("Sending update to %s" % team_name)
             bots = self.get_bots(team_name)
@@ -217,17 +228,17 @@ class BotManager(object):
                 monitor.update(bots)
 
     def get_bots(self, team):
-        """ Get info on boxes for a team """
+        """Get info on boxes for a team"""
         bots = self.botdb.query(Bot).filter_by(team_name=str(team)).all()
         return [bot.to_dict() for bot in bots]
 
     def get_all_bots(self):
-        """ Get info on all bots"""
+        """Get info on all bots"""
         bots = self.botdb.query(Bot).all()
         return [bot.to_dict() for bot in bots]
 
     def add_rewards(self, team, reward):
-        """ Add rewards to bot records """
+        """Add rewards to bot records"""
         bots = self.botdb.query(Bot).filter_by(team_name=str(team)).all()
         for bot in bots:
             bot.total_reward += reward
@@ -240,7 +251,7 @@ class BotManager(object):
 
 
 def ping_bots():
-    """ Ping all websockets in database """
+    """Ping all websockets in database"""
     bot_manager = BotManager.instance()
     logging.debug("Pinging open botnet websockets")
 
