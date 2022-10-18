@@ -30,6 +30,7 @@ from threading import Thread
 from sqlalchemy.orm import scoped_session
 from models import dbsession, session_maker
 from models.Team import Team
+from models.User import User
 from models.Box import Box
 from models.Flag import Flag
 from models.Hint import Hint
@@ -66,9 +67,11 @@ class Scoreboard(object):
 
         game_levels = GameLevel.all(threadsession)
         teams = Team.ranks(threadsession)
+        users = User.ranks(threadsession)
         bots = BotManager.instance().count_all_teams()
         game_state = {
             "teams": OrderedDict(),
+            "users": OrderedDict(),
             "levels": {},
             "boxes": {},
             "hint_count": len(Hint.all()),
@@ -105,6 +108,10 @@ class Scoreboard(object):
             app.settings["scoreboard_history"][team.name] = game_state["teams"].get(
                 team.name
             )
+        for user in users:
+            game_state["users"][user.handle] = {
+                "money": user.money
+            }
         for level in game_levels:
             game_state["levels"][level.name] = {
                 "type": level.type,

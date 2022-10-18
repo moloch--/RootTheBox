@@ -1,10 +1,10 @@
 {% from tornado.options import options %}
 <!-- users ranked by money -->
 {% for index, user in enumerate(users) %}
-    {% if user.money > 0 and not user.locked %}
+    {% if users[user].get("money") > 0 %}
     <tr style="padding-top: 5px;">
-        <td>{{ user.handle }}</td>
-        <td class="summarycolumn" style="font-size: large; text-align: center; width: 75px;">{% if options.banking %}{{ _("$") }}{% end %}{{ user.money }}</td>
+        <td>{{ user }}</td>
+        <td class="summarycolumn" style="font-size: large; text-align: center; width: 75px;">{% if options.banking %}{{ _("$") }}{% end %}{{ users[user].get("money") }}</td>
     </tr>
     {% end %}
     <!-- List only the Top N with money -->
