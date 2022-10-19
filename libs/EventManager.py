@@ -132,8 +132,12 @@ class EventManager(object):
         dbsession.commit()
 
     def push_scoreboard(self):
+        print("get future")
         future = Scoreboard.update_gamestate(self.app.application)
+        print("got futre")
+        print(future)
         future_add_done_callback(future=future, callback=self._push_scoreboard)
+        print("moving on")
 
     def push_history(self, *args):
         msg = {"update": ["history"]}
@@ -141,6 +145,7 @@ class EventManager(object):
             self.safe_write_message(connection, msg)
 
     def _push_scoreboard(self, msg):
+        print("pushing scoreboard")
         msg = {"update": ["scoreboard"]}
         for connection in self.all_connections:
             self.safe_write_message(connection, msg)

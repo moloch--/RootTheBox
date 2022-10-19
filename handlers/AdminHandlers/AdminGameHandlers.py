@@ -183,7 +183,7 @@ class AdminRegTokenHandler(BaseHandler):
         reg_token = RegistrationToken.by_value(token_value)
         if reg_token is not None:
             self.dbsession.delete(reg_token)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.redirect("/admin/regtoken/view")
         else:
             self.render("admin/view/token.html", errors=["Token does not exist"])
@@ -192,7 +192,7 @@ class AdminRegTokenHandler(BaseHandler):
         """Adds a registration token to the db and displays the value"""
         token = RegistrationToken()
         self.dbsession.add(token)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.render("admin/create/token.html", token=token)
 
     def view(self):
@@ -249,7 +249,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         self.dbsession.flush()
         source_code.data = self.request.files["source_archive"][0]["body"]
         self.dbsession.add(source_code)
-        self.dbsession.commit()
+        #self.dbsession.commit()
 
     def delete_source_code(self):
         """Delete source code file"""
@@ -258,7 +258,7 @@ class AdminSourceCodeMarketHandler(BaseHandler):
         if box is not None and box.source_code is not None:
             box.source_code.delete_data()
             self.dbsession.delete(box.source_code)
-            self.dbsession.commit()
+            #self.dbsession.commit()
         else:
             raise ValidationError("Box/source code does not exist")
         self.render("admin/upgrades/source_code_market.html", errors=None)
@@ -306,7 +306,7 @@ class AdminSwatHandler(BaseHandler):
             swat.target.locked = True
             self.dbsession.add(swat)
             self.dbsession.add(swat.target)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.render_page()
         else:
             logging.warning(
@@ -324,7 +324,7 @@ class AdminSwatHandler(BaseHandler):
             swat.target.locked = False
             self.dbsession.add(swat)
             self.dbsession.add(swat.target)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.render_page()
         else:
             logging.warning(
@@ -690,7 +690,7 @@ class AdminResetHandler(BaseHandler):
                     level_0 = GameLevel.all()[0]
                 team.game_levels = [level_0]
                 self.dbsession.add(team)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.dbsession.flush()
             for team in teams:
                 for paste in team.pastes:
@@ -698,18 +698,18 @@ class AdminResetHandler(BaseHandler):
                 for shared_file in team.files:
                     shared_file.delete_data()
                     self.dbsession.delete(shared_file)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.dbsession.flush()
             Penalty.clear()
             Notification.clear()
             snapshot = Snapshot.all()
             for snap in snapshot:
                 self.dbsession.delete(snap)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             snapshot_team = SnapshotTeam.all()
             for snap in snapshot_team:
                 self.dbsession.delete(snap)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             game_history = GameHistory.instance()
             game_history.take_snapshot()  # Take starting snapshot
             flags = Flag.all()
@@ -719,7 +719,7 @@ class AdminResetHandler(BaseHandler):
                 # Can be removed after depreciation timeframe
                 flag.value = flag.value
                 self.dbsession.add(flag)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.dbsession.flush()
             self.event_manager.push_score_update()
             self.flush_memcached()

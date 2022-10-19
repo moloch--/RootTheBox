@@ -69,7 +69,7 @@ class AdminEditTeamsHandler(BaseHandler):
                 team = Team.by_uuid(group)
                 team.money += value
                 self.dbsession.add(team)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.event_manager.admin_score_update(team, message, value)
             self.redirect("/admin/users")
         except ValidationError as error:
@@ -105,7 +105,7 @@ class AdminEditUsersHandler(BaseHandler):
                     # allow for default without setting
                     team._avatar = avatar
             self.dbsession.add(team)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
         except ValidationError as error:
@@ -204,7 +204,7 @@ class AdminEditUsersHandler(BaseHandler):
                         self.dbsession.delete(permission)
 
             self.dbsession.add(user)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
         except ValidationError as error:
@@ -224,7 +224,7 @@ class AdminEditUsersHandler(BaseHandler):
             level_0 = GameLevel.all()[0]
         team.game_levels.append(level_0)
         self.dbsession.add(team)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.event_manager.push_score_update()
         return team
 
@@ -253,7 +253,7 @@ class AdminDeleteUsersHandler(BaseHandler):
             logging.info("Deleted User: '%s'" % str(user.handle))
             EventManager.instance().deauth(user)
             self.dbsession.delete(user)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
 
@@ -273,7 +273,7 @@ class AdminDeleteUsersHandler(BaseHandler):
                     return
                 EventManager.instance().deauth(user)
             self.dbsession.delete(team)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
         else:
@@ -344,7 +344,7 @@ class AdminLockHandler(BaseHandler):
         if user is not None:
             user.locked = False if user.locked else True
             self.dbsession.add(user)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
         else:
@@ -356,7 +356,7 @@ class AdminLockHandler(BaseHandler):
         if box is not None:
             box.locked = False if box.locked else True
             self.dbsession.add(box)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         else:
             self.render("public/404.html")
@@ -368,7 +368,7 @@ class AdminLockHandler(BaseHandler):
         if flag is not None:
             flag.locked = False if flag.locked else True
             self.dbsession.add(flag)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % flag.uuid)
         else:
             self.render("public/404.html")

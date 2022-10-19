@@ -157,13 +157,13 @@ class SettingsHandler(BaseHandler):
             if avatar.lower().endswith(tuple(IMG_FORMATS)):
                 user._avatar = avatar
                 self.dbsession.add(user)
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 self.render_page(success=["Updated avatar"])
         elif hasattr(self.request, "files") and "user_avatar" in self.request.files:
             try:
                 user.avatar = self.request.files["user_avatar"][0]["body"]
                 self.dbsession.add(user)
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 self.render_page(success=["Updated avatar"])
             except ValidationError as error:
                 self.render_page(errors=[str(error)])
@@ -182,7 +182,7 @@ class SettingsHandler(BaseHandler):
             if avatar.lower().endswith(tuple(IMG_FORMATS)):
                 user.team._avatar = avatar
                 self.dbsession.add(user)
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 if self.config.teams:
                     self.render_page(success=["Updated team avatar"])
                 else:
@@ -194,7 +194,7 @@ class SettingsHandler(BaseHandler):
                 else:
                     user.team.avatar = self.request.files["team_avatar"][0]["body"]
                     self.dbsession.add(user)
-                    self.dbsession.commit()
+                    #self.dbsession.commit()
                     if self.config.teams:
                         self.render_page(success=["Updated team avatar"])
                     else:
@@ -217,7 +217,7 @@ class SettingsHandler(BaseHandler):
             user = self.get_current_user()
             user.theme_id = theme.id
             self.dbsession.add(user)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.render_page()
         else:
             self.render_page(errors=["Theme does not exist."])
@@ -230,7 +230,7 @@ class SettingsHandler(BaseHandler):
         else:
             user.team.motto = self.get_argument("motto", "")
         self.dbsession.add(user)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.render_page(success=["Successfully updated Motto."])
 
     def post_email(self, *args, **kwargs):
@@ -238,7 +238,7 @@ class SettingsHandler(BaseHandler):
         user = self.get_current_user()
         user.email = self.get_argument("email", "")
         self.dbsession.add(user)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.render_page(success=["Successfully updated email address."])
 
     def post_password(self, *args, **kwargs):
@@ -260,7 +260,7 @@ class SettingsHandler(BaseHandler):
                 ):
                     user.password = new_password
                     self.dbsession.add(user)
-                    self.dbsession.commit()
+                    #self.dbsession.commit()
                     self.render_page(success=["Successfully updated password"])
                 else:
                     self.render_page(
@@ -292,7 +292,7 @@ class SettingsHandler(BaseHandler):
         if 0 < len(new_bankpw) <= options.max_password_length:
             user.bank_password = new_bankpw
             self.dbsession.add(user)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.render_page(success=["Successfully updated bank password"])
         else:
             self.render_page(

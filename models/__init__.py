@@ -73,9 +73,9 @@ else:
 
 ### Setup the database session
 engine = create_engine(str(db_connection), pool_pre_ping=True)
-session_maker = sessionmaker(bind=engine)
+session_maker = sessionmaker(bind=engine, autocommit=True, autoflush=True)
 _Session = session_maker
-StartSession = lambda: _Session(autoflush=True)
+StartSession = lambda: _Session()
 
 dbsession = StartSession()
 

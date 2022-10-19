@@ -302,7 +302,7 @@ class BoxHandler(BaseHandler):
                 user.team.money += box.value
                 self.dbsession.add(user.team)
                 self.dbsession.flush()
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 dialog = str(box.value) + " points added to your " + teamval + "score."
                 reward_dialog += dialog
                 success.append(
@@ -325,7 +325,7 @@ class BoxHandler(BaseHandler):
                 user.team.money += level._reward
                 self.dbsession.add(user.team)
                 self.dbsession.flush()
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 if options.banking:
                     reward_dialog += (
                         "$"
@@ -363,7 +363,7 @@ class BoxHandler(BaseHandler):
                 )
                 user.team.game_levels.append(lv)
                 self.dbsession.add(user.team)
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 self.event_manager.level_unlocked(user, lv)
                 success.append("Congratulations! You have unlocked " + lv.name)
 
@@ -380,7 +380,7 @@ class BoxHandler(BaseHandler):
                 )
                 user.team.game_levels.append(next_level)
                 self.dbsession.add(user.team)
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 self.event_manager.level_unlocked(user, next_level)
                 success.append("Congratulations! You have unlocked " + next_level.name)
         self.event_manager.push_score_update()
@@ -414,7 +414,7 @@ class BoxHandler(BaseHandler):
             self.dbsession.add(user.team)
             self.dbsession.flush()
             self.event_manager.flag_penalty(user, flag)
-            self.dbsession.commit()
+            #self.dbsession.commit()
 
             return penalty
         return False
@@ -445,7 +445,7 @@ class BoxHandler(BaseHandler):
                 user.flags.append(flag)
                 self.dbsession.add(user)
                 self.dbsession.add(team)
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 self.event_manager.flag_captured(user, flag)
                 return True
         return False
@@ -539,7 +539,7 @@ class PurchaseHintHandler(BaseHandler):
             team.money -= abs(hint.price)
             team.hints.append(hint)
             self.dbsession.add(team)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.event_manager.hint_taken(user, hint)
             send_hint_taken_webhook(user, hint)
 
@@ -592,7 +592,7 @@ class MissionsHandler(BaseHandler):
                 user.team.game_levels.append(level)
                 user.team.money -= level.buyout
                 self.dbsession.add(user.team)
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 self.event_manager.level_unlocked(user, level)
                 self.redirect("/user/missions")
             else:

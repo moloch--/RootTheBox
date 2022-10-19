@@ -110,7 +110,7 @@ class CodeFlowHandler(BaseHandler):
 
         self.update_permissions(user, hasAdminRole)
 
-        self.dbsession.commit()
+        #self.dbsession.commit()
 
         self.create_login_session(user)
 
@@ -287,7 +287,7 @@ class LoginHandler(BaseHandler):
         user.last_login = datetime.now()
         user.logins += 1
         self.dbsession.add(user)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.start_session()
         theme = Theme.by_id(user.theme_id)
         if user.team is not None:
@@ -393,7 +393,7 @@ class RegistrationHandler(BaseHandler):
         if token is not None and not token.used:
             token.used = True
             self.dbsession.add(token)
-            self.dbsession.commit()
+            #self.dbsession.commit()
         else:
             raise ValidationError("Invalid registration token")
 
@@ -477,7 +477,7 @@ class RegistrationHandler(BaseHandler):
         team = self.get_team()
         self.dbsession.add(user)
         self.dbsession.add(team)
-        self.dbsession.commit()
+        #self.dbsession.commit()
 
         # Avatar
         avatar_select = self.get_argument("user_avatar_select", "")
@@ -497,7 +497,7 @@ class RegistrationHandler(BaseHandler):
                 team._avatar = identicon(user.handle, 6)
         self.dbsession.add(user)
         self.dbsession.add(team)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         if (
             options.require_email
             and options.validate_email
@@ -506,7 +506,7 @@ class RegistrationHandler(BaseHandler):
             self.send_validate_message(user)
             user.locked = True
             self.dbsession.add(user)
-            self.dbsession.commit()
+            #self.dbsession.commit()
         else:
             self.event_manager.user_joined_team(user)
 
@@ -621,7 +621,7 @@ class RegistrationHandler(BaseHandler):
             else:
                 logging.info("Email Validation sent for %s" % user.email)
             self.dbsession.add(emailtoken)
-            self.dbsession.commit()
+            #self.dbsession.commit()
         elif (
             user is not None
             and options.require_email
@@ -633,7 +633,7 @@ class RegistrationHandler(BaseHandler):
                 % user.handle
             )
             self.dbsession.delete(user)
-            self.dbsession.commit()
+            #self.dbsession.commit()
 
     def create_validate_message(self, user, token):
         account = encode(user.uuid)
@@ -775,7 +775,7 @@ class ForgotPasswordHandler(BaseHandler):
             passtoken.user_id = user.id
             passtoken.value = sha256(reset_token).hexdigest()
             self.dbsession.add(passtoken)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             receivers = [user.email]
             message = email_rfc2822_compliance(
                 self.create_reset_message(user, reset_token)
@@ -892,7 +892,7 @@ class ResetPasswordHandler(BaseHandler):
                 user.password = self.get_argument("pass1", "")
                 pass_token.used = True
                 self.dbsession.add(pass_token)
-                self.dbsession.commit()
+                #self.dbsession.commit()
                 self.render(
                     "public/reset.html",
                     errors=None,
@@ -946,7 +946,7 @@ class ValidEmailHandler(BaseHandler):
                     info = ["Successfully validated email for %s" % user.handle]
                     user.locked = False
                     self.dbsession.add(user)
-                    self.dbsession.commit()
+                    #self.dbsession.commit()
                     self.event_manager.user_joined_team(user)
                 else:
                     error = ["Failed to validate email for %s" % user.handle]

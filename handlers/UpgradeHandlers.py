@@ -75,7 +75,7 @@ class PasswordSecurityHandler(BaseHandler):
         elif len(passwd) <= self.config.max_password_length:
             user.team.money -= self.config.password_upgrade_cost
             self.dbsession.add(user.team)
-            self.dbsession.commit()
+            #self.dbsession.commit()
             self.event_manager.push_score_update()
             self.update_password(passwd)
             self.render_page()
@@ -103,7 +103,7 @@ class PasswordSecurityHandler(BaseHandler):
         self.dbsession.flush()
         user.bank_password = new_password
         self.dbsession.add(user)
-        self.dbsession.commit()
+        #self.dbsession.commit()
 
 
 class FederalReserveHandler(BaseHandler):
@@ -243,7 +243,7 @@ class FederalReserveAjaxHandler(BaseHandler):
             preimage=str(preimage), cracker_id=user.id, victim_id=victim.id, value=value
         )
         self.dbsession.add(sheep)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.event_manager.cracked_password(user, victim, preimage, value)
         return value
 
@@ -283,7 +283,7 @@ class SourceCodeMarketHandler(BaseHandler):
             % (team.name, source_code.file_name)
         )
         self.dbsession.add(team)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.event_manager.push_score_update()
 
     def render_page(self, errors=None):
@@ -378,7 +378,7 @@ class SwatHandler(BaseHandler):
         swat = Swat(user_id=user.id, target_id=target.id, paid=price)
         self.dbsession.add(swat)
         self.dbsession.add(user.team)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.event_manager.push_score_update()
 
     def render_page(self, errors=None):

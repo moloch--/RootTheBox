@@ -88,7 +88,7 @@ class MarketViewHandler(BaseHandler):
         team.money -= abs(item.price)
         team.items.append(item)
         self.dbsession.add(team)
-        self.dbsession.commit()
+        #self.dbsession.commit()
         self.event_manager.push_score_update()
 
 
