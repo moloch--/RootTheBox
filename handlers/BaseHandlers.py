@@ -76,6 +76,7 @@ class BaseHandler(RequestHandler):
 
     def initialize(self):
         """Setup sessions, etc"""
+        self.event_manager.app = self
         self.add_content_policy("connect-src", self.config.origin)
         # We need this for a few things, and so far as I know it doesn't
         # present too much of a security risk - TODO: no longer require

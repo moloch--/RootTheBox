@@ -25,10 +25,11 @@ Created on Oct 04, 2012
 import json
 import logging
 import time
+import asyncio
 
 from threading import Thread
 from sqlalchemy.orm import scoped_session
-from models import dbsession, session_maker
+from models import dbsession, session_maker, db_connection
 from models.Team import Team
 from models.User import User
 from models.Box import Box
@@ -36,11 +37,10 @@ from models.Flag import Flag
 from models.Hint import Hint
 from models.GameLevel import GameLevel
 from libs.BotManager import BotManager
-from libs.EventManager import EventManager
 from tornado.options import options
 from builtins import object, str
 from collections import OrderedDict
-
+from concurrent.futures import Future, ThreadPoolExecutor
 
 class Scoreboard(object):
     """Manages websocket connections (mostly thread safe)"""
@@ -53,18 +53,22 @@ class Scoreboard(object):
     @classmethod
     def update_gamestate(cls, app, background=True):
         if background:
-            t = Thread(target=cls._update_gamestate, args=(app,))
-            t.daemon = True
-            t.start()
+            executor = ThreadPoolExecutor(max_workers=1)
+            return executor.submit(cls._update_gamestate, app, background)
+            
         else:
-            cls._update_gamestate(app)
+            cls._update_gamestate(app, background)
+
 
     @classmethod
-    def _update_gamestate(cls, app):
+    def _update_gamestate(cls, app, background):
+        if background:
+            time.sleep(1)
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
         threadSession = scoped_session(session_maker)
         threadDBSession = lambda: threadSession(autoflush=True)
         threadsession = threadDBSession()
-
         game_levels = GameLevel.all(threadsession)
         teams = Team.ranks(threadsession)
         users = User.ranks(threadsession)
@@ -108,10 +112,13 @@ class Scoreboard(object):
             app.settings["scoreboard_history"][team.name] = game_state["teams"].get(
                 team.name
             )
-        for user in users:
-            game_state["users"][user.handle] = {
-                "money": user.money
-            }
+        for idx, user in enumerate(users):
+            if idx < options.mvp_max:
+                game_state["users"][user.handle] = {
+                    "money": user.money
+                }
+            else:
+                break
         for level in game_levels:
             game_state["levels"][level.name] = {
                 "type": level.type,
@@ -149,6 +156,7 @@ class Scoreboard(object):
 def score_bots():
     """Award money for botnets"""
     logging.info("Scoring botnets, please wait ...")
+    from libs.EventManager import EventManager
     bot_manager = BotManager.instance()
     event_manager = EventManager.instance()
     for team in Team.all():

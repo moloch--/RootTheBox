@@ -23,8 +23,10 @@ import logging
 
 from tornado.ioloop import IOLoop
 from tornado.websocket import WebSocketClosedError
+from tornado.concurrent import future_add_done_callback
 from tornado.options import options
 from libs.Singleton import Singleton
+from libs.Scoreboard import Scoreboard
 from builtins import object, str
 from models import dbsession
 from models.User import User
@@ -44,6 +46,7 @@ class EventManager(object):
 
     public_connections = set()
     auth_connections = {}
+    app = None
 
     def __init__(self):
         self.io_loop = IOLoop.instance()
@@ -129,12 +132,16 @@ class EventManager(object):
         dbsession.commit()
 
     def push_scoreboard(self):
-        msg = {"update": ["scoreboard"]}
-        for connection in self.all_connections:
-            self.safe_write_message(connection, msg)
+        future = Scoreboard.update_gamestate(self.app.application)
+        future_add_done_callback(future=future, callback=self._push_scoreboard)
 
     def push_history(self, *args):
         msg = {"update": ["history"]}
+        for connection in self.all_connections:
+            self.safe_write_message(connection, msg)
+
+    def _push_scoreboard(self, msg):
+        msg = {"update": ["scoreboard"]}
         for connection in self.all_connections:
             self.safe_write_message(connection, msg)
 
