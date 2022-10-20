@@ -256,6 +256,7 @@ app = Application(
     # Scoreboard Highlights
     scoreboard_history={},
     scoreboard_state={},
+    scoreboard_update=False,
     # Application version
     version=__version__,
     autoreload=options.autoreload_source,

@@ -237,6 +237,7 @@ class BaseHandler(RequestHandler):
     def on_finish(self, *args, **kwargs):
         """Called after a response is sent to the client"""
         self.dbsession.close()
+        self.application.settings["scoreboard_update"] = True
 
     def timer(self):
         timer = None

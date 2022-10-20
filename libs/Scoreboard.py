@@ -52,6 +52,7 @@ class Scoreboard(object):
 
     @classmethod
     def update_gamestate(cls, app, background=True):
+        app.settings["scoreboard_update"] = False
         if background:
             executor = ThreadPoolExecutor(max_workers=1)
             return executor.submit(cls._update_gamestate, app, background)
@@ -63,7 +64,8 @@ class Scoreboard(object):
     @classmethod
     def _update_gamestate(cls, app, background):
         if background:
-            time.sleep(1)
+            while not app.settings["scoreboard_update"]:
+                time.sleep(.5)
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
         threadSession = scoped_session(session_maker)
