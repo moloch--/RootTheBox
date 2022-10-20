@@ -331,7 +331,7 @@ def start_server():
         )
     try:
         logging.info("Building Scoreboard Gamestate...")
-        Scoreboard.update_gamestate(app, background=False)
+        Scoreboard.update_gamestate(app)
     except OperationalError as err:
         if "Table definition has changed" in str(err):
             logging.info("Table definitions have changed -restarting RootTheBox.")

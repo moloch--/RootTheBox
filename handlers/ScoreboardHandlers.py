@@ -186,7 +186,8 @@ class ScoreboardAjaxHandler(BaseHandler):
 
     def mvp_table(self):
         """Render the "leaderboard" mvp snippit"""
-        self.render("scoreboard/mvp_table.html", users=User.ranks())
+        users = self.settings["scoreboard_state"].get("users")
+        self.render("scoreboard/mvp_table.html", users=users)
 
     def timediff(self):
         timer = self.timer()

@@ -183,7 +183,9 @@ class User(DatabaseObject):
     @classmethod
     def ranks(cls):
         """Returns a list of all objects in the database"""
-        return dbsession.query(cls).order_by(desc(cls.money)).all()
+        return (
+            dbsession.query(cls).filter_by(_locked=0).order_by(desc(cls.money)).all()
+        )
 
     @property
     def password(self):

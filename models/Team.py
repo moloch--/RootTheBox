@@ -136,10 +136,10 @@ class Team(DatabaseObject):
         return dbsession.query(cls).filter_by(_code=code).first()
 
     @classmethod
-    def ranks(cls, _dbsession=dbsession):
+    def ranks(cls):
         """Returns a list of unlocked objects in the database"""
         ranked = []
-        for team in sorted(_dbsession.query(cls).order_by(desc(cls.money)).all()):
+        for team in sorted(dbsession.query(cls).order_by(desc(cls.money)).all()):
             if not team.locked:
                 ranked.append(team)
         return ranked
