@@ -129,7 +129,7 @@ class AdminCreateHandler(BaseHandler):
                 level_0 = GameLevel.all()[0]
             team.game_levels.append(level_0)
             self.dbsession.add(team)
-            #self.dbsession.commit()
+            self.dbsession.commit()
 
             # Avatar
             avatar_select = self.get_argument("team_avatar_select", "")
@@ -138,7 +138,7 @@ class AdminCreateHandler(BaseHandler):
             elif hasattr(self.request, "files") and "avatar" in self.request.files:
                 team.avatar = self.request.files["avatar"][0]["body"]
             self.dbsession.add(team)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.event_manager.push_score_update()
             self.redirect("/admin/users")
         except ValidationError as error:
@@ -156,7 +156,7 @@ class AdminCreateHandler(BaseHandler):
                 corporation.name = corp_name
                 corporation.description = corp_desc
                 self.dbsession.add(corporation)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 self.redirect("/admin/view/game_objects")
         except ValidationError as error:
             self.render("admin/create/corporation.html", errors=[str(error)])
@@ -173,7 +173,7 @@ class AdminCreateHandler(BaseHandler):
                 new_category.category = category
                 new_category.description = cat_desc
                 self.dbsession.add(new_category)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 self.redirect("/admin/view/categories")
         except ValidationError as error:
             self.render("admin/create/category.html", errors=[str(error)])
@@ -194,7 +194,7 @@ class AdminCreateHandler(BaseHandler):
                         corporation = Corporation()
                         corporation.name = ""
                         self.dbsession.add(corporation)
-                        #self.dbsession.commit()
+                        self.dbsession.commit()
                         corp_uuid = corporation.uuid
                     else:
                         raise ValidationError("Corporation does not exist")
@@ -222,7 +222,7 @@ class AdminCreateHandler(BaseHandler):
                 elif hasattr(self.request, "files") and "avatar" in self.request.files:
                     box.avatar = self.request.files["avatar"][0]["body"]
                 self.dbsession.add(box)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render("admin/create/box.html", errors=[str(error)])
@@ -296,7 +296,7 @@ class AdminCreateHandler(BaseHandler):
             self.dbsession.add(game_levels[0])
             game_levels[-1].next_level_id = None
             self.dbsession.add(game_levels[-1])
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/game_levels")
         except ValidationError as error:
             self.render("admin/create/game_level.html", errors=[str(error)])
@@ -316,7 +316,7 @@ class AdminCreateHandler(BaseHandler):
             else:
                 hint.flag_id = None
             self.dbsession.add(hint)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render("admin/create/hint.html", errors=[str(error)])
@@ -349,7 +349,7 @@ class AdminCreateHandler(BaseHandler):
             flag.lock_id = None
         self.add_attachments(flag)
         self.dbsession.add(flag)
-        #self.dbsession.commit()
+        self.dbsession.commit()
 
         choices = self.get_arguments("addmore[]", strip=True)
         if choices is not None:
@@ -436,7 +436,7 @@ class AdminViewHandler(BaseHandler):
                                     value,
                                 )
                             self.dbsession.delete(penalty)
-                            #self.dbsession.commit()
+                            self.dbsession.commit()
                     if flag not in team.flags:
                         flag_value = flag.dynamic_value(team)
                         if (
@@ -456,7 +456,7 @@ class AdminViewHandler(BaseHandler):
                             self.dbsession.add(user)
                         team.flags.append(flag)
                         self.dbsession.add(team)
-                        #self.dbsession.commit()
+                        self.dbsession.commit()
                         BoxHandler.success_capture(self, user, flag, flag_value)
                         self._check_level(flag, team)
                         self.event_manager.flag_captured(team, flag)
@@ -478,7 +478,7 @@ class AdminViewHandler(BaseHandler):
                     if len(token) < 256:
                         flag.token = token
                         self.dbsession.add(flag)
-                        #self.dbsession.commit()
+                        self.dbsession.commit()
                         success.append(
                             "Token successfully added for Flag %s" % flag.name
                         )
@@ -565,7 +565,7 @@ class AdminEditHandler(BaseHandler):
                 )
                 corp.description = desc
             self.dbsession.add(corp)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/game_objects")
         except ValidationError as error:
             self.render(
@@ -592,7 +592,7 @@ class AdminEditHandler(BaseHandler):
             cat.category = category
             cat.description = cat_desc
             self.dbsession.add(cat)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/categories")
         except ValidationError as error:
             self.render("admin/view/categories.html", errors=[str(error)])
@@ -710,7 +710,7 @@ class AdminEditHandler(BaseHandler):
                 box.avatar = self.request.files["avatar"][0]["body"]
 
             self.dbsession.add(box)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render(
@@ -725,7 +725,7 @@ class AdminEditHandler(BaseHandler):
                 raise ValidationError("Flag does not exist")
             flag.order = self.get_argument("order", "")
             self.dbsession.add(flag)
-            #self.dbsession.commit()
+            self.dbsession.commit()
         except ValidationError as error:
             logging.error("Failed to reorder flag: %s" % error)
 
@@ -784,7 +784,7 @@ class AdminEditHandler(BaseHandler):
             elif box is None:
                 raise ValidationError("Box does not exist")
             self.dbsession.add(flag)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             if flag.type == FLAG_CHOICE:
                 self.edit_choices(flag, self.request.arguments)
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
@@ -819,7 +819,7 @@ class AdminEditHandler(BaseHandler):
                 # update choice
                 flagchoice.choice = decode(choiceitems[choice])
                 self.dbsession.add(flagchoice)
-        #self.dbsession.commit()
+        self.dbsession.commit()
 
     def edit_ip(self):
         """Add ip addresses to a box (sorta edits the box object)"""
@@ -835,7 +835,7 @@ class AdminEditHandler(BaseHandler):
                 box.ip_addresses.append(ip)
                 self.dbsession.add(ip)
                 self.dbsession.add(box)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 self.redirect("/admin/view/game_objects#%s" % box.uuid)
             else:
                 raise ValidationError("IP address is already in use")
@@ -867,14 +867,14 @@ class AdminEditHandler(BaseHandler):
                         if team:
                             team.game_levels.append(level)
                             self.dbsession.add(team)
-                            #self.dbsession.commit()
+                            self.dbsession.commit()
                 for team_uuid in available:
                     if decode(team_uuid) in teams:
                         team = Team.by_uuid(decode(team_uuid))
                         if team:
                             team.game_levels.remove(level)
                             self.dbsession.add(team)
-                            #self.dbsession.commit()
+                            self.dbsession.commit()
                 self.redirect("/admin/view/game_levels")
         except ValueError:
             raise ValidationError("That was not a number ...")
@@ -913,7 +913,7 @@ class AdminEditHandler(BaseHandler):
             game_levels[-1].next_level_id = None
             self.dbsession.add(game_levels[-1])
             self.dbsession.add(level)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/game_levels")
         except ValueError:
             raise ValidationError("That was not a number ...")
@@ -928,7 +928,7 @@ class AdminEditHandler(BaseHandler):
         if box is not None and level is not None:
             box.game_level_id = level.id
             self.dbsession.add(box)
-            #self.dbsession.commit()
+            self.dbsession.commit()
         elif box is None:
             errors.append("Box does not exist")
         elif level is None:
@@ -955,7 +955,7 @@ class AdminEditHandler(BaseHandler):
             hint.flag_id = flag_id
             box = Box.by_id(flag.box_id)
             self.dbsession.add(hint)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/game_objects#%s" % box.uuid)
         except ValidationError as error:
             self.render(
@@ -972,7 +972,7 @@ class AdminEditHandler(BaseHandler):
             if item.price != price:
                 item.price = price
             self.dbsession.add(item)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/market_objects")
         except ValidationError as error:
             self.render("admin/view/market_objects.html", errors=[str(error)])
@@ -1009,7 +1009,7 @@ class AdminDeleteHandler(BaseHandler):
         if ip is not None:
             logging.info("Deleted IP address: '%s'" % str(ip))
             self.dbsession.delete(ip)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             if ip_init is None:
                 self.redirect("/admin/view/game_objects")
         elif ip_init is None:
@@ -1030,7 +1030,7 @@ class AdminDeleteHandler(BaseHandler):
                 self.del_hint(hint)
             logging.info("Deleted flag: %s " % flag.name)
             self.dbsession.delete(flag)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             if flag_init is None:
                 self.redirect("/admin/view/game_objects")
         elif flag_init is None:
@@ -1048,7 +1048,7 @@ class AdminDeleteHandler(BaseHandler):
         if hint is not None:
             logging.info("Delete hint: %s" % hint.uuid)
             self.dbsession.delete(hint)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             if hint_init is None:
                 self.redirect("/admin/view/game_objects")
         elif hint_init is None:
@@ -1064,7 +1064,7 @@ class AdminDeleteHandler(BaseHandler):
         if corp is not None:
             logging.info("Delete corporation: %s" % corp.name)
             self.dbsession.delete(corp)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/game_objects")
         else:
             self.render(
@@ -1079,7 +1079,7 @@ class AdminDeleteHandler(BaseHandler):
         if cat is not None:
             logging.info("Delete category: %s" % cat.category)
             self.dbsession.delete(cat)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/categories")
         else:
             self.render(
@@ -1104,7 +1104,7 @@ class AdminDeleteHandler(BaseHandler):
                 self.del_flag(flag)
             logging.info("Delete box: %s" % box.name)
             self.dbsession.delete(box)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             if box_init is None:
                 self.redirect("/admin/view/game_objects")
         elif box_init is None:
@@ -1132,7 +1132,7 @@ class AdminDeleteHandler(BaseHandler):
             game_levels[-1].next_level_id = None
             self.dbsession.add(game_levels[-1])
             self.dbsession.delete(game_level)
-            #self.dbsession.commit()
+            self.dbsession.commit()
             self.redirect("/admin/view/game_levels")
         else:
             self.render(

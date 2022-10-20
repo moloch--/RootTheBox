@@ -81,7 +81,7 @@ class CreatePasteHandler(BaseHandler):
                     paste.contents = content
                     self.dbsession.add(paste)
                     self.event_manager.team_paste_shared(user, team, paste)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 if user.is_admin():
                     self.redirect("/admin/view/pastebin")
                 else:
@@ -133,12 +133,12 @@ class DeletePasteHandler(BaseHandler):
             user = self.get_current_user()
             if user.is_admin():
                 self.dbsession.delete(paste)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 self.redirect("/admin/view/pastebin")
                 return
             if paste is not None and paste in user.team.pastes:
                 self.dbsession.delete(paste)
-                #self.dbsession.commit()
+                self.dbsession.commit()
             self.redirect("/user/share/pastebin")
         else:
             self.redirect("/404")

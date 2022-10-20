@@ -63,11 +63,11 @@ class Scoreboard(object):
     @classmethod
     def _update_gamestate(cls, app, background):
         if background:
-
+            time.sleep(1)
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
         threadSession = scoped_session(session_maker)
-        threadDBSession = lambda: threadSession()
+        threadDBSession = lambda: threadSession(autoflush=True)
         threadsession = threadDBSession()
         game_levels = GameLevel.all(threadsession)
         teams = Team.ranks(threadsession)

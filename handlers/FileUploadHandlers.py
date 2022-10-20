@@ -107,7 +107,7 @@ class FileUploadHandler(BaseHandler):
                 file_upload.data = shared_file["body"]
                 file_upload.description = self.get_argument("description", "")
                 self.dbsession.add(file_upload)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 return file_upload
             except ValidationError as error:
                 self.errors.append(str(error))
@@ -156,7 +156,7 @@ class FileDeleteHandler(BaseHandler):
                 )
                 shared_file.delete_data()
                 self.dbsession.delete(shared_file)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 self.redirect("/admin/view/fileshare")
             elif shared_file is not None and shared_file in user.team.files:
                 logging.info(
@@ -164,7 +164,7 @@ class FileDeleteHandler(BaseHandler):
                 )
                 shared_file.delete_data()
                 self.dbsession.delete(shared_file)
-                #self.dbsession.commit()
+                self.dbsession.commit()
                 self.redirect("/user/share/files")
             else:
                 self.redirect("/404")

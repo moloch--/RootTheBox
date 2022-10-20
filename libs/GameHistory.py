@@ -129,7 +129,7 @@ class GameHistory(object):
                 self.dbsession.flush()
                 snapshot.teams.append(snapshot_team)
         self.dbsession.add(snapshot)
-        #self.dbsession.commit()
+        self.dbsession.commit()
         return snapshot
 
     def __iter__(self):
