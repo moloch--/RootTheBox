@@ -192,6 +192,7 @@ urls = [
     (r"/admin/export/(.*)", AdminExportHandler),
     (r"/admin/import/xml", AdminImportXmlHandler),
     (r"/admin/reset", AdminResetHandler),
+    (r"/admin/resetdelete", AdminResetDeleteHandler),
     # Error handlers - ErrorHandlers.py
     (r"/403", UnauthorizedHandler),
     (r"/gamestatus", StopHandler),

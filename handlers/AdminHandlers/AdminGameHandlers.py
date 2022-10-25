@@ -722,10 +722,89 @@ class AdminResetHandler(BaseHandler):
             self.dbsession.commit()
             self.dbsession.flush()
             self.event_manager.push_score_update()
+            session = self.session()
             self.flush_memcached()
+            self.set_session(session)
             success = "Successfully Reset Game"
             self.render("admin/reset.html", success=success, errors=errors)
         except BaseException as e:
             errors.append("Failed to Reset Game")
+            logging.error(str(e))
+            self.render("admin/reset.html", success=None, errors=errors)
+
+class AdminResetDeleteHandler(BaseHandler):
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def get(self, *args, **kwargs):
+        """Reset Game Information"""
+        self.render("admin/reset.html", success=None, errors=None)
+
+    @restrict_ip_address
+    @authenticated
+    @authorized(ADMIN_PERMISSION)
+    def post(self, *args, **kwargs):
+        """
+        Reset the Game - Delete all teams
+        """
+        errors = []
+        success = None
+        try:
+            users = User.all()
+            teams = Team.all()
+            for team in teams:
+                for paste in team.pastes:
+                    self.dbsession.delete(paste)
+                for shared_file in team.files:
+                    shared_file.delete_data()
+                    self.dbsession.delete(shared_file)
+            self.dbsession.commit()
+            self.dbsession.flush()
+            Penalty.clear()
+            Notification.clear()
+            swats = Swat.all()
+            for swat in swats:
+                self.dbsession.delete(swat)
+            self.dbsession.commit()
+            snapshot = Snapshot.all()
+            for snap in snapshot:
+                self.dbsession.delete(snap)
+            self.dbsession.commit()
+            snapshot_team = SnapshotTeam.all()
+            for snap in snapshot_team:
+                self.dbsession.delete(snap)
+            self.dbsession.commit()
+            for user in users:
+                if not user.is_admin():
+                    self.dbsession.delete(user)
+            self.dbsession.commit()
+            for team in teams:
+                self.dbsession.delete(team)
+            self.dbsession.commit()
+            game_history = GameHistory.instance()
+            game_history.take_snapshot()  # Take starting snapshot
+            flags = Flag.all()
+            for flag in flags:
+                # flag.value = flag.value allows a fallback to when original_value was used
+                # Allows for the flag value to be reset if dynamic scoring was used
+                # Can be removed after depreciation timeframe
+                flag.value = flag.value
+                self.dbsession.add(flag)
+            self.dbsession.commit()
+            self.dbsession.flush()
+            self.event_manager.push_score_update()
+            session = self.session()
+            self.flush_memcached()
+            self.set_session(session)
+            if options.teams:
+                success = "Successfully Deleted Teams"
+            else:
+                success = "Successfully Deleted Players"
+            self.render("admin/reset.html", success=success, errors=errors)
+        except BaseException as e:
+            if options.teams:
+                errors.append("Failed to Delete Teams")
+            else:
+                errors.append("Failed to Delete Players")
             logging.error(str(e))
             self.render("admin/reset.html", success=None, errors=errors)
