@@ -235,8 +235,8 @@ app = Application(
     # Enable XSRF protected forms; not optional
     xsrf_cookies=True,
     # Anti-bruteforce
-    automatic_ban=False,
-    blacklist_threshold=10,
+    automatic_ban=options.automatic_ban,
+    blacklist_threshold=options.blacklist_threshold,
     blacklisted_ips=[],
     failed_logins={},
     # Debug mode

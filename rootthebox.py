@@ -990,6 +990,22 @@ define(
 )
 
 define(
+    "automatic_ban",
+    default=False,
+    group="anti-bruteforce",
+    type=bool,
+    help="configures the option to automatically ban bruteforce"
+)
+
+define(
+    "blacklist_threshold",
+    default=10,
+    group="anti-bruteforce",
+    help="Sets the threshold for the automatic ban",
+    type=int,
+)
+
+define(
     "chat_url",
     default="",
     group="chat",

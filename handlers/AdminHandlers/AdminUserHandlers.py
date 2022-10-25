@@ -38,6 +38,7 @@ from libs.SecurityDecorators import *
 from libs.ValidationError import ValidationError
 from libs.EventManager import EventManager
 from libs.Identicon import identicon
+from libs.ConfigHelpers import save_config
 from builtins import str
 from tornado.options import options
 from netaddr import IPAddress
@@ -294,15 +295,19 @@ class AdminBanHammerHandler(BaseHandler):
         """Configure the automatic ban settings"""
         if self.get_argument("automatic_ban", "") == "true":
             self.application.settings["automatic_ban"] = True
+            self.config.automatic_ban = True
             try:
                 threshold = abs(int(self.get_argument("threshold_size", "10")))
             except ValueError:
                 threshold = 10
             logging.info("Automatic ban enabled, with threshold of %d" % threshold)
             self.application.settings["blacklist_threshold"] = threshold
+            self.config.blacklist_threshold = threshold
         else:
             logging.info("Automatic ban disabled")
             self.application.settings["automatic_ban"] = False
+            self.config.automatic_ban = False
+        save_config()
 
     def ban_add(self):
         """Add an ip address to the banned list"""
