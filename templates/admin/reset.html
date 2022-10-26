@@ -4,6 +4,16 @@
 
 {% block content %}
 {% from tornado.options import options %}
+<script>
+    function clicked(e)
+        {
+            if(!confirm('Are you sure?')) {
+                e.preventDefault();
+            } else {
+                document.body.style.cursor='wait'
+            }
+        }
+</script>
 <div class="container">
     <h1>
         <i class="fa fa-undo"></i>
@@ -57,7 +67,7 @@
                         </div>
                         <div class="control-group">
                             <div class="controls"  style="margin-left: 70px;">
-                                <button class="btn btn-primary" onclick="(function(){document.body.style.cursor='wait'})()" type="submit">{{ _("Reset Game") }}</button>
+                                <button class="btn btn-primary" onclick="clicked(event)" type="submit">{{ _("Reset Game") }}</button>
                             </div>
                         </div>
                     </form>
@@ -79,7 +89,7 @@
                         </div>
                         <div class="control-group">
                             <div class="controls" style="margin-left: 70px;">
-                                <button class="btn btn-danger" onclick="(function(){document.body.style.cursor='wait'})()" type="submit">{{ _("Delete") }} {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}</button>
+                                <button class="btn btn-danger" onclick="clicked(event)" type="submit">{{ _("Delete") }} {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}</button>
                             </div>
                         </div>
                     </form>
