@@ -192,6 +192,7 @@ urls = [
     (r"/admin/export/(.*)", AdminExportHandler),
     (r"/admin/import/xml", AdminImportXmlHandler),
     (r"/admin/reset", AdminResetHandler),
+    (r"/admin/resetdelete", AdminResetDeleteHandler),
     # Error handlers - ErrorHandlers.py
     (r"/403", UnauthorizedHandler),
     (r"/gamestatus", StopHandler),
@@ -235,8 +236,8 @@ app = Application(
     # Enable XSRF protected forms; not optional
     xsrf_cookies=True,
     # Anti-bruteforce
-    automatic_ban=False,
-    blacklist_threshold=10,
+    automatic_ban=options.automatic_ban,
+    blacklist_threshold=options.blacklist_threshold,
     blacklisted_ips=[],
     failed_logins={},
     # Debug mode
@@ -332,7 +333,7 @@ def start_server():
         )
     try:
         logging.info("Building Scoreboard Gamestate...")
-        Scoreboard.update_gamestate(app, background=False)
+        Scoreboard.update_gamestate(app)
     except OperationalError as err:
         if "Table definition has changed" in str(err):
             logging.info("Table definitions have changed -restarting RootTheBox.")

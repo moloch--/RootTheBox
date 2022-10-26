@@ -61,9 +61,9 @@ class GameLevel(DatabaseObject):
     )
 
     @classmethod
-    def all(cls, _dbsession=dbsession):
+    def all(cls):
         """Returns a list of all objects in the database"""
-        return _dbsession.query(cls).order_by(asc(cls._number)).all()
+        return dbsession.query(cls).order_by(asc(cls._number)).all()
 
     @classmethod
     def count(cls):

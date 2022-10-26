@@ -33,6 +33,7 @@ from models import dbsession, session_maker, db_connection
 from models.Team import Team
 from models.User import User
 from models.Box import Box
+from models.User import User
 from models.Flag import Flag
 from models.Hint import Hint
 from models.GameLevel import GameLevel
@@ -152,7 +153,6 @@ class Scoreboard(object):
                         flag.uuid
                     ] = {"name": flag.name}
         app.settings["scoreboard_state"] = game_state
-        threadSession.remove()
 
 
 def score_bots():

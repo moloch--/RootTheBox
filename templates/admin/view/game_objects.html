@@ -779,14 +779,14 @@
                                         {{ box.name }}&nbsp;&nbsp;
                                     </h3>
                                         {% if box.locked %}
-                                            <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-success" data-uuid="{{ box.uuid }}">
-                                                <i class="fa fa-fw fa-unlock"></i>
-                                                {{_("Unlock")}}
-                                            </a>
-                                        {% else %}
                                             <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-warning" data-uuid="{{ box.uuid }}">
                                                 <i class="fa fa-fw fa-lock"></i>
-                                                {{_("Lock")}}
+                                                {{_("Unlock")}}&nbsp;
+                                            </a>
+                                        {% else %}
+                                            <a id="lock-box-button-{{ box.uuid }}" class="btn btn-small btn-success" data-uuid="{{ box.uuid }}">
+                                                <i class="fa fa-fw fa-unlock"></i>
+                                                {{_("Lock")}}&nbsp;
                                             </a>
                                         {% end %}
                                         <a id="edit-box-button-{{ box.uuid }}" class="btn btn-small" data-toggle="modal" href="#edit-box-modal" data-uuid="{{ box.uuid }}" data-corporation-uuid="{{ box.corporation.uuid }}">
@@ -870,12 +870,12 @@
                                                             </td>
                                                             <td class="shortcolumn">
                                                                 {% if flag.locked %}
-                                                                <a id="lock-flag-button-{{ flag.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ flag.uuid }}">
-                                                                    <i class="fa fa-unlock" title="Lock Flag"></i>
+                                                                <a id="lock-flag-button-{{ flag.uuid }}" class="btn btn-mini btn-warning" data-uuid="{{ flag.uuid }}">
+                                                                    <i class="fa fa-fw fa-lock" title="Unlock Flag"></i>
                                                                 </a>
                                                                 {% else %}
-                                                                <a id="lock-flag-button-{{ flag.uuid }}" class="btn btn-mini btn-warning" data-uuid="{{ flag.uuid }}">
-                                                                    <i class="fa fa-lock" title="Unlock Flag"></i>
+                                                                <a id="lock-flag-button-{{ flag.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ flag.uuid }}">
+                                                                    <i class="fa fa-fw fa-unlock" title="Lock Flag"></i>
                                                                 </a>
                                                                 {% end %}
                                                             </td>

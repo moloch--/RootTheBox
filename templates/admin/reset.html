@@ -3,6 +3,17 @@
 {% block title %}{{ _("Reset Game") }}{% end %}
 
 {% block content %}
+{% from tornado.options import options %}
+<script>
+    function clicked(e)
+        {
+            if(!confirm('Are you sure?')) {
+                e.preventDefault();
+            } else {
+                document.body.style.cursor='wait'
+            }
+        }
+</script>
 <div class="container">
     <h1>
         <i class="fa fa-undo"></i>
@@ -26,36 +37,65 @@
     </div>
     {% end %}
     <div class="well">
-        <form class="form-horizontal" action="/admin/reset" method="post">
-            {% raw xsrf_form_html() %}
-            <div class="control-group">
-                <div class="controls">
-                    <h3>{{ _("Reset Actions") }}</h3>
-                    <ul>
-                        <li>
-                            {{ _("Clear all team / player flag captures") }}
-                        </li>
-                        <li>
-                            {{ _("Clear all team pastebin and file shares") }}
-                        </li>
-                        <li>
-                            {{ _("Clear all notifications and game history") }}
-                        </li>
-                        <li>
-                            {{ _("Clear market items or source code purchases") }}
-                        </li>
-                        <li>
-                            {{ _("Reset player / team starting points / money") }}
-                        </li>
-                    </ul>
+        <div style="width: 100%; display: table;">
+            <div style="display: table-row">
+                <div style="display: table-cell; width: 50%; border-right: 1px solid gray">
+                    <form class="form-horizontal" action="/admin/reset" method="post">
+                        {% raw xsrf_form_html() %}
+                        <div class="control-group">
+                            <div class="controls" style="margin-left: 70px;">
+                                <h3>{{ _("Reset Actions") }}</h3>
+                                <h5>{{ _("Keeps teams / players and resets the game to start.") }}<br><br></h5>
+                                <ul>
+                                    <li>
+                                        {{ _("Clear all team / player flag captures") }}
+                                    </li>
+                                    <li>
+                                        {{ _("Clear all team pastebin and file shares") }}
+                                    </li>
+                                    <li>
+                                        {{ _("Clear all notifications and game history") }}
+                                    </li>
+                                    <li>
+                                        {{ _("Clear market items or source code purchases") }}
+                                    </li>
+                                    <li>
+                                        {{ _("Reset player / team starting points / money") }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls"  style="margin-left: 70px;">
+                                <button class="btn btn-primary" onclick="clicked(event)" type="submit">{{ _("Reset Game") }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div style="display: table-cell;width: 50%;">
+                    <form class="form-horizontal" action="/admin/resetdelete" method="post">
+                        {% raw xsrf_form_html() %}
+                        <div class="control-group">
+                            <div class="controls" style="margin-left: 70px;">
+                                <h3>{{ _("Delete Actions") }}</h3>
+                                <h5>{{ _("Deletes teams / players and resets the game to start.") }}<br><br></h5>
+                                <ul>
+                                    <li>
+                                        {{ _("Delete all teams / players and associated data.") }}
+                                    </li>
+                                    <br><br><br><br>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls" style="margin-left: 70px;">
+                                <button class="btn btn-danger" onclick="clicked(event)" type="submit">{{ _("Delete") }} {% if options.teams %}{{ _("Teams") }}{% else %}{{ _("Players") }}{% end %}</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <button class="btn btn-primary" type="submit">{{ _("Reset Game") }}</button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 {% end %}
