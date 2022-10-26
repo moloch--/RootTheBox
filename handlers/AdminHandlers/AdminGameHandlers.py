@@ -671,7 +671,7 @@ class AdminResetHandler(BaseHandler):
         errors = []
         success = None
         try:
-            users = User.all()
+            users = User.all_users()
             for user in users:
                 user.money = 0
             teams = Team.all()
@@ -702,6 +702,10 @@ class AdminResetHandler(BaseHandler):
             self.dbsession.flush()
             Penalty.clear()
             Notification.clear()
+            swats = Swat.all()
+            for swat in swats:
+                self.dbsession.delete(swat)
+            self.dbsession.commit()
             snapshot = Snapshot.all()
             for snap in snapshot:
                 self.dbsession.delete(snap)
@@ -722,9 +726,7 @@ class AdminResetHandler(BaseHandler):
             self.dbsession.commit()
             self.dbsession.flush()
             self.event_manager.push_score_update()
-            session = self.session()
             self.flush_memcached()
-            self.set_session(session)
             success = "Successfully Reset Game"
             self.render("admin/reset.html", success=success, errors=errors)
         except BaseException as e:
@@ -750,7 +752,7 @@ class AdminResetDeleteHandler(BaseHandler):
         errors = []
         success = None
         try:
-            users = User.all()
+            users = User.all_users()
             teams = Team.all()
             for team in teams:
                 for paste in team.pastes:
@@ -775,8 +777,7 @@ class AdminResetDeleteHandler(BaseHandler):
                 self.dbsession.delete(snap)
             self.dbsession.commit()
             for user in users:
-                if not user.is_admin():
-                    self.dbsession.delete(user)
+                self.dbsession.delete(user)
             self.dbsession.commit()
             for team in teams:
                 self.dbsession.delete(team)
@@ -793,9 +794,7 @@ class AdminResetDeleteHandler(BaseHandler):
             self.dbsession.commit()
             self.dbsession.flush()
             self.event_manager.push_score_update()
-            session = self.session()
             self.flush_memcached()
-            self.set_session(session)
             if options.teams:
                 success = "Successfully Deleted Teams"
             else:
