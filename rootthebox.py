@@ -590,6 +590,14 @@ define(
 )
 
 define(
+    "game_version",
+    default="1.0",
+    group="game",
+    help="optional version for this game",
+    type=game_type,
+)
+
+define(
     "ctf_logo",
     default="/static/images/rtb2.png",
     group="game",

@@ -337,9 +337,10 @@ class StatusHandler(BaseHandler):
     """Status"""
 
     def get(self, *args, **kwargs):
-        teamcount = len(self.application.settings["scoreboard_state"].get("teams"))
+        teamcount = len(Team.all())
         status = {
-            "version": self.application.settings["version"],
+            "rtb_version": self.application.settings["version"],
+            "game_version": options.game_version,
             "name": options.game_name,
             "game_started": self.application.settings["game_started"],
             "suspend_registration": self.application.settings["suspend_registration"],

@@ -29,6 +29,7 @@ def send_game_start_webhook():
     send_webhook(
         {
             "game": options.game_name,
+            "game_version": options.game_version,
             "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "game_start",
         }
@@ -39,6 +40,7 @@ def send_game_stop_webhook():
     send_webhook(
         {
             "game": options.game_name,
+            "game_version": options.game_version,
             "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "game_stop",
         }
@@ -49,6 +51,7 @@ def send_capture_webhook(user, flag, reward):
     send_webhook(
         {
             "game": options.game_name,
+            "game_version": options.game_version,
             "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "capture_flag",
             "flag": {"name": flag.name, "original_value": flag.value, "value": reward},
@@ -62,6 +65,7 @@ def send_capture_failed_webhook(user, flag):
     send_webhook(
         {
             "game": options.game_name,
+            "game_version": options.game_version,
             "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "capture_failed",
             "flag": {"name": flag.name, "original_value": flag.value},
@@ -75,6 +79,7 @@ def send_level_complete_webhook(user, level):
     send_webhook(
         {
             "game": options.game_name,
+            "game_version": options.game_version,
             "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "level_complete",
             "level": {
@@ -93,6 +98,7 @@ def send_box_complete_webhook(user, box):
     send_webhook(
         {
             "game": options.game_name,
+            "game_version": options.game_version,
             "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "box_complete",
             "box": {
@@ -111,6 +117,7 @@ def send_hint_taken_webhook(user, hint):
     send_webhook(
         {
             "game": options.game_name,
+            "game_version": options.game_version,
             "origin": options.origin.replace("wss://", "").replace("ws://", ""),
             "action": "hint_taken",
             "flag": {"name": hint.flag.name},
@@ -124,6 +131,7 @@ def send_hint_taken_webhook(user, hint):
 def get_user_info(user):
     return {
         "game": options.game_name,
+        "game_version": options.game_version,
         "origin": options.origin.replace("wss://", "").replace("ws://", ""),
         "handle": user.handle,
         "email": user.email,
@@ -133,6 +141,7 @@ def get_user_info(user):
 def get_team_info(team):
     return {
         "game": options.game_name,
+        "game_version": options.game_version,
         "origin": options.origin.replace("wss://", "").replace("ws://", ""),
         "name": team.name,
         "money": team.get_score("money"),
