@@ -494,7 +494,7 @@ define(
 define(
     "show_organizor_help",
     default=False,
-    group="game",
+    group="application",
     help="show an info text on the user's home page about organizor help",
     type=bool,
 )
