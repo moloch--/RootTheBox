@@ -832,6 +832,14 @@ define(
 )
 
 define(
+    "show_source_code_description",
+    default=False,
+    group="game",
+    help="show description of a source code file to users",
+    type=bool,
+)
+
+define(
     "password_upgrade_cost",
     default=1000,
     group="game",

@@ -62,6 +62,9 @@
                             <th>{{ _("Level") }}</th>
                             <th>{% if options.banking %}{{ _("Price") }}{% else %}{{ _("Cost") }}{% end %}</th>
                             <th>{{ _("File Name") }}</th>
+							{% if options.show_source_code_description %}
+								<th>{{ _("File Description") }}</th>
+							{% end %}
                             <th>{{ _("Checksum") }}</th>
                             <th><!-- Buy/Download --></th>
                         </tr>
@@ -78,6 +81,9 @@
                                 {% else %}
                                     <td>{{ box.source_code.file_name[:25] + "..." }}</td>
                                 {% end %}
+								{% if options.show_source_code_description %}
+									<td>{{ box.source_code.description }}</td>
+								{% end %}
                                 <td>{{ box.source_code.checksum }}</td>
                                 {% if box.source_code in user.team.purchased_source_code %}
                                     <td>
