@@ -410,6 +410,14 @@ define(
 )
 
 define(
+    "suspend_registration",
+    default=False,
+    group="application",
+    help="suspend the registration automatically",
+    type=bool,
+)
+
+define(
     "auth",
     default="db",
     group="application",

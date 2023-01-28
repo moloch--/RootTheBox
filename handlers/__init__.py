@@ -244,7 +244,7 @@ app = Application(
     debug=options.debug,
     # Flags used to run the game
     game_started=options.autostart_game,
-    suspend_registration=False,
+    suspend_registration=options.suspend_registration,
     countdown_timer=False,
     hide_scoreboard=False,
     stop_timer=False,
