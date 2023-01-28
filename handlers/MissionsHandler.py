@@ -279,17 +279,10 @@ class BoxHandler(BaseHandler):
         old_reward = flag.dynamic_value(user.team) if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
         if options.banking:
-            reward_dialog += (
-                "$"
-                + str(old_reward)
-                + " has been added to your "
-                + teamval
-                + "account."
-            )
+            reward_added_str_template = "$ {} has been added to your " + teamval + "account."
         else:
-            reward_dialog += (
-                str(old_reward) + " points added to your " + teamval + "score."
-            )
+            reward_added_str_template = "{} points added to your " + teamval + "score."
+        reward_dialog += reward_added_str_template.format(str(old_reward))
         success = [reward_dialog]
 
         # Fire capture webhook
@@ -303,7 +296,7 @@ class BoxHandler(BaseHandler):
                 self.dbsession.add(user.team)
                 self.dbsession.flush()
                 self.dbsession.commit()
-                dialog = str(box.value) + " points added to your " + teamval + "score."
+                dialog = reward_added_str_template.format(str(box.value))
                 reward_dialog += dialog
                 success.append(
                     "Congratulations! You have completed " + box.name + ". " + dialog
@@ -326,21 +319,7 @@ class BoxHandler(BaseHandler):
                 self.dbsession.add(user.team)
                 self.dbsession.flush()
                 self.dbsession.commit()
-                if options.banking:
-                    reward_dialog += (
-                        "$"
-                        + str(level._reward)
-                        + " has been added to your "
-                        + teamval
-                        + "account."
-                    )
-                else:
-                    reward_dialog += (
-                        str(level._reward)
-                        + " points added to your "
-                        + teamval
-                        + "score."
-                    )
+                reward_dialog += reward_added_str_template.format(str(level._reward))
             success.append(
                 "Congratulations! You have completed "
                 + level.name
