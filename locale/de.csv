@@ -30,6 +30,8 @@ Admin Notes,Admin-Hinweise
 Administrator Panel,Administrator Panel
 Admins,Admins
 All Notifications,Alle Benachrichtigungen
+"Allows your team access to the Source Code Black Market where you can purchase leaked source code for certain target boxes.","Erlaubt ihrem Team Zugriff auf den Quellcode-Schwarzmarkt, welcher es ihnen erlaubt durchgesickerte Quellcodes für bestimmtes Ziele zu kaufen."
+Allows your team to upgrade their password hashes to more secure algorithms such as SHA1, and SHA256.,Erlaubt ihrem Team ihre Passwort-Hashes auf einen sichereren Algorithmus wie z.B. SHA1 und SHA256 zu aktualiseren.
 and logos in export.,und Logos im Export.
 and so on,und so weiter
 Apply penalty on attempt,Bestrafung beim Versuch
@@ -292,6 +294,8 @@ Flags Captured,Eroberte Flaggen
 Flags on,Flaggen auf
 for,zum
 Forbidden,verboten
+"Gain access to the internal New York Federal Reserve banking system, allowing you to transfer funds to/from accounts.","Erhalte Zugriff auf das interne Banksystem der New York Federal Reserve, um Kapital zu/von ihrem Account zu transferieren."
+"Gain access to the internal police computer system, allowing you to insert fraudlent arrest warrents for other players.","Erhalte Zugriff auf das interne Computersystem der Polizei, um betrügerische Haftbefehle für andere Spieler einzutragen."
 Game,Spiel
 Game Control,Spielsteuerung
 Game Information,Spielinformationen
@@ -588,6 +592,7 @@ Teams,Mannschaften
 Test Flag,Testflag
 Text Share,Text teilen
 The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.,Der Schwarzmarkt ist offen und Sie kennen einen Mann. Laden Sie den Quellcode eines Ziels oder S.W.A.T. andere Spieler durch Bestechung der Polizei (im Spiel).
+The black market is open and you know a guy. The following items are available:,Der Schwarzmarkt ist offen und Sie kennen einen Mann. Folgende Artikel werden angeboten:
 The cost to take the hint.  Can be >= 0.,Die Kosten für den Hinweis. Kann> = 0 sein.
 The deduction is,Der Abzug ist
 "The only other possibility is that I messed up some of the code, and that doesn't seem very likely.","Die einzige andere Möglichkeit ist, dass ich einen Teil des Codes durcheinander gebracht habe, und das scheint nicht sehr wahrscheinlich zu sein."

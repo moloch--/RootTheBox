@@ -832,6 +832,14 @@ define(
 )
 
 define(
+    "allowed_market_items",
+    default=["Source Code Market", "Password Security", "Federal Reserve", "SWAT"],
+    group="game",
+    help="if black market is enabled only allow these market items",
+    multiple=True,
+)
+
+define(
     "password_upgrade_cost",
     default=1000,
     group="game",

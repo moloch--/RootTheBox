@@ -30,7 +30,7 @@ import logging
 
 from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
-from libs.SecurityDecorators import use_black_market
+from libs.SecurityDecorators import use_black_market, item_allowed
 from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
 from builtins import str
@@ -300,6 +300,7 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
 
 class ScoreboardWallOfSheepHandler(BaseHandler):
     @use_black_market
+    @item_allowed("Federal Reserve")
     def get(self, *args, **kwargs):
         """Optionally order by argument; defaults to date/time"""
         user = self.get_current_user()

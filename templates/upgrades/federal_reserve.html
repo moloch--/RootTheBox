@@ -9,8 +9,9 @@
 <link href="/static/css/terminal.css" rel="stylesheet" />
 {% end %}
 
+{% from tornado.options import options %}
 {% block content %}
-    {% if user.has_item("Federal Reserve") %}
+    {% if "Federal Reserve" in options.allowed_market_items and user.has_item("Federal Reserve") %}
         <div class="container">
             <h1>{{ _("Federal Reserve Bank") }}</h1>
             <br />

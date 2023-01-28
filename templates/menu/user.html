@@ -182,7 +182,7 @@
                                     {{ _("Charts") }}
                               </a>
                             </li>
-                            {% if options.use_black_market %}
+                            {% if options.use_black_market and "Federal Reserve" in options.allowed_market_items %}
                             <li>
                                 <a href="/scoreboard/wall_of_sheep">
                                     <i class="fa fa-fw fa-key"></i>
