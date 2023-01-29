@@ -56,7 +56,7 @@ Authenticate,Authentifizieren
 Authentication Failure,Authentifizierungsfehler
 Authentication Required,Authentifizierung erforderlich
 Automatic Ban,Automatisches Verbot
-Available=Verfügbar
+Available,Verfügbar
 Avatar,Benutzerbild
 Backup/Restore,Backup wiederherstellen
 Ban IP Address,IP-Adresse sperren
@@ -701,7 +701,7 @@ You have not submitted any bribes yet.,Sie haben noch keine Bestechungsgelder ei
 "Request Password Reset",Zurücksetzung des Passwortes beantragen
 "Update Email",E-Mail aktualisieren
 "Please check your email for account validation",Bitte bestätigen Sie ihre E-Mail Adresse
-Validate Email,E-Mail valideren
+Validate Email,E-Mail validieren
 "Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.","Bei Aktivierung dieses Features wird eine Email Validierung erforderlich bevor der Benutzer auf das Spiel zugreifen kann. Bei Deaktivierung ist keine Validierung nötig."
 Note: Mail settings must be defined.,Bemerkung: E-Mail Einstellung müssen definiert sein.
 Validation,Validierung
