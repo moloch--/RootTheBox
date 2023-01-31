@@ -491,6 +491,14 @@ define(
     help="links to add to the tool menu",
 )
 
+define(
+    "show_organizor_help",
+    default=False,
+    group="application",
+    help="show an info text on the user's home page about organizor help",
+    type=bool,
+)
+
 # Azure AD
 define("client_id", default="", group="azuread")
 define("tenant_id", default="common", group="azuread")
