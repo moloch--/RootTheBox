@@ -227,7 +227,7 @@
             {% end %}
         {% end %}
         {% if len(box.hints) != 0 %}
-            <input id="hintbanking" value="str(config.banking).lower()" type="hidden" />
+            <input id="hintbanking" value="{{ str(options.banking).lower() }}" type="hidden" />
             {% for index, hint in enumerate(box.hints) %}
                 {% if hint.flag_id %}
                     {% set flaghints.append(hint) %}
@@ -441,7 +441,7 @@
             </div>
         {% end %}
         {% if len(box.hints) != 0 %}
-            <input id="hintbanking" value="str(config.banking).lower()" type="hidden" />
+            <input id="hintbanking" value="{{ str(options.banking).lower() }}" type="hidden" />
             {% if len(boxhints) > 0 %}
                 <div class="well">
                     <table class="table table-hover">

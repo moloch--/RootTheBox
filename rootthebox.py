@@ -410,6 +410,14 @@ define(
 )
 
 define(
+    "suspend_registration",
+    default=False,
+    group="application",
+    help="suspend the registration automatically",
+    type=bool,
+)
+
+define(
     "auth",
     default="db",
     group="application",
@@ -489,6 +497,14 @@ define(
     default=[{"name": "CyberChef", "url": "/cyberchef/", "target": "_blank"}],
     group="application",
     help="links to add to the tool menu",
+)
+
+define(
+    "show_organizor_help",
+    default=False,
+    group="application",
+    help="show an info text on the user's home page about organizor help",
+    type=bool,
 )
 
 # Azure AD
@@ -837,6 +853,14 @@ define(
     group="game",
     help="if black market is enabled only allow these market items",
     multiple=True,
+)
+
+define(
+    "show_source_code_description",
+    default=False,
+    group="game",
+    help="show description of a source code file to users",
+    type=bool,
 )
 
 define(

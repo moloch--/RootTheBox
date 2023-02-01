@@ -132,6 +132,17 @@
                     </div>
                 </div>
                 <br/>
+				{% if options.show_organizor_help %}
+				<div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-question-circle" style="font-size: 180%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+							{{ _("If you have any questions or need help do not hestitate to ask one of the organizers.") }}
+                    </div>
+                </div>
+				<br/>
+				{% end %}
                 <div class="row">
                     <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
                         <i class="fa fa-crosshairs" style="font-size: 180%;"></i>

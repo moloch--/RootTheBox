@@ -7,6 +7,7 @@ Accept Bribe?,Bestechung annehmen?
 Accept this bribe?,Diese Bestechung annehmen?
 Accepted,Akzeptiert
 Accepted / In Jail,Akzeptiert / Im Gefängnis
+Access,Zugriff
 Account Locked!,Konto gesperrt!
 Account Password,Konto Passwort
 Active Bots,Aktive Bots
@@ -57,6 +58,7 @@ Authenticate,Authentifizieren
 Authentication Failure,Authentifizierungsfehler
 Authentication Required,Authentifizierung erforderlich
 Automatic Ban,Automatisches Verbot
+Available,Verfügbar
 Avatar,Benutzerbild
 Backup/Restore,Backup wiederherstellen
 Ban IP Address,IP-Adresse sperren
@@ -131,6 +133,7 @@ Completed Bribes,Abgeschlossene Bestechungen
 Completion Message,Abschlussnachricht
 completion of Level,Abschluss des Levels
 Completion Reward,Abschlussbelohnung
+configuration,Konfiguration
 Configuration,Konfiguration
 Confirm,Bestätigen
 Confirm Account Password,Bestätigen Sie das Konto-Passwort
@@ -216,7 +219,7 @@ Dynamic Scoring,Dynamisches Punkten
 Each flag has a submit.  The player will choose the flag they intend to capture.,"Jede Flagge hat ein Submit. Der Spieler wählt die Flagge, die er erobern möchte."
 "Each player will target challenges of varying difficulty and sophistication, attempting to collect flags and win glory.  Good luck!","Jeder Spieler visiert Herausforderungen unterschiedlicher Schwierigkeit und Rafinesse an und versucht, Flaggen zu sammeln und Ruhm zu erlangen. Viel Glück!"
 Edit,Bearbeiten
-Edit Access,Toegang bewerken
+Edit Access,Zugriff bearbeiten
 Edit Account,Konto bearbeiten
 Edit Box,Box bearbeiten
 Edit Category,Kategorie bearbeiten
@@ -305,6 +308,7 @@ Game Management,Spielverwaltung
 Game Materials,Spielmaterialien
 Game Metrics,Spielmetriken
 Game Name,Spielname
+Game Points,Spielpunkte
 Game Progress,Spielfortschritt
 Garbage File,Mülleimer
 Get help with,Holen Sie sich Hilfe bei
@@ -312,7 +316,7 @@ Get your registration token from reception,Holen Sie sich Ihren Registrierungs-T
 Glitch in the Matrix,Glitch in der Matrix
 Global Notifications,Globale Benachrichtigungen
 Handle,Identifikator
-Hide scoreboard during countdown,Scorebord verbergen tijdens aftellen
+Hide scoreboard during countdown,Scorebord während des Countdowns verbergen
 Hint,Hinweis
 Hint not yet taken,Hinweis noch nicht genutzt
 Hint Taken,Hinweis genutzt
@@ -325,6 +329,7 @@ How should the next level unlock?,Wie soll das nächste Level freigeschaltet wer
 I accept the,Ich akzeptiere die 
 "If the flag selection is left empty, the hint will be considered a Box Hint.","Wenn die Flaggen-Auswahl leer gelassen wird, wird der Hinweis berücksichtigt"
 "If this option is disabled, there is no cost for submitting incorrect flags.","Wenn diese Option deaktiviert ist, fallen keine Kosten für die Übermittlung falscher Flaggen an."
+If you have any questions or need help do not hestitate to ask one of the organizers., Wenn Sie Fragen oder Probleme haben zögern Sie nicht sich an einen der Organisatoren zu wenden.
 Import File,Datei importieren
 Import XML,XML importieren
 Import XML,XML importieren
@@ -362,6 +367,7 @@ Limit number of players that can be on any one team,"Begrenzen Sie die Anzahl de
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Begrenzt die Anzahl der Versuche, eine Flagge zu erobern. Sobald das Limit erreicht ist, kann für dieses Flag keine weitere Aktion ausgeführt werden."
 Linux,Linux
 Lock,Sperren
+Locked,Gesperrt
 Locked by,Gesperrt von
 Login,Anmeldung
 Login Password,Passwort
@@ -370,7 +376,7 @@ MacOS,Mac OS
 Mainframe Console,Mainframe-Konsole
 Manage Black Market,Schwarzmarkt verwalten
 Manage Categories,Kategorien verwalten
-Managed,Beheerd
+Managed,Verwaltet
 Market Objects,Marktobjekte
 Max,Max
 Max Flag Attempts,Max. Flaggen-Versuche
@@ -419,7 +425,7 @@ No Completed Bribes,Keine abgeschlossenen Bestechungsgelder
 No flags captured yet.,Noch keine Flaggen erfasst.
 No flags on this box yet,Noch keine Flaggen auf dieser Box
 No further penalty thereafter.,Keine weitere Strafe danach.
-No Lock,Kein Schloss
+No Lock,Keine Sperrung
 No name,Kein Name
 No Pending Bribes,Keine ausstehenden Bestechungsgelder
 No sheep yet - check back later.,Noch keine Schafe - versuchen Sie es später noch einmal.
@@ -479,7 +485,7 @@ Players,Spieler
 Please do NOT enter your real bank account password.,Bitte geben Sie NICHT Ihr echtes Bankkonto-Passwort ein.
 points,Punkte
 Points,Punkte
-points,Punkte
+Points Required,Benötigte Punkte
 Previous Bribes,Vorherige Bestechungsgelder
 Price,Preis
 Privacy Policy,Datenschutz Richtlinie
@@ -490,7 +496,7 @@ Public,Öffentlichkeit
 Public Team Creation,Öffentliche Teambildung
 Public Teams,Öffentliche Teams
 Purchase,Kauf
-Purchase Unlock,Kauf Unlock
+Purchase Unlock,Entsperrung kaufen
 Purchased,Gekauft
 Rank By,Rang nach
 Regex Flag,Regex Flagge
@@ -500,7 +506,7 @@ Registration,Registrierung
 Registration Email,Registrierungs-E-Mail
 Registration Tokens,Registrierungs-Tokens
 Regular Expression,Regulären Ausdruck
-Remove,Verwijderen
+Remove,Entfernen
 Require Email,E-Mail anfordern
 Reset Actions,Aktionen zurücksetzen
 Reset Game,Spiel zurücksetzen
@@ -516,8 +522,9 @@ Reward,Belohnung
 Role,Rolle
 Rules of Engagement: Do not attack the game scoreboard platform.  Do not change the passwords of existing accounts in the network unless specified by a game objective.,"Einsatzregeln: Greife die Plattform des Spielanzeigers nicht an. Ändern Sie die Kennwörter bestehender Konten im Netzwerk nur, wenn dies von einem Spielziel festgelegt wurde."
 S.W.A.T,S.W.A.T.
-Save,sparen
+Save,Speichern
 Score,Ergebnis
+Score Points Earned,Verdiente Spielpunkte
 Scoreboard,Anzeigetafel
 Scoreboard Rank By,Anzeigetafel Rang nach
 Scoreboard Visibility,Sichtbarkeit der Anzeigetafel
@@ -530,7 +537,7 @@ Send,Senden
 Send a global notification to all players,Sende eine globale Benachrichtigung an alle Spieler
 Set Countdown Timer,Countdown-Timer einstellen
 Set the game countdown timer,Stellen Sie den Countdown-Timer für das Spiel ein
-Settings,die Einstellungen
+Settings,Einstellungen
 Share your team code to allow other players to join,Teilen Sie Ihren Teamcode mit anderen Spielern
 Shared Files,Geteilte Dateien
 Sheep,Schaf
@@ -639,9 +646,9 @@ Total Users,Benutzer insgesamt
 Total Teams,Gesamtteams
 Total Boxes,Gesamtboxen
 Type,Art
-Unknown,unbekannte
+Unknown,Unbekannt
 Unlock,Freischalten
-Unlock Cost,Kosten freischalten
+Unlock Cost,Freischaltungskosten
 Unlock Level,Level freischalten
 Unlocks,Entsperrt
 Unlocks after,Entsperrt nach
@@ -695,12 +702,12 @@ You have not submitted any bribes yet.,Sie haben noch keine Bestechungsgelder ei
 "Your email, visible to game administrators.","Deine E-Mail, sichtbar für Spieladministratoren."
 "Your handle must be 3-16 alphanumeric characters.  Underscore, dash, and dots allowed.","Ihr Handle muss aus 3 bis 16 alphanumerischen Zeichen bestehen. Unterstreichen, Bindestrich und Punkte sind zulässig."
 "Your name, visible to game administrators.  Your name can be 3-64 alphanumeric characters","Dein Name, sichtbar für Spieladministratoren. Ihr Name kann aus 3-64 alphanumerischen Zeichen bestehen"
-"Password Reset",Wachtwoord reset
-"Forgot Password",Wachtwoord vergeten
-"Request Password Reset",Wachtwoord reset aanvragen
-"Update Email",E-mail bijwerken
-"Please check your email for account validation",Controleer uw e-mail voor accountvalidatie
-Validate Email,Email valideren
-"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.","Het inschakelen van deze functie vereist validatie van e-mail voordat de gebruiker toegang heeft tot de game. Als deze optie is uitgeschakeld, wordt e-mail niet geverifieerd."
-Note: Mail settings must be defined.,Opmerking: e-mailinstellingen moeten zijn gedefinieerd.
-Validation,Validatie
+"Password Reset",Passwort zurücksetzen
+"Forgot Password",Passwort vergessen
+"Request Password Reset",Zurücksetzung des Passwortes beantragen
+"Update Email",E-Mail aktualisieren
+"Please check your email for account validation",Bitte bestätigen Sie ihre E-Mail Adresse
+Validate Email,E-Mail validieren
+"Enabling this feature will require validation of email before the user can access the game.  If this option is disabled, email will not be verified.","Bei Aktivierung dieses Features wird eine Email Validierung erforderlich bevor der Benutzer auf das Spiel zugreifen kann. Bei Deaktivierung ist keine Validierung nötig."
+Note: Mail settings must be defined.,Bemerkung: E-Mail Einstellung müssen definiert sein.
+Validation,Validierung

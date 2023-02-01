@@ -225,7 +225,7 @@
                     <li>
                         <a href="/about">
                             <i class="fa fa-fw fa-info-circle"></i>
-                            &nbsp;{{ _("About") }}
+                            {{ _("About") }}
                         </a>
                     </li>
                     <li class="divider"></li>
@@ -233,7 +233,7 @@
                         <form id="logout-form" action="/logout" method="post">
                             {% raw xsrf_form_html() %}
                         </form>
-                        <a id="logout">
+                        <a id="logout" href="#">
                             <i class="fa fa-fw fa-sign-out"></i>
                             {{ _("Logout") }}
                         </a>
