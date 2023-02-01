@@ -164,6 +164,25 @@ def has_item(name):
         return wrapper
 
     return func
+    
+def item_allowed(name):
+    """Checks an unlock/item is allowed to use"""
+
+    def func(method):
+        @functools.wraps(method)
+        def wrapper(self, *args, **kwargs):
+            if name in options.allowed_market_items:
+                return method(self, *args, **kwargs)
+            else:
+                logging.warning(
+                    "Attempted unauthorized access from %s to %s"
+                    % (self.request.remote_ip, self.request.uri)
+                )
+                self.redirect(self.application.settings["forbidden_url"])
+
+        return wrapper
+
+    return func
 
 
 def use_bots(method):

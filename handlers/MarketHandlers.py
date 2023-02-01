@@ -55,7 +55,13 @@ class MarketViewHandler(BaseHandler):
         if item is not None:
             user = self.get_current_user()
             team = Team.by_id(user.team.id)  # Refresh object
-            if user.has_item(item.name):
+            if item.name not in options.allowed_market_items:
+                self.render(
+                    "market/view.html",
+                    user=self.get_current_user(),
+                    errors=["Item is not allowed."],
+                )
+            elif user.has_item(item.name):
                 self.render(
                     "market/view.html",
                     user=user,
@@ -104,6 +110,8 @@ class MarketDetailsHandler(BaseHandler):
         item = MarketItem.by_uuid(uuid)
         if item is None:
             self.write({"Error": "Item does not exist."})
+        elif item.name not in options.allowed_market_items:
+            self.write({"Error": "Item is not allowed."})
         else:
             self.write(item.to_dict())
         self.finish()
