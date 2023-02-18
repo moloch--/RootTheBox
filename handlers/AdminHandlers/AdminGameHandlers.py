@@ -734,6 +734,7 @@ class AdminResetHandler(BaseHandler):
             logging.error(str(e))
             self.render("admin/reset.html", success=None, errors=errors)
 
+
 class AdminResetDeleteHandler(BaseHandler):
     @restrict_ip_address
     @authenticated

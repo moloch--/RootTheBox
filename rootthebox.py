@@ -1034,7 +1034,7 @@ define(
     default=False,
     group="anti-bruteforce",
     type=bool,
-    help="configures the option to automatically ban bruteforce"
+    help="configures the option to automatically ban bruteforce",
 )
 
 define(

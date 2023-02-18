@@ -164,7 +164,8 @@ def has_item(name):
         return wrapper
 
     return func
-    
+
+
 def item_allowed(name):
     """Checks an unlock/item is allowed to use"""
 
