@@ -40,8 +40,6 @@ from models.User import ADMIN_PERMISSION
 from models.Team import Team
 from models.Theme import Theme
 from models.Penalty import Penalty
-from models.Snapshot import Snapshot
-from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Corporation import Corporation
 from models.Category import Category
@@ -644,13 +642,6 @@ class AdminImportXmlHandler(BaseHandler):
             logging.info("Starting botnet callback function")
             self.application.settings["score_bots_callback"].start()
 
-        logging.info("Restarting history callback function")
-        game_history = GameHistory.instance()
-        self.application.settings["history_callback"].stop()
-        self.application.history_callback = PeriodicCallback(
-            game_history.take_snapshot, options.history_snapshot_interval
-        )
-        self.application.settings["history_callback"].start()
 
 
 class AdminResetHandler(BaseHandler):
@@ -706,16 +697,6 @@ class AdminResetHandler(BaseHandler):
             for swat in swats:
                 self.dbsession.delete(swat)
             self.dbsession.commit()
-            snapshot = Snapshot.all()
-            for snap in snapshot:
-                self.dbsession.delete(snap)
-            self.dbsession.commit()
-            snapshot_team = SnapshotTeam.all()
-            for snap in snapshot_team:
-                self.dbsession.delete(snap)
-            self.dbsession.commit()
-            game_history = GameHistory.instance()
-            game_history.take_snapshot()  # Take starting snapshot
             flags = Flag.all()
             for flag in flags:
                 # flag.value = flag.value allows a fallback to when original_value was used
@@ -769,22 +750,12 @@ class AdminResetDeleteHandler(BaseHandler):
             for swat in swats:
                 self.dbsession.delete(swat)
             self.dbsession.commit()
-            snapshot = Snapshot.all()
-            for snap in snapshot:
-                self.dbsession.delete(snap)
-            self.dbsession.commit()
-            snapshot_team = SnapshotTeam.all()
-            for snap in snapshot_team:
-                self.dbsession.delete(snap)
-            self.dbsession.commit()
             for user in users:
                 self.dbsession.delete(user)
             self.dbsession.commit()
             for team in teams:
                 self.dbsession.delete(team)
             self.dbsession.commit()
-            game_history = GameHistory.instance()
-            game_history.take_snapshot()  # Take starting snapshot
             flags = Flag.all()
             for flag in flags:
                 # flag.value = flag.value allows a fallback to when original_value was used

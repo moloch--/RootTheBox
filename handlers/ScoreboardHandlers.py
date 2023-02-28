@@ -31,7 +31,6 @@ import logging
 from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import use_black_market, item_allowed
-from libs.GameHistory import GameHistory
 from libs.Scoreboard import Scoreboard
 from builtins import str
 from math import ceil
@@ -268,10 +267,9 @@ class ScoreboardFeedHandler(BaseHandler):
 class ScoreboardHistorySocketHandler(WebSocketHandler):
 
     connections = set()
-    game_history = GameHistory.instance()
+    game_history = []
 
     def initialize(self):
-        self.game_history._load()
         self.last_message = datetime.now()
 
     def open(self):

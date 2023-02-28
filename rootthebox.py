@@ -57,9 +57,7 @@ def start():
             os._exit(1)
 
     """ Starts the application """
-    from handlers import start_server, load_history
-
-    load_history()
+    from handlers import start_server
 
     prefix = "https://" if options.ssl else "http://"
     # TODO For docker, it would be nice to grab the mapped docker port
@@ -1013,14 +1011,6 @@ define(
 )
 
 # I/O Loop Settings
-define(
-    "history_snapshot_interval",
-    default=int(60000 * 5),
-    group="game",
-    help="interval to create history snapshots (milliseconds)",
-    type=int,
-)
-
 define(
     "bot_reward_interval",
     default=int(60000 * 15),

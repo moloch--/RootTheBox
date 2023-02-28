@@ -56,8 +56,6 @@ from models.Theme import Theme, ThemeFile
 from models.RegistrationToken import RegistrationToken
 from models.MarketItem import MarketItem
 from models.IpAddress import IpAddress
-from models.Snapshot import Snapshot
-from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.Hint import Hint
