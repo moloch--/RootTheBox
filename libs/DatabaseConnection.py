@@ -105,12 +105,13 @@ class DatabaseConnection(object):
             db_name = "rtb"
         if not db_name.endswith(".db"):
             db_name = "%s.db" % db_name
-        if os.path.exists(db_name):
+        if os.path.exists("files/%s" % db_name):
+            path = "sqlite:///files/%s" % db_name
+        elif os.path.exists(db_name):
             path = "sqlite:///%s" % db_name
         else:
-            if not os.path.exists("files/%s" % db_name):
-                logging.debug("Created rootthebox database at: %s" % path)
             path = "sqlite:///files/%s" % db_name
+            logging.debug("Created rootthebox database at: %s" % path)
         return path
 
     def _mysql(self):
