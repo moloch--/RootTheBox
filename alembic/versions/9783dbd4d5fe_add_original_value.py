@@ -17,20 +17,20 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column(
-        "hint",
-        "_description",
-        existing_type=sa.VARCHAR(length=512),
-        type_=sa.VARCHAR(length=1024),
-    )
+    with op.batch_alter_table("hint") as batch_op:
+        batch_op.alter_column(
+            "_description",
+            existing_type=sa.VARCHAR(length=512),
+            type_=sa.VARCHAR(length=1024),
+        )
     op.add_column("flag", sa.Column("_original_value", sa.INTEGER))
 
 
 def downgrade():
-    op.alter_column(
-        "hint",
-        "_description",
-        existing_type=sa.VARCHAR(length=1024),
-        type_=sa.VARCHAR(length=512),
-    )
+    with op.batch_alter_table("hint") as batch_op:
+        batch_op.alter_column(
+            "_description",
+            existing_type=sa.VARCHAR(length=1024),
+            type_=sa.VARCHAR(length=512),
+        )
     op.drop_column("flag", "_original_value")

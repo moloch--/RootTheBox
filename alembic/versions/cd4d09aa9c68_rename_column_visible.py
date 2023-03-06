@@ -17,12 +17,14 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column(
-        "ip_address", "visable", new_column_name="visible", existing_type=sa.BOOLEAN
-    )
+    with op.batch_alter_table("ip_address") as batch_op:
+        batch_op.alter_column(
+            "visable", new_column_name="visible", existing_type=sa.BOOLEAN
+        )
 
 
 def downgrade():
-    op.alter_column(
-        "ip_address", "visible", new_column_name="visable", existing_type=sa.BOOLEAN
-    )
+    with op.batch_alter_table("ip_address") as batch_op:
+        batch_op.alter_column(
+            "visible", new_column_name="visable", existing_type=sa.BOOLEAN
+        )

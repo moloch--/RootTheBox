@@ -17,18 +17,18 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column(
-        "category",
-        "_category",
-        existing_type=sa.VARCHAR(length=24),
-        type_=sa.VARCHAR(length=64),
-    )
+    with op.batch_alter_table("category") as batch_op:
+        batch_op.alter_column(
+            "_category",
+            existing_type=sa.VARCHAR(length=24),
+            type_=sa.VARCHAR(length=64),
+        )
 
 
 def downgrade():
-    op.alter_column(
-        "category",
-        "_category",
-        existing_type=sa.VARCHAR(length=64),
-        type_=sa.VARCHAR(length=24),
-    )
+    with op.batch_alter_table("category") as batch_op:
+        batch_op.alter_column(
+            "_category",
+            existing_type=sa.VARCHAR(length=64),
+            type_=sa.VARCHAR(length=24),
+        )
