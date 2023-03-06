@@ -153,6 +153,8 @@ class BotManager(object):
 
     def add_bot(self, bot_wsocket):
         if not self.is_duplicate(bot_wsocket):
+            from models.Team import Team
+
             bot = Bot(
                 wsock_uuid=str(bot_wsocket.uuid),
                 team_name=str(bot_wsocket.team_name),
@@ -161,11 +163,14 @@ class BotManager(object):
                 box_uuid=str(bot_wsocket.box_uuid),
                 remote_ip=str(bot_wsocket.remote_ip),
             )
+            team = Team.by_uuid(bot.team_uuid)
             bot.dbsession = self.dbsession
             self.botdb.add(bot)
             self.botdb.flush()
             self.botnet[bot_wsocket.uuid] = bot_wsocket
-            self.notify_monitors(bot.team_name)
+
+            team.set_bot(self.count_by_team_uuid(team.uuid))
+            self.notify_monitors(team.name)
             return True
         else:
             return False
@@ -178,12 +183,15 @@ class BotManager(object):
     def remove_bot(self, bot_wsocket):
         bot = self.botdb.query(Bot).filter_by(wsock_uuid=str(bot_wsocket.uuid)).first()
         if bot is not None:
+            from models.Team import Team
+
+            team = Team.by_uuid(bot.team_uuid)
             logging.debug("Removing bot '%s' at %s" % (bot.team_uuid, bot.remote_ip))
-            team = bot.team_name
             self.botnet.pop(bot_wsocket.uuid, None)
             self.botdb.delete(bot)
             self.botdb.flush()
-            self.notify_monitors(team)
+            team.set_bot(self.count_by_team_uuid(team.uuid))
+            self.notify_monitors(team.name)
         else:
             logging.warning(
                 "Failed to remove bot '%s' does not exist in manager" % bot_wsocket.uuid

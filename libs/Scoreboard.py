@@ -83,13 +83,15 @@ class Scoreboard(object):
             for item in highlights:
                 value = team.get_score(item)
                 game_state["teams"][team.name][item] = value
-                game_history = app.settings["scoreboard_history"]
-                if team.name in game_history:
-                    prev = game_history[team.name][item]
+                scoreboard_history = app.settings["scoreboard_history"]
+                if team.name in scoreboard_history:
+                    prev = scoreboard_history[team.name][item]
                     if prev < value:
                         highlights[item] = millis
                     else:
-                        highlights[item] = game_history[team.name]["highlights"][item]
+                        highlights[item] = scoreboard_history[team.name]["highlights"][
+                            item
+                        ]
             highlights["now"] = millis
             game_state["teams"][team.name]["highlights"] = highlights
             app.settings["scoreboard_history"][team.name] = game_state["teams"].get(
@@ -164,7 +166,7 @@ def score_bots():
                 )
                 bot_manager.add_rewards(team.name, options.bot_reward)
                 bot_manager.notify_monitors(team.name)
-                team.money += reward
+                team.set_score("bot", reward + team.money)
                 dbsession.add(team)
                 dbsession.flush()
                 event_manager.bot_scored(team, message)

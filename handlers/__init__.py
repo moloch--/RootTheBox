@@ -95,6 +95,7 @@ urls = [
     (r"/scoreboard/feed", ScoreboardFeedHandler),
     (r"/scoreboard/ajax/(.*)", ScoreboardAjaxHandler),
     (r"/scoreboard/wsocket/game_data", ScoreboardDataSocketHandler),
+    (r"/scoreboard/wsocket/game_history", ScoreboardHistorySocketHandler),
     (r"/scoreboard/wsocket/pause_score", ScoreboardPauseHandler),
     (r"/teams", TeamsHandler),
     # FileUploadHandlers - FileUploadHandlers.py

@@ -550,9 +550,9 @@ class RegistrationHandler(BaseHandler):
             team.motto = self.get_argument("motto", "")
             team._avatar = identicon(team.name, 6)
             if self.config.banking:
-                team.money = self.config.starting_team_money
+                team.set_score("start", self.config.starting_team_money)
             else:
-                team.money = 0
+                team.set_score("start", 0)
             levels = GameLevel.all()
             for level in levels:
                 if level.type == "none":
@@ -571,7 +571,9 @@ class RegistrationHandler(BaseHandler):
             if len(filter_avatars("team")) == 0:
                 team._avatar = identicon(team.name, 6)
             if not self.config.banking:
-                team.money = 0
+                team.set_score("start", 0)
+            else:
+                team.set_score("start", self.config.starting_team_money)
             level_0 = GameLevel.by_number(0)
             if not level_0:
                 level_0 = GameLevel.all()[0]

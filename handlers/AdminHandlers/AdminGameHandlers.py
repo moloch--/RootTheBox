@@ -50,7 +50,6 @@ from libs.SecurityDecorators import *
 from libs.StringCoding import encode, decode
 from libs.ValidationError import ValidationError
 from libs.ConfigHelpers import save_config
-from libs.GameHistory import GameHistory
 from libs.ConsoleColors import *
 from libs.Scoreboard import score_bots
 from handlers.BaseHandlers import BaseHandler
@@ -643,7 +642,6 @@ class AdminImportXmlHandler(BaseHandler):
             self.application.settings["score_bots_callback"].start()
 
 
-
 class AdminResetHandler(BaseHandler):
     @restrict_ip_address
     @authenticated
@@ -667,10 +665,11 @@ class AdminResetHandler(BaseHandler):
                 user.money = 0
             teams = Team.all()
             for team in teams:
+                team.game_history = []
                 if options.banking:
-                    team.money = options.starting_team_money
+                    team.set_score("start", options.starting_team_money)
                 else:
-                    team.money = 0
+                    team.set_score("start", 0)
                 team.flags = []
                 team.hints = []
                 team.boxes = []

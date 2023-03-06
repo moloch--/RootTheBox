@@ -24,26 +24,8 @@
                 <i class="fa fa-bar-chart-o"></i>
                 {{ _("Charts") }}
             </h1>
-            <h5 class="span11 graphhr">
-                    <span id="graphtext" style="float: right; cursor: pointer;"><i class="fa fa-caret-down graphtoggle"></i>&nbsp;&nbsp;{{ _("Charts") }}&nbsp;</span>
-            </h5>
             <br />
-            <div id="pie_graphs" class="row-fluid">
-                <div class="well span5 offset1">
-                    <div id="pie_flags" style="height:300px;" data-name="{{ _('Flags Captured') }} ({{ _('Top 10') }})">
-                        <!-- Pie Chart Here -->
-                    </div>
-                </div>
-                <div class="well span5">
-                    <div id="pie_money" style="height:300px;" 
-                        data-name="{% if options.banking %}{{ _('Bank Account') }}{% else %}{{ _('Score') }}{% end %}  ({{ _('Top 10') }})" 
-                        data-symbol="{% if options.banking %}{{ _('$') }}{% end %}">
-                        <!-- Pie Chart Here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row-fluid">
+            <div class="row-fluid">
             <div class="well span10 offset1">
                 <div class="navbar navbar-inverse">
                     <div class="navbar-inner">
@@ -79,17 +61,14 @@
                                             </a>
                                         </li>
                                     {% end %}
-                                    <li style="padding: 15px; padding-right: 0;">{{ _("Data Points") }}</li>
+                                    <li style="padding: 15px; padding-right: 0;">{{ _("Top") }}</li>
                                     <li style="padding: 10px; padding-bottom: 0px;">
                                         <select id="datapoints" style="width: 100px;">
-                                            <option value="29">30</option>
-                                            <option value="89">90</option>
-                                            <option value="149">150</option>
-                                            <option value="299">300</option>
-                                            <option value="499">500</option>
-                                            <option value="799">800</option>
-                                            <option value="1199">1200</option>
-                                            <option value="1499">1500</option>
+                                            <option value="5">5</option>
+                                            <option value="10" selected>10</option>
+                                            <option value="15">15</option>
+                                            <option value="25">20</option>
+                                            <option value="30">30</option>
                                         </select>  
                                     </li>
                                 </ul>
@@ -105,6 +84,21 @@
                 <div id="history-graph" style="height:400px;" data-name="{{ _('Botnets') }}"
                     data-xaxis="{{ _('Time') }}" data-yaxis="{{ _('Number of Bots') }}">
                     <!-- Graph goes here - used for several graphs, not just bots -->
+                </div>
+            </div>
+        </div>
+            <div id="pie_graphs" class="row-fluid">
+                <div class="well span5 offset1">
+                    <div id="pie_flags" style="height:300px;" data-name="{{ _('Flags Captured') }} ({{ _('Top 10') }})">
+                        <!-- Pie Chart Here -->
+                    </div>
+                </div>
+                <div class="well span5">
+                    <div id="pie_money" style="height:300px;" 
+                        data-name="{% if options.banking %}{{ _('Bank Account') }}{% else %}{{ _('Score') }}{% end %}  ({{ _('Top 10') }})" 
+                        data-symbol="{% if options.banking %}{{ _('$') }}{% end %}">
+                        <!-- Pie Chart Here -->
+                    </div>
                 </div>
             </div>
         </div>

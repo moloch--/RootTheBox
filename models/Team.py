@@ -34,6 +34,7 @@ from sqlalchemy.types import Integer, Unicode, String
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.User import User
+from models.GameHistory import GameHistory
 from models.Relationships import (
     team_to_box,
     team_to_item,
@@ -110,6 +111,12 @@ class Team(DatabaseObject):
         "GameLevel", secondary=team_to_game_level, back_populates="teams", lazy="select"
     )
 
+    game_history = relationship(
+        "GameHistory",
+        backref=backref("team", lazy="select"),
+        cascade="all,delete,delete-orphan",
+    )
+
     @classmethod
     def all(cls):
         """Returns a list of all objects in the database"""
@@ -152,16 +159,43 @@ class Team(DatabaseObject):
     def name(self):
         return self._name
 
-    def get_score(self, item):
-        if item == "money":
+    def get_score(self, _type):
+        if _type == "money":
             return self.money
-        elif item == "flag":
+        elif _type == "flag":
             return len(self.flags)
-        elif item == "hint":
+        elif _type == "hint":
             return len(self.hints)
-        elif item == "bot":
+        elif _type == "bot":
             return self.bot_count
         return 0
+
+    def set_score(self, _type, _money):
+        score_update = GameHistory(type=_type, value=_money)
+        self.game_history.append(score_update)
+        self.money = _money
+
+    def set_bot(self, botcount):
+        bot_update = GameHistory(type="bot_count", value=botcount)
+        self.game_history.append(bot_update)
+
+    def add_flag(self, flag):
+        self.flags.append(flag)
+        add_flag = GameHistory(type="flag_count", value=len(self.flags))
+        self.game_history.append(add_flag)
+
+    def get_history(self, _type=None):
+        history = []
+        for item in self.game_history:
+            if _type == "bots":
+                if item.type == "bot_count":
+                    history.append(item.to_dict())
+            elif _type == "flags":
+                if item.type == "flag_count":
+                    history.append(item.to_dict())
+            elif item.type != "flag_count" and item.type != "bot_count":
+                history.append(item.to_dict())
+        return history
 
     @name.setter
     def name(self, value):

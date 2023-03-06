@@ -76,7 +76,9 @@ class PasswordSecurityHandler(BaseHandler):
         elif user.team.money < self.config.password_upgrade_cost:
             self.render_page(["You cannot afford to upgrade your hash"])
         elif len(passwd) <= self.config.max_password_length:
-            user.team.money -= self.config.password_upgrade_cost
+            user.team.set_score(
+                "upgrade", user.team.money - self.config.password_upgrade_cost
+            )
             self.dbsession.add(user.team)
             self.dbsession.commit()
             self.event_manager.push_score_update()
@@ -239,9 +241,9 @@ class FederalReserveAjaxHandler(BaseHandler):
 
     def theft(self, victim, destination, amount, preimage):
         """Successfully cracked a password"""
-        victim.team.money -= abs(amount)
+        victim.team.set_score("theft", victim.team.money - abs(amount))
         value = int(abs(amount) * 0.85)
-        destination.money += value
+        destination.set_score("theft", destination.money + value)
         self.dbsession.add(destination)
         self.dbsession.add(victim.team)
         user = self.get_current_user()
@@ -284,7 +286,7 @@ class SourceCodeMarketHandler(BaseHandler):
         """Modify the database to reflect purchase"""
         team = self.get_current_user().team
         source_code = SourceCode.by_box_id(box.id)
-        team.money -= abs(source_code.price)
+        team.set_score("purchase_code", team.money - abs(source_code.price))
         team.purchased_source_code.append(source_code)
         logging.info(
             "%s purchased '%s' from the source code market."
@@ -385,7 +387,7 @@ class SwatHandler(BaseHandler):
         """Create Swat request object in database"""
         price = Swat.get_price(target)
         assert 0 < price
-        user.team.money -= price
+        user.team.set_score("purchase_swat", user.team.money - price)
         swat = Swat(user_id=user.id, target_id=target.id, paid=price)
         self.dbsession.add(swat)
         self.dbsession.add(user.team)

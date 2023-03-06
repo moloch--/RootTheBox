@@ -117,6 +117,14 @@ function setGraphScale(scale) {
 function setGraphSymbol(symbol) {
     symbol_val = symbol;
 }
+
+function extendData(series, axis) {
+    var ext = axis.getExtremes();
+    var x   = ext.dataMax;
+    var y   = series.data[series.data.length -1].y;
+    series.addPoint({'x':x, 'y':y, marker: { enabled: true }});
+}
+
 function drawBotGraph(state) {
     var chart = new Highcharts.Chart({
         chart: {
@@ -168,8 +176,12 @@ function drawBotGraph(state) {
                 enableMouseTracking: true
             }
         },
+        colors: ['#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE', '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92'],
         series: state,
     });
+    for (item in chart.series) {
+        extendData(chart.series[item], chart.xAxis[0]);
+    }
     return chart;
 }
 
@@ -224,12 +236,14 @@ function drawMoneyGraph(state) {
                 enableMouseTracking: true
             }
         },
+        colors: ['#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE', '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92'],
         series: state,
     });
+    for (item in chart.series) {
+        extendData(chart.series[item], chart.xAxis[0]);
+    }
     return chart;
 }
-
-
 
 function drawFlagGraph(state) {
 
@@ -249,6 +263,7 @@ function drawFlagGraph(state) {
                 },
         },
         xAxis: {
+            gridLineColor: "#888",
             type: 'datetime',
             title: {
                 text: $("#history-graph").data("xaxis"),
@@ -260,6 +275,7 @@ function drawFlagGraph(state) {
             }
         },
         yAxis: {
+            gridLineColor: "#888",
             title: {
                 text: $("#pie-flags").data("name"),
                 style: {
@@ -275,6 +291,7 @@ function drawFlagGraph(state) {
                 return '<strong>' + htmlEncode(this.series.name) + '</strong><br />' + htmlEncode(this.y) + ' flag(s)';
             }
         },
+        colors: ['#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE', '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92'],
         plotOptions: {
             line: {
                 dataLabels: {
@@ -285,6 +302,9 @@ function drawFlagGraph(state) {
         },
         series: state,
     });
+    for (item in chart.series) {
+        extendData(chart.series[item], chart.xAxis[0]);
+    }
     return chart;
 }
 
@@ -297,146 +317,62 @@ function getSeriesIndexByName(state, teamName) {
     return undefined;
 }
 
-/* Updates the local graph state */
-function updateFlagState(flagState, update) {
-    timestamp = update['timestamp'] * 1000;
-    for (var teamName in update['scoreboard']) {
-        flagCount = update['scoreboard'][teamName]['flags'].length;
-        seriesIndex = getSeriesIndexByName(flagState, teamName);
-        if (seriesIndex !== undefined) {
-            /* Add to existing series' data array */
-            flagState[seriesIndex].data.push([timestamp, flagCount]);
-        } else {
-            //console.log("Create flag series: " + teamName);
-            newSeries = {
-                name: teamName,
-                data: [
-                    [timestamp, flagCount],
-                ]
+/* Called if the graph is currently displayed */
+function liveUpdate(chart, update) {
+    for (var teamname in updates) {
+        teamdata = updates[teamName]
+        for(index = 0; index < teamdata.length; ++index) {
+            update = teamdata[index]
+            timestamp = update['timestamp'] * 1000;
+            teamname = update['team_name'];
+            value = update['value'];
+            seriesIndex = getSeriesIndexByName(chart.series, teamname);
+            if (index !== undefined) {
+                var shift = (30 <= chart.series[index].data.length);
+                var scores = [timestamp, value];
+                chart.series[index].addPoint(scores, true, shift);
+            } else {
+                create_series = {
+                    name: teamname,
+                    data: [
+                        [timestamp, value],
+                    ]
+                }
+                chart.addSeries(create_series);
             }
-            flagState.push(newSeries);
         }
     }
 }
 
-/* Called if the Flag graph is currently displayed */
-function liveFlagUpdate(chart, update) {
-    timestamp = update['timestamp'] * 1000;
-    for (var teamName in update['scoreboard']) {
-        //console.log("Updating: " + teamName);
-        flagCount = update['scoreboard'][teamName]['flags'].length;
-        index = getSeriesIndexByName(chart.series, teamName);
-        if (index !== undefined) {
-            var shift = (30 <= chart.series[index].data.length);
-            var scores = [timestamp, flagCount];
-            chart.series[index].addPoint(scores, true, shift);
-        } else {
-            create_series = {
-                name: teamName,
-                data: [
-                    [timestamp, flagCount],
-                ]
+function updateState(state, updates) {
+    for (var teamName in updates) {
+        teamdata = updates[teamName]
+        for(index = 0; index < teamdata.length; ++index) {
+            update = teamdata[index]
+            timestamp = update['timestamp'] * 1000;
+            teamname = update['team_name'];
+            value = update['value'];
+            seriesIndex = getSeriesIndexByName(state, teamname);
+            if (seriesIndex !== undefined) {
+                // Add to existing series' data array
+                state[seriesIndex].data.push([timestamp, value]);
+            } else {
+                //console.log("Create flag series: " + teamname);
+                newSeries = {
+                    name: teamname,
+                    data: [
+                        [timestamp, value],
+                    ]
+                }
+                state.push(newSeries);
             }
-            chart.addSeries(create_series);
         }
     }
 }
 
-function updateMoneyState(moneyState, update) {
-    timestamp = update['timestamp'] * 1000;
-    for (var teamName in update['scoreboard']) {
-        money = update['scoreboard'][teamName]['money'];
-        seriesIndex = getSeriesIndexByName(moneyState, teamName);
-        if (seriesIndex !== undefined) {
-            /* Add to existing series' data array */
-            moneyState[seriesIndex].data.push([timestamp, money]);
-        } else {
-            //console.log("Create money series: " + teamName);
-            newSeries = {
-                name: teamName,
-                data: [
-                    [timestamp, money],
-                ]
-            }
-            moneyState.push(newSeries);
-        }
-    }
-}
-
-function liveMoneyUpdate(chart, update) {
-    timestamp = update['timestamp'] * 1000;
-    for (var teamName in update['scoreboard']) {
-        //console.log("Updating: " + teamName);
-        money = update['scoreboard'][teamName]['money'];
-        index = getSeriesIndexByName(chart.series, teamName);
-        if (index !== undefined) {
-            var shift = (30 <= chart.series[index].data.length);
-            var scores = [timestamp, money];
-            chart.series[index].addPoint(scores, true, shift);
-        } else {
-            create_series = {
-                name: teamName,
-                data: [
-                    [timestamp, money],
-                ]
-            }
-            chart.addSeries(create_series);
-        }
-    }
-}
-
-function updateBotState(botState, update) {
-    timestamp = update['timestamp'] * 1000;
-    for (var teamName in update['scoreboard']) {
-        bots = update['scoreboard'][teamName]['bots'];
-        seriesIndex = getSeriesIndexByName(botState, teamName);
-        if (seriesIndex !== undefined) {
-            /* Add to existing series' data array */
-            botState[seriesIndex].data.push([timestamp, bots]);
-        } else {
-            //console.log("Create bot series: " + teamName);
-            newSeries = {
-                name: teamName,
-                data: [
-                    [timestamp, bots],
-                ]
-            }
-            botState.push(newSeries);
-        }
-    }
-}
-
-function liveBotUpdate(chart, update) {
-    timestamp = update['timestamp'] * 1000;
-    for (var teamName in update['scoreboard']) {
-        //console.log("Updating: " + teamName);
-        bots = update['scoreboard'][teamName]['bots'];
-        index = getSeriesIndexByName(chart.series, teamName);
-        if (index !== undefined) {
-            var shift = (30 <= chart.series[index].data.length);
-            var scores = [timestamp, bots];
-            chart.series[index].addPoint(scores, true, shift);
-        } else {
-            create_series = {
-                name: teamName,
-                data: [
-                    [timestamp, bots],
-                ]
-            }
-            chart.addSeries(create_series);
-        }
-    }
-}
-
-function initializeState(updater, state, updates) {
-    for(index = 0; index < updates.length; ++index) {
-        updater(state, updates[index]);
-    }
-}
-
-function initializeSocket(length) {
+function initializeSocket(top) {
     $("body").css("cursor", "progress");
-    window.history_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_history?length=" + length);
+    window.history_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_history?top=" + top);
     var chart = undefined;
     var flagState = []; // List of Highchart series
     var moneyState = [];
@@ -458,22 +394,21 @@ function initializeSocket(length) {
             location.reload();
         } else {
             msg = jQuery.parseJSON(evt.data);
-            //console.log(msg);
             if ('error' in msg) {
                 console.log("ERROR: " + msg.toString());
             } else if ('history' in msg) {
                 /* Default graph is flags, init that first */
-                initializeState(updateFlagState, flagState, msg['history']);
+                updateState(flagState, msg['history']['flag_count']);
                 chart = drawFlagGraph(flagState);
-                liveUpdateCallback = liveFlagUpdate;
+                liveUpdateCallback = liveUpdate;
                 /* Init other states */
-                initializeState(updateMoneyState, moneyState, msg['history']);
-                initializeState(updateBotState, botState, msg['history']);
+                updateState(moneyState, msg['history']['score_count']);
+                updateState(botState, msg['history']['bot_count']);
             } else if ('update' in msg) {
                 /* Update graph states */
-                updateFlagState(flagState, msg['update']);
-                updateMoneyState(moneyState, msg['update']);
-                updateBotState(botState, msg['update']);
+                updateState(flagState, msg['update']['flag_count']);
+                updateState(moneyState, msg['update']['score_count']);
+                updateState(botState, msg['update']['bot_count']);
                 /* Update the live chart */
                 liveUpdateCallback(chart, msg['update']);
             }
@@ -483,17 +418,17 @@ function initializeSocket(length) {
     $("#flags-history-button").off();
     $("#flags-history-button").click(function() {
         chart = drawFlagGraph(flagState);
-        liveUpdateCallback = liveFlagUpdate;
+        liveUpdateCallback = liveUpdate;
     });
     $("#money-history-button").off();
     $("#money-history-button").click(function() {
         chart = drawMoneyGraph(moneyState);
-        liveUpdateCallback = liveMoneyUpdate;
+        liveUpdateCallback = liveUpdate;
     });
     $("#bots-history-button").off();
     $("#bots-history-button").click(function() {
         chart = drawBotGraph(botState);
-        liveUpdateCallback = liveBotUpdate;
+        liveUpdateCallback = liveUpdate;
     });
     
 }
@@ -511,7 +446,7 @@ $(document).ready(function() {
             }
         }
     } else {
-        initializeSocket(29);
+        initializeSocket(10);
         $("#datapoints").change(function(){
             initializeSocket(this.value);
         });

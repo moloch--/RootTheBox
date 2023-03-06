@@ -91,7 +91,7 @@ class MarketViewHandler(BaseHandler):
 
     def purchase_item(self, team, item):
         """Conducts the actual purchase of an item"""
-        team.money -= abs(item.price)
+        team.set_score("purchase_market", team.money - abs(item.price))
         team.items.append(item)
         self.dbsession.add(team)
         self.dbsession.commit()
