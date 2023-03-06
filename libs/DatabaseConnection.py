@@ -102,13 +102,15 @@ class DatabaseConnection(object):
         logging.debug("Configured to use SQLite for a database")
         db_name = self.database
         if not len(db_name):
-            db_name = "rtb"
+            db_name = "rootthebox.db"
         if not db_name.endswith(".db"):
             db_name = "%s.db" % db_name
         if os.path.exists("files/%s" % db_name):
             path = "sqlite:///files/%s" % db_name
+            logging.debug("Found rootthebox database at: %s" % path)
         elif os.path.exists(db_name):
             path = "sqlite:///%s" % db_name
+            logging.debug("Found rootthebox database at: %s" % path)
         else:
             path = "sqlite:///files/%s" % db_name
             logging.debug("Created rootthebox database at: %s" % path)

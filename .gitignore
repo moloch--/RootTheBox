@@ -67,6 +67,7 @@ pip-log.txt
 
 # OSX
 .DS_Store
+.dccache
 
 __pycache__
 */__pycache__
