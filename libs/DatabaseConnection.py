@@ -112,7 +112,10 @@ class DatabaseConnection(object):
             path = "sqlite:///%s" % db_name
             logging.debug("Found rootthebox database at: %s" % path)
         else:
-            path = "sqlite:///files/%s" % db_name
+            if "files" in db_name:
+                path = "sqlite:///%s" % db_name
+            else:
+                path = "sqlite:///files/%s" % db_name
             logging.debug("Created rootthebox database at: %s" % path)
         return path
 
