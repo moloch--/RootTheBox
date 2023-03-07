@@ -12,7 +12,7 @@ Root the Box is a real-time capture the flag (CTF) scoring engine for computer w
 ## Screenshots & Demo
 Additional platform [screenshots](https://github.com/moloch--/RootTheBox/wiki/Screenshots) and game examples.
 
-[RootTheBox Demo](https://rootthebox.herokuapp.com/) – _Note it may take a few seconds to wake up. Also, please don't change passwords on the example accounts, but feel free to register a new user._
+[RootTheBox Demo](https://rootthebox-2xyfdkbnkq-uc.a.run.app) – _Note it may take a few seconds to wake up. Also, please don't change passwords on the example accounts, but feel free to register a new user._
 -   Admin Username `admin` Password `rootthebox`
 -   Player Username `player` Password `rootthebox`
 
