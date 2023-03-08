@@ -45,6 +45,7 @@ develop-eggs
 
 # XML exports
 *.xml
+!demo_juiceshop.xml
 
 # SQLite3 databases
 *.db
