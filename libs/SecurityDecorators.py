@@ -105,7 +105,7 @@ def blacklist_ips(method):
         if self.request.remote_ip not in self.application.settings["blacklisted_ips"]:
             return method(self, *args, **kwargs)
         else:
-            self.render("public/login.html", info=None, errors=["This IP address has been banned."])
+            self.render("public/login.html", info=None, errors=["Your IP address is currently banned - Contact Admin"])
             logging.warning("[BAN HAMMER] Login attempt from blacklisted IP %s" % self.request.remote_ip)
     return wrapper
 
