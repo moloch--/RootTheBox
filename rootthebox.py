@@ -263,16 +263,9 @@ def options_parse_environment():
                 options[item] = value
             else:
                 logging.error(
-                    "Environment Confirguation (%s): unable to convert type %s to %s for %s"
+                    "Environment Configuration (%s): unable to convert type %s to %s for %s"
                     % (item.upper(), type(value), type(options[item]), value)
                 )
-    if os.environ.get("DEMO"):
-        setup_xml(["setup/demo_juiceshop.xml"])
-        from libs.ConfigHelpers import create_demo_user
-
-        logging.info("Setting Up Demo Environment...")
-        create_demo_user()
-        options.autostart_game = True
 
 
 def help():
@@ -1156,6 +1149,14 @@ if __name__ == "__main__":
 
     # Make sure that cli args always have president over the file and env
     options.parse_command_line()
+
+    if os.environ.get("DEMO"):
+        setup_xml(["setup/demo_juiceshop.xml"])
+        from libs.ConfigHelpers import create_demo_user
+
+        logging.info("Setting Up Demo Environment...")
+        create_demo_user()
+        options.autostart_game = True
 
     # If authenticating with Azure AD (i.e. enterprise scenario) There's a few settings which
     # don't make sense, so force them to disabled.
