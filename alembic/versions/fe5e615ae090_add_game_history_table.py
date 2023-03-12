@@ -1,4 +1,4 @@
-"""add relationship timestamp
+"""add game history table
 
 Revision ID: fe5e615ae090
 Revises: de5d615ae090
