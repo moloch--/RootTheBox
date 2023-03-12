@@ -24,6 +24,7 @@ depends_on = None
 history = {}
 flag_count = {}
 
+
 def _table_has_column(table, column):
     has_column = False
     for col in inspector.get_columns(table):
@@ -37,9 +38,13 @@ def _has_table(table_name):
     tables = inspector.get_table_names()
     return table_name in tables
 
+
 def add_history(created, team_id, reason, value):
     conn = op.get_bind()
-    conn.execute(f"INSERT INTO game_history (created, team_id, _type, _value) VALUES ('{created}', {team_id}, '{reason}', {value});")
+    conn.execute(
+        f"INSERT INTO game_history (created, team_id, _type, _value) VALUES ('{created}', {team_id}, '{reason}', {value});"
+    )
+
 
 def check_flag(item):
     team_id = item[0]
@@ -50,6 +55,7 @@ def check_flag(item):
         add_history(created, team_id, "flag_count", 0)
         flag_count[str(team_id)] = 1
     add_history(created, team_id, "flag_count", flag_count[str(team_id)])
+
 
 def check_history(item):
     created = item[1]
@@ -74,6 +80,7 @@ def check_history(item):
             add_history(created, team_id, "score", money)
         history[str(team_id)] = {"money": money, "bots": bots}
 
+
 def upgrade():
     try:
         conn = op.get_bind()
@@ -84,8 +91,8 @@ def upgrade():
             check_history(item)
             i += 1
         if i > 0:
-             conn.execute("COMMIT;")
-        
+            conn.execute("COMMIT;")
+
     except Exception as e:
         print("Failed to import prior snapshot data into game history: %s" % str(e))
         print("Continuing...")
@@ -97,7 +104,7 @@ def upgrade():
             check_flag(item)
             i += 1
         if i > 0:
-             conn.execute("COMMIT;")
+            conn.execute("COMMIT;")
     except Exception as e:
         print("Failed to import prior flag count into game history: %s" % str(e))
         print("Continuing...")
