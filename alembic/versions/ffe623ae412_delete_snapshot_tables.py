@@ -6,6 +6,7 @@ Create Date: 2023-03-11 19:33:02.808038
 
 """
 import sqlalchemy as sa
+from datetime import datetime
 from alembic import op
 from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.sql.expression import func
@@ -38,11 +39,11 @@ def _has_table(table_name):
 
 def add_history(created, team_id, reason, value):
     conn = op.get_bind()
-    conn.execute(f"INSERT INTO game_history (created, team_id, _type, _value) VALUES ('{created}', {team_id}, '{reason}', {value}); COMMIT;")
+    conn.execute(f"INSERT INTO game_history (created, team_id, _type, _value) VALUES ('{created}', {team_id}, '{reason}', {value});")
 
 def check_flag(item):
     team_id = item[0]
-    created = item[2]
+    created = datetime.now()
     if str(team_id) in flag_count:
         flag_count[str(team_id)] += 1
     else:
@@ -65,24 +66,38 @@ def check_history(item):
             add_history(created, team_id, "score", money)
         return
     else:
+        add_history(created, team_id, "bot_count", 0)
+        add_history(created, team_id, "start", 0)
+        if bots > 0:
+            add_history(created, team_id, "bot_count", 0)
+        if money > 0:
+            add_history(created, team_id, "score", money)
         history[str(team_id)] = {"money": money, "bots": bots}
-        add_history(created, team_id, "start", money)
 
 def upgrade():
     try:
         conn = op.get_bind()
-        res = conn.execute("SELECT * FROM snapshot_team")
+        res = conn.execute("SELECT * FROM snapshot_team;")
         results = res.fetchall()
+        i = 0
         for item in results:
             check_history(item)
+            i += 1
+        if i > 0:
+             conn.execute("COMMIT;")
+        
     except Exception as e:
         print("Failed to import prior snapshot data into game history: %s" % str(e))
         print("Continuing...")
     try:
-        res = conn.execute("SELECT * FROM team_to_flag")
+        res = conn.execute("SELECT * FROM team_to_flag;")
         results = res.fetchall()
+        i = 0
         for item in results:
             check_flag(item)
+            i += 1
+        if i > 0:
+             conn.execute("COMMIT;")
     except Exception as e:
         print("Failed to import prior flag count into game history: %s" % str(e))
         print("Continuing...")
