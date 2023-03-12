@@ -114,6 +114,7 @@
             {% end %} 
 
         {% if not visitor %}
+		{% from models.MarketItem import MarketItem %}
         <div class="row">
             <div class="span11 offset1 well">
                 <h2>
@@ -131,6 +132,17 @@
                     </div>
                 </div>
                 <br/>
+				{% if options.show_organizor_help %}
+				<div class="row">
+                    <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
+                        <i class="fa fa-question-circle" style="font-size: 180%;"></i>
+                    </div>
+                    <div class="span7 msgdescription">
+							{{ _("If you have any questions or need help do not hestitate to ask one of the organizers.") }}
+                    </div>
+                </div>
+				<br/>
+				{% end %}
                 <div class="row">
                     <div class="span1 offset1" style="text-align: center; padding-top: 5px;">
                         <i class="fa fa-crosshairs" style="font-size: 180%;"></i>
@@ -187,8 +199,21 @@
                         <i class="fa fa-shopping-cart" style="font-size: 180%;"></i>
                     </div>
                     <div class="span7 msgdescription">
-                        {{ _("The black market is open and you know a guy. Download a target's source code or S.W.A.T. other players by bribing the (in-game) police.") }}
-                        {{ _("Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.") }}
+						{% if options.use_black_market %}
+							{{ _("The black market is open and you know a guy. The following items are available:") }}
+							{% set market_items = MarketItem.all() %}
+							{% if market_items %}
+								<ul>
+								{% for index, item in enumerate(market_items) %}
+									{% if item.name in options.allowed_market_items %}
+										<li>
+											<b>{{ _(item.name) }}</b>: {{ _(item.description) }}
+										</li>
+									{% end %}
+								{% end %}
+								</ul>
+							{% end %}
+						{% end %}
                     </div>
                 </div>
                 <br/>

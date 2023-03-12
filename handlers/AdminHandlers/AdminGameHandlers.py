@@ -40,8 +40,6 @@ from models.User import ADMIN_PERMISSION
 from models.Team import Team
 from models.Theme import Theme
 from models.Penalty import Penalty
-from models.Snapshot import Snapshot
-from models.SnapshotTeam import SnapshotTeam
 from models.SourceCode import SourceCode
 from models.Corporation import Corporation
 from models.Category import Category
@@ -52,9 +50,8 @@ from libs.SecurityDecorators import *
 from libs.StringCoding import encode, decode
 from libs.ValidationError import ValidationError
 from libs.ConfigHelpers import save_config
-from libs.GameHistory import GameHistory
 from libs.ConsoleColors import *
-from libs.Scoreboard import score_bots
+from libs.Scoreboard import score_bots, Scoreboard
 from handlers.BaseHandlers import BaseHandler
 from string import printable
 from setup.xmlsetup import import_xml
@@ -644,14 +641,6 @@ class AdminImportXmlHandler(BaseHandler):
             logging.info("Starting botnet callback function")
             self.application.settings["score_bots_callback"].start()
 
-        logging.info("Restarting history callback function")
-        game_history = GameHistory.instance()
-        self.application.settings["history_callback"].stop()
-        self.application.history_callback = PeriodicCallback(
-            game_history.take_snapshot, options.history_snapshot_interval
-        )
-        self.application.settings["history_callback"].start()
-
 
 class AdminResetHandler(BaseHandler):
     @restrict_ip_address
@@ -676,10 +665,11 @@ class AdminResetHandler(BaseHandler):
                 user.money = 0
             teams = Team.all()
             for team in teams:
+                team.game_history = []
                 if options.banking:
-                    team.money = options.starting_team_money
+                    team.set_score("start", options.starting_team_money)
                 else:
-                    team.money = 0
+                    team.set_score("start", 0)
                 team.flags = []
                 team.hints = []
                 team.boxes = []
@@ -706,16 +696,6 @@ class AdminResetHandler(BaseHandler):
             for swat in swats:
                 self.dbsession.delete(swat)
             self.dbsession.commit()
-            snapshot = Snapshot.all()
-            for snap in snapshot:
-                self.dbsession.delete(snap)
-            self.dbsession.commit()
-            snapshot_team = SnapshotTeam.all()
-            for snap in snapshot_team:
-                self.dbsession.delete(snap)
-            self.dbsession.commit()
-            game_history = GameHistory.instance()
-            game_history.take_snapshot()  # Take starting snapshot
             flags = Flag.all()
             for flag in flags:
                 # flag.value = flag.value allows a fallback to when original_value was used
@@ -725,6 +705,7 @@ class AdminResetHandler(BaseHandler):
                 self.dbsession.add(flag)
             self.dbsession.commit()
             self.dbsession.flush()
+            Scoreboard.update_gamestate(self)
             self.event_manager.push_score_update()
             self.flush_memcached()
             success = "Successfully Reset Game"
@@ -733,6 +714,7 @@ class AdminResetHandler(BaseHandler):
             errors.append("Failed to Reset Game")
             logging.error(str(e))
             self.render("admin/reset.html", success=None, errors=errors)
+
 
 class AdminResetDeleteHandler(BaseHandler):
     @restrict_ip_address
@@ -768,22 +750,12 @@ class AdminResetDeleteHandler(BaseHandler):
             for swat in swats:
                 self.dbsession.delete(swat)
             self.dbsession.commit()
-            snapshot = Snapshot.all()
-            for snap in snapshot:
-                self.dbsession.delete(snap)
-            self.dbsession.commit()
-            snapshot_team = SnapshotTeam.all()
-            for snap in snapshot_team:
-                self.dbsession.delete(snap)
-            self.dbsession.commit()
             for user in users:
                 self.dbsession.delete(user)
             self.dbsession.commit()
             for team in teams:
                 self.dbsession.delete(team)
             self.dbsession.commit()
-            game_history = GameHistory.instance()
-            game_history.take_snapshot()  # Take starting snapshot
             flags = Flag.all()
             for flag in flags:
                 # flag.value = flag.value allows a fallback to when original_value was used
@@ -793,6 +765,7 @@ class AdminResetDeleteHandler(BaseHandler):
                 self.dbsession.add(flag)
             self.dbsession.commit()
             self.dbsession.flush()
+            Scoreboard.update_gamestate(self)
             self.event_manager.push_score_update()
             self.flush_memcached()
             if options.teams:

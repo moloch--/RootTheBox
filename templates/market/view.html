@@ -82,20 +82,23 @@
             </thead>
             <tbody>
                 {% for index, item in enumerate(MarketItem.all()) %}
-                <tr>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{% if options.banking %}{{ _("$") }}{% end %}{{ item.price }}</td>
-                    <td>
-                        {% if not user.has_item(item.name) %}
-                        <a id="item-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#buy-market-item-modal" data-uuid="{{ item.uuid }}">
-                            {{ _("Details") }}
-                        </a>
-                        {% else %}
-                        <i>{{ _("Purchased") }}</i>
-                        {% end %}
-                    </td>
-                </tr>
+					{% if item.name not in options.allowed_market_items %}
+						{% continue %}
+					{% end %}
+					<tr>
+						<td>{{ index + 1 }}</td>
+						<td>{{ item.name }}</td>
+						<td>{% if options.banking %}{{ _("$") }}{% end %}{{ item.price }}</td>
+						<td>
+							{% if not user.has_item(item.name) %}
+							<a id="item-details-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#buy-market-item-modal" data-uuid="{{ item.uuid }}">
+								{{ _("Details") }}
+							</a>
+							{% else %}
+							<i>{{ _("Purchased") }}</i>
+							{% end %}
+						</td>
+					</tr>
                 {% end %}
             </tbody>
         </table>

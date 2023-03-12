@@ -123,7 +123,9 @@ class AdminCreateHandler(BaseHandler):
             team.name = self.get_argument("team_name", "")
             team.motto = self.get_argument("motto", "")
             if not self.config.banking:
-                team.money = 0
+                team.set_score("start", 0)
+            else:
+                team.set_score("start", options.starting_team_money)
             level_0 = GameLevel.by_number(0)
             if not level_0:
                 level_0 = GameLevel.all()[0]
@@ -283,7 +285,12 @@ class AdminCreateHandler(BaseHandler):
                 new_level.buyout = min(new_level.buyout, 100)
             elif new_level._type == "none":
                 new_level.buyout = 0
-            if new_level._type != "none" and new_level.buyout == 0:
+            if (
+                new_level._type != "none"
+                and new_level._type != "hidden"
+                and new_level._type != "locked"
+                and new_level.buyout == 0
+            ):
                 new_level._type = "none"
             self.dbsession.add(new_level)
             self.dbsession.flush()
@@ -424,7 +431,7 @@ class AdminViewHandler(BaseHandler):
                         if penalty:
                             value = penalty.cost()
                             if value > 0:
-                                team.money += value
+                                team.set_score("penalty", value + team.money)
                                 if user:
                                     user.money += value
                                     self.dbsession.add(user)
@@ -446,15 +453,15 @@ class AdminViewHandler(BaseHandler):
                             for item in Flag.team_captures(flag.id):
                                 tm = Team.by_id(item[0])
                                 deduction = flag.dynamic_value(tm) - flag_value
-                                tm.money = int(tm.money - deduction)
+                                tm.set_score("decay", int(tm.money - deduction))
                                 self.dbsession.add(tm)
                                 self.event_manager.flag_decayed(tm, flag)
-                        team.money += flag_value
+                        team.set_score("flag", flag_value + team.money)
                         if user:
                             user.money += flag_value
                             user.flags.append(flag)
                             self.dbsession.add(user)
-                        team.flags.append(flag)
+                        team.add_flag(flag)
                         self.dbsession.add(team)
                         self.dbsession.commit()
                         BoxHandler.success_capture(self, user, flag, flag_value)
@@ -898,7 +905,12 @@ class AdminEditHandler(BaseHandler):
                 level.buyout = min(level.buyout, 100)
             elif level._type == "none":
                 level.buyout = 0
-            if level._type != "none" and level._type != "hidden" and level.buyout == 0:
+            if (
+                level._type != "none"
+                and level._type != "hidden"
+                and level._type != "locked"
+                and level.buyout == 0
+            ):
                 level._type = "none"
             self.dbsession.add(level)
             self.dbsession.flush()

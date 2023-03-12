@@ -11,7 +11,7 @@ netaddr
 nose
 future
 python-resize-image
-sqlalchemy
+sqlalchemy==1.*
 alembic
 enum34
 mysqlclient

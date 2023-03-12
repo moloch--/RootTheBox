@@ -207,17 +207,17 @@
                             data-content="{{_('Enter the same password as before')}}" />
                     </div>
                 </div>
-                {% if options.banking %}
-                <div class="control-group">
-                    <label class="control-label" for="bpass1">{{ _("Bank Account Password") }}</label>
-                    <div class="controls">
-                        <input required id="bpass" name="bpass" maxlength="{{ options.max_password_length }}" placeholder="{{ _('Bank Account Password') }}" type="password"
-                            autocomplete="off"
-                            rel="popover"
-                            data-original-title="{{_('Password')}}"
-                            data-content="{{_('Used to secure your (in-game) bank account.')}} [{{ _('Max') }}: {{ options.max_password_length }} {{_('Characters')}}].  {{_('Please do NOT enter your real bank account password.')}}" />
-                    </div>
-                </div>
+                {% if options.banking and not set(["Password Security", "Federal Reserve"]).isdisjoint(options.allowed_market_items) %}
+					<div class="control-group">
+						<label class="control-label" for="bpass1">{{ _("Bank Account Password") }}</label>
+						<div class="controls">
+							<input required id="bpass" name="bpass" maxlength="{{ options.max_password_length }}" placeholder="{{ _('Bank Account Password') }}" type="password"
+								autocomplete="off"
+								rel="popover"
+								data-original-title="{{_('Password')}}"
+								data-content="{{_('Used to secure your (in-game) bank account.')}} [{{ _('Max') }}: {{ options.max_password_length }} {{_('Characters')}}].  {{_('Please do NOT enter your real bank account password.')}}" />
+						</div>
+					</div>
                 {% end %}
                 {% if options.restrict_registration %}
                     <div class="control-group">

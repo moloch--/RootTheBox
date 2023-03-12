@@ -665,7 +665,7 @@
                 <p id="pointrestore">
                     <input name="point_restore" type="checkbox" style="margin-top: -5px; margin-right: 5px;" checked> 
                     {{ _("If not captured, award flag and") }} {% if options.banking %}{{ _("money") }}{% else %}{{ _("points") }}{% end %}. 
-                    {% if options.penalize_flag_value %}{{ _("Restore the penalty cost") }}{% end %}
+                    {% if options.penalize_flag_value %}{{ _("Restore the penalty cost") }}.{% end %}
                 </p>
             </div>
             </form>

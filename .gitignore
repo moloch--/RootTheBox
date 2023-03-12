@@ -45,6 +45,7 @@ develop-eggs
 
 # XML exports
 *.xml
+!demo_juiceshop.xml
 
 # SQLite3 databases
 *.db
@@ -67,6 +68,7 @@ pip-log.txt
 
 # OSX
 .DS_Store
+.dccache
 
 __pycache__
 */__pycache__

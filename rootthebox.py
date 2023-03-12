@@ -57,9 +57,7 @@ def start():
             os._exit(1)
 
     """ Starts the application """
-    from handlers import start_server, load_history
-
-    load_history()
+    from handlers import start_server
 
     prefix = "https://" if options.ssl else "http://"
     # TODO For docker, it would be nice to grab the mapped docker port
@@ -265,16 +263,9 @@ def options_parse_environment():
                 options[item] = value
             else:
                 logging.error(
-                    "Environment Confirguation (%s): unable to convert type %s to %s for %s"
+                    "Environment Configuration (%s): unable to convert type %s to %s for %s"
                     % (item.upper(), type(value), type(options[item]), value)
                 )
-    if os.environ.get("DEMO"):
-        setup_xml(["setup/demo_juiceshop.xml"])
-        from libs.ConfigHelpers import create_demo_user
-
-        logging.info("Setting Up Demo Environment...")
-        create_demo_user()
-        options.autostart_game = True
 
 
 def help():
@@ -410,6 +401,14 @@ define(
 )
 
 define(
+    "suspend_registration",
+    default=False,
+    group="application",
+    help="suspend the registration automatically",
+    type=bool,
+)
+
+define(
     "auth",
     default="db",
     group="application",
@@ -489,6 +488,14 @@ define(
     default=[{"name": "CyberChef", "url": "/cyberchef/", "target": "_blank"}],
     group="application",
     help="links to add to the tool menu",
+)
+
+define(
+    "show_organizor_help",
+    default=False,
+    group="application",
+    help="show an info text on the user's home page about organizor help",
+    type=bool,
 )
 
 # Azure AD
@@ -586,6 +593,14 @@ define(
     default="Root the Box",
     group="game",
     help="the name of the current game",
+    type=game_type,
+)
+
+define(
+    "game_version",
+    default="1.0",
+    group="game",
+    help="optional version for this game",
     type=game_type,
 )
 
@@ -824,6 +839,22 @@ define(
 )
 
 define(
+    "allowed_market_items",
+    default=["Source Code Market", "Password Security", "Federal Reserve", "SWAT"],
+    group="game",
+    help="if black market is enabled only allow these market items",
+    multiple=True,
+)
+
+define(
+    "show_source_code_description",
+    default=False,
+    group="game",
+    help="show description of a source code file to users",
+    type=bool,
+)
+
+define(
     "password_upgrade_cost",
     default=1000,
     group="game",
@@ -974,14 +1005,6 @@ define(
 
 # I/O Loop Settings
 define(
-    "history_snapshot_interval",
-    default=int(60000 * 5),
-    group="game",
-    help="interval to create history snapshots (milliseconds)",
-    type=int,
-)
-
-define(
     "bot_reward_interval",
     default=int(60000 * 15),
     group="game",
@@ -994,7 +1017,7 @@ define(
     default=False,
     group="anti-bruteforce",
     type=bool,
-    help="configures the option to automatically ban bruteforce"
+    help="configures the option to automatically ban bruteforce",
 )
 
 define(
@@ -1126,6 +1149,14 @@ if __name__ == "__main__":
 
     # Make sure that cli args always have president over the file and env
     options.parse_command_line()
+
+    if os.environ.get("DEMO"):
+        setup_xml(["setup/demo_juiceshop.xml"])
+        from libs.ConfigHelpers import create_demo_user
+
+        logging.info("Setting Up Demo Environment...")
+        create_demo_user()
+        options.autostart_game = True
 
     # If authenticating with Azure AD (i.e. enterprise scenario) There's a few settings which
     # don't make sense, so force them to disabled.

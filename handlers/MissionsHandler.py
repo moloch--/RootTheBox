@@ -279,17 +279,12 @@ class BoxHandler(BaseHandler):
         old_reward = flag.dynamic_value(user.team) if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
         if options.banking:
-            reward_dialog += (
-                "$"
-                + str(old_reward)
-                + " has been added to your "
-                + teamval
-                + "account."
+            reward_added_str_template = (
+                "${} has been added to your " + teamval + "account."
             )
         else:
-            reward_dialog += (
-                str(old_reward) + " points added to your " + teamval + "score."
-            )
+            reward_added_str_template = "{} points added to your " + teamval + "score."
+        reward_dialog += reward_added_str_template.format(str(old_reward))
         success = [reward_dialog]
 
         # Fire capture webhook
@@ -299,11 +294,11 @@ class BoxHandler(BaseHandler):
         box = flag.box
         if box.is_complete(user):
             if box.value > 0:
-                user.team.money += box.value
+                user.team.set_score("box", box.value + user.team.money)
                 self.dbsession.add(user.team)
                 self.dbsession.flush()
                 self.dbsession.commit()
-                dialog = str(box.value) + " points added to your " + teamval + "score."
+                dialog = reward_added_str_template.format(str(box.value))
                 reward_dialog += dialog
                 success.append(
                     "Congratulations! You have completed " + box.name + ". " + dialog
@@ -322,25 +317,11 @@ class BoxHandler(BaseHandler):
         if level_progress == 1.0 and level not in user.team.game_levels:
             reward_dialog = ""
             if level._reward > 0:
-                user.team.money += level._reward
+                user.team.set_score("level", level._reward + user.team.money)
                 self.dbsession.add(user.team)
                 self.dbsession.flush()
                 self.dbsession.commit()
-                if options.banking:
-                    reward_dialog += (
-                        "$"
-                        + str(level._reward)
-                        + " has been added to your "
-                        + teamval
-                        + "account."
-                    )
-                else:
-                    reward_dialog += (
-                        str(level._reward)
-                        + " points added to your "
-                        + teamval
-                        + "score."
-                    )
+                reward_dialog += reward_added_str_template.format(str(level._reward))
             success.append(
                 "Congratulations! You have completed "
                 + level.name
@@ -409,7 +390,7 @@ class BoxHandler(BaseHandler):
                 "%s (%s) capture failed '%s' - lost %s"
                 % (user.handle, user.team.name, flag.name, penalty)
             )
-            user.team.money -= penalty
+            user.team.set_score("penalty", user.team.money - penalty)
             user.money -= penalty
             self.dbsession.add(user.team)
             self.dbsession.flush()
@@ -436,12 +417,12 @@ class BoxHandler(BaseHandler):
                     for item in Flag.team_captures(flag.id):
                         tm = Team.by_id(item[0])
                         deduction = flag.dynamic_value(tm) - flag_value
-                        tm.money = int(tm.money - deduction)
+                        tm.set_score("decay", int(tm.money - deduction))
                         self.dbsession.add(tm)
                         self.event_manager.flag_decayed(tm, flag)
-                team.money += flag_value
+                team.set_score("flag", flag_value + team.money)
                 user.money += flag_value
-                team.flags.append(flag)
+                team.add_flag(flag)
                 user.flags.append(flag)
                 self.dbsession.add(user)
                 self.dbsession.add(team)
@@ -536,7 +517,7 @@ class PurchaseHintHandler(BaseHandler):
         """Add hint to team object"""
         if hint not in team.hints:
             user = self.get_current_user()
-            team.money -= abs(hint.price)
+            team.set_score("purchase_hint", team.money - abs(hint.price))
             team.hints.append(hint)
             self.dbsession.add(team)
             self.dbsession.commit()
@@ -590,7 +571,7 @@ class MissionsHandler(BaseHandler):
                     % (user.handle, user.team.name, level.name)
                 )
                 user.team.game_levels.append(level)
-                user.team.money -= level.buyout
+                user.team.set_score("level_buyout", user.team.money - level.buyout)
                 self.dbsession.add(user.team)
                 self.dbsession.commit()
                 self.event_manager.level_unlocked(user, level)

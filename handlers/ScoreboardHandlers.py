@@ -30,11 +30,11 @@ import logging
 
 from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
-from libs.SecurityDecorators import use_black_market
-from libs.GameHistory import GameHistory
+from libs.SecurityDecorators import use_black_market, item_allowed
 from libs.Scoreboard import Scoreboard
 from builtins import str
 from math import ceil
+from models import dbsession
 from models.Team import Team
 from models.User import User
 from models.Box import Box
@@ -43,15 +43,13 @@ from models.WallOfSheep import WallOfSheep
 from datetime import datetime, timedelta
 from tornado.options import options
 from collections import OrderedDict
+from itertools import islice
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):
     """Get Score data via websocket"""
 
     connections = set()
-
-    def initialize(self):
-        self.last_message = datetime.now()
 
     def open(self):
         """When we receive a new websocket connect"""
@@ -65,8 +63,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
         """We ignore messages if there are more than 1 every 3 seconds"""
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
-        elif datetime.now() - self.last_message > timedelta(seconds=3):
-            self.last_message = datetime.now()
+        else:
             self.write_message(Scoreboard.now(self))
 
     def on_close(self):
@@ -128,6 +125,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             "mvp": self.mvp_table,
             "timer": self.timediff,
             "feed": self.json_feed,
+            "history": self.history_data,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -241,6 +239,50 @@ class ScoreboardAjaxHandler(BaseHandler):
             self.write({"error": "Team does not exist"})
         self.finish()
 
+    def history_data(self):
+        """Send history in JSON"""
+        top = int(self.get_argument("top", 10))
+        teams = self.application.settings["scoreboard_state"]["teams"]
+        score_teams = [
+            team["uuid"]
+            for team in sorted(teams.values(), key=lambda d: d["money"], reverse=True)[
+                0:top
+            ]
+        ]
+        flag_teams = [
+            team["uuid"]
+            for team in sorted(
+                teams.values(), key=lambda d: len(d["flags"]), reverse=True
+            )[0:top]
+        ]
+        bot_teams = [
+            team["uuid"]
+            for team in sorted(
+                teams.values(), key=lambda d: d["bot_count"], reverse=True
+            )[0:top]
+        ]
+        history = {
+            "history": {
+                "bot_count": {},
+                "flag_count": {},
+                "score_count": {},
+            }
+        }
+        for uuid in flag_teams:
+            team = Team.by_uuid(uuid)
+            if team:
+                history["history"]["flag_count"][team.name] = team.get_history("flags")
+        for uuid in score_teams:
+            team = Team.by_uuid(uuid)
+            if team:
+                history["history"]["score_count"][team.name] = team.get_history("score")
+        for uuid in bot_teams:
+            team = Team.by_uuid(uuid)
+            if team:
+                history["history"]["bot_count"][team.name] = team.get_history("bots")
+        self.write(json.dumps(history))
+        self.finish()
+
 
 class ScoreboardHistoryHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -267,38 +309,26 @@ class ScoreboardFeedHandler(BaseHandler):
 class ScoreboardHistorySocketHandler(WebSocketHandler):
 
     connections = set()
-    game_history = GameHistory.instance()
-
-    def initialize(self):
-        self.game_history._load()
-        self.last_message = datetime.now()
 
     def open(self):
         """When we receive a new websocket connect"""
         self.connections.add(self)
-        history_length = int(self.get_argument("length", 29))
-        self.write_message(self.get_history(history_length))
 
     def on_message(self, message):
         """We ignore messages if there are more than 1 every 3 seconds"""
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
-        elif datetime.now() - self.last_message > timedelta(seconds=3):
-            self.last_message = datetime.now()
-            self.write_message(self.get_history(1))
+        else:
+            self.write_message("update")
 
     def on_close(self):
         """Lost connection to client"""
         self.connections.remove(self)
 
-    def get_history(self, length=29):
-        """Send history in JSON"""
-        length = abs(length) + 1
-        return json.dumps({"history": self.game_history[(-1 * length) :]})
-
 
 class ScoreboardWallOfSheepHandler(BaseHandler):
     @use_black_market
+    @item_allowed("Federal Reserve")
     def get(self, *args, **kwargs):
         """Optionally order by argument; defaults to date/time"""
         user = self.get_current_user()
@@ -363,9 +393,11 @@ class TeamsHandler(BaseHandler):
         end_count = display * page
         start_count = end_count - display
         teams = []
-        for i, team in enumerate(ranks):
+        for i, team_name in enumerate(ranks):
             if i >= start_count and i < end_count:
-                teams.append(Team.by_uuid(ranks[team].get("uuid")))
+                team = Team.by_uuid(ranks[team_name].get("uuid"))
+                if team:
+                    teams.append(team)
             elif i >= end_count:
                 break
 

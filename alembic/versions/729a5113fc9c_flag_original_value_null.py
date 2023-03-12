@@ -17,8 +17,14 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column("flag", "_original_value", existing_type=sa.INTEGER, nullable=True)
+    with op.batch_alter_table("flag") as batch_op:
+        batch_op.alter_column(
+            "_original_value", existing_type=sa.INTEGER, nullable=True
+        )
 
 
 def downgrade():
-    op.alter_column("flag", "_original_value", existing_type=sa.INTEGER, nullable=False)
+    with op.batch_alter_table("flag") as batch_op:
+        batch_op.alter_column(
+            "_original_value", existing_type=sa.INTEGER, nullable=False
+        )

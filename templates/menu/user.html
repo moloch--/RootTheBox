@@ -182,7 +182,7 @@
                                     {{ _("Charts") }}
                               </a>
                             </li>
-                            {% if options.use_black_market %}
+                            {% if options.use_black_market and "Federal Reserve" in options.allowed_market_items %}
                             <li>
                                 <a href="/scoreboard/wall_of_sheep">
                                     <i class="fa fa-fw fa-key"></i>
@@ -225,7 +225,7 @@
                     <li>
                         <a href="/about">
                             <i class="fa fa-fw fa-info-circle"></i>
-                            &nbsp;{{ _("About") }}
+                            {{ _("About") }}
                         </a>
                     </li>
                     <li class="divider"></li>
@@ -233,7 +233,7 @@
                         <form id="logout-form" action="/logout" method="post">
                             {% raw xsrf_form_html() %}
                         </form>
-                        <a id="logout">
+                        <a id="logout" href="#">
                             <i class="fa fa-fw fa-sign-out"></i>
                             {{ _("Logout") }}
                         </a>

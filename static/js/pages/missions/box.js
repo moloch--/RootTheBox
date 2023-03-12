@@ -5,7 +5,8 @@ $(document).ready(function() {
     /* Markdown */
     $(".markdown").each(function() {
         var parsed = reader.parse($(this).text());
-        $(this).html(writer.render(parsed).trim());
+        var formatted = writer.render(parsed).trim();
+        $(this).html(formatted.replaceAll("<a href=", '<a target="_blank" href='));
     });
 
     /* Flags */

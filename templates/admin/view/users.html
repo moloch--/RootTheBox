@@ -497,7 +497,7 @@
                                 <th><!-- Lock Button --></th>
                                 <th><!-- Stats Button --></th>
                                 <th><!-- Edit Button --></th>
-                                <th><!-- Delete Button --></th>
+                                {% if options.teams %}<th><!-- Delete Button --></th>{% end %}
                             </tr>
                         </thead>
                         <tbody>
@@ -533,13 +533,13 @@
                                     <td> {% if user.notes %}{{ user.notes }}{% end %} </td>
                                     <td class="shortcolumn">
                                         {% if user.locked %}
-                                            <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
-                                                <i class="fa fa-fw fa-unlock"></i>
+                                            <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-warning" data-uuid="{{ user.uuid }}">
+                                                <i class="fa fa-fw fa-lock"></i>
                                                 {{_("Unlock")}}
                                             </a>
                                         {% else %}
-                                            <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-warning" data-uuid="{{ user.uuid }}">
-                                                <i class="fa fa-fw fa-lock"></i>
+                                            <a id="lock-user-button-{{ user.uuid }}" class="btn btn-mini btn-success" data-uuid="{{ user.uuid }}">
+                                                <i class="fa fa-fw fa-unlock"></i>
                                                 {{_("Lock")}}
                                             </a>
                                         {% end %}
@@ -556,12 +556,14 @@
                                             {{_("Edit Account")}}
                                         </a>
                                     </td>
+                                    {% if options.teams %}
                                     <td class="shortcolumn">
                                         <a id="delete-user-button-{{ user.uuid }}" class="btn btn-mini btn-danger" data-toggle="modal" href="#delete-user-modal" data-uuid="{{ user.uuid }}">
                                             <i class="fa fa-fw fa-times-circle-o"></i>
                                             {{_("Delete")}}
                                         </a>
                                     </td>
+                                    {% end %}
                                 </tr>
                             {% end %}
                         </tbody>

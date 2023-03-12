@@ -36,6 +36,7 @@ from models.Swat import Swat
 from models.User import User
 from libs.SecurityDecorators import (
     authenticated,
+    item_allowed,
     has_item,
     use_black_market,
     game_started,
@@ -52,6 +53,7 @@ class PasswordSecurityHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("Password Security")
     @has_item("Password Security")
     def get(self, *args, **kwargs):
         """Render update hash page"""
@@ -60,6 +62,7 @@ class PasswordSecurityHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("Password Security")
     @has_item("Password Security")
     def post(self, *args, **kwargs):
         """Attempt to upgrade hash algo"""
@@ -73,7 +76,9 @@ class PasswordSecurityHandler(BaseHandler):
         elif user.team.money < self.config.password_upgrade_cost:
             self.render_page(["You cannot afford to upgrade your hash"])
         elif len(passwd) <= self.config.max_password_length:
-            user.team.money -= self.config.password_upgrade_cost
+            user.team.set_score(
+                "upgrade", user.team.money - self.config.password_upgrade_cost
+            )
             self.dbsession.add(user.team)
             self.dbsession.commit()
             self.event_manager.push_score_update()
@@ -110,6 +115,7 @@ class FederalReserveHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("Federal Reserve")
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         user = self.get_current_user()
@@ -123,6 +129,7 @@ class FederalReserveAjaxHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("Federal Reserve")
     @has_item("Federal Reserve")
     def get(self, *args, **kwargs):
         commands = {
@@ -139,6 +146,7 @@ class FederalReserveAjaxHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("Federal Reserve")
     @has_item("Federal Reserve")
     def post(self, *args, **kwargs):
         self.get(*args, **kwargs)
@@ -233,9 +241,9 @@ class FederalReserveAjaxHandler(BaseHandler):
 
     def theft(self, victim, destination, amount, preimage):
         """Successfully cracked a password"""
-        victim.team.money -= abs(amount)
+        victim.team.set_score("theft", victim.team.money - abs(amount))
         value = int(abs(amount) * 0.85)
-        destination.money += value
+        destination.set_score("theft", destination.money + value)
         self.dbsession.add(destination)
         self.dbsession.add(victim.team)
         user = self.get_current_user()
@@ -252,6 +260,7 @@ class SourceCodeMarketHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("Source Code Market")
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
         self.render_page()
@@ -259,6 +268,7 @@ class SourceCodeMarketHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("Source Code Market")
     @has_item("Source Code Market")
     def post(self, *args, **kwargs):
         box = Box.by_uuid(self.get_argument("box_uuid", ""))
@@ -276,7 +286,7 @@ class SourceCodeMarketHandler(BaseHandler):
         """Modify the database to reflect purchase"""
         team = self.get_current_user().team
         source_code = SourceCode.by_box_id(box.id)
-        team.money -= abs(source_code.price)
+        team.set_score("purchase_code", team.money - abs(source_code.price))
         team.purchased_source_code.append(source_code)
         logging.info(
             "%s purchased '%s' from the source code market."
@@ -303,6 +313,7 @@ class SourceCodeMarketDownloadHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("Source Code Market")
     @has_item("Source Code Market")
     def get(self, *args, **kwargs):
         """Send file to user if their team owns it"""
@@ -340,6 +351,7 @@ class SwatHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("SWAT")
     @has_item("SWAT")
     def get(self, *args, **kwargs):
         """Render SWAT page"""
@@ -348,6 +360,7 @@ class SwatHandler(BaseHandler):
     @authenticated
     @use_black_market
     @game_started
+    @item_allowed("SWAT")
     @has_item("SWAT")
     def post(self, *args, **kwargs):
         """Validate user arguments for SWAT request"""
@@ -374,7 +387,7 @@ class SwatHandler(BaseHandler):
         """Create Swat request object in database"""
         price = Swat.get_price(target)
         assert 0 < price
-        user.team.money -= price
+        user.team.set_score("purchase_swat", user.team.money - price)
         swat = Swat(user_id=user.id, target_id=target.id, paid=price)
         self.dbsession.add(swat)
         self.dbsession.add(user.team)
