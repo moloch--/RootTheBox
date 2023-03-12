@@ -1,6 +1,10 @@
-var flag_chart;
-var money_chart;
+var flag_pie_chart;
+var money_pie_chart;
 var game_data;
+var flagState = []; // List of Highchart series
+var moneyState = [];
+var botState = [];
+var history_option = "flag";
 
 /* Highcharts code */
 $(document).ready(function() {
@@ -16,7 +20,7 @@ $(document).ready(function() {
             };
         });
         /* Flag Chart */
-        flag_chart = new Highcharts.Chart({
+        flag_pie_chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'pie_flags',
                 plotBackgroundColor: null,
@@ -60,7 +64,7 @@ $(document).ready(function() {
             }]
         });
         /* Money Chart */
-        money_chart = new Highcharts.Chart({
+        money_pie_chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'pie_money',
                 plotBackgroundColor: null,
@@ -317,33 +321,6 @@ function getSeriesIndexByName(state, teamName) {
     return undefined;
 }
 
-/* Called if the graph is currently displayed */
-function liveUpdate(chart, update) {
-    for (var teamname in updates) {
-        teamdata = updates[teamName]
-        for(index = 0; index < teamdata.length; ++index) {
-            update = teamdata[index]
-            timestamp = update['timestamp'] * 1000;
-            teamname = update['team_name'];
-            value = update['value'];
-            seriesIndex = getSeriesIndexByName(chart.series, teamname);
-            if (index !== undefined) {
-                var shift = (30 <= chart.series[index].data.length);
-                var scores = [timestamp, value];
-                chart.series[index].addPoint(scores, true, shift);
-            } else {
-                create_series = {
-                    name: teamname,
-                    data: [
-                        [timestamp, value],
-                    ]
-                }
-                chart.addSeries(create_series);
-            }
-        }
-    }
-}
-
 function updateState(state, updates) {
     for (var teamName in updates) {
         teamdata = updates[teamName]
@@ -370,18 +347,48 @@ function updateState(state, updates) {
     }
 }
 
-function initializeSocket(top) {
-    $("body").css("cursor", "progress");
-    window.history_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_history?top=" + top);
-    var chart = undefined;
-    var flagState = []; // List of Highchart series
-    var moneyState = [];
-    var botState = [];
-    var liveUpdateCallback = undefined;
+function update_graph_state(msg) {
+    /* Default graph is flags, init that first */
+    flagState = [];
+    moneyState = [];
+    botState = [];
+    updateState(flagState, msg['history']['flag_count']);
+    updateState(moneyState, msg['history']['score_count']);
+    updateState(botState, msg['history']['bot_count']);
+    set_graph_chart();
+}
 
+function set_graph_chart() {
+    /* get the correct state */
+    if (history_option == "flag") {
+        drawFlagGraph(flagState);
+    } else if (history_option == "bot") {
+        drawFlagGraph(botState);
+    } else {
+        drawFlagGraph(moneyState);
+    }
+}
+
+function trigger_update() {
+    let top = $("#datapoints").find(":selected").val();
+    $.get("/scoreboard/ajax/history?top=" + top, function(data) {
+        msg = jQuery.parseJSON(data);
+        if ('error' in msg) {
+            console.log("ERROR: " + msg.toString());
+        } else if ('history' in msg) {
+            update_graph_state(msg)
+        }
+        $("body").css("cursor", "default");
+    });
+}
+
+function initializeSocket() {
+    $("body").css("cursor", "progress");
+    window.history_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_history");
     history_ws.onopen = function() {
         $("#activity-monitor").removeClass("fa-eye-slash");
         $("#activity-monitor").addClass("fa-refresh fa-spin");
+        trigger_update();
     }
 
     history_ws.onclose = function() {
@@ -393,44 +400,42 @@ function initializeSocket(top) {
         if (evt.data === "pause") {
             location.reload();
         } else {
-            msg = jQuery.parseJSON(evt.data);
-            if ('error' in msg) {
-                console.log("ERROR: " + msg.toString());
-            } else if ('history' in msg) {
-                /* Default graph is flags, init that first */
-                updateState(flagState, msg['history']['flag_count']);
-                chart = drawFlagGraph(flagState);
-                liveUpdateCallback = liveUpdate;
-                /* Init other states */
-                updateState(moneyState, msg['history']['score_count']);
-                updateState(botState, msg['history']['bot_count']);
-            } else if ('update' in msg) {
-                /* Update graph states */
-                updateState(flagState, msg['update']['flag_count']);
-                updateState(moneyState, msg['update']['score_count']);
-                updateState(botState, msg['update']['bot_count']);
-                /* Update the live chart */
-                liveUpdateCallback(chart, msg['update']);
-            }
-            $("body").css("cursor", "default");
+            trigger_update();
         }
     };
-    $("#flags-history-button").off();
-    $("#flags-history-button").click(function() {
-        chart = drawFlagGraph(flagState);
-        liveUpdateCallback = liveUpdate;
-    });
-    $("#money-history-button").off();
-    $("#money-history-button").click(function() {
-        chart = drawMoneyGraph(moneyState);
-        liveUpdateCallback = liveUpdate;
-    });
-    $("#bots-history-button").off();
-    $("#bots-history-button").click(function() {
-        chart = drawBotGraph(botState);
-        liveUpdateCallback = liveUpdate;
-    });
-    
+
+    window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
+    scoreboard_ws.onmessage = function(event) {
+        if (event.data === "pause") {
+            location.reload();
+        } else {
+            game_data = jQuery.parseJSON(event.data);
+
+            /* Update Money */
+            let i = 0;
+            var money_ls = [];
+            $.each(game_data, function(index, item) {
+                money_ls.push([index.toString(), item.money]);
+                i = i+1;
+                if (i > 9) {
+                    return false;
+                }
+            });
+            money_pie_chart.series[0].setData(money_ls, true);
+
+            /* Update Flags */
+            i = 0;
+            var flag_ls = [];
+            $.each(game_data, function(index, item) {
+                flag_ls.push([index.toString(), item.flags.length]);
+                i = i+1;
+                if (i > 9) {
+                    return false;
+                }
+            });
+            flag_pie_chart.series[0].setData(flag_ls, true);
+        }
+    };
 }
 
 $(document).ready(function() {
@@ -446,9 +451,9 @@ $(document).ready(function() {
             }
         }
     } else {
-        initializeSocket(10);
+        initializeSocket();
         $("#datapoints").change(function(){
-            initializeSocket(this.value);
+            trigger_update();
         });
         if ($("#timercount").length > 0) {
             $.get("/scoreboard/ajax/timer", function(distance) {
@@ -456,40 +461,6 @@ $(document).ready(function() {
                 setTimer(distance, "");
             });
         }
-        window.scoreboard_ws = new WebSocket(wsUrl() + "/scoreboard/wsocket/game_data");
-        scoreboard_ws.onmessage = function(event) {
-            if (event.data === "pause") {
-                location.reload();
-            } else {
-                game_data = jQuery.parseJSON(event.data);
-
-                /* Update Money */
-                let i = 0;
-                var money_ls = [];
-                $.each(game_data, function(index, item) {
-                    money_ls.push([index.toString(), item.money]);
-                    i = i+1;
-                    if (i > 9) {
-                        return false;
-                    }
-                });
-                money_chart.series[0].setData(money_ls, true);
-    
-                /* Update Flags */
-                i = 0;
-                var flag_ls = [];
-                $.each(game_data, function(index, item) {
-                    flag_ls.push([index.toString(), item.flags.length]);
-                    i = i+1;
-                    if (i > 9) {
-                        return false;
-                    }
-                });
-                flag_chart.series[0].setData(flag_ls, true);
-                
-            }
-        };
-
         $("#graphtext").click(function(){
             $("#pie_graphs").toggle();
             if ($("#pie_graphs").is(":visible")) {
@@ -497,6 +468,21 @@ $(document).ready(function() {
             } else {
                 $("#graphtext").html('<i class="fa fa-caret-up graphtoggle"></i>&nbsp;&nbsp;Charts&nbsp;');
             }
+        });
+        $("#flags-history-button").off();
+        $("#flags-history-button").click(function() {
+            history_option = "flag"
+            set_graph_chart()
+        });
+        $("#money-history-button").off();
+        $("#money-history-button").click(function() {
+            history_option = "money"
+            set_graph_chart()
+        });
+        $("#bots-history-button").off();
+        $("#bots-history-button").click(function() {
+            history_option = "bot"
+            set_graph_chart()
         });
     }
 });

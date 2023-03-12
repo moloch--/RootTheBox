@@ -130,6 +130,7 @@ class ScoreboardAjaxHandler(BaseHandler):
             "mvp": self.mvp_table,
             "timer": self.timediff,
             "feed": self.json_feed,
+            "history": self.history_data,
         }
         if len(args) and args[0] in uri:
             uri[args[0]]()
@@ -243,58 +244,9 @@ class ScoreboardAjaxHandler(BaseHandler):
             self.write({"error": "Team does not exist"})
         self.finish()
 
-
-class ScoreboardHistoryHandler(BaseHandler):
-    def get(self, *args, **kwargs):
-        user = self.get_current_user()
-        if scoreboard_visible(user):
-            self.render(
-                "scoreboard/history.html",
-                hide_scoreboard=self.application.settings["hide_scoreboard"],
-                timer=self.timer(),
-            )
-        elif not user:
-            self.redirect("/login")
-        else:
-            self.render("public/404.html")
-
-
-class ScoreboardFeedHandler(BaseHandler):
-    def get(self, *args, **kwargs):
-        """Renders the scoreboard feed page"""
-        hostname = "%s://%s" % (self.request.protocol, self.request.host)
-        self.render("scoreboard/feed.html", hostname=hostname)
-
-
-class ScoreboardHistorySocketHandler(WebSocketHandler):
-
-    connections = set()
-    game_history = []
-
-    def initialize(self):
-        self.last_message = datetime.now()
-
-    def open(self):
-        """When we receive a new websocket connect"""
-        self.connections.add(self)
-        history_top = int(self.get_argument("top", 10))
-
-        self.write_message(self.get_history(history_top))
-
-    def on_message(self, message):
-        """We ignore messages if there are more than 1 every 3 seconds"""
-        if self.application.settings["hide_scoreboard"]:
-            self.write_message("pause")
-        elif datetime.now() - self.last_message > timedelta(seconds=3):
-            self.last_message = datetime.now()
-            self.write_message(self.get_history())
-
-    def on_close(self):
-        """Lost connection to client"""
-        self.connections.remove(self)
-
-    def get_history(self, top=10):
+    def history_data(self):
         """Send history in JSON"""
+        top = int(self.get_argument("top", 10))
         teams = self.application.settings["scoreboard_state"]["teams"]
         score_teams = [
             team["uuid"]
@@ -329,8 +281,51 @@ class ScoreboardHistorySocketHandler(WebSocketHandler):
             history["history"]["score_count"][team.name] = team.get_history("score")
         for uuid in bot_teams:
             team = Team.by_uuid(uuid)
-            history["history"]["bot_count"][team.name] = team.get_history("bot")
-        return json.dumps(history)
+            history["history"]["bot_count"][team.name] = team.get_history("bots")
+        self.write(json.dumps(history))
+        self.finish()
+
+
+class ScoreboardHistoryHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        user = self.get_current_user()
+        if scoreboard_visible(user):
+            self.render(
+                "scoreboard/history.html",
+                hide_scoreboard=self.application.settings["hide_scoreboard"],
+                timer=self.timer(),
+            )
+        elif not user:
+            self.redirect("/login")
+        else:
+            self.render("public/404.html")
+
+
+class ScoreboardFeedHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        """Renders the scoreboard feed page"""
+        hostname = "%s://%s" % (self.request.protocol, self.request.host)
+        self.render("scoreboard/feed.html", hostname=hostname)
+
+
+class ScoreboardHistorySocketHandler(WebSocketHandler):
+
+    connections = set()
+
+    def open(self):
+        """When we receive a new websocket connect"""
+        self.connections.add(self)
+
+    def on_message(self, message):
+        """We ignore messages if there are more than 1 every 3 seconds"""
+        if self.application.settings["hide_scoreboard"]:
+            self.write_message("pause")
+        else:
+            self.write_message("update")
+
+    def on_close(self):
+        """Lost connection to client"""
+        self.connections.remove(self)
 
 
 class ScoreboardWallOfSheepHandler(BaseHandler):
