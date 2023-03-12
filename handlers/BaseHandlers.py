@@ -255,7 +255,6 @@ class BaseHandler(RequestHandler):
         if not self.application.settings["game_started"]:
             logging.info("The game is about to begin, good hunting!")
             self.application.settings["game_started"] = True
-            self.application.settings["history_callback"].start()
             if self.config.use_bots:
                 self.application.settings["score_bots_callback"].start()
             # Fire game start webhook
@@ -266,8 +265,6 @@ class BaseHandler(RequestHandler):
         if self.application.settings["game_started"]:
             logging.info("The game is stopping ...")
             self.application.settings["game_started"] = False
-            if self.application.settings["history_callback"]._running:
-                self.application.settings["history_callback"].stop()
             if self.application.settings["score_bots_callback"]._running:
                 self.application.settings["score_bots_callback"].stop()
             # Fire game stop webhook

@@ -44,7 +44,6 @@ from modules.Recaptcha import Recaptcha
 from modules.AppTheme import AppTheme
 from libs.ConsoleColors import *
 from libs.Scoreboard import Scoreboard, score_bots
-from libs.GameHistory import GameHistory
 from libs.DatabaseConnection import DatabaseConnection
 from libs.StringCoding import encode
 from handlers.BotnetHandlers import *
@@ -71,7 +70,6 @@ except ImportError:
 
 # Singletons
 io_loop = IOLoop.instance()
-game_history = GameHistory.instance()
 
 
 def get_cookie_secret():
@@ -251,9 +249,6 @@ app = Application(
     temp_global_notifications=None,
     # Callback functions
     score_bots_callback=PeriodicCallback(score_bots, options.bot_reward_interval),
-    history_callback=PeriodicCallback(
-        game_history.take_snapshot, options.history_snapshot_interval
-    ),
     # Scoreboard Highlights
     scoreboard_history={},
     scoreboard_state={},
@@ -284,10 +279,6 @@ def update_db(update=True):
         command.stamp(alembic_cfg, "head")
 
 
-def load_history():
-    game_history._load()
-
-
 # Main entry point
 def start_server():
     """Main entry point for the application"""
@@ -295,7 +286,6 @@ def start_server():
     locale.load_translations("locale")
     if options.autostart_game:
         app.settings["game_started"] = True
-        app.settings["history_callback"].start()
         if options.use_bots:
             app.settings["score_bots_callback"].start()
     # Setup server object

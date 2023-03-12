@@ -75,7 +75,7 @@ def create_demo_user():
         team = Team()
         team.name = "player"
         team.motto = "Don't hate the player"
-        team.money = 0
+        team.set_score("start", 0)
         team.game_levels.append(GameLevel.all()[0])
         team.members.append(user)
         dbsession.add(user)

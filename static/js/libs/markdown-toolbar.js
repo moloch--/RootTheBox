@@ -52,6 +52,7 @@
         ) {
             rendered = emoji.replace_colons(rendered);
         }
+        rendered = rendered.replaceAll('<a href=', '<a target="_blank" href=');
         return rendered;
     };
 

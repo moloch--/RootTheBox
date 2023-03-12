@@ -64,11 +64,11 @@ class AdminEditTeamsHandler(BaseHandler):
             if group == "all":
                 teams = Team.all()
                 for team in teams:
-                    team.money += value
+                    team.set_score("admin", value + team.money)
                     self.dbsession.add(team)
             else:
                 team = Team.by_uuid(group)
-                team.money += value
+                team.set_score("admin", value + team.money)
                 self.dbsession.add(team)
             self.dbsession.commit()
             self.event_manager.admin_score_update(team, message, value)
@@ -96,7 +96,7 @@ class AdminEditUsersHandler(BaseHandler):
                 raise ValidationError("Team does not exist")
             team.name = self.get_argument("name", team.name)
             team.motto = self.get_argument("motto", team.motto)
-            team.money = self.get_argument("money", team.money)
+            team.set_score("admin", self.get_argument("money", team.money))
             team.notes = self.get_argument("notes", "")
             if hasattr(self.request, "files") and "avatarfile" in self.request.files:
                 team.avatar = self.request.files["avatarfile"][0]["body"]
@@ -217,9 +217,9 @@ class AdminEditUsersHandler(BaseHandler):
         team.motto = ""
         team._avatar = identicon(team.name, 6)
         if self.config.banking:
-            team.money = self.config.starting_team_money
+            team.set_score("start", self.config.starting_team_money)
         else:
-            team.money = 0
+            team.set_score("start", 0)
         level_0 = GameLevel.by_number(0)
         if not level_0:
             level_0 = GameLevel.all()[0]
