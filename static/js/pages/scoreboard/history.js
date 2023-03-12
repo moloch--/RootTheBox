@@ -415,10 +415,12 @@ function initializeSocket() {
             let i = 0;
             var money_ls = [];
             $.each(game_data, function(index, item) {
-                money_ls.push([index.toString(), item.money]);
-                i = i+1;
-                if (i > 9) {
-                    return false;
+                if (item.money > 0) {
+                    money_ls.push([index.toString(), item.money]);
+                    i = i+1;
+                    if (i > 9) {
+                        return false;
+                    }
                 }
             });
             money_pie_chart.series[0].setData(money_ls, true);
@@ -427,10 +429,13 @@ function initializeSocket() {
             i = 0;
             var flag_ls = [];
             $.each(game_data, function(index, item) {
-                flag_ls.push([index.toString(), item.flags.length]);
-                i = i+1;
-                if (i > 9) {
-                    return false;
+                flag_count = item.flags.length;
+                if (flag_count > 0) {
+                    flag_ls.push([index.toString(), flag_count]);
+                    i = i+1;
+                    if (i > 9) {
+                        return false;
+                    }
                 }
             });
             flag_pie_chart.series[0].setData(flag_ls, true);
@@ -461,14 +466,6 @@ $(document).ready(function() {
                 setTimer(distance, "");
             });
         }
-        $("#graphtext").click(function(){
-            $("#pie_graphs").toggle();
-            if ($("#pie_graphs").is(":visible")) {
-                $("#graphtext").html('<i class="fa fa-caret-down graphtoggle"></i>&nbsp;&nbsp;Charts&nbsp;');
-            } else {
-                $("#graphtext").html('<i class="fa fa-caret-up graphtoggle"></i>&nbsp;&nbsp;Charts&nbsp;');
-            }
-        });
         $("#flags-history-button").off();
         $("#flags-history-button").click(function() {
             history_option = "flag"

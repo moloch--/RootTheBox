@@ -51,9 +51,6 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
     connections = set()
 
-    def initialize(self):
-        self.last_message = datetime.now()
-
     def open(self):
         """When we receive a new websocket connect"""
         self.connections.add(self)
@@ -64,11 +61,9 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
     def on_message(self, message):
         """We ignore messages if there are more than 1 every 3 seconds"""
-        Scoreboard.update_gamestate(self)
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
-        elif datetime.now() - self.last_message > timedelta(seconds=3):
-            self.last_message = datetime.now()
+        else:
             self.write_message(Scoreboard.now(self))
 
     def on_close(self):
