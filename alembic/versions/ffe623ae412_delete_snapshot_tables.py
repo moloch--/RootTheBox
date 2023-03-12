@@ -76,7 +76,7 @@ def upgrade():
         for item in results:
             check_history(item)
     except Exception as e:
-        print("Failed to import prior snapshot data into game history")
+        print("Failed to import prior snapshot data into game history: %s" % str(e))
         print("Continuing...")
     try:
         res = conn.execute("SELECT * FROM team_to_flag")
@@ -84,7 +84,7 @@ def upgrade():
         for item in results:
             check_flag(item)
     except Exception as e:
-        print("Failed to import prior flag count into game history")
+        print("Failed to import prior flag count into game history: %s" % str(e))
         print("Continuing...")
 
     if _has_table("snapshot_to_snapshot_team"):

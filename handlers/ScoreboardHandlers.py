@@ -275,13 +275,16 @@ class ScoreboardAjaxHandler(BaseHandler):
         }
         for uuid in flag_teams:
             team = Team.by_uuid(uuid)
-            history["history"]["flag_count"][team.name] = team.get_history("flags")
+            if team:
+                history["history"]["flag_count"][team.name] = team.get_history("flags")
         for uuid in score_teams:
             team = Team.by_uuid(uuid)
-            history["history"]["score_count"][team.name] = team.get_history("score")
+            if team:
+                history["history"]["score_count"][team.name] = team.get_history("score")
         for uuid in bot_teams:
             team = Team.by_uuid(uuid)
-            history["history"]["bot_count"][team.name] = team.get_history("bots")
+            if team:
+                history["history"]["bot_count"][team.name] = team.get_history("bots")
         self.write(json.dumps(history))
         self.finish()
 
@@ -395,9 +398,11 @@ class TeamsHandler(BaseHandler):
         end_count = display * page
         start_count = end_count - display
         teams = []
-        for i, team in enumerate(ranks):
+        for i, team_name in enumerate(ranks):
             if i >= start_count and i < end_count:
-                teams.append(Team.by_uuid(ranks[team].get("uuid")))
+                team = Team.by_uuid(ranks[team_name].get("uuid"))
+                if team:
+                    teams.append(team)
             elif i >= end_count:
                 break
 
