@@ -51,7 +51,7 @@ from libs.StringCoding import encode, decode
 from libs.ValidationError import ValidationError
 from libs.ConfigHelpers import save_config
 from libs.ConsoleColors import *
-from libs.Scoreboard import score_bots
+from libs.Scoreboard import score_bots, Scoreboard
 from handlers.BaseHandlers import BaseHandler
 from string import printable
 from setup.xmlsetup import import_xml
@@ -705,6 +705,7 @@ class AdminResetHandler(BaseHandler):
                 self.dbsession.add(flag)
             self.dbsession.commit()
             self.dbsession.flush()
+            Scoreboard.update_gamestate(self)
             self.event_manager.push_score_update()
             self.flush_memcached()
             success = "Successfully Reset Game"
@@ -764,6 +765,7 @@ class AdminResetDeleteHandler(BaseHandler):
                 self.dbsession.add(flag)
             self.dbsession.commit()
             self.dbsession.flush()
+            Scoreboard.update_gamestate(self)
             self.event_manager.push_score_update()
             self.flush_memcached()
             if options.teams:
