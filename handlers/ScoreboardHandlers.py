@@ -61,6 +61,7 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
     def on_message(self, message):
         """We ignore messages if there are more than 1 every 3 seconds"""
+        Scoreboard.update_gamestate(self)
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         else:
