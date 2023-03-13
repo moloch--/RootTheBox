@@ -140,9 +140,7 @@ class AdminGameHandler(BaseHandler):
 
 class AdminMessageHandler(BaseHandler):
 
-    event_manager = EventManager.instance()
-
-    """ Send a global notification message """
+    """Send a global notification message"""
 
     @restrict_ip_address
     @authenticated

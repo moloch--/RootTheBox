@@ -22,15 +22,12 @@ Created on Mar 15, 2012
 import logging
 
 from libs.SecurityDecorators import *
-from libs.EventManager import EventManager
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 
 class NotifySocketHandler(BaseWebSocketHandler):
 
     """Handles websocket connections"""
-
-    event_manager = EventManager.instance()
 
     def open(self):
         """When we receive a new websocket connect"""

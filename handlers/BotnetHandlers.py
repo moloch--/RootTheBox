@@ -39,7 +39,7 @@ from libs.SecurityDecorators import *
 from tornado.options import options
 
 
-class BotSocketHandler(tornado.websocket.WebSocketHandler):
+class BotSocketHandler(BaseWebSocketHandler):
     """
     *** Rough bot protocol layout ***
     =================================
@@ -68,7 +68,6 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
     """
 
     bot_manager = BotManager.instance()
-    event_manager = EventManager.instance()
     config = options
     team_name = None
     team_uuid = None
@@ -174,7 +173,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         self.close()
 
 
-class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
+class BotCliMonitorSocketHandler(BaseWebSocketHandler):
     """
     Handles the CLI BotMonitor websocket connections, has custom auth.
     TODO: Trash this and use the web api handler, w/ normal session cookie

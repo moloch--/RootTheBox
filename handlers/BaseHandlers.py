@@ -75,6 +75,7 @@ class BaseHandler(RequestHandler):
     config = options  # backward compatibility
 
     def initialize(self):
+        self.event_manager.app = self.application
         """Setup sessions, etc"""
         self.add_content_policy("connect-src", self.config.origin)
         # We need this for a few things, and so far as I know it doesn't
@@ -300,8 +301,11 @@ class BaseWebSocketHandler(WebSocketHandler):
     _session = None
     _memcached = None
     io_loop = IOLoop.instance()
-    manager = EventManager.instance()
+    event_manager = EventManager.instance()
     config = options  # backward compatibility
+
+    def initialize(self):
+        self.event_manager.app = self.application
 
     def check_origin(self, origin):
         """Parses the request's origin header"""

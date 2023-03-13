@@ -26,7 +26,6 @@ import json
 import logging
 import time
 
-from threading import Thread
 from sqlalchemy.orm import scoped_session
 from models import dbsession, session_maker
 from models.Team import Team
@@ -52,6 +51,9 @@ class Scoreboard(object):
 
     @classmethod
     def update_gamestate(cls, app):
+        if app is None:
+            logging.warning("Unable to update Gamestate")
+            return
         game_levels = GameLevel.all()
         teams = Team.ranks()
         users = User.ranks()

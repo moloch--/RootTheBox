@@ -28,8 +28,7 @@ This file contains handlers related to the scoreboard.
 import json
 import logging
 
-from tornado.websocket import WebSocketHandler
-from handlers.BaseHandlers import BaseHandler
+from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from libs.SecurityDecorators import use_black_market, item_allowed
 from libs.Scoreboard import Scoreboard
 from builtins import str
@@ -46,7 +45,7 @@ from collections import OrderedDict
 from itertools import islice
 
 
-class ScoreboardDataSocketHandler(WebSocketHandler):
+class ScoreboardDataSocketHandler(BaseWebSocketHandler):
     """Get Score data via websocket"""
 
     connections = set()
@@ -61,7 +60,6 @@ class ScoreboardDataSocketHandler(WebSocketHandler):
 
     def on_message(self, message):
         """We ignore messages if there are more than 1 every 3 seconds"""
-        Scoreboard.update_gamestate(self)
         if self.application.settings["hide_scoreboard"]:
             self.write_message("pause")
         else:
@@ -87,8 +85,6 @@ class ScoreboardHandler(BaseHandler):
             page = 1
             display = 50
         if scoreboard_visible(user):
-            if not options.scoreboard_lazy_update:
-                Scoreboard.update_gamestate(self)
             settings = self.application.settings
             teamcount = len(settings["scoreboard_state"].get("teams"))
             if page == 0:
@@ -307,7 +303,7 @@ class ScoreboardFeedHandler(BaseHandler):
         self.render("scoreboard/feed.html", hostname=hostname)
 
 
-class ScoreboardHistorySocketHandler(WebSocketHandler):
+class ScoreboardHistorySocketHandler(BaseWebSocketHandler):
 
     connections = set()
 
@@ -351,7 +347,7 @@ class ScoreboardWallOfSheepHandler(BaseHandler):
             self.render("public/404.html")
 
 
-class ScoreboardPauseHandler(WebSocketHandler):
+class ScoreboardPauseHandler(BaseWebSocketHandler):
 
     connections = set()
 
