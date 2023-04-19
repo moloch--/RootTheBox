@@ -1,5 +1,5 @@
 tornado==5.*; python_version<'3.0'
-tornado==6.2; python_version>='3.0'
+tornado; python_version>='3.0'
 pbkdf2
 PyMySQL==0.10.1; python_version<'3.0'
 PyMySQL; python_version>='3.0'

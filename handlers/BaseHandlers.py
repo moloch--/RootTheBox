@@ -96,7 +96,7 @@ class BaseHandler(RequestHandler):
     def start_session(self):
         """Starts a new session"""
         self.session = self._create_session()
-        flags = {"expires": self.session.expires, "path": "/", "HttpOnly": True}
+        flags = {"expires": self.session.expires, "path": "/", "httponly": True}
         if self.config.ssl:
             flags["Secure"] = True
         self.set_secure_cookie("session_id", self.session.session_id, **flags)
