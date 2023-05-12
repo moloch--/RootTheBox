@@ -654,6 +654,14 @@ class AdminResetHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
+        success, errors = self.reset(self.dbsession)
+        Scoreboard.update_gamestate(self)
+        self.event_manager.push_score_update()
+        self.flush_memcached()
+        self.render("admin/reset.html", success=success, errors=errors)
+
+    @staticmethod
+    def reset(dbsession):
         """
         Reset the Game
         """
@@ -679,41 +687,38 @@ class AdminResetHandler(BaseHandler):
                 if not level_0:
                     level_0 = GameLevel.all()[0]
                 team.game_levels = [level_0]
-                self.dbsession.add(team)
-            self.dbsession.commit()
-            self.dbsession.flush()
+                dbsession.add(team)
+            dbsession.commit()
+            dbsession.flush()
             for team in teams:
                 for paste in team.pastes:
-                    self.dbsession.delete(paste)
+                    dbsession.delete(paste)
                 for shared_file in team.files:
                     shared_file.delete_data()
-                    self.dbsession.delete(shared_file)
-            self.dbsession.commit()
-            self.dbsession.flush()
+                    dbsession.delete(shared_file)
+            dbsession.commit()
+            dbsession.flush()
             Penalty.clear()
             Notification.clear()
             swats = Swat.all()
             for swat in swats:
-                self.dbsession.delete(swat)
-            self.dbsession.commit()
+                dbsession.delete(swat)
+            dbsession.commit()
             flags = Flag.all()
             for flag in flags:
                 # flag.value = flag.value allows a fallback to when original_value was used
                 # Allows for the flag value to be reset if dynamic scoring was used
                 # Can be removed after depreciation timeframe
                 flag.value = flag.value
-                self.dbsession.add(flag)
-            self.dbsession.commit()
-            self.dbsession.flush()
-            Scoreboard.update_gamestate(self)
-            self.event_manager.push_score_update()
-            self.flush_memcached()
+                dbsession.add(flag)
+            dbsession.commit()
+            dbsession.flush()
             success = "Successfully Reset Game"
-            self.render("admin/reset.html", success=success, errors=errors)
+            return (success, errors)
         except BaseException as e:
             errors.append("Failed to Reset Game")
             logging.error(str(e))
-            self.render("admin/reset.html", success=None, errors=errors)
+            return (None, errors)
 
 
 class AdminResetDeleteHandler(BaseHandler):
@@ -728,6 +733,14 @@ class AdminResetDeleteHandler(BaseHandler):
     @authenticated
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
+        success, errors = self.reset(self.dbsession)
+        Scoreboard.update_gamestate(self)
+        self.event_manager.push_score_update()
+        self.flush_memcached()
+        self.render("admin/reset.html", success=success, errors=errors)
+
+    @staticmethod
+    def reset(dbsession):
         """
         Reset the Game - Delete all teams
         """
@@ -738,45 +751,43 @@ class AdminResetDeleteHandler(BaseHandler):
             teams = Team.all()
             for team in teams:
                 for paste in team.pastes:
-                    self.dbsession.delete(paste)
+                    dbsession.delete(paste)
                 for shared_file in team.files:
                     shared_file.delete_data()
-                    self.dbsession.delete(shared_file)
-            self.dbsession.commit()
-            self.dbsession.flush()
+                    dbsession.delete(shared_file)
+            dbsession.commit()
+            dbsession.flush()
             Penalty.clear()
             Notification.clear()
             swats = Swat.all()
             for swat in swats:
-                self.dbsession.delete(swat)
-            self.dbsession.commit()
+                dbsession.delete(swat)
+            dbsession.commit()
             for user in users:
-                self.dbsession.delete(user)
-            self.dbsession.commit()
+                dbsession.delete(user)
+            dbsession.commit()
             for team in teams:
-                self.dbsession.delete(team)
-            self.dbsession.commit()
+                dbsession.delete(team)
+            dbsession.commit()
             flags = Flag.all()
             for flag in flags:
                 # flag.value = flag.value allows a fallback to when original_value was used
                 # Allows for the flag value to be reset if dynamic scoring was used
                 # Can be removed after depreciation timeframe
                 flag.value = flag.value
-                self.dbsession.add(flag)
-            self.dbsession.commit()
-            self.dbsession.flush()
-            Scoreboard.update_gamestate(self)
-            self.event_manager.push_score_update()
-            self.flush_memcached()
+                dbsession.add(flag)
+            dbsession.commit()
+            dbsession.flush()
+
             if options.teams:
                 success = "Successfully Deleted Teams"
             else:
                 success = "Successfully Deleted Players"
-            self.render("admin/reset.html", success=success, errors=errors)
+            return (success, errors)
         except BaseException as e:
             if options.teams:
                 errors.append("Failed to Delete Teams")
             else:
                 errors.append("Failed to Delete Players")
             logging.error(str(e))
-            self.render("admin/reset.html", success=None, errors=errors)
+            return (None, errors)

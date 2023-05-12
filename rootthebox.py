@@ -273,6 +273,12 @@ def help():
         "\tNo options specified. Examples: 'rootthebox.py --setup=prod' or 'rootthebox.py --start'"
     ]
     help_response.append("\t\t--recovery\tstart the recovery console")
+    help_response.append(
+        "\t\t--reset\tkeeps teams / players and resets the game to start"
+    )
+    help_response.append(
+        "\t\t--reset-delete\tdeletes teams / players and resets the game to start"
+    )
     help_response.append("\t\t--restart\trestart the server")
     help_response.append("\t\t--save\t\tsave the current configuration to file")
     help_response.append("\t\t--setup\t\tsetup a database (prod|devel|docker)")
@@ -1088,6 +1094,20 @@ define("start", default=False, help="start the server", type=bool)
 
 define("restart", default=False, help="restart the server", type=bool)
 
+define(
+    "reset",
+    default=False,
+    help="keeps teams / players and resets the game to start",
+    type=bool,
+)
+
+define(
+    "reset_delete",
+    default=False,
+    help="deletes teams / players and resets the game to start",
+    type=bool,
+)
+
 define("update", default=False, help="pull the latest code via github", type=bool)
 
 define("version", default=False, help="display version information and exit", type=bool)
@@ -1189,5 +1209,15 @@ if __name__ == "__main__":
         setup_xml(options.xml)
     elif options.tests:
         tests()
+    elif options.reset:
+        from models import dbsession
+        from handlers.AdminHandlers import AdminResetHandler
+
+        AdminResetHandler.reset(dbsession)
+    elif options.reset_delete:
+        from models import dbsession
+        from handlers.AdminHandlers import AdminResetDeleteHandler
+
+        AdminResetDeleteHandler.reset(dbsession)
     else:
         print(help())

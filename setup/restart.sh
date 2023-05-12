@@ -5,4 +5,4 @@ for process in $(pgrep -f "(python|python3) ./rootthebox.py --start"); do
 done &&
 
 # Restart
-./rootthebox.py --start
+python3 ./rootthebox.py --start
