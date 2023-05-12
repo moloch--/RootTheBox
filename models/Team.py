@@ -28,6 +28,7 @@ import imghdr
 import io
 
 from uuid import uuid4
+from datetime import datetime
 from sqlalchemy import Column, desc
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Integer, Unicode, String
@@ -291,6 +292,12 @@ class Team(DatabaseObject):
         """Sorted game_levels"""
         return sorted(self.game_levels)
 
+    def last_scored(self):
+        for item in reversed(self.game_history):
+            if item.type == "flag_count":
+                return item.created.strftime("%s")
+        return datetime.now().strftime("%s")
+
     def level_flags(self, lvl):
         """Given a level number return all flags captured for that level"""
         return [flag for flag in self.flags if flag.game_level.number == lvl]
@@ -345,17 +352,21 @@ class Team(DatabaseObject):
     def __cmp__(self, other):
         """Compare based on the config option rank_by"""
         if options.rank_by.lower() != "money":
-            """flags ▲, money ▲, hints ▼"""
+            """flags ▲, money ▲, hints ▼, time ▼"""
             this, that = len(self.flags), len(other.flags)
             if this == that:
                 this, that = self.money, other.money
             if this == that:
                 this, that = len(other.hints), len(self.hints)
+            if this == that:
+                this, that = other.last_scored(), self.last_scored()
         else:
-            """money ▲, hints ▼, flags ▲"""
+            """money ▲, hints ▼, time ▼, flags ▲"""
             this, that = self.money, other.money
             if this == that:
                 this, that = len(other.hints), len(self.hints)
+            if this == that:
+                this, that = other.last_scored(), self.last_scored()
             if this == that:
                 this, that = len(self.flags), len(other.flags)
         if this < that:

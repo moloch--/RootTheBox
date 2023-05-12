@@ -47,6 +47,11 @@ class GameHistory(DatabaseObject):
         """Return the game history object based on the _type"""
         return dbsession.query(cls).filter_by(_type=_type).all()
 
+    @classmethod
+    def by_team(cls, _team_id):
+        """Return the game history object based on the team"""
+        return dbsession.query(cls).filter_by(team_id=_team_id).all()
+
     @property
     def type(self):
         return self._type
@@ -82,6 +87,9 @@ class GameHistory(DatabaseObject):
         )
 
     def __str__(self):
+        from models.Team import Team
+
+        team = Team.by_id(self.team_id)
         return json.dumps(
             {
                 "created": self.created.strftime("%s"),
