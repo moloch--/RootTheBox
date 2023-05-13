@@ -363,6 +363,7 @@ Level,级别
 Level Name,级别名称
 Level Number,级别编号
 Level to put box in?,确认题目级别？
+Level Locked,关卡锁定
 Level Unlocked,级别已解锁
 Limit number of players that can be on any one team,限制每支队伍成员数量
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",限制提交Flag的尝试次数。达到限制后，不能再次提交Flag。

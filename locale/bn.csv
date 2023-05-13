@@ -354,6 +354,7 @@ Level,উচ্চতা
 Level Name,স্তরের নাম
 Level Number,স্তর সংখ্যা
 Level to put box in?,বাক্সে রাখার স্তর?
+Level Locked,লেভেল লকড
 Level Unlocked,স্তরটি আনলক করা হয়েছে
 Limit number of players that can be on any one team,যে কোনও একটি দলে থাকতে পারে এমন খেলোয়াড়ের সীমাবদ্ধ করুন
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","একটি পতাকা ক্যাপচার করার প্রচেষ্টা সীমাবদ্ধ করে। সীমাটি পৌঁছে গেলে, পতাকাটিতে আর কোনও পদক্ষেপ নেওয়া যাবে না।"

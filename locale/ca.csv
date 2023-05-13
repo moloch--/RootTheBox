@@ -354,6 +354,7 @@ Level,Nivell
 Level Name,Nom de nivell
 Level Number,Numere de nivell
 Level to put box in?,Nivell per a posar la caixa?
+Level Locked,Nivell bloquejat
 Level Unlocked,Nivell desbloquejat
 Limit number of players that can be on any one team,Limite la quantitat de jugadors que poden estar en un equip
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Limita el nombre d'intents de capturar una bandera. Una vegada que s'aconsegueix el límit, no es poden prendre més mesurades sobre aqueixa bandera."

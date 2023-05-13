@@ -354,6 +354,7 @@ Level,レベル
 Level Name,レベル名
 Level Number,レベル番号
 Level to put box in?,箱を入れるレベル？
+Level Locked,レベルロック済み
 Level Unlocked,レベルロック解除
 Limit number of players that can be on any one team,いずれかのチームに所属できるプレイヤーの数を制限する
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",フラグをキャプチャする試行回数を制限します。制限に達すると、そのフラグに対してそれ以上のアクションは実行できません。

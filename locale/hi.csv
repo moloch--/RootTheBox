@@ -354,6 +354,7 @@ Level,स्तर
 Level Name,स्तर का नाम
 Level Number,स्तर संख्या
 Level to put box in?,बॉक्स में डालने के लिए स्तर?
+Level Locked,स्तर बंद
 Level Unlocked,स्तर खुला
 Limit number of players that can be on any one team,किसी एक टीम पर हो सकने वाले खिलाड़ियों की सीमा
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","एक ध्वज को पकड़ने के प्रयासों की संख्या को सीमित करता है। एक बार सीमा समाप्त हो जाने के बाद, उस झंडे पर कोई और कार्रवाई नहीं की जा सकती है।"

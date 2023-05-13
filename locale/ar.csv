@@ -354,6 +354,7 @@ Level,مستوى
 Level Name,اسم المستوى
 Level Number,رقم المستوى
 Level to put box in?,المستوى لوضع مربع في؟
+Level Locked,المستوى مغلق
 Level Unlocked,مستوى مفتوح
 Limit number of players that can be on any one team,الحد من عدد اللاعبين الذين يمكن أن يكونوا في أي فريق واحد
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",يحد من عدد محاولات التقاط العلم. بمجرد الوصول إلى الحد ، لا يمكن اتخاذ أي إجراء آخر على هذا العلم.

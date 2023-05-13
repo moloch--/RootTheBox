@@ -354,6 +354,7 @@ Level,수평
 Level Name,레벨 이름
 Level Number,레벨 번호
 Level to put box in?,박스를 넣을 수준?
+Level Locked,잠긴 레벨
 Level Unlocked,레벨 잠금 해제
 Limit number of players that can be on any one team,한 팀에 참여할 수있는 플레이어 수 제한
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.",플래그 캡처 시도 횟수를 제한합니다. 한도에 도달하면 해당 플래그에 대한 추가 조치를 수행 할 수 없습니다.

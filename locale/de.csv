@@ -363,6 +363,7 @@ Level,Level
 Level Name,Level-Name
 Level Number,Level-Nummer
 Level to put box in?,Level um Box hineinzutun?
+Level Locked,Level vergrendeld
 Level Unlocked,Level freigeschaltet
 Limit number of players that can be on any one team,"Begrenzen Sie die Anzahl der Spieler, die in einem Team sein können"
 "Limits the number of attempts to capture a flag.  Once the limit is reached, no further action can be taken on that flag.","Begrenzt die Anzahl der Versuche, eine Flagge zu erobern. Sobald das Limit erreicht ist, kann für dieses Flag keine weitere Aktion ausgeführt werden."
