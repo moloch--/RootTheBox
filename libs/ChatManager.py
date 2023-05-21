@@ -65,10 +65,13 @@ class ChatManager(object):
     def has_group(self, team):
         if not team:
             return False
+        safe_groupname = team.name.replace(" ", "_").lower()
         privaterooms = self.rocket.groups_list().json()
         if "groups" in privaterooms:
             for group in privaterooms["groups"]:
-                if group["name"] == team.name.replace(" ", "_").lower():
+                if group.get("fname", '') == safe_groupname:
+                    return group
+                if group["name"] == safe_groupname:
                     return group
         return False
 
