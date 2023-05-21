@@ -40,11 +40,15 @@ class ChatManager(object):
         if not self.rocket:
             return
         email = user.email
-        if email is None:
+        if not email:
             email = "%s@rocketchat.com" % user.uuid
         account = self.rocket.users_create(
             email, user.name, password, user.handle.replace(" ", "_")
         ).json()
+        if not account.get("success"):
+            logging.error(account.get("error"))
+            logging.error(account.get("details"))
+            return
         self.create_team(user.team, account)
 
     def create_team(self, team, account):
