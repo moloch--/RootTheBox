@@ -40,11 +40,15 @@ class ChatManager(object):
         if not self.rocket:
             return
         email = user.email
-        if email is None:
+        if not email:
             email = "%s@rocketchat.com" % user.uuid
         account = self.rocket.users_create(
             email, user.name, password, user.handle.replace(" ", "_")
         ).json()
+        if not account.get("success"):
+            logging.error(account.get("error"))
+            logging.error(account.get("details"))
+            return
         self.create_team(user.team, account)
 
     def create_team(self, team, account):
@@ -61,10 +65,13 @@ class ChatManager(object):
     def has_group(self, team):
         if not team:
             return False
+        safe_groupname = team.name.replace(" ", "_").lower()
         privaterooms = self.rocket.groups_list().json()
         if "groups" in privaterooms:
             for group in privaterooms["groups"]:
-                if group["name"] == team.name.replace(" ", "_").lower():
+                if group.get("fname", '') == safe_groupname:
+                    return group
+                if group["name"] == safe_groupname:
                     return group
         return False
 
