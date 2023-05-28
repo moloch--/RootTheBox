@@ -69,7 +69,7 @@ class ChatManager(object):
         privaterooms = self.rocket.groups_list().json()
         if "groups" in privaterooms:
             for group in privaterooms["groups"]:
-                if group.get("fname", '') == safe_groupname:
+                if group.get("fname", "") == safe_groupname:
                     return group
                 if group["name"] == safe_groupname:
                     return group

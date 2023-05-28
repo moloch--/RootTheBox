@@ -49,9 +49,6 @@ from .BaseHandlers import BaseHandler
 from tornado.options import options
 
 
-RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
-
-
 class HomeHandler(BaseHandler):
     """Allow for public view of user page if scoreboard set to public"""
 
@@ -313,8 +310,8 @@ class SettingsHandler(BaseHandler):
             }
             try:
                 recaptcha_req_body = urlencode(recaptcha_req_data).encode("utf-8")
-                reqquest = urlrequest.Request(RECAPTCHA_URL, recaptcha_req_body)
-                response = urlrequest.urlopen(reqquest)
+                request = urlrequest.Request(self.RECAPTCHA_URL, recaptcha_req_body)
+                response = urlrequest.urlopen(request)
                 self.recaptcha_callback(response)
             except tornado.httpclient.HTTPError:
                 logging.exception("Recaptcha AsyncHTTP request threw an exception")

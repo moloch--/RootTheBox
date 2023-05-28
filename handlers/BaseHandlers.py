@@ -73,6 +73,7 @@ class BaseHandler(RequestHandler):
     io_loop = IOLoop.instance()
     event_manager = EventManager.instance()
     config = options  # backward compatibility
+    RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
 
     def initialize(self):
         """Setup sessions, etc"""

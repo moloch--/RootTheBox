@@ -99,7 +99,12 @@
                             <a id="uploadbutton" class="btn btn-primary" href="#">{{ _("Upload Avatar") }}</a>&nbsp;&nbsp;(w500 x h250)
                             <input id="user-avatar" name="avatar" type="file" accept="image/bmp,image/jpeg,image/gif,image/png" style="display: none;"/>
                         </div>
+                        {% if options.use_recaptcha %}
+                        <br>
+                        {% module Recaptcha() %}
+                        {% end %}
                     </div>
+                    
                 {% end %}
                 <div class="control-group">
                     <label class="control-label" for="handle">

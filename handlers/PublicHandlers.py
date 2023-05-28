@@ -32,6 +32,14 @@ import random
 import string
 import json
 
+try:
+    from urllib.parse import urlencode
+except ImportError:
+    from urllib import urlencode
+try:
+    import urllib.request as urlrequest
+except ImportError:
+    import urllib2 as urlrequest
 from os import urandom
 from netaddr import IPAddress
 from libs.Identicon import identicon
@@ -220,7 +228,13 @@ class LoginHandler(BaseHandler):
         if user is None:
             user = User.by_email(self.get_argument("account", ""))
         if user is not None:
-            if user.validate_password(password_attempt):
+            if self.config.use_recaptcha and self.verify_recaptcha() is False:
+                self.render(
+                    "public/login.html",
+                    info=None,
+                    errors=["Invalid reCAPTCHA, try again"],
+                )
+            elif user.validate_password(password_attempt):
                 self.valid_login(user)
             else:
                 self.failed_login()
@@ -228,6 +242,25 @@ class LoginHandler(BaseHandler):
             if password_attempt is not None:
                 PBKDF2.crypt(password_attempt, "BurnTheHashTime")
             self.failed_login()
+
+    def verify_recaptcha(self):
+        """Checks recaptcha"""
+        recaptcha_response = self.get_argument("g-recaptcha-response", None)
+        if recaptcha_response:
+            recaptcha_req_data = {
+                "secret": self.config.recaptcha_secret_key,
+                "remoteip": self.request.remote_ip,
+                "response": recaptcha_response,
+            }
+
+            recaptcha_req_body = urlencode(recaptcha_req_data).encode("utf-8")
+            request = urlrequest.Request(self.RECAPTCHA_URL, recaptcha_req_body)
+            response = urlrequest.urlopen(request)
+            if response:
+                result = json.loads(response.read())
+                if result["success"]:
+                    return True
+        return False
 
     def build_auth_code_flow(self):
         codeflow = azuread_app.initiate_auth_code_flow(
@@ -465,6 +498,27 @@ class RegistrationHandler(BaseHandler):
             raise ValidationError("This email address is already registered")
         if self.get_argument("pass1", "") != self.get_argument("pass2", ""):
             raise ValidationError("Passwords do not match")
+        if self.config.use_recaptcha and self.verify_recaptcha() is False:
+            raise ValidationError("Invalid reCAPTCHA")
+
+    def verify_recaptcha(self):
+        """Checks recaptcha"""
+        recaptcha_response = self.get_argument("g-recaptcha-response", None)
+        if recaptcha_response:
+            recaptcha_req_data = {
+                "secret": self.config.recaptcha_secret_key,
+                "remoteip": self.request.remote_ip,
+                "response": recaptcha_response,
+            }
+
+            recaptcha_req_body = urlencode(recaptcha_req_data).encode("utf-8")
+            request = urlrequest.Request(self.RECAPTCHA_URL, recaptcha_req_body)
+            response = urlrequest.urlopen(request)
+            if response:
+                result = json.loads(response.read())
+                if result["success"]:
+                    return True
+        return False
 
     def create_user(self):
         """Add user to the database"""

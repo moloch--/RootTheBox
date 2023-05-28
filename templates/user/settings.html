@@ -332,7 +332,12 @@
                                 </div>
                             </div>
                         </div>
-                        {% module Recaptcha() %}
+                        {% if options.use_recaptcha %}
+                        <div class="span5 offset1">
+                            <br><br>
+                            {% module Recaptcha() %}
+                        </div>
+                        {% end %}
                     </div>
                     <div class="row" style="margin-left: 0px;">
                         <div class="control-group">

@@ -35,6 +35,10 @@
         {% raw xsrf_form_html() %}
         <input name="account" type="text" class="input-block-level" placeholder="{{ _('Handle') }}" autofocus>
         <input name="password" type="password" class="input-block-level" placeholder="{{ _('Password') }}" autocomplete="off">
+        {% if options.use_recaptcha %}
+        {% module Recaptcha() %}
+        <br />
+        {% end %}
         <button class="btn btn-primary" type="submit">
             <i class="fa fa-sign-in"></i>
             {{ _("Login") }}
