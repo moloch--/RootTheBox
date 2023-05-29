@@ -24,7 +24,7 @@ import xml.etree.cElementTree as ET
 
 from uuid import uuid4
 from sqlalchemy import Column
-from sqlalchemy.types import Unicode, String
+from sqlalchemy.types import Unicode, String, Boolean
 from sqlalchemy.orm import relationship, backref
 from libs.ValidationError import ValidationError
 from builtins import str
@@ -39,6 +39,7 @@ class Corporation(DatabaseObject):
 
     _name = Column(Unicode(32), unique=True, nullable=False)
     _description = Column(Unicode(512))
+    _locked = Column(Boolean, default=False, nullable=False)
 
     boxes = relationship(
         "Box",
@@ -92,6 +93,25 @@ class Corporation(DatabaseObject):
             raise ValidationError("Description cannot be greater than 512 characters")
         self._description = str(value)
 
+    @property
+    def locked(self):
+        """Determines if an admin has locked an corp."""
+        if self._locked == None:
+            return False
+        return self._locked
+
+    @locked.setter
+    def locked(self, value):
+        """Setter method for _lock"""
+        if value is None:
+            value = False
+        elif isinstance(value, int):
+            value = value == 1
+        elif isinstance(value, str):
+            value = value.lower() in ["true", "1"]
+        assert isinstance(value, bool)
+        self._locked = value
+
     def to_dict(self):
         """Returns editable data as a dictionary"""
         return {
@@ -106,6 +126,7 @@ class Corporation(DatabaseObject):
         corp_elem = ET.SubElement(parent, "corporation")
         ET.SubElement(corp_elem, "name").text = self.name
         ET.SubElement(corp_elem, "description").text = self.description
+        ET.SubElement(corp_elem, "locked").text = str(self.locked)
         boxes_elem = ET.SubElement(corp_elem, "boxes")
         boxes_elem.set("count", "%s" % str(len(self.boxes)))
         for box in self.boxes:

@@ -59,7 +59,7 @@
                 {% continue %}
             {% end %}
         {% for index, level in enumerate(GameLevel.all()) %}
-            {% if len(level.boxes) > 0 %}
+            {% if len(level.unlocked_boxes()) > 0 %}
                 {% if options.group_by_corp %}
                     <h2>{{ corp.name }}&nbsp;</h2>
                     {% if corp.description %}<h4 class="levelheader">{{ corp.description }}</h4>{% end %}
@@ -93,7 +93,7 @@
                 {% if has_level %}
                     <div class="container">
                         {% set boxes = [] %}
-                        {% for box in sorted(level.boxes) %}
+                        {% for box in sorted(level.unlocked_boxes()) %}
                             <!-- Only show boxes that have flags -->
                             {% if len(box.flags) > 0 and not box.locked %}
                                 {% if options.group_by_corp %}

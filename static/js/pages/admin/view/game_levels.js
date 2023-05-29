@@ -141,6 +141,11 @@ $(document).ready(function() {
          $("#delete-game-level-form").submit();
     });
 
+    $("a[id^=lock-level-button]").click(function() {
+        $("#lock-level-uuid").val($(this).data("uuid"));
+        $("#lock-level-form").submit();
+    });
+
     /* Switch Level */
     $("a[id^=switch-level-button]").click(function() {
         $("#game-level-uuid").val($(this).data("level-uuid"));

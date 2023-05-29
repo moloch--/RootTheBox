@@ -30,6 +30,7 @@ import logging
 from models.Team import Team
 from models.Box import Box
 from models.Flag import Flag
+from models.Corporation import Corporation
 from models.User import User, ADMIN_PERMISSION
 from models.Permission import Permission
 from models.GameLevel import GameLevel
@@ -337,7 +338,13 @@ class AdminLockHandler(BaseHandler):
     @authorized(ADMIN_PERMISSION)
     def post(self, *args, **kwargs):
         """Calls an lock based on URL"""
-        uri = {"user": self.lock_user, "box": self.lock_box, "flag": self.lock_flag}
+        uri = {
+            "user": self.lock_user,
+            "box": self.lock_box,
+            "flag": self.lock_flag,
+            "corp": self.lock_corp,
+            "level": self.lock_level,
+        }
         if len(args) and args[0] in uri:
             uri[args[0]]()
         else:
@@ -355,14 +362,45 @@ class AdminLockHandler(BaseHandler):
         else:
             self.render("public/404.html")
 
+    def lock_corp(self):
+        uuid = self.get_argument("uuid", "")
+        corp = Corporation.by_uuid(uuid)
+        if corp is not None:
+            corp.locked = False if corp.locked else True
+            self.dbsession.add(corp)
+            self.dbsession.commit()
+            self.redirect("/admin/view/game_objects#%s" % corp.uuid)
+        else:
+            self.render("public/404.html")
+
+    def lock_level(self):
+        uuid = self.get_argument("uuid", "")
+        level = GameLevel.by_uuid(uuid)
+        if level is not None:
+            level.locked = False if level.locked else True
+            self.dbsession.add(level)
+            self.dbsession.commit()
+            self.redirect("/admin/view/game_levels")
+        else:
+            self.render("public/404.html")
+
     def lock_box(self):
         uuid = self.get_argument("uuid", "")
         box = Box.by_uuid(uuid)
         if box is not None:
-            box.locked = False if box.locked else True
-            self.dbsession.add(box)
-            self.dbsession.commit()
-            self.redirect("/admin/view/game_objects#%s" % box.uuid)
+            if box.locked_corp():
+                self.render(
+                    "admin/view/game_objects.html", success=None, errors=["Box Locked by Corporation Lock"]
+                )
+            elif box.locked_level():
+                self.render(
+                    "admin/view/game_objects.html", success=None, errors=["Box Locked by Level Lock"]
+                )
+            else:
+                box.locked = False if box.locked else True
+                self.dbsession.add(box)
+                self.dbsession.commit()
+                self.redirect("/admin/view/game_objects#%s" % box.uuid)
         else:
             self.render("public/404.html")
 
