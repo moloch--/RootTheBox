@@ -108,7 +108,7 @@ class Scoreboard(object):
                 "number": level.number,
                 "teams": {},
                 "boxes": {},
-                "box_count": len(level.boxes),
+                "box_count": len(level.unlocked_boxes()),
                 "flag_count": len(level.flags),
             }
             for team in teams:
@@ -116,7 +116,7 @@ class Scoreboard(object):
                     "lvl_count": len(team.level_flags(level.number)),
                     "lvl_unlock": level in team.game_levels,
                 }
-            for box in sorted(level.boxes):
+            for box in sorted(level.unlocked_boxes()):
                 game_state["levels"][level.name]["boxes"][box.uuid] = {
                     "name": box.name,
                     "locked": box.locked,
