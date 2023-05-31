@@ -261,7 +261,7 @@
         {% if game_started %}
             {% for index, level in enumerate(GameLevel.all()) %}
                 {% set show_level = level.type != "hidden" or (level.type == "hidden" and level in team.game_levels) %}
-                {% if len(level.boxes) > 0 and team and show_level %}
+                {% if len(level.unlocked_boxes()) > 0 and team and show_level %}
                     {% if len(GameLevel.all()) > 1 %}
                     <h3 class="levelheader">
                         {% if level.type == 'none' or level in team.game_levels %}
@@ -280,7 +280,7 @@
                     {% end %}
                     {% if level.type == 'none' or level in team.game_levels %}
                         <hr style="margin: 5px 0;">
-                        {% for box in sorted(level.boxes) %}
+                        {% for box in sorted(level.unlocked_boxes()) %}
                             {% if not box.locked and len(box.flags) > 0 %}
                             <div class="row" style="margin-left: 16px;">
                                 <div class="span4">
@@ -348,7 +348,7 @@
             {% if game_started %}
                 {% for index, level in enumerate(GameLevel.all()) %}
                     {% set show_level = level.type != "hidden" or (level.type == "hidden" and level in team.game_levels) %}
-                    {% if len(level.boxes) > 0 and team and show_level %}
+                    {% if len(level.unlocked_boxes()) > 0 and team and show_level %}
                         {% if len(GameLevel.all()) > 1 %}
                         <h3 class="levelheader">
                             {% if level.type == 'none' or level in team.game_levels %}
@@ -367,7 +367,7 @@
                         {% end %}
                         {% if level.type == 'none' or level in team.game_levels %}
                             <hr style="margin: 5px 0;">
-                            {% for box in sorted(level.boxes) %}
+                            {% for box in sorted(level.unlocked_boxes()) %}
                                 {% if not box.locked and len(box.flags) > 0 %}
                                 <div class="row" style="margin-left: 16px;">
                                     <div class="span4">

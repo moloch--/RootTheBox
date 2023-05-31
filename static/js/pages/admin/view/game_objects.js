@@ -209,6 +209,11 @@ $(document).ready(function() {
         $("#lock-box-uuid").val($(this).data("uuid"));
         $("#lock-box-form").submit();
     });
+
+    $("a[id^=lock-corp-button]").click(function() {
+        $("#lock-corp-uuid").val($(this).data("uuid"));
+        $("#lock-corp-form").submit();
+    });
     
     $("a[id^=lock-flag-button]").click(function() {
         $("#lock-flag-uuid").val($(this).data("uuid"));

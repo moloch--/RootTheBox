@@ -3,12 +3,18 @@
 {% block title %}{{ _("Game Levels") }}{% end %}
 
 {% block header %}
+<link rel="stylesheet" href="/static/css/pages/admin/game_objects.css" type="text/css" />
 <script src="/static/js/pages/admin/view/game_levels.js"></script>
 {% end %}
 
 {% block modals %}
 {% from tornado.options import options %}
 {% from models.GameLevel import GameLevel %}
+    <!-- Lock Corp Form -->
+    <form id="lock-level-form" action="/admin/lock/level" method="post">
+        {% raw xsrf_form_html() %}
+        <input id="lock-level-uuid" name="uuid" type="hidden" />
+    </form>
     <!-- Edit Level -->
     <div id="edit-game-level-modal" class="modal hide fade" style="display: none; ">
         <div class="modal-header">
@@ -208,7 +214,7 @@
         </h1>
         <br />
         {% for index, level in enumerate(GameLevel.all()) %}
-            <div class="well">
+            <div class="well{% if level.locked %} locked{% end %}">
                 <h2 class="levelheader">
                     {{ level.name }}&nbsp;
                 </h2>
@@ -225,6 +231,17 @@
                     <i class="fa fa-pencil"></i>
                     {{ _("Edit Access") }}
                 </button>
+                {% if level.locked %}
+                    <a id="lock-level-button-{{ level.uuid }}" class="btn btn-small btn-warning" data-uuid="{{ level.uuid }}" style="float: right; margin-top: 5px; margin-right: 10px;">
+                        <i class="fa fa-fw fa-lock"></i>
+                        {{_("Unlock")}}&nbsp;
+                    </a>
+                {% else %}
+                    <a id="lock-level-button-{{ level.uuid }}" class="btn btn-small btn-success" data-uuid="{{ level.uuid }}" style="float: right; margin-top: 5px; margin-right: 10px;">
+                        <i class="fa fa-fw fa-unlock"></i>
+                        {{_("Lock")}}&nbsp;
+                    </a>
+                {% end %}
                 <div style="padding-left: 3px; margin-bottom: -10px;">
                 {% if level._name  and level._name != level.name %}<strong>{{ _("Level") }} #{{ level.number }}</strong>&nbsp;&nbsp;&ndash;&nbsp;{% end %}
                     {% if level.type == "hidden" %}

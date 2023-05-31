@@ -294,10 +294,26 @@ class Box(DatabaseObject):
             self._value = abs(int(value))
         except ValueError:
             raise ValidationError("Reward value must be an integer")
+        
+    def locked_corp(self):
+        corp = Corporation.by_id(self.corporation_id)
+        if corp and corp.locked:
+            return True
+        return False
+    
+    def locked_level(self):
+        level = GameLevel.by_id(self.game_level_id)
+        if level and level.locked:
+            return True
+        return False
 
     @property
     def locked(self):
         """Determines if an admin has locked an box."""
+        if self.locked_corp():
+            return True
+        if self.locked_level():
+            return True
         if self._locked == None:
             return False
         return self._locked
@@ -401,7 +417,9 @@ class Box(DatabaseObject):
         ).name
         ET.SubElement(box_elem, "difficulty").text = self._difficulty
         ET.SubElement(box_elem, "garbage").text = str(self.garbage)
-        ET.SubElement(box_elem, "locked").text = str(self.locked)
+        ET.SubElement(box_elem, "locked").text = str(
+            False if self._locked is None else self._locked
+        )
         if self.category_id:
             ET.SubElement(box_elem, "category").text = Category.by_id(
                 self.category_id

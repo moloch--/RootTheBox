@@ -121,7 +121,7 @@
                                     <div style="display: table-row; ">
                                         {% set gamelevels = GameLevel.all() %}
                                         {% for g_index, level in enumerate(gamelevels) %}
-                                            {% if len(level.boxes) > 0 %}
+                                            {% if len(level.unlocked_boxes()) > 0 %}
                                                 {% if g_index> 0 %}
                                                     <div class="summarycolumn" style="display: table-cell; width: 10px;"></div>
                                                 {% end %}
