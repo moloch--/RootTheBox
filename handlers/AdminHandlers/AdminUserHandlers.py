@@ -323,10 +323,14 @@ class AdminBanHammerHandler(BaseHandler):
     def ban_clear(self):
         """Remove an ip from the banned list"""
         ip = self.get_argument("ip", "")
-        if ip in self.application.settings["blacklisted_ips"]:
+        if ip == "all":
+            self.application.settings["failed_logins"] = {}
+            self.application.settings["blacklisted_ips"] = []
+        elif ip in self.application.settings["blacklisted_ips"]:
             logging.info("Removed ban on ip: %s" % ip)
             self.application.settings["blacklisted_ips"].remove(ip)
-        self.application.settings["failed_logins"][ip] = 0
+        if ip in self.application.settings["failed_logins"]:
+            self.application.settings["failed_logins"][ip] = 0
 
 
 class AdminLockHandler(BaseHandler):
