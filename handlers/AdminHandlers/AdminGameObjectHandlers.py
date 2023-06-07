@@ -1121,6 +1121,10 @@ class AdminDeleteHandler(BaseHandler):
             for hint in hints:
                 self.del_hint(hint)
             for flag in flags:
+                flag.lock_id = None
+                self.dbsession.add(flag)
+                self.dbsession.commit()
+            for flag in flags:
                 self.del_flag(flag)
             logging.info("Delete box: %s" % box.name)
             self.dbsession.delete(box)
