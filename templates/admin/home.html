@@ -252,10 +252,15 @@
         {% end %}
     </div>
     <div class="well span8">
+    
         <h3>
+        <span style="float: right;">
+            <a class="clear-ip-button btn btn-warning btn-small" data-ip="all" type="button">
+                <i class="fa fa-fw fa-eraser"></i> {{ _("Clear") }} All</a></span>
             <i class="fa fa-warning"></i>
             {{ _("Failed Logins") }}
         </h3>
+        
         <hr />
         <table class="table table-striped">
             <thead>
@@ -290,8 +295,7 @@
                 {% end %}
             </tbody>
         </table>
-    </div>
-    <div class="well span8">
+        <br>
         <h3>
             <i class="fa fa-shield"></i>
             {{ _("Banned IPs") }}
@@ -313,6 +317,6 @@
                 {% end %}
             </tbody>
         </table>
-    </div>  
+    </div>
 </div>
 {% end %}
