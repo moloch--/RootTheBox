@@ -870,7 +870,7 @@
                                                     {% for index, flag in enumerate(sorted(box.flags_all)) %}
                                                         <tr id="{{ flag.uuid }}" class="{% if flag.locked %} locked{% end %}">
                                                             <td class="index shortcolumn" data-uuid="{{ flag.uuid }}">{{ index + 1 }}</td>
-                                                            <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
+                                                            <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id and Flag.by_id(flag.lock_id) %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                             <td class="shortcolumn" style="padding-right: 25px;">{{ flag.name }}</td>
                                                             <td class="descriptioncol markdown">{{ flag.description }}{% if flag.type == FLAG_CHOICE %}
                                                                 {% set choices = FlagChoice.by_flag_id(flag.id) %}

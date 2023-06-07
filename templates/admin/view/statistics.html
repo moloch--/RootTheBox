@@ -236,7 +236,7 @@
                                                         {% set captures = len(Flag.team_captures(flag.id)) %}
                                                         <td class="shortcolumn">{{ index + 1 }}</td>
                                                         <td class="shortcolumn">{{ flag.box.name }}</td>
-                                                        <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
+                                                        <td class="shortcolumn" style="padding-right: 0px;">{% if flag.lock_id and Flag.by_id(flag.lock_id) %}<i class="fa fa-lock" title="Locked by {{ Flag.by_id(flag.lock_id).name }}"></i>{% end %}</td>
                                                         <td style="width: 40%; padding-right: 25px;" title="{{flag.description}}">{{ flag.name }}</td>
                                                         <td class="shortcolumn" style="text-align: center;">{% if captures > 0 %}{{ int(float(captures) / float(teamcount) * 100) }}%{% else %}0%{% end %}</td>
                                                         <td class="shortcolumn" style="text-align: center;{% if captures > 0 %} color: green;{% end %}">{{ captures }}</td>

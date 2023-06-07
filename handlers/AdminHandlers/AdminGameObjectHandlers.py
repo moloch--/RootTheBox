@@ -1037,6 +1037,14 @@ class AdminDeleteHandler(BaseHandler):
         if flag is None:
             flag = Flag.by_uuid(self.get_argument("uuid", ""))
         if flag is not None:
+            children = Flag.get_children(flag.id)
+            if children:
+                self.render(
+                    "admin/view/game_objects.html",
+                    success=None,
+                    errors=["Flag locks another flag - please clear all locks"],
+                )
+                return
             hints = flag.hints
             for hint in hints:
                 self.del_hint(hint)

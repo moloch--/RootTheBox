@@ -294,7 +294,7 @@
                         {% end %}
                             <td class="shortcolumn" style="vertical-align: middle;">{{ box.flags.index(flag) +1 }}</td>
                             <td class="shortcolumn" style="vertical-align: middle; padding-right: 20px; font-weight: bold;">{{ flag.name }}</td>
-                            {% if team and flag.lock_id and not Flag.by_id(flag.lock_id) in team.flags %}
+                            {% if team and flag.lock_id and Flag.by_id(flag.lock_id) and not Flag.by_id(flag.lock_id) in team.flags %}
                                 <td class="descriptioncol"><i class="fa fa-lock"></i> {{ _("Locked by") }} {{ Flag.by_id(flag.lock_id).name }}</td>
                                 <td class="shortcolumn centercolumn">{% if options.scoreboard_visibility != 'admins' %}{{ len(Flag.team_captures(flag.id)) }}{% end %}</td>
                                 {% if options.penalize_flag_value %}
@@ -357,7 +357,7 @@
                                 {% end %}
                             {% end %}
                         </tr>
-                        {% if team and flag.lock_id and not Flag.by_id(flag.lock_id) in team.flags %}
+                        {% if team and flag.lock_id and Flag.by_id(flag.lock_id) and not Flag.by_id(flag.lock_id) in team.flags %}
                         {% else %}
                         <tr {% if team and flag in team.flags %}class="flag-collapse" style="display: none;"{% end %}>
                             {% if team and flag in team.flags %}
