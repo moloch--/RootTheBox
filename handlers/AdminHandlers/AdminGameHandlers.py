@@ -45,6 +45,7 @@ from models.Corporation import Corporation
 from models.Category import Category
 from models.Notification import Notification
 from models.RegistrationToken import RegistrationToken
+from models.EmailToken import EmailToken
 from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
 from libs.StringCoding import encode, decode
@@ -704,6 +705,10 @@ class AdminResetHandler(BaseHandler):
             for swat in swats:
                 dbsession.delete(swat)
             dbsession.commit()
+            tokens = EmailToken.all()
+            for token in tokens:
+                dbsession.delete(token)
+            dbsession.commit()
             flags = Flag.all()
             for flag in flags:
                 # flag.value = flag.value allows a fallback to when original_value was used
@@ -762,6 +767,10 @@ class AdminResetDeleteHandler(BaseHandler):
             swats = Swat.all()
             for swat in swats:
                 dbsession.delete(swat)
+            dbsession.commit()
+            tokens = EmailToken.all()
+            for token in tokens:
+                dbsession.delete(token)
             dbsession.commit()
             for user in users:
                 dbsession.delete(user)
