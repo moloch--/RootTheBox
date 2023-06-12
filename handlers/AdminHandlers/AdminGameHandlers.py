@@ -706,8 +706,9 @@ class AdminResetHandler(BaseHandler):
                 dbsession.delete(swat)
             dbsession.commit()
             tokens = EmailToken.all()
-            for token in tokens:
-                dbsession.delete(token)
+            if tokens is not None:
+                for token in tokens:
+                    dbsession.delete(token)
             dbsession.commit()
             flags = Flag.all()
             for flag in flags:
