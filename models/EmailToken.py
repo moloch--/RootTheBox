@@ -50,7 +50,7 @@ class EmailToken(DatabaseObject):
     @classmethod
     def by_user_id(cls, user_id):
         """Returns the object with id of user_id"""
-        return dbsession.query(cls).filter_by(user_id=user_id).last()
+        return dbsession.query(cls).filter_by(user_id=user_id).order_by(id.desc()).first()
 
     @classmethod
     def count(cls):
@@ -60,4 +60,4 @@ class EmailToken(DatabaseObject):
     @classmethod
     def by_value(cls, value):
         """Returns the object with value of value"""
-        return dbsession.query(cls).filter_by(value=value).last()
+        return dbsession.query(cls).filter_by(value=value).order_by(id.desc()).first()
