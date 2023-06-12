@@ -255,10 +255,11 @@ class AdminDeleteUsersHandler(BaseHandler):
         else:
             logging.info("Deleted User: '%s'" % str(user.handle))
             EventManager.instance().deauth(user)
-            tokens = EmailToken.by_user_id(user.id)
-            if tokens is not None:
+            tokens = EmailToken.by_user_id(user.id, all=True)
+            if tokens:
                 for token in tokens:
                     self.dbsession.delete(token)
+                self.dbsession.commit()
             self.dbsession.delete(user)
             self.dbsession.commit()
             self.event_manager.push_score_update()
