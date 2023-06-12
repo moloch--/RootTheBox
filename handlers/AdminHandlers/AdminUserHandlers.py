@@ -30,6 +30,7 @@ import logging
 from models.Team import Team
 from models.Box import Box
 from models.Flag import Flag
+from models.EmailToken import EmailToken
 from models.Corporation import Corporation
 from models.User import User, ADMIN_PERMISSION
 from models.Permission import Permission
@@ -254,6 +255,9 @@ class AdminDeleteUsersHandler(BaseHandler):
         else:
             logging.info("Deleted User: '%s'" % str(user.handle))
             EventManager.instance().deauth(user)
+            tokens = EmailToken.by_user_id(user.id)
+            for token in tokens:
+                self.dbsession.delete(token)
             self.dbsession.delete(user)
             self.dbsession.commit()
             self.event_manager.push_score_update()
