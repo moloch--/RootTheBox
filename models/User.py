@@ -318,6 +318,13 @@ class User(DatabaseObject):
         assert isinstance(value, bool)
         if not self.is_admin():
             self._locked = value
+            if not self._locked:
+                # admin email validation
+                emailtoken = EmailToken.by_user_id(self.id)
+                if emailtoken and not emailtoken.valid:
+                    emailtoken.valid = True
+                    dbsession.add(emailtoken)
+                    dbsession.commit()
 
     @property
     def avatar(self):
