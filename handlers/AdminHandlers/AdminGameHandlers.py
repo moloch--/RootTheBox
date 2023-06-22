@@ -75,7 +75,7 @@ class AdminGameHandler(BaseHandler):
 
     @staticmethod
     def isOn(value):
-        return value == "on"
+        return value == "on" or value == "true"
 
     @staticmethod
     def admin_actions(self):
@@ -84,10 +84,16 @@ class AdminGameHandler(BaseHandler):
         suspend_reg = self.get_argument("suspend_registration", None)
         set_timer = self.get_argument("countdown_timer", None)
         hide_scoreboard = self.get_argument("hide_scoreboard", None)
+        show_scoreboard = self.get_argument("show_scoreboard", None)
         stop_timer = self.get_argument("stop_timer", None)
+        start_timer = self.get_argument("start_timer", None)
 
         if start_game is None and stop_game is not None:
             start_game = "false" if stop_game == "true" else "true"
+        if stop_timer is None and start_timer is not None:
+            stop_timer = "false" if start_timer == "true" else "true"
+        if hide_scoreboard is None and show_scoreboard is not None:
+            hide_scoreboard = "false" if show_scoreboard == "true" else "true"
 
         if (
             start_game
