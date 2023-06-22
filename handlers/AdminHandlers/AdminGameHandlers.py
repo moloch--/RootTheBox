@@ -149,7 +149,7 @@ class AdminGameHandler(BaseHandler):
             "start_game": self.application.settings["game_started"],
             "suspend_registration": self.application.settings["suspend_registration"],
             "hide_scoreboard": self.application.settings["hide_scoreboard"],
-            "set_timer": self.application.settings["countdown_timer"],
+            "countdown_timer": self.application.settings["countdown_timer"],
             "stop_timer": self.application.settings["stop_timer"],
         }
 
