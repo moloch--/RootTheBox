@@ -23,6 +23,7 @@ Created on Mar 11, 2012
 import os
 import imghdr
 import io
+import binascii
 import xml.etree.cElementTree as ET
 
 from os import urandom
@@ -82,7 +83,7 @@ class Box(DatabaseObject):
         String(32),
         unique=True,
         nullable=False,
-        default=lambda: decode(encode(urandom(16), "hex")),
+        default=lambda: binascii.hexlify(urandom(16)).decode(),
     )
 
     teams = relationship(

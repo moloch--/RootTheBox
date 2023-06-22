@@ -25,6 +25,7 @@ It reads an XML file(s) and calls the API based on the it's contents.
 
 
 import logging
+import binascii
 import defusedxml.cElementTree as ET
 from os import urandom, path, listdir
 from tornado.options import options
@@ -233,7 +234,7 @@ def create_boxes(parent, corporation):
                         b64decode(get_child_text(box_elem, "avatar"))
                     )
                 box.garbage = get_child_text(
-                    box_elem, "garbage", decode(encode(urandom(16), "hex"))
+                    box_elem, "garbage", binascii.hexlify(urandom(16)).decode()
                 )
                 category = get_child_text(box_elem, "category")
                 if category:

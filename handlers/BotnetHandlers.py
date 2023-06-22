@@ -25,6 +25,7 @@ import os
 import json
 import logging
 import tornado.websocket
+import binascii
 
 
 from uuid import uuid4
@@ -79,7 +80,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         try:
             hex_random = os.urandom(16).hex()
         except AttributeError:
-            hex_random = encode(os.urandom(16), "hex")
+            hex_random = binascii.hexlify(os.urandom(16)).decode()
         self.xid = hex_random
         if not self.config.use_bots:
             self.close()
