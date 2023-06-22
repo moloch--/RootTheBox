@@ -405,11 +405,15 @@ class AdminLockHandler(BaseHandler):
         if box is not None:
             if box.locked_corp():
                 self.render(
-                    "admin/view/game_objects.html", success=None, errors=["Box Locked by Corporation Lock"]
+                    "admin/view/game_objects.html",
+                    success=None,
+                    errors=["Box Locked by Corporation Lock"],
                 )
             elif box.locked_level():
                 self.render(
-                    "admin/view/game_objects.html", success=None, errors=["Box Locked by Level Lock"]
+                    "admin/view/game_objects.html",
+                    success=None,
+                    errors=["Box Locked by Level Lock"],
                 )
             else:
                 box.locked = False if box.locked else True

@@ -233,7 +233,7 @@ def create_boxes(parent, corporation):
                         b64decode(get_child_text(box_elem, "avatar"))
                     )
                 box.garbage = get_child_text(
-                    box_elem, "garbage", encode(urandom(16), "hex")
+                    box_elem, "garbage", decode(encode(urandom(16), "hex"))
                 )
                 category = get_child_text(box_elem, "category")
                 if category:

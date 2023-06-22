@@ -141,7 +141,7 @@ class Flag(DatabaseObject):
     def by_type(cls, _type):
         """Return and object based on a token"""
         return dbsession.query(cls).filter_by(_type=str(_type)).all()
-    
+
     @classmethod
     def get_children(cls, _id):
         return dbsession.query(cls).filter_by(lock_id=_id).all()

@@ -42,7 +42,7 @@ from models.SourceCode import SourceCode
 from tornado.options import options
 from libs.XSSImageCheck import is_xss_image, get_new_avatar
 from libs.ValidationError import ValidationError
-from libs.StringCoding import encode
+from libs.StringCoding import encode, decode
 from PIL import Image
 from resizeimage import resizeimage
 import enum
@@ -82,7 +82,7 @@ class Box(DatabaseObject):
         String(32),
         unique=True,
         nullable=False,
-        default=lambda: encode(urandom(16), "hex"),
+        default=lambda: decode(encode(urandom(16), "hex")),
     )
 
     teams = relationship(
@@ -294,13 +294,13 @@ class Box(DatabaseObject):
             self._value = abs(int(value))
         except ValueError:
             raise ValidationError("Reward value must be an integer")
-        
+
     def locked_corp(self):
         corp = Corporation.by_id(self.corporation_id)
         if corp and corp.locked:
             return True
         return False
-    
+
     def locked_level(self):
         level = GameLevel.by_id(self.game_level_id)
         if level and level.locked:
