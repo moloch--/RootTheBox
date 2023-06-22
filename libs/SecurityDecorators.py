@@ -26,6 +26,27 @@ from models.User import User
 from tornado.options import options
 
 
+def apikey(method):
+    """Checks to see if a key is valid"""
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        apikey = None
+        for key, value in self.request.headers.items():
+            if key.lower() == "apikey":
+                apikey = value
+        if apikey and apikey in options.api_keys:
+            return method(self, *args, **kwargs)
+        else:
+            logging.warning(
+                "Attempted unauthorized access from %s to %s"
+                % (self.request.remote_ip, self.request.uri)
+            )
+            self.redirect(self.application.settings["forbidden_url"])
+
+    return wrapper
+
+
 def authenticated(method):
     """Checks to see if a user has been authenticated"""
 

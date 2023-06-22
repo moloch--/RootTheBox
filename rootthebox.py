@@ -371,6 +371,14 @@ define(
     help="url to receive webhook callbacks when certain game actions occur, such as flag capture",
 )
 
+define(
+    "api_keys",
+    multiple=True,
+    default=[],
+    group="server",
+    help="keys to use for api access",
+)
+
 # Mail Server
 define("mail_host", default="", group="mail", help="SMTP server")
 

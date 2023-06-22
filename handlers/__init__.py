@@ -49,6 +49,7 @@ from libs.StringCoding import encode
 from handlers.BotnetHandlers import *
 from handlers.UserHandlers import *
 from handlers.AdminHandlers import *
+from handlers.APIHanders import *
 from handlers.ErrorHandlers import *
 from handlers.PublicHandlers import *
 from handlers.MarketHandlers import *
@@ -191,6 +192,8 @@ urls = [
     (r"/admin/import/xml", AdminImportXmlHandler),
     (r"/admin/reset", AdminResetHandler),
     (r"/admin/resetdelete", AdminResetDeleteHandler),
+    # API handlers - APIHandlers.py
+    (r"/api/actions", APIActionHandler),
     # Error handlers - ErrorHandlers.py
     (r"/403", UnauthorizedHandler),
     (r"/gamestatus", StopHandler),
