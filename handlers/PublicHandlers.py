@@ -31,7 +31,6 @@ import smtplib
 import random
 import string
 import json
-import binascii
 
 try:
     from urllib.parse import urlencode
@@ -639,7 +638,7 @@ class RegistrationHandler(BaseHandler):
 
     def send_validate_message(self, user):
         if user is not None and len(user.email) > 0:
-            email_token = binascii.hexlify(urandom(16)).decode()
+            email_token = encode(urandom(16), "hex")
             emailtoken = EmailToken()
             emailtoken.user_id = user.id
             emailtoken.value = sha256(email_token).hexdigest()
@@ -829,7 +828,7 @@ class ForgotPasswordHandler(BaseHandler):
         """Sends the password reset to email"""
         user = User.by_email(self.get_argument("email", ""))
         if user is not None and len(options.mail_host) > 0 and len(user.email) > 0:
-            reset_token = binascii.hexlify(urandom(16)).decode()
+            reset_token = encode(urandom(16), "hex")
             passtoken = PasswordToken()
             passtoken.user_id = user.id
             passtoken.value = sha256(reset_token).hexdigest()
