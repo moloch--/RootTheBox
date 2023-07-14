@@ -39,10 +39,10 @@
                     {% for index, token in enumerate(RegistrationToken.all()) %}
                         <tr>
                             <td>{{ index + 1 }}</td>
-                            <td>{{ token.value }}</td>
+                            <td>{{ token.getvalue() }}</td>
                             <td>{{ token.used }}</td>
                             <td>
-                                <a id="delete-token-button{{ index }}" class="btn btn-danger btn-mini" type="button" data-value="{{ token.value }}">
+                                <a id="delete-token-button{{ index }}" class="btn btn-danger btn-mini" type="button" data-value="{{ token.getvalue() }}">
                                     <i class="fa fa-fw fa-times-circle-o"></i>
                                     {{ _("Delete") }}
                                 </a>
