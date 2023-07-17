@@ -789,6 +789,14 @@ define(
 )
 
 define(
+    "player_use_handle",
+    default=True,
+    group="game",
+    help="when in individual playstyle, use handle or playername",
+    type=bool,
+)
+
+define(
     "max_team_size",
     default=4,
     group="game",

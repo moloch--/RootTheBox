@@ -590,7 +590,10 @@ class RegistrationHandler(BaseHandler):
             team = Team.by_name(self.get_argument("handle", ""))
             if team is None:
                 team = Team()
-                team.name = self.get_argument("handle", "")
+                if self.config.player_use_handle:
+                    team.name = self.get_argument("handle", "")
+                else:
+                    team.name = self.get_argument("playername", "")
             else:
                 logging.info(
                     "Team %s already exists - Player Mode: reset team." % team.name
