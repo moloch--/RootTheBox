@@ -39,7 +39,7 @@ class Category(DatabaseObject):
     uuid = Column(String(36), unique=True, nullable=False, default=lambda: str(uuid4()))
 
     _category = Column(Unicode(64), unique=True, nullable=False)
-    _description = Column(Unicode(1024), nullable=True)
+    _description = Column(Unicode(4096), nullable=True)
 
     boxes = relationship("Box", backref=backref("category", lazy="select"))
 
@@ -84,8 +84,8 @@ class Category(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        if 1024 < len(value):
-            raise ValidationError("Description cannot be greater than 1024 characters")
+        if 4096 < len(value):
+            raise ValidationError("Description cannot be greater than 4096 characters")
         self._description = str(value)
 
     @property

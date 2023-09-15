@@ -72,8 +72,8 @@ class Flag(DatabaseObject):
 
     _name = Column(Unicode(64), nullable=True)
     _token = Column(Unicode(256), nullable=False)
-    _description = Column(Unicode(1024), nullable=False)
-    _capture_message = Column(Unicode(512))
+    _description = Column(Unicode(4096), nullable=False)
+    _capture_message = Column(Unicode(4096))
     _case_sensitive = Column(Integer, nullable=True)
     _value = Column(Integer, nullable=False)
     _original_value = Column(Integer, nullable=True)
@@ -298,7 +298,7 @@ class Flag(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = str(value)[:1024]
+        self._description = str(value)[:4096]
 
     @property
     def capture_message(self):

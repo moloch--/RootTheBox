@@ -45,7 +45,7 @@ class Hint(DatabaseObject):
     box_id = Column(Integer, ForeignKey("box.id"), nullable=False)
     flag_id = Column(Integer, ForeignKey("flag.id"), nullable=True)
     _price = Column(Integer, nullable=False)
-    _description = Column(Unicode(1024), nullable=False)
+    _description = Column(Unicode(4096), nullable=False)
 
     @classmethod
     def all(cls):
@@ -109,8 +109,8 @@ class Hint(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        if not 0 < len(value) < 1025:
-            raise ValidationError("Hint description must be 1 - 1024 characters")
+        if not 0 < len(value) < 4097:
+            raise ValidationError("Hint description must be 1 - 4096 characters")
         self._description = str(value)
 
     def to_xml(self, parent):

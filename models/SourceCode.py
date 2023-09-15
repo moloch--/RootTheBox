@@ -44,7 +44,7 @@ class SourceCode(DatabaseObject):
 
     box_id = Column(Integer, ForeignKey("box.id", ondelete="CASCADE"), nullable=False)
     _price = Column(Integer, nullable=False)
-    _description = Column(Unicode(1024), nullable=False)
+    _description = Column(Unicode(4096), nullable=False)
     checksum = Column(String(40))
     _file_name = Column(String(64), nullable=False)
 
@@ -113,7 +113,7 @@ class SourceCode(DatabaseObject):
 
     @description.setter
     def description(self, value):
-        self._description = str(value)[:1024]
+        self._description = str(value)[:4096]
 
     def to_dict(self):
         return {

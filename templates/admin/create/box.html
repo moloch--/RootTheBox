@@ -167,11 +167,11 @@
             <div class="control-group">
                 <label class="control-label" for="description">{{_("Description")}}</label>
                 <div class="controls">
-                    <textarea class="toolbar" id="description" style="width: 60%;" rows="5" name="description" maxlength="1024" placeholder="{{_('Description')}}"
+                    <textarea class="toolbar" id="description" style="width: 60%;" rows="5" name="description" maxlength="4096" placeholder="{{_('Description')}}"
                               rel="popover"
                               data-original-title="{{_('Description')}}"
                               data-html="true"
-                              data-content="{{_('A brief description of the box')}} [Max: 1024 {{_('Characters')}}].<br/><br/>{{_('Supports')}} Markdown (GitHub Style)">
+                              data-content="{{_('A brief description of the box')}} [Max: 4096 {{_('Characters')}}].<br/><br/>{{_('Supports')}} Markdown (GitHub Style)">
                     </textarea>
                 </div>
             </div>
@@ -221,7 +221,7 @@
             <div class="control-group">
                 <label class="control-label" for="capture-message">{{_("Completion Message")}}</label>
                 <div class="controls">
-                    <textarea class="toolbar" id="capture-message" name="capture_message" style="width: 60%;" rows="5" maxlength="1024" type="text" placeholder="({{_('Optional')}})"
+                    <textarea class="toolbar" id="capture-message" name="capture_message" style="width: 60%;" rows="5" maxlength="4096" type="text" placeholder="({{_('Optional')}})"
                             rel="popover"
                             data-original-title="{{_('Completion Message')}}"
                             data-content="{{_('This is the message displayed to the user once the box is completed.')}}" >
