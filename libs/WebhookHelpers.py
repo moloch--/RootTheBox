@@ -127,22 +127,28 @@ def send_hint_taken_webhook(user, hint):
         }
     )
 
+def send_user_validated_webhook(user):
+    send_webhook(
+        {
+            "game": options.game_name,
+            "game_version": options.game_version,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
+            "action": "user_validated",
+            "user": get_user_info(user),
+        }
+    )
+
 
 def get_user_info(user):
     return {
-        "game": options.game_name,
-        "game_version": options.game_version,
-        "origin": options.origin.replace("wss://", "").replace("ws://", ""),
         "handle": user.handle,
         "email": user.email,
+        "name": user.name,
     }
 
 
 def get_team_info(team):
     return {
-        "game": options.game_name,
-        "game_version": options.game_version,
-        "origin": options.origin.replace("wss://", "").replace("ws://", ""),
         "name": team.name,
         "money": team.get_score("money"),
         "flags": team.get_score("flag"),

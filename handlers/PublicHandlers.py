@@ -48,6 +48,7 @@ from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import filter_avatars
 from libs.StringCoding import encode, decode
 from libs.EmailHelpers import email_rfc2822_compliance
+from libs.WebhookHelpers import send_user_validated_webhook
 from base64 import urlsafe_b64encode, urlsafe_b64decode, b64encode
 from builtins import str
 from models import azuread_app
@@ -1009,6 +1010,7 @@ class ValidEmailHandler(BaseHandler):
                     self.dbsession.add(user)
                     self.dbsession.commit()
                     self.event_manager.user_joined_team(user)
+                    send_user_validated_webhook(user)
                 else:
                     error = ["Failed to validate email for %s" % user.handle]
             elif len(user_uuid) > 0 and not user:
