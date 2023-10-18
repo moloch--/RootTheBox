@@ -77,7 +77,7 @@ class Team(DatabaseObject):
         backref=backref("team", lazy="select"),
         cascade="all,delete,delete-orphan",
     )
-    money = Column(Integer, default=options.starting_team_money, nullable=False)
+    money = Column(Integer, nullable=False)
 
     members = relationship(
         "User",
@@ -360,3 +360,10 @@ class Team(DatabaseObject):
 
     def __le__(self, other):
         return self.__cmp__(other) <= 0
+
+    def __init__(self):
+        if options.banking:
+            self.set_score("start", options.starting_team_money)
+        else:
+            self.set_score("start", 0)
+
