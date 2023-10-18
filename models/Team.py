@@ -34,6 +34,7 @@ from sqlalchemy.types import Integer, String, Unicode
 from tornado.options import options
 
 from libs.BotManager import BotManager
+from libs.Identicon import identicon
 from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import (
@@ -203,6 +204,8 @@ class Team(DatabaseObject):
             raise ValidationError("Team name must be 3 - 24 characters")
         else:
             self._name = str(value)
+            if self._avatar is None:
+                self._avatar = identicon(self.name, 6)
 
     @property
     def motto(self):
