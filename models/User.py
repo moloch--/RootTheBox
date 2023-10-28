@@ -48,6 +48,7 @@ from models.Relationships import user_to_flag
 from libs.XSSImageCheck import MAX_AVATAR_SIZE, MIN_AVATAR_SIZE, IMG_FORMATS
 from libs.XSSImageCheck import is_xss_image, get_new_avatar, default_avatar
 from libs.ValidationError import ValidationError
+from libs.WebhookHelpers import send_user_validated_webhook
 from string import printable
 from tornado.options import options
 from PIL import Image
@@ -325,6 +326,7 @@ class User(DatabaseObject):
                     emailtoken.valid = True
                     dbsession.add(emailtoken)
                     dbsession.commit()
+                    send_user_validated_webhook(self)
 
     @property
     def avatar(self):
