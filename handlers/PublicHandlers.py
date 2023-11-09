@@ -48,7 +48,7 @@ from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import filter_avatars
 from libs.StringCoding import encode, decode
 from libs.EmailHelpers import email_rfc2822_compliance
-from libs.WebhookHelpers import send_user_validated_webhook
+from libs.WebhookHelpers import send_user_validated_webhook, send_user_registered_webhook
 from base64 import urlsafe_b64encode, urlsafe_b64decode, b64encode
 from builtins import str
 from models import azuread_app
@@ -414,6 +414,7 @@ class RegistrationHandler(BaseHandler):
                     self.check_regtoken()
                 user = self.create_user()
                 validate = options.require_email and options.validate_email
+                send_user_registered_webhook(user)
                 self.render("public/successful_reg.html", user=user, validate=validate)
         except ValidationError as error:
             self.render(
