@@ -149,17 +149,17 @@ class User(DatabaseObject):
             return None
 
     @classmethod
-    def by_handle(cls, handle, case_sensitive=True):
+    def by_handle(cls, handle):
         """Return the user object whose user is "_handle" """
-        handle = str(handle).strip()
-        if case_sensitive:
-            return dbsession.query(cls).filter_by(_handle=handle).first()
-        else:
+        if handle and len(handle) > 0:
+            handle = str(handle).strip()
             return (
                 dbsession.query(cls)
                 .filter(func.lower(User._handle) == func.lower(handle))
                 .first()
             )
+        else:
+            return None
 
     @classmethod
     def _hash_bank_password(cls, algorithm_name, password):

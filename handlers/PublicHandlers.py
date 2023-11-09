@@ -488,7 +488,7 @@ class RegistrationHandler(BaseHandler):
         ):
             raise ValidationError("Invalid Team Motto format")
         if (
-            User.by_handle(self.get_argument("handle", ""), case_sensitive=False)
+            User.by_handle(self.get_argument("handle", ""))
             is not None
         ):
             raise ValidationError("This handle is already registered")
