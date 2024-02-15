@@ -1,13 +1,21 @@
-"""add flag _order field
+"""add_plain_answer_flag
 
-Revision ID: eb3f7dc1b16f
-Revises: 67bf6ca63a9c
-Create Date: 2018-12-14 10:56:12.295780
+Revision ID: 1ee5b63e716f
+Revises: a143abd40133
+Create Date: 2024-02-15 11:17:27.270274
 
 """
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
 from sqlalchemy.engine.reflection import Inspector
+from sqlalchemy.sql.expression import func
+
+
+# revision identifiers, used by Alembic.
+revision = '1ee5b63e716f'
+down_revision = 'a143abd40133'
+branch_labels = None
+depends_on = None
 
 try:
     conn = op.get_bind()
@@ -17,13 +25,6 @@ except:
     conn = None
     inspector = None
     tables = None
-
-# revision identifiers, used by Alembic.
-revision = "eb3f7dc1b16f"
-down_revision = "67bf6ca63a9c"
-branch_labels = None
-depends_on = None
-
 
 def _table_has_column(table, column):
     if not inspector:
@@ -42,11 +43,10 @@ def _has_table(table_name):
 
 
 def upgrade():
-    if not _table_has_column("flag", "_order"):
-        op.add_column("flag", sa.Column("_order", sa.INTEGER))
-        op.create_index("order", "flag", ["_order"])
+    if not _table_has_column("flag", "_plain_answer"):
+        op.add_column("flag", sa.Column("_plain_answer", sa.VARCHAR(256)))
 
 
 def downgrade():
-    if _table_has_column("flag", "_order"):
-        op.drop_column("flag", "_order")
+    if _table_has_column("flag", "_plain_answer"):
+        op.drop_column("flag", "_plain_answer")

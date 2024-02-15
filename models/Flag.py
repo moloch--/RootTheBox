@@ -72,6 +72,7 @@ class Flag(DatabaseObject):
 
     _name = Column(Unicode(64), nullable=True)
     _token = Column(Unicode(256), nullable=False)
+    _plain_answer = Column(Unicode(256)) # https://github.com/moloch--/RootTheBox/issues/601
     _description = Column(Unicode(4096), nullable=False)
     _capture_message = Column(Unicode(4096))
     _case_sensitive = Column(Integer, nullable=True)

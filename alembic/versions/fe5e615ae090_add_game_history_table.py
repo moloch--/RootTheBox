@@ -10,9 +10,14 @@ from alembic import op
 from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.sql.expression import func
 
-conn = op.get_bind()
-inspector = Inspector.from_engine(conn)
-tables = inspector.get_table_names()
+try:
+    conn = op.get_bind()
+    inspector = Inspector.from_engine(conn)
+    tables = inspector.get_table_names()
+except:
+    conn = None
+    inspector = None
+    tables = None
 
 # revision identifiers, used by Alembic.
 revision = "fe5e615ae090"
@@ -22,6 +27,8 @@ depends_on = None
 
 
 def _table_has_column(table, column):
+    if not inspector:
+        return True
     has_column = False
     for col in inspector.get_columns(table):
         if column not in col["name"]:
