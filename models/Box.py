@@ -255,8 +255,8 @@ class Box(DatabaseObject):
     def description(self, value):
         if value is None:
             return ""
-        if 1025 < len(value):
-            raise ValidationError("Description cannot be greater than 1024 characters")
+        if 4096 < len(value):
+            raise ValidationError("Description cannot be greater than 4096 characters")
         self._description = str(value)
 
     @property
