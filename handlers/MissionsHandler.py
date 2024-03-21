@@ -334,19 +334,29 @@ class BoxHandler(BaseHandler):
 
         # Unlock level if based on Game Score
         for lv in GameLevel.all():
-            if (
-                lv.type == "points"
-                and lv.buyout <= user.team.money
-                and lv not in user.team.game_levels
-            ):
-                logging.info(
-                    "%s (%s) unlocked %s" % (user.handle, user.team.name, lv.name)
-                )
-                user.team.game_levels.append(lv)
-                self.dbsession.add(user.team)
-                self.dbsession.commit()
-                self.event_manager.level_unlocked(user, lv)
-                success.append("Congratulations! You have unlocked " + lv.name)
+            unlock_lv = False
+            if lv not in user.team.game_levels:
+                if (
+                    lv.type == "points"
+                    and lv.buyout <= user.team.money
+                ):
+                    unlock_lv = True
+                elif (
+                    lv.type == "level"
+                    and lv.buyout == level.id
+                ):
+                    unlock_lv = True
+                    
+                if unlock_lv:  
+                    logging.info(
+                        "%s (%s) unlocked %s" % (user.handle, user.team.name, lv.name)
+                    )
+                    user.team.game_levels.append(lv)
+                    self.dbsession.add(user.team)
+                    self.dbsession.commit()
+                    self.event_manager.level_unlocked(user, lv)
+                    success.append("Congratulations! You have unlocked " + lv.name)
+            
 
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
