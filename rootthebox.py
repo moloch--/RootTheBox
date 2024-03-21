@@ -512,6 +512,14 @@ define(
     type=bool,
 )
 
+define(
+    "disable_hijack_protection",
+    default=False,
+    group="application",
+    help="Disable the hijack protection when the session ip doesn't equal the request ip",
+    type=bool,
+)
+
 # Azure AD
 define("client_id", default="", group="azuread")
 define("tenant_id", default="common", group="azuread")
