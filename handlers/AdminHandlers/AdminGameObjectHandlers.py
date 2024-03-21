@@ -280,7 +280,7 @@ class AdminCreateHandler(BaseHandler):
         try:
             new_level = GameLevel()
             new_level.number = self.get_argument("level_number", "")
-            new_level.buyout = self.get_argument("buyout", 0)
+            new_level.buyout = self.get_argument("buyout", 0) or 0
             lvl_buyout = self.get_argument("buyoutlvl", 1)
             new_level.name = self.get_argument("name", None)
             new_level.description = self.get_argument("description", "")
@@ -908,7 +908,8 @@ class AdminEditHandler(BaseHandler):
                 raise ValidationError("Game level does not exist")
             if int(self.get_argument("number", level.number)) != level.number:
                 level.number = self.get_argument("number", "")
-            level.buyout = self.get_argument("buyout", 1)
+            
+            level.buyout = self.get_argument("buyout", 1) or 1
             lvlbuyout = self.get_argument("buyoutlvl", 1)
             level._type = self.get_argument("type", "buyout")
             level._reward = self.get_argument("reward", 0)
