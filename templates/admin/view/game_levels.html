@@ -263,6 +263,12 @@
                         <i class="fa fa-lock"></i> {{ _("Unlocks for") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
                     {% elif level.type == "points" %}
                         <i class="fa fa-lock"></i> {{ _("Unlocks at") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
+                    {% elif level.type == "level" %}
+                        {% for lv in game_levels %}
+                            {% if lv.id == level.buyout %}
+                                <i class="fa fa-lock"></i> {{ _("Unlocks after") }} {{ _("completion of Level") }} {{ lv.number }}
+                            {% end %}
+                        {% end %}
                     {% else %}
                         {% set last = GameLevel.last_level(level.id) %}
                         <i class="fa fa-lock"></i> {{ _("Unlocks after") }} {{ level.buyout }}% {{ _("completion of Level") }} {% if last %}{{ last.number }}{% end %}
