@@ -94,6 +94,25 @@ def send_level_complete_webhook(user, level):
     )
 
 
+def send_level_unlock_webhook(user, level):
+    send_webhook(
+        {
+            "game": options.game_name,
+            "game_version": options.game_version,
+            "origin": options.origin.replace("wss://", "").replace("ws://", ""),
+            "action": "level_unlocked",
+            "level": {
+                "name": level.name,
+                "number": level.number,
+                "type": level.type,
+                "reward": level.reward,
+            },
+            "user": get_user_info(user),
+            "team": get_team_info(user.team),
+        }
+    )
+
+
 def send_box_complete_webhook(user, box):
     send_webhook(
         {
