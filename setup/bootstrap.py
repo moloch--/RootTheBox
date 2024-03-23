@@ -29,7 +29,7 @@ from builtins import input, str
 
 from tornado.options import options
 
-from libs.ConsoleColors import WARN, PROMPT
+from libs.ConsoleColors import *
 from models import dbsession
 from models.GameLevel import GameLevel
 from models.MarketItem import MarketItem

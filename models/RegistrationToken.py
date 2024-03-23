@@ -30,7 +30,6 @@ from libs.StringCoding import decode, encode
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
-
 def gen_token():
     return binascii.hexlify(urandom(3))
 

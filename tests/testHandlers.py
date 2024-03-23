@@ -6,7 +6,7 @@ Unit tests for everything in handlers/
 from tornado.options import options
 
 from models import dbsession
-from tests.Helpers import create_user
+from tests.Helpers import *
 from tests.HTTPClient import ApplicationTest
 
 
