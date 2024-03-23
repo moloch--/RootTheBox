@@ -21,15 +21,16 @@ Created on Mar 11, 2012
 
 
 import xml.etree.cElementTree as ET
-
+from builtins import str
 from uuid import uuid4
+
 from netaddr import IPAddress
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Integer, String, Boolean
+from sqlalchemy.types import Boolean, Integer, String
+
+from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.ValidationError import ValidationError
-from builtins import str
 
 
 class IpAddress(DatabaseObject):

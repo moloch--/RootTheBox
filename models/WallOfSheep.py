@@ -22,9 +22,10 @@ Created on Mar 21, 2012
 
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.types import Integer, Unicode
+
 from models import dbsession
-from models.User import User
 from models.BaseModels import DatabaseObject
+from models.User import User
 
 
 class WallOfSheep(DatabaseObject):

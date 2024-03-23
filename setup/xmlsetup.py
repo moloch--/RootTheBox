@@ -24,20 +24,22 @@ It reads an XML file(s) and calls the API based on the it's contents.
 # pylint: disable=unused-wildcard-import
 
 
-import logging
 import binascii
-import defusedxml.cElementTree as ET
-from os import urandom, path, listdir
-from tornado.options import options
+import logging
+from base64 import b64decode
+from os import listdir, path, urandom
 from shutil import copyfile
+
+import defusedxml.cElementTree as ET
+from tornado.options import options
+
+from libs.ConfigHelpers import save_config, save_config_image
+from libs.StringCoding import decode, encode, set_type
+from models import dbsession
+from models.Box import FlagsSubmissionType
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *
-from models import dbsession
-from models.Box import FlagsSubmissionType
-from libs.StringCoding import encode, decode, set_type
-from libs.ConfigHelpers import save_config, save_config_image
-from base64 import b64decode
 
 
 def get_child_by_tag(elem, tag_name):

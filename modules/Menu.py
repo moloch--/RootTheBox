@@ -20,9 +20,10 @@ Created on Mar 14, 2012
 """
 
 
-from tornado.web import UIModule
-from models.User import User
 from tornado.options import options
+from tornado.web import UIModule
+
+from models.User import User
 
 
 class Menu(UIModule):

@@ -20,28 +20,29 @@ Created on Mar 12, 2012
 """
 
 
-import re
 import hashlib
 import json
+import re
 import xml.etree.cElementTree as ET
-
+from builtins import str
 from uuid import uuid4
+
+from dateutil.parser import parse
+from past.utils import old_div
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship, backref
-from models.Relationships import team_to_flag, user_to_flag
-from sqlalchemy.types import Unicode, Integer, String, Boolean
+from sqlalchemy.orm import backref, relationship
+from sqlalchemy.types import Boolean, Integer, String, Unicode
+from tornado.options import options
+
+from libs.ValidationError import ValidationError
 from models import dbsession
+from models.BaseModels import DatabaseObject
 from models.Box import Box
-from models.Team import Team
 from models.FlagAttachment import FlagAttachment  # Fix object mapper
 from models.FlagChoice import FlagChoice
 from models.Penalty import Penalty
-from models.BaseModels import DatabaseObject
-from libs.ValidationError import ValidationError
-from builtins import str
-from tornado.options import options
-from dateutil.parser import parse
-from past.utils import old_div
+from models.Relationships import team_to_flag, user_to_flag
+from models.Team import Team
 
 ### Constants
 FLAG_STATIC = "static"

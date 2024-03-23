@@ -5,11 +5,11 @@ Revises: a143abd40133
 Create Date: 2024-02-15 11:17:27.270274
 
 """
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.sql.expression import func
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '1ee5b63e716f'

@@ -20,15 +20,17 @@ Created on Mar 12, 2012
 """
 
 
+from builtins import str
 from uuid import uuid4
+
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
-from sqlalchemy.types import Integer, Boolean, String
-from models import dbsession
-from models.User import User
-from models.BaseModels import DatabaseObject
+from sqlalchemy.types import Boolean, Integer, String
 from tornado.options import options
-from builtins import str
+
+from models import dbsession
+from models.BaseModels import DatabaseObject
+from models.User import User
 
 
 class Swat(DatabaseObject):

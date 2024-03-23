@@ -21,13 +21,14 @@ Created on Mar 12, 2012
 
 
 import json
-
-from uuid import uuid4
-from sqlalchemy import Column
-from sqlalchemy.types import Unicode, Integer, String
-from models.BaseModels import DatabaseObject
-from models import dbsession
 from builtins import str
+from uuid import uuid4
+
+from sqlalchemy import Column
+from sqlalchemy.types import Integer, String, Unicode
+
+from models import dbsession
+from models.BaseModels import DatabaseObject
 
 
 class MarketItem(DatabaseObject):

@@ -33,20 +33,22 @@ try:
     import urllib.request as urlrequest
 except ImportError:
     import urllib2 as urlrequest
-import logging
-import tornado
 import json
+import logging
+from builtins import str
 
+import tornado
+from tornado.options import options
+
+from libs.EventManager import EventManager
+from libs.SecurityDecorators import authenticated
+from libs.ValidationError import ValidationError
+from libs.XSSImageCheck import IMG_FORMATS
+from models.Box import Box
 from models.Theme import Theme
 from models.User import User
-from models.Box import Box
-from libs.EventManager import EventManager
-from libs.ValidationError import ValidationError
-from libs.SecurityDecorators import authenticated
-from libs.XSSImageCheck import IMG_FORMATS
-from builtins import str
+
 from .BaseHandlers import BaseHandler
-from tornado.options import options
 
 
 class HomeHandler(BaseHandler):

@@ -21,14 +21,15 @@ Created on Sep 22, 2012
 
 
 import binascii
+from builtins import str
 from os import urandom
+
 from sqlalchemy import Column
-from sqlalchemy.types import String, Boolean
+from sqlalchemy.types import Boolean, String
+
+from libs.StringCoding import decode, encode
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import encode, decode
-from builtins import str
-
 
 gen_token = lambda: binascii.hexlify(urandom(3))
 

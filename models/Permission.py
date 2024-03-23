@@ -19,8 +19,9 @@ Created on Mar 12, 2012
     limitations under the License.
 """
 
-from sqlalchemy.types import Unicode, Integer
 from sqlalchemy import Column, ForeignKey
+from sqlalchemy.types import Integer, Unicode
+
 from models import dbsession
 from models.BaseModels import DatabaseObject
 

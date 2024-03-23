@@ -20,17 +20,17 @@ Created on Mar 12, 2012
 """
 
 import logging
-
-
-from uuid import uuid4
+from builtins import str
 from string import ascii_letters, digits
+from uuid import uuid4
+
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import synonym, relationship
-from sqlalchemy.types import Unicode, Integer, Boolean, String
+from sqlalchemy.orm import relationship, synonym
+from sqlalchemy.types import Boolean, Integer, String, Unicode
+from tornado.options import options
+
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from builtins import str
-from tornado.options import options
 
 
 class ThemeFile(DatabaseObject):

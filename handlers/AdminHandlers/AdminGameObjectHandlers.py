@@ -29,36 +29,36 @@ CRUD for game objects:
 # pylint: disable=unused-wildcard-import
 
 
+import json
 import logging
 import re
-import json
+from builtins import str
 
 from handlers.BaseHandlers import BaseHandler
 from handlers.MissionsHandler import BoxHandler
+from libs.SecurityDecorators import *
+from libs.StringCoding import decode
+from libs.ValidationError import ValidationError
 from models.Box import Box, FlagsSubmissionType
-from models.Corporation import Corporation
 from models.Category import Category
-from models.GameLevel import GameLevel
-from models.FlagAttachment import FlagAttachment
-from models.FlagChoice import FlagChoice
-from models.MarketItem import MarketItem
-from models.Hint import Hint
-from models.Team import Team
-from models.Penalty import Penalty
-from models.IpAddress import IpAddress
-from models.User import ADMIN_PERMISSION
+from models.Corporation import Corporation
 from models.Flag import (
-    Flag,
+    FLAG_CHOICE,
+    FLAG_DATETIME,
     FLAG_FILE,
     FLAG_REGEX,
     FLAG_STATIC,
-    FLAG_DATETIME,
-    FLAG_CHOICE,
+    Flag,
 )
-from libs.ValidationError import ValidationError
-from libs.SecurityDecorators import *
-from libs.StringCoding import decode
-from builtins import str
+from models.FlagAttachment import FlagAttachment
+from models.FlagChoice import FlagChoice
+from models.GameLevel import GameLevel
+from models.Hint import Hint
+from models.IpAddress import IpAddress
+from models.MarketItem import MarketItem
+from models.Penalty import Penalty
+from models.Team import Team
+from models.User import ADMIN_PERMISSION
 
 
 class AdminCreateHandler(BaseHandler):

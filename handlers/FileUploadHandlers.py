@@ -25,15 +25,16 @@ This file contains handlers related to the file sharing functionality
 
 
 import logging
-
-from models.FileUpload import FileUpload
-from models.Team import Team
-from libs.ValidationError import ValidationError
-from libs.SecurityDecorators import authenticated
-from .BaseHandlers import BaseHandler
-from tornado.options import options
 from builtins import str
 
+from tornado.options import options
+
+from libs.SecurityDecorators import authenticated
+from libs.ValidationError import ValidationError
+from models.FileUpload import FileUpload
+from models.Team import Team
+
+from .BaseHandlers import BaseHandler
 
 MAX_UPLOADS = 5
 

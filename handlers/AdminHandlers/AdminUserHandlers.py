@@ -26,24 +26,25 @@ Handlers for user-related tasks.
 
 
 import logging
+from builtins import str
 
-from models.Team import Team
-from models.Box import Box
-from models.Flag import Flag
-from models.EmailToken import EmailToken
-from models.Corporation import Corporation
-from models.User import User, ADMIN_PERMISSION
-from models.Permission import Permission
-from models.GameLevel import GameLevel
+from netaddr import IPAddress
+from tornado.options import options
+
 from handlers.BaseHandlers import BaseHandler
-from libs.SecurityDecorators import *
-from libs.ValidationError import ValidationError
+from libs.ConfigHelpers import save_config
 from libs.EventManager import EventManager
 from libs.Identicon import identicon
-from libs.ConfigHelpers import save_config
-from builtins import str
-from tornado.options import options
-from netaddr import IPAddress
+from libs.SecurityDecorators import *
+from libs.ValidationError import ValidationError
+from models.Box import Box
+from models.Corporation import Corporation
+from models.EmailToken import EmailToken
+from models.Flag import Flag
+from models.GameLevel import GameLevel
+from models.Permission import Permission
+from models.Team import Team
+from models.User import ADMIN_PERMISSION, User
 
 
 class AdminManageUsersHandler(BaseHandler):

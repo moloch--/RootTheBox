@@ -20,8 +20,8 @@ Created on Mar 14, 2012
 """
 
 
-from tornado.web import UIModule
 from tornado.options import options
+from tornado.web import UIModule
 
 
 class Recaptcha(UIModule):

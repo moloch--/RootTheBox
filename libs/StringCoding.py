@@ -21,9 +21,9 @@ Created on Jul 14, 2018
 # pylint: disable=unused-variable
 
 
-from base64 import b64encode, b64decode
 import codecs
 import sys
+from base64 import b64decode, b64encode
 
 
 def encode(s, name="utf-8", *args, **kwargs):

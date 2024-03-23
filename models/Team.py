@@ -21,39 +21,44 @@ Created on Mar 12, 2012
 # pylint: disable=no-member
 
 
-import xml.etree.cElementTree as ET
-
-import os
 import imghdr
 import io
-
-from uuid import uuid4
+import os
+import xml.etree.cElementTree as ET
+from builtins import str
 from datetime import datetime
+from random import randint
+from uuid import uuid4
+
+from PIL import Image
+from resizeimage import resizeimage
 from sqlalchemy import Column, desc
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import Integer, Unicode, String
+from sqlalchemy.orm import backref, relationship
+from sqlalchemy.types import Integer, String, Unicode
+from tornado.options import options
+
+from libs.BotManager import BotManager
+from libs.StringCoding import encode
+from libs.ValidationError import ValidationError
+from libs.XSSImageCheck import (
+    IMG_FORMATS,
+    MAX_AVATAR_SIZE,
+    MIN_AVATAR_SIZE,
+    get_new_avatar,
+    is_xss_image,
+)
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from models.User import User
 from models.GameHistory import GameHistory
 from models.Relationships import (
     team_to_box,
-    team_to_item,
     team_to_flag,
     team_to_game_level,
-    team_to_source_code,
     team_to_hint,
+    team_to_item,
+    team_to_source_code,
 )
-from libs.BotManager import BotManager
-from libs.XSSImageCheck import is_xss_image, get_new_avatar
-from libs.XSSImageCheck import MAX_AVATAR_SIZE, MIN_AVATAR_SIZE, IMG_FORMATS
-from libs.ValidationError import ValidationError
-from tornado.options import options
-from PIL import Image
-from resizeimage import resizeimage
-from random import randint
-from libs.StringCoding import encode
-from builtins import str
+from models.User import User
 
 
 class Team(DatabaseObject):

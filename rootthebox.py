@@ -23,19 +23,19 @@ command line arguments it calls various components setup/start/etc.
 
 from __future__ import print_function
 
-
-import os
-import sys
-import nose
-import random
 import logging
-
+import os
+import random
+import sys
+from builtins import input, str
 from datetime import datetime
+
+import nose
 from tornado.options import define, options
-from libs.ConsoleColors import *
+
 from libs.ConfigHelpers import save_config, save_config_image
+from libs.ConsoleColors import *
 from libs.StringCoding import set_type
-from builtins import str, input
 from setup import __version__
 
 
@@ -177,7 +177,7 @@ def generate_teams_by_name(team_names):
 
 def generate_admins(admin_names):
     """Creates admin users with the syntax '<handle> <email> <password>'"""
-    from models import User, Permission, dbsession
+    from models import Permission, User, dbsession
     from models.User import ADMIN_PERMISSION
 
     for i in range(0, len(admin_names)):
@@ -1234,13 +1234,13 @@ if __name__ == "__main__":
     elif options.tests:
         tests()
     elif options.reset:
-        from models import dbsession
         from handlers.AdminHandlers import AdminResetHandler
+        from models import dbsession
 
         AdminResetHandler.reset(dbsession)
     elif options.reset_delete:
-        from models import dbsession
         from handlers.AdminHandlers import AdminResetDeleteHandler
+        from models import dbsession
 
         AdminResetDeleteHandler.reset(dbsession)
     else:

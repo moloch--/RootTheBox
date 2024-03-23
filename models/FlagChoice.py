@@ -20,14 +20,15 @@ Created on Jun 22, 2018
 """
 
 import logging
-
+from builtins import str
 from uuid import uuid4
+
 from sqlalchemy import Column, ForeignKey, asc
 from sqlalchemy.sql import and_
-from sqlalchemy.types import Unicode, String, Integer
+from sqlalchemy.types import Integer, String, Unicode
+
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from builtins import str
 
 
 class FlagChoice(DatabaseObject):

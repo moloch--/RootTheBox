@@ -20,10 +20,10 @@ Created on Sep 12, 2012
 """
 
 
-from models.BaseModels import DatabaseObject
-from sqlalchemy import Column, Table, ForeignKey
+from sqlalchemy import Column, ForeignKey, Table
 from sqlalchemy.types import Integer
 
+from models.BaseModels import DatabaseObject
 
 team_to_box = Table(
     "team_to_box",

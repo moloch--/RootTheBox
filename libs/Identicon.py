@@ -1,7 +1,8 @@
 # source: https://github.com/evuez/svg-identicon
 # Modified for 2 x 1 ratio - RootTheBox
-from os import path
 from hashlib import md5
+from os import path
+
 from tornado.options import options
 
 

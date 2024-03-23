@@ -23,10 +23,11 @@ import logging
 
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
-from sqlalchemy.types import Unicode, Integer
+from sqlalchemy.types import Integer, Unicode
+from tornado.options import options
+
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from tornado.options import options
 
 
 class Penalty(DatabaseObject):
@@ -159,8 +160,8 @@ class Penalty(DatabaseObject):
                 if idx < options.flag_start_penalty or idx > options.flag_stop_penalty:
                     penalty = 0
                 else:
-                    from models.Team import Team
                     from models.Flag import Flag
+                    from models.Team import Team
 
                     flag = Flag.by_id(self.flag_id)
                     team = Team.by_id(self.team_id)

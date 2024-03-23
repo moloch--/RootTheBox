@@ -8,11 +8,13 @@ Helper functions for email
 """
 import logging
 import smtplib
-from email.message import EmailMessage
-from email.header import Header
-from email.utils import formataddr
 from base64 import encodebytes as _bencode
+from email.header import Header
+from email.message import EmailMessage
+from email.utils import formataddr
+
 from tornado.options import options
+
 
 def send_email_message(to_addrs, message):
   """Try to send email message

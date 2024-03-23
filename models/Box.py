@@ -20,33 +20,34 @@ Created on Mar 11, 2012
 """
 
 
-import os
+import binascii
+import enum
 import imghdr
 import io
-import binascii
+import os
 import xml.etree.cElementTree as ET
-
+from collections import OrderedDict
 from os import urandom
 from uuid import uuid4
-from collections import OrderedDict
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import Integer, Unicode, String, Boolean, Enum
-from models import dbsession
-from models.BaseModels import DatabaseObject
-from models.Relationships import team_to_box
-from models.IpAddress import IpAddress
-from models.GameLevel import GameLevel
-from models.Corporation import Corporation
-from models.Category import Category
-from models.SourceCode import SourceCode
-from tornado.options import options
-from libs.XSSImageCheck import is_xss_image, get_new_avatar
-from libs.ValidationError import ValidationError
-from libs.StringCoding import encode, decode
+
 from PIL import Image
 from resizeimage import resizeimage
-import enum
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.orm import backref, relationship
+from sqlalchemy.types import Boolean, Enum, Integer, String, Unicode
+from tornado.options import options
+
+from libs.StringCoding import decode, encode
+from libs.ValidationError import ValidationError
+from libs.XSSImageCheck import get_new_avatar, is_xss_image
+from models import dbsession
+from models.BaseModels import DatabaseObject
+from models.Category import Category
+from models.Corporation import Corporation
+from models.GameLevel import GameLevel
+from models.IpAddress import IpAddress
+from models.Relationships import team_to_box
+from models.SourceCode import SourceCode
 
 
 class FlagsSubmissionType(str, enum.Enum):
@@ -56,7 +57,7 @@ class FlagsSubmissionType(str, enum.Enum):
 
 from builtins import (  # noqa: E402
     str,
-)  # TODO Python2/3 compatibility issue if imported before FlagSubmissionType
+)
 
 
 class Box(DatabaseObject):

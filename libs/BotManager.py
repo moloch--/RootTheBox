@@ -25,22 +25,23 @@ Not gonna sugar code it, this shit gets a bit complicated.
 # pylint: disable=no-member
 
 
-import re
-import os
 import logging
-
-from datetime import datetime
-from libs.Singleton import Singleton
+import os
+import re
 from builtins import str
-from sqlalchemy import Column, create_engine
-from sqlalchemy.sql import and_
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.types import DateTime, Integer, Unicode
-from sqlalchemy.ext.declarative import declared_attr, declarative_base
+from datetime import datetime
 from tempfile import NamedTemporaryFile
+
+from sqlalchemy import Column, create_engine
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import and_
+from sqlalchemy.types import DateTime, Integer, Unicode
+from tornado.options import options
+
+from libs.Singleton import Singleton
 from models import dbsession
 from models.Box import Box
-from tornado.options import options
 
 
 class _BotDatabaseObject(object):

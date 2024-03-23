@@ -26,25 +26,26 @@ be purchased from the "Black Market" (see markethandlers.py)
 
 
 import logging
+from base64 import b64decode
+from builtins import str
+from mimetypes import guess_type
+from string import ascii_letters
 
-from .BaseHandlers import BaseHandler
-from models.WallOfSheep import WallOfSheep
-from models.Team import Team
+from libs.SecurityDecorators import (
+    authenticated,
+    game_started,
+    has_item,
+    item_allowed,
+    use_black_market,
+)
 from models.Box import Box
 from models.SourceCode import SourceCode
 from models.Swat import Swat
+from models.Team import Team
 from models.User import User
-from libs.SecurityDecorators import (
-    authenticated,
-    item_allowed,
-    has_item,
-    use_black_market,
-    game_started,
-)
-from builtins import str
-from mimetypes import guess_type
-from base64 import b64decode
-from string import ascii_letters
+from models.WallOfSheep import WallOfSheep
+
+from .BaseHandlers import BaseHandler
 
 
 class PasswordSecurityHandler(BaseHandler):
