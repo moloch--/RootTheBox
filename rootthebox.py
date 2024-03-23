@@ -29,12 +29,13 @@ import random
 import sys
 from builtins import input, str
 from datetime import datetime
+from past.builtins import basestring
 
 import nose
 from tornado.options import define, options
 
 from libs.ConfigHelpers import save_config, save_config_image
-from libs.ConsoleColors import *
+from libs.ConsoleColors import WARN, C, W, INFO, bold, R, PROMPT
 from libs.StringCoding import set_type
 from setup import __version__
 

@@ -37,6 +37,14 @@ from libs.ConfigHelpers import save_config, save_config_image
 from libs.StringCoding import set_type
 from models import dbsession
 from models.Box import FlagsSubmissionType
+from models.Category import Category
+from models.GameLevel import GameLevel
+from models.Hint import Hint
+from models.Flag import Flag
+from models.FlagAttachment import FlagAttachment
+from models.FlagChoice import FlagChoice
+from models.Box import Box
+from models.Corporation import Corporation
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *

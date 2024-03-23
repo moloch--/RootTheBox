@@ -18,7 +18,7 @@ from models.Flag import (
     Flag,
 )
 from models.GameLevel import GameLevel
-from tests.Helpers import *
+from tests.Helpers import create_team, create_user, create_corp, create_box
 
 
 class TestTeam(unittest.TestCase):

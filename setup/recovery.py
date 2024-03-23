@@ -29,8 +29,11 @@ import os
 import sys
 from builtins import input, str
 
-from libs.ConsoleColors import *
+from libs.ConsoleColors import WARN, W, INFO, bold, PROMPT, underline
 from models import dbsession
+from models.User import User
+from models.Team import Team
+from models.Permission import Permission
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *
