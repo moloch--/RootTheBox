@@ -29,11 +29,9 @@ try:
     from urllib.parse import quote_plus
 except ImportError:
     from urllib import quote_plus
-from tornado.httpclient import HTTPRequest
 from tornado.testing import AsyncHTTPTestCase
 
 from handlers import app
-from libs.StringCoding import decode
 
 
 class ApplicationTest(AsyncHTTPTestCase):

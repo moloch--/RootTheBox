@@ -25,8 +25,8 @@ from string import ascii_letters, digits
 from uuid import uuid4
 
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship, synonym
-from sqlalchemy.types import Boolean, Integer, String, Unicode
+from sqlalchemy.orm import relationship
+from sqlalchemy.types import Integer, String, Unicode
 from tornado.options import options
 
 from models import dbsession

@@ -18,7 +18,6 @@
 """
 
 
-from models import engine
 from models.BaseModels import DatabaseObject
 
 
@@ -33,28 +32,4 @@ metadata = DatabaseObject.metadata
 
 # Create secondary tables
 # Import your models here
-from models.Box import Box
-from models.Category import Category
-from models.Corporation import Corporation
-from models.EmailToken import EmailToken
-from models.FileUpload import FileUpload
-from models.Flag import Flag
-from models.FlagAttachment import FlagAttachment
-from models.FlagChoice import FlagChoice
-from models.GameLevel import GameLevel
-from models.Hint import Hint
-from models.IpAddress import IpAddress
-from models.MarketItem import MarketItem
-from models.Notification import Notification
-from models.PasswordToken import PasswordToken
-from models.PasteBin import PasteBin
-from models.Penalty import Penalty
-from models.Permission import Permission
-from models.RegistrationToken import RegistrationToken
 from models.Relationships import *
-from models.SourceCode import SourceCode
-from models.Swat import Swat
-from models.Team import Team
-from models.Theme import Theme, ThemeFile
-from models.User import User
-from models.WallOfSheep import WallOfSheep

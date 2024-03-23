@@ -21,13 +21,10 @@ Created on Sep 6, 2020
 
 
 from datetime import datetime, timedelta
-from hashlib import sha256
-from os import urandom
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Boolean, Integer, String
 
-from libs.StringCoding import encode
 from models import dbsession
 from models.BaseModels import DatabaseObject
 

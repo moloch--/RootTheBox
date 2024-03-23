@@ -22,7 +22,6 @@ Created on Jul 14, 2018
 
 
 import codecs
-import sys
 from base64 import b64decode, b64encode
 
 

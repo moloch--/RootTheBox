@@ -40,7 +40,6 @@ import hashlib
 import json
 import logging
 import os
-import platform
 import random
 import socket
 import struct
@@ -56,7 +55,6 @@ try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
-from datetime import datetime
 
 from libs.StringCoding import encode
 

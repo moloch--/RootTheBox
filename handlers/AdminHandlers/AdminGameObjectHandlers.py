@@ -828,7 +828,7 @@ class AdminEditHandler(BaseHandler):
                                 # add choice
                                 FlagChoice.create_choice(flag, decode(flagoption))
         for choice in currentchoices:
-            if not choice["uuid"] in choiceitems:
+            if choice["uuid"] not in choiceitems:
                 # delete choice
                 flagchoice = FlagChoice.by_uuid(choice["uuid"])
                 self.dbsession.delete(flagchoice)

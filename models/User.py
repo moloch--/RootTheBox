@@ -42,7 +42,7 @@ from pbkdf2 import PBKDF2
 from PIL import Image
 from resizeimage import resizeimage
 from sqlalchemy import Column, ForeignKey, desc, func
-from sqlalchemy.orm import backref, relationship, synonym
+from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import Boolean, DateTime, Integer, String, Unicode
 from tornado.options import options
 

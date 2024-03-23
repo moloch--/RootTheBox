@@ -34,7 +34,7 @@ import defusedxml.cElementTree as ET
 from tornado.options import options
 
 from libs.ConfigHelpers import save_config, save_config_image
-from libs.StringCoding import decode, encode, set_type
+from libs.StringCoding import set_type
 from models import dbsession
 from models.Box import FlagsSubmissionType
 

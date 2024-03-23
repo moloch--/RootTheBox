@@ -26,7 +26,6 @@ from these base classes.
 # pylint: disable=unused-wildcard-import,no-member
 
 
-import datetime
 import logging
 import time
 import traceback
