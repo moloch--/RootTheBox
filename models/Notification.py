@@ -90,7 +90,7 @@ class Notification(DatabaseObject):
         """Return all notification which have not been viewed"""
         return (
             dbsession.query(cls)
-            .filter(and_(cls.user_id == user_id, cls.viewed == False))
+            .filter(and_(cls.user_id == user_id, cls.viewed is False))
             .all()
         )
 

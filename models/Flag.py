@@ -387,7 +387,7 @@ class Flag(DatabaseObject):
     @property
     def locked(self):
         """Determines if an admin has locked an flag."""
-        if self._locked == None:
+        if self._locked is None:
             return False
         return self._locked
 

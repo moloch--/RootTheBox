@@ -75,7 +75,8 @@ else:
 engine = create_engine(str(db_connection), pool_pre_ping=True)
 session_maker = sessionmaker(bind=engine)
 _Session = scoped_session(session_maker)
-StartSession = lambda: _Session(autoflush=True)
+def StartSession():
+    return _Session(autoflush=True)
 
 dbsession = StartSession()
 

@@ -316,7 +316,7 @@ class Box(DatabaseObject):
             return True
         if self.locked_level():
             return True
-        if self._locked == None:
+        if self._locked is None:
             return False
         return self._locked
 

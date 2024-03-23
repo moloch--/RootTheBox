@@ -100,7 +100,8 @@ else:
 INFO = bold + C + "[*]" + W
 WARN = bold + R + "[!]" + W
 PROMPT = bold + P + "[?]" + W
-current_time = lambda: str(datetime.now()).split(" ")[1].split(".")[0]
+def current_time():
+    return str(datetime.now()).split(" ")[1].split(".")[0]
 
 """
 websocket python client.
@@ -248,7 +249,7 @@ def create_connection(url, timeout=None, **options):
     """
     sockopt = options.get("sockopt", ())
     websock = WebSocket(sockopt=sockopt)
-    websock.settimeout(timeout != None and timeout or default_timeout)
+    websock.settimeout(timeout is not None and timeout or default_timeout)
     websock.connect(url, **options)
     return websock
 

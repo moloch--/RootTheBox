@@ -30,7 +30,8 @@ from libs.StringCoding import decode, encode
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
-gen_token = lambda: binascii.hexlify(urandom(3))
+def gen_token():
+    return binascii.hexlify(urandom(3))
 
 
 class RegistrationToken(DatabaseObject):
