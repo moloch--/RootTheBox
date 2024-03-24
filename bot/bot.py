@@ -55,7 +55,7 @@ except ImportError:
     from urlparse import urlparse
 from builtins import chr, object, range
 from datetime import datetime
-from hashlib import sha512
+from hashlib import sha1, sha512
 
 ### Settings
 __version__ = "0.1.1"

@@ -108,6 +108,7 @@ def setup():
         return
 
     print(INFO + "%s : Bootstrapping the database ..." % current_time())
+    import setup.bootstrap
 
     # Display Details
     if is_devel:

@@ -27,6 +27,7 @@ import os
 import xml.etree.cElementTree as ET
 from builtins import str
 from datetime import datetime
+from random import randint
 from uuid import uuid4
 
 from PIL import Image
@@ -37,6 +38,7 @@ from sqlalchemy.types import Integer, String, Unicode
 from tornado.options import options
 
 from libs.BotManager import BotManager
+from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import (
     IMG_FORMATS,
@@ -56,6 +58,7 @@ from models.Relationships import (
     team_to_item,
     team_to_source_code,
 )
+from models.User import User
 
 
 class Team(DatabaseObject):

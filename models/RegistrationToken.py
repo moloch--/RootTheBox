@@ -21,6 +21,7 @@ Created on Sep 22, 2012
 
 
 import binascii
+from builtins import str
 from os import urandom
 
 from sqlalchemy import Column

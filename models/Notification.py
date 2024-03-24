@@ -29,7 +29,7 @@ from builtins import str
 
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
-from sqlalchemy.types import Boolean, Integer, Unicode
+from sqlalchemy.types import Boolean, Integer, String, Unicode
 from tornado.options import options
 
 from models import dbsession

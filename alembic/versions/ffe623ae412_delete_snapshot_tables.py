@@ -7,7 +7,9 @@ Create Date: 2023-03-11 19:33:02.808038
 """
 from datetime import datetime
 
+import sqlalchemy as sa
 from sqlalchemy.engine.reflection import Inspector
+from sqlalchemy.sql.expression import func
 
 from alembic import op
 

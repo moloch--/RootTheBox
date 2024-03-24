@@ -26,6 +26,7 @@ be purchased from the "Black Market" (see markethandlers.py)
 
 
 import logging
+from base64 import b64decode
 from builtins import str
 from mimetypes import guess_type
 from string import ascii_letters

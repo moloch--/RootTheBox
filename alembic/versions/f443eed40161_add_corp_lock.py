@@ -7,6 +7,7 @@ Create Date: 2023-05-27 17:01:22.454528
 """
 import sqlalchemy as sa
 from sqlalchemy.engine.reflection import Inspector
+from sqlalchemy.sql.expression import func
 
 from alembic import op
 

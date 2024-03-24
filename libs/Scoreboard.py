@@ -27,12 +27,14 @@ import logging
 import time
 from builtins import object, str
 from collections import OrderedDict
+from threading import Thread
 
+from sqlalchemy.orm import scoped_session
 from tornado.options import options
 
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
-from models import dbsession
+from models import dbsession, session_maker
 from models.Box import Box
 from models.Flag import Flag
 from models.GameLevel import GameLevel

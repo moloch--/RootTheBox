@@ -38,7 +38,9 @@ from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Box import Box
+from models.FlagAttachment import FlagAttachment  # Fix object mapper
 from models.FlagChoice import FlagChoice
+from models.Penalty import Penalty
 from models.Relationships import team_to_flag, user_to_flag
 from models.Team import Team
 

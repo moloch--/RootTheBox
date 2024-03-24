@@ -37,7 +37,7 @@ from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import Boolean, Enum, Integer, String, Unicode
 from tornado.options import options
 
-from libs.StringCoding import encode
+from libs.StringCoding import decode, encode
 from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import get_new_avatar, is_xss_image
 from models import dbsession

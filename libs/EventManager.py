@@ -28,8 +28,10 @@ from tornado.websocket import WebSocketClosedError
 
 from libs.Singleton import Singleton
 from models import dbsession
+from models.Flag import Flag
 from models.GameLevel import GameLevel
 from models.Notification import ERROR, INFO, SUCCESS, WARNING, Notification
+from models.PasteBin import PasteBin
 from models.User import User
 
 

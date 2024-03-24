@@ -44,7 +44,7 @@ from libs.ConsoleColors import *
 from libs.EventManager import EventManager
 from libs.Scoreboard import Scoreboard, score_bots
 from libs.SecurityDecorators import *
-from libs.StringCoding import encode
+from libs.StringCoding import decode, encode
 from libs.ValidationError import ValidationError
 from models.Box import Box
 from models.Category import Category

@@ -26,14 +26,14 @@ This file contains the code for displaying flags / recv flag submissions
 
 import json
 import logging
-from builtins import str
+from builtins import next, str
 
 from past.utils import old_div
 from tornado.options import options
 
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import authenticated, game_started
-from libs.StringCoding import encode
+from libs.StringCoding import decode, encode
 from libs.WebhookHelpers import *
 from models.Box import Box, FlagsSubmissionType
 from models.Flag import Flag

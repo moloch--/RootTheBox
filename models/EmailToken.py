@@ -20,10 +20,14 @@ Created on Jan 29, 2021
 """
 
 
+from datetime import datetime, timedelta
+from hashlib import sha256
+from os import urandom
 
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.types import Boolean, Integer, String
 
+from libs.StringCoding import encode
 from models import dbsession
 from models.BaseModels import DatabaseObject
 

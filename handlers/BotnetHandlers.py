@@ -35,8 +35,8 @@ from tornado.options import options
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
-from libs.StringCoding import encode
-from models import Box, User
+from libs.StringCoding import decode, encode
+from models import Box, Team, User
 
 from .BaseHandlers import BaseHandler, BaseWebSocketHandler
 

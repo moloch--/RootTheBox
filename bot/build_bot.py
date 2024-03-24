@@ -23,9 +23,11 @@ Requires Py2Exe, builds a .exe file for easy of use on windows
 
 """
 
+import os
 import sys
 from distutils.core import setup
 
+import py2exe
 
 sys.argv.append("py2exe")
 
