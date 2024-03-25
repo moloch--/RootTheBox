@@ -19,19 +19,19 @@ Created on Sep 12, 2012
     limitations under the License.
 """
 
-import time
 import logging
-
-from tornado.options import options
-from sqlalchemy import event, create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.engine import Engine
-from contextlib import contextmanager
-from libs.DatabaseConnection import DatabaseConnection
-from libs.ConsoleColors import *
+import time
 from builtins import str
-from msal import ConfidentialClientApplication
+from contextlib import contextmanager
 
+from msal import ConfidentialClientApplication
+from sqlalchemy import create_engine, event
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from tornado.options import options
+
+from libs.ConsoleColors import *
+from libs.DatabaseConnection import DatabaseConnection
 
 if options.log_sql:
 
@@ -75,7 +75,8 @@ else:
 engine = create_engine(str(db_connection), pool_pre_ping=True)
 session_maker = sessionmaker(bind=engine)
 _Session = scoped_session(session_maker)
-StartSession = lambda: _Session(autoflush=True)
+def StartSession():
+    return _Session(autoflush=True)
 
 dbsession = StartSession()
 
@@ -114,21 +115,21 @@ def cxt_dbsession():
 
 # Avoids mapper issues
 from models.Box import Box
-from models.PasteBin import PasteBin
-from models.Permission import Permission
-from models.Team import Team
-from models.User import User
+from models.Corporation import Corporation
 from models.FileUpload import FileUpload
-from models.WallOfSheep import WallOfSheep
 from models.Flag import Flag
 from models.FlagAttachment import FlagAttachment
-from models.Notification import Notification
-from models.Corporation import Corporation
 from models.GameLevel import GameLevel
-from models.Theme import Theme, ThemeFile
-from models.RegistrationToken import RegistrationToken
-from models.MarketItem import MarketItem
+from models.Hint import Hint
 from models.IpAddress import IpAddress
+from models.MarketItem import MarketItem
+from models.Notification import Notification
+from models.PasteBin import PasteBin
+from models.Permission import Permission
+from models.RegistrationToken import RegistrationToken
 from models.SourceCode import SourceCode
 from models.Swat import Swat
-from models.Hint import Hint
+from models.Team import Team
+from models.Theme import Theme, ThemeFile
+from models.User import User
+from models.WallOfSheep import WallOfSheep

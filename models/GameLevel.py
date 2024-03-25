@@ -21,15 +21,16 @@ Created on Mar 12, 2012
 
 
 import xml.etree.cElementTree as ET
-
+from builtins import str
 from uuid import uuid4
+
 from sqlalchemy import Column, ForeignKey, asc
-from sqlalchemy.types import Unicode, Integer, String, Boolean
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import backref, relationship
+from sqlalchemy.types import Boolean, Integer, String, Unicode
+
 from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from builtins import str
 from models.Relationships import team_to_game_level
 
 
@@ -178,7 +179,7 @@ class GameLevel(DatabaseObject):
     @property
     def locked(self):
         """Determines if an admin has locked an level."""
-        if self._locked == None:
+        if self._locked is None:
             return False
         return self._locked
 

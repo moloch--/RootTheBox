@@ -22,20 +22,20 @@ fills the database with some startup data.
 # pylint: disable=unused-wildcard-import
 
 
+import getpass
 import os
 import sys
-import getpass
+from builtins import input, str
 
-from libs.ConsoleColors import *
-from builtins import str, input
-from models import dbsession
-from models.Permission import Permission
-from models.Theme import Theme, ThemeFile
-from models.MarketItem import MarketItem
-from models.GameLevel import GameLevel
-from models.User import User, ADMIN_PERMISSION
 from tornado.options import options
 
+from libs.ConsoleColors import *
+from models import dbsession
+from models.GameLevel import GameLevel
+from models.MarketItem import MarketItem
+from models.Permission import Permission
+from models.Theme import Theme, ThemeFile
+from models.User import ADMIN_PERMISSION, User
 
 # Fills the database with some startup data.
 password = ""

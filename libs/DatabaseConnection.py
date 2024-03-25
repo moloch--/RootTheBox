@@ -21,13 +21,13 @@ Created on Sep 20, 2012
 # pylint: disable=unused-wildcard-import,unused-variable
 
 
-import os
-import logging
-import sys
-import getpass
 import codecs
-
+import getpass
+import logging
+import os
+import sys
 from builtins import object
+
 from libs.ConsoleColors import *
 
 try:

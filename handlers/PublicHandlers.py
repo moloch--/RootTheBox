@@ -25,11 +25,11 @@ any authentication) with the exception of error handlers and the scoreboard
 """
 
 
-import logging
-import re
-import random
-import string
 import json
+import logging
+import random
+import re
+import string
 
 try:
     from urllib.parse import urlencode
@@ -39,32 +39,41 @@ try:
     import urllib.request as urlrequest
 except ImportError:
     import urllib2 as urlrequest
-from os import urandom
-from netaddr import IPAddress
-from libs.Identicon import identicon
-from libs.SecurityDecorators import blacklist_ips
-from libs.ValidationError import ValidationError
-from libs.XSSImageCheck import filter_avatars
-from libs.StringCoding import encode, decode
-from libs.EmailHelpers import create_email_headers, get_email_message, send_email_message
-from libs.WebhookHelpers import send_user_validated_webhook, send_user_registered_webhook
-from base64 import urlsafe_b64encode, urlsafe_b64decode, b64encode
+from base64 import b64encode, urlsafe_b64decode, urlsafe_b64encode
 from builtins import str
-from models import azuread_app
-from models.Team import Team
-from models.Theme import Theme
-from models.PasswordToken import PasswordToken
-from models.RegistrationToken import RegistrationToken
-from models.EmailToken import EmailToken
-from models.GameLevel import GameLevel
-from models.User import User, ADMIN_PERMISSION
-from models.Permission import Permission
-from handlers.BaseHandlers import BaseHandler
-from hashlib import sha256
 from datetime import datetime
+from hashlib import sha256
+from os import urandom
+
+from msal import ConfidentialClientApplication
+from netaddr import IPAddress
 from pbkdf2 import PBKDF2
 from tornado.options import options
-from msal import ConfidentialClientApplication
+
+from handlers.BaseHandlers import BaseHandler
+from libs.EmailHelpers import (
+    create_email_headers,
+    get_email_message,
+    send_email_message,
+)
+from libs.Identicon import identicon
+from libs.SecurityDecorators import blacklist_ips
+from libs.StringCoding import decode, encode
+from libs.ValidationError import ValidationError
+from libs.WebhookHelpers import (
+    send_user_registered_webhook,
+    send_user_validated_webhook,
+)
+from libs.XSSImageCheck import filter_avatars
+from models import azuread_app
+from models.EmailToken import EmailToken
+from models.GameLevel import GameLevel
+from models.PasswordToken import PasswordToken
+from models.Permission import Permission
+from models.RegistrationToken import RegistrationToken
+from models.Team import Team
+from models.Theme import Theme
+from models.User import ADMIN_PERMISSION, User
 
 
 class HomePageHandler(BaseHandler):

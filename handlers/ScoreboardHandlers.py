@@ -27,23 +27,24 @@ This file contains handlers related to the scoreboard.
 
 import json
 import logging
-
-from tornado.websocket import WebSocketHandler
-from handlers.BaseHandlers import BaseHandler
-from libs.SecurityDecorators import use_black_market, item_allowed
-from libs.Scoreboard import Scoreboard
 from builtins import str
+from collections import OrderedDict
+from datetime import datetime, timedelta
+from itertools import islice
 from math import ceil
+
+from tornado.options import options
+from tornado.websocket import WebSocketHandler
+
+from handlers.BaseHandlers import BaseHandler
+from libs.Scoreboard import Scoreboard
+from libs.SecurityDecorators import item_allowed, use_black_market
 from models import dbsession
-from models.Team import Team
-from models.User import User
 from models.Box import Box
 from models.Category import Category
+from models.Team import Team
+from models.User import User
 from models.WallOfSheep import WallOfSheep
-from datetime import datetime, timedelta
-from tornado.options import options
-from collections import OrderedDict
-from itertools import islice
 
 
 class ScoreboardDataSocketHandler(WebSocketHandler):

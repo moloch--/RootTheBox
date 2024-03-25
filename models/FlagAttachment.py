@@ -21,14 +21,15 @@ Created on Nov 24, 2014
 
 import os
 import xml.etree.cElementTree as ET
-
-from uuid import uuid4
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, String, Integer
-from models.BaseModels import DatabaseObject
-from libs.StringCoding import encode, decode
 from builtins import str
+from uuid import uuid4
+
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.types import Integer, String, Unicode
 from tornado.options import options
+
+from libs.StringCoding import decode, encode
+from models.BaseModels import DatabaseObject
 
 
 class FlagAttachment(DatabaseObject):

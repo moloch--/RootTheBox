@@ -20,15 +20,16 @@ Created on Jun 19, 2018
 """
 
 
-import xml.etree.cElementTree as ET
 import json
-
-from uuid import uuid4
-from sqlalchemy import Column
-from sqlalchemy.types import Unicode, String
-from sqlalchemy.orm import relationship, backref
-from libs.ValidationError import ValidationError
+import xml.etree.cElementTree as ET
 from builtins import str
+from uuid import uuid4
+
+from sqlalchemy import Column
+from sqlalchemy.orm import backref, relationship
+from sqlalchemy.types import String, Unicode
+
+from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
 

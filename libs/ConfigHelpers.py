@@ -1,14 +1,14 @@
-import logging
-import imghdr
 import hashlib
+import imghdr
+import logging
 from base64 import b64decode
-
-from tornado.options import options
 from datetime import datetime
-from past.builtins import basestring
 
-from libs.XSSImageCheck import is_xss_image
+from past.builtins import basestring
+from tornado.options import options
+
 from libs.ValidationError import ValidationError
+from libs.XSSImageCheck import is_xss_image
 
 
 def save_config():
@@ -61,10 +61,10 @@ def save_config_image(b64_data):
 
 
 def create_demo_user():
+    from models import dbsession
+    from models.GameLevel import GameLevel
     from models.Team import Team
     from models.User import User
-    from models.GameLevel import GameLevel
-    from models import dbsession
 
     if Team.by_name("player") is None:
         user = User()

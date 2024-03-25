@@ -1,10 +1,11 @@
+from tornado.options import options
+
 from models import dbsession
+from models.Box import Box
+from models.Corporation import Corporation
+from models.GameLevel import GameLevel
 from models.Team import Team
 from models.User import User
-from models.Corporation import Corporation
-from models.Box import Box
-from models.GameLevel import GameLevel
-from tornado.options import options
 
 
 def create_team():

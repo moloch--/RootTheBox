@@ -12,22 +12,33 @@ $(document).ready(function () {
          $("#buyoutcost").hide();
       } else if (this.value === "buyout") {
          $("#buyoutlabel").text("Unlock Cost");
-         $("#game_level-buyout").attr('max', '');
+         $("#buyout").attr('max', '');
          $("#buyout").attr('data-original-title', 'Unlock Cost');
          $("#buyout").attr('data-content', 'Cost to open this level and see flags [0-9]+');
          $("#buyoutcost").show();
+         $("#buyout").show();
+         $("#buyoutlvl").hide();
       } else if (this.value === "progress") {
          $("#buyoutlabel").text("% Complete of Prior Level");
-         $("#game_level-buyout").attr('max', 100);
+         $("#buyout").attr('max', 100);
          $("#buyout").attr('data-original-title', '% Complete of Prior Level');
          $("#buyout").attr('data-content', 'This level will unlock automatically after this percentage of prior level is completed (value 0-100).');
          $("#buyoutcost").show();
+         $("#buyout").show();
+         $("#buyoutlvl").hide();
       } else if (this.value === "points") {
          $("#buyoutlabel").text("Points Required");
-         $("#game_level-buyout").attr('max', '');
+         $("#buyout").attr('max', '');
          $("#buyout").attr('data-original-title', 'Points Required');
          $("#buyout").attr('data-content', 'This level will unlock automatically after the score reaches this amount.');
          $("#buyoutcost").show();
+         $("#buyout").show();
+         $("#buyoutlvl").hide();
+      } else if (this.value === "level") {
+         $("#buyoutlabel").text("Completion of Level");
+         $("#buyoutcost").show();
+         $("#buyoutlvl").show();
+         $("#buyout").hide();
       }
    });
 });

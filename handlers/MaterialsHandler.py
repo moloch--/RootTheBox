@@ -20,13 +20,14 @@ Created on Jun 18, 2018
 
 """
 
-import os
 import json
 import logging
+import os
+
+from tornado.options import options
 
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import authenticated
-from tornado.options import options
 from models.Corporation import Corporation
 
 

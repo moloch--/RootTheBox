@@ -24,11 +24,12 @@ This file contains handlers related to the pastebin functionality
 """
 
 
+from tornado.options import options
+
 from handlers.BaseHandlers import BaseHandler
+from libs.SecurityDecorators import authenticated
 from models.PasteBin import PasteBin
 from models.Team import Team
-from libs.SecurityDecorators import authenticated
-from tornado.options import options
 
 
 class PasteHandler(BaseHandler):

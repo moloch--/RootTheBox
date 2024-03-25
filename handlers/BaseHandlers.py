@@ -26,28 +26,28 @@ from these base classes.
 # pylint: disable=unused-wildcard-import,no-member
 
 
-import logging
-import traceback
 import datetime
+import logging
 import time
-
-from models import dbsession, chatsession
-from models.User import User
-from libs.SecurityDecorators import *
-from libs.Sessions import MemcachedSession, MemcachedConnect
-from libs.EventManager import EventManager
-from libs.WebhookHelpers import *
+import traceback
 from builtins import str
+
+from libs.EventManager import EventManager
+from libs.SecurityDecorators import *
+from libs.Sessions import MemcachedConnect, MemcachedSession
+from libs.WebhookHelpers import *
+from models import chatsession, dbsession
+from models.User import User
 
 try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
 from tornado import locale
-from tornado.web import RequestHandler
 from tornado.ioloop import IOLoop
-from tornado.websocket import WebSocketHandler
 from tornado.options import options
+from tornado.web import RequestHandler
+from tornado.websocket import WebSocketHandler
 
 
 class BaseHandler(RequestHandler):

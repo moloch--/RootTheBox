@@ -62,6 +62,7 @@
                         data-content="{{_('How should the next level unlock?')}}">
                         <option value="none">{{_("No Lock")}}</option>
                         <option value="locked">{{ _("Locked") }}</option>
+                        <option value="level">{{ _("Level Completion" )}}</option>
                         <option value="buyout" selected>{{_("Purchase Unlock")}}</option>
                         <option value="progress">{{_("Game Progress")}}</option>
                         <option value="points">{{ _("Game Points") }}</option>
@@ -76,6 +77,14 @@
                             rel="popover"
                             data-original-title="{{_('Unlock Cost')}}"
                             data-content="{{_('Cost to open this level and see flags')}} [0-9]+" />
+                    <select id="buyoutlvl" name="buyoutlvl" style="display: none;"
+                            rel="popover"
+                            data-original-title="Level Completed"
+                            data-content="Complete this level for unlock">
+                            {% for lv in game_levels %}
+                                <option value="{{ lv.id }}">{{ lv.name }}</option>
+                            {% end %}
+                     </select>
                 </div>
             </div>
             <div class="control-group">

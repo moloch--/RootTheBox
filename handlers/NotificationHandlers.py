@@ -21,9 +21,9 @@ Created on Mar 15, 2012
 
 import logging
 
-from libs.SecurityDecorators import *
-from libs.EventManager import EventManager
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
+from libs.EventManager import EventManager
+from libs.SecurityDecorators import *
 
 
 class NotifySocketHandler(BaseWebSocketHandler):

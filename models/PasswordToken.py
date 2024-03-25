@@ -20,14 +20,16 @@ Created on Sep 6, 2020
 """
 
 
-from os import urandom
+from datetime import datetime, timedelta
 from hashlib import sha256
+from os import urandom
+
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import String, Boolean, Integer
+from sqlalchemy.types import Boolean, Integer, String
+
+from libs.StringCoding import encode
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.StringCoding import encode
-from datetime import datetime, timedelta
 
 
 class PasswordToken(DatabaseObject):

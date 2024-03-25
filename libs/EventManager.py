@@ -20,18 +20,19 @@ Created on Sep 20, 2012
 """
 
 import logging
+from builtins import object, str
 
 from tornado.ioloop import IOLoop
-from tornado.websocket import WebSocketClosedError
 from tornado.options import options
+from tornado.websocket import WebSocketClosedError
+
 from libs.Singleton import Singleton
-from builtins import object, str
 from models import dbsession
-from models.User import User
 from models.Flag import Flag
 from models.GameLevel import GameLevel
+from models.Notification import ERROR, INFO, SUCCESS, WARNING, Notification
 from models.PasteBin import PasteBin
-from models.Notification import Notification, SUCCESS, INFO, WARNING, ERROR
+from models.User import User
 
 
 @Singleton

@@ -5,10 +5,12 @@ Revises: f443eed40161
 Create Date: 2023-08-14 17:01:22.454528
 
 """
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.sql.expression import func
+
+from alembic import op
+
 try:
     conn = op.get_bind()
     inspector = Inspector.from_engine(conn)

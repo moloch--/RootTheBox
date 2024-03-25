@@ -26,43 +26,44 @@ This is the main file the defines what URLs get routed to what handlers
 
 
 import sys
-import tornado.locale
+import logging
+from builtins import str
+from os import _exit, urandom
+from os import path as os_path
 
-from setup import __version__
-from os import urandom, _exit, path as os_path
-from tornado import netutil, locale
-from tornado.web import Application
+import tornado.locale
+from sqlalchemy.exc import OperationalError
+from tornado import locale, netutil
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
 from tornado.options import options
-from sqlalchemy.exc import OperationalError
-from alembic.config import Config, command
-from builtins import str
+from tornado.web import Application
 
-from modules.Menu import Menu
-from modules.Recaptcha import Recaptcha
-from modules.AppTheme import AppTheme
-from libs.ConsoleColors import *
-from libs.Scoreboard import Scoreboard, score_bots
-from libs.DatabaseConnection import DatabaseConnection
-from libs.StringCoding import encode
-from handlers.BotnetHandlers import *
-from handlers.UserHandlers import *
+from alembic.config import Config, command
 from handlers.AdminHandlers import *
 from handlers.APIHanders import *
-from handlers.ErrorHandlers import *
-from handlers.PublicHandlers import *
-from handlers.MarketHandlers import *
-from handlers.UpgradeHandlers import *
-from handlers.MissionsHandler import *
-from handlers.PastebinHandlers import *
-from handlers.ScoreboardHandlers import *
-from handlers.FileUploadHandlers import *
-from handlers.NotificationHandlers import *
-from handlers.MaterialsHandler import *
+from handlers.BotnetHandlers import *
 from handlers.ChefHandler import *
+from handlers.ErrorHandlers import *
+from handlers.FileUploadHandlers import *
+from handlers.MarketHandlers import *
+from handlers.MaterialsHandler import *
+from handlers.MissionsHandler import *
+from handlers.NotificationHandlers import *
+from handlers.PastebinHandlers import *
+from handlers.PublicHandlers import *
+from handlers.ScoreboardHandlers import *
 from handlers.StaticFileHandler import StaticFileHandler
-
+from handlers.UpgradeHandlers import *
+from handlers.UserHandlers import *
+from libs.ConsoleColors import *
+from libs.DatabaseConnection import DatabaseConnection
+from libs.Scoreboard import Scoreboard, score_bots
+from libs.StringCoding import encode
+from modules.AppTheme import AppTheme
+from modules.Menu import Menu
+from modules.Recaptcha import Recaptcha
+from setup import __version__
 
 try:
     from urllib.parse import unquote

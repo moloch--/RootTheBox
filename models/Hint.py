@@ -21,17 +21,18 @@ Created on Aug 11, 2013
 
 
 import xml.etree.cElementTree as ET
-
-from uuid import uuid4
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, Integer, String
-from libs.ValidationError import ValidationError
-from models.BaseModels import DatabaseObject
-from models.Relationships import team_to_hint
-from models.Flag import Flag
-from models.Box import Box
-from models import dbsession
 from builtins import str
+from uuid import uuid4
+
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.types import Integer, String, Unicode
+
+from libs.ValidationError import ValidationError
+from models import dbsession
+from models.BaseModels import DatabaseObject
+from models.Box import Box
+from models.Flag import Flag
+from models.Relationships import team_to_hint
 
 
 class Hint(DatabaseObject):

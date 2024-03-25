@@ -24,8 +24,8 @@ Setup / delete the unit test database
 """
 
 
-import os
 import logging
+import os
 
 from tornado.options import options
 

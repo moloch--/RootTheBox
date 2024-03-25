@@ -23,43 +23,44 @@ Handlers related to controlling and configuring the overall game.
 """
 # pylint: disable=unused-wildcard-import,no-member
 
+import logging
 import os
 import subprocess
-import logging
-import defusedxml.minidom
-import xml.etree.cElementTree as ET
 import time
-
-from tempfile import NamedTemporaryFile
+import xml.etree.cElementTree as ET
 from builtins import str
-from models.Flag import Flag
-from models.Box import Box
-from models.Swat import Swat
-from models.GameLevel import GameLevel
-from models.User import ADMIN_PERMISSION
-from models.Team import Team
-from models.Theme import Theme
-from models.Penalty import Penalty
-from models.SourceCode import SourceCode
-from models.Corporation import Corporation
-from models.Category import Category
-from models.Notification import Notification
-from models.RegistrationToken import RegistrationToken
-from models.EmailToken import EmailToken
-from libs.EventManager import EventManager
-from libs.SecurityDecorators import *
-from libs.StringCoding import encode, decode
-from libs.ValidationError import ValidationError
+from datetime import datetime
+from string import printable
+from tempfile import NamedTemporaryFile
+
+import defusedxml.minidom
+from past.builtins import basestring
+from tornado.ioloop import PeriodicCallback
+from tornado.options import options
+
+from handlers.BaseHandlers import BaseHandler
 from libs.ConfigHelpers import save_config
 from libs.ConsoleColors import *
-from libs.Scoreboard import score_bots, Scoreboard
-from handlers.BaseHandlers import BaseHandler
-from string import printable
+from libs.EventManager import EventManager
+from libs.Scoreboard import Scoreboard, score_bots
+from libs.SecurityDecorators import *
+from libs.StringCoding import decode, encode
+from libs.ValidationError import ValidationError
+from models.Box import Box
+from models.Category import Category
+from models.Corporation import Corporation
+from models.EmailToken import EmailToken
+from models.Flag import Flag
+from models.GameLevel import GameLevel
+from models.Notification import Notification
+from models.Penalty import Penalty
+from models.RegistrationToken import RegistrationToken
+from models.SourceCode import SourceCode
+from models.Swat import Swat
+from models.Team import Team
+from models.Theme import Theme
+from models.User import ADMIN_PERMISSION
 from setup.xmlsetup import import_xml
-from tornado.options import options
-from tornado.ioloop import PeriodicCallback
-from past.builtins import basestring
-from datetime import datetime
 
 
 class AdminGameHandler(BaseHandler):

@@ -7,11 +7,11 @@ This module implements sessions for Tornado using Memcached.
 """
 
 
-import re
-import os
-import sys
 import json
 import logging
+import os
+import re
+import sys
 
 if sys.version_info.major >= 3 and sys.version_info.minor >= 10:
     from collections.abc import MutableMapping
@@ -25,8 +25,10 @@ except ImportError:
 
 from builtins import str
 from datetime import datetime, timedelta
+
 from tornado.options import options
-from libs.StringCoding import encode, decode
+
+from libs.StringCoding import decode, encode
 
 
 class BaseSession(MutableMapping):

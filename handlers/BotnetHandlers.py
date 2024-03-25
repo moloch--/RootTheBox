@@ -21,23 +21,24 @@ Created on Mar 15, 2012
 # pylint: disable=unused-wildcard-import,no-member
 
 
-import os
+import binascii
 import json
 import logging
-import tornado.websocket
-import binascii
-
-
-from uuid import uuid4
+import os
+from builtins import str
 from hashlib import sha512
+from uuid import uuid4
+
+import tornado.websocket
+from tornado.options import options
+
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
-from libs.StringCoding import encode, decode
-from builtins import str
-from models import Box, Team, User
-from .BaseHandlers import BaseHandler, BaseWebSocketHandler
 from libs.SecurityDecorators import *
-from tornado.options import options
+from libs.StringCoding import decode, encode
+from models import Box, Team, User
+
+from .BaseHandlers import BaseHandler, BaseWebSocketHandler
 
 
 class BotSocketHandler(tornado.websocket.WebSocketHandler):

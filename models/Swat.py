@@ -20,15 +20,17 @@ Created on Mar 12, 2012
 """
 
 
+from builtins import str
 from uuid import uuid4
+
 from sqlalchemy import Column, ForeignKey, desc
 from sqlalchemy.sql import and_
-from sqlalchemy.types import Integer, Boolean, String
-from models import dbsession
-from models.User import User
-from models.BaseModels import DatabaseObject
+from sqlalchemy.types import Boolean, Integer, String
 from tornado.options import options
-from builtins import str
+
+from models import dbsession
+from models.BaseModels import DatabaseObject
+from models.User import User
 
 
 class Swat(DatabaseObject):
@@ -54,7 +56,7 @@ class Swat(DatabaseObject):
     def all_pending(cls):
         return (
             dbsession.query(cls)
-            .filter(and_(cls.accepted == False, cls.completed == False))
+            .filter(and_(cls.accepted is False, cls.completed is False))
             .order_by(desc(cls.created))
             .all()
         )
@@ -63,7 +65,7 @@ class Swat(DatabaseObject):
     def all_in_progress(cls):
         return (
             dbsession.query(cls)
-            .filter(and_(cls.accepted == True, cls.completed == False))
+            .filter(and_(cls.accepted is True, cls.completed is False))
             .order_by(desc(cls.created))
             .all()
         )
@@ -82,7 +84,7 @@ class Swat(DatabaseObject):
         return (
             dbsession.query(cls)
             .filter_by(completed=False)
-            .filter(and_(cls.accepted == False, cls.target_id == uid))
+            .filter(and_(cls.accepted is False, cls.target_id == uid))
             .all()
         )
 
@@ -90,7 +92,7 @@ class Swat(DatabaseObject):
     def in_progress_by_target_id(cls, uid):
         return (
             dbsession.query(cls)
-            .filter(and_(cls.accepted == True, cls.completed == False))
+            .filter(and_(cls.accepted is True, cls.completed is False))
             .filter_by(target_id=uid)
             .all()
         )
@@ -120,7 +122,7 @@ class Swat(DatabaseObject):
         """Return the number of completed bribes in database"""
         return (
             dbsession.query(cls)
-            .filter(and_(cls.completed == True, cls.target_id == uid))
+            .filter(and_(cls.completed is True, cls.target_id == uid))
             .count()
         )
 

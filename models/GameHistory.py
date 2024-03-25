@@ -21,12 +21,14 @@ Created on Mar 3, 2023
 # pylint: disable=no-member
 
 import json
-from models import dbsession
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, String, Integer
-from models.BaseModels import DatabaseObject
 from builtins import str
+
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.types import Integer, String, Unicode
 from tornado.options import options
+
+from models import dbsession
+from models.BaseModels import DatabaseObject
 
 
 class GameHistory(DatabaseObject):

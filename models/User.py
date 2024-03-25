@@ -25,38 +25,45 @@ indiviudal user, such as handle/account/password/etc
 """
 
 
-import os
 import imghdr
-import string
-import random
 import io
+import os
+import random
+import string
 import xml.etree.cElementTree as ET
-from uuid import uuid4
+from builtins import str
 from datetime import datetime
 from hashlib import md5, sha1, sha256, sha512
-from pbkdf2 import PBKDF2
-from sqlalchemy import Column, ForeignKey, desc, func
-from sqlalchemy.orm import synonym, relationship, backref
-from sqlalchemy.types import Unicode, Integer, String, Boolean, DateTime
-from models import dbsession
-from models.Permission import Permission
-from models.MarketItem import MarketItem
-from models.BaseModels import DatabaseObject
-from models.EmailToken import EmailToken
-from models.Theme import Theme
-from models.Relationships import user_to_flag
-from libs.XSSImageCheck import MAX_AVATAR_SIZE, MIN_AVATAR_SIZE, IMG_FORMATS
-from libs.XSSImageCheck import is_xss_image, get_new_avatar, default_avatar
-from libs.ValidationError import ValidationError
-from libs.WebhookHelpers import send_user_validated_webhook
 from string import printable
-from tornado.options import options
+from uuid import uuid4
+
+from past.builtins import basestring
+from pbkdf2 import PBKDF2
 from PIL import Image
 from resizeimage import resizeimage
-from libs.StringCoding import encode
-from builtins import str
-from past.builtins import basestring
+from sqlalchemy import Column, ForeignKey, desc, func
+from sqlalchemy.orm import backref, relationship, synonym
+from sqlalchemy.types import Boolean, DateTime, Integer, String, Unicode
+from tornado.options import options
 
+from libs.StringCoding import encode
+from libs.ValidationError import ValidationError
+from libs.WebhookHelpers import send_user_validated_webhook
+from libs.XSSImageCheck import (
+    IMG_FORMATS,
+    MAX_AVATAR_SIZE,
+    MIN_AVATAR_SIZE,
+    default_avatar,
+    get_new_avatar,
+    is_xss_image,
+)
+from models import dbsession
+from models.BaseModels import DatabaseObject
+from models.EmailToken import EmailToken
+from models.MarketItem import MarketItem
+from models.Permission import Permission
+from models.Relationships import user_to_flag
+from models.Theme import Theme
 
 # Constants
 ADMIN_PERMISSION = "admin"

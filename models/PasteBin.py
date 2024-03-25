@@ -20,13 +20,15 @@ Created on Mar 12, 2012
 """
 
 
+from builtins import str
 from uuid import uuid4
+
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, Integer, String
+from sqlalchemy.types import Integer, String, Unicode
+from tornado.options import options
+
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from tornado.options import options
-from builtins import str
 
 
 class PasteBin(DatabaseObject):

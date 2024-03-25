@@ -12,9 +12,10 @@ http://jklmnn.de/imagejs/
 """
 
 import os
-from string import printable
-from tornado.options import options
 from random import randint, sample
+from string import printable
+
+from tornado.options import options
 
 MAX_AVATAR_SIZE = 1024 * 1024
 MIN_AVATAR_SIZE = 64

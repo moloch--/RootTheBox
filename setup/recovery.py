@@ -23,17 +23,17 @@ The all powerful recovery console
 # pylint: disable=unused-wildcard-import
 
 
-import os
 import cmd
-import sys
 import getpass
+import os
+import sys
+from builtins import input, str
 
 from libs.ConsoleColors import *
-from builtins import str, input
+from models import dbsession
 
 # We have to import all of the classes to avoid mapper errors
 from setup.create_database import *
-from models import dbsession
 
 
 class RecoveryConsole(cmd.Cmd):

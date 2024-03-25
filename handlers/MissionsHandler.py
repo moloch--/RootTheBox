@@ -24,23 +24,23 @@ This file contains the code for displaying flags / recv flag submissions
 """
 
 
-import logging
 import json
+import logging
+from builtins import next, str
 
-from tornado.options import options
-from builtins import next
-from builtins import str
 from past.utils import old_div
+from tornado.options import options
+
+from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import authenticated, game_started
 from libs.StringCoding import decode, encode
 from libs.WebhookHelpers import *
-from handlers.BaseHandlers import BaseHandler
-from models.GameLevel import GameLevel
-from models.Flag import Flag
-from models.Team import Team
 from models.Box import Box, FlagsSubmissionType
+from models.Flag import Flag
+from models.GameLevel import GameLevel
 from models.Hint import Hint
 from models.Penalty import Penalty
+from models.Team import Team
 
 
 class FirstLoginHandler(BaseHandler):
@@ -328,25 +328,28 @@ class BoxHandler(BaseHandler):
                 + ". "
                 + reward_dialog
             )
-
             # Fire level complete webhook
             send_level_complete_webhook(user, level)
+
+            # Unlock level if based on level completion
+            for lv in GameLevel.all():
+                if (
+                    lv not in user.team.game_levels
+                    and lv.type == "level"
+                    and lv.buyout == level.id
+                ):
+                    msg = self.unlock_level(lv, user)
+                    success.append(msg)
 
         # Unlock level if based on Game Score
         for lv in GameLevel.all():
             if (
-                lv.type == "points"
+                lv not in user.team.game_levels
+                and lv.type == "points"
                 and lv.buyout <= user.team.money
-                and lv not in user.team.game_levels
             ):
-                logging.info(
-                    "%s (%s) unlocked %s" % (user.handle, user.team.name, lv.name)
-                )
-                user.team.game_levels.append(lv)
-                self.dbsession.add(user.team)
-                self.dbsession.commit()
-                self.event_manager.level_unlocked(user, lv)
-                success.append("Congratulations! You have unlocked " + lv.name)
+                msg = self.unlock_level(lv, user)
+                success.append(msg)
 
         # Unlock next level if based on Game Progress
         next_level = GameLevel.by_id(level.next_level_id)
@@ -355,17 +358,19 @@ class BoxHandler(BaseHandler):
                 next_level._type == "progress"
                 and level_progress * 100 >= next_level.buyout
             ):
-                logging.info(
-                    "%s (%s) unlocked %s"
-                    % (user.handle, user.team.name, next_level.name)
-                )
-                user.team.game_levels.append(next_level)
-                self.dbsession.add(user.team)
-                self.dbsession.commit()
-                self.event_manager.level_unlocked(user, next_level)
-                success.append("Congratulations! You have unlocked " + next_level.name)
+                msg = self.unlock_level(next_level)
+                success.append(msg)
         self.event_manager.push_score_update()
         return success
+
+    def unlock_level(self, level, user):
+        logging.info(f"{user.handle} ({user.team.name}) unlocked {level.name}")
+        send_level_complete_webhook(user, level)
+        user.team.game_levels.append(level)
+        self.dbsession.add(user.team)
+        self.dbsession.commit()
+        self.event_manager.level_unlocked(user, level)
+        return f"Congratulations! You have unlocked {level.name}"
 
     def failed_capture(self, flag, submission):
         user = self.get_current_user()
@@ -539,7 +544,6 @@ class PurchaseHintHandler(BaseHandler):
 
 
 class MissionsHandler(BaseHandler):
-
     """Renders pages related to Missions/Flag submissions"""
 
     @authenticated

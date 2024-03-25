@@ -6,22 +6,22 @@ Unit tests for everything in models/
 
 import unittest
 
+from libs.StringCoding import encode
+from libs.ValidationError import ValidationError
 from models import dbsession
+from models.Box import Box
+from models.Corporation import Corporation
+from models.Flag import (
+    FLAG_CHOICE,
+    FLAG_DATETIME,
+    FLAG_FILE,
+    FLAG_REGEX,
+    FLAG_STATIC,
+    Flag,
+)
+from models.GameLevel import GameLevel
 from models.Team import Team
 from models.User import User
-from models.Corporation import Corporation
-from models.Box import Box
-from models.GameLevel import GameLevel
-from models.Flag import (
-    Flag,
-    FLAG_STATIC,
-    FLAG_REGEX,
-    FLAG_FILE,
-    FLAG_DATETIME,
-    FLAG_CHOICE,
-)
-from libs.ValidationError import ValidationError
-from libs.StringCoding import encode
 from tests.Helpers import *
 
 

@@ -28,22 +28,21 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
 # pylint: disable=unused-variable
 
 
-import os
-import sys
-import json
-import uuid
+import argparse
 import array
+import base64
+import codecs
+import hashlib
+import json
+import logging
+import os
+import platform
 import socket
 import ssl
 import struct
-import base64
-import hashlib
-import logging
-import argparse
-import platform
+import sys
 import traceback
-import codecs
-
+import uuid
 from builtins import str
 
 try:
@@ -54,10 +53,9 @@ try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
+from builtins import chr, object, range
 from datetime import datetime
-from hashlib import sha512, sha1
-from builtins import range, object, chr
-
+from hashlib import sha1, sha512
 
 ### Settings
 __version__ = "0.1.1"
@@ -102,7 +100,8 @@ else:
 INFO = bold + C + "[*]" + W
 WARN = bold + R + "[!]" + W
 PROMPT = bold + P + "[?]" + W
-current_time = lambda: str(datetime.now()).split(" ")[1].split(".")[0]
+def current_time():
+    return str(datetime.now()).split(" ")[1].split(".")[0]
 
 """
 websocket python client.
@@ -250,7 +249,7 @@ def create_connection(url, timeout=None, **options):
     """
     sockopt = options.get("sockopt", ())
     websock = WebSocket(sockopt=sockopt)
-    websock.settimeout(timeout != None and timeout or default_timeout)
+    websock.settimeout(timeout is not None and timeout or default_timeout)
     websock.connect(url, **options)
     return websock
 

@@ -27,10 +27,12 @@ This file contains handlers related to the "Black Market" functionality
 import logging
 
 from tornado.options import options
-from .BaseHandlers import BaseHandler
+
+from libs.SecurityDecorators import authenticated, game_started, use_black_market
 from models.MarketItem import MarketItem
 from models.Team import Team
-from libs.SecurityDecorators import authenticated, use_black_market, game_started
+
+from .BaseHandlers import BaseHandler
 
 
 class MarketViewHandler(BaseHandler):

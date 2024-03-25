@@ -21,13 +21,14 @@ Created on Mar 12, 2012
 
 
 import xml.etree.cElementTree as ET
-
-from uuid import uuid4
-from sqlalchemy import Column
-from sqlalchemy.types import Unicode, String, Boolean
-from sqlalchemy.orm import relationship, backref
-from libs.ValidationError import ValidationError
 from builtins import str
+from uuid import uuid4
+
+from sqlalchemy import Column
+from sqlalchemy.orm import backref, relationship
+from sqlalchemy.types import Boolean, String, Unicode
+
+from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
 
@@ -96,7 +97,7 @@ class Corporation(DatabaseObject):
     @property
     def locked(self):
         """Determines if an admin has locked an corp."""
-        if self._locked == None:
+        if self._locked is None:
             return False
         return self._locked
 

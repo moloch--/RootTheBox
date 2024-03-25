@@ -18,8 +18,8 @@
 """
 
 
-from threading import Lock
 from builtins import object
+from threading import Lock
 
 
 class Singleton(object):

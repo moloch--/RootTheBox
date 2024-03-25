@@ -33,22 +33,23 @@ For the sake of portability everything is in one file
 ###################
 # > Imports
 ###################
-import os
-import sys
-import time
-import json
-import uuid
-import array
-import struct
-import base64
-import socket
-import random
-import hashlib
-import logging
 import argparse
+import array
+import base64
+import hashlib
+import json
+import logging
+import os
 import platform
+import random
+import socket
+import struct
+import sys
 import threading
-from builtins import range, object, chr, str
+import time
+import uuid
+from builtins import chr, object, range, str
+
 from past.utils import old_div
 
 try:
@@ -56,6 +57,7 @@ try:
 except ImportError:
     from urlparse import urlparse
 from datetime import datetime
+
 from libs.StringCoding import encode
 
 try:

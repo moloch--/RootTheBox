@@ -21,19 +21,19 @@ Created on Mar 15, 2012
 
 
 import os
-
+from builtins import str
+from mimetypes import guess_type
+from string import printable
 from uuid import uuid4
+
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.types import Integer, String, Unicode
+from tornado.options import options
+
+from libs.StringCoding import decode, encode
+from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Unicode, String, Integer
-from mimetypes import guess_type
-from tornado.options import options
-from string import printable
-from libs.ValidationError import ValidationError
-from libs.StringCoding import encode, decode
-from builtins import str
-
 
 MAX_FILE_SIZE = 50 * (1024**2)  # Max file size 50Mb
 

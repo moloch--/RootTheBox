@@ -20,17 +20,18 @@ Created on Mar 12, 2012
 """
 
 import os
-
-from uuid import uuid4
+from builtins import str
 from hashlib import sha1
+from uuid import uuid4
+
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import String, Unicode, Integer
+from sqlalchemy.types import Integer, String, Unicode
+from tornado.options import options
+
+from libs.StringCoding import decode, encode
+from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
-from libs.ValidationError import ValidationError
-from tornado.options import options
-from libs.StringCoding import encode, decode
-from builtins import str
 
 
 class SourceCode(DatabaseObject):

@@ -53,6 +53,7 @@
                         <select id="game_level-type" name="type">
                             <option value="none">{{ _("No Lock") }}</option>
                             <option value="locked">{{ _("Locked") }}</option>
+                            <option value="level">{{ _("Level Completion" )}}</option>
                             <option value="buyout">{{ _("Purchase Unlock") }}</option>
                             <option value="progress">{{ _("Game Progress") }}</option>
                             <option value="points">{{ _("Game Points") }}</option>
@@ -61,9 +62,17 @@
                     </div>
                 </div>
                 <div id="buyoutcost" class="control-group">
-                    <label id="buyoutlabel" class="control-label" for="game_level-buyout">{{ _("Unlock Cost") }}</label>
+                    <label id="buyoutlabel" class="control-label" for="buyout">{{ _("Unlock Cost") }}</label>
                     <div class="controls">
-                        <input id="game_level-buyout" name="buyout" pattern="[0-9]+" placeholder="" type="number" min=0 />
+                        <input id="buyout" name="buyout" pattern="[0-9]+" placeholder="" type="number" min=0 />
+                        <select id="buyoutlvl" name="buyoutlvl"
+                            rel="popover"
+                            data-original-title="Level Completed"
+                            data-content="Complete this level for unlock">
+                            {% for lv in game_levels %}
+                                <option value="{{ lv.id }}">{{ lv.name }}</option>
+                            {% end %}
+                     </select>
                     </div>
                 </div>
                 <div class="control-group">
@@ -254,6 +263,12 @@
                         <i class="fa fa-lock"></i> {{ _("Unlocks for") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
                     {% elif level.type == "points" %}
                         <i class="fa fa-lock"></i> {{ _("Unlocks at") }} {% if options.banking %}{{ _("$") }}{% end %}{{ level.buyout }}{% if not options.banking %} {{ _("points") }}{% end %}
+                    {% elif level.type == "level" %}
+                        {% for lv in game_levels %}
+                            {% if lv.id == level.buyout %}
+                                <i class="fa fa-lock"></i> {{ _("Unlocks after") }} {{ _("completion of Level") }} {{ lv.number }}
+                            {% end %}
+                        {% end %}
                     {% else %}
                         {% set last = GameLevel.last_level(level.id) %}
                         <i class="fa fa-lock"></i> {{ _("Unlocks after") }} {{ level.buyout }}% {{ _("completion of Level") }} {% if last %}{{ last.number }}{% end %}

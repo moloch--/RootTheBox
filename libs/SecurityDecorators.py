@@ -19,11 +19,12 @@ Created on Mar 13, 2012
 """
 
 
-import logging
 import functools
+import logging
+
+from tornado.options import options
 
 from models.User import User
-from tornado.options import options
 
 
 def apikey(method):
