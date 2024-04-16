@@ -478,7 +478,8 @@
 				thirdAnimator.addSubject(new ColorStyleSubject(wrapper, "background-color", animationSetting.backgroundColor, getColourOfBackground(newCell)));
 				thirdAnimator.addSubject(new NumericalStyleSubject(wrapper, "left", animationSetting.left, 0));
 
-			} else {  //must be in stay put..
+			} else if (newTBody && newTBody.rows && newTBody.rows[row]) {
+				//must be in stay put..
 				newCell = newTBody.rows[row].cells[column];
 			}
 			
