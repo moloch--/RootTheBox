@@ -358,7 +358,7 @@ class BoxHandler(BaseHandler):
                 next_level._type == "progress"
                 and level_progress * 100 >= next_level.buyout
             ):
-                msg = self.unlock_level(next_level)
+                msg = self.unlock_level(next_level, user)
                 success.append(msg)
         self.event_manager.push_score_update()
         return success
