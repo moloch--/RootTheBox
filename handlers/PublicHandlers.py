@@ -584,7 +584,7 @@ class RegistrationHandler(BaseHandler):
 
     def get_team(self):
         """Create a team object, or pull the existing one"""
-        code = self.get_argument("team-code", "")
+        code = self.get_argument("team-code", "").strip()
         if len(code) > 0:
             team = Team.by_code(code)
             if not team:
@@ -738,7 +738,7 @@ class JoinTeamHandler(BaseHandler):
             if self.application.settings["suspend_registration"]:
                 self.render("public/jointeam.html", errors=None, suspend=True)
             else:
-                code = self.get_argument("team-code", "")
+                code = self.get_argument("team-code", "").strip()
                 code = self.validate_teamcode(code)
                 login_hint = self.get_argument("login-hint", None)
                 if len(login_hint) == 0:

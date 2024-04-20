@@ -37,6 +37,12 @@ $(document).ready(function() {
     $("#regtoken").popover({placement:'right', trigger:'focus'});
     changeTeamMode($("input[name='teammode']:checked").val());
 
+    $('input[type="radio"].teammode[value="create"]').change(function() {
+        if ($(this).is(':checked')) {
+            $('#team-code').val('');
+        }
+    });
+
     /* Avatar */
     $(".useravatarimg").click(function() {
         var filename = $(this).attr('value');
