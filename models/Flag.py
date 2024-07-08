@@ -462,6 +462,7 @@ class Flag(DatabaseObject):
         ET.SubElement(flag_elem, "description").text = self.description
         ET.SubElement(flag_elem, "capture_message").text = self.capture_message
         ET.SubElement(flag_elem, "value").text = str(self.value)
+        ET.SubElement(flag_elem, "plain_answer").text = str(self._plain_answer)
         ET.SubElement(flag_elem, "locked").text = str(self.locked)
         if self.lock_id:
             ET.SubElement(flag_elem, "depends_on").text = Flag.by_id(self.lock_id).name
