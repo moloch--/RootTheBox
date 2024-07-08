@@ -144,6 +144,7 @@ def create_flags(parent, box):
                 flag.name = get_child_text(flag_elem, "name")
                 flag.token = get_child_text(flag_elem, "token")
                 flag.value = get_child_text(flag_elem, "value", 10)
+                flag._plain_answer = get_child_text(flag_elem, "plain_answer")
                 flag.case_sensitive = get_child_text(flag_elem, "case_sensitive", 0)
                 flag.description = get_child_text(flag_elem, "description")
                 flag.capture_message = get_child_text(flag_elem, "capture_message")
