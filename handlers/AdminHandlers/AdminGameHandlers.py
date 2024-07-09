@@ -600,7 +600,7 @@ class AdminExportHandler(BaseHandler):
         """
         levels_elem = ET.SubElement(root, "gamelevels")
         levels_elem.set("count", "%s" % str(GameLevel.count()))
-        for level in GameLevel.all()[1:]:
+        for level in GameLevel.all():
             level.to_xml(levels_elem)
         category_elem = ET.SubElement(root, "categories")
         category_elem.set("count", "%s" % str(Category.count()))
