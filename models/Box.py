@@ -410,6 +410,7 @@ class Box(DatabaseObject):
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", "%s" % str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
+        ET.SubElement(box_elem, "order").text = self._order
         ET.SubElement(box_elem, "gamelevel").text = str(self.game_level.number)
         ET.SubElement(box_elem, "operatingsystem").text = self._operating_system
         ET.SubElement(box_elem, "description").text = self._description
