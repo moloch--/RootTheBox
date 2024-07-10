@@ -246,11 +246,12 @@ def create_boxes(parent, corporation):
                 box.value = get_child_text(box_elem, "value", "0")
                 box_order = get_child_text(box_elem, "order", None)
                 if box_order:
-                    box.order = box_order
+                    box._order = int(box_order)
                 if get_child_text(box_elem, "avatar", "none") != "none":
-                    box.avatar = bytearray(
+                    avatar_path = get_child_text(box_elem, "avatar_path", "upload")
+                    box.avatar = (bytearray(
                         b64decode(get_child_text(box_elem, "avatar"))
-                    )
+                    ), avatar_path)
                 box.garbage = get_child_text(
                     box_elem, "garbage", binascii.hexlify(urandom(16)).decode()
                 )
