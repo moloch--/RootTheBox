@@ -84,35 +84,48 @@ def create_levels(levels):
     if levels is None:
         return
     logging.info("Found %s game level(s)" % levels.get("count"))
+    missing_level_buyouts = {}
     for index, level_elem in enumerate(levels):
         # GameLevel 0 is created automatically by the bootstrap
         try:
-            number = get_child_text(level_elem, "number")
-
-            if number == "0" or GameLevel.by_number(number) is None:
-                if number != "0":
-                    game_level = GameLevel()
-                else:
-                    game_level = GameLevel.by_id(0)
-                    if game_level is None:
-                        game_level = GameLevel()
-                game_level.number = number
+            number = get_child_text(level_elem, "number")            
+            if GameLevel.by_number(number) is None:
+                game_level = GameLevel()
+                game_level.number = int(number)
                 game_level.name = get_child_text(level_elem, "name")
+                game_level.description = get_child_text(level_elem, "description")
                 game_level.type = get_child_text(level_elem, "type")
                 game_level.reward = get_child_text(level_elem, "reward", 0)
                 game_level.buyout = get_child_text(level_elem, "buyout", 0)
+                if game_level.type == "level":
+                    buyoutlevel = GameLevel.by_number(game_level.buyout)
+                    if buyoutlevel:
+                        game_level.buyout = buyoutlevel.id
+                    else:
+                        missing_level_buyouts[game_level.number] = game_level.buyout
                 dbsession.add(game_level)
             else:
                 logging.info("GameLevel %d already exists, skipping" % int(number))
         except:
             logging.exception("Failed to import game level #%d" % (index + 1))
+    dbsession.commit()
     dbsession.flush()
     game_levels = GameLevel.all()
+    if len(missing_level_buyouts):
+        logging.info(f"Missing buyouts to update: {len(missing_level_buyouts)}")
     for index, game_level in enumerate(game_levels):
         if index + 1 < len(game_levels):
             game_level.next_level_id = game_levels[index + 1].id
             logging.info("%r -> %r" % (game_level, game_levels[index + 1]))
-            dbsession.add(game_level)
+            missing_buyout_level = missing_level_buyouts.get(game_level.number, None)            
+            if missing_buyout_level:
+                logging.info(f"attempting update for level {game_level.id} buyout after level {missing_buyout_level}")
+                buyoutlevel = GameLevel.by_number(missing_buyout_level)
+                if buyoutlevel:                    
+                    game_level.buyout = buyoutlevel.id
+                    logging.info(f"game_level {game_level.id} buyout {missing_buyout_level} -> {buyoutlevel.id}")
+            
+            # dbsession.add(game_level)
     dbsession.commit()
 
 
