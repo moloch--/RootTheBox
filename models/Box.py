@@ -346,23 +346,26 @@ class Box(DatabaseObject):
 
     @avatar.setter
     def avatar(self, image_data):
+        avatar_path = "upload"
+        if isinstance(image_data, tuple):
+            image_data, avatar_path = image_data
+            
         if self.uuid is None:
             self.uuid = str(uuid4())
         if len(image_data) < (1024 * 1024):
             ext = imghdr.what("", h=image_data)
             if ext in ["png", "jpeg", "gif", "bmp"] and not is_xss_image(image_data):
-                try:
-                    if self._avatar is not None and os.path.exists(
-                        options.avatar_dir + "/upload/" + self._avatar
-                    ):
-                        os.unlink(options.avatar_dir + "/upload/" + self._avatar)
-                    file_path = str(
-                        options.avatar_dir + "/upload/" + self.uuid + "." + ext
-                    )
+                try:                    
+                    if self._avatar is not None:
+                        current_image_path = os.path.join(options.avatar_dir, avatar_path, self._avatar) if avatar_path == "upload" else os.path.join(options.avatar_dir, avatar_path)
+                        if os.path.exists(current_image_path):
+                            os.unlink(current_image_path)
+                    
+                    new_image_path = os.path.join(avatar_path, f"{self.uuid}.{ext}") if avatar_path == "upload" else avatar_path
                     image = Image.open(io.BytesIO(image_data))
                     cover = resizeimage.resize_cover(image, [500, 250])
-                    cover.save(file_path, image.format)
-                    self._avatar = "upload/" + self.uuid + "." + ext
+                    cover.save(os.path.join(options.avatar_dir,new_image_path), image.format)
+                    self._avatar = new_image_path
                 except Exception as e:
                     raise ValidationError(e)
             else:
@@ -410,7 +413,6 @@ class Box(DatabaseObject):
         box_elem = ET.SubElement(parent, "box")
         box_elem.set("gamelevel", "%s" % str(self.game_level.number))
         ET.SubElement(box_elem, "name").text = self.name
-        ET.SubElement(box_elem, "order").text = self._order
         ET.SubElement(box_elem, "order").text = str(self._order)
         ET.SubElement(box_elem, "gamelevel").text = str(self.game_level.number)
         ET.SubElement(box_elem, "operatingsystem").text = self._operating_system
@@ -448,6 +450,8 @@ class Box(DatabaseObject):
         if self.avatar and os.path.isfile(avatarfile):
             with open(avatarfile, mode="rb") as _avatar:
                 data = _avatar.read()
+                if not "upload" in self.avatar:
+                    ET.SubElement(box_elem, "avatar_path").text = self.avatar
                 ET.SubElement(box_elem, "avatar").text = encode(data, "base64")
         else:
             ET.SubElement(box_elem, "avatar").text = "none"

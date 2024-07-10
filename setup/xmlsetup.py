@@ -309,7 +309,38 @@ def update_configuration(config):
         except BaseException as e:
             logging.exception("Failed to update configuration (%s)" % e)
     save_config()
-
+    
+def check_import_options(options):
+    """Check and handle import options based on XML data"""
+    
+    # User can add the following to the XML <import_options clear_levels="1" clear_corps="1" />
+    if options is None:
+        return
+    
+    try:
+        clear_levels = int(options.get("clear_levels", "0"))
+    except:
+        clear_levels = 0
+        pass
+    
+    if clear_levels == 1:
+        logging.info("Clearing Levels Before Import")
+        game_levels = GameLevel.all()
+        for level in game_levels:
+            dbsession.delete(level)
+        dbsession.commit()
+    
+    try:
+        clear_corps = int(options.get("clear_corps", "0"))
+    except:
+        clear_corps = 0
+    
+    if clear_corps == 1:
+        logging.info("Clearing Corporations Before Import")
+        corps = Corporation.all()
+        for corp in corps:
+            dbsession.delete(corp)
+        dbsession.commit()
 
 def _xml_file_import(filename):
     """Parse and import a single XML file"""
@@ -317,6 +348,8 @@ def _xml_file_import(filename):
     try:
         tree = ET.parse(filename)
         xml_root = tree.getroot()
+        import_options = get_child_by_tag(xml_root, "import_options")
+        check_import_options(import_options)
         levels = get_child_by_tag(xml_root, "gamelevels")
         create_levels(levels)
         categories = get_child_by_tag(xml_root, "categories")
