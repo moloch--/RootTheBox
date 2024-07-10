@@ -203,8 +203,15 @@ class GameLevel(DatabaseObject):
     def to_xml(self, parent):
         level_elem = ET.SubElement(parent, "gamelevel")
         ET.SubElement(level_elem, "number").text = str(self.number)
-        ET.SubElement(level_elem, "buyout").text = str(self.buyout)
         ET.SubElement(level_elem, "type").text = str(self._type)
+        if str(self._type) == "level":
+            buyoutlevel = GameLevel.by_id(self.buyout)
+            if buyoutlevel:
+                ET.SubElement(level_elem, "buyout").text = str(buyoutlevel.number)
+            else:
+                ET.SubElement(level_elem, "buyout").text = "0"
+        else:
+            ET.SubElement(level_elem, "buyout").text = str(self.buyout)
         ET.SubElement(level_elem, "reward").text = str(self._reward)
         ET.SubElement(level_elem, "name").text = str(self._name)
         ET.SubElement(level_elem, "description").text = str(self._description)
