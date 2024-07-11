@@ -66,6 +66,7 @@ function getDetails(obj, uuid) {
             $("#buyout").hide();
             $("#buyoutlvl").show();
             $("#buyoutlabel").text("Completion of Level");
+            $("#buyoutlvl" + ' option[value=' + response["buyout"] + ']').prop('selected',true);
         } else if (type == "buyout") {
             if (response["buyout"] === 0) {
                 type = "none"

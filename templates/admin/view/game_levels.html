@@ -266,7 +266,7 @@
                     {% elif level.type == "level" %}
                         {% for lv in game_levels %}
                             {% if lv.id == level.buyout %}
-                                <i class="fa fa-lock"></i> {{ _("Unlocks after") }} {{ _("completion of Level") }} {{ lv.number }}
+                                <i class="fa fa-lock"></i> {{ _("Unlocks after") }} {{ _("completion of Level") }} {{ lv.number }} - {{ lv.name }}
                             {% end %}
                         {% end %}
                     {% else %}

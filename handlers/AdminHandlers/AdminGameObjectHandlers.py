@@ -1164,15 +1164,16 @@ class AdminDeleteHandler(BaseHandler):
                 self.del_box(box)
             game_levels = sorted(GameLevel.all())
             game_levels.remove(game_level)
+            self.dbsession.delete(game_level)
             for index, level in enumerate(game_levels[:-1]):
                 level.next_level_id = game_levels[index + 1].id
                 self.dbsession.add(level)
-            if game_levels[0].number != 0:
-                game_levels[0].number = 0
-            self.dbsession.add(game_levels[0])
-            game_levels[-1].next_level_id = None
-            self.dbsession.add(game_levels[-1])
-            self.dbsession.delete(game_level)
+            if len(game_levels):
+                if game_levels[0].number != 0:
+                    game_levels[0].number = 0
+                self.dbsession.add(game_levels[0])
+                game_levels[-1].next_level_id = None
+                self.dbsession.add(game_levels[-1])            
             self.dbsession.commit()
             self.redirect("/admin/view/game_levels")
         else:

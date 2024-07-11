@@ -84,35 +84,48 @@ def create_levels(levels):
     if levels is None:
         return
     logging.info("Found %s game level(s)" % levels.get("count"))
+    missing_level_buyouts = {}
     for index, level_elem in enumerate(levels):
         # GameLevel 0 is created automatically by the bootstrap
         try:
-            number = get_child_text(level_elem, "number")
-
-            if number == "0" or GameLevel.by_number(number) is None:
-                if number != "0":
-                    game_level = GameLevel()
-                else:
-                    game_level = GameLevel.by_id(0)
-                    if game_level is None:
-                        game_level = GameLevel()
-                game_level.number = number
+            number = get_child_text(level_elem, "number")            
+            if GameLevel.by_number(number) is None:
+                game_level = GameLevel()
+                game_level.number = int(number)
                 game_level.name = get_child_text(level_elem, "name")
+                game_level.description = get_child_text(level_elem, "description")
                 game_level.type = get_child_text(level_elem, "type")
                 game_level.reward = get_child_text(level_elem, "reward", 0)
                 game_level.buyout = get_child_text(level_elem, "buyout", 0)
+                if game_level.type == "level":
+                    buyoutlevel = GameLevel.by_number(game_level.buyout)
+                    if buyoutlevel:
+                        game_level.buyout = buyoutlevel.id
+                    else:
+                        missing_level_buyouts[game_level.number] = game_level.buyout
                 dbsession.add(game_level)
             else:
                 logging.info("GameLevel %d already exists, skipping" % int(number))
         except:
             logging.exception("Failed to import game level #%d" % (index + 1))
+    dbsession.commit()
     dbsession.flush()
     game_levels = GameLevel.all()
+    if len(missing_level_buyouts):
+        logging.info(f"Missing buyouts to update: {len(missing_level_buyouts)}")
     for index, game_level in enumerate(game_levels):
         if index + 1 < len(game_levels):
             game_level.next_level_id = game_levels[index + 1].id
             logging.info("%r -> %r" % (game_level, game_levels[index + 1]))
-            dbsession.add(game_level)
+            missing_buyout_level = missing_level_buyouts.get(game_level.number, None)            
+            if missing_buyout_level:
+                logging.info(f"attempting update for level {game_level.id} buyout after level {missing_buyout_level}")
+                buyoutlevel = GameLevel.by_number(missing_buyout_level)
+                if buyoutlevel:                    
+                    game_level.buyout = buyoutlevel.id
+                    logging.info(f"game_level {game_level.id} buyout {missing_buyout_level} -> {buyoutlevel.id}")
+            
+            # dbsession.add(game_level)
     dbsession.commit()
 
 
@@ -231,11 +244,14 @@ def create_boxes(parent, corporation):
                 box.operating_system = get_child_text(box_elem, "operatingsystem")
                 box.locked = get_child_text(box_elem, "locked", 0)
                 box.value = get_child_text(box_elem, "value", "0")
-                box.order = get_child_text(box_elem, "order", None)
+                box_order = get_child_text(box_elem, "order", None)
+                if box_order:
+                    box._order = int(box_order)
                 if get_child_text(box_elem, "avatar", "none") != "none":
-                    box.avatar = bytearray(
+                    avatar_path = get_child_text(box_elem, "avatar_path", "upload")
+                    box.avatar = (bytearray(
                         b64decode(get_child_text(box_elem, "avatar"))
-                    )
+                    ), avatar_path)
                 box.garbage = get_child_text(
                     box_elem, "garbage", binascii.hexlify(urandom(16)).decode()
                 )
@@ -307,7 +323,38 @@ def update_configuration(config):
         except BaseException as e:
             logging.exception("Failed to update configuration (%s)" % e)
     save_config()
-
+    
+def check_import_options(options):
+    """Check and handle import options based on XML data"""
+    
+    # User can add the following to the XML <import_options clear_levels="1" clear_corps="1" />
+    if options is None:
+        return
+    
+    try:
+        clear_levels = int(options.get("clear_levels", "0"))
+    except:
+        clear_levels = 0
+        pass
+    
+    if clear_levels == 1:
+        logging.info("Clearing Levels Before Import")
+        game_levels = GameLevel.all()
+        for level in game_levels:
+            dbsession.delete(level)
+        dbsession.commit()
+    
+    try:
+        clear_corps = int(options.get("clear_corps", "0"))
+    except:
+        clear_corps = 0
+    
+    if clear_corps == 1:
+        logging.info("Clearing Corporations Before Import")
+        corps = Corporation.all()
+        for corp in corps:
+            dbsession.delete(corp)
+        dbsession.commit()
 
 def _xml_file_import(filename):
     """Parse and import a single XML file"""
@@ -315,6 +362,8 @@ def _xml_file_import(filename):
     try:
         tree = ET.parse(filename)
         xml_root = tree.getroot()
+        import_options = get_child_by_tag(xml_root, "import_options")
+        check_import_options(import_options)
         levels = get_child_by_tag(xml_root, "gamelevels")
         create_levels(levels)
         categories = get_child_by_tag(xml_root, "categories")
