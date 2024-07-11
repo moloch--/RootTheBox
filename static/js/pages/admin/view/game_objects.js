@@ -114,22 +114,25 @@ function setFlagType(flagtype) {
 }
 
 function getBoxFlags(box_uuid, flag_uuid) {
-    data = {'uuid': box_uuid, 'obj': 'box', '_xsrf': getCookie("_xsrf")}
-    $.post('/admin/ajax/objects', data, function(response) { 
-        $('#edit-flag-lock').empty();
-        $('#edit-flag-lock').append($('<option/>', { 
-            value: "",
-            text : ""
-        }));
-        $.each(response["flaglist"], function(uuid, name) {    
-            if (uuid !== flag_uuid) {
-                $('#edit-flag-lock').append($('<option/>', { 
-                    value: uuid,
-                    text : name
-                }));
-            } 
-        });
-    }, 'json');
+    return new Promise((resolve, reject) => {
+        let data = {'uuid': box_uuid, 'obj': 'box', '_xsrf': getCookie("_xsrf")};
+        $.post('/admin/ajax/objects', data, function(response) { 
+            $('#edit-flag-lock').empty();
+            $('#edit-flag-lock').append($('<option/>', { 
+                value: "",
+                text : ""
+            }));
+            $.each(response["flaglist"], function(uuid, name) {    
+                if (uuid !== flag_uuid) {
+                    $('#edit-flag-lock').append($('<option/>', { 
+                        value: uuid,
+                        text : name
+                    }));
+                } 
+            });
+            resolve();
+        }, 'json').fail(reject);
+    });
 }
 
 function testToken() {
@@ -253,8 +256,8 @@ $(document).ready(function() {
     });
 
     /* Flag */
-    $("a[id^=edit-flag-button]").click(function() {
-        getBoxFlags($(this).data("box-uuid"), $(this).data("uuid"));
+    $("a[id^=edit-flag-button]").click(async function() {
+        await getBoxFlags($(this).data("box-uuid"), $(this).data("uuid"));
         getDetails("flag", $(this).data("uuid"));
         setFlagType($(this).data("flagtype"));
         $("#test-token").val("");
