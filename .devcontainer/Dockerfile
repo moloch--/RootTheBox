@@ -1,6 +1,6 @@
 FROM python:3.8
 
-ADD [ "https://dev.mysql.com/get/mysql-apt-config_0.8.16-1_all.deb", "/" ]
+ADD [ "https://dev.mysql.com/get/mysql-apt-config_0.8.32-1_all.deb", "/" ]
 
 RUN apt-get -qq update \
 	&& export DEBIAN_FRONTEND=noninteractive \
@@ -12,7 +12,7 @@ RUN apt-get -qq update \
 		zlib1g-dev \
 		python3-pycurl \
 	# MySQL Tools
-	&& dpkg -i /mysql-apt-config_0.8.16-1_all.deb \
+	&& dpkg -i /mysql-apt-config_0.8.32-1_all.deb \
 	&& apt-get -qq update \
 	&& apt-get -qq install -y --no-install-recommends \
 		mysql-shell \

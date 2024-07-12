@@ -22,16 +22,12 @@ Created on Mar 11, 2012
 
 import binascii
 import enum
-import imghdr
-import io
 import os
 import xml.etree.cElementTree as ET
 from collections import OrderedDict
 from os import urandom
 from uuid import uuid4
 
-from PIL import Image
-from resizeimage import resizeimage
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import Boolean, Enum, Integer, String, Unicode
@@ -39,7 +35,11 @@ from tornado.options import options
 
 from libs.StringCoding import decode, encode
 from libs.ValidationError import ValidationError
-from libs.XSSImageCheck import get_new_avatar, is_xss_image
+from libs.XSSImageCheck import (
+    get_new_avatar,
+    avatar_validation,
+    save_avatar
+)
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Category import Category
@@ -352,28 +352,12 @@ class Box(DatabaseObject):
             
         if self.uuid is None:
             self.uuid = str(uuid4())
-        if len(image_data) < (1024 * 1024):
-            ext = imghdr.what("", h=image_data)
-            if ext in ["png", "jpeg", "gif", "bmp"] and not is_xss_image(image_data):
-                try:                    
-                    if self._avatar is not None:
-                        current_image_path = os.path.join(options.avatar_dir, avatar_path, self._avatar) if avatar_path == "upload" else os.path.join(options.avatar_dir, avatar_path)
-                        if os.path.exists(current_image_path):
-                            os.unlink(current_image_path)
-                    
-                    new_image_path = os.path.join(avatar_path, f"{self.uuid}.{ext}") if avatar_path == "upload" else avatar_path
-                    image = Image.open(io.BytesIO(image_data))
-                    cover = resizeimage.resize_cover(image, [500, 250])
-                    cover.save(os.path.join(options.avatar_dir,new_image_path), image.format)
-                    self._avatar = new_image_path
-                except Exception as e:
-                    raise ValidationError(e)
-            else:
-                raise ValidationError(
-                    "Invalid image format, avatar must be: .png .jpeg .gif or .bmp"
-                )
-        else:
-            raise ValidationError("The image is too large")
+        
+        if avatar_path == "upload":
+            os.path.join("upload", f"{self.uuid}.{ext}")
+        
+        ext = avatar_validation(image_data)
+        self._avatar = save_avatar(avatar_path)
 
     @property
     def ipv4s(self):

@@ -25,8 +25,6 @@ indiviudal user, such as handle/account/password/etc
 """
 
 
-import imghdr
-import io
 import os
 import random
 import string
@@ -39,8 +37,6 @@ from uuid import uuid4
 
 from past.builtins import basestring
 from pbkdf2 import PBKDF2
-from PIL import Image
-from resizeimage import resizeimage
 from sqlalchemy import Column, ForeignKey, desc, func
 from sqlalchemy.orm import backref, relationship, synonym
 from sqlalchemy.types import Boolean, DateTime, Integer, String, Unicode
@@ -50,12 +46,10 @@ from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
 from libs.WebhookHelpers import send_user_validated_webhook
 from libs.XSSImageCheck import (
-    IMG_FORMATS,
-    MAX_AVATAR_SIZE,
-    MIN_AVATAR_SIZE,
+    avatar_validation,
+    save_avatar,
     default_avatar,
-    get_new_avatar,
-    is_xss_image,
+    get_new_avatar,    
 )
 from models import dbsession
 from models.BaseModels import DatabaseObject
@@ -354,33 +348,8 @@ class User(DatabaseObject):
 
     @avatar.setter
     def avatar(self, image_data):
-        if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
-            ext = imghdr.what("", h=image_data)
-            if ext in IMG_FORMATS and not is_xss_image(image_data):
-                try:
-                    if self._avatar is not None and os.path.exists(
-                        options.avatar_dir + "/upload/" + self._avatar
-                    ):
-                        os.unlink(options.avatar_dir + "/upload/" + self._avatar)
-                    file_path = str(
-                        options.avatar_dir + "/upload/" + self.uuid + "." + ext
-                    )
-                    image = Image.open(io.BytesIO(image_data))
-                    cover = resizeimage.resize_cover(image, [500, 250])
-                    cover.save(file_path, image.format)
-                    self._avatar = "upload/" + self.uuid + "." + ext
-                except Exception as e:
-                    raise ValidationError(e)
-            else:
-                raise ValidationError(
-                    "Invalid image format, avatar must be: %s"
-                    % (", ".join(IMG_FORMATS))
-                )
-        else:
-            raise ValidationError(
-                "The image is too large must be %d - %d bytes"
-                % (MIN_AVATAR_SIZE, MAX_AVATAR_SIZE)
-            )
+        ext = avatar_validation(image_data)
+        self._avatar = save_avatar(os.path.join("upload", f"{self.uuid}.{ext}"),image_data)                
 
     def has_item(self, item_name):
         """Check to see if a team has purchased an item"""
