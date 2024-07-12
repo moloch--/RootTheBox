@@ -488,7 +488,7 @@ class RegistrationHandler(BaseHandler):
             self.get_argument("motto", None)
             and bool(
                 re.match(
-                    r"^[0-9A-Za-z _\-\.%s]{,32}$" % unicodewd,
+                    r"^[\s\S]{0,32}$",
                     self.get_argument("motto", ""),
                     re.UNICODE,
                 )
