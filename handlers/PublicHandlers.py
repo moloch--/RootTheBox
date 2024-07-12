@@ -64,7 +64,10 @@ from libs.WebhookHelpers import (
     send_user_registered_webhook,
     send_user_validated_webhook,
 )
-from libs.XSSImageCheck import filter_avatars
+from libs.XSSImageCheck import (
+    filter_avatars,
+    avatar_validation,    
+)
 from models import azuread_app
 from models.EmailToken import EmailToken
 from models.GameLevel import GameLevel
@@ -510,7 +513,9 @@ class RegistrationHandler(BaseHandler):
             raise ValidationError("Passwords do not match")
         if self.config.use_recaptcha and self.verify_recaptcha() is False:
             raise ValidationError("Invalid reCAPTCHA")
-
+        if hasattr(self.request, "files") and "avatar" in self.request.files:
+            avatar_validation(self.request.files["avatar"][0]["body"])
+    
     def verify_recaptcha(self):
         """Checks recaptcha"""
         recaptcha_response = self.get_argument("g-recaptcha-response", None)
