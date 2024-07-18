@@ -357,7 +357,7 @@ class Box(DatabaseObject):
             os.path.join("upload", f"{self.uuid}.{ext}")
         
         ext = avatar_validation(image_data)
-        self._avatar = save_avatar(avatar_path)
+        self._avatar = save_avatar(avatar_path, image_data)
 
     @property
     def ipv4s(self):
