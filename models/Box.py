@@ -347,17 +347,13 @@ class Box(DatabaseObject):
     @avatar.setter
     def avatar(self, image_data):
         avatar_path = "upload"
-        ext = avatar_validation(image_data)
-
         if isinstance(image_data, tuple):
             image_data, avatar_path = image_data
-            
+        ext = avatar_validation(image_data)
         if self.uuid is None:
             self.uuid = str(uuid4())
-        
         if avatar_path == "upload":
-            os.path.join("upload", f"{self.uuid}.{ext}")
-        
+            avatar_path = os.path.join(avatar_path, f"{self.uuid}.{ext}")
         self._avatar = save_avatar(avatar_path, image_data)
 
     @property
