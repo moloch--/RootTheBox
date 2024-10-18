@@ -119,6 +119,8 @@ class Corporation(DatabaseObject):
             "uuid": self.uuid,
             "name": self.name,
             "description": self.description,
+            "id": self.id,
+            "locked": self.locked,
             # "boxes": [box.uuid for box in self.boxes],
         }
 
