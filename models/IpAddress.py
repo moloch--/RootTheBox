@@ -24,7 +24,7 @@ import xml.etree.cElementTree as ET
 from builtins import str
 from uuid import uuid4
 
-from netaddr import IPAddress
+from ipaddress import ip_address
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Boolean, Integer, String
 
@@ -87,26 +87,26 @@ class IpAddress(DatabaseObject):
     @address.setter
     def address(self, value):
         try:
-            ip = IPAddress(self.ipformat(value))
+            ip = ip_address(self.ipformat(value))
         except:
             raise ValidationError("Invalid IP Address")
-        if ip.is_loopback():
+        if ip.is_loopback:
             raise ValidationError("You cannot use a loopback address")
-        if ip.is_multicast():
+        if ip.is_multicast:
             raise ValidationError("You cannot use a multicast address")
         self._address = value
 
     @property
     def version(self):
         if self._ip_address is None:
-            self._ip_address = IPAddress(self.ipformat(self._address))
+            self._ip_address = ip_address(self.ipformat(self._address))
         return self._ip_address.version
 
     @property
     def is_private(self):
         if self._ip_address is None:
-            self._ip_address = IPAddress(self.ipformat(self._address))
-        return self._ip_address.is_private()
+            self._ip_address = ip_address(self.ipformat(self._address))
+        return self._ip_address.is_private
 
     def to_xml(self, parent):
         ip_elem = ET.SubElement(parent, "ip")
