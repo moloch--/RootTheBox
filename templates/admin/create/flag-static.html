@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/static/css/markdown-toolbar.css" type="text/css" />
 <script src="/static/js/libs/commonmark.min.js"></script>
 <script src="/static/js/libs/markdown-toolbar.js"></script>
-<script src="/static/js/pages/admin/create/flags.js"></script>
+<script src="/static/js/pages/admin/create/flags.js" defer></script>
 {% end %}
 
 {% block content %}
@@ -101,6 +101,7 @@
                         <label class="control-label" for="token">{{_("Token")}}</label>
                         <div class="controls">
                             <input required id="token" name="token" maxlength="256" type="text" placeholder="{{_('Static Token')}}" autocomplete="off">
+                            <button type="button" onclick="generateRandomString(16)">Random Token</button>
                         </div>
                     </div>
                     <div class="control-group">
