@@ -16,3 +16,4 @@ setuptools-rust
 msal
 requests
 Pillow
+nose-py3

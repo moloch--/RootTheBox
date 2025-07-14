@@ -206,11 +206,8 @@ def tests():
 
     db_name = "test-%04s" % random.randint(0, 9999)
     setup_database(db_name)
-    import unittest
-    loader = unittest.TestLoader()
-    suite = loader.discover(os.path.join(os.getcwd(), "tests"))
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+    import nose
+    nose.run(module="tests", argv=[os.getcwd() + "/tests"])
     teardown_database(db_name)
 
 
