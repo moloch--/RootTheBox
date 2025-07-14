@@ -33,10 +33,12 @@ import json
 import logging
 import re
 from builtins import str
+from tornado.options import options
+
 
 from handlers.BaseHandlers import BaseHandler
 from handlers.MissionsHandler import BoxHandler
-from libs.SecurityDecorators import *
+from libs.SecurityDecorators import authenticated, authorized, restrict_ip_address
 from libs.StringCoding import decode
 from libs.ValidationError import ValidationError
 from models.Box import Box, FlagsSubmissionType
@@ -58,7 +60,7 @@ from models.IpAddress import IpAddress
 from models.MarketItem import MarketItem
 from models.Penalty import Penalty
 from models.Team import Team
-from models.User import ADMIN_PERMISSION
+from models.User import ADMIN_PERMISSION, User
 
 
 class AdminCreateHandler(BaseHandler):
@@ -828,7 +830,7 @@ class AdminEditHandler(BaseHandler):
                                 # add choice
                                 FlagChoice.create_choice(flag, decode(flagoption))
         for choice in currentchoices:
-            if not choice["uuid"] in choiceitems:
+            if choice["uuid"] not in choiceitems:
                 # delete choice
                 flagchoice = FlagChoice.by_uuid(choice["uuid"])
                 self.dbsession.delete(flagchoice)
@@ -1323,7 +1325,7 @@ class AdminTestTokenHandler(BaseHandler):
 
             try:
                 test = parse(token) == parse(submission)
-            except:
+            except Exception:
                 test = False
         else:
             self.write({"Error": "Invalid flag type, cannot capture"})

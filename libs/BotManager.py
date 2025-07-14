@@ -119,7 +119,7 @@ class BotManager(object):
         self.db_path = "sqlite:///%s" % options.botnet_db
         logging.debug("Created botnet database at: %s" % self.db_path)
         self.sqlite_engine = create_engine(self.db_path, echo=options.log_sql)
-        Session = sessionmaker(bind=self.sqlite_engine, autocommit=True)
+        Session = sessionmaker(bind=self.sqlite_engine)
         self.botdb = Session(autoflush=True)
         BotDatabaseObject.metadata.create_all(self.sqlite_engine)
         self.dbsession = dbsession

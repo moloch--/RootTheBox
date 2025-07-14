@@ -27,6 +27,7 @@ Guidelines for writing code in this file:
     - All functions should check authentication/IP address/permission
 """
 
+# ruff: noqa: F403
 from .AdminGameHandlers import *
 from .AdminGameObjectHandlers import *
 from .AdminUserHandlers import *

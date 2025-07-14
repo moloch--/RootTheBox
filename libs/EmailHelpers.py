@@ -93,7 +93,7 @@ def get_email_message(headers: dict, body: EmailMessage):
     encdata = str(_bencode(orig), 'ascii')
     message.set_payload(encdata)
     message.replace_header('Content-Transfer-Encoding', 'base64')        
-  except:
+  except Exception:
     # if encoding fails it will send as plain text
     pass
   

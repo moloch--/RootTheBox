@@ -42,7 +42,7 @@ def setup_database(db_name):
     from setup.create_database import create_tables, engine, metadata
 
     create_tables(engine, metadata, False)
-    import setup.bootstrap
+    import setup.bootstrap # noqa: F401
 
 
 def teardown_database(db_name):

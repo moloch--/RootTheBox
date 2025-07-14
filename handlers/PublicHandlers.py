@@ -39,13 +39,12 @@ try:
     import urllib.request as urlrequest
 except ImportError:
     import urllib2 as urlrequest
-from base64 import b64encode, urlsafe_b64decode, urlsafe_b64encode
+from base64 import urlsafe_b64decode, urlsafe_b64encode
 from builtins import str
 from datetime import datetime
 from hashlib import sha256
 from os import urandom
 
-from msal import ConfidentialClientApplication
 from netaddr import IPAddress
 from pbkdf2 import PBKDF2
 from tornado.options import options
@@ -368,7 +367,7 @@ class LoginHandler(BaseHandler):
                     self.application.settings["blacklisted_ips"].append(ip)
                 else:
                     logging.warning("[BAN HAMMER] Cannot blacklist loopback address")
-            except:
+            except Exception:
                 logging.exception("Error while attempting to ban ip address")
         self.render(
             "public/login.html",
@@ -690,7 +689,7 @@ class RegistrationHandler(BaseHandler):
         try:
             account = decode(urlsafe_b64encode(account))
             token = decode(urlsafe_b64encode(token))
-        except:
+        except Exception:
             account = urlsafe_b64encode(account)
             token = urlsafe_b64encode(token)
         if options.ssl:
@@ -833,7 +832,7 @@ class ForgotPasswordHandler(BaseHandler):
         try:
             account = decode(urlsafe_b64encode(account))
             token = decode(urlsafe_b64encode(token))
-        except:
+        except Exception:
             account = urlsafe_b64encode(account)
             token = urlsafe_b64encode(token)
         if options.ssl:
@@ -873,7 +872,7 @@ class ResetPasswordHandler(BaseHandler):
                 token = sha256(
                     urlsafe_b64decode(self.get_argument("p", ""))
                 ).hexdigest()
-            except:
+            except Exception:
                 uuid = urlsafe_b64decode(encode(self.get_argument("u", "")))
                 token = sha256(
                     urlsafe_b64decode(encode(self.get_argument("p", "")))
@@ -944,7 +943,7 @@ class ValidEmailHandler(BaseHandler):
                 token = sha256(
                     urlsafe_b64decode(self.get_argument("t", ""))
                 ).hexdigest()
-            except:
+            except Exception:
                 user_uuid = urlsafe_b64decode(encode(self.get_argument("u", "")))
                 token = sha256(
                     urlsafe_b64decode(encode(self.get_argument("t", "")))

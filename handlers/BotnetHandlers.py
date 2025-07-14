@@ -34,9 +34,9 @@ from tornado.options import options
 
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
-from libs.SecurityDecorators import *
-from libs.StringCoding import decode, encode
-from models import Box, Team, User
+from libs.SecurityDecorators import authenticated, use_bots
+from libs.StringCoding import encode
+from models import Box, User
 
 from .BaseHandlers import BaseHandler, BaseWebSocketHandler
 
@@ -166,7 +166,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         """Just make sure we can write data to the socket"""
         try:
             self.write_message({"opcode": "ping"})
-        except:
+        except Exception:
             logging.exception("Error: while sending ping to bot.")
             self.close()
 
@@ -220,7 +220,7 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
         """Authenticate user"""
         try:
             user = User.by_handle(req["handle"])
-        except:
+        except Exception:
             user = None
         if user is None or user.is_admin():
             logging.debug("Monitor socket user does not exist.")

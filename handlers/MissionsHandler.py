@@ -26,15 +26,15 @@ This file contains the code for displaying flags / recv flag submissions
 
 import json
 import logging
-from builtins import next, str
+from builtins import str
 
 from past.utils import old_div
 from tornado.options import options
 
 from handlers.BaseHandlers import BaseHandler
 from libs.SecurityDecorators import authenticated, game_started
-from libs.StringCoding import decode, encode
-from libs.WebhookHelpers import *
+from libs.StringCoding import encode
+from libs.WebhookHelpers import send_hint_taken_webhook, send_capture_webhook, send_box_complete_webhook, send_level_complete_webhook, send_capture_failed_webhook
 from models.Box import Box, FlagsSubmissionType
 from models.Flag import Flag
 from models.GameLevel import GameLevel
@@ -75,14 +75,14 @@ class StoryAjaxHandler(BaseHandler):
                     dialog[index] = line.replace("$user", str(user.handle)).replace(
                         "$reward", str(options.bot_reward)
                     )
-                except:
+                except Exception:
                     dialog[index] = line.replace("$user", encode(user.handle)).replace(
                         "$reward", ("%d" % options.bot_reward)
                     )
             dialog.append(" ")
             try:
                 self.write(json.dumps(dialog))
-            except:
+            except Exception:
                 self.write(json.dumps(dialog, encoding="latin1"))
         else:
             self.render("public/404.html")

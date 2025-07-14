@@ -26,16 +26,14 @@ from these base classes.
 # pylint: disable=unused-wildcard-import,no-member
 
 
-import datetime
 import logging
 import time
 import traceback
 from builtins import str
 
 from libs.EventManager import EventManager
-from libs.SecurityDecorators import *
 from libs.Sessions import MemcachedConnect, MemcachedSession
-from libs.WebhookHelpers import *
+from libs.WebhookHelpers import send_game_start_webhook, send_game_stop_webhook
 from models import chatsession, dbsession
 from models.User import User
 
@@ -90,7 +88,7 @@ class BaseHandler(RequestHandler):
                 return User.by_uuid(self.session["user_uuid"])
             except KeyError:
                 logging.exception("Malformed session: %r" % self.session)
-            except:
+            except Exception:
                 logging.exception("Failed call to get_current_user()")
         return None
 
@@ -128,7 +126,7 @@ class BaseHandler(RequestHandler):
         for src, policies in list(self.csp.items()):
             if len(policies):
                 _csp.append("%s %s; " % (src, " ".join(policies)))
-        csp = "".join(_csp)
+        csp = "".join(_csp) # noqa: F841
         # Disabled until i can figure out the bug
         # self.set_header("Content-Security-Policy", csp)
 
@@ -288,9 +286,9 @@ class BaseHandler(RequestHandler):
             if codes:
                 for code in codes.split(","):
                     code = code.split(";")[0]
-                    for l in locale.get_supported_locales():
-                        if code.lower() == l.split("_")[0]:
-                            return locale.get(l)
+                    for locale_code in locale.get_supported_locales():
+                        if code.lower() == locale_code.split("_")[0]:
+                            return locale.get(locale_code)
         return None
 
 
@@ -313,7 +311,7 @@ class BaseWebSocketHandler(WebSocketHandler):
                 "Checking request origin '%s' ends with '%s'" % (request_origin, origin)
             )
             return request_origin.netloc.endswith(origin)
-        except:
+        except Exception:
             logging.exception("Failed to parse request origin: %r" % origin)
             return False
 
@@ -356,7 +354,7 @@ class BaseWebSocketHandler(WebSocketHandler):
                 return User.by_handle(self.session["handle"])
             except KeyError:
                 logging.exception("Malformed session: %r" % self.session)
-            except:
+            except Exception:
                 logging.exception("Failed call to get_current_user()")
         return None
 

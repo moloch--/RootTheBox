@@ -7,9 +7,7 @@ Create Date: 2023-03-11 19:33:02.808038
 """
 from datetime import datetime
 
-import sqlalchemy as sa
 from sqlalchemy.engine.reflection import Inspector
-from sqlalchemy.sql.expression import func
 
 from alembic import op
 
@@ -17,7 +15,7 @@ try:
     conn = op.get_bind()
     inspector = Inspector.from_engine(conn)
     tables = inspector.get_table_names()
-except:
+except Exception:
     conn = None
     inspector = None
     tables = None

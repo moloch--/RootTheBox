@@ -33,7 +33,7 @@ from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import Boolean, Enum, Integer, String, Unicode
 from tornado.options import options
 
-from libs.StringCoding import decode, encode
+from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import (
     get_new_avatar,
@@ -431,7 +431,7 @@ class Box(DatabaseObject):
         if self.avatar and os.path.isfile(avatarfile):
             with open(avatarfile, mode="rb") as _avatar:
                 data = _avatar.read()
-                if not "upload" in self.avatar:
+                if "upload" not in self.avatar:
                     ET.SubElement(box_elem, "avatar_path").text = self.avatar
                 ET.SubElement(box_elem, "avatar").text = encode(data, "base64")
         else:

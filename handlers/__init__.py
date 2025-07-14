@@ -31,7 +31,7 @@ from builtins import str
 from os import _exit, urandom
 from os import path as os_path
 
-import tornado.locale
+import tornado.locale # noqa: F401
 from sqlalchemy.exc import OperationalError
 from tornado import locale, netutil
 from tornado.httpserver import HTTPServer
@@ -40,23 +40,23 @@ from tornado.options import options
 from tornado.web import Application
 
 from alembic.config import Config, command
-from handlers.AdminHandlers import *
-from handlers.APIHanders import *
-from handlers.BotnetHandlers import *
-from handlers.ChefHandler import *
-from handlers.ErrorHandlers import *
-from handlers.FileUploadHandlers import *
-from handlers.MarketHandlers import *
-from handlers.MaterialsHandler import *
-from handlers.MissionsHandler import *
-from handlers.NotificationHandlers import *
-from handlers.PastebinHandlers import *
-from handlers.PublicHandlers import *
-from handlers.ScoreboardHandlers import *
+from handlers.AdminHandlers import AdminLockHandler, AdminManageUsersHandler, AdminEditUsersHandler, AdminDeleteUsersHandler, AdminEditTeamsHandler, AdminEditHandler, AdminViewHandler, AdminDeleteHandler, AdminCreateHandler, AdminGarbageCfgHandler, AdminMessageHandler, AdminGameHandler, AdminSwatHandler, AdminSourceCodeMarketHandler, AdminAjaxUserHandler, AdminAjaxGameObjectDataHandler, AdminBanHammerHandler, AdminRegTokenHandler, AdminResetHandler, AdminResetDeleteHandler, AdminConfigurationHandler, AdminGitStatusHandler, AdminExportHandler, AdminImportXmlHandler, AdminTestTokenHandler
+from handlers.APIHanders import APIActionHandler
+from handlers.BotnetHandlers import BotSocketHandler, BotCliMonitorSocketHandler, BotWebMonitorSocketHandler, BotDownloadHandler, BotWebMonitorHandler
+from handlers.ChefHandler import ChefHandler
+from handlers.ErrorHandlers import NoobHandler, UnauthorizedHandler, NotFoundHandler, StopHandler
+from handlers.FileUploadHandlers import FileDeleteHandler, FileDownloadHandler, FileUploadHandler
+from handlers.MarketHandlers import MarketViewHandler, MarketDetailsHandler
+from handlers.MaterialsHandler import MaterialsHandler
+from handlers.MissionsHandler import MissionsHandler, FlagCaptureMessageHandler, FirstLoginHandler, BoxHandler, PurchaseHintHandler, StoryAjaxHandler
+from handlers.NotificationHandlers import AllNotificationsHandler, NotifySocketHandler
+from handlers.PastebinHandlers import PasteHandler, CreatePasteHandler, DisplayPasteHandler, DeletePasteHandler
+from handlers.PublicHandlers import AboutHandler, CodeFlowHandler, LoginHandler, HomePageHandler, FakeRobotsHandler, StatusHandler, JoinTeamHandler, RegistrationHandler, ValidEmailHandler, ForgotPasswordHandler, ResetPasswordHandler
+from handlers.ScoreboardHandlers import TeamsHandler, ScoreboardHandler, ScoreboardHistoryHandler, ScoreboardFeedHandler, ScoreboardAjaxHandler, ScoreboardDataSocketHandler, ScoreboardHistorySocketHandler, ScoreboardPauseHandler, ScoreboardWallOfSheepHandler
 from handlers.StaticFileHandler import StaticFileHandler
-from handlers.UpgradeHandlers import *
-from handlers.UserHandlers import *
-from libs.ConsoleColors import *
+from handlers.UpgradeHandlers import SwatHandler,PasswordSecurityHandler, FederalReserveHandler, FederalReserveAjaxHandler, SourceCodeMarketHandler, SourceCodeMarketDownloadHandler
+from handlers.UserHandlers import HomeHandler, SettingsHandler, LogoutHandler
+from libs.ConsoleColors import WARN, R, W, bold
 from libs.DatabaseConnection import DatabaseConnection
 from libs.Scoreboard import Scoreboard, score_bots
 from libs.StringCoding import encode
@@ -339,7 +339,7 @@ def start_server():
         io_loop.start()
     except KeyboardInterrupt:
         sys.stdout.write("\r" + WARN + "Shutdown Everything!\n")
-    except:
+    except Exception:
         logging.exception("Main i/o loop threw exception")
     finally:
         io_loop.stop()

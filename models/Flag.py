@@ -38,9 +38,7 @@ from libs.ValidationError import ValidationError
 from models import dbsession
 from models.BaseModels import DatabaseObject
 from models.Box import Box
-from models.FlagAttachment import FlagAttachment  # Fix object mapper
 from models.FlagChoice import FlagChoice
-from models.Penalty import Penalty
 from models.Relationships import team_to_flag, user_to_flag
 from models.Team import Team
 
@@ -188,7 +186,7 @@ class Flag(DatabaseObject):
         """Check flag regex specific parameters"""
         try:
             re.compile(raw_token)
-        except:
+        except Exception:
             raise ValidationError("Flag token is not a valid regex")
         return cls(
             box_id=box.id,
@@ -214,7 +212,7 @@ class Flag(DatabaseObject):
         """Check flag datetime specific parameters"""
         try:
             parse(raw_token)
-        except:
+        except Exception:
             raise ValidationError("Flag token is not a valid datetime")
         return cls(
             box_id=box.id,
@@ -448,7 +446,7 @@ class Flag(DatabaseObject):
         elif self._type == FLAG_DATETIME:
             try:
                 return parse(self.token) == parse(submission)
-            except:
+            except Exception:
                 return False
         else:
             raise ValueError("Invalid flag type, cannot capture")

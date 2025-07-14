@@ -24,7 +24,7 @@ if platform.system().lower() in ["linux", "darwin"]:
     BLA = "\033[30m"  # black
     R = "\033[31m"  # red
     G = "\033[32m"  # green
-    O = "\033[33m"  # orange
+    O = "\033[33m"  # orange # noqa: E741
     BLU = "\033[34m"  # blue
     P = "\033[35m"  # purple
     C = "\033[36m"  # cyan
@@ -55,7 +55,7 @@ else:
     BLA = ""
     R = ""
     G = ""
-    O = ""
+    O = "" # noqa: E741
     BLU = ""
     P = ""
     C = ""

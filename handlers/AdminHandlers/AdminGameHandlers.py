@@ -40,11 +40,11 @@ from tornado.options import options
 
 from handlers.BaseHandlers import BaseHandler
 from libs.ConfigHelpers import save_config
-from libs.ConsoleColors import *
+from libs.ConsoleColors import INFO
 from libs.EventManager import EventManager
 from libs.Scoreboard import Scoreboard, score_bots
-from libs.SecurityDecorators import *
-from libs.StringCoding import decode, encode
+from libs.SecurityDecorators import authenticated, authorized, restrict_ip_address
+from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
 from models.Box import Box
 from models.Category import Category
@@ -59,7 +59,7 @@ from models.SourceCode import SourceCode
 from models.Swat import Swat
 from models.Team import Team
 from models.Theme import Theme
-from models.User import ADMIN_PERMISSION
+from models.User import ADMIN_PERMISSION, User
 from setup.xmlsetup import import_xml
 
 
@@ -361,7 +361,7 @@ class AdminConfigurationHandler(BaseHandler):
     def get_int(self, name, default=0):
         try:
             return abs(int(self.get_argument(name, default)))
-        except:
+        except Exception:
             return default
 
     def get_bool(self, name, default=""):
@@ -400,7 +400,7 @@ class AdminConfigurationHandler(BaseHandler):
         self.config.story_mode = self.get_bool("story_mode", False)
         try:
             self.config.rank_by = str(self.get_argument("rank_by", "money"))
-        except:
+        except Exception:
             self.config.rank_by = bytes(self.get_argument("rank_by", "money"))
         self.config.scoreboard_visibility = str(
             self.get_argument("scoreboard_visibility", "public")

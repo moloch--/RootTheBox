@@ -35,7 +35,7 @@ from handlers.BaseHandlers import BaseHandler
 from libs.ConfigHelpers import save_config
 from libs.EventManager import EventManager
 from libs.Identicon import identicon
-from libs.SecurityDecorators import *
+from libs.SecurityDecorators import authenticated, authorized, restrict_ip_address
 from libs.ValidationError import ValidationError
 from models.Box import Box
 from models.Corporation import Corporation
@@ -329,7 +329,7 @@ class AdminBanHammerHandler(BaseHandler):
             if not IPAddress(ip).is_loopback():
                 logging.info("Banned new ip: %s" % ip)
                 self.application.settings["blacklisted_ips"].append(ip)
-        except:
+        except Exception:
             pass  # Don't care about exceptions here
 
     def ban_clear(self):

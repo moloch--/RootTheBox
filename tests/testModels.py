@@ -9,8 +9,6 @@ import unittest
 from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
 from models import dbsession
-from models.Box import Box
-from models.Corporation import Corporation
 from models.Flag import (
     FLAG_CHOICE,
     FLAG_DATETIME,
@@ -20,9 +18,7 @@ from models.Flag import (
     Flag,
 )
 from models.GameLevel import GameLevel
-from models.Team import Team
-from models.User import User
-from tests.Helpers import *
+from tests.Helpers import create_team, create_user, create_corp, create_box
 
 
 class TestTeam(unittest.TestCase):

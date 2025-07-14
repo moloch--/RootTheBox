@@ -28,8 +28,6 @@ from models.Theme import Theme
 
 class AppTheme(UIModule):
 
-    theme = Theme.by_name(options.default_theme)
-
     def render(self, *args, **kwargs):
         """Includes different CSS themes based on user prefs"""
 
@@ -42,4 +40,14 @@ class AppTheme(UIModule):
                 "theme/theme.html", theme_files=self.handler.session["theme"]
             )
         else:
-            return self.render_string("theme/theme.html", theme_files=self.theme)
+            # Get theme dynamically to avoid issues during startup
+            theme = Theme.by_name(options.default_theme)
+            if theme is None:
+                # Fallback to default theme files if theme doesn't exist
+                if options.default_theme == "386":
+                    theme_files = ["386.js"]
+                else:
+                    theme_files = [f"{options.default_theme.lower()}.min.css"]
+            else:
+                theme_files = theme
+            return self.render_string("theme/theme.html", theme_files=theme_files)

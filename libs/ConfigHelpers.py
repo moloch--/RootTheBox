@@ -1,5 +1,4 @@
 import hashlib
-import imghdr
 import logging
 from base64 import b64decode
 from datetime import datetime
@@ -8,7 +7,7 @@ from past.builtins import basestring
 from tornado.options import options
 
 from libs.ValidationError import ValidationError
-from libs.XSSImageCheck import is_xss_image
+from libs.XSSImageCheck import is_xss_image, detect_image_format
 
 
 def save_config():
@@ -46,7 +45,7 @@ def save_config():
 def save_config_image(b64_data):
     image_data = bytearray(b64decode(b64_data))
     if len(image_data) < (2048 * 2048):
-        ext = imghdr.what("", h=image_data)
+        ext = detect_image_format(image_data)
         file_name = "/story/%s.%s" % (hashlib.sha1(image_data).hexdigest(), ext)
         if ext in ["png", "jpeg", "gif", "bmp"] and not is_xss_image(image_data):
             with open("files" + file_name, "wb") as fp:
@@ -58,6 +57,9 @@ def save_config_image(b64_data):
             )
     else:
         raise ValidationError("The image is too large")
+
+
+
 
 
 def create_demo_user():

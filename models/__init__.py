@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# ruff: noqa: E402
 """
 Created on Sep 12, 2012
 
@@ -30,7 +31,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from tornado.options import options
 
-from libs.ConsoleColors import *
+from libs.ConsoleColors import WARN, INFO, bold, R, C, W, PROMPT, BLU
 from libs.DatabaseConnection import DatabaseConnection
 
 if options.log_sql:
@@ -114,22 +115,47 @@ def cxt_dbsession():
 
 
 # Avoids mapper issues
-from models.Box import Box
-from models.Corporation import Corporation
-from models.FileUpload import FileUpload
-from models.Flag import Flag
-from models.FlagAttachment import FlagAttachment
-from models.GameLevel import GameLevel
-from models.Hint import Hint
-from models.IpAddress import IpAddress
-from models.MarketItem import MarketItem
-from models.Notification import Notification
-from models.PasteBin import PasteBin
-from models.Permission import Permission
-from models.RegistrationToken import RegistrationToken
-from models.SourceCode import SourceCode
-from models.Swat import Swat
-from models.Team import Team
-from models.Theme import Theme, ThemeFile
-from models.User import User
-from models.WallOfSheep import WallOfSheep
+# ruff: noqa: E402 F401
+# Import all models to ensure they're registered with SQLAlchemy
+# This prevents mapper configuration issues
+try:
+    from models.Box import Box
+    from models.Category import Category
+    from models.Corporation import Corporation
+    from models.EmailToken import EmailToken
+    from models.FileUpload import FileUpload
+    from models.Flag import Flag
+    from models.FlagAttachment import FlagAttachment
+    from models.FlagChoice import FlagChoice
+    from models.GameHistory import GameHistory
+    from models.GameLevel import GameLevel
+    from models.Hint import Hint
+    from models.IpAddress import IpAddress
+    from models.MarketItem import MarketItem
+    from models.Notification import Notification
+    from models.PasteBin import PasteBin
+    from models.PasswordToken import PasswordToken
+    from models.Penalty import Penalty
+    from models.Permission import Permission
+    from models.RegistrationToken import RegistrationToken
+    from models.SourceCode import SourceCode
+    from models.Swat import Swat
+    from models.Team import Team
+    from models.Theme import Theme, ThemeFile
+    from models.User import User
+    from models.WallOfSheep import WallOfSheep
+except ImportError as e:
+    logging.warning(f"Failed to import model: {e}")
+
+# Define __all__ for better module organization
+__all__ = [
+    'Box', 'Category', 'Corporation', 'EmailToken', 'FileUpload', 'Flag', 
+    'FlagAttachment', 'FlagChoice', 'GameHistory', 'GameLevel', 'Hint', 
+    'IpAddress', 'MarketItem', 'Notification', 'PasteBin', 'PasswordToken', 
+    'Penalty', 'Permission', 'RegistrationToken', 'SourceCode', 'Swat', 
+    'Team', 'Theme', 'ThemeFile', 'User', 'WallOfSheep'
+]
+
+# Configure all mappers after imports to prevent duplicate attribute warnings
+from sqlalchemy.orm import configure_mappers
+configure_mappers()

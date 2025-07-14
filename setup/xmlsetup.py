@@ -34,12 +34,12 @@ import defusedxml.cElementTree as ET
 from tornado.options import options
 
 from libs.ConfigHelpers import save_config, save_config_image
-from libs.StringCoding import decode, encode, set_type
+from libs.StringCoding import set_type
 from models import dbsession
 from models.Box import FlagsSubmissionType
 
 # We have to import all of the classes to avoid mapper errors
-from setup.create_database import *
+from models import Category, GameLevel, Corporation, Box, Flag, FlagAttachment, FlagChoice, Hint
 
 
 def get_child_by_tag(elem, tag_name):
@@ -56,7 +56,7 @@ def get_child_text(elem, tag_name, default=""):
             return default
         else:
             return text
-    except:
+    except Exception:
         return default
 
 
@@ -74,7 +74,7 @@ def create_categories(categories):
                 category.category = cat
                 category.description = desc
                 dbsession.add(category)
-            except:
+            except Exception:
                 logging.exception("Failed to import category #%d" % (index + 1))
     dbsession.commit()
 
@@ -106,7 +106,7 @@ def create_levels(levels):
                 dbsession.add(game_level)
             else:
                 logging.info("GameLevel %d already exists, skipping" % int(number))
-        except:
+        except Exception:
             logging.exception("Failed to import game level #%d" % (index + 1))
     dbsession.commit()
     dbsession.flush()
@@ -142,7 +142,7 @@ def create_hints(parent, box, flag=None):
                 hint.price = get_child_text(hint_elem, "price", 0)
                 hint.description = get_child_text(hint_elem, "description")
                 dbsession.add(hint)
-            except:
+            except Exception:
                 logging.exception("Failed to import hint #%d" % (index + 1))
 
 
@@ -176,7 +176,7 @@ def create_flags(parent, box):
                 if flag.type == "choice":
                     create_choices(get_child_by_tag(flag_elem, "flag_choices"), flag)
                 create_hints(get_child_by_tag(flag_elem, "hints"), box, flag)
-            except:
+            except Exception:
                 logging.exception("Failed to import flag #%d" % (index + 1))
         if len(flag_dependency) > 0:
             for item in flag_dependency:
@@ -201,7 +201,7 @@ def add_attachments(parent, flag):
             )
             flag.flag_attachments.append(flag_attachment)
             dbsession.add(flag_attachment)
-        except:
+        except Exception:
             logging.exception("Failed to import attachment #%d in flag" % (index + 1))
 
 
@@ -215,7 +215,7 @@ def create_choices(parent, flag):
             choice = FlagChoice(flag_id=flag.id)
             choice.choice = choice_elem.text
             dbsession.add(choice)
-        except:
+        except Exception:
             logging.exception("Failed to import choice #%d in flag" % (index + 1))
 
 
@@ -333,7 +333,7 @@ def check_import_options(options):
     
     try:
         clear_levels = int(options.get("clear_levels", "0"))
-    except:
+    except Exception:
         clear_levels = 0
         pass
     
@@ -346,7 +346,7 @@ def check_import_options(options):
     
     try:
         clear_corps = int(options.get("clear_corps", "0"))
-    except:
+    except Exception:
         clear_corps = 0
     
     if clear_corps == 1:
@@ -375,7 +375,7 @@ def _xml_file_import(filename):
         logging.debug("Done processing: %s" % filename)
         dbsession.commit()
         return True
-    except:
+    except Exception:
         dbsession.rollback()
         logging.exception(
             "Exception raised while parsing %s, rolling back changes" % filename

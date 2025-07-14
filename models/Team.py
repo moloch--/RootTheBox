@@ -25,7 +25,6 @@ import os
 import xml.etree.cElementTree as ET
 from builtins import str
 from datetime import datetime
-from random import randint
 from uuid import uuid4
 
 from sqlalchemy import Column, desc
@@ -35,7 +34,6 @@ from tornado.options import options
 
 from libs.BotManager import BotManager
 from libs.Identicon import identicon
-from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
 from libs.XSSImageCheck import (
     get_new_avatar, 
@@ -53,7 +51,6 @@ from models.Relationships import (
     team_to_item,
     team_to_source_code,
 )
-from models.User import User
 
 
 class Team(DatabaseObject):

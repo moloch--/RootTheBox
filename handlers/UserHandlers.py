@@ -57,10 +57,6 @@ class HomeHandler(BaseHandler):
     def get(self, *args, **kwargs):
         """Display the default user page"""
         user = self.get_current_user()
-        if user:
-            admin = user.is_admin()
-        else:
-            admin = False
         uuid = self.get_argument("id", None)
         display_user = User.by_uuid(uuid)
         visitor = False
@@ -77,7 +73,7 @@ class HomeHandler(BaseHandler):
         try:
             stats = self.memcached.stats().get("127.0.0.1")
             activeconnections = int(stats.get("curr_connections"))
-        except:
+        except Exception:
             activeconnections = None
         if uuid is None and user.is_admin():
             self.timer()

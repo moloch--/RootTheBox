@@ -16,7 +16,6 @@ import os
 from random import randint, sample
 from string import printable
 from pathlib import Path
-import imghdr
 
 from PIL import Image
 from resizeimage import resizeimage
@@ -32,6 +31,30 @@ IMG_SIZE = [500, 250]
 def is_xss_image(data):
     # str(char) works here for both py2 & py3
     return all([str(char) in printable for char in data[:16]])
+
+
+def detect_image_format(image_data):
+    """Detect image format using PIL."""
+    try:
+        with io.BytesIO(image_data) as bio:
+            img = Image.open(bio)
+            format_name = img.format.lower()
+            # PIL returns 'JPEG' but we want 'jpeg'
+            if format_name == 'jpeg':
+                return 'jpeg'
+            return format_name
+    except Exception:
+        # Fallback: check magic bytes
+        if image_data.startswith(b'\xff\xd8\xff'):
+            return 'jpeg'
+        elif image_data.startswith(b'\x89PNG\r\n\x1a\n'):
+            return 'png'
+        elif image_data.startswith(b'GIF87a') or image_data.startswith(b'GIF89a'):
+            return 'gif'
+        elif image_data.startswith(b'BM'):
+            return 'bmp'
+        else:
+            return 'unknown'
 
 
 def get_new_avatar(dir, forceteam=False):
@@ -109,7 +132,7 @@ def avatar_validation(image_data) -> str:
     Returns image extension as str if checks pass
     """
     if MIN_AVATAR_SIZE < len(image_data) < MAX_AVATAR_SIZE:
-        ext = imghdr.what("", h=image_data)
+        ext = detect_image_format(image_data)
         if ext in IMG_FORMATS and not is_xss_image(image_data):
             verify_image_size(image_data)                                
             return ext

@@ -29,11 +29,11 @@ import os
 import sys
 from builtins import input, str
 
-from libs.ConsoleColors import *
+from libs.ConsoleColors import WARN, INFO, underline, bold, W, PROMPT
 from models import dbsession
 
 # We have to import all of the classes to avoid mapper errors
-from setup.create_database import *
+from setup.create_database import User, Team, Permission
 
 
 class RecoveryConsole(cmd.Cmd):
@@ -127,7 +127,7 @@ class RecoveryConsole(cmd.Cmd):
             dbsession.add(user)
             dbsession.commit()
             print(INFO + "Successfully created new account.")
-        except:
+        except Exception:
             print(WARN + "Failed to create new account.")
 
     def do_mkteam(self, nop):
@@ -143,7 +143,7 @@ class RecoveryConsole(cmd.Cmd):
             dbsession.add(team)
             dbsession.commit()
             print(INFO + "Successfully created new team.")
-        except:
+        except Exception:
             print(WARN + "Failed to create new team.")
 
     def do_grant(self, username):

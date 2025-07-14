@@ -55,7 +55,7 @@ except ImportError:
     from urlparse import urlparse
 from builtins import chr, object, range
 from datetime import datetime
-from hashlib import sha1, sha512
+from hashlib import sha512
 
 ### Settings
 __version__ = "0.1.1"
@@ -71,7 +71,7 @@ if platform.system().lower() in ["linux", "darwin"]:
     BLA = "\033[30m"  # black
     R = "\033[31m"  # red
     G = "\033[32m"  # green
-    O = "\033[33m"  # orange
+    O = "\033[33m"  # orange # noqa: E741
     BLU = "\033[34m"  # blue
     P = "\033[35m"  # purple
     C = "\033[36m"  # cyan
@@ -87,7 +87,7 @@ else:
     BLA = ""
     R = ""
     G = ""
-    O = ""
+    O = "" # noqa: E741
     BLU = ""
     P = ""
     C = ""
@@ -622,8 +622,8 @@ class WebSocket(object):
             frame.get_mask_key = self.get_mask_key
         data = frame.format()
         while data:
-            l = self.io_sock.send(data)
-            data = data[l:]
+            l_value = self.io_sock.send(data) # noqa: F841
+            data = data[l_value:]
 
     def ping(self, payload=""):
         """
@@ -752,11 +752,11 @@ class WebSocket(object):
                         recv_status = struct.unpack("!H", frame.data)[0]
                         if recv_status != STATUS_NORMAL:
                             logger.error("close status: " + repr(recv_status))
-                except:
+                except Exception:
                     pass
                 self.sock.settimeout(timeout)
                 self.sock.shutdown(socket.SHUT_RDWR)
-            except:
+            except Exception:
                 pass
         self._closeInternal()
 
@@ -992,7 +992,7 @@ def main(domain, port, user, garbage_path, secure, verbose):
     fp = open(garbage_path, "r")
     try:
         garbage_cfg.readfp(fp)
-    except:
+    except Exception:
         print(WARN + " Garbage file is not properly formatted")
         os._exit(2)
     try:

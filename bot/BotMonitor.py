@@ -40,7 +40,6 @@ import hashlib
 import json
 import logging
 import os
-import platform
 import random
 import socket
 import struct
@@ -56,7 +55,6 @@ try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
-from datetime import datetime
 
 from libs.StringCoding import encode
 
@@ -348,10 +346,7 @@ class ABNF(object):
 
         opcode: operation code. please see OPCODE_XXX.
         """
-        if sys.version_info.major == 2:
-            instance = isinstance(data, unicode)
-        else:
-            instance = isinstance(data, str)
+        instance = isinstance(data, str)
         if opcode == ABNF.OPCODE_TEXT and instance:
             data = encode(data, "utf-8")
         # mask must be set if send data from client
@@ -606,8 +601,8 @@ class WebSocket(object):
             frame.get_mask_key = self.get_mask_key
         data = frame.format()
         while data:
-            l = self.io_sock.send(data)
-            data = data[l:]
+            l_value = self.io_sock.send(data) # noqa: F841
+            data = data[l_value:]
         if traceEnabled:
             logger.debug("send: " + repr(data))
 
@@ -734,11 +729,11 @@ class WebSocket(object):
                         recv_status = struct.unpack("!H", frame.data)[0]
                         if recv_status != STATUS_NORMAL:
                             logger.error("close status: " + repr(recv_status))
-                except:
+                except Exception:
                     pass
                 self.sock.settimeout(timeout)
                 self.sock.shutdown(socket.SHUT_RDWR)
-            except:
+            except Exception:
                 pass
         self._closeInternal()
 

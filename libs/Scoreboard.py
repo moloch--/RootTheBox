@@ -27,14 +27,12 @@ import logging
 import time
 from builtins import object, str
 from collections import OrderedDict
-from threading import Thread
 
-from sqlalchemy.orm import scoped_session
 from tornado.options import options
 
 from libs.BotManager import BotManager
 from libs.EventManager import EventManager
-from models import dbsession, session_maker
+from models import dbsession
 from models.Box import Box
 from models.Flag import Flag
 from models.GameLevel import GameLevel
@@ -155,7 +153,7 @@ def score_bots():
                                 "message": "Collected $%d reward" % options.bot_reward,
                             }
                         )
-                    except:
+                    except Exception:
                         logging.info(
                             "Bot at %s failed to respond to score ping" % bot.remote_ip
                         )

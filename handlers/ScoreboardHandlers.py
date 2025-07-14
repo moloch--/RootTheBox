@@ -29,8 +29,6 @@ import json
 import logging
 from builtins import str
 from collections import OrderedDict
-from datetime import datetime, timedelta
-from itertools import islice
 from math import ceil
 
 from tornado.options import options
@@ -39,11 +37,9 @@ from tornado.websocket import WebSocketHandler
 from handlers.BaseHandlers import BaseHandler
 from libs.Scoreboard import Scoreboard
 from libs.SecurityDecorators import item_allowed, use_black_market
-from models import dbsession
 from models.Box import Box
 from models.Category import Category
 from models.Team import Team
-from models.User import User
 from models.WallOfSheep import WallOfSheep
 
 

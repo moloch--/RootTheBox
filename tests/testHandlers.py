@@ -2,14 +2,11 @@
 """
 Unit tests for everything in handlers/
 """
-import logging
 
 from tornado.options import options
 
 from models import dbsession
-from models.Team import Team
-from models.User import User
-from tests.Helpers import *
+from tests.Helpers import create_user
 from tests.HTTPClient import ApplicationTest
 
 

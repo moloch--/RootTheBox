@@ -25,8 +25,8 @@ from string import ascii_letters, digits
 from uuid import uuid4
 
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship, synonym
-from sqlalchemy.types import Boolean, Integer, String, Unicode
+from sqlalchemy.orm import relationship
+from sqlalchemy.types import Integer, String, Unicode
 from tornado.options import options
 
 from models import dbsession
@@ -104,7 +104,7 @@ class Theme(DatabaseObject):
     def name(self):
         try:
             return self._name
-        except:
+        except Exception:
             return options.default_theme
 
     @name.setter
@@ -115,7 +115,7 @@ class Theme(DatabaseObject):
         try:
             for _file in self.files:
                 yield _file
-        except:
+        except Exception:
             logging.error(
                 "Session Expired - returning default theme: %s" % options.default_theme
             )

@@ -29,11 +29,9 @@ try:
     from urllib.parse import quote_plus
 except ImportError:
     from urllib import quote_plus
-from tornado.httpclient import HTTPRequest
 from tornado.testing import AsyncHTTPTestCase
 
 from handlers import app
-from libs.StringCoding import decode
 
 
 class ApplicationTest(AsyncHTTPTestCase):
@@ -71,7 +69,7 @@ class ApplicationTest(AsyncHTTPTestCase):
             self.post("/login", data=form, follow_redirects=False)
             auth_cookie = "%s;" % self.wait()[0].headers["Set-Cookie"].split(";")[0]
             self.cookies.append("session_id=%s" % auth_cookie)
-        except:
+        except Exception:
             logging.exception("Login failed")
 
     def _fetch(self, path, **kwargs):

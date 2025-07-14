@@ -28,7 +28,7 @@ import os
 import sys
 from builtins import object
 
-from libs.ConsoleColors import *
+from libs.ConsoleColors import WARN, bold, R, W, PROMPT
 
 try:
     from urllib.parse import quote, quote_plus
@@ -78,7 +78,7 @@ class DatabaseConnection(object):
         """
         logging.debug("Configured to use Postgresql for a database")
         try:
-            import pypostgresql
+            import pypostgresql # noqa: F401
         except ImportError:
             print(WARN + "You must install 'pypostgresql'")
             os._exit(1)

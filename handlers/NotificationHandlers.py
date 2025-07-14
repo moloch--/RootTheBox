@@ -23,7 +23,7 @@ import logging
 
 from handlers.BaseHandlers import BaseHandler, BaseWebSocketHandler
 from libs.EventManager import EventManager
-from libs.SecurityDecorators import *
+from libs.SecurityDecorators import authenticated
 
 
 class NotifySocketHandler(BaseWebSocketHandler):

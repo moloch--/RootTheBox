@@ -24,7 +24,7 @@ except ImportError:
     import memcache
 
 from builtins import str
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from tornado.options import options
 
@@ -104,10 +104,10 @@ class BaseSession(MutableMapping):
 
     def is_expired(self):
         """Check if the session has expired."""
-        return datetime.utcnow() > self.expires
+        return datetime.now(timezone.utc) > self.expires
 
     def _expires_at(self):
-        return datetime.utcnow() + timedelta(minutes=self.duration)
+        return datetime.now(timezone.utc) + timedelta(minutes=self.duration)
 
     def refresh(self):
         self.expires = self._expires_at()
@@ -138,7 +138,7 @@ class BaseSession(MutableMapping):
         dump = {
             "session_id": str(self.session_id),
             "data": self.data,
-            "expires": str(self.expires),
+            "expires": self.expires.isoformat(),
             "ip_address": self.ip_address,
         }
         return encode(json.dumps(dump), "base64").strip()
@@ -146,7 +146,18 @@ class BaseSession(MutableMapping):
     @staticmethod
     def deserialize(datastring):
         dump = json.loads(decode(datastring, "base64"))
-        dump["expires"] = datetime.strptime(dump["expires"], "%Y-%m-%d %H:%M:%S.%f")
+        # Handle both timezone-aware and naive datetime strings
+        expires_str = dump["expires"]
+        try:
+            # Try parsing with timezone info first
+            dump["expires"] = datetime.fromisoformat(expires_str)
+        except ValueError:
+            try:
+                # Fallback to old format without timezone
+                dump["expires"] = datetime.strptime(expires_str, "%Y-%m-%d %H:%M:%S.%f")
+            except ValueError:
+                # Fallback to format without microseconds
+                dump["expires"] = datetime.strptime(expires_str, "%Y-%m-%d %H:%M:%S")
         return dump
 
 
@@ -175,7 +186,7 @@ class MemcachedSession(BaseSession):
     @staticmethod
     def _parse_connection_details(details):
         if len(details) > 12:
-            return re.sub("\s+", "", details[12:]).split(",")
+            return re.sub(r"\s+", "", details[12:]).split(",")
         else:
             return ["127.0.0.1"]
 
@@ -189,7 +200,7 @@ class MemcachedSession(BaseSession):
         time and session expiry.
         """
         if self.dirty:
-            ttl = self.expires - datetime.utcnow()
+            ttl = self.expires - datetime.now(timezone.utc)
             self.connection.set(
                 str(self.session_id), self.serialize(), time=ttl.seconds
             )
@@ -204,7 +215,7 @@ class MemcachedSession(BaseSession):
             if value:
                 kwargs = MemcachedSession.deserialize(value)
                 session = MemcachedSession(connection, **kwargs)
-        except:
+        except Exception:
             logging.exception("[Memcached] Error while grabbing session data")
         return session
 

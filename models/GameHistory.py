@@ -24,8 +24,7 @@ import json
 from builtins import str
 
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.types import Integer, String, Unicode
-from tornado.options import options
+from sqlalchemy.types import Integer, Unicode
 
 from models import dbsession
 from models.BaseModels import DatabaseObject
