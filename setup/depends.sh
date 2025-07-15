@@ -41,43 +41,30 @@ done
 #   debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
 # fi
 
-python_version="$(python -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
-python3_version="$(python3 -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major);')"
-
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   echo -e "\t#########################"
   echo -e "\t   Linux Configuration"
   echo -e "\t#########################"
   
   echo "[*] Add Universe Repo..."
-  apt-get update
-  apt-get install software-properties-common $SKIP
-  apt-get update
+  apt update
+  apt install software-properties-common $SKIP
+  apt update
   add-apt-repository universe
 
   echo "Update package list..."
-  apt-get update
+  apt update
 
   echo "[*] Installing pip/gcc..."
-  if [[ "$python_version" == "2" ]]; then
-      echo "[*] Installing Python 2.x depends..."
-      apt-get install python-pip python-dev python-mysqldb python-mysqldb-dbg python-pycurl $SKIP
-  fi
-  if [[ "$python3_version" == "3" ]]; then
-      echo "[*] Installing Python 3.x depends..."
-      apt-get install python3-pip python3-dev python3-mysqldb python3-mysqldb-dbg python3-pycurl $SKIP
-  fi
+  echo "[*] Installing Python 3.x depends..."
+  apt install python3-pip python3-dev python3-venv python3-mysqldb python3-pycurl $SKIP
+
 
   echo "[*] Installing common packages..."
-  apt-get install build-essential zlib1g-dev memcached rustc $SKIP
+  apt install build-essential pkg-config zlib1g-dev memcached rustc $SKIP
 
   echo "[*] Installing db packages..."
-  if [[ "$SKIP" == "-y" ]]; then
-    echo "[*] Non-interactive setup - Using sqlite"
-    apt-get install sqlite3 libsqlite3-dev $SKIP
-  else
-    apt-get install default-mysql-server default-libmysqlclient-dev $SKIP
-  fi
+  apt install default-mysql-server sqlite3 libsqlite3-dev default-libmysqlclient-dev $SKIP
 
 elif [[ "${OSTYPE}" == "darwin14" ]]; then
   echo -e "\t#########################"
@@ -98,21 +85,12 @@ elif [[ "${OSTYPE}" == "darwin14" ]]; then
 
 fi	
 
-echo "[*] Installing python libs..."
+echo "[*] Creating virtual environment..."
+python3 -m venv .venv
 
-#sh "$current_path/python-depends.sh"
-if [[ "$python_version" == "2" ]]; then
-    for line in $(cat "$current_path/requirements.txt")
-    do
-      pip install $line --upgrade
-    done
-fi
-if [[ "$python3_version" == "3" ]]; then
-    for line in $(cat "$current_path/requirements.txt")
-    do
-      pip3 install $line --upgrade
-    done
-fi
+echo "[*] Activating virtual environment..."
+source .venv/bin/activate
 
 echo ""
-echo "[*] Setup Completed."
+echo "[*] Base Setup Completed."
+echo "[*] Please run 'pip3 install -r requirements.txt --upgrade' to install the python dependencies."
