@@ -50,7 +50,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   apt update
   apt install software-properties-common $SKIP
   apt update
-  add-apt-repository universe
+  add-apt-repository universe $SKIP
 
   echo "Update package list..."
   apt update
@@ -93,4 +93,4 @@ source .venv/bin/activate
 
 echo ""
 echo "[*] Base Setup Completed."
-echo "[*] Please run 'pip3 install -r requirements.txt --upgrade' to install the python dependencies."
+echo "[*] Please run (non-root user) 'pip3 install -r requirements.txt --upgrade' to install the python dependencies."
