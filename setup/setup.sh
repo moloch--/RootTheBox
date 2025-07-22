@@ -19,6 +19,6 @@ echo "[*] Activating virtual environment..."
 source .venv/bin/activate
 
 echo "[*] Installing python dependencies..."
-pip3 install -r ./requirements.txt --upgrade
+pip3 install -r "$SCRIPT_DIR/requirements.txt" --upgrade
 
-echo "[*] Python dependencies installed." 
+echo "[*] Python dependencies installed."
