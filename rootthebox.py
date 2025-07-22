@@ -60,7 +60,19 @@ def start():
 
     prefix = "https://" if options.ssl else "http://"
     # TODO For docker, it would be nice to grab the mapped docker port
-    listenport = C + "%slocalhost:%s" % (prefix, str(options.listen_port)) + W
+    # Get the actual IP address
+    import socket
+    try:
+        # Get the primary IP address
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip_address = s.getsockname()[0]
+        s.close()
+    except Exception:
+        # Fallback to localhost if we can't get the IP
+        ip_address = "localhost"
+    
+    listenport = C + "%s%s:%s" % (prefix, ip_address, str(options.listen_port)) + W
     sys.stdout.flush()
     try:
         print(INFO + bold + R + "Starting RTB on %s" % listenport, flush=True)
