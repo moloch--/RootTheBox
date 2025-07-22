@@ -24,3 +24,6 @@ echo "[*] Python dependencies installed."
 
 echo "[*] Running default sqlite setup... (change later if desired)"
 python3 ./rootthebox.py --setup=prod --sql-dialect=sqlite
+
+echo "[*] Setup complete."
+echo "[*] Run 'python3 ./rootthebox.py --start' to start the server."
