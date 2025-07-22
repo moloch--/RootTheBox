@@ -83,14 +83,8 @@ elif [[ "${OSTYPE}" == "darwin14" ]]; then
   echo "Brew install package..."
   brew install python mysql memcached zlib
 
-fi	
-
-echo "[*] Creating virtual environment..."
-python3 -m venv .venv
-
-echo "[*] Activating virtual environment..."
-source .venv/bin/activate
+fi
 
 echo ""
 echo "[*] Base Setup Completed."
-echo "[*] Please run (non-root user) 'pip3 install -r requirements.txt --upgrade' to install the python dependencies."
+echo "[*] Make sure to install the python dependencies."
