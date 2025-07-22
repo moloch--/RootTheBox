@@ -8,8 +8,7 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 # Change to project root directory
 cd "$PROJECT_ROOT"
 
-echo "[*] Running from project root: $PROJECT_ROOT"
-
+echo "[*] Installing dependencies..."
 sudo "$SCRIPT_DIR/depends.sh"
 
 echo "[*] Creating virtual environment..."
@@ -22,3 +21,6 @@ echo "[*] Installing python dependencies..."
 pip3 install -r "$SCRIPT_DIR/requirements.txt" --upgrade
 
 echo "[*] Python dependencies installed."
+
+echo "[*] Running default sqlite setup... (change later if desired)"
+python3 ./rootthebox.py --setup=prod --sql-dialect=sqlite
