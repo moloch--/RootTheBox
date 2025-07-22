@@ -33,7 +33,9 @@ from libs.ConsoleColors import WARN, INFO, underline, bold, W, PROMPT
 from models import dbsession
 
 # We have to import all of the classes to avoid mapper errors
-from setup.create_database import User, Team, Permission
+from models.User import User
+from models.Team import Team
+from models.Permission import Permission
 
 
 class RecoveryConsole(cmd.Cmd):
