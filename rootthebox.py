@@ -97,13 +97,7 @@ def setup():
     warning yourself. Don't merge any code the removes it.
     """
     is_devel = options.setup.startswith("dev")
-    if is_devel:
-        print("%sWARNING:%s Setup is in development mode %s" % (WARN + bold, W, WARN))
-        message = "I know what the fuck I am doing"
-        resp = input(PROMPT + 'Please type "%s": ' % message)
-        if resp.replace('"', "").lower().strip() != message.lower():
-            os._exit(1)
-    else:
+    if not is_devel:
         is_devel = options.setup.startswith("docker")
     print(INFO + "%s : Creating the database ..." % current_time())
     from setup.create_database import create_tables, metadata

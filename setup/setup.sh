@@ -23,7 +23,7 @@ pip3 install -r "$SCRIPT_DIR/requirements.txt" --upgrade
 echo "[*] Python dependencies installed."
 
 echo "[*] Running default sqlite setup... (change later if desired)"
-python3 ./rootthebox.py --setup=prod --sql-dialect=sqlite
+python3 ./rootthebox.py --setup=dev
 
 echo "[*] Setup complete."
 echo "[*] Run 'python3 ./rootthebox.py --start' to start the server."
