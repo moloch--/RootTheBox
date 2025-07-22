@@ -31,14 +31,9 @@ import random
 import re
 import string
 
-try:
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib import urlencode
-try:
-    import urllib.request as urlrequest
-except ImportError:
-    import urllib2 as urlrequest
+from urllib.parse import urlencode
+import urllib.request as urlrequest
+
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from builtins import str
 from datetime import datetime

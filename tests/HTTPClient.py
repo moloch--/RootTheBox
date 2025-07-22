@@ -25,10 +25,7 @@ Wrapper for AsyncHTTPTestCase that removed some of the boilerplate code
 
 import logging
 
-try:
-    from urllib.parse import quote_plus
-except ImportError:
-    from urllib import quote_plus
+from urllib.parse import quote_plus
 from tornado.testing import AsyncHTTPTestCase
 
 from handlers import app

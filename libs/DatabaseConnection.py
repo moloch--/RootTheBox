@@ -29,11 +29,8 @@ import sys
 from builtins import object
 
 from libs.ConsoleColors import WARN, bold, R, W, PROMPT
+from urllib.parse import quote, quote_plus
 
-try:
-    from urllib.parse import quote, quote_plus
-except ImportError:
-    from urllib import quote, quote_plus
 from sqlalchemy import create_engine
 from tornado.options import options
 

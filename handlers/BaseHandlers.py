@@ -37,10 +37,8 @@ from libs.WebhookHelpers import send_game_start_webhook, send_game_stop_webhook
 from models import chatsession, dbsession
 from models.User import User
 
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+from urllib.parse import urlparse
+
 from tornado import locale
 from tornado.ioloop import IOLoop
 from tornado.options import options

@@ -50,11 +50,8 @@ import uuid
 from builtins import chr, object, range, str
 
 from past.utils import old_div
+from urllib.parse import urlparse
 
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
 
 from libs.StringCoding import encode
 

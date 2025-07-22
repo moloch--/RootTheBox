@@ -45,14 +45,9 @@ import traceback
 import uuid
 from builtins import str
 
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
+import configparser as ConfigParser
+from urllib.parse import urlparse
+
 from builtins import chr, object, range
 from datetime import datetime
 from hashlib import sha512
