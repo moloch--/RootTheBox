@@ -292,7 +292,7 @@ class Team(DatabaseObject):
         ls = self.files.filter_by(file_name=file_name)
         return ls[0] if 0 < len(ls) else None
 
-    def to_dict(self):
+    def to_dict(self, with_flags: bool = False):
         """Use for JSON related tasks; return public data only"""
         return {
             "uuid": self.uuid,
@@ -301,6 +301,13 @@ class Team(DatabaseObject):
             "money": self.money,
             "avatar": self.avatar,
             "notes": self.notes,
+            "score": {
+                "money": self.get_score("money"),
+                "flags": self.get_score("flag"),
+                "hints": self.get_score("hint"),
+                "bots": self.get_score("bot"),
+            },
+            "flags": [flag.to_dict() for flag in self.flags] if with_flags else [],
         }
 
     def to_xml(self, parent):
