@@ -82,6 +82,7 @@ css_files = [
     ("Superhero", ["superhero.min.css"]),
     ("Geocities", ["geocities.min.css"]),
     ("386", ["386.css", "386.js", "386.responsive.css"]),
+    ("cyberpunk", ["cyberpunk.min.css"]),
 ]
 for css in css_files:
     theme = Theme(name=css[0])
