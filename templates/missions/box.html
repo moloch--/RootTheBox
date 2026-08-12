@@ -17,6 +17,8 @@
 {% from models.Flag import Flag %}
 {% from models.Flag import FLAG_FILE %}
 {% from models.Flag import FLAG_CHOICE %}
+{% from models.Flag import FLAG_REMOTE %}
+{% from models.Flag import FLAG_REMOTESTRING %}
 {% from models.FlagChoice import FlagChoice %}
 {% from models.Box import FlagsSubmissionType %}
 {% from handlers.MaterialsHandler import has_materials,has_box_materials %}
@@ -95,6 +97,28 @@
             </button>
         </div>
     </div>
+
+    <!-- Submit remote flag-->
+    <div id="capture-remote-flag-modal" class="modal hide fade" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>{{ _("Submit Flag") }}</h3>
+        </div>
+        <div class="modal-body">
+            <form id="capture-remote-flag-form" class="form-horizontal" method="post" action="/user/missions/boxes?uuid={{ box.uuid }}">
+                {% raw xsrf_form_html() %}
+                <input id="capture-remote-flag-uuid" name="uuid" value="" type="hidden" />
+                <br />
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">{{ _("Close") }}</a>
+            <button id="capture-remote-flag-submit" class="btn btn-primary" type="button">
+                {{ _("Submit") }}
+            </button>
+        </div>
+    </div>
+
 
     <div id="show-flag-modal" class="modal hide fade" style="display: none;">
         <div class="modal-header">
@@ -344,7 +368,7 @@
                                     {% else %}         
                                         <td class="shortcolumn">
                                             {% if box.flag_submission_type != FlagsSubmissionType.SINGLE_SUBMISSION_BOX or not flag.is_static %}
-                                            <a id="capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% else %}text{% end %}-flag-modal" 
+                                            <a id="capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% elif flag.type == FLAG_REMOTE %}remote{% else %}text{%end%}-flag-button{{ index }}" class="btn btn-mini" data-toggle="modal" href="#capture-{% if flag.is_file %}file{% elif flag.type == FLAG_CHOICE %}choice{% elif flag.type == FLAG_REMOTE %}remote{% else %}text{% end %}-flag-modal"
                                             data-uuid="{{ flag.uuid }}" data-choices='{{ str(flag.choicelist()) }}'>
                                                 <i class="fa fa-flag"></i>
                                                 {{ _("Submit") }}

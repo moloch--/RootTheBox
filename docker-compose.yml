@@ -8,6 +8,9 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - ./files:/opt/rtb/files:rw
+      #########################
+      # temporary cahnge for dev
+      # - ./files:/opt/rtb/files:rw -> - ./:/opt/rtb:rw
+      - ./:/opt/rtb:rw
     environment:
       - COMPOSE_CONVERT_WINDOWS_PATHS=1

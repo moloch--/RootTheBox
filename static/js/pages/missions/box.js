@@ -34,6 +34,18 @@ $(document).ready(function() {
         $("#capture-text-flag-form").submit();
     });
 
+    $("#capture-remote-flag-modal").on('shown.bs.modal', function () {
+        $("#flag-token").focus()
+    });
+
+    $("a[id^=capture-remote-flag-button]").click(function() {
+        $("#capture-remote-flag-uuid").val($(this).data("uuid"));
+    });
+
+    $("#capture-remote-flag-submit").click(function() {
+        $("#capture-remote-flag-form").submit();
+    });
+
     $("a[id^=capture-choice-flag-button]").click(function() {
         $("#capture-choice-flag-uuid").val($(this).data("uuid"));
         $("#choiceinput").empty();

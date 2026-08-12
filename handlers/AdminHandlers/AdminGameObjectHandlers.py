@@ -48,6 +48,8 @@ from models.Flag import (
     FLAG_FILE,
     FLAG_REGEX,
     FLAG_STATIC,
+    FLAG_REMOTE,
+    FLAG_REMOTESTRING,
     Flag,
 )
 from models.FlagAttachment import FlagAttachment
@@ -80,6 +82,8 @@ class AdminCreateHandler(BaseHandler):
             "flag/static": "admin/create/flag-static.html",
             "flag/datetime": "admin/create/flag-datetime.html",
             "flag/choice": "admin/create/flag-choice.html",
+            "flag/remote": "admin/create/flag-remote.html",
+            "flag/remotestring": "admin/create/flag-remotestring.html",
             "game_level": "admin/create/game_level.html",
             "hint": "admin/create/hint.html",
             "team": "admin/create/team.html",
@@ -107,6 +111,8 @@ class AdminCreateHandler(BaseHandler):
             "flag/static": self.create_flag_static,
             "flag/datetime": self.create_flag_datetime,
             "flag/choice": self.create_flag_choice,
+            "flag/remote": self.create_flag_remote,
+            "flag/remotestring": self.create_flag_remotestring,
             "game_level": self.create_game_level,
             "hint": self.create_hint,
             "team": self.create_team,
@@ -269,6 +275,25 @@ class AdminCreateHandler(BaseHandler):
             self.render(
                 "admin/create/flag-datetime.html", errors=[str(error)], box=None
             )
+
+    def create_flag_remote(self):
+        """Create a regex flag"""
+        try:
+            self._mkflag(FLAG_REMOTE)
+        except ValidationError as error:
+            self.render(
+                "admin/create/flag-remote.html", errors=[str(error)], box=None
+            )
+
+    def create_flag_remotestring(self):
+        """Create a regex flag"""
+        try:
+            self._mkflag(FLAG_REMOTESTRING)
+        except ValidationError as error:
+            self.render(
+                "admin/create/flag-remote.html", errors=[str(error)], box=None
+            )
+
 
     def create_game_level(self):
         """
