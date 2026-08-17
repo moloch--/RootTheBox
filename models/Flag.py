@@ -23,7 +23,8 @@ Created on Mar 12, 2012
 import hashlib
 import json
 import re
-import xml.etree.cElementTree as ET
+import requests
+import xml.etree.ElementTree as ET
 from builtins import str
 from uuid import uuid4
 
@@ -42,9 +43,10 @@ from models.FlagAttachment import FlagAttachment  # Fix object mapper
 from models.FlagChoice import FlagChoice
 from models.Penalty import Penalty
 from models.Relationships import team_to_flag, user_to_flag
-from models.Team import Team
+from models.Team import Team 
 
-import requests
+
+
 
 ### Constants
 FLAG_STATIC = "static"
@@ -498,54 +500,118 @@ class Flag(DatabaseObject):
             raise ValueError("Invalid flag type, cannot capture")
 
     def capture_remote_flag(self, submission, **kwargs):
-        if self._type != FLAG_REMOTE and self._type != FLAG_REMOTESTRING:  
-            self.status = "error"
-            self.message = "Wrong flagtype for remoteflag"
+        """Submit this flag to the configured remote flag server.
+
+        Validates the flag type, sends the request to the remote server, and
+        updates ``self.status`` and ``self.message`` with the result.
+
+        Possible values for self.status:
+        success, fail, error
+
+        Args:
+            submission: The submitted flag value. It is sent only for
+                ``FLAG_REMOTESTRING`` flags.
+            **kwargs: Optional request metadata. If ``player_ip`` is provided,
+                it is included in the request payload.
+
+        Returns:
+            bool: ``True`` if the remote server returns a ``"success"`` status;
+            otherwise ``False``.
+        """
+
+        if not self._validate_remote_flag_request():
             return False
-        if "player_ip" not in kwargs:
-            self.status = "error"
-            self.message = "No Player IP for Remote Flag"
+
+        data = self._build_remote_flag_data(submission, **kwargs)
+        reply = self._send_remote_flag_request(data)
+
+        if reply is None:
             return False
-        
-        data = {"player_ip": kwargs.get("player_ip"), "flag_token": self.token}
+
+        return self._process_remote_flag_response(reply)
+
+    def _validate_remote_flag_request(self):
+        if self._type not in (FLAG_REMOTE, FLAG_REMOTESTRING):
+            return self._set_remote_error("Wrong flagtype for remoteflag")
+
+        return True
+
+    def _set_remote_error(self, message):
+        self.status = "error"
+        self.message = message
+        return False
+
+    def _build_remote_flag_data(self, submission, **kwargs):
+        data = {
+            "flag_token": self.token,
+        }
+
+        if "player_ip" in kwargs:
+            data["player_ip"] = kwargs["player_ip"]
+
         if self._type == FLAG_REMOTESTRING:
             data["submission"] = submission
-        url = f"{options.remote_protocol}://{options.remote_domain}:{options.remote_port}{options.remote_path}"
+
+        return data
+
+    def _get_remote_flag_url(self):
+        return (
+            f"{options.remote_protocol}://"
+            f"{options.remote_domain}:"
+            f"{options.remote_port}"
+            f"{options.remote_path}"
+        )
+
+    def _send_remote_flag_request(self, data):
         try:
-            reply = requests.post(url=url, data=data, timeout=options.remote_timeout)
-        except requests.Timeout:
-            self.status = "error"
-            self.message = "Request to Flagserver timed out"
-            return False
-        except Exception as e:
-            self.status = "error"
-            self.message = "Exception during POST to Remote server"
-            return False
-        
+            return requests.post(
+                url=self._get_remote_flag_url(),
+                data=data,
+                timeout=options.remote_timeout,
+            )
+        except requests.exceptions.Timeout:
+            self._set_remote_error("Request to Flagserver timed out")
+        except requests.exceptions.ConnectionError:
+            self._set_remote_error("Could not connect to Flagserver")
+        except requests.exceptions.SSLError:
+            self._set_remote_error("SSL/TLS error while connecting to Flagserver")
+        except requests.exceptions.ProxyError:
+            self._set_remote_error("Proxy error while connecting to Flagserver")
+        except requests.exceptions.TooManyRedirects:
+            self._set_remote_error("Too many redirects from Flagserver")
+        except requests.exceptions.InvalidURL:
+            self._set_remote_error("Invalid Flagserver URL")
+        except requests.exceptions.HTTPError as error:
+            self._set_remote_error(f"Flagserver returned HTTP error: {error}")
+        except requests.exceptions.RequestException as error:
+            self._set_remote_error(f"Request to Flagserver failed: {error}")
+
+        return None
+
+
+    def _process_remote_flag_response(self, reply):
         if reply.status_code != 200:
-            self.status = "error"
-            self.message = "Request to Flagserver returned status " + str(reply.status_code)
-            return False
+            return self._set_remote_error(
+                f"Request to Flagserver returned status {reply.status_code}"
+            )
 
         try:
-            retval = json.loads(reply.text)
-        except json.JSONDecodeError as e:
-            self.status = "error"
-            self.message = "Reply from FlagCheckServer is not a valid Json"
-            return False
-        
-        if "status" not in retval:
-            self.status = "error"
-            self.message = "Reply from FlagCheckServer does not contain a Status"
-            return False
+            response_data = json.loads(reply.text)
+        except json.JSONDecodeError:
+            return self._set_remote_error(
+                "Reply from FlagCheckServer is not a valid Json"
+            )
 
-        self.status = retval["status"]
-        if "message" in retval:
-            self.message = retval["message"]
-        else:
-            self.message = "No message from FlagServer"
+        if "status" not in response_data:
+            return self._set_remote_error(
+                "Reply from FlagCheckServer does not contain a Status"
+            )
+
+        self.status = response_data["status"]
+        self.message = response_data.get("message", "No message from FlagServer")
 
         return self.status == "success"
+
 
 
     def to_xml(self, parent):

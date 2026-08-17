@@ -1153,7 +1153,7 @@ define(
 
 define(
     "remote_domain",
-    default="127.0.0.1",
+    default="FlagCheckServer",
     group="remote",
     help="domain or IP to access the remote flag server"
 )
