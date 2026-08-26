@@ -286,12 +286,12 @@ class AdminCreateHandler(BaseHandler):
             )
 
     def create_flag_remotestring(self):
-        """Create a regex flag"""
+        """Create a remote string flag"""
         try:
             self._mkflag(FLAG_REMOTESTRING)
         except ValidationError as error:
             self.render(
-                "admin/create/flag-remote.html", errors=[str(error)], box=None
+                "admin/create/flag-remotestring.html", errors=[str(error)], box=None
             )
 
 

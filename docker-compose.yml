@@ -6,11 +6,8 @@ services:
   webapp:
     build: .
     ports:
-      - "80:8888"
+      - "8888:8888"
     volumes:
-      #########################
-      # temporary cahnge for dev
-      # - ./files:/opt/rtb/files:rw -> - ./:/opt/rtb:rw
-      - ./:/opt/rtb:rw
-    #environment:
-      #- COMPOSE_CONVERT_WINDOWS_PATHS=1
+      - ./files:/opt/rtb/files:rw
+    environment:
+      - COMPOSE_CONVERT_WINDOWS_PATHS=1

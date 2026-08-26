@@ -5,6 +5,10 @@ Unit tests for everything in models/
 
 
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
+
+from tornado.ioloop import IOLoop
 
 from libs.StringCoding import encode
 from libs.ValidationError import ValidationError
@@ -16,6 +20,8 @@ from models.Flag import (
     FLAG_DATETIME,
     FLAG_FILE,
     FLAG_REGEX,
+    FLAG_REMOTE,
+    FLAG_REMOTESTRING,
     FLAG_STATIC,
     Flag,
 )
@@ -182,12 +188,30 @@ class TestFlag(unittest.TestCase):
             description="A datetime test token",
             value=500,
         )
+        self.remote_flag = Flag.create_flag(
+            _type=FLAG_REMOTE,
+            box=self.box,
+            name="Remote Flag",
+            raw_token="remote-id",
+            description="A remotely checked flag",
+            value=600,
+        )
+        self.remote_string_flag = Flag.create_flag(
+            _type=FLAG_REMOTESTRING,
+            box=self.box,
+            name="Remote String Flag",
+            raw_token="remote-string-id",
+            description="A remotely checked string flag",
+            value=700,
+        )
 
         dbsession.add(self.static_flag)
         dbsession.add(self.regex_flag)
         dbsession.add(self.file_flag)
         dbsession.add(self.choice_flag)
         dbsession.add(self.datetime_flag)
+        dbsession.add(self.remote_flag)
+        dbsession.add(self.remote_string_flag)
         dbsession.commit()
 
     def tearDown(self):
@@ -218,3 +242,85 @@ class TestFlag(unittest.TestCase):
     def test_datetime_capture(self):
         assert self.datetime_flag.capture("2018-06-22 18:00:00")
         assert not self.datetime_flag.capture("2018-06-21 16:00:00")
+
+    def test_remote_capture_is_async(self):
+        response = SimpleNamespace(
+            code=200,
+            body=b'{"status": "success", "message": "captured"}',
+        )
+        request_data = {}
+
+        async def send_request(flag, data):
+            request_data.update(data)
+            return response
+
+        with patch.object(Flag, "_send_remote_flag_request", send_request):
+            captured = IOLoop.current().run_sync(
+                lambda: self.remote_flag.capture_async(
+                    "ignored", player_ip="192.0.2.1"
+                )
+            )
+
+        assert captured
+        assert self.remote_flag.status == "success"
+        assert self.remote_flag.message == "captured"
+        assert request_data == {
+            "flag_token": "remote-id",
+            "player_ip": "192.0.2.1",
+        }
+
+    def test_remote_string_capture_sends_submission(self):
+        response = SimpleNamespace(
+            code=200,
+            body=b'{"status": "fail", "message": "try again"}',
+        )
+        request_data = {}
+
+        async def send_request(flag, data):
+            request_data.update(data)
+            return response
+
+        with patch.object(Flag, "_send_remote_flag_request", send_request):
+            captured = IOLoop.current().run_sync(
+                lambda: self.remote_string_flag.capture_async("player answer")
+            )
+
+        assert not captured
+        assert self.remote_string_flag.status == "fail"
+        assert self.remote_string_flag.message == "try again"
+        assert request_data == {
+            "flag_token": "remote-string-id",
+            "submission": "player answer",
+        }
+
+    def test_remote_response_rejects_invalid_payloads(self):
+        invalid_responses = (
+            SimpleNamespace(code=200, body=b"not-json"),
+            SimpleNamespace(code=200, body=b"null"),
+            SimpleNamespace(code=200, body=b'{"status": "unknown"}'),
+            SimpleNamespace(code=200, body=b'{"status": []}'),
+            SimpleNamespace(
+                code=200,
+                body=b'{"status": "success", "message": {}}',
+            ),
+            SimpleNamespace(code=503, body=b""),
+        )
+
+        for response in invalid_responses:
+            with self.subTest(response=response):
+                assert not self.remote_flag._process_remote_flag_response(response)
+                assert self.remote_flag.status == "error"
+
+    def test_remote_response_preserves_server_error(self):
+        response = SimpleNamespace(
+            code=200,
+            body=b'{"status": "error", "message": "maintenance"}',
+        )
+
+        assert not self.remote_flag._process_remote_flag_response(response)
+        assert self.remote_flag.status == "error"
+        assert self.remote_flag.message == "maintenance"
+
+    def test_remote_capture_requires_async_api(self):
+        with self.assertRaises(ValueError):
+            self.remote_flag.capture("ignored")
