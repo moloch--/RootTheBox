@@ -296,7 +296,7 @@ class BoxHandler(BaseHandler):
         old_reward = flag.dynamic_value(user.team) if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
         if flag is not None and (flag.is_remote or flag.is_remotestring):
-            reward_dialog = f"{reward_dialog} Message: {flag.message}"
+            reward_dialog = f"{reward_dialog} Message: {flag.message} "
         if options.banking:
             reward_added_str_template = (
                 "${} has been added to your " + teamval + "account."
