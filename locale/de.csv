@@ -163,6 +163,8 @@ Create New Paste,Neuen Paste erstellen
 Create Notification,Benachrichtigung erstellen
 Create Regex Flag,Regex-Flagge erstellen
 Create Static Flag,Statische Flagge erstellen
+Create Remote Flag,Remote-Flagge erstellen
+Create Remote String Flag,Remote-String-Flagge erstellen
 Create Team,Team erstellen
 Created,Erstellt
 Current algorithm,Aktueller Algorithmus
@@ -258,6 +260,7 @@ Enter a Matching Flag,Geben Sie eine passende Flagge ein
 Enter Choice,Auswahl eingeben
 Enter the same password as before,Geben Sie dasselbe Passwort wie zuvor ein
 ERROR,ERROR
+Error, Fehler
 Expire,Verlopen
 Export Game Objects,Spielobjekte exportieren
 Export of gameplay settings does not include the entire server and database configuration.,Der Export der Gameplay-Einstellungen umfasst nicht die gesamte Server- und Datenbankkonfiguration.
@@ -282,6 +285,7 @@ Flag Decrease Value,Flaggenwert verringern
 Flag Details,Flaggendetails
 Flag File,Flaggendatei
 Flag Hints,Flaggenhinweise
+Flag ID, Flaggen ID
 Flag Minimum Value,Vlag Minimumwaarde
 Flag Name,Flaggenname
 Flag Penalty,Flaggenstrafe
@@ -338,6 +342,7 @@ In Progress,In Bearbeitung
 "In this case, the flag is a Date / Time string. This flag type will try to match on common datetime format variations and deal with differences like slashes, dashes, padding, 12hr, 24hr, etc.  It can handle a date, time, or a datetime.","In diesem Fall ist die Flagge eine Datums- / Uhrzeitzeichenfolge. Dieser Flaggentyp versucht, mit gängigen Datums- / Uhrzeit-Formatvariationen übereinzustimmen und behandelt Unterschiede wie Schrägstriche, Bindestriche, Auffüllungen, 12 Stunden, 24 Stunden usw. Er kann ein Datum, eine Uhrzeit oder eine Datums- / Uhrzeitangabe verarbeiten."
 "In this case, the flag is a multiple choice question where the selected option is the token.","In diesem Fall ist die Flagge eine Multiple-Choice-Frage, bei der die ausgewählte Option das Token ist."
 "In this case, the flag is a regular expression. The user must submit the a string which matches the pattern to capture the flag. Matches can be insensitive. Please be sure to test your regex, and ensure its not too broad.","In diesem Fall ist die Flagge ein regulärer Ausdruck. Der Benutzer muss eine Zeichenfolge übermitteln, die mit dem Muster übereinstimmt, um die Flagge zu erobern. Übereinstimmungen können unempfindlich sein. Bitte stellen Sie sicher, dass Sie Ihren regulären Ausdruck testen, und stellen Sie sicher, dass er nicht zu breit angelegt ist."
+"In this case, the flag is a remote Flag, the ID is submited to the flag-check-server.","In diesem Fall ist die Flagge eine Remote-Flagge, die ID wird an den Flaggen-Test-Server übermittelt"
 "In this case, the flag is a static string. The user must submit the exact token to capture the flag.  Whitespace at the beginning and end are stripped.","In diesem Fall ist die Flagge eine statische Zeichenfolge. Der Benutzer muss das genaue Token senden, um die Flagge zu erobern. Leerzeichen am Anfang und Ende werden entfernt."
 Include gameplay settings (such as those under ,Das Einbeziehen von Gameplay-Einstellungen (z. B. beim Exportieren von Gameplay-Einstellungen) umfasst nicht die gesamte Server- und Datenbankkonfiguration.
 Income,Einkommen
@@ -483,6 +488,7 @@ Player Arrested!,Spieler verhaftet!
 Player Email,Spieler E-Mail
 Player Name,Spielername
 "Player's bank account passwords are also available, allowing you to crack each other's passwords and steal the money.","Passwörter für das Bankkonto des Spielers sind ebenfalls verfügbar, sodass Sie die Passwörter des anderen knacken und das Geld stehlen können."
+please inform your trainer ,Bitte informieren sie den Referenten.
 Players,Spieler
 Please do NOT enter your real bank account password.,Bitte geben Sie NICHT Ihr echtes Bankkonto-Passwort ein.
 points,Punkte

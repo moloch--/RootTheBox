@@ -1143,6 +1143,47 @@ define("config", default="files/rootthebox.cfg", help="root the box configuratio
 define("tests", default=False, help="runs the unit tests", type=bool)
 
 
+# remote Flag server
+define(
+    "remote_protocol",
+    default="http",
+    group="remote",
+    help="protocol to access the remote flag server"
+)
+
+define(
+    "remote_domain",
+    default="FlagCheckServer",
+    group="remote",
+    help="domain or IP to access the remote flag server"
+)
+
+define(
+    "remote_path",
+    default="/UserFlagCheck",
+    group="remote",
+    help="path to check remote flags on the remote flag server"
+)
+
+define(
+    "remote_port",
+    default= 8080,
+    group="remote",
+    help="port to access the remote flag server",
+    type=int
+)
+
+define(
+    "remote_timeout",
+    default= 60,
+    group="remote",
+    help="time to wait for reply from the remote flag server in seconds",
+    type=int
+)
+
+
+
+
 if __name__ == "__main__":
 
     # We need this to pull the --config option

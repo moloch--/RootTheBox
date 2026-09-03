@@ -3,14 +3,51 @@
 Unit tests for everything in handlers/
 """
 import logging
+import unittest
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 from tornado.options import options
 
+from handlers.MissionsHandler import BoxHandler
 from models import dbsession
 from models.Team import Team
 from models.User import User
 from tests.Helpers import *
 from tests.HTTPClient import ApplicationTest
+
+
+class TestBoxHandler(unittest.TestCase):
+    def test_failed_attempt_handles_missing_flag(self):
+        handler = SimpleNamespace(render_page_by_box_id=Mock())
+        user = SimpleNamespace(team=None)
+
+        BoxHandler.failed_attempt(handler, None, user, "missing", 123)
+
+        handler.render_page_by_box_id.assert_called_once_with(
+            123, errors=["Sorry - Try Again"]
+        )
+
+    def test_remote_server_errors_do_not_create_attempts(self):
+        handler = SimpleNamespace(
+            failed_capture=Mock(),
+            render_page_by_flag=Mock(),
+        )
+        flag = SimpleNamespace(
+            is_remote=True,
+            is_remotestring=False,
+            message="maintenance",
+            status="error",
+        )
+        user = SimpleNamespace(team=None)
+
+        BoxHandler.failed_attempt(handler, flag, user, "submission", 123)
+
+        handler.failed_capture.assert_not_called()
+        handler.render_page_by_flag.assert_called_once_with(
+            flag,
+            info=["Error: maintenance please inform the trainer"],
+        )
 
 
 class TestPublicHandlers(ApplicationTest):

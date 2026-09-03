@@ -27,6 +27,7 @@ This file contains the code for displaying flags / recv flag submissions
 import json
 import logging
 from builtins import next, str
+from uuid import uuid4
 
 from past.utils import old_div
 from tornado.options import options
@@ -144,7 +145,7 @@ class BoxHandler(BaseHandler):
 
     @authenticated
     @game_started
-    def post(self, *args, **kwargs):
+    async def post(self, *args, **kwargs):
         """Check validity of flag submissions"""
         box_id = self.get_argument("box_id", None)
         uuid = self.get_argument("uuid", "")
@@ -189,6 +190,8 @@ class BoxHandler(BaseHandler):
             if flag is not None and flag.is_file:
                 if hasattr(self.request, "files") and "flag" in self.request.files:
                     submission = self.request.files["flag"][0]["body"]
+            elif flag is not None and flag.is_remote:
+                submission = f"Remote Submission: {uuid4()}"
             else:
                 submission = self.get_argument("token", "").replace("__quote__", '"')
             if len(submission) == 0:
@@ -197,7 +200,7 @@ class BoxHandler(BaseHandler):
                 )
                 return
             old_reward = flag.dynamic_value(user.team) if flag is not None else 0
-            if flag is not None and self.attempt_capture(flag, submission):
+            if flag is not None and await self.attempt_capture(flag, submission):
                 self.add_content_policy("script", "'unsafe-eval'")
                 success = self.success_capture(user, flag, old_reward)
                 if options.story_mode:
@@ -219,11 +222,23 @@ class BoxHandler(BaseHandler):
                 self.render_page_by_flag(flag, success=success)
                 return
             else:
+                if flag is not None and flag in user.team.flags:
+                    self.render_page_by_flag(flag)
+                    return
                 self.failed_attempt(flag, user, submission, box_id)
         else:
             self.render("public/404.html")
 
     def failed_attempt(self, flag, user, submission, box_id):
+        remote_error = (
+            flag is not None
+            and (flag.is_remote or flag.is_remotestring)
+            and flag.status == "error"
+        )
+        if remote_error:
+            msg = f"Error: {flag.message} please inform the trainer"
+            self.render_page_by_flag(flag, info=[msg])
+            return
         if flag is None or Penalty.by_token_count(flag, user.team, submission) == 0:
             if options.teams:
                 teamval = "team's "
@@ -252,6 +267,8 @@ class BoxHandler(BaseHandler):
                         + teamval
                         + "score."
                     )
+            if flag is not None and (flag.is_remote or flag.is_remotestring):
+                penalty_dialog = f"{penalty_dialog} Message: {flag.message}"
             if flag is None:
                 self.render_page_by_box_id(box_id, errors=[penalty_dialog])
             else:
@@ -278,6 +295,8 @@ class BoxHandler(BaseHandler):
             teamval = ""
         old_reward = flag.dynamic_value(user.team) if old_reward is None else old_reward
         reward_dialog = flag.name + " answered correctly. "
+        if flag is not None and (flag.is_remote or flag.is_remotestring):
+            reward_dialog = f"{reward_dialog} Message: {flag.message} "
         if options.banking:
             reward_added_str_template = (
                 "${} has been added to your " + teamval + "account."
@@ -405,7 +424,7 @@ class BoxHandler(BaseHandler):
             return penalty
         return False
 
-    def attempt_capture(self, flag, submission):
+    async def attempt_capture(self, flag, submission):
         """Compares a user provided token to the token in the db"""
         user = self.get_current_user()
         team = user.team
@@ -413,7 +432,10 @@ class BoxHandler(BaseHandler):
             "%s (%s) capture the flag '%s'" % (user.handle, team.name, flag.name)
         )
         if submission is not None and flag not in team.flags:
-            if flag.capture(submission):
+            captured = await flag.capture_async(
+                submission, player_ip=self.request.remote_ip
+            )
+            if captured and flag not in team.flags:
                 flag_value = flag.dynamic_value(team)
                 if (
                     options.dynamic_flag_value

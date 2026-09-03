@@ -23,8 +23,9 @@ Created on Mar 12, 2012
 import hashlib
 import json
 import re
-import xml.etree.cElementTree as ET
+import xml.etree.ElementTree as ET
 from builtins import str
+from urllib.parse import urlencode
 from uuid import uuid4
 
 from dateutil.parser import parse
@@ -32,6 +33,7 @@ from past.utils import old_div
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import Boolean, Integer, String, Unicode
+from tornado.httpclient import AsyncHTTPClient, HTTPClientError, HTTPRequest
 from tornado.options import options
 
 from libs.ValidationError import ValidationError
@@ -50,7 +52,18 @@ FLAG_REGEX = "regex"
 FLAG_FILE = "file"
 FLAG_DATETIME = "datetime"
 FLAG_CHOICE = "choice"
-FLAG_TYPES = [FLAG_STATIC, FLAG_REGEX, FLAG_FILE, FLAG_DATETIME, FLAG_CHOICE]
+FLAG_REMOTE = "remote"
+FLAG_REMOTESTRING = "remotestring"
+FLAG_TYPES = [
+    FLAG_STATIC,
+    FLAG_REGEX,
+    FLAG_FILE,
+    FLAG_DATETIME,
+    FLAG_CHOICE,
+    FLAG_REMOTE,
+    FLAG_REMOTESTRING,
+]
+REMOTE_FLAG_STATUSES = frozenset(("success", "fail", "error"))
 
 
 class Flag(DatabaseObject):
@@ -63,6 +76,8 @@ class Flag(DatabaseObject):
         -datetime
         -file
         -choice
+        -remote
+        -remotestring
 
     Depending on the cls._type value. For more information see the wiki.
     """
@@ -82,6 +97,9 @@ class Flag(DatabaseObject):
     _order = Column(Integer, nullable=True, index=True)
     _type = Column(Unicode(16), default=False)
     _locked = Column(Boolean, default=False, nullable=False)
+
+    status = ""
+    message = "Default Message"
 
     flag_attachments = relationship(
         "FlagAttachment",
@@ -107,7 +125,15 @@ class Flag(DatabaseObject):
         cascade="all,delete,delete-orphan",
     )
 
-    FLAG_TYPES = [FLAG_FILE, FLAG_REGEX, FLAG_STATIC, FLAG_DATETIME, FLAG_CHOICE]
+    FLAG_TYPES = [
+        FLAG_FILE,
+        FLAG_REGEX,
+        FLAG_STATIC,
+        FLAG_DATETIME,
+        FLAG_CHOICE,
+        FLAG_REMOTE,
+        FLAG_REMOTESTRING,
+    ]
 
     @classmethod
     def all(cls):
@@ -165,6 +191,8 @@ class Flag(DatabaseObject):
             FLAG_FILE: cls._create_flag_file,
             FLAG_DATETIME: cls._create_flag_datetime,
             FLAG_CHOICE: cls._create_flag_choice,
+            FLAG_REMOTE: cls._create_flag_remote,
+            FLAG_REMOTESTRING: cls._create_flag_remotestring,
         }
         # TODO Don't understand why this is here - name is not unique value
         # and you could simply name questions per box, like "Question 1" - ElJefe 6/1/2018
@@ -234,6 +262,29 @@ class Flag(DatabaseObject):
             description=description,
             value=value,
         )
+
+    @classmethod
+    def _create_flag_remote(cls, box, name, raw_token, description, value):
+        """Check flag remote specific parameters"""
+        return cls(
+            box_id=box.id,
+            name=name,
+            token=raw_token,
+            description=description,
+            value=value,
+        )
+
+    @classmethod
+    def _create_flag_remotestring(cls, box, name, raw_token, description, value):
+        """Check flag remotestring specific parameters"""
+        return cls(
+            box_id=box.id,
+            name=name,
+            token=raw_token,
+            description=description,
+            value=value,
+        )
+
 
     @classmethod
     def digest(self, data):
@@ -383,6 +434,14 @@ class Flag(DatabaseObject):
         return self._type == FLAG_FILE
 
     @property
+    def is_remote(self):
+        return self._type == FLAG_REMOTE
+
+    @property
+    def is_remotestring(self):
+        return self._type == FLAG_REMOTESTRING
+
+    @property
     def box(self):
         return Box.by_id(self.box_id)
 
@@ -425,7 +484,7 @@ class Flag(DatabaseObject):
                     choices.append(flagchoice.choice)
         return json.dumps(choices)
 
-    def capture(self, submission):
+    def capture(self, submission, **kwargs):
         if self._type == FLAG_STATIC:
             if self._case_sensitive == 0:
                 return (
@@ -450,8 +509,129 @@ class Flag(DatabaseObject):
                 return parse(self.token) == parse(submission)
             except:
                 return False
+        elif self._type in (FLAG_REMOTE, FLAG_REMOTESTRING):
+            raise ValueError("Remote flags must be captured asynchronously")
         else:
             raise ValueError("Invalid flag type, cannot capture")
+
+    async def capture_async(self, submission, **kwargs):
+        """Capture a flag without blocking the Tornado event loop."""
+        if self._type in (FLAG_REMOTE, FLAG_REMOTESTRING):
+            return await self.capture_remote_flag(submission, **kwargs)
+        return self.capture(submission, **kwargs)
+
+    async def capture_remote_flag(self, submission, **kwargs):
+        """Submit this flag to the configured remote flag server.
+
+        Validates the flag type, sends the request to the remote server, and
+        updates ``self.status`` and ``self.message`` with the result.
+
+        Possible values for self.status:
+        success, fail, error
+
+        Args:
+            submission: The submitted flag value. It is sent only for
+                ``FLAG_REMOTESTRING`` flags.
+            **kwargs: Optional request metadata. If ``player_ip`` is provided,
+                it is included in the request payload.
+
+        Returns:
+            bool: ``True`` if the remote server returns a ``"success"`` status;
+            otherwise ``False``.
+        """
+
+        if not self._validate_remote_flag_request():
+            return False
+
+        data = self._build_remote_flag_data(submission, **kwargs)
+        reply = await self._send_remote_flag_request(data)
+
+        if reply is None:
+            return False
+
+        return self._process_remote_flag_response(reply)
+
+    def _validate_remote_flag_request(self):
+        if self._type not in (FLAG_REMOTE, FLAG_REMOTESTRING):
+            return self._set_remote_error("Wrong flagtype for remoteflag")
+
+        return True
+
+    def _set_remote_error(self, message):
+        self.status = "error"
+        self.message = message
+        return False
+
+    def _build_remote_flag_data(self, submission, **kwargs):
+        data = {
+            "flag_token": self.token,
+        }
+
+        if "player_ip" in kwargs:
+            data["player_ip"] = kwargs["player_ip"]
+
+        if self._type == FLAG_REMOTESTRING:
+            data["submission"] = submission
+
+        return data
+
+    def _get_remote_flag_url(self):
+        return (
+            f"{options.remote_protocol}://"
+            f"{options.remote_domain}:"
+            f"{options.remote_port}"
+            f"{options.remote_path}"
+        )
+
+    async def _send_remote_flag_request(self, data):
+        try:
+            request = HTTPRequest(
+                url=self._get_remote_flag_url(),
+                method="POST",
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                body=urlencode(data).encode("utf-8"),
+                request_timeout=options.remote_timeout,
+            )
+            return await AsyncHTTPClient().fetch(request, raise_error=False)
+        except (HTTPClientError, ValueError) as error:
+            self._set_remote_error(f"Request to Flagserver failed: {error}")
+
+        return None
+
+    def _process_remote_flag_response(self, reply):
+        if reply.code != 200:
+            return self._set_remote_error(
+                f"Request to Flagserver returned status {reply.code}"
+            )
+
+        try:
+            response_data = json.loads(reply.body.decode("utf-8"))
+        except (AttributeError, UnicodeDecodeError, json.JSONDecodeError):
+            return self._set_remote_error(
+                "Reply from FlagCheckServer is not valid JSON"
+            )
+
+        if not isinstance(response_data, dict):
+            return self._set_remote_error(
+                "Reply from FlagCheckServer is not a JSON object"
+            )
+
+        status = response_data.get("status")
+        if not isinstance(status, str) or status not in REMOTE_FLAG_STATUSES:
+            return self._set_remote_error(
+                "Reply from FlagCheckServer contains an invalid status"
+            )
+
+        message = response_data.get("message", "No message from FlagServer")
+        if not isinstance(message, str):
+            return self._set_remote_error(
+                "Reply from FlagCheckServer contains an invalid message"
+            )
+
+        self.status = status
+        self.message = message
+
+        return self.status == "success"
 
     def to_xml(self, parent):
         """Write attributes to XML doc"""
