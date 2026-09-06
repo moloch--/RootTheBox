@@ -1,0 +1,169 @@
+{% extends "../main.html" %}
+
+{% block title %}{{ _("LEDs") }}{% end %}
+
+{% block content %}
+<div class="container">
+    <h1>
+        <i class="fa fa-lightbulb-o"></i>
+        {{ _("LEDs") }}
+    </h1>
+    <div style="font-style: italic;">{{ _("Assign a physical table to each team and configure the led API.") }}</div>
+    <br />
+    {% if led_error is not None %}
+    <div class="alert alert-error">
+        <h4 class="alert-heading">
+            <i class="fa fa-exclamation-triangle"></i>
+            {{ _("Led API Error") }}
+        </h4>
+        {{ led_error }}
+        <form style="display: inline;" action="/admin/leds" method="post">
+            {% raw xsrf_form_html() %}
+            <input type="hidden" name="action" value="dismiss" />
+            <button class="btn btn-mini" type="submit">{{ _("Dismiss") }}</button>
+        </form>
+    </div>
+    {% end %}
+    {% if errors is not None and len(errors) != 0 %}
+        {% for error in errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            <h4 class="alert-heading">{{ _("ERROR") }}</h4>
+            {{ error }}
+        </div>
+        {% end %}
+    {% end %}
+    {% if success is not None %}
+    <div class="alert alert-success">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        {{ success }}
+    </div>
+    {% end %}
+
+    <form class="form-horizontal" action="/admin/leds" method="post">
+        {% raw xsrf_form_html() %}
+        <input type="hidden" name="action" value="save" />
+
+        <div class="well">
+            <h3>{{ _("Tables") }}</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{{ _("Team") }}</th>
+                        <th>{{ _("Table") }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for team in teams %}
+                    <tr>
+                        <td>{{ team.name }}</td>
+                        <td>
+                            <input type="number" min="1" style="width: 80px; margin: 0;"
+                                name="team_table_{{ team.uuid }}"
+                                value="{{ team.table_id if team.table_id is not None else '' }}" />
+                        </td>
+                    </tr>
+                    {% end %}
+                    {% if len(teams) == 0 %}
+                    <tr>
+                        <td colspan="2">{{ _("There are no teams yet.") }}</td>
+                    </tr>
+                    {% end %}
+                </tbody>
+            </table>
+            <div style="font-style: italic;">{{ _("Leave the field empty to unassign a team. A table can only be used by one team.") }}</div>
+        </div>
+
+        <div class="well">
+            <h3>{{ _("Settings") }}</h3>
+            <div class="control-group">
+                <label class="control-label" for="led-base-api">{{ _("Led API URL") }}</label>
+                <div class="controls">
+                    <input required id="led-base-api" type="text" name="led_base_api" value="{{ config.led_base_api }}"
+                        rel="popover"
+                        data-original-title="{{ _('Led API URL') }}"
+                        data-content="{{ _('Base url of the led api, it must end with a slash') }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="led-round-duration">{{ _("Round Duration") }}</label>
+                <div class="controls">
+                    <input required id="led-round-duration" type="number" min="1" name="led_round_duration"
+                        value="{{ config.led_round_duration }}"
+                        rel="popover"
+                        data-original-title="{{ _('Round Duration') }}"
+                        data-content="{{ _('Duration in seconds sent to the led api when a round starts') }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="led-stop-duration">{{ _("Stop Duration") }}</label>
+                <div class="controls">
+                    <input required id="led-stop-duration" type="number" min="1" name="led_stop_duration"
+                        value="{{ config.led_stop_duration }}"
+                        rel="popover"
+                        data-original-title="{{ _('Stop Duration') }}"
+                        data-content="{{ _('Duration in seconds of the color displayed when the game stops') }}" />
+                </div>
+            </div>
+            <hr />
+            <div class="control-group">
+                <label class="control-label" for="led-color-flag">{{ _("Flag Color") }}</label>
+                <div class="controls">
+                    <input required id="led-color-flag" type="color" name="led_color_flag" value="{{ config.led_color_flag }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="led-color-box">{{ _("Box Color") }}</label>
+                <div class="controls">
+                    <input required id="led-color-box" type="color" name="led_color_box" value="{{ config.led_color_box }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="led-color-round">{{ _("Round Color") }}</label>
+                <div class="controls">
+                    <input required id="led-color-round" type="color" name="led_color_round" value="{{ config.led_color_round }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="led-color-stop">{{ _("Stop Color") }}</label>
+                <div class="controls">
+                    <input required id="led-color-stop" type="color" name="led_color_stop" value="{{ config.led_color_stop }}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <button class="btn btn-primary" type="submit">
+                    {{ _("Update Led Configuration") }}
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="well">
+        <h3>{{ _("Test") }}</h3>
+        <form class="form-inline" action="/admin/leds" method="post">
+            {% raw xsrf_form_html() %}
+            <input type="hidden" name="action" value="test" />
+            <label for="test-table-id">{{ _("Table") }}</label>
+            <input id="test-table-id" type="number" min="1" name="table_id" value="1" style="width: 80px;" />
+            <button class="btn" type="submit">
+                <i class="fa fa-lightbulb-o"></i>
+                {{ _("Test Table") }}
+            </button>
+        </form>
+        <br />
+        <form style="display: inline;" action="/admin/leds" method="post">
+            {% raw xsrf_form_html() %}
+            <input type="hidden" name="action" value="test_round" />
+            <button class="btn" type="submit">{{ _("Test Round Start") }}</button>
+        </form>
+        <form style="display: inline;" action="/admin/leds" method="post">
+            {% raw xsrf_form_html() %}
+            <input type="hidden" name="action" value="test_stop" />
+            <button class="btn" type="submit">{{ _("Test Stop") }}</button>
+        </form>
+    </div>
+</div>
+{% end %}

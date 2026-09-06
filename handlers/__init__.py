@@ -161,7 +161,7 @@ urls = [
         StaticFileHandler,
         {"path": "files/story/"},
     ),
-    (r"/materials/(.*)(?<!/)", StaticFileHandler, {"path": "files/game_materials/"}),
+    (r"/materials/(.*)(?<!/)", MaterialsFileHandler),
     # Game Materials
     (r"/materials/?", MaterialsHandler),
     (r"/materials/(.*)/", MaterialsHandler),
@@ -188,6 +188,7 @@ urls = [
     (r"/admin/ajax/(user|team)", AdminAjaxUserHandler),
     (r"/admin/lock/(level|corp|user|box|flag)", AdminLockHandler),
     (r"/admin/configuration", AdminConfigurationHandler),
+    (r"/admin/leds", AdminLedsHandler),
     (r"/admin/gitstatus", AdminGitStatusHandler),
     (r"/admin/export/(.*)", AdminExportHandler),
     (r"/admin/import/xml", AdminImportXmlHandler),

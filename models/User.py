@@ -61,7 +61,7 @@ from models.Theme import Theme
 
 # Constants
 ADMIN_PERMISSION = "admin"
-DEFAULT_HASH_ALGORITHM = "md5"
+DEFAULT_HASH_ALGORITHM = "sha512"
 ITERATE = 0x2BAD  # 11181
 
 
@@ -201,6 +201,10 @@ class User(DatabaseObject):
                 "Invalid password length (min %d chars)"
                 % (options.min_user_password_length,)
             )
+
+    def set_password_unchecked(self, value):
+        """Sets a password bypassing the length policy, for bulk csv imports"""
+        self._password = self._hash_password(value)
 
     @property
     def theme(self):

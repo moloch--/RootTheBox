@@ -235,11 +235,26 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="/admin/configuration">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-fw fa-gear"></i>
                             {{ _("Configuration") }}
+                            <b class="caret"></b>
                         </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/admin/configuration">
+                                    <i class="fa fa-fw fa-gamepad"></i>
+                                    {{ _("Game") }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/leds">
+                                    <i class="fa fa-fw fa-lightbulb-o"></i>
+                                    {{ _("LEDs") }}
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     {% if options.restrict_registration %}
                     <li class="dropdown">

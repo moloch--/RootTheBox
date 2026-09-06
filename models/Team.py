@@ -65,6 +65,7 @@ class Team(DatabaseObject):
     _motto = Column(Unicode(32))
     _avatar = Column(String(64))
     _notes = Column(Unicode(512))
+    _table_id = Column(Integer)
     _code = Column(
         "code", String(16), unique=True, default=lambda: str(uuid4().hex)[:16]
     )
@@ -137,6 +138,11 @@ class Team(DatabaseObject):
     def by_name(cls, name):
         """Return the team object based on "team_name" """
         return dbsession.query(cls).filter_by(_name=str(name)).first()
+
+    @classmethod
+    def by_table_id(cls, table_id):
+        """Return the team sitting at the given physical table"""
+        return dbsession.query(cls).filter_by(_table_id=int(table_id)).first()
 
     @classmethod
     def by_code(cls, code):
@@ -224,6 +230,29 @@ class Team(DatabaseObject):
             self._motto = str(value)
 
     @property
+    def table_id(self):
+        return self._table_id
+
+    @table_id.setter
+    def table_id(self, value):
+        """Physical table the team sits at, None when unassigned"""
+        if value is None or str(value).strip() == "":
+            self._table_id = None
+            return
+        try:
+            table_id = int(value)
+        except ValueError:
+            raise ValidationError("Table id must be a number")
+        if table_id < 1:
+            raise ValidationError("Table id must be greater than 0")
+        other = Team.by_table_id(table_id)
+        if other is not None and other.id != self.id:
+            raise ValidationError(
+                "Table %d is already assigned to %s" % (table_id, other.name)
+            )
+        self._table_id = table_id
+
+    @property
     def notes(self):
         if self._notes is None:
             self._notes = ""
@@ -303,6 +332,7 @@ class Team(DatabaseObject):
             "uuid": self.uuid,
             "name": self.name,
             "motto": self.motto,
+            "table_id": self.table_id,
             "money": self.money,
             "avatar": self.avatar,
             "notes": self.notes,

@@ -44,7 +44,7 @@ def current_time():
     return str(datetime.now()).split(" ")[1].split(".")[0]
 
 
-def start():
+def update_database():
     """Update the database schema"""
     try:
         from handlers import update_db
@@ -56,7 +56,9 @@ def start():
             # Skipped if alembic record ahead for branch compatibility
             os._exit(1)
 
-    """ Starts the application """
+
+def start():
+    """ Starts the application, the schema is updated by the caller """
     from handlers import start_server
 
     prefix = "https://" if options.ssl else "http://"
@@ -105,6 +107,7 @@ def setup():
     themes = Theme.all()
     if len(themes) > 0:
         print(INFO + "It looks like database has already been set up.")
+        update_database()
         return
 
     print(INFO + "%s : Bootstrapping the database ..." % current_time())
@@ -178,33 +181,54 @@ def generate_teams_by_name(team_names):
 def generate_teams_user_with_file(file_name):
     from models import Team, dbsession
     from models import User
+    from libs.ValidationError import ValidationError
     import csv
     import string
     import random
 
-    def generate_password(length=12):
-        characters = string.ascii_letters + string.digits + string.punctuation
-        password = ''.join(random.choice(characters) for _ in range(length))
-        return password
+    # def generate_password(length=12):
+    #     characters = string.ascii_letters + string.digits + string.punctuation
+    #     password = ''.join(random.choice(characters) for _ in range(length))
+    #     return password
 
     with open(file_name[0], 'r') as csvfile:
         reader = csv.reader(csvfile)
         i = 0
         for row in reader:
+            if len(row) == 0 or not row[0].strip():
+                continue  # Blank lines are common at the end of a csv
             team_name = row[0]
-            team = Team.by_name(team_name)
-            if not team:
-                team = Team(name=team_name)
-                dbsession.add(team)
-                dbsession.commit()
+            try:
+                team = Team.by_name(team_name)
+                if not team:
+                    team = Team()
+                    team.name = team_name
+                    dbsession.add(team)
+                    dbsession.commit()
+            except ValidationError as error:
+                # A bad row must not abort the whole import
+                dbsession.rollback()
+                logging.error("Skipping team `%s`: %s" % (team_name, error))
+                continue
 
             for user_pseudo in row[1:]:
                 user = User.by_handle(user_pseudo)
                 if not user:
-                    pwd = generate_password(12)
-                    user = User(handle=user_pseudo, team=team, password=pwd)
-                    dbsession.add(user)
-                    dbsession.commit()
+                    # pwd = generate_password(12)
+                    pwd = user_pseudo # username = password, easier to manage
+                    try:
+                        user = User(handle=user_pseudo, team=team)
+                        # The pseudo is the password, so no length policy here
+                        user.set_password_unchecked(pwd)
+                        dbsession.add(user)
+                        dbsession.commit()
+                    except ValidationError as error:
+                        dbsession.rollback()
+                        logging.error(
+                            "Skipping user `%s` of team `%s`: %s"
+                            % (user_pseudo, team_name, error)
+                        )
+                        continue
 
                     if i == 0:
                         with open("/opt/rtb/files/save_user.txt", "w") as f:
@@ -243,8 +267,7 @@ def generate_boxes_flag(file_path):
     with open(file_path[0], 'r') as csvfile:
         reader = csv.reader(csvfile)
 
-        idx_box = 0
-        boxes = []
+        boxes = {}
 
         corp_uuid = generate_empty_corporation()
         corp = Corporation.by_uuid(corp_uuid)
@@ -252,14 +275,16 @@ def generate_boxes_flag(file_path):
         for row in reader:
             name, description, points, category_names = row[0], row[1], int(row[2]), row[3]
             flag_name, flag_str, flag_points, flag_desc = row[4], row[5], int(row[6]), row[7]
+            # Optional 9th column overrides the submission type
+            submission_type = row[8] if len(row) > 8 and row[8] else "CLASSIC"
 
-            if name not in boxes:
-                existing_box = dbsession.query(Box).filter_by(_name=name).first()
-                print(existing_box)
-                if not existing_box:
+            box = boxes.get(name)
+            if box is None:
+                box = dbsession.query(Box).filter_by(_name=name).first()
+                if not box:
                     box = Box(name=name, operating_system="linux", description=description,
                               game_level_id=1, value=points, corporation_id=corp.id,
-                              flag_submission_type="SINGLE_SUBMISSION_BOX")
+                              flag_submission_type=submission_type)
 
                     # Add categories to the box
                     for category_name in category_names.split("|"):
@@ -271,14 +296,12 @@ def generate_boxes_flag(file_path):
                     dbsession.commit()
 
                     logging.info(box.to_dict())
-
-                    boxes.append(name)
-                    idx_box += 1
                     print("Box added")
+                boxes[name] = box
 
             existing_flag = dbsession.query(Flag).filter_by(name=flag_name).first()
             if not existing_flag:
-                flag = Flag(box_id=idx_box, name=flag_name, token=flag_str, value=flag_points,
+                flag = Flag(box_id=box.id, name=flag_name, token=flag_str, value=flag_points,
                             type="static", description=flag_desc)
                 dbsession.add(flag)
                 dbsession.commit()
@@ -425,6 +448,48 @@ define(
     default="http://localhost:5000/",
     group="server",
     help="api url for leds handling",
+)
+
+define(
+    "led_round_duration",
+    default=30,
+    group="server",
+    help="duration in seconds of a led round",
+)
+
+define(
+    "led_stop_duration",
+    default=10,
+    group="server",
+    help="duration in seconds of the end of game led color",
+)
+
+define(
+    "led_color_flag",
+    default="#00ff00",
+    group="server",
+    help="led color used when a team captures a flag",
+)
+
+define(
+    "led_color_box",
+    default="#ff8800",
+    group="server",
+    help="led color used when a team owns a box",
+)
+
+define(
+    "led_color_round",
+    default="#ffffff",
+    group="server",
+    help="led color used when a round starts",
+)
+
+define(
+    "led_color_stop",
+    default="#1fe4f7",
+    group="server",
+    help="led color used when the game is stopped",
 )
 
 # HTTP Server Settings
@@ -1362,6 +1427,11 @@ if __name__ == "__main__":
         options.auth = "azuread"  # in-case it wasn't lower-case.
         options.require_email = False
         options.public_teams = False
+
+    # The generate helpers below query the models, so the schema must be
+    # up to date before they run, not only once start() is reached
+    if options.start:
+        update_database()
 
     if options.generate_teams:
         generate_teams(options.generate_teams)

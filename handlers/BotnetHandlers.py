@@ -33,6 +33,11 @@ import tornado.websocket
 from tornado.options import options
 
 from libs.BotManager import BotManager
+from libs.BruteForceProtection import (
+    is_blacklisted,
+    record_failed_login,
+    reset_failed_logins,
+)
 from libs.EventManager import EventManager
 from libs.SecurityDecorators import *
 from libs.StringCoding import decode, encode
@@ -176,7 +181,7 @@ class BotSocketHandler(tornado.websocket.WebSocketHandler):
         self.close()
 
 
-class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
+class BotCliMonitorSocketHandler(BaseWebSocketHandler):
     """
     Handles the CLI BotMonitor websocket connections, has custom auth.
     TODO: Trash this and use the web api handler, w/ normal session cookie
@@ -194,6 +199,13 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             self.opcodes = {"auth": self.auth}
 
     def open(self):
+        if is_blacklisted(self.application.settings, self.request.remote_ip):
+            logging.warning(
+                "[BAN HAMMER] Monitor socket from blacklisted IP %s"
+                % self.request.remote_ip
+            )
+            self.close()
+            return
         logging.debug("Opened new monitor socket to %s" % self.request.remote_ip)
 
     def on_message(self, message):
@@ -218,20 +230,21 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
 
     def auth(self, req):
         """Authenticate user"""
+        if is_blacklisted(self.application.settings, self.request.remote_ip):
+            self.auth_failure()
+            return
         try:
             user = User.by_handle(req["handle"])
         except:
             user = None
-        if user is None or user.is_admin():
+        if user is None or user.is_admin() or user.team is None:
             logging.debug("Monitor socket user does not exist.")
-            self.write_message(
-                {"opcode": "auth_failure", "message": "Authentication failure"}
-            )
-            self.close()
+            self.auth_failure()
         elif user.validate_password(req.get("password", "")):
             logging.debug(
                 "Monitor socket successfully authenticated as %s" % user.handle
             )
+            reset_failed_logins(self.application.settings, self.request.remote_ip)
             self.team_name = "".join(user.team.name)
             self.bot_manager.add_monitor(self)
             self.write_message({"opcode": "auth_success"})
@@ -239,10 +252,15 @@ class BotCliMonitorSocketHandler(tornado.websocket.WebSocketHandler):
             self.update(bots)
         else:
             logging.debug("Monitor socket provided invalid password for user")
-            self.write_message(
-                {"opcode": "auth_failure", "message": "Authentication failure"}
-            )
-            self.close()
+            self.auth_failure()
+
+    def auth_failure(self):
+        """Count the attempt against the shared ban counter, then hang up"""
+        record_failed_login(self.application.settings, self.request.remote_ip)
+        self.write_message(
+            {"opcode": "auth_failure", "message": "Authentication failure"}
+        )
+        self.close()
 
     def update(self, bots):
         """Called by the observable class"""

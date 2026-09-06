@@ -2,13 +2,18 @@ version: "3"
 services:
   memcached:
     image: memcached:latest
-    ports:
-      - "11211:11211"
+    expose:
+      - "11211"
   webapp:
     build: .
     ports:
       - "8888:8888"
     volumes:
       - ./files:/opt/rtb/files:rw
+    depends_on:
+      - memcached
     environment:
       - COMPOSE_CONVERT_WINDOWS_PATHS=1
+      - MEMCACHED=memcached:11211
+      # Optional: pick the admin password, otherwise one is generated on first boot
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-rootthebox}

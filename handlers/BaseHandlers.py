@@ -308,14 +308,20 @@ class BaseWebSocketHandler(WebSocketHandler):
     config = options  # backward compatibility
 
     def check_origin(self, origin):
-        """Parses the request's origin header"""
+        """Compares the request's origin header against the configured origin"""
+        if not origin:
+            logging.warning("Rejected websocket connection with no origin header")
+            return False
         try:
-            request_origin = urlparse(origin)
-            origin = urlparse(self.config.origin)
+            request_netloc = urlparse(origin).netloc.lower()
+            expected_netloc = urlparse(self.config.origin).netloc.lower()
             logging.debug(
-                "Checking request origin '%s' ends with '%s'" % (request_origin, origin)
+                "Checking request origin '%s' against '%s'"
+                % (request_netloc, expected_netloc)
             )
-            return request_origin.netloc.endswith(origin)
+            if not expected_netloc:
+                return False
+            return request_netloc == expected_netloc
         except:
             logging.exception("Failed to parse request origin: %r" % origin)
             return False

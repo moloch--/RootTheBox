@@ -46,11 +46,11 @@ from hashlib import sha256
 from os import urandom
 
 from msal import ConfidentialClientApplication
-from netaddr import IPAddress
 from pbkdf2 import PBKDF2
 from tornado.options import options
 
 from handlers.BaseHandlers import BaseHandler
+from libs.BruteForceProtection import record_failed_login, reset_failed_logins
 from libs.EmailHelpers import (
     create_email_headers,
     get_email_message,
@@ -329,6 +329,7 @@ class LoginHandler(BaseHandler):
         logging.info(
             "Successful login: %s from %s" % (user.handle, self.request.remote_ip)
         )
+        reset_failed_logins(self.application.settings, self.request.remote_ip)
         user.last_login = datetime.now()
         user.logins += 1
         self.dbsession.add(user)
@@ -350,26 +351,7 @@ class LoginHandler(BaseHandler):
 
     def failed_login(self):
         """Called if username/password is invalid"""
-        ip = self.request.remote_ip
-        logging.info("*** Failed login attempt from: %s" % ip)
-        failed_logins = self.application.settings["failed_logins"]
-        if ip in failed_logins:
-            failed_logins[ip] += 1
-        else:
-            failed_logins[ip] = 1
-        threshold = self.application.settings["blacklist_threshold"]
-        if (
-            self.application.settings["automatic_ban"]
-            and threshold <= failed_logins[ip]
-        ):
-            logging.info("[BAN HAMMER] Automatically banned IP: %s" % ip)
-            try:
-                if not IPAddress(ip).is_loopback():
-                    self.application.settings["blacklisted_ips"].append(ip)
-                else:
-                    logging.warning("[BAN HAMMER] Cannot blacklist loopback address")
-            except:
-                logging.exception("Error while attempting to ban ip address")
+        record_failed_login(self.application.settings, self.request.remote_ip)
         self.render(
             "public/login.html",
             info=None,

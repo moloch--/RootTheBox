@@ -22,6 +22,7 @@ Created on Jun 18, 2018
 
 import json
 import logging
+import mimetypes
 import os
 
 from tornado.options import options
@@ -93,6 +94,55 @@ class MaterialsHandler(BaseHandler):
         return (
             self.application.settings["game_started"] or options.game_materials_on_stop
         )
+
+
+class MaterialsFileHandler(MaterialsHandler):
+
+    """
+    Serves the game material files themselves. Inherits MaterialsHandler so the
+    downloads go through the same authentication and game state checks as the
+    file browser; a plain StaticFileHandler would bypass both.
+    """
+
+    CHUNK_SIZE = 64 * 1024
+
+    @authenticated
+    def get(self, *args, **kwargs):
+        if not self.show_materials():
+            self.redirect("/gamestatus")
+            return
+        file_path = self.resolve_material(args[0] if len(args) else "")
+        if file_path is None:
+            self.redirect(self.application.settings["forbidden_url"])
+            return
+        self.set_header(
+            "Content-Type",
+            mimetypes.guess_type(file_path)[0] or "application/octet-stream",
+        )
+        if options.force_download_game_materials:
+            self.set_header("Content-Disposition", "attachment")
+        self.stream_material(file_path)
+
+    def resolve_material(self, name):
+        """Returns the absolute path of a material file, or None if not allowed"""
+        file_path = os.path.join(os.path.abspath(options.game_materials_dir), name)
+        if is_directory_traversal(file_path):
+            logging.warning(
+                "%s attempted to use a directory traversal" % self.request.remote_ip
+            )
+            return None
+        if not os.path.isfile(file_path):
+            return None
+        return file_path
+
+    def stream_material(self, file_path):
+        """Writes the file to the response in chunks"""
+        with open(file_path, "rb") as material:
+            while True:
+                chunk = material.read(self.CHUNK_SIZE)
+                if not chunk:
+                    break
+                self.write(chunk)
 
 
 def is_directory_traversal(file_name):

@@ -24,6 +24,8 @@ fills the database with some startup data.
 
 import getpass
 import os
+import random
+import string
 import sys
 from builtins import input, str
 
@@ -40,14 +42,41 @@ from models.User import ADMIN_PERMISSION, User
 # Fills the database with some startup data.
 password = ""
 
+
+def generate_admin_password(length=24):
+    """Builds a strong random admin password for unattended (docker) setups"""
+    alphabet = string.ascii_letters + string.digits
+    return "".join(random.SystemRandom().choice(alphabet) for _ in range(length))
+
+
 if (
     options.setup.lower().startswith("dev")
-    or options.setup.lower().startswith("docker")
     or options.tests
     or options.auth.lower() == "azuread"
 ):
     admin_handle = "admin"
     password = "rootthebox"
+elif options.setup.lower().startswith("docker"):
+    admin_handle = os.environ.get("ADMIN_USER", "") or "admin"
+    password = os.environ.get("ADMIN_PASSWORD", "")
+    if password and len(password) < options.min_user_password_length:
+        print(
+            WARN
+            + "Error: ADMIN_PASSWORD is less than %d chars"
+            % (options.min_user_password_length,)
+        )
+        os._exit(1)
+    if not password:
+        password = generate_admin_password()
+        sys.stdout.write(
+            "%sGenerated admin account '%s' with password: %s\n"
+            % (INFO, admin_handle, password)
+        )
+        sys.stdout.write(
+            "%sSet ADMIN_PASSWORD to choose it yourself; it is shown only once.\n"
+            % (INFO,)
+        )
+        sys.stdout.flush()
 else:
     admin_handle = str(input(PROMPT + "RootTheBox Admin Username [admin]: ")) or "admin"
     sys.stdout.write(PROMPT + "New Admin ")
