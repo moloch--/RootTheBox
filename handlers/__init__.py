@@ -56,6 +56,7 @@ from handlers.ScoreboardHandlers import *
 from handlers.StaticFileHandler import StaticFileHandler
 from handlers.UpgradeHandlers import *
 from handlers.UserHandlers import *
+from handlers.ApiV2 import FlagApi, TeamApi, CorporationApi, BoxApi
 from libs.ConsoleColors import *
 from libs.DatabaseConnection import DatabaseConnection
 from libs.Scoreboard import Scoreboard, score_bots
@@ -195,6 +196,10 @@ urls = [
     (r"/admin/resetdelete", AdminResetDeleteHandler),
     # API handlers - APIHandlers.py
     (r"/api/actions", APIActionHandler),
+    (r"/api/v2/corporation/?(.*)", CorporationApi.CorporationApiHandler),
+    (r"/api/v2/box/?(.*)", BoxApi.BoxApiHandler),
+    (r"/api/v2/flag/?(.*)", FlagApi.FlagApiHandler),
+    (r"/api/v2/team/?(.*)", TeamApi.TeamApiHandler),
     # Error handlers - ErrorHandlers.py
     (r"/403", UnauthorizedHandler),
     (r"/gamestatus", StopHandler),
